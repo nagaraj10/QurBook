@@ -30,6 +30,7 @@ class ReminderBroadcaster : BroadcastReceiver() {
         val NS_ID = p1?.getIntExtra(p0.getString(R.string.nsid), 0)
         val currentMillis = p1?.getLongExtra(p0.getString(R.string.currentMillis), 0)
         val isCancel = p1?.getBooleanExtra("isCancel", false)
+        val isButtonShown = p1?.getBooleanExtra("isButtonShown", true)
 
         if (isCancel == true) {
             NS_ID?.let { nsManager.cancel(it) }
@@ -75,26 +76,54 @@ class ReminderBroadcaster : BroadcastReceiver() {
                 nsManager.createNotificationChannel(channelReminder)
             }
 
-            var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
-                    .setSmallIcon(R.drawable.ic_alarm_new)
-                    .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
-                    .setContentTitle(dataTitle)
-                    .setContentText(dataBody)
-                    .setContentIntent(onTapPendingIntent)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(NotificationCompat.CATEGORY_ALARM)
-                    .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
-                    .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
-                    .setAutoCancel(true)
-                    .setSound(_sound)
-                    //.setOngoing(true)
-                    .setOnlyAlertOnce(false)
-                    .build()
+            if(isButtonShown!!){
 
-            //notification.flags = Notification.FLAG_INSISTENT
-            if (NS_ID != null) {
-                nsManager.notify(NS_ID, notification)
+                var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
+                        .setSmallIcon(R.drawable.ic_alarm_new)
+                        .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
+                        .setContentTitle(dataTitle)
+                        .setContentText(dataBody)
+                        .setContentIntent(onTapPendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setCategory(NotificationCompat.CATEGORY_ALARM)
+                        .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
+                        .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
+                        .setAutoCancel(true)
+                        .setSound(_sound)
+                        //.setOngoing(true)
+                        .setOnlyAlertOnce(false)
+                        .build()
+
+                //notification.flags = Notification.FLAG_INSISTENT
+                if (NS_ID != null) {
+                    nsManager.notify(NS_ID, notification)
+                }
+
+            }else{
+
+                var notification = NotificationCompat.Builder(p0, CHANNEL_REMINDER)
+                        .setSmallIcon(R.drawable.ic_alarm_new)
+                        .setLargeIcon(BitmapFactory.decodeResource(p0.resources, R.mipmap.ic_launcher))
+                        .setContentTitle(dataTitle)
+                        .setContentText(dataBody)
+                        .setContentIntent(onTapPendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setCategory(NotificationCompat.CATEGORY_ALARM)
+                       /* .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
+                        .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)*/
+                        .setAutoCancel(true)
+                        .setSound(_sound)
+                        //.setOngoing(true)
+                        .setOnlyAlertOnce(false)
+                        .build()
+
+                //notification.flags = Notification.FLAG_INSISTENT
+                if (NS_ID != null) {
+                    nsManager.notify(NS_ID, notification)
+                }
+
             }
+
 
         }
     }

@@ -882,6 +882,7 @@ class MainActivity : FlutterActivity() {
         val nsId = data["eid"] as String
         val eDateTime: String = data["estart"] as String  //2021-04-20 06:10:00
         val remindin: String = data["remindin"] as String
+        val remindBefore: String = data["remindbefore"] as String
         val date: String = eDateTime.split(" ")[0]
         val time: String = eDateTime.split(" ")[1]
         val alarmHour = time.split(":")[0].toInt()
@@ -892,8 +893,100 @@ class MainActivity : FlutterActivity() {
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
         reminderBroadcaster.putExtra("title", title)
         reminderBroadcaster.putExtra("body", body)
-        reminderBroadcaster.putExtra("nsid", nsId.toInt())
+        /*reminderBroadcaster.putExtra("nsid", nsId.toInt())*/
         reminderBroadcaster.putExtra("isCancel", false)
+
+        if(remindBefore.toInt()>0){
+            // Set the alarm to start for specific time
+            val calendar: Calendar = Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.YEAR, alarmYear)
+                set(Calendar.MONTH, alarmMonth - 1)
+                set(Calendar.DAY_OF_MONTH, alarmDate)
+                set(Calendar.HOUR_OF_DAY, alarmHour)
+                set(Calendar.MINUTE, remindBefore.toInt())
+                set(Calendar.SECOND, 0)
+            }
+
+            //check the reminder time with current time if its true allow user to create alaram
+            if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
+                val eIdAppend =  "${nsId}${"00000"}"
+                reminderBroadcaster.putExtra("nsid", eIdAppend.toInt())
+                reminderBroadcaster.putExtra("isButtonShown", false)
+                val pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        eIdAppend.toInt(),
+                        reminderBroadcaster,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager?.setAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                    )
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    alarmManager?.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                    )
+                } else {
+                    alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                }
+                val date = Date(alarmManager?.nextAlarmClock?.triggerTime!!)
+                val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            }
+
+
+        }
+
+        if(remindin.toInt()>0) {
+            // Set the alarm to start for specific time
+            val calendar: Calendar = Calendar.getInstance().apply {
+                timeInMillis = System.currentTimeMillis()
+                set(Calendar.YEAR, alarmYear)
+                set(Calendar.MONTH, alarmMonth - 1)
+                set(Calendar.DAY_OF_MONTH, alarmDate)
+                set(Calendar.HOUR_OF_DAY, alarmHour)
+                set(Calendar.MINUTE, remindin.toInt())
+                set(Calendar.SECOND, 0)
+            }
+
+            //check the reminder time with current time if its true allow user to create alaram
+            if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
+                val eIdAppend =  "${nsId}${"11111"}"
+                reminderBroadcaster.putExtra("nsid", eIdAppend.toInt())
+                reminderBroadcaster.putExtra("isButtonShown", false)
+                val pendingIntent = PendingIntent.getBroadcast(
+                        this,
+                        eIdAppend.toInt(),
+                        reminderBroadcaster,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager?.setAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                    )
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    alarmManager?.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.timeInMillis,
+                            pendingIntent
+                    )
+                } else {
+                    alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+                }
+                val date = Date(alarmManager?.nextAlarmClock?.triggerTime!!)
+                val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            }
+        }
 
 
         // Set the alarm to start for specific time
@@ -913,6 +1006,8 @@ class MainActivity : FlutterActivity() {
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
             alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
+            reminderBroadcaster.putExtra("nsid", nsId.toInt())
+            reminderBroadcaster.putExtra("isButtonShown", true)
             val pendingIntent = PendingIntent.getBroadcast(
                 this,
                 nsId.toInt(),

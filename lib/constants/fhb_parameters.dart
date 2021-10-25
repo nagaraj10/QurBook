@@ -331,6 +331,9 @@ const String selectSlotsMsg =
 const String noUrl = 'Something went wrong ..please try again..';
 const String noAddress =
     'Please fill your address details in your profile before you book an appointment';
+
+const String no_addr1_zip =
+    'Address line 1 and Zipcode is required to proceed booking the appointment';
 const String noGender =
     'Please fill your gender and address details in your profile before you book an appointment';
 const String noDOB =
