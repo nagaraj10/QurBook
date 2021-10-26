@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -30,6 +30,9 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
+
+import 'package:country_pickers/country_pickers.dart';
+import 'package:country_pickers/country.dart';
 
 export '../models/hospital_list_response.dart';
 
@@ -58,10 +61,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   LabsListBlock _labsListBlock;
 
   final TextEditingController _textFieldController =
-  TextEditingController(text: '');
+      TextEditingController(text: '');
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  GlobalKey<RefreshIndicatorState>();
+      GlobalKey<RefreshIndicatorState>();
   String value;
 
   final mobileNoController = TextEditingController();
@@ -85,7 +88,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   DoctorsListRepository doctorsListRepository = DoctorsListRepository();
   HospitalListRepository hospitalListRepository = HospitalListRepository();
 
-  var _selected = Country.IN;
+  //var _selected = Country.IN;
+  Country _selectedDialogCountry =
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   @override
@@ -125,10 +130,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Search List Screen',
       'screenSessionTime':
-      '${DateTime
-          .now()
-          .difference(mInitialTime)
-          .inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -185,21 +187,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     value = editedValue;
                     widget.arguments.searchWord == CommonConstants.doctors
                         ? _doctorsListBlock.getDoctorsListNew(
-                        value, widget.isSkipUnknown)
+                            value, widget.isSkipUnknown)
                         : widget.arguments.searchWord ==
-                        CommonConstants.hospitals
-                        ? _hospitalListBlock.getHospitalListNew(value)
-                        : _labsListBlock.getLabsListNew(value);
+                                CommonConstants.hospitals
+                            ? _hospitalListBlock.getHospitalListNew(value)
+                            : _labsListBlock.getLabsListNew(value);
                     setState(() {});
                   } else {
                     widget.arguments.searchWord == CommonConstants.doctors
                         ? _doctorsListBlock.getExistingDoctorList('50')
                         : widget.arguments.searchWord ==
-                        CommonConstants.hospitals
-                        ? _hospitalListBlock.getExistingHospitalListNew(
-                        Constants.STR_HEALTHORG_HOSPID)
-                        : _labsListBlock.getExistingLabsListNew(
-                        Constants.STR_HEALTHORG_LABID);
+                                CommonConstants.hospitals
+                            ? _hospitalListBlock.getExistingHospitalListNew(
+                                Constants.STR_HEALTHORG_HOSPID)
+                            : _labsListBlock.getExistingLabsListNew(
+                                Constants.STR_HEALTHORG_LABID);
                     setState(() {});
                   }
                 },
@@ -211,7 +213,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   ),
                   hintText: variable.strSearch,
                   hintStyle:
-                  TextStyle(color: Colors.black54, fontSize: 16.0.sp),
+                      TextStyle(color: Colors.black54, fontSize: 16.0.sp),
                   border: InputBorder.none,
                 ),
               ),
@@ -220,22 +222,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           Expanded(
               child: value == ''
                   ?
-              //getEmptyCard()
-              /* Container(
+                  //getEmptyCard()
+                  /* Container(
                       child: Center(
                         child: Text(variable.strNodata),
                       ),
                     )*/
-              widget.arguments.searchWord == CommonConstants.doctors
-                  ? getResponseFromApiWidgetForDoctors()
-                  : widget.arguments.searchWord == CommonConstants.hospitals
-                  ? getResponseFromApiWidgetForHospital()
-                  : getResponseFromApiWidgetForLabs()
+                  widget.arguments.searchWord == CommonConstants.doctors
+                      ? getResponseFromApiWidgetForDoctors()
+                      : widget.arguments.searchWord == CommonConstants.hospitals
+                          ? getResponseFromApiWidgetForHospital()
+                          : getResponseFromApiWidgetForLabs()
                   : widget.arguments.searchWord == CommonConstants.doctors
-                  ? getResponseFromApiWidgetForDoctors()
-                  : widget.arguments.searchWord == CommonConstants.hospitals
-                  ? getResponseFromApiWidgetForHospital()
-                  : getResponseFromApiWidgetForLabs()),
+                      ? getResponseFromApiWidgetForDoctors()
+                      : widget.arguments.searchWord == CommonConstants.hospitals
+                          ? getResponseFromApiWidgetForHospital()
+                          : getResponseFromApiWidgetForLabs()),
         ],
       ),
     );
@@ -252,10 +254,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-                  child: CommonCircularIndicator(),
-                  width: 30.0.h,
-                  height: 30.0.h,
-                ));
+              child: CommonCircularIndicator(),
+              width: 30.0.h,
+              height: 30.0.h,
+            ));
 
             break;
 
@@ -269,30 +271,30 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           case Status.COMPLETED:
             rebuildBlockObject();
             return (snapshot.data.data.isSuccess == false &&
-                widget.isSkipUnknown == true)
+                    widget.isSkipUnknown == true)
                 ? Container(
-              margin: EdgeInsets.all(5),
-              child: getAllDatasInDoctorsListScrap(snapshot.data.data),
-            )
+                    margin: EdgeInsets.all(5),
+                    child: getAllDatasInDoctorsListScrap(snapshot.data.data),
+                  )
                 : (snapshot.data.data.result == null)
-                ? /*Container(
+                    ? /*Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
                       )*/
-            getEmptyCard(snapshot.data.data.diagnostics)
-                : snapshot.data.data.result.isEmpty
-                ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
-                : Container(
-              margin: EdgeInsets.all(5),
-              child: getAllDatasInDoctorsList(
-                  snapshot.data.data.result),
-            );
+                    getEmptyCard(snapshot.data.data.diagnostics)
+                    : snapshot.data.data.result.isEmpty
+                        ? Container(
+                            child: Center(
+                              child: Text(variable.strNodata),
+                            ),
+                          )
+                        //getEmptyCard()
+                        : Container(
+                            margin: EdgeInsets.all(5),
+                            child: getAllDatasInDoctorsList(
+                                snapshot.data.data.result),
+                          );
             break;
         }
       },
@@ -310,10 +312,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-                  width: 30.0.h,
-                  height: 30.0.h,
-                  child: CommonCircularIndicator(),
-                ));
+              width: 30.0.h,
+              height: 30.0.h,
+              child: CommonCircularIndicator(),
+            ));
 
             break;
 
@@ -333,19 +335,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: Text(variable.strNodata),
                     ),
                   )*/
-            getEmptyCard(snapshot.data.data.diagnostics)
+                getEmptyCard(snapshot.data.data.diagnostics)
                 : snapshot.data.data.result.isEmpty
-                ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
-                : Container(
-              child: getAllDatasInHospitalList(
-                  snapshot.data.data.result),
-              margin: EdgeInsets.all(5),
-            );
+                    ? Container(
+                        child: Center(
+                          child: Text(variable.strNodata),
+                        ),
+                      )
+                    //getEmptyCard()
+                    : Container(
+                        child: getAllDatasInHospitalList(
+                            snapshot.data.data.result),
+                        margin: EdgeInsets.all(5),
+                      );
             break;
         }
       },
@@ -363,10 +365,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-                  width: 30.0.h,
-                  height: 30.0.h,
-                  child: CommonCircularIndicator(),
-                ));
+              width: 30.0.h,
+              height: 30.0.h,
+              child: CommonCircularIndicator(),
+            ));
 
             break;
 
@@ -381,22 +383,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return snapshot.data.data.result == null
                 ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
+                    child: Center(
+                      child: Text(variable.strNodata),
+                    ),
+                  )
+                //getEmptyCard()
                 : snapshot.data.data.result.isEmpty
-                ? Container(
-              child: Center(
-                child: Text(variable.strNodata),
-              ),
-            )
-            //getEmptyCard()
-                : Container(
-              margin: EdgeInsets.all(5),
-              child: getAllDatasInLabsList(snapshot.data.data.result),
-            );
+                    ? Container(
+                        child: Center(
+                          child: Text(variable.strNodata),
+                        ),
+                      )
+                    //getEmptyCard()
+                    : Container(
+                        margin: EdgeInsets.all(5),
+                        child: getAllDatasInLabsList(snapshot.data.data.result),
+                      );
 
             break;
 
@@ -421,43 +423,43 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget getEmptyCard(Diagnostics diagnostics) {
     return !widget.toPreviousScreen
         ? Center(
-      child: Text(
-        'No Records Found ',
-        style: TextStyle(
-          color: ColorUtils.blackcolor,
-          fontSize: 15.0.sp,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    )
-        : Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'No Records Found ',
-            style: TextStyle(
-              color: ColorUtils.blackcolor,
-              fontSize: 15.0.sp,
-              fontWeight: FontWeight.w500,
+            child: Text(
+              'No Records Found ',
+              style: TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          fhbBasicWidget.getSaveButton(() {
-            if (widget.toPreviousScreen) {
-              widget.arguments.searchWord == CommonConstants.doctors
-                  ? saveMediaDialog(context)
-                  : widget.arguments.searchWord ==
-                  CommonConstants.hospitals
-                  ? saveHospitalDialog(context)
-                  : passLaboratoryValue(null, context);
-            }
-          }, text: 'Click here to add', width: 150.w),
-        ],
-      ),
-    );
+          )
+        : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'No Records Found ',
+                  style: TextStyle(
+                    color: ColorUtils.blackcolor,
+                    fontSize: 15.0.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                fhbBasicWidget.getSaveButton(() {
+                  if (widget.toPreviousScreen) {
+                    widget.arguments.searchWord == CommonConstants.doctors
+                        ? saveMediaDialog(context)
+                        : widget.arguments.searchWord ==
+                                CommonConstants.hospitals
+                            ? saveHospitalDialog(context)
+                            : passLaboratoryValue(null, context);
+                  }
+                }, text: 'Click here to add', width: 150.w),
+              ],
+            ),
+          );
   }
 
   Future<void> _refresh() async {
@@ -472,8 +474,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           widget.arguments.searchWord == CommonConstants.doctors
               ? passDoctorsValue(diagnostics.errorData, context)
               : widget.arguments.searchWord == CommonConstants.hospitals
-              ? passHospitalValue(null, context)
-              : passLaboratoryValue(null, context);
+                  ? passHospitalValue(null, context)
+                  : passLaboratoryValue(null, context);
         }
       },
       child: Container(
@@ -514,17 +516,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: data != null
           ? Container(
-          color: Color(fhbColors.bgColorContainer),
-          child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: ListView.builder(
+                itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
                           ? data[i]?.name?.capitalizeFirstofEach
                           : data[i]?.firstName?.capitalizeFirstofEach +
-                          ' ' +
-                          data[i]?.lastName?.capitalizeFirstofEach,
+                              ' ' +
+                              data[i]?.lastName?.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -532,14 +533,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       HospitalsListResult(),
                       LabListResult()),
                 ),
-            itemCount: data.length,
-          ))
+                itemCount: data.length,
+              ))
           : Container(
-        color: Color(fhbColors.bgColorContainer),
-        child: Center(
-          child: Text(variable.strNodata),
-        ),
-      ),
+              color: Color(fhbColors.bgColorContainer),
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            ),
     );
   }
 
@@ -548,43 +549,42 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
       child: (data.isSuccess == false &&
-          widget.isSkipUnknown == true &&
-          data?.diagnostics?.errorData != null)
+              widget.isSkipUnknown == true &&
+              data?.diagnostics?.errorData != null)
           ? Container(
-        color: Color(fhbColors.bgColorContainer),
-        child: getEmptyCard(data.diagnostics),
-      )
+              color: Color(fhbColors.bgColorContainer),
+              child: getEmptyCard(data.diagnostics),
+            )
           : data.result != null
-          ? Container(
-          color: Color(fhbColors.bgColorContainer),
-          child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Container(
-                  padding: EdgeInsets.only(top: 2, bottom: 2),
-                  child: getCardToDisplaySearchList(
-                      (data.result[i].name != null &&
-                          data.result[i].name != '')
-                          ? data?.result[i]?.name?.capitalizeFirstofEach
-                          : data?.result[i]?.firstName
-                          ?.capitalizeFirstofEach +
-                          ' ' +
-                          data?.result[i]?.lastName
-                              ?.capitalizeFirstofEach,
-                      getDoctorsAddress(data.result[i]),
-                      data.result[i].doctorId,
-                      data.result[i].profilePicThumbnailUrl,
-                      data.result[i],
-                      HospitalsListResult(),
-                      LabListResult()),
+              ? Container(
+                  color: Color(fhbColors.bgColorContainer),
+                  child: ListView.builder(
+                    itemBuilder: (c, i) => Container(
+                      padding: EdgeInsets.only(top: 2, bottom: 2),
+                      child: getCardToDisplaySearchList(
+                          (data.result[i].name != null &&
+                                  data.result[i].name != '')
+                              ? data?.result[i]?.name?.capitalizeFirstofEach
+                              : data?.result[i]?.firstName
+                                      ?.capitalizeFirstofEach +
+                                  ' ' +
+                                  data?.result[i]?.lastName
+                                      ?.capitalizeFirstofEach,
+                          getDoctorsAddress(data.result[i]),
+                          data.result[i].doctorId,
+                          data.result[i].profilePicThumbnailUrl,
+                          data.result[i],
+                          HospitalsListResult(),
+                          LabListResult()),
+                    ),
+                    itemCount: data.result.length,
+                  ))
+              : Container(
+                  color: Color(fhbColors.bgColorContainer),
+                  child: Center(
+                    child: Text(variable.strNodata),
+                  ),
                 ),
-            itemCount: data.result.length,
-          ))
-          : Container(
-        color: Color(fhbColors.bgColorContainer),
-        child: Center(
-          child: Text(variable.strNodata),
-        ),
-      ),
     );
   }
 
@@ -595,10 +595,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       color: Color(CommonUtil().getMyPrimaryColor()),
       child: data != null
           ? Container(
-          color: Color(fhbColors.bgColorContainer),
-          child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: ListView.builder(
+                itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != "")
@@ -613,14 +612,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       LabListResult(),
                       cityAndState: getHospitalCityAndState(data[i])),
                 ),
-            itemCount: data.length,
-          ))
+                itemCount: data.length,
+              ))
           : Container(
-        color: Color(fhbColors.bgColorContainer),
-        child: Center(
-          child: Text(variable.strNodata),
-        ),
-      ),
+              color: Color(fhbColors.bgColorContainer),
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            ),
     );
   }
 
@@ -631,10 +630,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       color: Color(CommonUtil().getMyPrimaryColor()),
       child: data != null
           ? Container(
-          color: Color(fhbColors.bgColorContainer),
-          child: ListView.builder(
-            itemBuilder: (c, i) =>
-                Container(
+              color: Color(fhbColors.bgColorContainer),
+              child: ListView.builder(
+                itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       data[i].healthOrganizationName,
@@ -646,18 +644,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       HospitalsListResult(),
                       data[i]),
                 ),
-            itemCount: data.length,
-          ))
+                itemCount: data.length,
+              ))
           : Container(
-        color: Color(fhbColors.bgColorContainer),
-        child: Center(
-          child: Text(variable.strNodata),
-        ),
-      ),
+              color: Color(fhbColors.bgColorContainer),
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            ),
     );
   }
 
-  Widget getCardToDisplaySearchList(String name,
+  Widget getCardToDisplaySearchList(
+      String name,
       String address,
       String id,
       String logo,
@@ -680,14 +679,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   ),
                   ClipOval(
                       child: Container(
-                        height: 50.0.h,
-                        width: 50.0.h,
-                        color: Color(fhbColors.bgColorContainer),
-                        child:
+                    height: 50.0.h,
+                    width: 50.0.h,
+                    color: Color(fhbColors.bgColorContainer),
+                    child:
                         widget.arguments.searchWord == CommonConstants.doctors
                             ? getHospitalLogoImage(logo, data)
                             : getHospitalLogoImage(logo, data),
-                      )),
+                  )),
                   SizedBox(width: 10.0.w),
                   Expanded(
                       flex: 5,
@@ -697,14 +696,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                           widget.arguments.searchWord == CommonConstants.doctors
                               ? name
                               : widget.arguments.searchWord ==
-                              CommonConstants.hospitals
-                              ? name
-                              : labData.healthOrganizationName,
+                                      CommonConstants.hospitals
+                                  ? name
+                                  : labData.healthOrganizationName,
                           address,
                           id,
                           data,
                           specialization: widget.arguments.searchWord ==
-                              CommonConstants.hospitals
+                                  CommonConstants.hospitals
                               ? hospitalData.specialization
                               : null,
                         ),
@@ -715,8 +714,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             widget.arguments.searchWord == CommonConstants.doctors
                 ? passDoctorsValue(data, context)
                 : widget.arguments.searchWord == CommonConstants.hospitals
-                ? passHospitalValue(hospitalData, context)
-                : passLaboratoryValue(labData, context);
+                    ? passHospitalValue(hospitalData, context)
+                    : passLaboratoryValue(labData, context);
           } else {
             passdataToNextScreen(data?.name.capitalizeFirstofEach, context,
                 data, hospitalData, labData);
@@ -732,8 +731,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyDoctor: json.encode(doctorData)});
   }
 
-  void passHospitalValue(HospitalsListResult hospitaData,
-      BuildContext context) {
+  void passHospitalValue(
+      HospitalsListResult hospitaData, BuildContext context) {
     Navigator.of(context)
         .maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
@@ -742,13 +741,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  getDataToView(String name,
-      String address,
-      String id,
-      DoctorsListResult data, {
-        String cityAndState,
-        String specialization,
-      }) {
+  getDataToView(
+    String name,
+    String address,
+    String id,
+    DoctorsListResult data, {
+    String cityAndState,
+    String specialization,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -783,27 +783,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ),
         widget.arguments.searchWord == CommonConstants.doctors
             ? (data.specialty != null && data.specialty != '')
-            ? Text(
-          toBeginningOfSentenceCase(data.specialty ?? ''),
-          style: TextStyle(
-              fontSize: 15.0.sp,
-              fontWeight: FontWeight.w400,
-              color: ColorUtils.lightgraycolor),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        )
-            : SizedBox(height: 10.0.h)
+                ? Text(
+                    toBeginningOfSentenceCase(data.specialty ?? ''),
+                    style: TextStyle(
+                        fontSize: 15.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.lightgraycolor),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : SizedBox(height: 10.0.h)
             : (specialization != null && specialization != '')
-            ? Text(
-          toBeginningOfSentenceCase(specialization ?? ''),
-          style: TextStyle(
-              fontSize: 15.0.sp,
-              fontWeight: FontWeight.w400,
-              color: ColorUtils.lightgraycolor),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        )
-            : SizedBox(height: 10.0.h),
+                ? Text(
+                    toBeginningOfSentenceCase(specialization ?? ''),
+                    style: TextStyle(
+                        fontSize: 15.0.sp,
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.lightgraycolor),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : SizedBox(height: 10.0.h),
       ],
     );
   }
@@ -836,15 +836,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       return Image.network(logo,
           errorBuilder: (context, exception, stackTrace) {
-            return Container(
-              height: 50.0.h,
-              width: 50.0.h,
-              color: Colors.grey[200],
-              child: Center(
-                child: getFirstLastNameText(docs),
-              ),
-            );
-          });
+        return Container(
+          height: 50.0.h,
+          width: 50.0.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: getFirstLastNameText(docs),
+          ),
+        );
+      });
     }
   }
 
@@ -882,7 +882,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  void passdataToNextScreen(String name,
+  void passdataToNextScreen(
+      String name,
       BuildContext context,
       DoctorsListResult data,
       HospitalsListResult hospitalData,
@@ -965,8 +966,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       widget.arguments.searchWord == CommonConstants.doctors
           ? passDoctorsValue(diagnostics.errorData, context)
           : widget.arguments.searchWord == CommonConstants.hospitals
-          ? passHospitalValue(null, context)
-          : passLaboratoryValue(null, context);
+              ? passHospitalValue(null, context)
+              : passLaboratoryValue(null, context);
     }
   }
 
@@ -978,7 +979,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   passHospitalValueSample(results, BuildContext context) {
     final HospitalsListResult jsonDecodeForDoctor =
-    results[Constants.keyHospital];
+        results[Constants.keyHospital];
 
     passHospitalValue(jsonDecodeForDoctor, context);
   }
@@ -1032,7 +1033,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
             content: Container(
                 width: 1.sw,
                 height: 1.sh / 1.5,
@@ -1076,26 +1077,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             ),
                             Row(
                               children: <Widget>[
-                                CountryPicker(
-                                  nameTextStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                  dialingCodeTextStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                  showFlag: false,
-                                  //displays flag, true by default
-                                  showDialingCode: true,
-                                  //displays dialing code, false by default
-                                  showName: false,
-                                  //eg. 'GBP'
-                                  onChanged: (country) {
-                                    setState(() {
-                                      _selected = country;
-                                    });
-                                  },
-                                  selectedCountry: _selected,
-                                ),
+                                CountryCodePickerPage(
+                                    onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country),
+                                    selectedDialogCountry:
+                                        _selectedDialogCountry),
                                 _ShowMobileNoTextField()
                               ],
                             ),
@@ -1111,14 +1097,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             SizedBox(
                               height: 10.0.h,
                             ),
-                            Row(
+                            /*Row(
                               children: <Widget>[
                                 _showHospitalNameTextField(false),
                               ],
                             ),
                             SizedBox(
                               height: 10.0.h,
-                            ),
+                            ),*/
 
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -1151,7 +1137,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
             content: Container(
                 width: 1.sw,
                 height: 1.sh / 3,
@@ -1210,67 +1196,67 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: firstNameController,
-          keyboardType: TextInputType.text,
-          focusNode: firstNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(firstNameFocus);
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.firstNameWithStar,
-            hintText: CommonConstants.firstName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: firstNameController,
+      keyboardType: TextInputType.text,
+      focusNode: firstNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(firstNameFocus);
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.firstNameWithStar,
+        hintText: CommonConstants.firstName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: lastNameController,
-          keyboardType: TextInputType.text,
-          focusNode: lastNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            lastNameFocus.unfocus();
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.lastName,
-            hintText: CommonConstants.lastName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: lastNameController,
+      keyboardType: TextInputType.text,
+      focusNode: lastNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        lastNameFocus.unfocus();
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.lastName,
+        hintText: CommonConstants.lastName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _ShowMobileNoTextField() {
@@ -1309,71 +1295,71 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showSpecializationTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: specializationController,
-          keyboardType: TextInputType.text,
-          focusNode: specializationFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(lastNameFocus);
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.specialization,
-            hintText: CommonConstants.specialization,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: specializationController,
+      keyboardType: TextInputType.text,
+      focusNode: specializationFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(lastNameFocus);
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.specialization,
+        hintText: CommonConstants.specialization,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _showHospitalNameTextField(bool condition) {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: hospitalNameController,
-          keyboardType: TextInputType.text,
-          focusNode: hospitalNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(specializationFocus);
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: condition
-                ? CommonConstants.hospitalNameWithStar
-                : CommonConstants.hospitalName,
-            hintText: condition
-                ? CommonConstants.hospitalNameWithStar
-                : CommonConstants.hospitalName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: hospitalNameController,
+      keyboardType: TextInputType.text,
+      focusNode: hospitalNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(specializationFocus);
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: condition
+            ? CommonConstants.hospitalNameWithStar
+            : CommonConstants.hospitalName,
+        hintText: condition
+            ? CommonConstants.hospitalNameWithStar
+            : CommonConstants.hospitalName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   _showAddDoctorButton() {
@@ -1458,9 +1444,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ? ''
           : toBeginningOfSentenceCase(lastNameController.text);
       addDoctorData['specialization'] =
-      specializationController.text.trim() == ''
-          ? null
-          : specializationController.text;
+          specializationController.text.trim() == ''
+              ? null
+              : specializationController.text;
       if (mobileNoController.text.trim() == '' ||
           mobileNoController.text == null) {
         addDoctorData['phoneNumber'] = mobileNoController.text.trim() == ''
@@ -1468,7 +1454,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             : mobileNoController.text;
       } else {
         final phoneNumber = '+' +
-            _selected.dialingCode.toString() +
+            _selectedDialogCountry.phoneCode.toString() +
             '' +
             mobileNoController.text;
         addDoctorData['phoneNumber'] = phoneNumber;
@@ -1496,8 +1482,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
+          builder: (context) => AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text('Enter First Name'),
               ));
@@ -1518,9 +1503,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       final params = json.encode(addHospitalData);
       print(params.toString());
 
-      hospitalListRepository
-          .addHospitalList(params)
-          .then((value) {
+      hospitalListRepository.addHospitalList(params).then((value) {
         if (value.isSuccess) {
           Navigator.pop(context);
           HospitalsListResult hospitaData = new HospitalsListResult();
@@ -1544,8 +1527,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           Navigator.pop(context);
           showDialog(
               context: context,
-              builder: (context) =>
-                  AlertDialog(
+              builder: (context) => AlertDialog(
                     title: Text(variable.strAPP_NAME),
                     content: Text(value.isSuccess.toString()),
                   ));
@@ -1553,12 +1535,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           //
         }
       });
-    }
-    else {
+    } else {
       showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
+          builder: (context) => AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text('Enter hospital Name'),
               ));
