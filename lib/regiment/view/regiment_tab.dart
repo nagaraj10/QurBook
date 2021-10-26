@@ -97,6 +97,14 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     PreferenceUtil.init();
   }
 
+  @override
+  void deactivate() {
+    Provider.of<RegimentViewModel>(context, listen: false).stopRegimenTTS(
+      isInitial: true,
+    );
+    super.deactivate();
+  }
+
   void showShowcase() {
     isFirst = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Regimen);
     isFirstSymptom = PreferenceUtil.isKeyValid(KEY_SHOWCASE_Symptom);

@@ -517,15 +517,20 @@ class RegimentDataCard extends StatelessWidget {
     return title;
   }
 
-  Future<void> onCardPressed(BuildContext context) async {
+  Future<void> onCardPressed(
+    BuildContext context, {
+    String eventIdReturn,
+    String followEventContext,
+  }) async {
     stopRegimenTTS();
+    var eventId = eventIdReturn ?? eid;
     var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
-            .getFormData(eid: eid);
+            .getFormData(eid: eventId);
     print(fieldsResponseModel);
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
@@ -538,11 +543,23 @@ class RegimentDataCard extends StatelessWidget {
         context: context,
         builder: (context) => FormDataDialog(
           fieldsData: fieldsResponseModel.result.fields,
-          eid: eid,
+          eid: eventId,
           color: color,
           mediaData: mediaData,
           formTitle: getDialogTitle(context),
           canEdit: canEdit || isValidSymptom(context),
+          triggerAction: (String triggerEventId, String followContext) {
+            Provider.of<RegimentViewModel>(Get.context, listen: false)
+                .updateRegimentStatus(RegimentStatus.DialogClosed);
+            Get.back();
+            onCardPressed(
+              Get.context,
+              eventIdReturn: triggerEventId,
+              followEventContext: followContext,
+            );
+          },
+          followEventContext: followEventContext,
+          isFollowEvent: eventIdReturn != null,
         ),
       );
       if (value != null && (value ?? false)) {

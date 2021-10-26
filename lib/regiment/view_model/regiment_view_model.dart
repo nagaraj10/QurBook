@@ -358,11 +358,15 @@ class RegimentViewModel extends ChangeNotifier {
   Future<SaveResponseModel> saveFormData({
     String eid,
     String events,
+    bool isFollowEvent,
+    String followEventContext,
   }) async {
     updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
       eid: eid,
       events: events,
+      isFollowEvent: isFollowEvent,
+      followEventContext: followEventContext,
     );
   }
 

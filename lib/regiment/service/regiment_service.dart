@@ -54,8 +54,12 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> saveFormData(
-      {String eid, String events}) async {
+  static Future<SaveResponseModel> saveFormData({
+    String eid,
+    String events,
+    bool isFollowEvent,
+    String followEventContext,
+  }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -64,6 +68,11 @@ class RegimentService {
         isIndianTime: true,
       );
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var followEventParams = '';
+      if (isFollowEvent ?? false) {
+        followEventParams =
+            '&followevent=1&context=${followEventContext ?? ''}';
+      }
       var response = await ApiServices.post(
         urlForRegiment,
         headers: headerRequest,
@@ -71,7 +80,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams",
           },
         ),
       );
