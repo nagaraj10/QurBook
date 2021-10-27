@@ -32,6 +32,9 @@ class FormDataDialog extends StatefulWidget {
     @required this.mediaData,
     @required this.formTitle,
     @required this.canEdit,
+    @required this.triggerAction,
+    this.isFollowEvent,
+    this.followEventContext,
   });
 
   final List<FieldModel> fieldsData;
@@ -40,6 +43,9 @@ class FormDataDialog extends StatefulWidget {
   final Otherinfo mediaData;
   final String formTitle;
   final bool canEdit;
+  final Function(String eventId, String followContext) triggerAction;
+  final bool isFollowEvent;
+  final String followEventContext;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -378,6 +384,9 @@ class FormDataDialogState extends State<FormDataDialog> {
                                             .saveFormData(
                                           eid: eid,
                                           events: events,
+                                          isFollowEvent: widget.isFollowEvent,
+                                          followEventContext:
+                                              widget.followEventContext,
                                         );
                                         if (saveResponse?.isSuccess ?? false) {
                                           LoaderClass.hideLoadingDialog(
@@ -389,6 +398,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                                               RegimentStatus.DialogOpened) {
                                             Navigator.pop(context, true);
                                           }
+                                          checkForReturnActions(
+                                            returnAction: saveResponse
+                                                ?.result?.actions?.returnData,
+                                          );
                                         }
                                       }
                                     } else {
@@ -431,6 +444,121 @@ class FormDataDialogState extends State<FormDataDialog> {
         bottom: 10.0.w,
       ),
     );
+  }
+
+  checkForReturnActions({
+    ReturnModel returnAction,
+  }) async {
+    if ((returnAction?.action ?? '').isNotEmpty &&
+        (returnAction?.message ?? '').isNotEmpty) {
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  size: 24.0.sp,
+                ),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+          titlePadding: EdgeInsets.only(
+            top: 10.0.h,
+            right: 5.0.w,
+            left: 15.0.w,
+          ),
+          content: Container(
+            width: 0.75.sw,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: 10.0.h,
+                  ),
+                  child: Text(
+                    returnAction?.message ?? '',
+                    style: TextStyle(
+                      fontSize: 16.0.sp,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RaisedButton(
+                      onPressed: () {
+                        if (returnAction?.eid != null &&
+                            (returnAction?.action ?? '') == startActivity) {
+                          widget.triggerAction(
+                            returnAction?.eid,
+                            returnAction?.context,
+                          );
+                        } else {
+                          Get.back();
+                        }
+                      },
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            5.0.sp,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        okButton,
+                        style: TextStyle(
+                          fontSize: 16.0.sp,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    if (returnAction?.action == startActivity)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: 20.0.w,
+                        ),
+                        child: RaisedButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                5.0.sp,
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            laterButton,
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          contentPadding: EdgeInsets.only(
+            top: 0.0.h,
+            left: 10.0.w,
+            right: 10.0.w,
+            bottom: 10.0.w,
+          ),
+        ),
+      );
+    }
   }
 
   Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
