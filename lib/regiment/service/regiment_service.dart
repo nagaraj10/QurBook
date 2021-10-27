@@ -253,7 +253,10 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> undoSaveFormData({String eid}) async {
+  static Future<SaveResponseModel> undoSaveFormData({
+    String eid,
+    String activityDate,
+  }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -264,7 +267,8 @@ class RegimentService {
         body: json.encode(
           {
             'method': 'post',
-            'data': "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId",
+            'data':
+                "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId&date=$activityDate",
           },
         ),
       );
@@ -294,10 +298,6 @@ class RegimentService {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var hh = DateFormat('HH').format(startTime);
       var mm = DateFormat('mm').format(startTime);
-      var date = '${CommonUtil.dateConversionToApiFormat(
-        startTime,
-        isIndianTime: true,
-      )}';
       var hide = isDisable ? '1' : '0';
       var response = await ApiServices.post(
         urlForRegiment,
