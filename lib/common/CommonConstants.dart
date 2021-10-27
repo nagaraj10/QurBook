@@ -224,6 +224,7 @@ class CommonConstants {
 
   static String specialization = 'Specialization';
   static String hospitalName = 'Hospital Name';
+  static String hospitalNameWithStar = 'Hospital Name *';
 
   //===========================================//
 

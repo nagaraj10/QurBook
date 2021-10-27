@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_country_picker/flutter_country_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
+import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -29,6 +30,9 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
+
+import 'package:country_pickers/country_pickers.dart';
+import 'package:country_pickers/country.dart';
 
 export '../models/hospital_list_response.dart';
 
@@ -82,8 +86,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   FocusNode hospitalNameFocus = FocusNode();
 
   DoctorsListRepository doctorsListRepository = DoctorsListRepository();
+  HospitalListRepository hospitalListRepository = HospitalListRepository();
 
-  var _selected = Country.IN;
+  //var _selected = Country.IN;
+  Country _selectedDialogCountry =
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   @override
@@ -323,12 +330,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
 
             return snapshot.data.data.result == null
-                ? Container(
+                ? /*Container(
                     child: Center(
                       child: Text(variable.strNodata),
                     ),
-                  )
-                //getEmptyCard()
+                  )*/
+                getEmptyCard(snapshot.data.data.diagnostics)
                 : snapshot.data.data.result.isEmpty
                     ? Container(
                         child: Center(
@@ -446,7 +453,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         ? saveMediaDialog(context)
                         : widget.arguments.searchWord ==
                                 CommonConstants.hospitals
-                            ? passHospitalValue(null, context)
+                            ? saveHospitalDialog(context)
                             : passLaboratoryValue(null, context);
                   }
                 }, text: 'Click here to add', width: 150.w),
@@ -1070,26 +1077,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             ),
                             Row(
                               children: <Widget>[
-                                CountryPicker(
-                                  nameTextStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                  dialingCodeTextStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500),
-                                  showFlag: false,
-                                  //displays flag, true by default
-                                  showDialingCode: true,
-                                  //displays dialing code, false by default
-                                  showName: false,
-                                  //eg. 'GBP'
-                                  onChanged: (country) {
-                                    setState(() {
-                                      _selected = country;
-                                    });
-                                  },
-                                  selectedCountry: _selected,
-                                ),
+                                CountryCodePickerPage(
+                                    onValuePicked: (country) => setState(
+                                        () => _selectedDialogCountry = country),
+                                    selectedDialogCountry:
+                                        _selectedDialogCountry),
                                 _ShowMobileNoTextField()
                               ],
                             ),
@@ -1105,9 +1097,74 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             SizedBox(
                               height: 10.0.h,
                             ),
+                            /*Row(
+                              children: <Widget>[
+                                _showHospitalNameTextField(false),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0.h,
+                            ),*/
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                _showAddDoctorButton(),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20.0.h,
+                            ),
+                            // callAddFamilyStreamBuilder(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                )),
+          );
+        });
+      },
+    );
+  }
+
+  saveHospitalDialog(BuildContext context) {
+    hospitalNameController.text = _textFieldController.text;
+
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+            content: Container(
+                width: 1.sw,
+                height: 1.sh / 3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 24.0.sp,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            ),
+
                             Row(
                               children: <Widget>[
-                                _showHospitalNameTextField(),
+                                _showHospitalNameTextField(true),
                               ],
                             ),
                             SizedBox(
@@ -1117,7 +1174,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                _showAddDoctorButton(),
+                                _showAddHospitalButton(),
                               ],
                             ),
                             SizedBox(
@@ -1268,7 +1325,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     ));
   }
 
-  Widget _showHospitalNameTextField() {
+  Widget _showHospitalNameTextField(bool condition) {
     return Expanded(
         child: TextField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -1284,8 +1341,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
-        labelText: CommonConstants.hospitalName,
-        hintText: CommonConstants.hospitalName,
+        labelText: condition
+            ? CommonConstants.hospitalNameWithStar
+            : CommonConstants.hospitalName,
+        hintText: condition
+            ? CommonConstants.hospitalNameWithStar
+            : CommonConstants.hospitalName,
         labelStyle: TextStyle(
             fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
@@ -1336,6 +1397,41 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: addButtonWithGesture);
   }
 
+  _showAddHospitalButton() {
+    final addButtonWithGesture = GestureDetector(
+      onTap: _addHospitalToList,
+      child: Container(
+        width: 130.0.w,
+        height: 40.0.h,
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(2)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            'Add Hospital',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
+        child: addButtonWithGesture);
+  }
+
   void _addDoctorToList() {
     final addDoctorData = {};
     final doctorReferenced = {};
@@ -1358,7 +1454,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             : mobileNoController.text;
       } else {
         final phoneNumber = '+' +
-            _selected.dialingCode.toString() +
+            _selectedDialogCountry.phoneCode.toString() +
             '' +
             mobileNoController.text;
         addDoctorData['phoneNumber'] = phoneNumber;
@@ -1389,6 +1485,62 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           builder: (context) => AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text('Enter First Name'),
+              ));
+    }
+  }
+
+  void _addHospitalToList() {
+    final addHospitalData = {};
+    final hospitalReferenced = {};
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    if (hospitalNameController.text.trim() != '') {
+      addHospitalData['name'] =
+          toBeginningOfSentenceCase(hospitalNameController.text);
+
+      hospitalReferenced['id'] = Constants.STR_HEALTHORG_HOSPID;
+      addHospitalData['healthOrganizationType'] = hospitalReferenced;
+      final params = json.encode(addHospitalData);
+      print(params.toString());
+
+      hospitalListRepository.addHospitalList(params).then((value) {
+        if (value.isSuccess) {
+          Navigator.pop(context);
+          HospitalsListResult hospitaData = new HospitalsListResult();
+          hospitaData.name = '';
+          hospitaData.healthOrganizationName = value.result?.name;
+          hospitaData.healthOrganizationId = null;
+          hospitaData.healthOrganizationReferenceId = value.result?.id;
+          hospitaData.healthOrganizationTypeId = Constants.STR_HEALTHORG_HOSPID;
+          hospitaData.healthOrganizationTypeName = 'Hospital';
+          hospitaData.pincode = null;
+          hospitaData.specialization = null;
+          hospitaData.stateName = null;
+          hospitaData.addressLine1 = null;
+          hospitaData.addressLine2 = null;
+          hospitaData.phoneNumber = null;
+          hospitaData.phoneNumberTypeId = null;
+          hospitaData.phoneNumberTypeName = null;
+          hospitaData.cityName = null;
+          passHospitalValue(hospitaData, context);
+        } else {
+          Navigator.pop(context);
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text(variable.strAPP_NAME),
+                    content: Text(value.isSuccess.toString()),
+                  ));
+
+          //
+        }
+      });
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text(variable.strAPP_NAME),
+                content: Text('Enter hospital Name'),
               ));
     }
   }
