@@ -430,6 +430,10 @@ class RegimentViewModel extends ChangeNotifier {
   }) async {
     return await RegimentService.undoSaveFormData(
       eid: eid,
+      activityDate: CommonUtil.dateConversionToApiFormat(
+        selectedRegimenDate,
+        isIndianTime: true,
+      ),
     );
   }
 
