@@ -392,6 +392,7 @@ import IQKeyboardManagerSwift
                         dateComponentAfter.minute = min
                         dateComponentAfter.second = sec
                     }
+                    print(dateComponentBefore.description)
                 }
                 if let dateForSchedule = dateFromStringBefore{
                     let strOfDateAndTime = "\(dateForSchedule)"
@@ -406,10 +407,11 @@ import IQKeyboardManagerSwift
                         dateComponentBefore.minute = min
                         dateComponentBefore.second = sec
                     }
+                    print(dateComponentAfter.description)
                 }
                 print(dateComponent.description)
-                print(dateComponentAfter.description)
-                print(dateComponentBefore.description)
+                
+                
                 
             }
             if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
