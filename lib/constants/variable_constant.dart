@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-const String strAPP_NAME = 'QurBook';
+const String strAPP_NAME = 'QurBook US';
 const String strAppPackage =
-    'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
+    'com.qurhealth.qurbook.us'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
-const String iOSAppId = '1526444520';
+const String iOSAppId = '1592260464';
 const String iOSAppStoreLink =
-    'https://apps.apple.com/in/app/qurbook/id1526444520';
+    'https://apps.apple.com/in/app/qurbook/id1592260464';
 //For class add_family_otp
 //web service call
 const String strSrcName = 'sourceName';
@@ -519,7 +519,7 @@ const String strImgNtClear = 'Image not clear';
 const String strGlucUnit = 'mgdl';
 const String strbfood = 'Before Food';
 const String strafood = 'After Food';
-const String strarandom= 'Random';
+const String strarandom = 'Random';
 const String strpulseUnit = '%spo2';
 const String strpulse = 'pulse';
 const String strbpunit = 'mmHg';
@@ -655,17 +655,17 @@ const String alreadySubscribed =
     'You’ve already subscribed to the plan. Selecting this now will renew the plan';
 
 //String for choose Units
-const String str_Weight='Weight';
-const String str_Pounds='Pounds';
-const String str_Kilogram='Kilograms';
+const String str_Weight = 'Weight';
+const String str_Pounds = 'Pounds';
+const String str_Kilogram = 'Kilograms';
 
-const String str_Height='Height';
-const String str_Feet='Feet/Inches';
-const String str_centi='Centimeters';
+const String str_Height = 'Height';
+const String str_Feet = 'Feet/Inches';
+const String str_centi = 'Centimeters';
 
-const String str_Temp='Temperature';
-const String str_celesius='Celisius';
-const String str_far='Farenheit';
+const String str_Temp = 'Temperature';
+const String str_celesius = 'Celisius';
+const String str_far = 'Farenheit';
 
 //Reminders
 //
