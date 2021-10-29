@@ -87,7 +87,8 @@ import IQKeyboardManagerSwift
         notificationCenter.getPendingNotificationRequests { [weak self](data) in
             guard let self = self else { return }
             self.listOfScheduledNotificaitons = data
-            print(data.count)
+            print("total notifications scheduled \(data.count)")
+           
         }
         setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
@@ -305,7 +306,6 @@ import IQKeyboardManagerSwift
                     self.scheduleNotification(message: notifiationToShow)
                 }
             }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
-                
                 self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
             }
             else if call.method == Constants.removeAllReminderMethod{
@@ -325,27 +325,45 @@ import IQKeyboardManagerSwift
     var title = "";
     var des = "";
     var dateComponent:DateComponents = DateComponents();
+    var dateComponentBefore:DateComponents = DateComponents();
+    var dateComponentAfter:DateComponents = DateComponents();
     //Prepare New Notificaion with deatils and trigger
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
-        if let _id =  message["eid"] as? String {
+        var before :Int = 0
+        var after : Int = 0
+       if let _id =  message["eid"] as? String {
             id = _id
         }else{
             return
         }
         if let _title = message[Constants.title] as? String { title = _title}
         if let _des = message[Constants.description] as? String {des = _des}
+        if let _before = message[Constants.before] as? String ,let beforeInt = Int(_before){before = beforeInt}
+        if let _after = message[Constants.after] as? String,let afterInt = Int(_after) {after = afterInt}
+        
         
         if !snooze{
             if let dateNotifiation = message["estart"] as? String{
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 var dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
+                var dateFromStringAfter:Date?
+                var dateFromStringBefore:Date?
+                
                 print(dateNotifiation)
                 print(dateFromString as Any)
                 if let dateToBeTriggered = dateFromString{
-                    if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
-                        dateFromString = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
+                    //                    if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
+                    //                        dateFromString = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
+                    //                    }
+                    
+                    if before > 0{
+                        dateFromStringBefore = Calendar.current.date(byAdding: .minute, value: -before, to: dateToBeTriggered) ?? dateToBeTriggered
                     }
+                    if after > 0{
+                        dateFromStringAfter = Calendar.current.date(byAdding: .minute, value: after, to: dateToBeTriggered) ?? dateToBeTriggered
+                    }
+                    
                 }
                 if let dateForSchedule = dateFromString{
                     let strOfDateAndTime = "\(dateForSchedule)"
@@ -361,7 +379,40 @@ import IQKeyboardManagerSwift
                         dateComponent.second = sec
                     }
                 }
+                if let dateForSchedule = dateFromStringAfter{
+                    let strOfDateAndTime = "\(dateForSchedule)"
+                    let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+                    let strDates = strSplitDateTime[0].components(separatedBy: "-")
+                    let strTime = strSplitDateTime[1].components(separatedBy: ":")
+                    if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                        dateComponentAfter.year = year
+                        dateComponentAfter.month = month
+                        dateComponentAfter.day = day
+                        dateComponentAfter.hour = hour
+                        dateComponentAfter.minute = min
+                        dateComponentAfter.second = sec
+                    }
+                    print(dateComponentBefore.description)
+                }
+                if let dateForSchedule = dateFromStringBefore{
+                    let strOfDateAndTime = "\(dateForSchedule)"
+                    let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+                    let strDates = strSplitDateTime[0].components(separatedBy: "-")
+                    let strTime = strSplitDateTime[1].components(separatedBy: ":")
+                    if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                        dateComponentBefore.year = year
+                        dateComponentBefore.month = month
+                        dateComponentBefore.day = day
+                        dateComponentBefore.hour = hour
+                        dateComponentBefore.minute = min
+                        dateComponentBefore.second = sec
+                    }
+                    print(dateComponentAfter.description)
+                }
                 print(dateComponent.description)
+                
+                
+                
             }
             if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
                 let ids = listOfScheduledNotificaitons.filter({$0.identifier == id})
@@ -401,6 +452,41 @@ import IQKeyboardManagerSwift
         notificationCenter.add(request) { (error) in
             if let error = error {
                 print("Error \(error.localizedDescription)")
+            }
+            self.notificationCenter.getPendingNotificationRequests { data in
+                print("All pending notificaiton count = \(data.count)")
+            }
+        }
+        if after > 0,!snooze{
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = des
+            let identifier = id + "11111"
+            content.userInfo = message as! [AnyHashable : Any]
+            let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentAfter, repeats: false)
+            let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
+            notificationCenter.add(request) { (error) in
+                if let error = error {
+                    print("Error \(error.localizedDescription)")
+                }
+            }
+        }
+        if before > 0,!snooze{
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = des
+            let identifier = id + "00000"
+            
+            content.userInfo = message as! [AnyHashable : Any]
+            
+            let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
+            let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
+            
+            //adding the notification
+            notificationCenter.add(request) { (error) in
+                if let error = error {
+                    print("Error \(error.localizedDescription)")
+                }
             }
         }
     }
