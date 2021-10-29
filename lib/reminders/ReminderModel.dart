@@ -11,6 +11,8 @@ class Reminder {
   String uformname;
   String remindin;
   String remindin_type;
+  String remindbefore;
+  String remindbefore_type;
   String providerid;
   String providername;
   bool alreadyScheduled = false;
@@ -29,6 +31,8 @@ class Reminder {
     this.remindin_type,
     this.providerid,
     this.providername,
+    this.remindbefore,
+    this.remindbefore_type,
     this.evDisabled = false,
   });
 
@@ -43,6 +47,8 @@ class Reminder {
     String uformname,
     String remindin,
     String remindin_type,
+    String remindbefore,
+    String remindbefore_type,
     String providerid,
     String providername,
     bool evDisabled,
@@ -61,6 +67,8 @@ class Reminder {
       providerid: providerid ?? this.providerid,
       providername: providername ?? this.providername,
       evDisabled: evDisabled ?? this.evDisabled,
+      remindbefore: remindbefore ?? this.remindbefore,
+      remindbefore_type: remindbefore_type ?? this.remindbefore_type,
     );
   }
 
@@ -76,6 +84,8 @@ class Reminder {
       'uformname': uformname,
       'remindin': remindin,
       'remindin_type': remindin_type,
+      'remindbefore': remindbefore,
+      'remindbefore_type': remindbefore_type,
       'providerid': providerid,
       'providername': providername,
       'alreadyScheduled': alreadyScheduled,
@@ -95,6 +105,8 @@ class Reminder {
       uformname: map['uformname'],
       remindin: map['remindin'],
       remindin_type: map['remindin_type'],
+      remindbefore: map['remindbefore'],
+      remindbefore_type: map['remindbefore_type'],
       providerid: map['providerid'],
       providername: map['providername'],
       evDisabled: (map['ev_disabled'] ?? '0') == '1',
@@ -126,6 +138,8 @@ class Reminder {
         other.uformname == uformname &&
         other.remindin == remindin &&
         other.remindin_type == remindin_type &&
+        other.remindbefore == remindbefore &&
+        other.remindbefore_type == remindbefore_type &&
         other.providerid == providerid &&
         other.providername == providername &&
         other.evDisabled == evDisabled;
@@ -145,6 +159,6 @@ class Reminder {
         remindin_type.hashCode ^
         providerid.hashCode ^
         providername.hashCode;
-        evDisabled.hashCode;
+    evDisabled.hashCode;
   }
 }

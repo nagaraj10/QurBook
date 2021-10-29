@@ -32,7 +32,8 @@ struct Constants {
     static let title = "title";
     static let description = "description";
     static let notification = "notification";
-    
+    static let after = "remindin";
+    static let before = "remindbefore";
     struct paramaters {
         static let message = "message"
         static let isClose = "isClose"

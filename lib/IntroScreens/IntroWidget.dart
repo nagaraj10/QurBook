@@ -50,7 +50,7 @@ class IntroWidget extends StatelessWidget {
   String getStringForIntro() {
     switch (imageForScreen) {
       case icon_languageIntro:
-        return '150+ Personalized Health Care Plans \n from Trusted Doctors & Hospitals';
+        return '1000 Unique Care Plans across 30 Specialities from Trusted Doctors & Hospitals';
         break;
       case icon_SheelaIntro:
         return 'Use Sheela to Record Vitals, \nTrack Symptoms, and Disease Education';
@@ -66,7 +66,7 @@ class IntroWidget extends StatelessWidget {
         break;
 
       default:
-        return '150+ Personalized Health Care Plans \n from Trusted Doctors & Hospitals';
+        return '1000 Unique Care Plans across 30 Specialities from Trusted Doctors & Hospitals';
     }
   }
 }
