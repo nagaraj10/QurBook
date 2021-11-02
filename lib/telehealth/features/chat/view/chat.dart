@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -64,18 +65,17 @@ class Chat extends StatefulWidget {
   final String message;
   final bool isCareGiver;
 
-  Chat(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
-      this.message,
-      this.isCareGiver})
+  Chat({Key key,
+    @required this.peerId,
+    @required this.peerAvatar,
+    @required this.peerName,
+    @required this.lastDate,
+    @required this.patientId,
+    @required this.patientName,
+    @required this.patientPicture,
+    @required this.isFromVideoCall,
+    this.message,
+    this.isCareGiver})
       : super(key: key);
 
   @override
@@ -120,43 +120,42 @@ class ChatScreen extends StatefulWidget {
   final String message;
   final bool isCareGiver;
 
-  ChatScreen(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
-      this.message,
-      this.isCareGiver})
+  ChatScreen({Key key,
+    @required this.peerId,
+    @required this.peerAvatar,
+    @required this.peerName,
+    @required this.lastDate,
+    @required this.patientId,
+    @required this.patientName,
+    @required this.patientPicture,
+    @required this.isFromVideoCall,
+    this.message,
+    this.isCareGiver})
       : super(key: key);
 
   @override
-  State createState() => ChatScreenState(
-      peerId: peerId,
-      peerAvatar: peerAvatar,
-      peerName: peerName,
-      lastDate: lastDate,
-      patientId: patientId,
-      patientName: patientName,
-      patientPicUrl: patientPicture,
-      isFromVideoCall: isFromVideoCall);
+  State createState() =>
+      ChatScreenState(
+          peerId: peerId,
+          peerAvatar: peerAvatar,
+          peerName: peerName,
+          lastDate: lastDate,
+          patientId: patientId,
+          patientName: patientName,
+          patientPicUrl: patientPicture,
+          isFromVideoCall: isFromVideoCall);
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState(
-      {Key key,
-      @required this.peerId,
-      @required this.peerAvatar,
-      @required this.peerName,
-      @required this.lastDate,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicUrl,
-      @required this.isFromVideoCall});
+  ChatScreenState({Key key,
+    @required this.peerId,
+    @required this.peerAvatar,
+    @required this.peerName,
+    @required this.lastDate,
+    @required this.patientId,
+    @required this.patientName,
+    @required this.patientPicUrl,
+    @required this.isFromVideoCall});
 
   String peerId;
   String peerAvatar;
@@ -180,6 +179,17 @@ class ChatScreenState extends State<ChatScreen> {
   bool isFromVideoCall;
 
   final TextEditingController textEditingController = TextEditingController();
+
+  /*final TextFieldColorizer textEditingController = TextFieldColorizer(
+    {
+      r'^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]|(?:Jan|Mar|May|Jul|Aug|Oct|Dec)))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2]|(?:Jan|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec))\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)(?:0?2|(?:Feb))\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9]|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep))|(?:1[0-2]|(?:Oct|Nov|Dec)))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$'
+          : TextStyle(color: Colors.orange, shadows: kElevationToShadow[2]),
+      'green': TextStyle(color: Colors.green, shadows: kElevationToShadow[2]),
+      'purple': TextStyle(color: Colors.purple, shadows: kElevationToShadow[2]),
+    },
+  );*/
+
+
   var chatEnterMessageController = TextEditingController();
 
   /*final ScrollController listScrollController = ScrollController();*/
@@ -264,13 +274,16 @@ class ChatScreenState extends State<ChatScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'TeleHealth Chat Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime
+          .now()
+          .difference(mInitialTime)
+          .inSeconds} secs'
     });
   }
 
   set_up_audios() async {
     _mPlayer.openAudioSession().then(
-      (value) {
+          (value) {
         _mPlayer.setSubscriptionDuration(
           Duration(
             seconds: 1,
@@ -325,7 +338,7 @@ class ChatScreenState extends State<ChatScreen> {
 
     if (patientName == null || patientName == '') {
       MyProfileModel myProfile =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       patientName = myProfile.result != null
           ? myProfile.result.firstName + ' ' + myProfile.result.lastName
           : '';
@@ -344,7 +357,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   String getProfileURL() {
     MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientPicURL = myProfile.result.profilePicThumbnailUrl;
 
     return patientPicURL;
@@ -397,25 +410,25 @@ class ChatScreenState extends State<ChatScreen> {
               : '';
           doctorDeviceToken = appointmentResult?.deviceToken != null
               ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
-                  ? appointmentResult
-                      .deviceToken?.doctor?.payload[0]?.deviceTokenId
-                  : ''
+              ? appointmentResult
+              .deviceToken?.doctor?.payload[0]?.deviceTokenId
+              : ''
               : '';
           patientDeviceToken = '';
           if (appointmentResult?.deviceToken != null) {
             if (appointmentResult?.deviceToken?.patient?.isSuccess &&
                 appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
                 appointmentResult
-                        ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
+                    ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess &&
+                ?.deviceToken?.parentMember?.isSuccess &&
                 appointmentResult
                     ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload[0]
-                        ?.deviceTokenId !=
+                    ?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
@@ -456,9 +469,12 @@ class ChatScreenState extends State<ChatScreen> {
   Future uploadFile(String path) async {
     try {
       File file = File(path);
-      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String fileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
       Reference reference =
-          FirebaseStorage.instance.ref().child(fileName + '.m4a');
+      FirebaseStorage.instance.ref().child(fileName + '.m4a');
       UploadTask uploadTask = reference.putFile(file);
 
       String url;
@@ -495,7 +511,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
     // final file = await CommonUtil.downloadFile(url, 'mp3');
     await _mPlayer.startPlayer(fromURI: url).whenComplete(
-      () {
+          () {
         setState(() {
           isPlaying = false;
         });
@@ -534,7 +550,10 @@ class ChatScreenState extends State<ChatScreen> {
           .collection(STR_MESSAGES)
           .doc(groupChatId)
           .collection(groupChatId)
-          .doc(DateTime.now().millisecondsSinceEpoch.toString());
+          .doc(DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString());
 
       FirebaseFirestore.instance.runTransaction((transaction) async {
         await transaction.set(
@@ -574,8 +593,8 @@ class ChatScreenState extends State<ChatScreen> {
     return count;
   }
 
-  void addChatList(
-      String content, int type, bool isMuted, bool isTempChatDisable) async {
+  void addChatList(String content, int type, bool isMuted,
+      bool isTempChatDisable) async {
     await FirebaseFirestore.instance
         .collection(STR_CHAT_LIST)
         .doc(patientId)
@@ -628,8 +647,8 @@ class ChatScreenState extends State<ChatScreen> {
     } catch (e) {}
   }
 
-  openDownloadAlert(
-      String fileUrl, BuildContext contxt, bool isPdf, String type) {
+  openDownloadAlert(String fileUrl, BuildContext contxt, bool isPdf,
+      String type) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -769,197 +788,199 @@ class ChatScreenState extends State<ChatScreen> {
       return Row(
         children: <Widget>[
           document[STR_TYPE] == 0
-              // Text
+          // Text
               ? Card(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                          bottomRight: Radius.circular(25))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .6,
-                    ),
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                      ),
-                    ),
-                    /*child: Text(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 1.sw * .6,
+              ),
+              padding: const EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+              ),
+              /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
                     ),*/
-                    child: RichText(
-                      text: TextSpan(
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 16.0.sp,
+                    ),
+                    children: textSpanList),
+              ),
+            ),
+          )
+              : document[STR_TYPE] == 1
+          // Image
+              ? Container(
+            child: FlatButton(
+              child: Material(
+                child: CachedNetworkImage(
+                  placeholder: (context, url) =>
+                      Container(
+                        child: CommonCircularIndicator(),
+                        width: 200.0.h,
+                        height: 200.0.h,
+                        padding: EdgeInsets.all(70.0),
+                        decoration: BoxDecoration(
+                          color: greyColor2,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                  errorWidget: (context, url, error) =>
+                      Material(
+                        child: Image.asset(
+                          'images/img_not_available.jpeg',
+                          width: 200.0.h,
+                          height: 200.0.h,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                      ),
+                  imageUrl: document[STR_CONTENT],
+                  width: 200.0.h,
+                  height: 200.0.h,
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                clipBehavior: Clip.hardEdge,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            FullPhoto(url: document[STR_CONTENT])));
+              },
+              onLongPress: () {
+                openDownloadAlert(
+                    document[STR_CONTENT], context, false, '.jpg');
+              },
+              padding: EdgeInsets.all(0),
+            ),
+            margin: EdgeInsets.only(
+                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                right: 10.0),
+          )
+          // Pdf
+              : document[STR_TYPE] == 2
+              ? Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: InkWell(
+              onTap: () {
+                goToPDFViewBasedonURL(document[STR_CONTENT]);
+              },
+              onLongPress: () {
+                openDownloadAlert(document[STR_CONTENT], context,
+                    false, '.pdf');
+              },
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 1.sw * .6,
+                ),
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.picture_as_pdf,
+                      size: 14,
+                      color: Colors.black54,
+                    ),
+                    SizedBoxWidget(
+                      width: 5.0.w,
+                    ),
+                    getPdfViewLabel(document),
+                  ],
+                ),
+              ),
+            ),
+          )
+          // voice card
+              : document[STR_TYPE] == 3
+              ? Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Material(
+              borderRadius: BorderRadius.circular(10.0),
+              elevation: 2.0,
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                width: 1.sw / 3,
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CircleAvatar(
+                        child: Text(
+                          patientName.substring(0, 1),
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontSize: 16.0.sp,
                           ),
-                          children: textSpanList),
+                        )),
+                    IconButton(
+                      icon: Icon(currentPlayedVoiceURL ==
+                          document[STR_CONTENT]
+                          ? isPlaying
+                          ? Icons.pause_circle_filled
+                          : Icons.play_circle_filled
+                          : Icons.play_circle_filled),
+                      onPressed: () {
+                        isPlaying
+                            ? flutterStopPlayer(
+                            document[STR_CONTENT])
+                            : flutterPlaySound(
+                            document[STR_CONTENT]);
+                      },
                     ),
-                  ),
-                )
-              : document[STR_TYPE] == 1
-                  // Image
-                  ? Container(
-                      child: FlatButton(
-                        child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CommonCircularIndicator(),
-                              width: 200.0.h,
-                              height: 200.0.h,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: greyColor2,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/img_not_available.jpeg',
-                                width: 200.0.h,
-                                height: 200.0.h,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: document[STR_CONTENT],
-                            width: 200.0.h,
-                            height: 200.0.h,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          clipBehavior: Clip.hardEdge,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      FullPhoto(url: document[STR_CONTENT])));
-                        },
-                        onLongPress: () {
-                          openDownloadAlert(
-                              document[STR_CONTENT], context, false, '.jpg');
-                        },
-                        padding: EdgeInsets.all(0),
-                      ),
-                      margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
-                    )
-                  // Pdf
-                  : document[STR_TYPE] == 2
-                      ? Card(
-                          color: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(25))),
-                          child: InkWell(
-                            onTap: () {
-                              goToPDFViewBasedonURL(document[STR_CONTENT]);
-                            },
-                            onLongPress: () {
-                              openDownloadAlert(document[STR_CONTENT], context,
-                                  false, '.pdf');
-                            },
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(25),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.picture_as_pdf,
-                                    size: 14,
-                                    color: Colors.black54,
-                                  ),
-                                  SizedBoxWidget(
-                                    width: 5.0.w,
-                                  ),
-                                  getPdfViewLabel(document),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      // voice card
-                      : document[STR_TYPE] == 3
-                          ? Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(10.0),
-                                elevation: 2.0,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  width: 1.sw / 3,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      CircleAvatar(
-                                          child: Text(
-                                        patientName.substring(0, 1),
-                                        style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                        ),
-                                      )),
-                                      IconButton(
-                                        icon: Icon(currentPlayedVoiceURL ==
-                                                document[STR_CONTENT]
-                                            ? isPlaying
-                                                ? Icons.pause_circle_filled
-                                                : Icons.play_circle_filled
-                                            : Icons.play_circle_filled),
-                                        onPressed: () {
-                                          isPlaying
-                                              ? flutterStopPlayer(
-                                                  document[STR_CONTENT])
-                                              : flutterPlaySound(
-                                                  document[STR_CONTENT]);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              child: Image.asset(
-                                'images/${document[STR_CONTENT]}.gif',
-                                width: 100.0.h,
-                                height: 100.0.h,
-                                fit: BoxFit.cover,
-                              ),
-                              margin: EdgeInsets.only(
-                                  bottom:
-                                      isLastMessageRight(index) ? 20.0 : 10.0,
-                                  right: 10.0),
-                            ),
+                  ],
+                ),
+              ),
+            ),
+          )
+              : Container(
+            child: Image.asset(
+              'images/${document[STR_CONTENT]}.gif',
+              width: 100.0.h,
+              height: 100.0.h,
+              fit: BoxFit.cover,
+            ),
+            margin: EdgeInsets.only(
+                bottom:
+                isLastMessageRight(index) ? 20.0 : 10.0,
+                right: 10.0),
+          ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -972,248 +993,252 @@ class ChatScreenState extends State<ChatScreen> {
               children: <Widget>[
                 isLastMessageLeft(index)
                     ? Material(
-                        child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 35.0.h,
-                                  height: 35.0.h,
-                                  padding: EdgeInsets.all(10.0),
-                                ),
-                            imageUrl: peerAvatar,
+                  child: CachedNetworkImage(
+                      placeholder: (context, url) =>
+                          Container(
+                            child: CommonCircularIndicator(),
                             width: 35.0.h,
                             height: 35.0.h,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => Container(
-                                  height: 35.0.h,
-                                  width: 35.0.h,
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                      child: Text(
-                                    peerName != null && peerName != ''
-                                        ? peerName[0].toString().toUpperCase()
-                                        : '',
-                                    style: TextStyle(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 16.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )),
+                            padding: EdgeInsets.all(10.0),
+                          ),
+                      imageUrl: peerAvatar,
+                      width: 35.0.h,
+                      height: 35.0.h,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          Container(
+                            height: 35.0.h,
+                            width: 35.0.h,
+                            color: Colors.grey[200],
+                            child: Center(
+                                child: Text(
+                                  peerName != null && peerName != ''
+                                      ? peerName[0].toString().toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 )),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                      )
+                          )),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(18.0),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                )
                     : Container(width: 35.0.w),
                 document[STR_TYPE] == 0
                     ? Card(
-                        color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(25),
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25))),
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 1.sw * .6,
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25))),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: 1.sw * .6,
+                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0.sp,
                           ),
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(25),
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.0.sp,
-                                ),
-                                children: textSpanList),
-                          ),
-                        ),
-                      )
+                          children: textSpanList),
+                    ),
+                  ),
+                )
                     : document[STR_TYPE] == 1
-                        ? Container(
-                            child: FlatButton(
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CommonCircularIndicator(),
-                                    width: 200.0.h,
-                                    height: 200.0.h,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                      color: greyColor2,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      'images/img_not_available.jpeg',
-                                      width: 200.0.h,
-                                      height: 200.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: document[STR_CONTENT],
-                                  width: 200.0.h,
-                                  height: 200.0.h,
-                                  fit: BoxFit.cover,
+                    ? Container(
+                  child: FlatButton(
+                    child: Material(
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) =>
+                            Container(
+                              child: CommonCircularIndicator(),
+                              width: 200.0.h,
+                              height: 200.0.h,
+                              padding: EdgeInsets.all(70.0),
+                              decoration: BoxDecoration(
+                                color: greyColor2,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
                                 ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                                clipBehavior: Clip.hardEdge,
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: document[STR_CONTENT])));
-                              },
-                              onLongPress: () {
-                                openDownloadAlert(document[STR_CONTENT],
-                                    context, false, '.jpg');
-                              },
-                              padding: EdgeInsets.all(0),
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
-                          )
-                        : document[STR_TYPE] == 2
-                            ? Card(
-                                color: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25))),
-                                child: InkWell(
-                                  onTap: () {
-                                    goToPDFViewBasedonURL(
-                                        document[STR_CONTENT]);
-                                  },
-                                  onLongPress: () {
-                                    openDownloadAlert(document[STR_CONTENT],
-                                        context, false, '.pdf');
-                                  },
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 1.sw * .6,
-                                    ),
-                                    padding: const EdgeInsets.all(15.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.picture_as_pdf,
-                                          size: 14,
-                                          color: Colors.black54,
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 5.0.w,
-                                        ),
-                                        Text(
-                                          'Click to view PDF',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : document[STR_TYPE] == 3
-                                ? Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      elevation: 2.0,
-                                      child: Container(
-                                        padding: EdgeInsets.all(10.0),
-                                        width: 1.sw / 3,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            CircleAvatar(
-                                                child: Text(peerName != null &&
-                                                        peerName != ''
-                                                    ? peerName.substring(0, 1)
-                                                    : '')),
-                                            IconButton(
-                                              icon: Icon(currentPlayedVoiceURL ==
-                                                      document[STR_CONTENT]
-                                                  ? isPlaying
-                                                      ? Icons
-                                                          .pause_circle_filled
-                                                      : Icons.play_circle_filled
-                                                  : Icons.play_circle_filled),
-                                              onPressed: () {
-                                                isPlaying
-                                                    ? flutterStopPlayer(
-                                                        document[STR_CONTENT])
-                                                    : flutterPlaySound(
-                                                        document[STR_CONTENT]);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    child: Image.asset(
-                                      'images/${document[STR_CONTENT]}.gif',
-                                      width: 100.0.h,
-                                      height: 100.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    margin: EdgeInsets.only(
-                                        bottom: isLastMessageRight(index)
-                                            ? 20.0
-                                            : 10.0,
-                                        right: 10.0),
-                                  ),
+                        errorWidget: (context, url, error) =>
+                            Material(
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 200.0.h,
+                                height: 200.0.h,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                            ),
+                        imageUrl: document[STR_CONTENT],
+                        width: 200.0.h,
+                        height: 200.0.h,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8.0)),
+                      clipBehavior: Clip.hardEdge,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FullPhoto(
+                                      url: document[STR_CONTENT])));
+                    },
+                    onLongPress: () {
+                      openDownloadAlert(document[STR_CONTENT],
+                          context, false, '.jpg');
+                    },
+                    padding: EdgeInsets.all(0),
+                  ),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
+                    : document[STR_TYPE] == 2
+                    ? Card(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25))),
+                  child: InkWell(
+                    onTap: () {
+                      goToPDFViewBasedonURL(
+                          document[STR_CONTENT]);
+                    },
+                    onLongPress: () {
+                      openDownloadAlert(document[STR_CONTENT],
+                          context, false, '.pdf');
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw * .6,
+                      ),
+                      padding: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(
+                            new CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.picture_as_pdf,
+                            size: 14,
+                            color: Colors.black54,
+                          ),
+                          SizedBoxWidget(
+                            width: 5.0.w,
+                          ),
+                          Text(
+                            'Click to view PDF',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    : document[STR_TYPE] == 3
+                    ? Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Color(
+                        new CommonUtil().getMyPrimaryColor()),
+                    elevation: 2.0,
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      width: 1.sw / 3,
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          CircleAvatar(
+                              child: Text(peerName != null &&
+                                  peerName != ''
+                                  ? peerName.substring(0, 1)
+                                  : '')),
+                          IconButton(
+                            icon: Icon(currentPlayedVoiceURL ==
+                                document[STR_CONTENT]
+                                ? isPlaying
+                                ? Icons
+                                .pause_circle_filled
+                                : Icons.play_circle_filled
+                                : Icons.play_circle_filled),
+                            onPressed: () {
+                              isPlaying
+                                  ? flutterStopPlayer(
+                                  document[STR_CONTENT])
+                                  : flutterPlaySound(
+                                  document[STR_CONTENT]);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  child: Image.asset(
+                    'images/${document[STR_CONTENT]}.gif',
+                    width: 100.0.h,
+                    height: 100.0.h,
+                    fit: BoxFit.cover,
+                  ),
+                  margin: EdgeInsets.only(
+                      bottom: isLastMessageRight(index)
+                          ? 20.0
+                          : 10.0,
+                      right: 10.0),
+                ),
               ],
             ),
             // Time
             isLastMessageLeft(index)
                 ? Container(
-                    child: Text(
-                      getFormattedDateTime(
-                          (document[STR_TIME_STAMP] as Timestamp)
-                              .toDate()
-                              .toString()),
-                      style: TextStyle(
-                          color: greyColor,
-                          fontSize: 14.0.sp,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                  )
+              child: Text(
+                getFormattedDateTime(
+                    (document[STR_TIME_STAMP] as Timestamp)
+                        .toDate()
+                        .toString()),
+                style: TextStyle(
+                    color: greyColor,
+                    fontSize: 14.0.sp,
+                    fontStyle: FontStyle.italic),
+              ),
+              margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+            )
                 : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1226,7 +1251,7 @@ class ChatScreenState extends State<ChatScreen> {
   Widget getPdfViewLabel(DocumentSnapshot document) {
     if (document[STR_TIME_STAMP] != null && document[STR_TIME_STAMP] != '') {
       DateTime dateTimeFromServerTimeStamp =
-          (document[STR_TIME_STAMP] as Timestamp).toDate();
+      (document[STR_TIME_STAMP] as Timestamp).toDate();
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
@@ -1268,10 +1293,16 @@ class ChatScreenState extends State<ChatScreen> {
     return formattedDate;
   }
 
+  String getFormattedDateTimeChoose(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTimeStamp);
+    return formattedDate;
+  }
+
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
-            listMessage != null &&
-            listMessage[index - 1][STR_ID_FROM] == patientId) ||
+        listMessage != null &&
+        listMessage[index - 1][STR_ID_FROM] == patientId) ||
         index == 0) {
       return true;
     } else {
@@ -1281,8 +1312,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
-            listMessage != null &&
-            listMessage[index - 1][STR_ID_FROM] != patientId) ||
+        listMessage != null &&
+        listMessage[index - 1][STR_ID_FROM] != patientId) ||
         index == 0) {
       return true;
     } else {
@@ -1314,13 +1345,13 @@ class ChatScreenState extends State<ChatScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(new CommonUtil().getMyPrimaryColor()),
-              Color(new CommonUtil().getMyGredientColor())
-            ],
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                ],
                 stops: [
-              0.3,
-              1.0
-            ])),
+                  0.3,
+                  1.0
+                ])),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1360,27 +1391,27 @@ class ChatScreenState extends State<ChatScreen> {
                       children: [
                         !isChatDisable && isCareGiver
                             ? IconButton(
-                                onPressed: () {
-                                  CommonUtil().CallbackAPIFromChat(
-                                      patientId,
-                                      peerId,
-                                      (widget.peerName ?? "").length > 0
-                                          ? widget
-                                              .peerName?.capitalizeFirstofEach
-                                          : '');
-                                },
-                                icon: Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 24.0.h,
-                                ),
-                              )
+                          onPressed: () {
+                            CommonUtil().CallbackAPIFromChat(
+                                patientId,
+                                peerId,
+                                (widget.peerName ?? "").length > 0
+                                    ? widget
+                                    .peerName?.capitalizeFirstofEach
+                                    : '');
+                          },
+                          icon: Icon(
+                            Icons.call,
+                            color: Colors.white,
+                            size: 24.0.h,
+                          ),
+                        )
                             : SizedBoxWithChild(
-                                height: 24.0.h,
-                                width: 24.0.h,
-                                child:
-                                    CommonUtil().getNotificationIcon(context),
-                              ),
+                          height: 24.0.h,
+                          width: 24.0.h,
+                          child:
+                          CommonUtil().getNotificationIcon(context),
+                        ),
                         SizedBoxWithChild(
                           height: 24.0.h,
                           width: 24.0.h,
@@ -1461,20 +1492,22 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget moreOptionsPopup() => PopupMenuButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: Colors.white,
-      ),
-      color: Colors.white,
-      padding: EdgeInsets.only(left: 1, right: 2),
-      onSelected: (newValue) {
-        if (newValue == 0) {
-          isSearchVisible = true;
-          showSearch();
-        }
-      },
-      itemBuilder: (context) => [
+  Widget moreOptionsPopup() =>
+      PopupMenuButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: Colors.white,
+          ),
+          color: Colors.white,
+          padding: EdgeInsets.only(left: 1, right: 2),
+          onSelected: (newValue) {
+            if (newValue == 0) {
+              isSearchVisible = true;
+              showSearch();
+            }
+          },
+          itemBuilder: (context) =>
+          [
             PopupMenuItem(
               value: 0,
               child: Text(
@@ -1565,97 +1598,98 @@ class ChatScreenState extends State<ChatScreen> {
                     width: 40.0.h,
                     fit: BoxFit.cover, errorBuilder: (BuildContext context,
                         Object exception, StackTrace stackTrace) {
-                  return Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Colors.grey[200],
-                    child: Center(
-                        child: Text(
-                      widget.peerName != null && widget.peerName != ''
-                          ? widget.peerName[0].toString().toUpperCase()
-                          : '',
-                      style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )),
-                  );
-                }),
+                      return Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                            child: Text(
+                              widget.peerName != null && widget.peerName != ''
+                                  ? widget.peerName[0].toString().toUpperCase()
+                                  : '',
+                              style: TextStyle(
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor()),
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            )),
+                      );
+                    }),
               ),
               SizedBox(
                 width: 15.0.w,
               ),
               Container(
                   child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                        widget.peerName != null && widget.peerName != ''
-                            ? widget.peerName?.capitalizeFirstofEach
-                            : '' /* toBeginningOfSentenceCase(widget.peerName) */,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: variable.font_poppins,
-                            fontSize: 16.0.sp,
-                            color: Colors.white)),
-                    !isCareGiverApi
-                        ? Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Booking Id: ' + bookingId,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: variable.font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    'Next Appointment: ' +
-                                        getFormattedDateTimeAppbar(
-                                            nextAppointmentDate),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: variable.font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    toBeginningOfSentenceCase(
-                                        'Last Appointment: ' +
-                                            getFormattedDateTimeAppbar(
-                                                lastAppointmentDate)),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: variable.font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                    Text(
-                      widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
-                          : '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontFamily: variable.font_poppins,
-                          fontSize: 12.0.sp,
-                          color: Colors.white),
-                    )
-                  ],
-                ),
-              ))
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            widget.peerName != null && widget.peerName != ''
+                                ? widget.peerName?.capitalizeFirstofEach
+                                : '' /* toBeginningOfSentenceCase(widget.peerName) */,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 16.0.sp,
+                                color: Colors.white)),
+                        !isCareGiverApi
+                            ? Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Booking Id: ' + bookingId,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: variable.font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                              Text(
+                                  'Next Appointment: ' +
+                                      getFormattedDateTimeAppbar(
+                                          nextAppointmentDate),
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: variable.font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                              Text(
+                                  toBeginningOfSentenceCase(
+                                      'Last Appointment: ' +
+                                          getFormattedDateTimeAppbar(
+                                              lastAppointmentDate)),
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: variable.font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                            ],
+                          ),
+                        )
+                            : SizedBox.shrink(),
+                        Text(
+                          widget.lastDate != null
+                              ? LAST_RECEIVED + widget.lastDate
+                              : '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontFamily: variable.font_poppins,
+                              fontSize: 12.0.sp,
+                              color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ))
             ],
           ),
         );
@@ -1672,98 +1706,98 @@ class ChatScreenState extends State<ChatScreen> {
           child: _patientChatBar()),
       floatingActionButton: isSearchVisible
           ? Padding(
-              // padding: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.only(
-                top: 250.0,
+        // padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(
+          top: 250.0,
+        ),
+        child: Column(
+          children: <Widget>[
+            // SpeedDial
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
               ),
-              child: Column(
-                children: <Widget>[
-                  // SpeedDial
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
-                    ),
-                    child: Container(
-                      height: 1.sw * 0.1,
-                      width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
-                        heroTag: null,
-                        onPressed: () async {
-                          firstTime = false;
-                          if (commonIndex < indexList.length - 1) {
-                            commonIndex = commonIndex + 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
-                          } else {
-                            toast.getToast('No more data', Colors.red);
-                          }
-                        },
-                        child: Icon(Icons.arrow_upward),
-                      ),
-                    ),
-                  ),
-                  SizedBoxWidget(
-                    height: 5.0.h,
-                  ),
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
-                    ),
-                    child: Container(
-                      height: 1.sw * 0.1,
-                      width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
-                        heroTag: null,
-                        onPressed: () async {
-                          firstTime = false;
-                          if (commonIndex > 0) {
-                            commonIndex = commonIndex - 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
-                          } else {
-                            toast.getToast('No more data', Colors.red);
-                          }
-                        },
-                        child: Icon(Icons.arrow_downward),
-                      ),
-                    ),
-                  ),
-                ],
+              child: Container(
+                height: 1.sw * 0.1,
+                width: 1.sw * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    firstTime = false;
+                    if (commonIndex < indexList.length - 1) {
+                      commonIndex = commonIndex + 1;
+                      listScrollController.scrollTo(
+                          index: indexList[commonIndex],
+                          duration: Duration(milliseconds: 100));
+                    } else {
+                      toast.getToast('No more data', Colors.red);
+                    }
+                  },
+                  child: Icon(Icons.arrow_upward),
+                ),
               ),
-            )
+            ),
+            SizedBoxWidget(
+              height: 5.0.h,
+            ),
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
+              ),
+              child: Container(
+                height: 1.sw * 0.1,
+                width: 1.sw * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    firstTime = false;
+                    if (commonIndex > 0) {
+                      commonIndex = commonIndex - 1;
+                      listScrollController.scrollTo(
+                          index: indexList[commonIndex],
+                          duration: Duration(milliseconds: 100));
+                    } else {
+                      toast.getToast('No more data', Colors.red);
+                    }
+                  },
+                  child: Icon(Icons.arrow_downward),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
           : Container(),
       body: isLoading
           ? Center(
-              child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()),
-            ))
+          child: CircularProgressIndicator(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ))
           : Stack(
+        children: <Widget>[
+          Container(
+            color: Colors.grey[300],
+            child: Column(
               children: <Widget>[
-                Container(
-                  color: Colors.grey[300],
-                  child: Column(
-                    children: <Widget>[
-                      // List of messages
-                      buildListMessage(),
+                // List of messages
+                buildListMessage(),
 
-                      // Sticker
-                      (isShowSticker ? buildSticker() : Container()),
+                // Sticker
+                (isShowSticker ? buildSticker() : Container()),
 
-                      // Input content
-                      !isChatDisable ? buildInput() : SizedBox.shrink(),
-                      SizedBox(
-                        height: 20.0.h,
-                      ),
-                    ],
-                  ),
+                // Input content
+                !isChatDisable ? buildInput() : SizedBox.shrink(),
+                SizedBox(
+                  height: 20.0.h,
                 ),
-
-                // Loading
-                buildLoading()
               ],
             ),
+          ),
+
+          // Loading
+          buildLoading()
+        ],
+      ),
       //onWillPop: onBackPress,
     );
   }
@@ -1883,7 +1917,7 @@ class ChatScreenState extends State<ChatScreen> {
     return Positioned(
       child: isLoading
           ? CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()))
+          color: Color(CommonUtil().getMyPrimaryColor()))
           : Container(),
     );
   }
@@ -1909,7 +1943,7 @@ class ChatScreenState extends State<ChatScreen> {
                   controller: textEditingController,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
-                        RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
+                        RegExp("\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
                   ],
                   decoration: InputDecoration(
                     suffixIcon: SizedBoxWithChild(
@@ -1922,12 +1956,14 @@ class ChatScreenState extends State<ChatScreen> {
                           },
                           child: new Icon(
                             Icons.attach_file,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: Color(
+                                CommonUtil().getMyPrimaryColor()),
                             size: 24,
                           )),
                     ),
                     isDense: true,
-                    contentPadding: EdgeInsets.only(bottom: -10.0, left: 8),
+                    contentPadding: EdgeInsets.only(bottom: -10.0,
+                        left: 8),
                     hintText: "$chatTextFieldHintText",
                     hintStyle: TextStyle(
                       color: Colors.grey,
@@ -1936,15 +1972,21 @@ class ChatScreenState extends State<ChatScreen> {
                     filled: true,
                     fillColor: Colors.white70,
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(12.0)),
                       borderSide:
-                          BorderSide(color: Colors.transparent, width: 2),
+                      BorderSide(color: Colors.transparent, width: 2),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                      borderRadius: BorderRadius.all(
+                          Radius.circular(10.0)),
                       borderSide: BorderSide(color: Colors.transparent),
                     ),
                   ),
+                  /*onChanged: (text){
+                    final val = TextSelection.collapsed(offset: textEditingController.text.length);
+                    textEditingController.selection = val;
+                  },*/
                   /*onSubmitted: (value) =>*/
                 ),
               ),
@@ -1968,40 +2010,41 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             !isFromVideoCall
                 ? Flexible(
-                    flex: 1,
-                    child: new Container(
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                              builder: (context) => AudioRecorder(
-                                arguments: AudioScreenArguments(
-                                  fromVoice: false,
-                                ),
+              flex: 1,
+              child: new Container(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AudioRecorder(
+                              arguments: AudioScreenArguments(
+                                fromVoice: false,
                               ),
                             ),
-                          )
-                              .then((results) {
-                            String audioPath = results[Constants.keyAudioFile];
-                            if (audioPath != null && audioPath != '') {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              uploadFile(audioPath);
-                            }
-                          });
-                        },
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        child: Icon(Icons.mic,
-                            size: 25.0,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
                       ),
-                    ),
-                  )
+                    )
+                        .then((results) {
+                      String audioPath = results[Constants.keyAudioFile];
+                      if (audioPath != null && audioPath != '') {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        uploadFile(audioPath);
+                      }
+                    });
+                  },
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  child: Icon(Icons.mic,
+                      size: 25.0,
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                  padding: EdgeInsets.all(12.0),
+                  shape: CircleBorder(),
+                ),
+              ),
+            )
                 : Container()
           ],
         ),
@@ -2013,47 +2056,47 @@ class ChatScreenState extends State<ChatScreen> {
     return Flexible(
       child: groupChatId == ''
           ? Center(
-              child: CircularProgressIndicator(
-                  color: Color(CommonUtil().getMyPrimaryColor())))
+          child: CircularProgressIndicator(
+              color: Color(CommonUtil().getMyPrimaryColor())))
           : StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseFirestore.instance
-                  .collection(STR_MESSAGES)
-                  .doc(groupChatId)
-                  .collection(groupChatId)
-                  .orderBy(STR_TIME_STAMP, descending: true)
-                  .limit(50)
-                  .snapshots(),
-              builder: (context,
-                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                          color: Color(CommonUtil().getMyPrimaryColor())));
-                } else {
-                  listMessage = snapshot.data.docs;
-                  for (var data in snapshot.data.docs) {
-                    if (data.data()[STR_ID_TO] == patientId &&
-                        data.data()[STR_IS_READ] == false) {
-                      if (data.reference != null) {
-                        FirebaseFirestore.instance
-                            .runTransaction((Transaction myTransaction) async {
-                          await myTransaction
-                              .update(data.reference, {STR_IS_READ: true});
-                        });
-                      }
-                    }
-                  }
-                  return ScrollablePositionedList.builder(
-                    padding: EdgeInsets.all(10.0),
-                    itemBuilder: (context, index) =>
-                        buildItem(index, snapshot.data.docs[index]),
-                    itemCount: snapshot.data.docs.length,
-                    reverse: true,
-                    itemScrollController: listScrollController,
-                  );
+        stream: FirebaseFirestore.instance
+            .collection(STR_MESSAGES)
+            .doc(groupChatId)
+            .collection(groupChatId)
+            .orderBy(STR_TIME_STAMP, descending: true)
+            .limit(50)
+            .snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+                child: CircularProgressIndicator(
+                    color: Color(CommonUtil().getMyPrimaryColor())));
+          } else {
+            listMessage = snapshot.data.docs;
+            for (var data in snapshot.data.docs) {
+              if (data.data()[STR_ID_TO] == patientId &&
+                  data.data()[STR_IS_READ] == false) {
+                if (data.reference != null) {
+                  FirebaseFirestore.instance
+                      .runTransaction((Transaction myTransaction) async {
+                    await myTransaction
+                        .update(data.reference, {STR_IS_READ: true});
+                  });
                 }
-              },
-            ),
+              }
+            }
+            return ScrollablePositionedList.builder(
+              padding: EdgeInsets.all(10.0),
+              itemBuilder: (context, index) =>
+                  buildItem(index, snapshot.data.docs[index]),
+              itemCount: snapshot.data.docs.length,
+              reverse: true,
+              itemScrollController: listScrollController,
+            );
+          }
+        },
+      ),
     );
   }
 
@@ -2061,17 +2104,18 @@ class ChatScreenState extends State<ChatScreen> {
       bool isNotesSelect, List<String> mediaIds) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
-      builder: (context) => MyRecords(
-          argument: MyRecordsArgument(
-              categoryPosition: position,
-              allowSelect: allowSelect,
-              isAudioSelect: isAudioSelect,
-              isNotesSelect: isNotesSelect,
-              selectedMedias: mediaIds,
-              showDetails: false,
-              isFromChat: true,
-              isAssociateOrChat: true,
-              fromClass: 'chats')),
+      builder: (context) =>
+          MyRecords(
+              argument: MyRecordsArgument(
+                  categoryPosition: position,
+                  allowSelect: allowSelect,
+                  isAudioSelect: isAudioSelect,
+                  isNotesSelect: isNotesSelect,
+                  selectedMedias: mediaIds,
+                  showDetails: false,
+                  isFromChat: true,
+                  isAssociateOrChat: true,
+                  fromClass: 'chats')),
     ))
         .then((results) {
       if (results != null) {
@@ -2108,37 +2152,40 @@ class ChatScreenState extends State<ChatScreen> {
   getAlertForFileSend(var healthRecordList) {
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        content: Text(
-          'Send to Dr. ' + peerName != null && peerName != '' ? peerName : '',
-          style: TextStyle(
-            fontSize: 16.0.sp,
-          ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text(
-              'Cancel',
+      builder: (context) =>
+          AlertDialog(
+            content: Text(
+              'Send to Dr. ' + peerName != null && peerName != ''
+                  ? peerName
+                  : '',
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
             ),
-          ),
-          FlatButton(
-            onPressed: () {
-              closeDialog();
-              getMediaURL(healthRecordList);
-            },
-            child: Text(
-              'Send',
-              style: TextStyle(
-                fontSize: 16.0.sp,
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => closeDialog(),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
               ),
-            ),
+              FlatButton(
+                onPressed: () {
+                  closeDialog();
+                  getMediaURL(healthRecordList);
+                },
+                child: Text(
+                  'Send',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -2155,8 +2202,8 @@ class ChatScreenState extends State<ChatScreen> {
         ),
       );
 
-  WidgetSpan buildLinkComponent(
-          String text, String linkToOpen, int index, bool isPatient) =>
+  WidgetSpan buildLinkComponent(String text, String linkToOpen, int index,
+      bool isPatient) =>
       WidgetSpan(
         child: InkWell(
           child: RichText(
@@ -2178,32 +2225,99 @@ class ChatScreenState extends State<ChatScreen> {
         ),
       );
 
+  WidgetSpan buildDateComponent(String text, String linkToOpen, int index,
+      bool isPatient) =>
+      WidgetSpan(
+        child: !isPatient?InkWell(
+          child: Container(
+            margin: EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: RichText(
+                text: TextSpan(
+                  children: getSplittedTextWidget(chooseYourDate, index),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.0.sp,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          onTap: () async {
+            FocusManager.instance.primaryFocus.unfocus();
+            final selectedDate = await showDatePicker(
+              context: context,
+              firstDate: DateTime.now(),
+              lastDate: DateTime(2101),
+              initialDate: DateTime.now(),
+            );
+            if (selectedDate != null) {
+              var getTextValue = textEditingController.text;
+              if (getTextValue != null && getTextValue.isNotEmpty) {
+                textEditingController.text = getTextValue +
+                    ', ' +
+                    '${getFormattedDateTimeChoose(selectedDate.toString())}';
+
+                /*textEditingController.selection = TextSelection(
+                    baseOffset: textEditingController.text.length,
+                    extentOffset: textEditingController.text.length);*/
+              } else {
+                textEditingController.text =
+                '${getFormattedDateTimeChoose(selectedDate.toString())}';
+              }
+            }
+          },
+        ):SizedBox.shrink(),
+      );
+
   List<InlineSpan> linkify(String text, int index, bool isPatient) {
     const String urlPattern = 'https?:/\/\\S+';
+    const String datePattern = '{date}';
+    final RegExp dateRegExp = RegExp('($datePattern)', caseSensitive: false);
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
+    final RegExpMatch dateMatch = dateRegExp.firstMatch(text);
     final RegExpMatch match = linkRegExp.firstMatch(text);
-    if (match == null) {
+
+    if (match == null && dateMatch == null) {
       list.add(TextSpan(children: getSplittedTextWidget(text, index)));
       return list;
     }
 
-    if (match.start > 0) {
+    if ((match?.start ?? 0) > 0) {
       list.add(TextSpan(
           children:
-              getSplittedTextWidget(text.substring(0, match.start), index)));
+          getSplittedTextWidget(text.substring(0, match.start), index)));
     }
 
-    final String linkText = match.group(0);
+    if ((dateMatch?.start ?? 0) > 0) {
+      list.add(TextSpan(
+          children: getSplittedTextWidget(
+              text.substring(0, dateMatch.start), index)));
+    }
+
+    final String linkText = match?.group(0) ?? '';
+    final String dateText = dateMatch?.group(0) ?? '';
     if (linkText.contains(RegExp(urlPattern, caseSensitive: false))) {
       list.add(buildLinkComponent(linkText, linkText, index, isPatient));
-    } else {
-      throw 'Unexpected match: $linkText';
+    }
+
+    if (dateText.contains(RegExp(datePattern, caseSensitive: false))) {
+      list.add(buildDateComponent(dateText, dateText, index, isPatient));
     }
 
     list.addAll(linkify(
-        text.substring(match.start + linkText.length), index, isPatient));
+        text.substring(match != null
+            ? match?.start + linkText?.length
+            : (dateMatch != null ? dateMatch?.start + dateText?.length : 0)),
+        index,
+        isPatient));
 
     return list;
   }
@@ -2222,9 +2336,9 @@ class ChatScreenState extends State<ChatScreen> {
         word = word.replaceAll(REGEX_EMOJI, '');
       }*/
     List<String> tempList =
-        word.length > 1 && word.indexOf(textFieldValue) != -1
-            ? word.split(textFieldValue)
-            : [word, ''];
+    word.length > 1 && word.indexOf(textFieldValue) != -1
+        ? word.split(textFieldValue)
+        : [word, ''];
     int i = 0;
     tempList.forEach((item) {
       if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
@@ -2239,7 +2353,8 @@ class ChatScreenState extends State<ChatScreen> {
             text: '${textFieldValue}',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                background: Paint()..color = Colors.yellow),
+                background: Paint()
+                  ..color = Colors.yellow),
           ),
         ];
       } else {
@@ -2251,15 +2366,17 @@ class ChatScreenState extends State<ChatScreen> {
     return textSpanList;
   }
 
+
   openYoutubeDialog(String url) {
     final videoId = YoutubePlayer.convertUrlToId(url);
     if (videoId != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyYoutubePlayer(
-            videoId: videoId,
-          ),
+          builder: (context) =>
+              MyYoutubePlayer(
+                videoId: videoId,
+              ),
         ),
       );
     } else {
@@ -2271,3 +2388,78 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 }
+
+class TextFieldColorizer extends TextEditingController {
+  final Map<String, TextStyle> map;
+  final Pattern pattern;
+
+  TextFieldColorizer(this.map)
+      : pattern = RegExp(
+      map.keys.map((key) {
+        return key;
+      }).join('|'),
+      multiLine: true);
+
+  @override
+  set text(String newText) {
+    value = value.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText?.length??0),
+      composing: TextRange.empty,
+    );
+  }
+
+  @override
+  TextSpan buildTextSpan({BuildContext context, TextStyle style , bool withComposing}) {
+    final List<InlineSpan> children = [];
+    String patternMatched;
+    String formatText;
+    TextStyle myStyle;
+
+    text.splitMapJoin(
+      pattern,
+      onMatch: (Match match) {
+        myStyle = map[match[0]] ??
+            map[map.keys.firstWhere(
+                  (e) {
+                bool ret = false;
+                RegExp(e).allMatches(text)
+                  ..forEach((element) {
+                    if (element.group(0) == match[0]) {
+                      patternMatched = e;
+                      ret = true;
+                      return true;
+                    }
+                  });
+                return ret;
+              },
+            )];
+
+        if (patternMatched == r"_(.*?)\_") {
+          formatText = match[0].replaceAll("_", " ");
+        } else if (patternMatched == r'\*(.*?)\*') {
+          formatText = match[0].replaceAll("*", " ");
+        } else if (patternMatched == "~(.*?)~") {
+          formatText = match[0].replaceAll("~", " ");
+        } else if (patternMatched == r'```(.*?)```') {
+          formatText = match[0].replaceAll("```", "   ");
+        } else {
+          formatText = match[0];
+        }
+        children.add(TextSpan(
+          text: formatText,
+          style: style.merge(myStyle),
+        ));
+        return "";
+      },
+      onNonMatch: (String text) {
+        children.add(TextSpan(text: text, style: style));
+        return "";
+      },
+    );
+
+    return TextSpan(style: style, children: children);
+
+  }
+}
+
