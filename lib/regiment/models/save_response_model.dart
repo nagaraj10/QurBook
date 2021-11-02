@@ -118,7 +118,7 @@ class ReturnModel {
         message: json['Message'],
         activityName: json['ActivityName'],
         dbg: json['dbg'],
-        context: json['context'],
+        context: json['context']?.toString(),
         eid: json['eid']?.toString(),
       );
 
