@@ -523,8 +523,8 @@ import IQKeyboardManagerSwift
         //
         //            }
         print(response.actionIdentifier)
-        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-        if let data = response.notification.request.content.userInfo as? NSDictionary{
+         
+        if let data = response.notification.request.content.userInfo as? NSDictionary,let controller = navigationController?.children.first as? FlutterViewController{
             if let eId = data["eid"] as? String{
                 if response.actionIdentifier == "Snooze" {
                     
