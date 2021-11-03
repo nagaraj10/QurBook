@@ -406,7 +406,7 @@ class RegimentDataCard extends StatelessWidget {
                     Get.to(
                       RegimentWebView(
                         title: title,
-                        selectedUrl: regimentData.htmltemplate,
+                        selectedUrl: regimentData?.htmltemplate,
                       ),
                     );
                     // CommonUtil().openWebViewNew(
