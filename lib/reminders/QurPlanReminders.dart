@@ -21,9 +21,14 @@ class QurPlanReminders {
     var headers = await headerRequest.getRequestHeadersAuthContents();
     var now = DateTime.now();
     var dayAfterTomorrowDate = DateTime(now.year, now.month, now.day + 2);
-    var today = CommonUtil.dateConversionToApiFormat(now);
-    var dayAfterTomorrow =
-        CommonUtil.dateConversionToApiFormat(dayAfterTomorrowDate);
+    var today = CommonUtil.dateConversionToApiFormat(
+      now,
+      isIndianTime: true,
+    );
+    var dayAfterTomorrow = CommonUtil.dateConversionToApiFormat(
+      dayAfterTomorrowDate,
+      isIndianTime: true,
+    );
     final _baseUrl = Constants.BASE_URL;
     var params = jsonEncode({
       'method': 'get',
