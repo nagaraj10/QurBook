@@ -228,7 +228,7 @@ class AdditionalInfo {
       }
     }
 
-    weight = json['weight'];
+    weight = json['weight']?.toString();
     try {
       heightObj = json['height'] != null
           ? new HeightObj.fromJson(json['height'])
@@ -236,7 +236,7 @@ class AdditionalInfo {
     } catch (e) {}
 
     try {
-      height = json['height'];
+      height = json['height']?.toString();
     } catch (e) {}
 
     try {
