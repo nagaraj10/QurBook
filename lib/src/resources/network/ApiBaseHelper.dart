@@ -581,7 +581,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response.statusCode}');
+            variable.strErrComm + '${response?.statusCode}');
     }
   }
 
@@ -1999,11 +1999,13 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getTags( String jsonData) async {
+  Future<dynamic> getTags(String jsonData) async {
     var responseJson;
     try {
-      var response = await ApiServices.post(_baseUrl + 'reference-value/data-codes',
-          body: '["TAGS"]', headers: await headerRequest.getRequestHeadersAuthContents());
+      var response = await ApiServices.post(
+          _baseUrl + 'reference-value/data-codes',
+          body: '["TAGS"]',
+          headers: await headerRequest.getRequestHeadersAuthContents());
       responseJson = _returnResponse(response);
       print(responseJson.toString());
     } on SocketException {
@@ -2024,7 +2026,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 }
 
 void exitFromApp() async {

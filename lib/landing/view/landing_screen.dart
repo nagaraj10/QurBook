@@ -555,9 +555,11 @@ class _LandingScreenState extends State<LandingScreen> {
       await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
     if (userId != null && userId.isNotEmpty) {
-      MyProfileModel value =
-          await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
-      myProfile = value;
+      try {
+        MyProfileModel value =
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+        myProfile = value;
+      } catch (e) {}
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
