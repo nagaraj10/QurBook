@@ -33,6 +33,9 @@ class SheelaAIVC: UIViewController {
         CloseBTN.setTitle(" ", for: .normal)
         SendBTN.setBackgroundImage(UIImage(named: "Send"), for: .normal)
         CloseBTN.setBackgroundImage(UIImage(named: "Close"), for: .normal)
+        if #available(iOS 13.0, *) {
+            mainTF.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        }
     }
     
     @IBAction func CloseAction(_ sender: UIButton) {
