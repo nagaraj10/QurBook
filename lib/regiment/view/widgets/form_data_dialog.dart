@@ -358,6 +358,28 @@ class FormDataDialogState extends State<FormDataDialog> {
               ),
             ),
             Container(
+                width: 0.75.sw,
+                padding: EdgeInsets.only(
+                  bottom: 10.0.h,
+                  left: 10.0.w,
+                  right: 10.0.w,
+                ),
+                child: Visibility(
+                  child: Text(
+                    (Provider.of<RegimentViewModel>(context,
+                        listen: false)
+                        .regimentMode ==
+                        RegimentMode.Symptoms)
+                        ? symptomsError
+                        : activitiesError,
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      color: Colors.red[500],
+                    ),
+                  ),
+                  visible: widget.canEdit ? false : true,
+                )),
+            Container(
               width: 0.75.sw,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
