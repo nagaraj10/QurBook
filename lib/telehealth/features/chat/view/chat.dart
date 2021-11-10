@@ -1284,8 +1284,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   String getFormattedDateTimeChoose(String datetime) {
     DateTime dateTimeStamp = DateTime.parse(datetime);
-    String formattedDate = DateFormat('MMM dd, yyyy').format(dateTimeStamp);
-    //String formattedDate = DateFormat('yyyy-dd-MM').format(dateTimeStamp);
+    String formattedDate = DateFormat('MMMdd').format(dateTimeStamp);
     return formattedDate;
   }
 
