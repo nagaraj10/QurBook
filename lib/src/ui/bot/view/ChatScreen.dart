@@ -227,6 +227,7 @@ class _ChatScreenState extends State<ChatScreen>
                     variable.icon_language,
                     width: 35.0.sp,
                     height: 35.0.sp,
+                    color: Colors.white,
                   ),
                 ),
                 onSelected: (languageCode) {
