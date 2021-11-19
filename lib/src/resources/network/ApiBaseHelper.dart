@@ -2025,6 +2025,58 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  // API BASE HELPER CLASS
+
+
+
+// True desk API List for no of tickets -- Yogeshwar
+
+  Future<dynamic> getTicketList(url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  // True desk API List for no of ticket types -- Yogeshwar
+  Future<dynamic> getTicketTypesList(url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  // True desk Create Ticket -- Yogeshwar
+  Future<dynamic> createTicket(url) async {
+    var responseJson;
+    try {
+      var bodyData = {
+        'subject': Constants.tckTitle,
+        'issue': Constants.tckDesc,
+        'type': Constants.ticketType, //ask
+        'priority': Constants.tckPriority, //ask
+        'preferredDate': Constants.tckPrefDate
+      };
+      var response = await ApiServices.post(_baseUrl + url,
+          body: json.encode(bodyData),
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 void exitFromApp() async {
