@@ -290,3 +290,9 @@ const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
 const String qr_code_tags='TAGS';
+
+// True desk
+
+const String qr_get_tickets = 'trudesk/ticket/list';
+const String qr_get_ticket_types = 'trudesk/ticket/types';
+const String qr_create_ticket = 'trudesk/create/ticket/by-patient';
