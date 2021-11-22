@@ -63,9 +63,12 @@ import IQKeyboardManagerSwift
             UNUserNotificationCenter.current().delegate = self
             
             let authOptions: UNAuthorizationOptions = [.alert,  .sound]
-            UNUserNotificationCenter.current().requestAuthorization(
-                options: authOptions,
-                completionHandler: {_, _ in })
+            DispatchQueue.main.asyncAfter(deadline: .now()+1, execute:  {
+                UNUserNotificationCenter.current().requestAuthorization(
+                    options: authOptions,
+                    completionHandler: {_, _ in })
+            })
+            
         } else {
             let settings: UIUserNotificationSettings =
             UIUserNotificationSettings(types: [.alert,  .sound], categories: nil)
