@@ -91,6 +91,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+    notificationData?.pagingController.dispose();
   }
 
   @override
