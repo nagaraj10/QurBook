@@ -19,9 +19,12 @@ class FetchNotificationService {
 
   HeaderRequest headerRequest = new HeaderRequest();
 
-  Future<NotificationModel> fetchNotificationList() async {
+  Future<NotificationModel> fetchNotificationList(int page) async {
     return await ApiServices.get(
-      _baseUrl + qr_notification_fetch + DateTime.now().toString(),
+      _baseUrl +
+          qr_notification_fetch +
+          DateTime.now().toString() +
+          "&count=50&page=$page",
       headers: await headerRequest.getRequestHeadersAuthContent(),
     ).then((http.Response response) {
 //          print(response.body);

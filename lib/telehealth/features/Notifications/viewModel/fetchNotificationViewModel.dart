@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 enum LoadingStatus {
   completed,
@@ -18,28 +21,59 @@ class FetchNotificationViewModel extends ChangeNotifier {
   bool selectAllTapped = false;
   NotificationModel notificationModel;
   List<String> deleteLogId = [];
-
+  List<NotificationResult> data = [];
+  int currentPage = 0;
   FetchNotificationViewModel({NotificationModel notificationModel})
       : _notificationModel = notificationModel;
 
   NotificationModel get notifications => _notificationModel;
-
+  final PagingController<int, NotificationResult> pagingController =
+      PagingController(
+    firstPageKey: 0,
+    invisibleItemsThreshold: 1,
+  );
+  static const _pageSize = 50;
   Future<NotificationModel> fetchNotifications() async {
     deleteLogId = [];
     deleteMode = false;
     selectAllTapped = false;
+    currentPage = 0;
+    pagingController.refresh();
+    notifyListeners();
+    //fetchPage(currentPage);
+    // try {
+    //   this.loadingStatus = LoadingStatus.searching;
+    //   notifyListeners();
+    //   currentPage = currentPage + 1;
+    //   NotificationModel notification =
+    //       await _fetchNotificationService.fetchNotificationList(currentPage);
+    //   _notificationModel = notification;
+    //   data.addAll(notification.result);
+    //   this.loadingStatus = LoadingStatus.completed;
+    //   notifyListeners();
+    //   return _notificationModel;
+    // } catch (e) {
+    //   this.loadingStatus = LoadingStatus.empty;
+    //   notifyListeners();
+    // }
+  }
+
+  Future<void> fetchPage(int pageKey) async {
     try {
-      this.loadingStatus = LoadingStatus.searching;
-      notifyListeners();
-      NotificationModel notification =
-          await _fetchNotificationService.fetchNotificationList();
-      _notificationModel = notification;
-      this.loadingStatus = LoadingStatus.completed;
-      notifyListeners();
-      return _notificationModel;
-    } catch (e) {
-      this.loadingStatus = LoadingStatus.empty;
-      notifyListeners();
+      currentPage = currentPage + 1;
+
+      final newdata =
+          await _fetchNotificationService.fetchNotificationList(currentPage);
+      final newItems = newdata.result;
+      final isLastPage = newItems.length < _pageSize;
+      if (isLastPage) {
+        pagingController.appendLastPage(newItems);
+      } else {
+        final nextPageKey = pageKey + newItems.length;
+        pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (error) {
+      pagingController.error = error;
     }
   }
 
@@ -93,8 +127,8 @@ class FetchNotificationViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void clearNotifications() {
-    _notificationModel = null;
-    notifyListeners();
-  }
+  // void clearNotifications() {
+  //   _notificationModel = null;
+  //   notifyListeners();
+  // }
 }
