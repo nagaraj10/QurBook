@@ -33,11 +33,7 @@
         android:allowBackup="false"
         android:fullBackupOnly="false"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="QurBook"
-        android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="m">
+        android:requestLegacyExternalStorage="true" >
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
