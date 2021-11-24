@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -64,14 +65,20 @@ class _NotificationScreen extends State<NotificationScreen> {
   FlutterToast toast = FlutterToast();
   CancelAppointmentViewModel cancelAppointmentViewModel;
   FetchNotificationViewModel notificationData;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
+    // Provider.of<FetchNotificationViewModel>(context, listen: false)
+    //     .fetchNotifications();
     Provider.of<FetchNotificationViewModel>(context, listen: false)
-        .fetchNotifications();
+        .pagingController
+        .addPageRequestListener((pageKey) {
+      Provider.of<FetchNotificationViewModel>(context, listen: false)
+          .fetchPage(pageKey);
+    });
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
-
     super.initState();
   }
 
@@ -84,6 +91,7 @@ class _NotificationScreen extends State<NotificationScreen> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+    notificationData?.pagingController.dispose();
   }
 
   @override
@@ -197,54 +205,64 @@ class _NotificationScreen extends State<NotificationScreen> {
     if (notificationData == null) {
       notificationData = Provider.of<FetchNotificationViewModel>(context);
     }
-    switch (notificationData.loadingStatus) {
-      case LoadingStatus.searching:
-        return CommonCircularIndicator();
-      case LoadingStatus.completed:
-        return (notificationData != null)
-            ? (notificationData.notifications != null)
-                ? (notificationData.notifications?.result != null) &&
-                        (notificationData.notifications?.result.length > 0)
-                    ? listView(notificationData.notifications)
-                    : emptyNotification()
-                : emptyNotification()
-            : emptyNotification();
-      case LoadingStatus.empty:
-      default:
-        return emptyNotification();
-    }
+    return listView(notificationData.pagingController.itemList);
+    // switch (notificationData.loadingStatus) {
+    //   case LoadingStatus.searching:
+    //     return CommonCircularIndicator();
+    //   case LoadingStatus.completed:
+    //     return (notificationData != null)
+    //         ? (notificationData.pagingController.itemList != null)
+    //             ? (notificationData.pagingController.itemList != null) &&
+    //                     (notificationData.pagingController.itemList.length > 0)
+    //                 ? listView(notificationData.pagingController.itemList)
+    //                 : emptyNotification()
+    //             : emptyNotification()
+    //         : emptyNotification();
+    //   case LoadingStatus.empty:
+    //   default:
+    //     return emptyNotification();
+    // }
   }
 
-  Widget listView(NotificationModel notification) {
-    List<NotificationResult> pendingNotification = new List();
-    List<NotificationResult> readNotification = new List();
-    List<NotificationResult> mainNotificationList = new List();
+  Widget listView(List<NotificationResult> notification) {
+    // List<NotificationResult> pendingNotification = new List();
+    // List<NotificationResult> readNotification = new List();
+    // List<NotificationResult> mainNotificationList = new List();
 
-    notification.result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
+    // notification.result.sort((a, b) => b.createdOn.compareTo(a.createdOn));
 
-    for (int i = 0; i < notification.result.length; i++) {
-      if (!notification?.result[i]?.isActionDone &&
-          notification?.result[i]?.isUnread) {
-        //this is for action button notification
-        pendingNotification.add(notification.result[i]);
-      } else if (notification?.result[i]?.isUnread) {
-        //this is for normal notification
-        pendingNotification.add(notification.result[i]);
-      } else {
-        readNotification.add(notification.result[i]);
-      }
+    // for (int i = 0; i < notification.result.length; i++) {
+    //   if (!notification?.result[i]?.isActionDone &&
+    //       notification?.result[i]?.isUnread) {
+    //     //this is for action button notification
+    //     pendingNotification.add(notification.result[i]);
+    //   } else if (notification?.result[i]?.isUnread) {
+    //     //this is for normal notification
+    //     pendingNotification.add(notification.result[i]);
+    //   } else {
+    //     readNotification.add(notification.result[i]);
+    //   }
 
-      mainNotificationList = []
-        ..addAll(pendingNotification)
-        ..addAll(readNotification);
-    }
-
-    return ListView.builder(
-        itemCount: mainNotificationList.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return notificationView(notification: mainNotificationList[index]);
-        });
+    //   mainNotificationList = []
+    //     ..addAll(pendingNotification)
+    //     ..addAll(readNotification);
+    // }
+    return PagedListView(
+      pagingController: notificationData.pagingController,
+      builderDelegate: PagedChildBuilderDelegate<NotificationResult>(
+        itemBuilder: (context, item, index) =>
+            notificationView(notification: item),
+        noItemsFoundIndicatorBuilder: (_) => emptyNotification(),
+        newPageErrorIndicatorBuilder: (_) => emptyNotification(),
+        firstPageErrorIndicatorBuilder: (_) => emptyNotification(),
+      ),
+    );
+    // return ListView.builder(
+    //     itemCount: notification.length,
+    //     shrinkWrap: true,
+    //     itemBuilder: (context, index) {
+    //       return notificationView(notification: notification[index]);
+    //     });
   }
 
   Widget emptyNotification() {
@@ -285,7 +303,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                         notificationData.addTheidToDelete(notification.id);
                       }
                     }
-                  : (notification.isUnread != null && notification?.isUnread)
+                  : (notification?.isUnread ?? false)
                       ? () {
                           var tempRedirectTo = payload?.redirectTo != null &&
                                   payload?.redirectTo != ''
@@ -324,6 +342,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
+                          } else {
+                            readUnreadAction(notification);
                           }
                           // notificationOnTapActions(
                           //     notification?.result[index],
@@ -744,19 +764,19 @@ class _NotificationScreen extends State<NotificationScreen> {
                 if (data != null && data['isSuccess']) {
                   Provider.of<FetchNotificationViewModel>(context,
                       listen: false)
-                    ..clearNotifications()
+                    //..clearNotifications()
                     ..fetchNotifications();
                 } else {
                   Provider.of<FetchNotificationViewModel>(context,
                       listen: false)
-                    ..clearNotifications()
+                    //..clearNotifications()
                     ..fetchNotifications();
                 }
               });
             }
           } else {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-              ..clearNotifications()
+              //..clearNotifications()
               ..fetchNotifications();
           }
         });
@@ -974,9 +994,9 @@ class _NotificationScreen extends State<NotificationScreen> {
     FetchNotificationService().updateNsOnTapAction(body).then((data) {
       if (data != null && data['isSuccess']) {
       } else {}
-      Provider.of<FetchNotificationViewModel>(context, listen: false)
-        ..clearNotifications()
-        ..fetchNotifications();
+      // Provider.of<FetchNotificationViewModel>(context, listen: false)
+      //   //..clearNotifications()
+      //   ..fetchNotifications();
     });
   }
 
@@ -1040,12 +1060,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               if (data != null && data['isSuccess']) {
                                 Provider.of<FetchNotificationViewModel>(context,
                                     listen: false)
-                                  ..clearNotifications()
+                                  //..clearNotifications()
                                   ..fetchNotifications();
                               } else {
                                 Provider.of<FetchNotificationViewModel>(context,
                                     listen: false)
-                                  ..clearNotifications()
+                                  //..clearNotifications()
                                   ..fetchNotifications();
                               }
                             });
@@ -1204,12 +1224,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             if (data != null && data['isSuccess']) {
                               Provider.of<FetchNotificationViewModel>(context,
                                   listen: false)
-                                ..clearNotifications()
+                                //..clearNotifications()
                                 ..fetchNotifications();
                             } else {
                               Provider.of<FetchNotificationViewModel>(context,
                                   listen: false)
-                                ..clearNotifications()
+                                //..clearNotifications()
                                 ..fetchNotifications();
                             }
                           });
