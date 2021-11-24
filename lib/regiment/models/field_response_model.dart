@@ -72,7 +72,7 @@ class FieldModel {
     this.value,
   });
 
-  String fieldid;
+  dynamic fieldid;
   String providerid;
   String formid;
   String title;
@@ -88,7 +88,7 @@ class FieldModel {
   String seq;
   String depth;
   DateTime ts;
-  String deleted;
+  dynamic deleted;
   String value;
 
   factory FieldModel.fromJson(Map<String, dynamic> json) => FieldModel(
