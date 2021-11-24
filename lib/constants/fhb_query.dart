@@ -290,3 +290,5 @@ const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
 const String qr_code_tags='TAGS';
+
+const String retry_payment='appointment/check-retry-appointment?id=';
