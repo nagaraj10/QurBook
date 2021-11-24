@@ -43,15 +43,15 @@ class NotificationActivity : AppCompatActivity() {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val nsID:Int=intent.getIntExtra(NS_ID,0)
         nsManager.cancel(nsID)
-        channelName=intent.getStringExtra(MID)
-        username=intent.getStringExtra(getString(R.string.username))
-        docId=intent.getStringExtra(getString(R.string.docId))
-        docPic=intent.getStringExtra(getString(R.string.docPic))
-        patId=intent.getStringExtra(getString(R.string.pat_id))
-        patName=intent.getStringExtra(getString(R.string.pat_name))
-        patPic=intent.getStringExtra(getString(R.string.pat_pic))
-        callType = intent.getStringExtra(getString(R.string.callType))
-        isWeb = intent.getStringExtra(getString(R.string.web))
+        channelName= intent.getStringExtra(MID)!!
+        username= intent.getStringExtra(getString(R.string.username))!!
+        docId= intent.getStringExtra(getString(R.string.docId))!!
+        docPic= intent.getStringExtra(getString(R.string.docPic))!!
+        patId= intent.getStringExtra(getString(R.string.pat_id))!!
+        patName= intent.getStringExtra(getString(R.string.pat_name))!!
+        patPic= intent.getStringExtra(getString(R.string.pat_pic))!!
+        callType = intent.getStringExtra(getString(R.string.callType))!!
+        isWeb = intent.getStringExtra(getString(R.string.web))!!
         tv_callType.text = intent.getStringExtra(getString(R.string.pro_ns_body))
         listenEvent(id=channelName)
         val handler = Handler()
