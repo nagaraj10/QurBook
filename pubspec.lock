@@ -498,6 +498,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  flashlight:
+    dependency: "direct main"
+    description:
+      name: flashlight
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -608,6 +615,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
+  flutter_logs:
+    dependency: "direct main"
+    description:
+      name: flutter_logs
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.4"
   flutter_math_fork:
     dependency: transitive
     description:
@@ -740,8 +759,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "C:\\Users\\ParvathiM\\commonWidget\\myfhb-flutter-common"
-      relative: false
+      path: "../myfhb-flutter-common"
+      relative: true
     source: path
     version: "0.0.1"
   google_maps_flutter:
@@ -884,6 +903,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  infinite_scroll_pagination:
+    dependency: "direct main"
+    description:
+      name: infinite_scroll_pagination
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   intl:
     dependency: "direct main"
     description:
@@ -1101,6 +1127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.11.1"
+  pin_input_text_field:
+    dependency: transitive
+    description:
+      name: pin_input_text_field
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.1"
   platform:
     dependency: transitive
     description:
@@ -1246,6 +1279,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: transitive
+    description:
+      name: sliver_tools
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5"
+  sms_autofill:
+    dependency: "direct main"
+    description:
+      name: sms_autofill
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   source_span:
     dependency: transitive
     description:
@@ -1295,6 +1342,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "19.3.54"
+  syncfusion_flutter_datepicker:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_datepicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "19.3.54"
   synchronized:
     dependency: transitive
     description:
