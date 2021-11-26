@@ -1368,16 +1368,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   Expanded(
                       child: Row(
                     children: [
-                      widget.isFromHospital
-                          ? commonWidgets.setDoctornameForHos(widget
+                      Container(
+                          constraints: BoxConstraints(
+                              maxWidth: 160.w),
+                          child: widget.isFromHospital
+                              ? commonWidgets.setDoctornameForHos(widget
                               .resultFromHospitalList[widget.doctorListIndex]
                               .doctor
                               .user)
-                          : commonWidgets.setDoctorname(widget
-                                  .isFromFollowReschedule
+                              : commonWidgets.setDoctorname(widget
+                              .isFromFollowReschedule
                               ? widget.docsReschedule[widget.doctorListPos].user
-                              : widget.docs[widget.doctorListPos].user),
-                      commonWidgets.getSizeBoxWidth(10.0),
+                              : widget.docs[widget.doctorListPos].user)),
+
+                      //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
