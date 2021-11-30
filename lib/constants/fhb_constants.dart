@@ -574,7 +574,7 @@ const strRenewal = ' - Renewal';
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =
-    'Data for future events can be entered only 15 minutes prior to the event time';
+    'Future activities can be logged only 15 minutes before the occurrence';
 const tickInfo = 'Please tap on the check mark to log the activity';
 
 const searchHospitals = 'Search Hospitals';
