@@ -433,8 +433,8 @@ class CommonWidgets {
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
                 Object exception, StackTrace stackTrace) {
             return Container(
-              height: 50.0.h,
-              width: 50.0.h,
+              height: 40.0.h,
+              width: 40.0.h,
               color: Colors.grey[200],
               child: Center(
                 child: getFirstLastNameTextDoctorFromHos(docs),
@@ -1355,6 +1355,7 @@ class CommonWidgets {
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
       softWrap: true,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
   }
