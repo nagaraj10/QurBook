@@ -53,6 +53,8 @@ import '../../../../common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
+import 'ChooseDateSlot.dart';
+
 class Chat extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
@@ -226,7 +228,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   bool isCareGiverApi = true;
 
-  bool isDateIconShown = false;
+  /*bool isDateIconShown = false;*/
 
   @override
   void initState() {
@@ -564,9 +566,9 @@ class ChatScreenState extends State<ChatScreen> {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
 
-    setState(() {
+    /* setState(() {
       isDateIconShown = false;
-    });
+    });*/
   }
 
   getReadCount() async {
@@ -1921,73 +1923,79 @@ class ChatScreenState extends State<ChatScreen> {
                 height: 58.0.h,
                 child: Stack(
                   alignment: Alignment.centerRight,
-                    children: [
-                      TextField(
-                        style: TextStyle(fontSize: 16.0.sp),
-                        focusNode: focusNode,
-                        onTap: () {
-                          //isSearchVisible = false;
-                          //_patientDetailOrSearch();
-                        },
-                        controller: textEditingController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp("\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
-                        ],
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.fromLTRB(13, 13, 46, 13),
-                          hintText: "$chatTextFieldHintText",
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16.0.sp,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white70,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                            borderSide:
-                            BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
+                  children: [
+                    TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
+                      focusNode: focusNode,
+                      onTap: () {
+                        //isSearchVisible = false;
+                        //_patientDetailOrSearch();
+                      },
+                      controller: textEditingController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp("\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
+                      ],
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(13, 13, 46, 13),
+                        hintText: "$chatTextFieldHintText",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0.sp,
                         ),
-                        /*onChanged: (text){
+                        filled: true,
+                        fillColor: Colors.white70,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                          borderSide:
+                              BorderSide(color: Colors.transparent, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                      /*onChanged: (text){
                       final val = TextSelection.collapsed(offset: textEditingController.text.length);
                       textEditingController.selection = val;
                       */ /*textEditingController.text = '~$text~';*/ /*
                     },*/
-                        /*onSubmitted: (value) =>*/
-                      ),
-
-                      Container(
-                        child: SizedBoxWithChild(
+                      /*onSubmitted: (value) =>*/
+                    ),
+                    Container(
+                      child: SizedBoxWithChild(
                           width: 46.0.h,
                           height: 46.0.h,
-                          child: !isDateIconShown?FlatButton(
-                              onPressed: () {
-                                recordIds.clear();
-                                FetchRecords(0, true, true, false, recordIds);
-                              },
-                              child: new Icon(
-                                Icons.attach_file,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                size: 22,
-                              )):FlatButton(
-                              onPressed: () {
-                                tapDatePicker();
-                              },
-                              child: new Icon(
-                                Icons.calendar_today,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                size: 22,
-                              )),
-                        ),
-                      )
-                    ],
-
+                          child:
+                              /*!isDateIconShown
+                            ?*/
+                              FlatButton(
+                                  onPressed: () {
+                                    recordIds.clear();
+                                    FetchRecords(
+                                        0, true, true, false, recordIds);
+                                  },
+                                  child: new Icon(
+                                    Icons.attach_file,
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    size: 22,
+                                  ))
+                          /*: FlatButton(
+                                onPressed: () {
+                                  tapDatePicker();
+                                },
+                                child: new Icon(
+                                  Icons.calendar_today,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  size: 22,
+                                )),*/
+                          ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -1996,7 +2004,8 @@ class ChatScreenState extends State<ChatScreen> {
               child: new Container(
                 child: RawMaterialButton(
                   onPressed: () {
-                    onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                    onSendMessage(
+                        textEditingController.text?.replaceAll("#", ""), 0);
                   },
                   elevation: 2.0,
                   fillColor: Colors.white,
@@ -2238,7 +2247,7 @@ class ChatScreenState extends State<ChatScreen> {
                         children: getSplittedTextWidget(chooseYourDate, index),
                         style: TextStyle(
                           color: Colors.black,
-                          fontSize: 15.0.sp,
+                          fontSize: 14.0.sp,
                         ),
                       ),
                     ),
@@ -2246,7 +2255,29 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
                 onTap: () async {
                   FocusManager.instance.primaryFocus.unfocus();
-                  tapDatePicker();
+                  //tapDatePicker();
+                  //Get.to(ChooseDateSlot());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChooseDateSlot()),
+                  ).then((value) {
+                    if (value != null) {
+                      List<String> result = [];
+                      result.add(value);
+                      try {
+                        if (result?.length > 0) {
+                          final removedBrackets = result
+                              .toString()
+                              .substring(2, result.toString().length - 2);
+                          if (removedBrackets.length > 0) {
+                            onSendMessage(removedBrackets.toString(), 0);
+                          }
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    }
+                  });
                 },
               )
             : SizedBox.shrink(),
@@ -2362,8 +2393,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  tapDatePicker() async {
-
+/*tapDatePicker() async {
     final selectedDate = await showDatePicker(
       context: context,
       firstDate: DateTime.now(),
@@ -2377,19 +2407,19 @@ class ChatScreenState extends State<ChatScreen> {
             //', ' +
             ', #${getFormattedDateTimeChoose(selectedDate.toString())}#';
 
-        /*textEditingController.selection = TextSelection(
+        */ /*textEditingController.selection = TextSelection(
                     baseOffset: textEditingController.text.length,
-                    extentOffset: textEditingController.text.length);*/
+                    extentOffset: textEditingController.text.length);*/ /*
       } else {
         textEditingController.text =
-        '#${getFormattedDateTimeChoose(selectedDate.toString())}#';
+            '#${getFormattedDateTimeChoose(selectedDate.toString())}#';
       }
 
-      setState(() {
+      */ /*setState(() {
         isDateIconShown = true;
-      });
+      });*/ /*
     }
-  }
+  }*/
 }
 
 class TextFieldColorizer extends TextEditingController {
