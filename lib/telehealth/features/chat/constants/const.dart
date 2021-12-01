@@ -18,7 +18,7 @@ const popUpChoiceDura = 'Duration';
 const popUpChoiceDefault = 'Default';
 const popUpChoiceSortLabel = 'SORT BY';
 
-const chooseYourDate = 'Choose your date';
+const chooseYourDate = 'CLICK HERE TO SCHEDULE';
 
 //dev
 /*const String firebaseCloudserverToken =
