@@ -135,7 +135,7 @@ dependencies {
 }
 apply plugin: 'com.google.gms.google-services'
 repositories {
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    maven { url 'http://maven.fabric.io/public' }
     mavenCentral()
 
 }
