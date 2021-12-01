@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ChooseDateSlot extends StatefulWidget {
-  const ChooseDateSlot({Key key}) : super(key: key);
+  ChooseDateSlot({Key key}) : super(key: key);
 
   @override
   _ChooseDateSlotState createState() => _ChooseDateSlotState();
@@ -20,33 +23,47 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
   // Map<String, String> selectedDate = {};
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
+    return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        leading: new IconButton(
+          icon: new Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        title: const Text('Schedule'),
+      ),
+      body: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Container(
                 child: SfDateRangePicker(
-                  controller: dateRangePickerController,
-                  selectionColor: Colors.purple,
-                  todayHighlightColor: Colors.purple,
-                  onSelectionChanged: _onSelectionChanged,
-                  selectionMode: DateRangePickerSelectionMode.multiple,
+              controller: dateRangePickerController,
+              selectionColor: Color(CommonUtil().getMyPrimaryColor()),
+              todayHighlightColor: Color(CommonUtil().getMyPrimaryColor()),
+              onSelectionChanged: _onSelectionChanged,
+              enablePastDates: false,
+              selectionMode: DateRangePickerSelectionMode.multiple,
+              monthCellStyle: DateRangePickerMonthCellStyle(
+                  todayTextStyle: TextStyle(color: Colors.black)),
+            )),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  'Selected Dates',
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    'Selected Dates',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              ListView.builder(
-                  padding: EdgeInsets.zero,
+            ),
+            Expanded(
+              child: ListView.builder(
                   shrinkWrap: true,
                   itemCount: finalList.length,
                   itemBuilder: (context, index) {
@@ -61,7 +78,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               removeDate(index);
                             },
                             child: Card(
-                              color: Colors.purple,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                               child: Row(
                                 children: [
                                   Padding(
@@ -121,12 +138,48 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                         ],
                       ),
                     );
-                  })
-            ],
-          ),
+                  }),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 120, vertical: 5),
+                width: double.infinity,
+                child: FlatButton(
+                  child: Text('Ok', style: TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    try {
+                      if (finalList?.length > 0) {
+                        List<String> appendedList = [];
+
+                        for (var array in finalList) {
+                          appendedList.add(getFormattedDateTimeChoose(
+                                  array['date'].toString()) +
+                              ' - ' +
+                              array['selectedSession'].toString());
+                        }
+
+                        Navigator.pop(context, appendedList.toString());
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    } catch (e) {}
+                  },
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  textColor: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  String getFormattedDateTimeChoose(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMMdd').format(dateTimeStamp);
+    return formattedDate;
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
