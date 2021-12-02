@@ -358,7 +358,11 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   Expanded(
                       child: Row(
                     children: [
-                      commonWidgets.setDoctornameForHos(docs[i].doctor.user),
+                      Container(
+                          constraints: BoxConstraints(
+                               maxWidth: 160.w),
+                          child: commonWidgets
+                              .setDoctornameForHos(docs[i].doctor.user)),
                       commonWidgets.getSizeBoxWidth(10.0.w),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -370,7 +374,6 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                           }),
                     ],
                   )),
-                  commonWidgets.getSizeBoxWidth(10.0),
                   /* commonWidgets.getBookMarkedIconNew(docs[i].doctor, () {
                     providerViewModel
                         .bookMarkDoctor(docs[i].doctor, false, 'ListItem')
@@ -380,7 +383,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       }
                     });
                   }),*/
-                  commonWidgets.getSizeBoxWidth(15.0),
+                  //commonWidgets.getSizeBoxWidth(15.0),
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

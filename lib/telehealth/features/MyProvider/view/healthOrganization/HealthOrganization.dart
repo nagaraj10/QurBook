@@ -358,17 +358,24 @@ class _HealthOrganizationState extends State<HealthOrganization> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 5.0.h),
-              AutoSizeText(
-                eachHospitalModel[i].healthOrganization.name != null
-                    ? toBeginningOfSentenceCase(
-                        eachHospitalModel[i].healthOrganization.name)
-                    : '',
-                maxLines: 1,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.start,
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      eachHospitalModel[i].healthOrganization.name != null
+                          ? toBeginningOfSentenceCase(
+                              eachHospitalModel[i].healthOrganization.name)
+                          : '',
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: 5.0.h),
               AutoSizeText(

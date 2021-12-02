@@ -167,39 +167,95 @@ class _NotificationScreen extends State<NotificationScreen> {
         fontsize: 18.0.sp,
         softwrap: true,
       ),
-      actions: (notificationData?.deleteMode ?? false)
-          ? [
-              InkWell(
-                onTap: () {
-                  notificationData.selectOrDeselectAllTapped();
-                },
-                child: Center(
-                  child: Text(
-                    'Select All',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              IconWidget(
-                icon: Icons.delete,
-                colors: Colors.white,
-                size: 24.0.sp,
-                onTap: () {
-                  showDeleteAlert(context);
-                },
-              ),
-              SizedBox(
-                width: 16,
-              )
-            ]
-          : [],
+      actions: [
+        PopupMenuButton<String>(
+          onSelected: handleClick,
+          itemBuilder: (BuildContext context) {
+            return {'Mark All as Read', 'Clear All'}.map((String choice) {
+              return PopupMenuItem<String>(
+                value: choice,
+                child: Text(choice),
+              );
+            }).toList();
+          },
+        ),
+      ],
+
+      // (notificationData?.deleteMode ?? false)
+      //     ? [
+      //         InkWell(
+      //           onTap: () {
+      //             notificationData.selectOrDeselectAllTapped();
+      //           },
+      //           child: Center(
+      //             child: Text(
+      //               'Select All',
+      //               style: TextStyle(
+      //                 color: Colors.white,
+      //               ),
+      //             ),
+      //           ),
+      //         ),
+      //         SizedBox(
+      //           width: 16,
+      //         ),
+      //         IconWidget(
+      //           icon: Icons.delete,
+      //           colors: Colors.white,
+      //           size: 24.0.sp,
+      //           onTap: () {
+      //             showDeleteAlert(context);
+      //           },
+      //         ),
+      //         SizedBox(
+      //           width: 16,
+      //         )
+      //       ]
+      //     : [],
     );
   }
+
+  void handleClick(String value) {
+    switch (value) {
+      case 'Mark All as Read':
+        NotificationOntapRequest req = NotificationOntapRequest();
+        req.logIds = [];
+        req.isMarkAllRead = true;
+        final body = req.toJson();
+        print(body);
+        FetchNotificationService().updateNsOnTapAction(body).then((data) {
+          if (data != null && data['isSuccess']) {
+            Provider.of<FetchNotificationViewModel>(context, listen: false)
+            //..clearNotifications()
+              ..fetchNotifications();
+          } else {
+            Provider.of<FetchNotificationViewModel>(context, listen: false)
+            //..clearNotifications()
+              ..fetchNotifications();
+          }
+        });
+        break;
+      case 'Clear All':
+        var body = {};
+        body["medium"] = "Push";
+        body["clearIds"] = [];
+        body["isClearAll"] = true;
+        print(body);
+        FetchNotificationService().clearNotifications(body).then((data) {
+          if (data != null && data) {
+            Provider.of<FetchNotificationViewModel>(context, listen: false)
+            //..clearNotifications()
+              ..fetchNotifications();
+          } else {
+            Provider.of<FetchNotificationViewModel>(context, listen: false)
+            //..clearNotifications()
+              ..fetchNotifications();
+          }
+        });
+        break;
+    }
+  }
+
 
   Widget notificationBodyView() {
     if (notificationData == null) {
@@ -285,11 +341,11 @@ class _NotificationScreen extends State<NotificationScreen> {
           ? Container()
           : InkWell(
               onLongPress: () {
-                if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
-                  notificationData.deleteMode = true;
-                  notification.deleteSelected = true;
-                  notificationData.addTheidToDelete(notification.id);
-                }
+                // if ((notificationData?.deleteLogId?.length ?? 0) == 0) {
+                //   notificationData.deleteMode = true;
+                //   notification.deleteSelected = true;
+                //   notificationData.addTheidToDelete(notification.id);
+                // }
               },
               splashColor: Color(CommonUtil.secondaryGrey),
               onTap: notificationData.deleteMode
