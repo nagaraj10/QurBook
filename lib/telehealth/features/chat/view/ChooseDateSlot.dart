@@ -15,6 +15,7 @@ class ChooseDateSlot extends StatefulWidget {
 class _ChooseDateSlotState extends State<ChooseDateSlot> {
   var dateList = [];
   var timeList = [];
+  String selectedLabel = "";
   List<Map<String, dynamic>> finalList = [];
   TimeOfDay selectedTime = TimeOfDay.now();
   DateRangePickerController dateRangePickerController =
@@ -57,7 +58,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10.0),
                 child: Text(
-                  'Selected Dates',
+                  selectedLabel,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -184,6 +185,15 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     print(args.value);
+    if (args.value.length > 0) {
+      if (args.value.length > 1) {
+        selectedLabel = "Selected Dates";
+      } else {
+        selectedLabel = "Selected Date";
+      }
+    } else {
+      selectedLabel = "";
+    }
     if (args.value.length > finalList.length) {
       Map<String, dynamic> temp = {};
       temp['date'] = args.value[args.value.length - 1];
