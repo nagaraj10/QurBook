@@ -215,6 +215,59 @@ class _NotificationScreen extends State<NotificationScreen> {
     );
   }
 
+  Future<void> _showNotificationClearDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Alert'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Would you like to clear the notifications?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                var body = {};
+                body["medium"] = "Push";
+                body["clearIds"] = [];
+                body["isClearAll"] = true;
+                print(body);
+                FetchNotificationService()
+                    .clearNotifications(body)
+                    .then((data) {
+                  if (data != null && data) {
+                    Provider.of<FetchNotificationViewModel>(context,
+                        listen: false)
+                      //..clearNotifications()
+                      ..fetchNotifications();
+                  } else {
+                    Provider.of<FetchNotificationViewModel>(context,
+                        listen: false)
+                      //..clearNotifications()
+                      ..fetchNotifications();
+                  }
+                });
+              },
+            ),
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void handleClick(String value) {
     switch (value) {
       case 'Mark All as Read':
@@ -226,36 +279,21 @@ class _NotificationScreen extends State<NotificationScreen> {
         FetchNotificationService().updateNsOnTapAction(body).then((data) {
           if (data != null && data['isSuccess']) {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-            //..clearNotifications()
+              //..clearNotifications()
               ..fetchNotifications();
           } else {
             Provider.of<FetchNotificationViewModel>(context, listen: false)
-            //..clearNotifications()
+              //..clearNotifications()
               ..fetchNotifications();
           }
         });
         break;
       case 'Clear All':
-        var body = {};
-        body["medium"] = "Push";
-        body["clearIds"] = [];
-        body["isClearAll"] = true;
-        print(body);
-        FetchNotificationService().clearNotifications(body).then((data) {
-          if (data != null && data) {
-            Provider.of<FetchNotificationViewModel>(context, listen: false)
-            //..clearNotifications()
-              ..fetchNotifications();
-          } else {
-            Provider.of<FetchNotificationViewModel>(context, listen: false)
-            //..clearNotifications()
-              ..fetchNotifications();
-          }
-        });
+        _showNotificationClearDialog();
+
         break;
     }
   }
-
 
   Widget notificationBodyView() {
     if (notificationData == null) {
