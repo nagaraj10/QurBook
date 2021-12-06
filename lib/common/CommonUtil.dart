@@ -3453,7 +3453,7 @@ class CommonUtil {
   Future<String> downloader(String url) async {
     return await FlutterDownloader.enqueue(
       url: url,
-      savedDir: '/storage/emulated/0/Download/',
+      savedDir: '/storage/emulated/0/Qurbook/',
       showNotification: true,
       // show download progress in status bar (for Android)
       openFileFromNotification:
@@ -3494,7 +3494,7 @@ class CommonUtil {
         }
 
         var path =
-            Platform.isIOS ? directory.path : '/storage/emulated/0/Download';
+            Platform.isIOS ? directory.path : '/storage/emulated/0/Qurbook';
         var file = File('$path/$fileName');
         await file.writeAsBytes(responseJson);
         path = file.path;
