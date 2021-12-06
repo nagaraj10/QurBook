@@ -40,6 +40,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
   TicketViewModel ticketViewModel = TicketViewModel();
   final FocusNode focusNode = FocusNode();
   final ItemScrollController listScrollController = ItemScrollController();
+  final addCommentController = TextEditingController();
 
   final List<Events> listOfEvents = [
     Events(
@@ -180,7 +181,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                   ],
                                 ),
                                 SizedBox(height: 10.0),
-                                _tabWidget(context),
+                                _tabWidget(context, widget.ticketList),
                               ],
                             ),
                           ),
@@ -196,7 +197,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         ));
   }
 
-  Widget _tabWidget(BuildContext context) {
+  Widget _tabWidget(BuildContext context, var ticketList) {
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
           Widget>[
@@ -384,16 +385,19 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                           children: [
                             Expanded(
                               child: Container(
-                                child: _getChatWidget(context),
-                                /*widget.ticketList.comments != null &&
-                                      widget.ticketList.comments.isNotEmpty
-                                  ? _getChatWidget(context)
-                                  : Container(
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Text('No Comments Found !'),
-                                      ),
-                                    ),*/
+                                child: //_getChatWidget(context, ticketList),
+                                    widget.ticketList.comments != null &&
+                                            widget
+                                                .ticketList.comments.isNotEmpty
+                                        ? _getChatWidget(
+                                            context, widget.ticketList)
+                                        : Container(
+                                            alignment: Alignment.center,
+                                            child: Center(
+                                              child:
+                                                  Text('No Comments Found !'),
+                                            ),
+                                          ),
                               ),
                             ),
                             Row(
@@ -468,7 +472,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                   child: new Container(
                                     child: RawMaterialButton(
                                       onPressed: () {
-                                        //onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                                        onSendMessage(
+                                            addCommentController.text
+                                                ?.replaceAll("#", ""),
+                                            0,
+                                            ticketList);
                                       },
                                       elevation: 2.0,
                                       fillColor: Colors.white,
@@ -586,10 +594,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
     }
   }
 
-  Widget _getChatWidget(BuildContext context) {
+  Widget _getChatWidget(BuildContext context, var ticketList) {
     return ScrollablePositionedList.builder(
       physics: BouncingScrollPhysics(),
-      itemCount: 5,
+      itemCount: ticketList.comments.length,
       reverse: true,
       itemScrollController: listScrollController,
       itemBuilder: (context, i) {
@@ -767,6 +775,27 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         );
       },
     );
+  }
+
+  void onSendMessage(var comment, int i, var ticketList) {
+    try {
+      strConstants.tckComment = comment;
+      strConstants.tckID = ticketList.id;
+      ticketViewModel.userTicketService.commentTicket().then((value) {
+        if (value != null) {
+          print('Hitting Send Comments API .. : ${value.toJson()}');
+        } else {
+          print('Failed Sending Comments ..');
+          return null;
+        }
+      }).catchError((e) {
+        print('Comment ticket exception in catch error: ${e.toString()}');
+        return null;
+      });
+    } catch (e) {
+      print('Comment ticket exception : ${e.toString()}');
+      return null;
+    }
   }
 }
 

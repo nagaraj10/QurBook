@@ -296,3 +296,4 @@ const String qr_code_tags='TAGS';
 const String qr_get_tickets = 'trudesk/ticket/list';
 const String qr_get_ticket_types = 'trudesk/ticket/types';
 const String qr_create_ticket = 'trudesk/create/ticket/by-patient';
+const String qr_comment_ticket = 'trudesk/ticket/comment';

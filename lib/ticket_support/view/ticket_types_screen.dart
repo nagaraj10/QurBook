@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/widgets/landing_card.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
@@ -171,7 +173,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateTicketScreen(ticketList[i])),
+                        builder: (context) =>
+                            CreateTicketScreen(ticketList[i])),
                   );
                 },
                 child: Container(
@@ -212,6 +215,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                         ],
                       ),
                       Flexible(
+                        flex: 1,
                         child: Text(
                           ticketList[i].name,
                           overflow: TextOverflow.visible,
@@ -233,33 +237,24 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypeImages(BuildContext context, var ticketListData) {
-    if (ticketListData.name.contains('Doctor')) {
-      return Image.asset(
-        'assets/icons/04.png',
-        width: 60.0.sp,
-        height: 60.0.sp,
-        color: Color(CommonUtil().getMyPrimaryColor()),
-      );
-    } else if (ticketListData.name.contains('Lab')) {
-      return Image.asset(
-        'assets/icons/02.png',
-        width: 60.0.sp,
-        height: 60.0.sp,
-        color: Color(CommonUtil().getMyPrimaryColor()),
-      );
-    } else if (ticketListData.name.contains('Prescription')) {
-      return Image.asset(
-        'assets/icons/03.png',
-        width: 60.0.sp,
-        height: 60.0.sp,
-        color: Color(CommonUtil().getMyPrimaryColor()),
-      );
-    } else if (ticketListData.name.contains('Pickup')) {
-      return Image.asset(
-        'assets/icons/01.png',
-        width: 60.0.sp,
-        height: 60.0.sp,
-        color: Color(CommonUtil().getMyPrimaryColor()),
+    if (ticketListData.name != null) {
+      return CachedNetworkImage(
+        imageUrl: ticketListData.name,
+        placeholder: (context, url) => CommonCircularIndicator(),
+        errorWidget: (context, url, error) => Image.asset(
+          'assets/icons/10.png',
+          height: 45.sp,
+          width: 45.sp,
+          color: Color(CommonUtil().getMyPrimaryColor()),
+        ),
+        imageBuilder: (context, imageProvider) => Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
+          ),
+        ),
       );
     } else {
       return Image.asset(

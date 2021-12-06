@@ -127,9 +127,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                         focusedBorder: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(8.0),
-                          borderSide:
-                              BorderSide(color: Color(
-                                  new CommonUtil().getMyPrimaryColor()),),
+                          borderSide: BorderSide(
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
                         ),
                       ),
                     ),
@@ -162,9 +162,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                         focusedBorder: new OutlineInputBorder(
                           borderRadius: new BorderRadius.circular(8.0),
-                          borderSide:
-                              BorderSide(color: Color(
-                                  new CommonUtil().getMyPrimaryColor()),),
+                          borderSide: BorderSide(
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
                         ),
                       ),
                     ),
@@ -293,33 +293,40 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   void _validateAndCreateTicket(var context, var ticketListData) {
-    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-    if (titleController.text.isNotEmpty &&
-        descController.text.isNotEmpty &&
-        preferredDateController.text.isNotEmpty) {
-      tckConstants.tckTitle = titleController.text.toString();
-      tckConstants.tckDesc = descController.text.toString();
-      tckConstants.tckPrefDate = preferredDateController.text.toString();
-      tckConstants.ticketType = ticketListData.id;
-      tckConstants.tckPriority = ticketListData.id;
+    try {
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+      if (titleController.text.isNotEmpty &&
+          descController.text.isNotEmpty &&
+          preferredDateController.text.isNotEmpty) {
+        tckConstants.tckTitle = titleController.text.toString();
+        tckConstants.tckDesc = descController.text.toString();
+        tckConstants.tckPrefDate = preferredDateController.text.toString();
+        tckConstants.ticketType = ticketListData.id;
+        tckConstants.tckPriority = ticketListData.id;
 
-      ticketViewModel.createTicket().then((value) {
-        if (value != null) {
+        ticketViewModel.createTicket().then((value) {
+          if (value != null) {
+            Navigator.of(context, rootNavigator: true).pop();
+            print('Hitting API .. : ${value.toJson()}');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
+            );
+          } else {
+            Navigator.of(context, rootNavigator: true).pop();
+          }
+        }).catchError((error) {
           Navigator.of(context, rootNavigator: true).pop();
-          print('Hitting API .. : ${value.toJson()}');
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
-          );
-        }
-      }).catchError((error) {
+          print('API Error Occured : $error');
+        });
+      } else {
         Navigator.of(context, rootNavigator: true).pop();
-        print('Error Occured : $error');
-      });
-    } else {
+        Alert.displayAlert(context,
+            title: variable.Error, content: CommonConstants.all_fields);
+      }
+    } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
-      Alert.displayAlert(context,
-          title: variable.Error, content: CommonConstants.all_fields);
+      print('Catch Error Occured : $error');
     }
   }
 

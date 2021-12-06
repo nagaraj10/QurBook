@@ -614,6 +614,8 @@ var tckDesc = 'desc';
 var tckPrefDate = 'pref_date';
 var ticketType = 'ticket type';
 var tckPriority = 'ticket priority';
+var tckID = 'ticket_id';
+var tckComment = 'ticket_comment';
 
 double height = 0.0;
 double width = 0.0;

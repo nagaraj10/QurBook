@@ -18,6 +18,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/ticket_support/model/create_ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
+import 'package:myfhb/ticket_support/model/user_comments_model.dart';
 import 'package:myfhb/ticket_support/services/ticket_service.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
@@ -63,6 +64,19 @@ class TicketViewModel extends ChangeNotifier {
         return createTicketModel;
       } catch (e) {
         print('Exception in Craete Ticket VM Model : ${e.toString()}');
+      }
+    }
+  }
+
+  // Comment Ticket
+  Future<UserCommentsModel> commentTicket() async {
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    if (userid != null) {
+      try {
+        var commentTicketModel = await userTicketService.commentTicket();
+        return commentTicketModel;
+      } catch (e) {
+        print('Exception in Comment Ticket VM Model : ${e.toString()}');
       }
     }
   }
