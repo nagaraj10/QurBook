@@ -43,7 +43,7 @@ class RegimentService {
             {
               "method": "get",
               "data":
-              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms&all=1&page=0&pagesize=50&search=d${variable
+              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms&all=1&page=0&pagesize=50&search=$searchText${variable
                   .qr_patientEqaul}$userId",
             },
           ),

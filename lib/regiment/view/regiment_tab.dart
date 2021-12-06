@@ -727,6 +727,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      SizedBox(height: 8.h),
                       (regimentViewModel.regimentMode == RegimentMode.Symptoms)
                           ? getMasterRegimenList()
                           : SizedBox.shrink(),
@@ -778,31 +779,27 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       final regimentData = (index < regimentsList.length)
                           ? regimentsList[index]
                           : RegimentDataModel();
-                      return AutoScrollTag(
-                          key: ValueKey(index),
-                          index: index,
-                          controller: scrollController,
-                          child: RegimentDataCard(
-                            index: index,
-                            title: regimentData.title,
-                            time: regimentData?.estart != null
-                                ? DateFormat('hh:mm\na')
-                                    .format(regimentData?.estart)
-                                : '',
-                            color: getColor(regimentData.activityname,
-                                regimentData.uformname, regimentData.metadata),
-                            icon: getIcon(regimentData.activityname,
-                                regimentData.uformname, regimentData.metadata),
-                            vitalsData: regimentData.uformdata?.vitalsData,
-                            eid: regimentData.eid,
-                            mediaData: regimentData.otherinfo,
-                            startTime: regimentData.estart,
-                            regimentData: regimentData,
-                            aid: regimentData.aid,
-                            uid: regimentData.uid,
-                            formId: regimentData.uformid,
-                            formName: regimentData.uformname1,
-                          ));
+                      return RegimentDataCard(
+                        index: index,
+                        title: regimentData.title,
+                        time: regimentData?.estart != null
+                            ? DateFormat('hh:mm\na')
+                                .format(regimentData?.estart)
+                            : '',
+                        color: getColor(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        icon: getIcon(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        vitalsData: regimentData.uformdata?.vitalsData,
+                        eid: regimentData.eid,
+                        mediaData: regimentData.otherinfo,
+                        startTime: regimentData.estart,
+                        regimentData: regimentData,
+                        aid: regimentData.aid,
+                        uid: regimentData.uid,
+                        formId: regimentData.uformid,
+                        formName: regimentData.uformname1,
+                      );
                     },
                   ),
                 );
