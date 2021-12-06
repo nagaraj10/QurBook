@@ -527,6 +527,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           setState(() {
             downloadStatus = true;
           });
+          Scaffold.of(contxt).showSnackBar(SnackBar(
+            content: const Text(
+              variable.strFileDownloaded,
+            ),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            action: SnackBarAction(
+              label: 'Open',
+              onPressed: () async {
+                await OpenFile.open(
+                  pdfFile,
+                );
+              },
+            ),
+          ));
         });
       }
     } else {
@@ -1484,7 +1498,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
-    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
+    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,fileType == '.mp3'?'${widget.data.metadata.fileName}' + fileType:widget.data.metadata.fileName)
         .then((filePath) async {
       var bytes = await _loadFileBytes(url,
           onError: (exception) =>
@@ -1510,9 +1524,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadFile(
       HealthRecordCollection audioMediaId, String fileType) async {
-    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
+    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,widget.data.metadata.fileName)
         .then((filePath) async {
-      var file = File('$filePath${widget.data.metadata.fileName}' + fileType);
+      var file = File('$filePath' /*+ fileType*/);
       final request = await ApiServices.get(
         audioMediaId.healthRecordUrl,
         headers: {
