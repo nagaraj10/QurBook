@@ -4,7 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view/widgets/filter_widget.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
@@ -29,6 +32,7 @@ class RegimentTab extends StatefulWidget {
   final String eventId;
 
   const RegimentTab({this.eventId});
+
   @override
   _RegimentTabState createState() => _RegimentTabState();
 }
@@ -50,6 +54,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
   BuildContext _myContext;
   ProfileResponseModel profileResponseModel;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -94,6 +99,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
       isInitial: true,
     );
+
     PreferenceUtil.init();
   }
 
@@ -103,6 +109,27 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       isInitial: true,
     );
     super.deactivate();
+  }
+
+  Future<RegimentResponseModel> getMasterData() async {
+    RegimentResponseModel regimentsData;
+
+    regimentsData = await RegimentService.getRegimentData(
+      dateSelected: CommonUtil.dateConversionToApiFormat(
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .selectedRegimenDate,
+        isIndianTime: true,
+      ),
+      isSymptoms:
+          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                  RegimentMode.Symptoms
+              ? 1
+              : 0,
+      isForMasterData: true,
+      searchText: searchController.text,
+    );
+
+    return regimentsData;
   }
 
   void showShowcase() {
@@ -683,7 +710,6 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                   }
                 } else {
                   return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
                         padding: EdgeInsets.all(
@@ -701,6 +727,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           textAlign: TextAlign.center,
                         ),
                       ),
+                      (regimentViewModel.regimentMode == RegimentMode.Symptoms)
+                          ? getMasterRegimenList()
+                          : SizedBox.shrink(),
                     ],
                   );
                 }
@@ -710,5 +739,84 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
         ],
       );
     }));
+  }
+
+  Widget getMasterRegimenList() {
+    return new FutureBuilder<RegimentResponseModel>(
+      future: getMasterData(),
+      builder: (BuildContext context, snapshot) {
+        /*if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: new Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
+        } else*/ if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          if (snapshot.hasData) {
+            if (snapshot?.data != null) {
+              if (snapshot?.data?.regimentsList.length > 0) {
+                final regimentsList = snapshot?.data?.regimentsList;
+                return Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemCount: regimentsList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final regimentData = (index < regimentsList.length)
+                          ? regimentsList[index]
+                          : RegimentDataModel();
+                      return AutoScrollTag(
+                          key: ValueKey(index),
+                          index: index,
+                          controller: scrollController,
+                          child: RegimentDataCard(
+                            index: index,
+                            title: regimentData.title,
+                            time: regimentData?.estart != null
+                                ? DateFormat('hh:mm\na')
+                                    .format(regimentData?.estart)
+                                : '',
+                            color: getColor(regimentData.activityname,
+                                regimentData.uformname, regimentData.metadata),
+                            icon: getIcon(regimentData.activityname,
+                                regimentData.uformname, regimentData.metadata),
+                            vitalsData: regimentData.uformdata?.vitalsData,
+                            eid: regimentData.eid,
+                            mediaData: regimentData.otherinfo,
+                            startTime: regimentData.estart,
+                            regimentData: regimentData,
+                            aid: regimentData.aid,
+                            uid: regimentData.uid,
+                            formId: regimentData.uformid,
+                            formName: regimentData.uformname1,
+                          ));
+                    },
+                  ),
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            } else {
+              return SizedBox.shrink();
+            }
+          } else {
+            return SizedBox.shrink();
+          }
+        }
+      },
+    );
   }
 }

@@ -20,15 +20,20 @@ import 'regiment_webview.dart';
 
 class RegimentDataCard extends StatelessWidget {
   final int index;
-  final String title;
-  final String time;
+  final dynamic title;
+  final dynamic time;
   final Color color;
   final dynamic icon;
-  final String eid;
+  final dynamic eid;
   final List<VitalsData> vitalsData;
   final Otherinfo mediaData;
   final DateTime startTime;
   final RegimentDataModel regimentData;
+
+  final dynamic uid;
+  final dynamic aid;
+  final dynamic formId;
+  final dynamic formName;
 
   const RegimentDataCard({
     @required this.index,
@@ -41,6 +46,10 @@ class RegimentDataCard extends StatelessWidget {
     @required this.startTime,
     @required this.mediaData,
     @required this.regimentData,
+    this.uid='',
+    this.aid='',
+    this.formId='',
+    this.formName='',
   });
 
   @override
@@ -54,14 +63,14 @@ class RegimentDataCard extends StatelessWidget {
           child: Material(
             color: Colors.white,
             child: InkWell(
-              onTap: () => onCardPressed(context),
+              onTap: () => onCardPressed(context,aid: aid,uid: uid,formId: formId,formName: formName),
               child: Row(
                 children: [
                   Expanded(
                     child: Material(
                       color: color,
                       child: InkWell(
-                        onTap: () => onCardPressed(context),
+                        onTap: () => onCardPressed(context,aid: aid,uid: uid,formId: formId,formName: formName),
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             vertical: 10.0.h,
@@ -517,13 +526,24 @@ class RegimentDataCard extends StatelessWidget {
     return title;
   }
 
-  Future<void> onCardPressed(
-    BuildContext context, {
-    String eventIdReturn,
-    String followEventContext,
-  }) async {
+  Future<void> onCardPressed(BuildContext context,
+      {String eventIdReturn,
+      String followEventContext,
+      dynamic uid,
+      dynamic aid,
+      dynamic formId,
+      dynamic formName}) async {
     stopRegimenTTS();
     var eventId = eventIdReturn ?? eid;
+    if (eventId == null || eventId == '' || eventId==0) {
+      final response =
+          await Provider.of<RegimentViewModel>(context, listen: false)
+              .getEventId(uid: uid,aid: aid,formId: formId,formName: formName);
+      if (response!=null && response?.isSuccess && response?.result!=null) {
+        print('forEventId: '+response.toJson().toString());
+        eventId = response?.result?.eid.toString();
+      }
+    }
     var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
