@@ -18,7 +18,7 @@ class UserTicketService {
   Future<UserTicketModel> getTicketList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final response =
-        await _helper.getTicketList(query.qr_get_tickets/* + '/$userid'*/);
+        await _helper.getTicketList('${query.qr_get_tickets}${'/$userid'}');
     _userTicketModel = UserTicketModel.fromJson(response);
     print('User Tickets Reponse : ${_userTicketModel.result.toJson()}');
     return _userTicketModel;

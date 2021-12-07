@@ -23,7 +23,7 @@ import 'package:myfhb/telehealth/features/Notifications/constants/notification_c
     as constants;
 import 'package:myfhb/common/CommonUtil.dart' as commonUtils;
 
-var fullName, date;
+var fullName, date, isUser;
 
 class DetailedTicketView extends StatefulWidget {
   DetailedTicketView(this.ticketList);
@@ -407,6 +407,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                   child: Container(
                                     height: 58.0.h,
                                     child: TextField(
+                                      controller: addCommentController,
                                       style: TextStyle(fontSize: 16.0.sp),
                                       focusNode: focusNode,
                                       onTap: () {
@@ -472,11 +473,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                   child: new Container(
                                     child: RawMaterialButton(
                                       onPressed: () {
-                                        onSendMessage(
-                                            addCommentController.text
-                                                ?.replaceAll("#", ""),
-                                            0,
-                                            ticketList);
+                                        onSendMessage(addCommentController.text,
+                                            widget.ticketList);
+                                        addCommentController.clear();
                                       },
                                       elevation: 2.0,
                                       fillColor: Colors.white,
@@ -589,6 +588,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
           print('History fullname : $fullName & $date');
         });
       }
+      for (int i = 0; i < ticketList.comments.length; i++) {
+        setState(() {
+          // Looping iSAgent value for checking patient or agent in comments
+          isUser = ticketList.comments[i].owner.role.isAgent;
+          print('Is agent length : $isUser');
+        });
+      }
     } else {
       print('History array is empty !!');
     }
@@ -604,183 +610,367 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              alignment: Alignment.bottomRight,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Card(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(16),
-                              topLeft: Radius.circular(16),
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16))),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: 1.sw * .6,
-                        ),
-                        padding: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(16),
-                            topLeft: Radius.circular(16),
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                        /*child: Text(
+            isUser != null && isUser
+                ? Container(
+                    alignment: Alignment.bottomRight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Card(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(16),
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16))),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 1.sw * .6,
+                              ),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                        child: Text('Hi !!',
-                            style: TextStyle(color: Colors.white)),
-                      )),
-                  Flexible(
-                    flex: 1,
-                    child: new Container(
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                        },
-                        elevation: 2.0,
-                        fillColor: Color(CommonUtil().getMyPrimaryColor()),
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            child: CommonCircularIndicator(),
-                            width: 30.w,
-                            height: 30.h,
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
+                              child: ticketList.comments[i].comment != null
+                                  ? Text('${ticketList.comments[i].comment}',
+                                      style: TextStyle(color: Colors.white))
+                                  : Text('Hi I have a query !!',
+                                      style: TextStyle(color: Colors.white)),
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: new Container(
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                              },
+                              elevation: 2.0,
+                              fillColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 30.w,
+                                  height: 30.h,
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'assets/maya/maya_india_main.png',
+                                    width: 30.w,
+                                    height: 30.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: '',
+                                width: 30.w,
+                                height: 30.h,
+                                fit: BoxFit.cover,
                               ),
+                              padding: EdgeInsets.all(12.0),
+                              shape: CircleBorder(),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Material(
-                            child: Image.asset(
-                              'assets/maya/maya_india_main.png',
-                              width: 30.w,
-                              height: 30.h,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                          ),
-                          imageUrl: '',
-                          width: 30.w,
-                          height: 30.h,
-                          fit: BoxFit.cover,
                         ),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
-                      ),
+                      ],
+                    ),
+                  )
+                : Container(
+                    alignment: Alignment.bottomRight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Card(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(16),
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16))),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 1.sw * .6,
+                              ),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              /*child: Text(
+                                document[STR_CONTENT],
+                                style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                              ),*/
+                              child: Text('Hi I have a query !!',
+                                  style: TextStyle(color: Colors.white)),
+                            )),
+                        Flexible(
+                          flex: 1,
+                          child: new Container(
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                              },
+                              elevation: 2.0,
+                              fillColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 30.w,
+                                  height: 30.h,
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'assets/maya/maya_india_main.png',
+                                    width: 30.w,
+                                    height: 30.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: '',
+                                width: 30.w,
+                                height: 30.h,
+                                fit: BoxFit.cover,
+                              ),
+                              padding: EdgeInsets.all(12.0),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
             SizedBox(height: 15.h),
-            Container(
-              alignment: Alignment.bottomLeft,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: 1,
-                    child: new Container(
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                        },
-                        elevation: 2.0,
-                        fillColor: Color(CommonUtil().getMyPrimaryColor()),
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            child: CommonCircularIndicator(),
-                            width: 30.w,
-                            height: 30.h,
-                            padding: EdgeInsets.all(10.0),
-                            decoration: BoxDecoration(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
+            isUser != null && isUser == false
+                ? Container(
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: new Container(
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                              },
+                              elevation: 2.0,
+                              fillColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 30.w,
+                                  height: 30.h,
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'assets/user/profile_pic_ph.png',
+                                    width: 30.w,
+                                    height: 30.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: '',
+                                width: 30.w,
+                                height: 30.h,
+                                fit: BoxFit.cover,
                               ),
+                              padding: EdgeInsets.all(12.0),
+                              shape: CircleBorder(),
                             ),
                           ),
-                          errorWidget: (context, url, error) => Material(
-                            child: Image.asset(
-                              'assets/maya/maya_india_main.png',
-                              width: 30.w,
-                              height: 30.h,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                          ),
-                          imageUrl: '',
-                          width: 30.w,
-                          height: 30.h,
-                          fit: BoxFit.cover,
                         ),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
-                      ),
-                    ),
-                  ),
-                  Card(
-                      color: Colors.grey[200],
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(16),
-                              topLeft: Radius.circular(16),
-                              bottomLeft: Radius.circular(16),
-                              bottomRight: Radius.circular(16))),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: 1.sw * .6,
-                        ),
-                        padding: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(16),
-                            topLeft: Radius.circular(16),
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                        /*child: Text(
+                        Card(
+                            color: Colors.grey[200],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(16),
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16))),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 1.sw * .6,
+                              ),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              /*child: Text(
                                 document[STR_CONTENT],
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                        child: Text('Hai I have a query !!',
-                            style: TextStyle(color: Colors.black)),
-                      )),
-                ],
-              ),
-            ),
+                              child: ticketList.comments[i].comment != null
+                                  ? Text('${ticketList.comments[i].comment}',
+                                      style: TextStyle(color: Colors.white))
+                                  : Text('Hi !!',
+                                      style: TextStyle(color: Colors.white)),
+                            )),
+                      ],
+                    ),
+                  )
+                : Container(
+                    alignment: Alignment.bottomLeft,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          flex: 1,
+                          child: new Container(
+                            child: RawMaterialButton(
+                              onPressed: () {
+                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+                              },
+                              elevation: 2.0,
+                              fillColor:
+                                  Color(CommonUtil().getMyPrimaryColor()),
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CommonCircularIndicator(),
+                                  width: 30.w,
+                                  height: 30.h,
+                                  padding: EdgeInsets.all(10.0),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'assets/user/profile_pic_ph.png',
+                                    width: 30.w,
+                                    height: 30.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                imageUrl: '',
+                                width: 30.w,
+                                height: 30.h,
+                                fit: BoxFit.cover,
+                              ),
+                              padding: EdgeInsets.all(12.0),
+                              shape: CircleBorder(),
+                            ),
+                          ),
+                        ),
+                        Card(
+                            color: Colors.grey[200],
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(16),
+                                    topLeft: Radius.circular(16),
+                                    bottomLeft: Radius.circular(16),
+                                    bottomRight: Radius.circular(16))),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 1.sw * .6,
+                              ),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(16),
+                                  topLeft: Radius.circular(16),
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              /*child: Text(
+                                document[STR_CONTENT],
+                                style: TextStyle(
+                                    color: Color(CommonUtil().getMyPrimaryColor())),
+                              ),*/
+                              child: Text('Hi !!',
+                                  style: TextStyle(color: Colors.white)),
+                            )),
+                      ],
+                    ),
+                  ),
           ],
         );
       },
     );
   }
 
-  void onSendMessage(var comment, int i, var ticketList) {
+  void onSendMessage(var comment, var ticketList) {
     try {
       strConstants.tckComment = comment;
       strConstants.tckID = ticketList.id;
+      print(
+          'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
       ticketViewModel.userTicketService.commentTicket().then((value) {
         if (value != null) {
           print('Hitting Send Comments API .. : ${value.toJson()}');
