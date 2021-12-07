@@ -249,6 +249,7 @@ const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
+const String getEventId = 'activity-master/save-personal-plan-symptom';
 
 const String qr_health_conditions = 'Action=GetMenu';
 
