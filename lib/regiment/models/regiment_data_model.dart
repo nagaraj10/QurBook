@@ -16,6 +16,7 @@ class RegimentDataModel {
     this.activityname,
     this.uformid,
     this.uformname,
+    this.uformname1,
     this.estart,
     this.eend,
     this.html,
@@ -51,47 +52,48 @@ class RegimentDataModel {
     this.isModifiedToday = false,
   });
 
-  final String eid;
-  final String providerid;
-  final String uid;
-  final String title;
-  final String description;
-  final String tplanid;
-  final String teidUser;
-  final String aid;
+  final dynamic eid;
+  final dynamic providerid;
+  final dynamic uid;
+  final dynamic title;
+  final dynamic description;
+  final dynamic tplanid;
+  final dynamic teidUser;
+  final dynamic aid;
   final Activityname activityname;
-  final String uformid;
+  final dynamic uformid;
   final Uformname uformname;
+  final String uformname1;
   final DateTime estart;
   final DateTime eend;
   final dynamic html;
   final Otherinfo otherinfo;
-  final String remindin;
-  final String remindinType;
+  final dynamic remindin;
+  final dynamic remindinType;
   final DateTime ack;
   final DateTime ackIST;
-  final String alarm;
+  final dynamic alarm;
   final UformData uformdata;
   final DateTime ts;
-  final String deleted;
-  final String evDuration;
+  final dynamic deleted;
+  final dynamic evDuration;
   final bool hashtml;
-  final int hascustform;
+  final dynamic hascustform;
   final dynamic htmltemplate;
-  final String dosesNeeded;
-  final String dosesAvailable;
-  final String dosesUsed;
-  final String providername;
+  final dynamic dosesNeeded;
+  final dynamic dosesAvailable;
+  final dynamic dosesUsed;
+  final dynamic providername;
   final bool hasform;
-  final String saytext;
+  final dynamic saytext;
   final bool doseMeal;
-  final String doseRepeat;
+  final dynamic doseRepeat;
   final Metadata metadata;
   bool isPlaying;
   final bool scheduled;
   final bool asNeeded;
   final bool isEventDisabled;
-  final String sayTextDynamic;
+  final dynamic sayTextDynamic;
   final bool isSymptom;
   final bool isMandatory;
   final bool isModifiedToday;
@@ -109,6 +111,7 @@ class RegimentDataModel {
         activityname: activitynameValues.map[json['activityname']],
         uformid: json['uformid'],
         uformname: uformnameValues.map[json['uformname']],
+        uformname1: json['uformname'],
         estart: DateTime.tryParse(json['estart'] ?? ''),
         eend: DateTime.tryParse(json['eend'] ?? ''),
         html: json['html'],
@@ -168,6 +171,7 @@ class RegimentDataModel {
         'activityname': activitynameValues.reverse[activityname],
         'uformid': uformid,
         'uformname': uformnameValues.reverse[uformname],
+        'uformname': uformname1,
         'estart': estart.toIso8601String(),
         'eend': eend.toIso8601String(),
         'html': html,
@@ -270,13 +274,13 @@ class VitalsData {
       this.video,
       this.file});
 
-  String vitalName;
-  String value;
-  String type;
-  String display;
-  int alarm;
-  String amin;
-  String amax;
+  dynamic vitalName;
+  dynamic value;
+  dynamic type;
+  dynamic display;
+  dynamic alarm;
+  dynamic amin;
+  dynamic amax;
   FieldType fieldType;
   OtherData photo;
   OtherData audio;

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import '../../common/CommonUtil.dart';
 import '../models/field_response_model.dart';
 import '../models/profile_response_model.dart';
@@ -300,6 +301,7 @@ class RegimentViewModel extends ChangeNotifier {
         isIndianTime: true,
       ),
       isSymptoms: regimentMode == RegimentMode.Symptoms ? 1 : 0,
+
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
@@ -401,6 +403,21 @@ class RegimentViewModel extends ChangeNotifier {
     return response;
   }
 
+  Future<GetEventIdModel> getEventId({
+    dynamic uid, dynamic aid,
+    dynamic formId, dynamic formName,
+  }) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var response = await RegimentService.getEventId(
+      uid: uid,aid: aid,formId: formId,formName: formName
+    );
+    LoaderClass.hideLoadingDialog(Get.context);
+    return response;
+  }
+
   Future<ProfileResponseModel> getProfile() async {
     // LoaderClass.showLoadingDialog(
     //   Get.context,
@@ -481,6 +498,7 @@ class RegimentViewModel extends ChangeNotifier {
         isIndianTime: true,
       ),
       isSymptoms: 0,
+      isForMasterData: false
     );
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {
