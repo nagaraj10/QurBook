@@ -233,27 +233,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             TextButton(
               child: const Text('Ok'),
               onPressed: () {
+                callClearAllApi();
                 Navigator.of(context).pop();
-                var body = {};
-                body["medium"] = "Push";
-                body["clearIds"] = [];
-                body["isClearAll"] = true;
-                print(body);
-                FetchNotificationService()
-                    .clearNotifications(body)
-                    .then((data) {
-                  if (data != null && data) {
-                    Provider.of<FetchNotificationViewModel>(context,
-                        listen: false)
-                      //..clearNotifications()
-                      ..fetchNotifications();
-                  } else {
-                    Provider.of<FetchNotificationViewModel>(context,
-                        listen: false)
-                      //..clearNotifications()
-                      ..fetchNotifications();
-                  }
-                });
               },
             ),
             TextButton(
@@ -266,6 +247,29 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
       },
     );
+  }
+
+  void callClearAllApi(){
+    var body = {};
+    body["medium"] = "Push";
+    body["clearIds"] = [];
+    body["isClearAll"] = true;
+    print(body);
+    FetchNotificationService()
+        .clearNotifications(body)
+        .then((data) {
+      if (data != null && data) {
+        Provider.of<FetchNotificationViewModel>(context,
+            listen: false)
+        //..clearNotifications()
+          ..fetchNotifications();
+      } else {
+        Provider.of<FetchNotificationViewModel>(context,
+            listen: false)
+        //..clearNotifications()
+          ..fetchNotifications();
+      }
+    });
   }
 
   void handleClick(String value) {
