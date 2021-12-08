@@ -152,12 +152,15 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
+  var reminderMethodChannelAndroid =
+      const MethodChannel('android/notification');
+
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var cameras = await availableCameras();
     listOfCameras = cameras;
-
+    reminderMethodChannelAndroid.invokeMethod('testingNotification');
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
