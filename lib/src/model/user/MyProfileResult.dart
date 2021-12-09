@@ -35,6 +35,7 @@ class MyProfileResult {
   // String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  String membershipOfferedBy;
   List<UserAddressCollection3> userAddressCollection3;
   List<UserContactCollection3> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
@@ -74,7 +75,7 @@ class MyProfileResult {
       this.userRoleCollection3,
       this.userRelationshipCollection,
       this.additionalInfo,
-      this.userProfileSettingCollection3});
+      this.userProfileSettingCollection3,this.membershipOfferedBy});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -103,6 +104,8 @@ class MyProfileResult {
     // createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
+    if(json.containsKey('membershipOfferedBy'))
+    membershipOfferedBy = json['membershipOfferedBy'];
     if (json['userAddressCollection3'] != null) {
       userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
@@ -168,6 +171,7 @@ class MyProfileResult {
     // data['createdOn'] = this.createdOn;
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
+    data['membershipOfferedBy'] = membershipOfferedBy;
     if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
           userAddressCollection3.map((v) => v.toJson()).toList();

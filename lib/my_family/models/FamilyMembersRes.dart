@@ -83,15 +83,14 @@ class SharedByUsers {
   RelationsShipModel relationship;
   Child child;
 
-  SharedByUsers(
-      {this.id,
-      this.status,
-      this.nickName,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.relationship,
-      this.child});
+  SharedByUsers({this.id,
+    this.status,
+    this.nickName,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.relationship,
+    this.child});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -200,6 +199,7 @@ class Child {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  String membershipOfferedBy;
   List<UserContactCollectionFamily> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
   List<UserAddressCollection3> userAddressCollection3;
@@ -235,7 +235,7 @@ class Child {
     this.userContactCollection3,
     this.userRoleCollection3,
     this.userAddressCollection3,
-    this.additionalInfo,
+    this.additionalInfo, this.membershipOfferedBy
   });
 
   Child.fromJson(Map<String, dynamic> json) {
@@ -264,6 +264,9 @@ class Child {
     createdBy = json['createdBy'];
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
+    if (json.containsKey('membershipOfferedBy')) {
+      membershipOfferedBy = json['membershipOfferedBy'];
+    }
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userContactCollection3'] != null) {
       userContactCollection3 = <UserContactCollectionFamily>[];
@@ -316,6 +319,7 @@ class Child {
     data['createdOn'] = createdOn;
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
+    data['membershipOfferedBy'] = membershipOfferedBy;
     if (userContactCollection3 != null) {
       data['userContactCollection3'] =
           userContactCollection3.map((v) => v.toJson()).toList();
@@ -425,14 +429,13 @@ class UserContactCollectionFamily {
   String lastModifiedOn;
   String email;
 
-  UserContactCollectionFamily(
-      {this.id,
-      this.phoneNumber,
-      this.isPrimary,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.email});
+  UserContactCollectionFamily({this.id,
+    this.phoneNumber,
+    this.isPrimary,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.email});
 
   UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -468,16 +471,15 @@ class PhoneNumberType {
   String createdOn;
   String lastModifiedOn;
 
-  PhoneNumberType(
-      {this.id,
-      this.code,
-      this.name,
-      this.description,
-      this.sortOrder,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedOn});
+  PhoneNumberType({this.id,
+    this.code,
+    this.name,
+    this.description,
+    this.sortOrder,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedOn});
 
   PhoneNumberType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -543,16 +545,15 @@ class Role {
   bool isSystemRole;
   bool isEnabled;
 
-  Role(
-      {this.id,
-      this.name,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.roleCode,
-      this.description,
-      this.isSystemRole,
-      this.isEnabled});
+  Role({this.id,
+    this.name,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.roleCode,
+    this.description,
+    this.isSystemRole,
+    this.isEnabled});
 
   Role.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -591,15 +592,14 @@ class SharedToUsers {
   RelationsShipModel relationship;
   Parent parent;
 
-  SharedToUsers(
-      {this.id,
-      this.status,
-      this.nickName,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.relationship,
-      this.parent});
+  SharedToUsers({this.id,
+    this.status,
+    this.nickName,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.relationship,
+    this.parent});
 
   SharedToUsers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -612,7 +612,7 @@ class SharedToUsers {
         ? RelationsShipModel.fromJson(json['relationship'])
         : null;
     parent =
-        json['parent'] != null ? Parent.fromJson(json['parent']) : null;
+    json['parent'] != null ? Parent.fromJson(json['parent']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -662,34 +662,33 @@ class Parent {
   String lastModifiedBy;
   String lastModifiedOn;
 
-  Parent(
-      {this.id,
-      this.name,
-      this.userName,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.gender,
-      this.dateOfBirth,
-      this.bloodGroup,
-      this.countryCode,
-      this.profilePicUrl,
-      this.profilePicThumbnailUrl,
-      this.isTempUser,
-      this.isVirtualUser,
-      this.isMigrated,
-      this.isClaimed,
-      this.isIeUser,
-      this.isEmailVerified,
-      this.isCpUser,
-      this.communicationPreferences,
-      this.medicalPreferences,
-      this.isSignedIn,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedBy,
-      this.lastModifiedOn});
+  Parent({this.id,
+    this.name,
+    this.userName,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.gender,
+    this.dateOfBirth,
+    this.bloodGroup,
+    this.countryCode,
+    this.profilePicUrl,
+    this.profilePicThumbnailUrl,
+    this.isTempUser,
+    this.isVirtualUser,
+    this.isMigrated,
+    this.isClaimed,
+    this.isIeUser,
+    this.isEmailVerified,
+    this.isCpUser,
+    this.communicationPreferences,
+    this.medicalPreferences,
+    this.isSignedIn,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn});
 
   Parent.fromJson(Map<String, dynamic> json) {
     id = json['id'];

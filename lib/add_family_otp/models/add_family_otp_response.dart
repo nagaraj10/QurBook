@@ -304,6 +304,7 @@ class ChildInfo {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  String membershipOfferedBy;
   String providerId;
   AdditionalInfos additionalInfo;
   List<ContactInfo> contactInfo;
@@ -338,7 +339,7 @@ class ChildInfo {
       this.lastModifiedOn,
       this.contactInfo,
       this.additionalInfo,
-      this.providerId});
+      this.providerId,this.membershipOfferedBy});
 
   ChildInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -368,6 +369,9 @@ class ChildInfo {
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
+    if (json.containsKey('membershipOfferedBy')) {
+      membershipOfferedBy = json['membershipOfferedBy'];
+    }
     if (json['contactInfo'] != null) {
       contactInfo = List<ContactInfo>();
       json['contactInfo'].forEach((v) {
@@ -408,6 +412,7 @@ class ChildInfo {
     data['createdOn'] = createdOn;
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
+    data['membershipOfferedBy'] = membershipOfferedBy;
     if (contactInfo != null) {
       data['contactInfo'] = contactInfo.map((v) => v.toJson()).toList();
     }
