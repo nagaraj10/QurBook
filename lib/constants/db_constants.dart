@@ -54,3 +54,4 @@ const String PRO_DATE = 'date';
 const String PRO_TIME = 'time';
 const String PRO_INTERVAL = 'interval';
 const String PRO_PATTERN = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+const String appName='Qurbook';

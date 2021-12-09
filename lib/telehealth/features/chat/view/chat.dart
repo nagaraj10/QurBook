@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,6 +52,8 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../../common/CommonUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+
+import 'ChooseDateSlot.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
@@ -179,7 +182,14 @@ class ChatScreenState extends State<ChatScreen> {
   String patientPicUrl;
   bool isFromVideoCall;
 
-  final TextEditingController textEditingController = TextEditingController();
+  //final TextEditingController textEditingController = TextEditingController();
+
+  final TextFieldColorizer textEditingController = TextFieldColorizer(
+    {
+      '#(.*?)#': TextStyle(color: Colors.orange),
+    },
+  );
+
   var chatEnterMessageController = TextEditingController();
 
   /*final ScrollController listScrollController = ScrollController();*/
@@ -217,6 +227,8 @@ class ChatScreenState extends State<ChatScreen> {
   bool isChatDisable = true;
 
   bool isCareGiverApi = true;
+
+  /*bool isDateIconShown = false;*/
 
   @override
   void initState() {
@@ -553,6 +565,10 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
+
+    /* setState(() {
+      isDateIconShown = false;
+    });*/
   }
 
   getReadCount() async {
@@ -1268,6 +1284,12 @@ class ChatScreenState extends State<ChatScreen> {
     return formattedDate;
   }
 
+  String getFormattedDateTimeChoose(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMMdd').format(dateTimeStamp);
+    return formattedDate;
+  }
+
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
             listMessage != null &&
@@ -1899,53 +1921,81 @@ class ChatScreenState extends State<ChatScreen> {
               flex: 4,
               child: Container(
                 height: 58.0.h,
-                child: TextField(
-                  style: TextStyle(fontSize: 16.0.sp),
-                  focusNode: focusNode,
-                  onTap: () {
-                    //isSearchVisible = false;
-                    //_patientDetailOrSearch();
-                  },
-                  controller: textEditingController,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(
-                        RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
+                child: Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    TextField(
+                      style: TextStyle(fontSize: 16.0.sp),
+                      focusNode: focusNode,
+                      onTap: () {
+                        //isSearchVisible = false;
+                        //_patientDetailOrSearch();
+                      },
+                      controller: textEditingController,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp("\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
+                      ],
+                      decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(13, 13, 46, 13),
+                        hintText: "$chatTextFieldHintText",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0.sp,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white70,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                          borderSide:
+                              BorderSide(color: Colors.transparent, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                      ),
+                      /*onChanged: (text){
+                      final val = TextSelection.collapsed(offset: textEditingController.text.length);
+                      textEditingController.selection = val;
+                      */ /*textEditingController.text = '~$text~';*/ /*
+                    },*/
+                      /*onSubmitted: (value) =>*/
+                    ),
+                    Container(
+                      child: SizedBoxWithChild(
+                          width: 46.0.h,
+                          height: 46.0.h,
+                          child:
+                              /*!isDateIconShown
+                            ?*/
+                              FlatButton(
+                                  onPressed: () {
+                                    recordIds.clear();
+                                    FetchRecords(
+                                        0, true, true, false, recordIds);
+                                  },
+                                  child: new Icon(
+                                    Icons.attach_file,
+                                    color:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    size: 22,
+                                  ))
+                          /*: FlatButton(
+                                onPressed: () {
+                                  tapDatePicker();
+                                },
+                                child: new Icon(
+                                  Icons.calendar_today,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  size: 22,
+                                )),*/
+                          ),
+                    )
                   ],
-                  decoration: InputDecoration(
-                    suffixIcon: SizedBoxWithChild(
-                      width: 50.0.h,
-                      height: 50.0.h,
-                      child: FlatButton(
-                          onPressed: () {
-                            recordIds.clear();
-                            FetchRecords(0, true, true, false, recordIds);
-                          },
-                          child: new Icon(
-                            Icons.attach_file,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            size: 24,
-                          )),
-                    ),
-                    isDense: true,
-                    contentPadding: EdgeInsets.only(bottom: -10.0, left: 8),
-                    hintText: "$chatTextFieldHintText",
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16.0.sp,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white70,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                      borderSide:
-                          BorderSide(color: Colors.transparent, width: 2),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                  ),
-                  /*onSubmitted: (value) =>*/
                 ),
               ),
             ),
@@ -1954,12 +2004,13 @@ class ChatScreenState extends State<ChatScreen> {
               child: new Container(
                 child: RawMaterialButton(
                   onPressed: () {
-                    onSendMessage(textEditingController.text, 0);
+                    onSendMessage(
+                        textEditingController.text?.replaceAll("#", ""), 0);
                   },
                   elevation: 2.0,
                   fillColor: Colors.white,
                   child: Icon(Icons.send,
-                      size: 25.0,
+                      size: 24.0,
                       color: Color(CommonUtil().getMyPrimaryColor())),
                   padding: EdgeInsets.all(12.0),
                   shape: CircleBorder(),
@@ -1995,7 +2046,7 @@ class ChatScreenState extends State<ChatScreen> {
                         elevation: 2.0,
                         fillColor: Colors.white,
                         child: Icon(Icons.mic,
-                            size: 25.0,
+                            size: 24.0,
                             color: Color(CommonUtil().getMyPrimaryColor())),
                         padding: EdgeInsets.all(12.0),
                         shape: CircleBorder(),
@@ -2178,32 +2229,103 @@ class ChatScreenState extends State<ChatScreen> {
         ),
       );
 
+  WidgetSpan buildDateComponent(
+          String text, String linkToOpen, int index, bool isPatient) =>
+      WidgetSpan(
+        child: !isPatient
+            ? InkWell(
+                child: Container(
+                  margin: EdgeInsets.only(top: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: RichText(
+                      text: TextSpan(
+                        children: getSplittedTextWidget(chooseYourDate, index),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14.0.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  FocusManager.instance.primaryFocus.unfocus();
+                  //tapDatePicker();
+                  //Get.to(ChooseDateSlot());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChooseDateSlot()),
+                  ).then((value) {
+                    if (value != null) {
+                      List<String> result = [];
+                      result.add(value);
+                      try {
+                        if (result?.length > 0) {
+                          final removedBrackets = result
+                              .toString()
+                              .substring(2, result.toString().length - 2);
+                          if (removedBrackets.length > 0) {
+                            onSendMessage(removedBrackets.toString(), 0);
+                          }
+                        }
+                      } catch (e) {
+                        print(e);
+                      }
+                    }
+                  });
+                },
+              )
+            : SizedBox.shrink(),
+      );
+
   List<InlineSpan> linkify(String text, int index, bool isPatient) {
     const String urlPattern = 'https?:/\/\\S+';
+    const String datePattern = '{date}';
+    final RegExp dateRegExp = RegExp('($datePattern)', caseSensitive: false);
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
+    final RegExpMatch dateMatch = dateRegExp.firstMatch(text);
     final RegExpMatch match = linkRegExp.firstMatch(text);
-    if (match == null) {
+
+    if (match == null && dateMatch == null) {
       list.add(TextSpan(children: getSplittedTextWidget(text, index)));
       return list;
     }
 
-    if (match.start > 0) {
+    if ((match?.start ?? 0) > 0) {
       list.add(TextSpan(
           children:
               getSplittedTextWidget(text.substring(0, match.start), index)));
     }
 
-    final String linkText = match.group(0);
+    if ((dateMatch?.start ?? 0) > 0) {
+      list.add(TextSpan(
+          children: getSplittedTextWidget(
+              text.substring(0, dateMatch.start), index)));
+    }
+
+    final String linkText = match?.group(0) ?? '';
+    final String dateText = dateMatch?.group(0) ?? '';
     if (linkText.contains(RegExp(urlPattern, caseSensitive: false))) {
       list.add(buildLinkComponent(linkText, linkText, index, isPatient));
-    } else {
-      throw 'Unexpected match: $linkText';
+    }
+
+    if (dateText.contains(RegExp(datePattern, caseSensitive: false))) {
+      list.add(buildDateComponent(dateText, dateText, index, isPatient));
     }
 
     list.addAll(linkify(
-        text.substring(match.start + linkText.length), index, isPatient));
+        text.substring(match != null
+            ? match?.start + linkText?.length
+            : (dateMatch != null ? dateMatch?.start + dateText?.length : 0)),
+        index,
+        isPatient));
 
     return list;
   }
@@ -2270,4 +2392,146 @@ class ChatScreenState extends State<ChatScreen> {
       );
     }
   }
+
+/*tapDatePicker() async {
+    final selectedDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2101),
+      initialDate: DateTime.now(),
+    );
+    if (selectedDate != null) {
+      var getTextValue = textEditingController.text;
+      if (getTextValue != null && getTextValue.isNotEmpty) {
+        textEditingController.text = getTextValue +
+            //', ' +
+            ', #${getFormattedDateTimeChoose(selectedDate.toString())}#';
+
+        */ /*textEditingController.selection = TextSelection(
+                    baseOffset: textEditingController.text.length,
+                    extentOffset: textEditingController.text.length);*/ /*
+      } else {
+        textEditingController.text =
+            '#${getFormattedDateTimeChoose(selectedDate.toString())}#';
+      }
+
+      */ /*setState(() {
+        isDateIconShown = true;
+      });*/ /*
+    }
+  }*/
 }
+
+class TextFieldColorizer extends TextEditingController {
+  final Map<String, TextStyle> map;
+  final Pattern pattern;
+
+  TextFieldColorizer(this.map)
+      : pattern = RegExp(
+            map.keys.map((key) {
+              return key;
+            }).join('|'),
+            multiLine: true);
+
+  @override
+  set text(String newText) {
+    value = value.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText?.length ?? 0),
+      composing: TextRange.empty,
+    );
+  }
+
+  @override
+  TextSpan buildTextSpan(
+      {BuildContext context, TextStyle style, bool withComposing}) {
+    final List<InlineSpan> children = [];
+    String patternMatched;
+    String formatText;
+    TextStyle myStyle;
+    text.splitMapJoin(
+      pattern,
+      onMatch: (Match match) {
+        myStyle = map[match[0]] ??
+            map[map.keys.firstWhere(
+              (e) {
+                bool ret = false;
+                RegExp(e).allMatches(text)
+                  ..forEach((element) {
+                    if (element.group(0) == match[0]) {
+                      patternMatched = e;
+                      ret = true;
+                      return true;
+                    }
+                  });
+                return ret;
+              },
+            )];
+
+        if (patternMatched == "#(.*?)#") {
+          formatText = match[0].replaceAll("#", " ");
+        } else {
+          formatText = match[0];
+        }
+        children.add(TextSpan(
+          text: formatText,
+          style: style.merge(myStyle),
+        ));
+        return "";
+      },
+      onNonMatch: (String text) {
+        children.add(TextSpan(text: text, style: style));
+        return "";
+      },
+    );
+
+    return TextSpan(style: style, children: children);
+  }
+}
+
+/*class TextFieldColorizer extends TextEditingController {
+  final Map<String, TextStyle> map;
+  final Pattern pattern;
+
+  TextFieldColorizer(this.map)
+      : pattern = RegExp(
+            map.keys.map((key) {
+              return key;
+            }).join('|'),
+            multiLine: true);
+
+  @override
+  set text(String newText) {
+    value = value.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText?.length ?? 0),
+      composing: TextRange.empty,
+    );
+  }
+
+  @override
+  TextSpan buildTextSpan(
+      {BuildContext context, TextStyle style, bool withComposing}) {
+    final List<InlineSpan> children = [];
+    String patternMatched;
+    String formatText;
+    TextStyle myStyle;
+
+    var splittedWords = text.split('~');
+    splittedWords.forEach((word) {
+      if (DateTime.tryParse(word?.trim()) != null) {
+        children
+            .add(TextSpan(style: TextStyle(color: Colors.orange), text: word));
+      } else {
+        children
+            .add(TextSpan(style: TextStyle(color: Colors.black), text: word));
+      }
+    });
+
+    */ /*if(text.contains('-')){
+      children.add(TextSpan(style: TextStyle(color: Colors.orange), text: text.substring(0, text.indexOf('-'))));
+      children.add(TextSpan(text: text.substring(text.indexOf('-'))));
+    } */ /*
+    return TextSpan(style: style, children: children);
+  }
+}*/

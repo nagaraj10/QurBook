@@ -22,6 +22,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class PaymentPage extends StatefulWidget {
   final String redirectUrl;
   final String paymentId;
+  final String appointmentId;
   Function(String) closePage;
   bool isFromSubscribe;
   bool isFromRazor;
@@ -30,6 +31,7 @@ class PaymentPage extends StatefulWidget {
       {Key key,
       @required this.redirectUrl,
       @required this.paymentId,
+      @required this.appointmentId,
       @required this.isFromSubscribe,
       @required this.isFromRazor,
       this.closePage})
@@ -42,6 +44,7 @@ class PaymentPage extends StatefulWidget {
 class _WebViewExampleState extends State<PaymentPage> {
   String PAYMENT_URL;
   String paymentId;
+  String appointmentId;
   UpdatePaymentViewModel updatePaymentViewModel;
   bool isFromSubscribe = false;
   bool isFromRazor = false;
@@ -59,6 +62,7 @@ class _WebViewExampleState extends State<PaymentPage> {
     updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
+    appointmentId = widget.appointmentId;
     isFromSubscribe = widget.isFromSubscribe;
     isFromRazor = widget.isFromRazor;
 
@@ -357,7 +361,10 @@ class _WebViewExampleState extends State<PaymentPage> {
                     widget.closePage(value);
                     Navigator.pop(context);
                   },
-                )));
+              isFromRazor: isFromRazor,
+              paymentRetryUrl: PAYMENT_URL,
+              paymentId: paymentId,
+              appointmentId: appointmentId)));
   }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {

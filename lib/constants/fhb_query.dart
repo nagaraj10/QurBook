@@ -249,6 +249,7 @@ const String qr_get = 'get';
 const String regiment = 'plan-package-master/wrapperApi';
 const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
+const String getEventId = 'activity-master/save-personal-plan-symptom';
 
 const String qr_health_conditions = 'Action=GetMenu';
 
@@ -290,3 +291,5 @@ const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
 const String qr_code_tags='TAGS';
+
+const String retry_payment='appointment/check-retry-appointment?id=';

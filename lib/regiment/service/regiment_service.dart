@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
@@ -15,8 +16,11 @@ import '../../common/CommonUtil.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
-  static Future<RegimentResponseModel> getRegimentData(
-      {String dateSelected, int isSymptoms = 0}) async {
+  static Future<RegimentResponseModel> getRegimentData({String dateSelected,
+    int isSymptoms = 0,
+    bool isForMasterData = false,
+    String searchText = ''}) async {
+    var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -24,22 +28,41 @@ class RegimentService {
       var currentLanguage = '';
       var lan = CommonUtil.getCurrentLanCode();
       if (lan != 'undef') {
-        var langCode = lan.split('-').first;
+        var langCode = lan
+            .split('-')
+            .first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
       }
-      var response = await ApiServices.post(
-        urlForRegiment,
-        headers: headerRequest,
-        body: json.encode(
-          {
-            "method": "get",
-            "data":
-                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms${variable.qr_patientEqaul}$userId",
-          },
-        ),
-      );
+      if (isForMasterData) {
+        response = await ApiServices.post(
+          urlForRegiment,
+          headers: headerRequest,
+          body: json.encode(
+            {
+              "method": "get",
+              "data":
+              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms&all=1&page=0&pagesize=50&search=$searchText${variable
+                  .qr_patientEqaul}$userId",
+            },
+          ),
+        );
+      } else {
+        response = await ApiServices.post(
+          urlForRegiment,
+          headers: headerRequest,
+          body: json.encode(
+            {
+              "method": "get",
+              "data":
+              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms${variable
+                  .qr_patientEqaul}$userId",
+            },
+          ),
+        );
+      }
+
       if (response != null && response.statusCode == 200) {
         print(response.body);
         return RegimentResponseModel.fromJson(json.decode(response.body));
@@ -71,7 +94,7 @@ class RegimentService {
       var followEventParams = '';
       if (isFollowEvent ?? false) {
         followEventParams =
-            '&followevent=1&context=${followEventContext ?? ''}';
+        '&followevent=1&context=${followEventContext ?? ''}';
       }
       var response = await ApiServices.post(
         urlForRegiment,
@@ -80,7 +103,8 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams",
+            "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ??
+                ''}${variable.qr_patientEqaul}$userId$followEventParams",
           },
         ),
       );
@@ -111,7 +135,8 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable.qr_patientEqaul}$userId",
+            "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable
+                .qr_patientEqaul}$userId",
           },
         ),
       );
@@ -142,7 +167,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SetOtherData&eid=$eid&dataname=PHOTO&name=&url=$url",
+            "Action=SetOtherData&eid=$eid&dataname=PHOTO&name=&url=$url",
           },
         ),
       );
@@ -173,7 +198,7 @@ class RegimentService {
           {
             'method': 'get',
             'data':
-                "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
+            "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -234,7 +259,8 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SetProfile$schedules&IsDefault=0${variable.qr_patientEqaul}$userId",
+            "Action=SetProfile$schedules&IsDefault=0${variable
+                .qr_patientEqaul}$userId",
           },
         ),
       );
@@ -253,7 +279,10 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> undoSaveFormData({String eid}) async {
+  static Future<SaveResponseModel> undoSaveFormData({
+    String eid,
+    String activityDate,
+  }) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
@@ -264,7 +293,9 @@ class RegimentService {
         body: json.encode(
           {
             'method': 'post',
-            'data': "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId",
+            'data':
+            "Action=UnDO&eid=$eid${variable
+                .qr_patientEqaul}$userId&date=$activityDate",
           },
         ),
       );
@@ -294,10 +325,6 @@ class RegimentService {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var hh = DateFormat('HH').format(startTime);
       var mm = DateFormat('mm').format(startTime);
-      var date = '${CommonUtil.dateConversionToApiFormat(
-        startTime,
-        isIndianTime: true,
-      )}';
       var hide = isDisable ? '1' : '0';
       var response = await ApiServices.post(
         urlForRegiment,
@@ -306,7 +333,8 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable.qr_patientEqaul}$userId",
+            "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable
+                .qr_patientEqaul}$userId",
             // 'data':
             //     'Action=${isDisable ? 'DisableUserActivity' : 'EnableUserActivity'}&teid=$eidUser${variable.qr_patientEqaul}$userId',
           },
@@ -320,6 +348,35 @@ class RegimentService {
           result: SaveResultModel(),
           isSuccess: false,
         );
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('$e was thrown');
+    }
+  }
+
+  static Future<GetEventIdModel> getEventId({dynamic uid, dynamic aid,
+    dynamic formId, dynamic formName}) async {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForGetEventId = Constants.BASE_URL + variable.getEventId;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var response = await ApiServices.post(
+        urlForGetEventId,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'uid': uid,
+            'aid': aid,
+            'formId': formId,
+            'formName': formName,
+            'userId': userId
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return GetEventIdModel.fromJson(json.decode(response.body));
       }
     } catch (e) {
       print(e);

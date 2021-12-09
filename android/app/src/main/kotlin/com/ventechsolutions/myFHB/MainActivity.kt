@@ -640,6 +640,7 @@ class MainActivity : FlutterActivity() {
                         handler.postDelayed(runnable, 1000)
                         //dialog.dismiss()
                         spin_kit.visibility = View.GONE
+                        displayText.setText(finalWords)
                         finalWords = null
                     } else if (finalWords == "") {
                         //do nothing

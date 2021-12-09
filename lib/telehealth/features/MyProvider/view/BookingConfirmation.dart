@@ -1221,7 +1221,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.shorturl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      true);
+                      true,value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(
@@ -1238,7 +1238,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.longurl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      false);
+                      false,value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(noUrl, Colors.red);
@@ -1269,7 +1269,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
   }
 
-  goToPaymentPage(String longurl, String paymentId, bool isRazor) {
+  goToPaymentPage(String longurl, String paymentId, bool isRazor,String appointmentId) {
     CommonUtil.recordIds.clear();
     CommonUtil.notesId.clear();
     CommonUtil.voiceIds.clear();
@@ -1280,6 +1280,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             builder: (context) => PaymentPage(
                   redirectUrl: longurl,
                   paymentId: paymentId,
+                  appointmentId: appointmentId,
                   isFromSubscribe: false,
                   isFromRazor: isRazor,
                   closePage: (value) {
@@ -1367,16 +1368,20 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   Expanded(
                       child: Row(
                     children: [
-                      widget.isFromHospital
-                          ? commonWidgets.setDoctornameForHos(widget
+                      Container(
+                          constraints: BoxConstraints(
+                              maxWidth: 160.w),
+                          child: widget.isFromHospital
+                              ? commonWidgets.setDoctornameForHos(widget
                               .resultFromHospitalList[widget.doctorListIndex]
                               .doctor
                               .user)
-                          : commonWidgets.setDoctorname(widget
-                                  .isFromFollowReschedule
+                              : commonWidgets.setDoctorname(widget
+                              .isFromFollowReschedule
                               ? widget.docsReschedule[widget.doctorListPos].user
-                              : widget.docs[widget.doctorListPos].user),
-                      commonWidgets.getSizeBoxWidth(10.0),
+                              : widget.docs[widget.doctorListPos].user)),
+
+                      //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
