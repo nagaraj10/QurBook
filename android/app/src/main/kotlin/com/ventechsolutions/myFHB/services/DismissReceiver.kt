@@ -1,17 +1,22 @@
 package com.ventechsolutions.myFHB.services
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationManagerCompat
+import android.util.Log
 import com.ventechsolutions.myFHB.MyApp
-import com.ventechsolutions.myFHB.R
+import com.ventechsolutions.myFHB.SharedPrefUtils
+import com.ventechsolutions.myFHB.services.ReminderBroadcaster.Companion.NOTIFICATION_ID
 
 class DismissReceiver:BroadcastReceiver() {
 
-    override fun onReceive(p0: Context?, p1: Intent?) {
-        val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
-        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
-        nsManager.cancel(notificationId!! as Int)
+    override fun onReceive(context: Context, intent: Intent) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
+        notificationManager.cancel(notificationId)
+        Log.e("DismissReceiver", "onReceive: "+notificationId )
+
+        SharedPrefUtils().deleteNotificationObject(context, notificationId)
 
         /*val reminderService = Intent(p0, RemiderService::class.java)
         p0.stopService(reminderService)*/

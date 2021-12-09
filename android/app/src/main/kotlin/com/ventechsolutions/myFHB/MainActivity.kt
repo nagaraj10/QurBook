@@ -1,10 +1,10 @@
 package com.ventechsolutions.myFHB
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.net.Uri
@@ -42,12 +42,8 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import kotlinx.android.synthetic.main.progess_dialog.*
-import org.json.JSONArray
-import org.json.JSONObject
 import java.lang.StringBuilder
-import java.math.BigInteger
 import java.security.SecureRandom
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.system.exitProcess
@@ -381,7 +377,6 @@ class MainActivity : FlutterActivity() {
                     data?.let { heyCancelMyReminder(it) }
                     result.success("success")
                 } else {
-//                    testNotification()
                     result.notImplemented()
                 }
             } catch (e: Exception) {
@@ -390,93 +385,6 @@ class MainActivity : FlutterActivity() {
         }
 
 
-    }
-
-    private fun testNotification() {
-        val map1:MutableMap<String,Any> = mutableMapOf()
-        map1["title"]= "data"
-        map1["description"]= "data"
-        map1["eid"]= "1377473000"
-        map1["timeDelay"]= "3000"
-        val map2:MutableMap<String,Any> = mutableMapOf()
-        map2["title"]= "data"
-        map2["description"]= "data"
-        map2["eid"]= "1377473"
-        map2["timeDelay"]= "6000"
-        val map3:MutableMap<String,Any> = mutableMapOf()
-        map3["title"]= "data"
-        map3["description"]= "data"
-        map3["eid"]= "1377473111"
-        map3["timeDelay"]= "9000"
-        val data = listOf(map1,map2,map3)
-        createNotificationChannel()
-        data.forEach {
-            Log.e("data","working")
-            val futureInMillis = SystemClock.elapsedRealtime() + (it["timeDelay"].toString().toLong())
-            val notiId=NotificationID.currentMillis
-            scheduleNotification(this,futureInMillis,notiId)
-
-        }
-    }
-
-
-    fun scheduleNotification(
-        context: Context,
-        futureInMillis: Long,
-        notificationId: Int
-    ) { //delay is after how much time(in millis) from current time you want to schedule the notification
-
-        try {
-
-
-        val builder : NotificationCompat.Builder = NotificationCompat.Builder(context,"schedule")
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-            .setContentTitle("title")
-            .setContentText("body")
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
-//            .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
-//            .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
-            .setAutoCancel(true)
-//            .setSound(_sound)
-            //.setOngoing(true)
-            .setOnlyAlertOnce(false)
-
-//        val builder: NotificationCompat.Builder = NotificationCompat.Builder(context,"schedule")
-//            .setContentTitle("title")
-//            .setContentText("description")
-//            .setAutoCancel(true)
-//            .setSmallIcon(R.mipmap.ic_launcher)
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//            .setLargeIcon(
-//                (context.getResources().getDrawable(R.drawable.app_icon) as BitmapDrawable).bitmap
-//            )
-//            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-//        val intent = Intent(context, MainActivity::class.java)
-//        val activity = PendingIntent.getActivity(
-//            context,
-//            notificationId,
-//            intent,
-//            PendingIntent.FLAG_CANCEL_CURRENT
-//        )
-//        builder.setContentIntent(activity)
-        val notification: Notification = builder.build()
-        val notificationIntent = Intent(context, ReminderBroadcaster::class.java)
-        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, notificationId)
-        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
-        val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            notificationId,
-            notificationIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager[AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis] = pendingIntent
-
-        }catch (e : Exception){
-            Log.e("error",e.message.toString())
-        }
     }
 
 
@@ -1065,6 +973,7 @@ class MainActivity : FlutterActivity() {
 
     }
 
+    @SuppressLint("LaunchActivityFromNotification")
     private fun createNotifiationBuilder(title:String,
                                          body:String,
                                          eId:String,
@@ -1072,17 +981,23 @@ class MainActivity : FlutterActivity() {
                                          currentMillis : Long,
                                          isCancel:Boolean,
                                          isButtonShown:Boolean,){
+        try{
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
-                    val dismissIntent = Intent(this, DismissReceiver::class.java)
-            dismissIntent.putExtra(this.getString(R.string.nsid), nsId)
-            val dismissIntentPendingIntent = PendingIntent.getBroadcast(this, 0, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
+        val dismissIntent = Intent(this, DismissReceiver::class.java)
+        dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+        val dismissPendingIntent = PendingIntent.getBroadcast(
+            this,
+            nsId,
+            dismissIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
             val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
-            snoozeIntent.putExtra(this.getString(R.string.nsid), nsId)
+            snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
             snoozeIntent.putExtra(this.getString(R.string.title), title)
             snoozeIntent.putExtra(this.getString(R.string.body), body)
-            val snoozePendingIntent = PendingIntent.getBroadcast(this, 0, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val snoozePendingIntent = PendingIntent.getBroadcast(this, nsId, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
             val onTapNS = Intent(this, OnTapNotification::class.java)
@@ -1104,7 +1019,7 @@ class MainActivity : FlutterActivity() {
                 .setContentIntent(onTapPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction(R.drawable.ic_close, "Dismiss", dismissIntentPendingIntent)
+                .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
                 .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
                 .setAutoCancel(true)
                 .setSound(_sound)
@@ -1122,30 +1037,33 @@ class MainActivity : FlutterActivity() {
                 .setOnlyAlertOnce(false)
         }
         val notification: Notification = builder.build()
-        val notificationAndAlarmId=NotificationID.currentMillis
-        val notificationIntent = Intent(context, ReminderBroadcaster::class.java)
-        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, notificationAndAlarmId)
+        val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
+        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
         notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
         val pendingIntent = PendingIntent.getBroadcast(
-            context,
-            notificationAndAlarmId,
+            this,
+            nsId,
             notificationIntent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent);
         }else{
             alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent);
         }
+
+    }catch (e:Exception){
+        Log.e("crash",e.message.toString())
+    }
     }
 
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Testing"
-            val descriptionText = "Testing Purpose"
+            val name = "Reminder Channel"
+            val descriptionText = "Scheduled Notification"
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel("schedule", name, importance).apply {
                 description = descriptionText
