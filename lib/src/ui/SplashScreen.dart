@@ -17,6 +17,7 @@ import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/regiment/view/manage_activities/manage_activities_screen.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -332,15 +333,23 @@ class _SplashScreenState extends State<SplashScreen> {
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myRecords' &&
                         (widget.templateName != null &&
-                            widget.templateName != '') &&
-                        (widget.bundle != null && widget.bundle != '')) {
+                            widget.templateName != '')
+                        ) {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'myRecords',
                         'navigationPage': '${widget.templateName}',
                       });
-                      CommonUtil().navigateToMyRecordsCategory(
-                          widget.templateName, [widget.bundle], true);
+
+                      if(widget.bundle != null && widget.bundle != ''){
+                        CommonUtil().navigateToMyRecordsCategory(
+                            widget.templateName, [widget.bundle], true);
+                      }else{
+                        CommonUtil().navigateToMyRecordsCategory(
+                            widget.templateName, null, true);
+                      }
+
+
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -490,7 +499,17 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
                       });
-                    } else {
+                    }else if (widget.nsRoute == 'manageActivities') {
+                      fbaLog(eveParams: {
+                        'eventTime': '${DateTime.now()}',
+                        'ns_type': 'manageActivities',
+                        'navigationPage': 'Manage Activities',
+                      });
+                      Get.to(ManageActivitiesScreen(
+                      )).then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
+                    }
+                    else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'landing',
