@@ -1,6 +1,7 @@
 package com.ventechsolutions.myFHB.services
 
 import android.app.AlarmManager
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.ContentResolver
@@ -16,21 +17,25 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
+import com.ventechsolutions.myFHB.SharedPrefUtils
 import java.util.*
 
 class SnoozeReceiver : BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
-        val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
+        val notificationId = p1?.getIntExtra(ReminderBroadcaster.NOTIFICATION_ID, 0)
         val currentMillis = p1?.getLongExtra(p0?.getString(R.string.currentMillis), 0)
         val title = p1?.getStringExtra(p0?.getString(R.string.title))
         val body = p1?.getStringExtra(p0?.getString(R.string.body))
-        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
+
+        val nsManager = p0?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val nsTimeThreshold = 300000
         MyApp.snoozeTapCountTime = MyApp.snoozeTapCountTime + 1
         if (MyApp.snoozeTapCountTime <= 1) {
             //currentMillis?.let { snoozeForSometime(p0, title, body, notificationId, it + nsTimeThreshold) }
             snoozeForSometime(p0, title, body, notificationId, Calendar.getInstance().timeInMillis + nsTimeThreshold)
-            nsManager.cancel(notificationId!! as Int)
+            notificationId?.let { nsManager.cancel(it) }
+            notificationId?.let { SharedPrefUtils().deleteNotificationObject(p0, it) }
+
         } else {
             Handler().postDelayed({
                 val CHANNEL_REMINDER = "ch_reminder"

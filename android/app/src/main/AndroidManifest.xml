@@ -34,6 +34,7 @@
         android:requestLegacyExternalStorage="true"
         android:allowBackup="false"
         android:fullBackupOnly="false">
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
@@ -115,7 +116,7 @@
         <receiver android:name=".services.Callback" />
         <receiver android:name=".services.Decline" />
         <service android:name=".services.AVServices"/>
-        <receiver android:name=".services.DismissReceiver"/>
+        <receiver android:name=".services.DismissReceiver" android:process=":dismiss"/>
         <receiver android:name=".services.NoReceiver"/>
         <receiver android:name=".services.SnoozeReceiver"/>
         <receiver android:name=".services.ReminderBroadcaster" android:process=":remote"/>
