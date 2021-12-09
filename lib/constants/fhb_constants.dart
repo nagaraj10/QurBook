@@ -402,6 +402,7 @@ const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
 const String STR_INSTAMOJO = 'instamojo';
 const String STR_RAZOPAY = 'razorpay';
+const String STR_NOT_AVAILABLE = 'Not Available';
 
 const String STR_JPG = '.jpg';
 const String STR_JPEG = '.jpeg';

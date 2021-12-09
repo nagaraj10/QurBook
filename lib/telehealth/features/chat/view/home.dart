@@ -579,7 +579,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   height: 1,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     document[STR_CREATED_AT] != null
                                         ? LAST_RECEIVED +
@@ -596,6 +596,19 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         fontFamily: variable.font_poppins),
                                   ),
                                 ),
+                                if ((widget?.careGiversList?.length ?? 0) > 0 &&
+                                    document[STR_IS_DISABLE] != null &&
+                                    document[STR_IS_DISABLE] == true)
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: Text(
+                                      STR_NOT_AVAILABLE,
+                                      style: TextStyle(
+                                          color: Colors.redAccent,
+                                          fontSize: 14.0.sp,
+                                          fontFamily: variable.font_poppins),
+                                    ),
+                                  )
                               ],
                             ),
                           ),
