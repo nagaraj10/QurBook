@@ -130,6 +130,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   var cntrlr_addr_city = TextEditingController(text: '');
   var cntrlr_addr_state = TextEditingController(text: '');
   var cntrlr_addr_zip = TextEditingController(text: '');
+
+  var cntrlr_corp_name = TextEditingController(text: '');
+
   final _formkey = GlobalKey<FormState>();
 
   City cityVal = City();
@@ -509,6 +512,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 else
                   Container(),
                 _showDateOfBirthTextFieldNew(),
+                cntrlr_corp_name.text != ''
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+                        child: TextField(
+                          style: TextStyle(fontSize: 16.0.sp),
+                          controller: cntrlr_corp_name,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(fontSize: 16.0.sp),
+                            labelText: CommonConstants.corpname,
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
                 AddressTypeWidget(
                   addressResult: _addressResult,
                   addressList: _addressList,
@@ -1479,6 +1496,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           selectedGender = widget.arguments.myProfileResult.gender;
         }
 
+        if (widget.arguments.myProfileResult.membershipOfferedBy != null &&
+            widget.arguments.myProfileResult.membershipOfferedBy != '') {
+          cntrlr_corp_name.text =
+              widget.arguments.myProfileResult.membershipOfferedBy;
+        }
         selectedTags = addFamilyUserInfoBloc.tagsList != null &&
                 addFamilyUserInfoBloc.tagsList.length > 0
             ? addFamilyUserInfoBloc.tagsList
@@ -1539,6 +1561,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ?.userContactCollection3[0].phoneNumber;
           emailController.text = widget
               ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+        }
+        if (widget
+            ?.arguments?.sharedbyme?.child?.membershipOfferedBy != null &&
+            widget
+                ?.arguments?.sharedbyme?.child?.membershipOfferedBy != '') {
+          cntrlr_corp_name.text =
+              widget
+                  ?.arguments?.sharedbyme?.child?.membershipOfferedBy;
         }
       }
       if (widget.arguments.sharedbyme != null) {
@@ -1709,6 +1739,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (value?.result?.additionalInfo != null) {
           heightController.text = value?.result?.additionalInfo?.height ?? '';
           weightController.text = value?.result?.additionalInfo?.weight ?? '';
+        }
+
+        if (value.result.membershipOfferedBy != null &&
+            value.result.membershipOfferedBy != '') {
+          cntrlr_corp_name.text =
+              value.result.membershipOfferedBy;
         }
       });
     }

@@ -69,6 +69,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var cntrlr_addr_state = TextEditingController(text: '');
   var cntrlr_addr_zip = TextEditingController(text: '');
 
+  var cntrlr_corp_name = TextEditingController(text: '');
+
   LanguageModel languageModelList;
   LanguageRepository languageBlock = new LanguageRepository();
 
@@ -316,6 +318,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
           cntrlr_addr_city.text = data.userAddressCollection3[0].city?.name;
           cntrlr_addr_state.text = data.userAddressCollection3[0].state?.name;
         }
+      }
+      if (data.membershipOfferedBy != null && data.membershipOfferedBy != '') {
+        cntrlr_corp_name.text = data.membershipOfferedBy;
       }
     }
     try {
@@ -645,6 +650,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         labelText: CommonConstants.year_of_birth_with_star),
                   ),
                 ),
+                cntrlr_corp_name.text != ''
+                    ? Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextField(
+                          style: TextStyle(fontSize: 16.0.sp),
+                          controller: cntrlr_corp_name,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(fontSize: 16.0.sp),
+                            labelText: CommonConstants.corpname,
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
