@@ -1554,6 +1554,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           mobileNoController.text = '';
           emailController.text = '';
         }
+
+        if (widget
+            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
+            widget
+                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+          cntrlr_corp_name.text =
+              widget
+                  ?.arguments?.sharedbyme?.membershipOfferedBy;
+        }
       } else {
         if (widget
             ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
@@ -1563,12 +1572,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
         }
         if (widget
-            ?.arguments?.sharedbyme?.child?.membershipOfferedBy != null &&
+            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
             widget
-                ?.arguments?.sharedbyme?.child?.membershipOfferedBy != '') {
+                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
               widget
-                  ?.arguments?.sharedbyme?.child?.membershipOfferedBy;
+                  ?.arguments?.sharedbyme?.membershipOfferedBy;
         }
       }
       if (widget.arguments.sharedbyme != null) {

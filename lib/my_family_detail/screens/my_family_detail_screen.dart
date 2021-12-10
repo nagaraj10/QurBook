@@ -374,8 +374,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
-    if(sharedbyme?.child?.membershipOfferedBy!=null && sharedbyme?.child?.membershipOfferedBy!=''){
-      cntrlr_corp_name.text=sharedbyme?.child?.membershipOfferedBy;
+    if(sharedbyme?.membershipOfferedBy!=null && sharedbyme?.membershipOfferedBy!=''){
+      cntrlr_corp_name.text=sharedbyme?.membershipOfferedBy;
     }
 
 
