@@ -571,6 +571,8 @@ const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 const strRenewal = ' - Renewal';
 
+const strMemb = 'MEMB';
+
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';
 const activitiesError =
