@@ -2526,6 +2526,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
                                       //setState(() {});
+                                      QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
@@ -3074,6 +3075,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
                                       //setState(() {});
+                                      QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
