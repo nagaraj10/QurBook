@@ -82,6 +82,7 @@ class SharedByUsers {
   String lastModifiedOn;
   RelationsShipModel relationship;
   Child child;
+  String membershipOfferedBy;
 
   SharedByUsers({this.id,
     this.status,
@@ -90,7 +91,7 @@ class SharedByUsers {
     this.createdOn,
     this.lastModifiedOn,
     this.relationship,
-    this.child});
+    this.child,this.membershipOfferedBy});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -99,6 +100,8 @@ class SharedByUsers {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    if(json.containsKey('membershipOfferedBy'))
+    membershipOfferedBy = json['membershipOfferedBy'];
     relationship = json['relationship'] != null
         ? RelationsShipModel.fromJson(json['relationship'])
         : null;
@@ -113,6 +116,7 @@ class SharedByUsers {
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
+    data['membershipOfferedBy'] = membershipOfferedBy;
     if (relationship != null) {
       data['relationship'] = relationship.toJson();
     }
@@ -199,7 +203,6 @@ class Child {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
-  String membershipOfferedBy;
   List<UserContactCollectionFamily> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
   List<UserAddressCollection3> userAddressCollection3;
@@ -235,7 +238,7 @@ class Child {
     this.userContactCollection3,
     this.userRoleCollection3,
     this.userAddressCollection3,
-    this.additionalInfo, this.membershipOfferedBy
+    this.additionalInfo,
   });
 
   Child.fromJson(Map<String, dynamic> json) {
@@ -264,9 +267,7 @@ class Child {
     createdBy = json['createdBy'];
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
-    if (json.containsKey('membershipOfferedBy')) {
-      membershipOfferedBy = json['membershipOfferedBy'];
-    }
+
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userContactCollection3'] != null) {
       userContactCollection3 = <UserContactCollectionFamily>[];
@@ -319,7 +320,6 @@ class Child {
     data['createdOn'] = createdOn;
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
-    data['membershipOfferedBy'] = membershipOfferedBy;
     if (userContactCollection3 != null) {
       data['userContactCollection3'] =
           userContactCollection3.map((v) => v.toJson()).toList();
