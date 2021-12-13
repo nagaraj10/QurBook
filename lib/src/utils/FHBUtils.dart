@@ -16,7 +16,7 @@ import 'package:sqflite/sqflite.dart';
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
-  static final String ANDROID_FILE_PATH = '/storage/emulated/0/MYFHB/';
+  static final String ANDROID_FILE_PATH = '/storage/emulated/0/Qurbook/';
   List<String> YMDList = [
     'sq_AL',
     'en_AU',
@@ -298,7 +298,7 @@ class FHBUtils {
       _appDocDirFolder = Directory(ANDROID_FILE_PATH);
     } else {
       final Directory _appDocDir = await getApplicationDocumentsDirectory();
-      _appDocDirFolder = Directory('${_appDocDir.path}/MYFHB');
+      _appDocDirFolder = Directory('${_appDocDir.path}/Qurbook');
     }
 
     if (await _appDocDirFolder.exists()) {
@@ -312,8 +312,8 @@ class FHBUtils {
     }
   }
 
-  static Future<String> createFolderInAppDocDirClone(String folderName) async {
-    Directory _appDocDirFolder;
+  static Future<String> createFolderInAppDocDirClone(String folderName,String fileType) async {
+   /* Directory _appDocDirFolder;
     //Create Directory with app name
     final Directory _appDocDir = await getTemporaryDirectory();
     _appDocDirFolder = Directory(_appDocDir.path);
@@ -326,7 +326,29 @@ class FHBUtils {
       final Directory _appDocDirNewFolder =
           await _appDocDirFolder.create(recursive: true);
       return _appDocDirNewFolder.path;
+    }*/
+
+    Directory appDocDir = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+    if (Platform.isAndroid) {
+      Directory(appDocDir.path.split('Android')[0] + '${DBConstants.appName}')
+          .createSync();
     }
+
+    String path = Platform.isIOS
+        ? appDocDir.path + '/$fileType'
+        : appDocDir.path.split('Android')[0] +
+        '${DBConstants.appName}/$fileType';
+    print(path);
+    File file = File(path);
+    if (!await file.exists()) {
+      await file.create();
+    } else {
+      await file.delete();
+      await file.create();
+    }
+    return path;
   }
 
   static Future<String> abstractUserData() async {

@@ -24,9 +24,11 @@ import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'constants/router_variable.dart';
 import 'regiment/models/regiment_arguments.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
+import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
 import 'constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
@@ -150,12 +152,15 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
+  var reminderMethodChannelAndroid =
+      const MethodChannel('android/notification');
+
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     var cameras = await availableCameras();
     listOfCameras = cameras;
-
+    reminderMethodChannelAndroid.invokeMethod('testingNotification');
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
@@ -654,7 +659,17 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        } else {
+        }
+        else if (passedValArr[1] == 'manageActivities') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'manageActivities',
+            'navigationPage': 'Manage Activities',
+          });
+          Get.to(ManageActivitiesScreen()).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
+        }
+        else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointment_list',
@@ -1048,7 +1063,17 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: 'mycart',
               bundle: parsedData[2],
             );
-          } else {
+          }
+          else if (parsedData[1] == 'manageActivities') {
+
+            return SplashScreen(
+              nsRoute: 'manageActivities',
+              bundle: parsedData[2],
+            );
+
+          }
+
+          else {
             return SplashScreen(
               nsRoute: '',
             );

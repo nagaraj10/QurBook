@@ -1,18 +1,23 @@
 package com.ventechsolutions.myFHB
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -20,6 +25,7 @@ import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.multidex.BuildConfig
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -28,8 +34,7 @@ import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ventechsolutions.myFHB.constants.Constants
-import com.ventechsolutions.myFHB.services.AVServices
-import com.ventechsolutions.myFHB.services.ReminderBroadcaster
+import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -37,13 +42,15 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import kotlinx.android.synthetic.main.progess_dialog.*
-import java.math.BigInteger
-import java.text.SimpleDateFormat
+import java.lang.StringBuilder
+import java.security.SecureRandom
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.system.exitProcess
 
 
 class MainActivity : FlutterActivity() {
+
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
@@ -109,6 +116,8 @@ class MainActivity : FlutterActivity() {
     private val REMINDER_METHOD_NAME = "addReminder"
     private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
     var alarmManager: AlarmManager? = null
+
+    var elapsedTime=3000;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -361,15 +370,11 @@ class MainActivity : FlutterActivity() {
                             data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
                     )
 
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        heyKindlyRemindMe(retMap)
-                    }
+                    heyKindlyRemindMe(retMap)
                     result.success("success")
                 } else if (call.method == CANCEL_REMINDER_METHOD_NAME) {
                     val data = call.argument<String>("data")
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        data?.let { heyCancelMyReminder(it) }
-                    }
+                    data?.let { heyCancelMyReminder(it) }
                     result.success("success")
                 } else {
                     result.notImplemented()
@@ -378,7 +383,10 @@ class MainActivity : FlutterActivity() {
                 print("exception" + e.message)
             }
         }
+
+
     }
+
 
     private fun startOnGoingNS(name: String, mode: String) {
         if (mode == Constants.PROP_START) {
@@ -897,6 +905,7 @@ class MainActivity : FlutterActivity() {
         reminderBroadcaster.putExtra("body", body)
         /*reminderBroadcaster.putExtra("nsid", nsId.toInt())*/
         reminderBroadcaster.putExtra("isCancel", false)
+        createNotificationChannel()
 
         if (remindBefore.toInt() > 0) {
             // Set the alarm to start for specific time
@@ -910,45 +919,16 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            //var calendar :Calendar =  calendarTemp.add(Calendar.MINUTE,-remindBefore.toInt());
-
             calendar.add(Calendar.MINUTE, -remindBefore.toInt());
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
                 val eIdAppend = "${nsId}${"000"}"
-                reminderBroadcaster.putExtra("nsid", eIdAppend.toInt())
-                reminderBroadcaster.putExtra("isButtonShown", false)
-                val pendingIntent = PendingIntent.getBroadcast(
-                        this,
-                        eIdAppend.toInt(),
-                        reminderBroadcaster,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager?.setAndAllowWhileIdle(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent
-                    )
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    alarmManager?.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent
-                    )
-                } else {
-                    alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-                }
-                val date = Date(alarmManager?.nextAlarmClock?.triggerTime!!)
-                val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+                val notificationAndAlarmId=NotificationID.currentMillis
+                SharedPrefUtils().saveAlarmId(this,eIdAppend,notificationAndAlarmId)
+                createNotifiationBuilder(title,body,eIdAppend,notificationAndAlarmId,calendar.timeInMillis,false,false)
             }
-
-
         }
-
 
         // Set the alarm to start for specific time
         val calendar: Calendar = Calendar.getInstance().apply {
@@ -961,45 +941,12 @@ class MainActivity : FlutterActivity() {
             set(Calendar.SECOND, 0)
         }
 
-        /*calendar.add(Calendar.MINUTE,0)*/
-
         //check the reminder time with current time if its true allow user to create alaram
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
-            reminderBroadcaster.putExtra("nsid", nsId.toInt())
-            reminderBroadcaster.putExtra("isButtonShown", true)
-            val pendingIntent = PendingIntent.getBroadcast(
-                    this,
-                    nsId.toInt(),
-                    reminderBroadcaster,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-            )
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager?.setAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                )
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                alarmManager?.setExact(
-                        AlarmManager.RTC_WAKEUP,
-                        calendar.timeInMillis,
-                        pendingIntent
-                )
-            } else {
-                alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            }
-            val date = Date(alarmManager?.nextAlarmClock?.triggerTime!!)
-            val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val notificationAndAlarmId=NotificationID.currentMillis
+            SharedPrefUtils().saveAlarmId(this,nsId,notificationAndAlarmId)
+            createNotifiationBuilder(title,body,nsId,notificationAndAlarmId,calendar.timeInMillis,false,true)
         }
-
-
-
-
-
-
-
 
         if (remindin.toInt() > 0) {
             // Set the alarm to start for specific time
@@ -1013,58 +960,136 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            //var calendar = calendarTemp.add(Calendar.MINUTE,remindin.toInt());
-
             calendar.add(Calendar.MINUTE, remindin.toInt());
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-                alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                reminderBroadcaster.putExtra("currentMillis", calendar.timeInMillis)
                 val eIdAppend = "${nsId}${"111"}"
-                reminderBroadcaster.putExtra("nsid", eIdAppend.toInt())
-                reminderBroadcaster.putExtra("isButtonShown", false)
-                val pendingIntent = PendingIntent.getBroadcast(
-                        this,
-                        eIdAppend.toInt(),
-                        reminderBroadcaster,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                )
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager?.setAndAllowWhileIdle(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent
-                    )
-                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    alarmManager?.setExact(
-                            AlarmManager.RTC_WAKEUP,
-                            calendar.timeInMillis,
-                            pendingIntent
-                    )
-                } else {
-                    alarmManager?.set(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-                }
-                val date = Date(alarmManager?.nextAlarmClock?.triggerTime!!)
-                val format = SimpleDateFormat("yyyy-MM-dd HH:mm")
+                val notificationAndAlarmId=NotificationID.currentMillis
+                SharedPrefUtils().saveAlarmId(this,eIdAppend,notificationAndAlarmId)
+                createNotifiationBuilder(title,body,eIdAppend,notificationAndAlarmId,calendar.timeInMillis,false,false)
             }
         }
 
     }
 
+    @SuppressLint("LaunchActivityFromNotification")
+    private fun createNotifiationBuilder(title:String,
+                                         body:String,
+                                         eId:String,
+                                         nsId: Int,
+                                         currentMillis : Long,
+                                         isCancel:Boolean,
+                                         isButtonShown:Boolean,){
+        try{
+        val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
+
+        val dismissIntent = Intent(this, DismissReceiver::class.java)
+        dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+        val dismissPendingIntent = PendingIntent.getBroadcast(
+            this,
+            nsId,
+            dismissIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+            val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
+            snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+            snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
+            snoozeIntent.putExtra(this.getString(R.string.title), title)
+            snoozeIntent.putExtra(this.getString(R.string.body), body)
+            val snoozePendingIntent = PendingIntent.getBroadcast(this, nsId, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+
+            val onTapNS = Intent(this, OnTapNotification::class.java)
+            onTapNS.putExtra("nsid", nsId)
+            onTapNS.putExtra("meeting_id", "")
+            onTapNS.putExtra("username", "")
+            //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+            onTapNS.putExtra(Constants.PROP_DATA, "")
+            onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
+            onTapNS.putExtra(Constants.PROP_HRMID, "")
+            val onTapPendingIntent = PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+        val builder : NotificationCompat.Builder
+        if(isButtonShown){
+            builder= NotificationCompat.Builder(context,"schedule")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setContentIntent(onTapPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
+                .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
+                .setAutoCancel(true)
+                .setSound(_sound)
+                .setOnlyAlertOnce(false)
+        }else{
+            builder= NotificationCompat.Builder(context,"schedule")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
+                .setContentTitle(title)
+                .setContentText(body)
+                .setContentIntent(onTapPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(false)
+        }
+        val notification: Notification = builder.build()
+        val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
+        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            nsId,
+            notificationIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent);
+        }else{
+            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent);
+        }
+
+    }catch (e:Exception){
+        Log.e("crash",e.message.toString())
+    }
+    }
+
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Reminder Channel"
+            val descriptionText = "Scheduled Notification"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel("schedule", name, importance).apply {
+                description = descriptionText
+            }
+            // Register the channel with the system
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun heyCancelMyReminder(nsId: String) {
+        val notificationAndAlarmId=SharedPrefUtils().getNotificationId(this,nsId)
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
-        reminderBroadcaster.putExtra("nsid", nsId.toInt())
+        reminderBroadcaster.putExtra("nsid", notificationAndAlarmId)
         reminderBroadcaster.putExtra("isCancel", true)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
                 this,
-                nsId.toInt(),
+            notificationAndAlarmId,
                 reminderBroadcaster,
                 PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.cancel(pendingIntent)
+        SharedPrefUtils().deleteNotificationObject(this,notificationAndAlarmId)
     }
 
     private fun validateMicAvailability(): Boolean {
@@ -1075,6 +1100,25 @@ class MainActivity : FlutterActivity() {
             available = false
         }
         return available
+    }
+
+
+
+    object NotificationID {
+        private val atomic=AtomicInteger(0)
+        val currentMillis : Int get() =System.currentTimeMillis().toInt()
+//        val currentMillis : Int get() = createRandomCode(5)
+
+        fun createRandomCode(codeLength: Int): Int {
+            val chars = "1234567890".toCharArray()
+            val sb = StringBuilder()
+            val random: Random = SecureRandom()
+            for (i in 0 until codeLength) {
+                val c = chars[random.nextInt(chars.size)]
+                sb.append(c)
+            }
+            return sb.toString().toInt()
+        }
     }
 
 }

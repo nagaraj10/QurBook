@@ -481,9 +481,19 @@ class IosNotificationHandler {
           : Get.to(SplashScreen(
               nsRoute: model.redirect,
             ));
+    } else if (model.redirect == 'manageActivities') {
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'manageActivities',
+        'navigationPage': 'ManageActivities list',
+      });
+      Get.toNamed(rt_ManageActivitiesScreen);
     } else {
       isAlreadyLoaded
-          ? PageNavigator.goTo(Get.context, router.rt_Landing)
+          ? PageNavigator.goTo(
+              Get.context,
+              router.rt_Landing,
+            )
           : Get.to(SplashScreen(
               nsRoute: '',
             ));

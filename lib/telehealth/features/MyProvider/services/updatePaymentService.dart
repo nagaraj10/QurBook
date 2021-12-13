@@ -1,6 +1,7 @@
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/plan_dashboard/model/UpdatePaymentStatusSubscribe.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/PaymentFailureRetryModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
@@ -46,5 +47,12 @@ class UpdatePaymentService {
     final response =
         await _helper.updatePayment(qr_update_payment_subscribe, jsonString);
     return UpdatePaymentStatusSubscribe.fromJson(response);
+  }
+
+  Future<PaymentFailureRetryModel> failureRetry(
+      String appointmentId) async {
+    final response =
+    await _helper.retryPayment(retry_payment+appointmentId);
+    return PaymentFailureRetryModel.fromJson(response);
   }
 }

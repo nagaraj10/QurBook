@@ -81,6 +81,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   var cntrlr_addr_city = TextEditingController(text: '');
   var cntrlr_addr_state = TextEditingController(text: '');
   var cntrlr_addr_zip = TextEditingController(text: '');
+
+  var cntrlr_corp_name = TextEditingController(text: '');
+
   final _formkey = GlobalKey<FormState>();
 
   RelationShipResponseList relationShipResponseList;
@@ -371,6 +374,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
+    if(sharedbyme?.membershipOfferedBy!=null && sharedbyme?.membershipOfferedBy!=''){
+      cntrlr_corp_name.text=sharedbyme?.membershipOfferedBy;
+    }
+
+
     final profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
 
@@ -504,6 +512,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           _showDateOfBirthTextField(),
+          cntrlr_corp_name.text!=''?Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+            child: TextField(
+              style: TextStyle(fontSize: 16.0.sp),
+              controller: cntrlr_corp_name,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 16.0.sp),
+                labelText: CommonConstants.corpname,
+              ),
+            ),
+          ):SizedBox(),
+
           _userAddressInfo(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

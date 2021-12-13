@@ -155,8 +155,10 @@ class ApiBaseHelper {
     return response.data;
   }
 
-  Future<bool> callBackForPlanExpiry(String userId,
-      String planId,) async {
+  Future<bool> callBackForPlanExpiry(
+    String userId,
+    String planId,
+  ) async {
     try {
       final head = await headerRequest.getRequestHeadersAuthContent();
       final body = convert.jsonEncode(
@@ -189,8 +191,10 @@ class ApiBaseHelper {
     }
   }
 
-  Future<bool> callBackFromChat(String careGiverId,
-      String patId,) async {
+  Future<bool> callBackFromChat(
+    String careGiverId,
+    String patId,
+  ) async {
     try {
       final head = await headerRequest.getRequestHeadersAuthContent();
       final body = convert.jsonEncode(
@@ -241,12 +245,12 @@ class ApiBaseHelper {
     return true;
   }
 
-  Future<dynamic> updateTeleHealthProvidersNew(String url,
-      String jsonString) async {
+  Future<dynamic> updateTeleHealthProvidersNew(
+      String url, String jsonString) async {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     final response = await dio.put(_baseUrl + url, data: jsonString);
@@ -501,7 +505,7 @@ class ApiBaseHelper {
       case 200:
         var responseJson;
         if (response.headers[variable.strcontenttype] ==
-            variable.file_img_jpg ||
+                variable.file_img_jpg ||
             response.headers[variable.strcontenttype] ==
                 variable.file_img_png ||
             response.headers[variable.strcontenttype] ==
@@ -611,14 +615,12 @@ class ApiBaseHelper {
       dio.options.headers[variable.strauthorization] = authToken;
       dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-      final fileNoun = file.path
-          .split('/')
-          .last;
+      final fileNoun = file.path.split('/').last;
 
       final FormData formData = FormData.fromMap({
         parameters.strmediaMetaId: metaID,
         parameters.strfile:
-        await MultipartFile.fromFile(file.path, filename: fileNoun.trim())
+            await MultipartFile.fromFile(file.path, filename: fileNoun.trim())
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
@@ -628,8 +630,8 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> signUpPage(String url,
-      Map<String, dynamic> mapForSignUp) async {
+  Future<dynamic> signUpPage(
+      String url, Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
       final dio = Dio();
@@ -712,8 +714,8 @@ class ApiBaseHelper {
     return responseJson;*/
   }
 
-  Future<dynamic> updateRelationShipUserInFamilyLinking(String url,
-      String jsonData) async {
+  Future<dynamic> updateRelationShipUserInFamilyLinking(
+      String url, String jsonData) async {
     var responseJson;
     print(url);
     print(jsonData);
@@ -743,8 +745,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageToServerClone1(String url, File file,
-      String jsonBody) async {
+  Future<dynamic> saveImageToServerClone1(
+      String url, File file, String jsonBody) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -756,14 +758,12 @@ class ApiBaseHelper {
       dio.options.headers[variable.strauthorization] = authToken;
       dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-      final fileNoun = file.path
-          .split('/')
-          .last;
+      final fileNoun = file.path.split('/').last;
 
       final Map<String, dynamic> mapForSignUp = {};
       mapForSignUp[parameters.strSections] = url;
       mapForSignUp[parameters.strprofilePic] =
-      await MultipartFile.fromFile(file.path, filename: fileNoun);
+          await MultipartFile.fromFile(file.path, filename: fileNoun);
 
       final FormData formData = FormData.fromMap(mapForSignUp);
       response = await dio.post(_baseUrl + jsonBody, data: formData);
@@ -806,8 +806,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<List<dynamic>> getDocumentImageListOld(String url,
-      List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<dynamic>> getDocumentImageListOld(
+      String url, List<MediaMasterIds> metaMasterIdList) async {
     final imagesList = List<dynamic>();
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -827,8 +827,8 @@ class ApiBaseHelper {
     return imagesList;
   }
 
-  Future<List<ImageDocumentResponse>> getDocumentImageList(String url,
-      List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<ImageDocumentResponse>> getDocumentImageList(
+      String url, List<MediaMasterIds> metaMasterIdList) async {
     final imagesList = List<ImageDocumentResponse>();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -902,9 +902,7 @@ class ApiBaseHelper {
 
         for (final image in imagePaths) {
           final fileName = File(image);
-          final fileNoun = fileName.path
-              .split('/')
-              .last;
+          final fileNoun = fileName.path.split('/').last;
           formData.files.addAll([
             MapEntry(
                 'fileName',
@@ -1095,7 +1093,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       var response =
-      await ApiServices.get(_baseUrlDeviceReading + url, headers: header);
+          await ApiServices.get(_baseUrlDeviceReading + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1103,14 +1101,14 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> postDeviceId(String url, String jsonBody,
-      bool isActive) async {
+  Future<dynamic> postDeviceId(
+      String url, String jsonBody, bool isActive) async {
     final Map<String, String> requestHeadersAuthAccept = {};
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
     requestHeadersAuthAccept['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     var responseJson;
@@ -1136,7 +1134,7 @@ class ApiBaseHelper {
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersAuthContent[Constants.KEY_OffSet] =
         CommonUtil().setTimeZone();
 
@@ -1153,8 +1151,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<GetRecordIdsFilter> getMetaIdURL(List<String> recordIds,
-      String patientId) async {
+  Future<GetRecordIdsFilter> getMetaIdURL(
+      List<String> recordIds, String patientId) async {
     final inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDIDS] = recordIds;
@@ -1278,9 +1276,7 @@ class ApiBaseHelper {
 
       for (final image in imagePaths) {
         final fileName = File(image);
-        final fileNoun = fileName.path
-            .split('/')
-            .last;
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1289,9 +1285,7 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         var fileName = File(audioPath);
-        final fileNoun = fileName.path
-            .split('/')
-            .last;
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1303,9 +1297,7 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         var fileName = File(audioPath);
-        var fileNoun = fileName.path
-            .split('/')
-            .last;
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1387,9 +1379,7 @@ class ApiBaseHelper {
 
       for (final image in imagePaths) {
         var fileName = File(image);
-        var fileNoun = fileName.path
-            .split('/')
-            .last;
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1398,9 +1388,7 @@ class ApiBaseHelper {
 
       if (audioPath != null && audioPath != '') {
         final fileName = File(audioPath);
-        final fileNoun = fileName.path
-            .split('/')
-            .last;
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1415,9 +1403,7 @@ class ApiBaseHelper {
       });
       if (audioPath != null && audioPath != '') {
         final fileName = File(audioPath);
-        final fileNoun = fileName.path
-            .split('/')
-            .last;
+        final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1485,11 +1471,9 @@ class ApiBaseHelper {
 
   Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
     var authToken =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     //String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    var filename = image.path
-        .split('/')
-        .last;
+    var filename = image.path.split('/').last;
     final fileType = filename.split('.')[1];
     final dio = Dio();
     dio.options.headers['content-type'] = 'multipart/form-data';
@@ -1669,8 +1653,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveRegimentMedia(String url, String imagePaths,
-      String userId) async {
+  Future<dynamic> saveRegimentMedia(
+      String url, String imagePaths, String userId) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1689,9 +1673,7 @@ class ApiBaseHelper {
         });
 
         var fileName = File(imagePaths);
-        var fileNoun = fileName.path
-            .split('/')
-            .last;
+        var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('file',
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
@@ -1833,14 +1815,14 @@ class ApiBaseHelper {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
-      await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
         Map<String, String> jsobBodyMap = new Map();
         jsobBodyMap['userId'] =
-        ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
+            ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
           final response = await ApiServices.post(
@@ -1862,7 +1844,7 @@ class ApiBaseHelper {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
-      await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       FetchingCartItemsModel responseJson;
 
@@ -1889,7 +1871,7 @@ class ApiBaseHelper {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
-      await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       CartGenricResponse responseJson;
 
@@ -1916,7 +1898,7 @@ class ApiBaseHelper {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
-      await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       MakePaymentResponse responseJson;
 
@@ -1966,7 +1948,7 @@ class ApiBaseHelper {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
-      await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       UpdatePaymentResponse responseJson;
 
@@ -2017,13 +1999,11 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getTags(String jsonData) async {
+  Future<dynamic> getTags( String jsonData) async {
     var responseJson;
     try {
-      var response = await ApiServices.post(
-          _baseUrl + 'reference-value/data-codes',
-          body: '["TAGS"]',
-          headers: await headerRequest.getRequestHeadersAuthContents());
+      var response = await ApiServices.post(_baseUrl + 'reference-value/data-codes',
+          body: '["TAGS"]', headers: await headerRequest.getRequestHeadersAuthContents());
       responseJson = _returnResponse(response);
       print(responseJson.toString());
     } on SocketException {
@@ -2120,6 +2100,19 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+
+  Future<dynamic> retryPayment(String url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 
 }
 
