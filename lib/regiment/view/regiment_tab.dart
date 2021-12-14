@@ -357,7 +357,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       child: InkWell(
                         onTap: () {
                           _regimentViewModel.handleSearchField();
-                          _regimentViewModel.getRegimentDate(isPrevious: true);
+                          _regimentViewModel.getRegimentDate(
+                              isPrevious: true, isDataChange: true);
                         },
                         child: Icon(
                           Icons.chevron_left_rounded,
@@ -382,8 +383,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                           if (selectedDate != null) {
                             _regimentViewModel.handleSearchField();
                             _regimentViewModel.getRegimentDate(
-                              dateTime: selectedDate,
-                            );
+                                dateTime: selectedDate, isDataChange: true);
                           }
                         },
                         child: Text(
@@ -403,7 +403,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                       child: InkWell(
                         onTap: () {
                           _regimentViewModel.handleSearchField();
-                          _regimentViewModel.getRegimentDate(isNext: true);
+                          _regimentViewModel.getRegimentDate(
+                              isNext: true, isDataChange: true);
                         },
                         child: Icon(
                           Icons.chevron_right_rounded,
@@ -759,7 +760,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
               ),
             ),
           );
-        } else*/ if (snapshot.hasError) {
+        } else*/
+        if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
           if (snapshot.hasData) {

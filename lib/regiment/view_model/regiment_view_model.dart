@@ -340,6 +340,7 @@ class RegimentViewModel extends ChangeNotifier {
     bool isNext = false,
     DateTime dateTime,
     bool isInitial = false,
+    bool isDataChange = false,
   }) {
     if (dateTime != null) {
       selectedRegimenDate = dateTime;
@@ -354,6 +355,14 @@ class RegimentViewModel extends ChangeNotifier {
       resetRegimenTab();
       fetchRegimentData(isInitial: true);
       notifyListeners();
+    }
+
+    if (regimentFilter != RegimentFilter.Scheduled) {
+      if (isDataChange) {
+        regimentFilter = RegimentFilter.Scheduled;
+        updateInitialShowIndex(index: 0);
+        notifyListeners();
+      }
     }
   }
 
