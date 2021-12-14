@@ -65,6 +65,7 @@ class PlanDetail extends State<MyPlanDetail> {
   MyPlanViewModel myPlanViewModel = MyPlanViewModel();
 
   String title;
+  String tags;
   String providerName;
   String docName;
   String startDate;
@@ -103,6 +104,7 @@ class PlanDetail extends State<MyPlanDetail> {
 
   void setValues(MyPlanListResult planList) {
     title = planList?.title ?? '';
+    tags = planList?.tags ?? '';
     providerName = planList?.providerName ?? '';
     docName = planList?.metadata?.doctorName ?? '';
     startDate = planList?.startdate ?? '';
@@ -337,7 +339,7 @@ class PlanDetail extends State<MyPlanDetail> {
                       ],
                     ),
             ),
-            Row(
+            if(tags!=strMemb)Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlineButton(
