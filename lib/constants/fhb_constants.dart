@@ -414,6 +414,7 @@ const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
 const String STR_INSTAMOJO = 'instamojo';
 const String STR_RAZOPAY = 'razorpay';
+const String STR_NOT_AVAILABLE = 'Not Available';
 
 const String STR_JPG = '.jpg';
 const String STR_JPEG = '.jpeg';
@@ -582,6 +583,8 @@ const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
 const strRenewal = ' - Renewal';
+
+const strMemb = 'MEMB';
 
 const goToRegimen = 'Go to Regimen';
 const symptomsError = 'Data for Symptoms cannot be entered for future dates';

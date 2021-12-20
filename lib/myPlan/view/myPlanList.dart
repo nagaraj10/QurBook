@@ -401,7 +401,7 @@ class _MyPlanState extends State<MyPlanList> {
                       ],
                     ),
                   ),
-                  Row(
+                  if(planList[i]?.tags!=strMemb)Row(
                     children: [
                       Column(
                         children: [
