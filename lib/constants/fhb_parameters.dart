@@ -693,6 +693,7 @@ const String isWeb = 'isWeb';
 
 const String planId = 'planId';
 const String myCartDetails = 'mycartdetails';
+const String myPlanDetails = 'myplandetails';
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
