@@ -14,8 +14,11 @@ import 'package:myfhb/plan_wizard/model/AddToCartModel.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/services/PlanWizardService.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/ticket_support/model/create_ticket_model.dart';
+import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/model/user_comments_model.dart';
@@ -30,11 +33,23 @@ class TicketViewModel extends ChangeNotifier {
   int currentTab = 0;
 
   // get list of tickets
-  Future<UserTicketModel> getTicketsList() async {
+  Future<TicketsListResponse> getTicketsList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
         var userTicketModel = await userTicketService.getTicketList();
+        return userTicketModel;
+      } catch (e) {
+        print('Exception in getting list of Ticket VM Model : ${e.toString()}');
+      }
+    }
+  }
+
+  Future<TicketDetailResponseModel> getTicketDetail(String sId) async {
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    if (userid != null) {
+      try {
+        var userTicketModel = await userTicketService.getTicketDetails(sId);
         return userTicketModel;
       } catch (e) {
         print('Exception in getting list of Ticket VM Model : ${e.toString()}');
@@ -50,7 +65,8 @@ class TicketViewModel extends ChangeNotifier {
         var userTicketTypesModel = await userTicketService.getTicketTypesList();
         return userTicketTypesModel;
       } catch (e) {
-        print('Exception in Get ticket category Ticket VM Model : ${e.toString()}');
+        print(
+            'Exception in Get ticket category Ticket VM Model : ${e.toString()}');
       }
     }
   }
@@ -69,7 +85,7 @@ class TicketViewModel extends ChangeNotifier {
   }
 
   // Comment Ticket
-  Future<UserCommentsModel> commentTicket() async {
+  Future<CommonResponse> commentTicket() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {

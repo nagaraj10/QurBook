@@ -1502,6 +1502,63 @@ class ApiBaseHelper {
     }
   }
 
+  Future<dynamic> uploadAttachment(
+      String url, String ticketId, File image) async {
+    var authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var filename = image.path.split('/').last;
+    final fileType = filename.split('.')[1];
+
+    var request = new http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
+    request.fields['ticketId'] = ticketId;
+    request.fields['patientUserId'] = userId;
+    request.files.add(http.MultipartFile.fromBytes(
+        'attachment', await image.readAsBytes(),
+        contentType: new MediaType('image', 'jpeg')));
+    Map<String, String> headers = await headerRequest.getAuth();
+    Map<String, String> newHeaders = <String, String>{
+      'Content-Type': 'multipart/form-data'
+    };
+    request.headers.addAll(headers);
+
+    request.send().then((value) {
+      print('=====codes');
+      print(value.statusCode);
+    });
+
+    final dio = Dio();
+    // dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.headers['Authorization'] = authToken;
+    dio.options.contentType = 'multipart/form-data';
+
+    // dio.options.headers['accept'] = 'application/json';
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
+
+    final FormData formData = FormData.fromMap({
+      'attachment':
+          await MultipartFile.fromFile(image.path, filename: filename),
+      'ticketId': ticketId,
+      'patientUserId': userId,
+    });
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+      print('==============code============');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response?.data;
+      } else {
+        return response?.data;
+      }
+    } on DioError catch (e) {
+      print('==============dio============');
+      print(e.toString());
+      return response?.data;
+    }
+  }
+
   Future<dynamic> getDeviceSelection(String url) async {
     var responseJson;
     try {
@@ -1999,11 +2056,13 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getTags( String jsonData) async {
+  Future<dynamic> getTags(String jsonData) async {
     var responseJson;
     try {
-      var response = await ApiServices.post(_baseUrl + 'reference-value/data-codes',
-          body: '["TAGS"]', headers: await headerRequest.getRequestHeadersAuthContents());
+      var response = await ApiServices.post(
+          _baseUrl + 'reference-value/data-codes',
+          body: '["TAGS"]',
+          headers: await headerRequest.getRequestHeadersAuthContents());
       responseJson = _returnResponse(response);
       print(responseJson.toString());
     } on SocketException {
@@ -2026,7 +2085,6 @@ class ApiBaseHelper {
   }
 
   // API BASE HELPER CLASS
-
 
 // True desk API List for no of tickets -- Yogeshwar
 
@@ -2100,7 +2158,6 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-
   Future<dynamic> retryPayment(String url) async {
     var responseJson;
     try {
@@ -2113,7 +2170,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 }
 
 void exitFromApp() async {

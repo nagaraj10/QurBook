@@ -6,6 +6,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_reports/model/report_model.dart';
 import 'package:myfhb/my_reports/view_model/report_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/model/ticket_model.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
@@ -34,27 +35,30 @@ class _TicketsList extends State<TicketsList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      fit: StackFit.expand,
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          child: Column(
-            children: [
-              Expanded(
-                child: getTicketsList(),
-              ),
-            ],
+      body: Stack(
+        fit: StackFit.expand,
+        alignment: Alignment.bottomCenter,
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Expanded(
+                  child: getTicketsList(),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Widget getTicketsList() {
-    return FutureBuilder<UserTicketModel>(
+    return FutureBuilder<TicketsListResponse>(
       future: ticketViewModel.getTicketsList(),
       builder: (context, snapshot) {
+        print('=================');
+        print(snapshot.data.tickets.length);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
@@ -72,10 +76,10 @@ class _TicketsList extends State<TicketsList> {
           return ErrorsWidget();
         } else {
           //return ticketListTest(context);
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result.tickets.isNotEmpty) {
-            return ticketList(snapshot.data.result.tickets);
+          if (snapshot?.hasData && snapshot?.data != null) {
+            print(snapshot.data.tickets.length.toString());
+            print('=================');
+            return ticketList(snapshot.data.tickets);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -98,7 +102,7 @@ class _TicketsList extends State<TicketsList> {
     );
   }
 
-  Widget ticketList(List<Ticket> ticketList) {
+  Widget ticketList(List<Tickets> ticketList) {
     return (ticketList != null && ticketList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
@@ -125,12 +129,13 @@ class _TicketsList extends State<TicketsList> {
   }
 
   Widget myTicketListItem(
-      BuildContext context, int i, List<Ticket> ticketList) {
+      BuildContext context, int i, List<Tickets> ticketList) {
     return InkWell(
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DetailedTicketView(ticketList[i])),
+            MaterialPageRoute(
+                builder: (context) => DetailedTicketView(ticketList[i])),
           );
         },
         child: Container(
@@ -214,7 +219,10 @@ class _TicketsList extends State<TicketsList> {
                           ),
                           SizedBox(height: 8.0.h),
                           Text(
-                            ticketList[i].subject.toString().capitalizeFirstofEach,
+                            ticketList[i]
+                                .subject
+                                .toString()
+                                .capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.w600,
@@ -225,7 +233,7 @@ class _TicketsList extends State<TicketsList> {
                           ),
                           Text(
                             constants.notificationDate(
-                                '${ticketList[i].preferredDate.toString()}'),
+                                '${ticketList[i].date.toString()}'),
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.w100,
@@ -250,12 +258,11 @@ class _TicketsList extends State<TicketsList> {
                                 },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      vertical: 8.0.sp,
-                                      horizontal: 35.0.sp),
+                                      vertical: 8.0.sp, horizontal: 35.0.sp),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10)),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
                                       boxShadow: <BoxShadow>[
                                         BoxShadow(
                                             color: Colors.grey.shade200,

@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,12 +9,12 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/ticket_support/model/ticket_model.dart';
-import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
+import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
+import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
@@ -26,10 +29,9 @@ import 'package:myfhb/common/CommonUtil.dart' as commonUtils;
 var fullName, date, isUser;
 
 class DetailedTicketView extends StatefulWidget {
-  DetailedTicketView(this.ticketList);
+  DetailedTicketView(this.ticket);
 
-  final ticketList;
-
+  final Tickets ticket;
   @override
   State createState() {
     return _DetailedTicketViewState();
@@ -57,114 +59,109 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         description: "Chat"),
   ];
 
+  Future<TicketDetailResponseModel> future;
+
   @override
   void initState() {
     super.initState();
-    _getHistoryData(widget.ticketList);
+    callTicketDetailsApi();
+    // _getHistoryData(widget.ticketUid);
+  }
+
+  callTicketDetailsApi() {
+    setState(() {
+      future = ticketViewModel.getTicketDetail(widget.ticket.uid.toString());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          elevation: 0,
-          leading: IconWidget(
-            icon: Icons.arrow_back_ios,
-            colors: Colors.white,
-            size: 24.0.sp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(strConstants.strMyTickets),
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 0,
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 24.0.sp,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Container(
-          child: ListView.builder(
-            physics: BouncingScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: widget.ticketList.history.length,
-            itemBuilder: (ctx, i) {
-              return Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+        title: Text(strConstants.strMyTickets),
+      ),
+      body: getData(),
+    );
+  }
+
+  Widget getData() {
+    return FutureBuilder<TicketDetailResponseModel>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          return detailView(snapshot.data.result.ticket);
+        }
+      },
+    );
+  }
+
+  Widget detailView(Ticket ticket) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          Text(
+                            'Status : ',
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w100,
+                            ),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Text(
+                            'Open',
+                            style: TextStyle(
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.orangeAccent[100]),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Spacer(flex: 1),
+                          Flexible(
+                            child: Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Status : ',
-                                      style: TextStyle(
-                                        fontSize: 16.0.sp,
-                                        fontWeight: FontWeight.w100,
-                                      ),
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
-                                    Text(
-                                      'Open',
-                                      style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.orangeAccent[100]),
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
-                                    Spacer(flex: 1),
-                                    Flexible(
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'Ticket ID\t:',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                              fontWeight: FontWeight.w100,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                          Text(
-                                            '\t#${widget.ticketList.uid.toString()}',
-                                            style: TextStyle(
-                                              fontSize: 16.0.sp,
-                                              fontWeight: FontWeight.w100,
-                                            ),
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.0),
                                 Text(
-                                  widget.ticketList.subject
-                                      .toString()
-                                      .capitalizeFirstofEach,
-                                  style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                                Text(
-                                  constants.notificationDate(
-                                      '${widget.ticketList.preferredDate.toString()}'),
+                                  'Ticket ID\t:',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
@@ -173,31 +170,69 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
                                 ),
-                                Row(
-                                  children: [
-                                    Spacer(
-                                      flex: 1,
-                                    ),
-                                  ],
+                                Text(
+                                  '\t#${widget.ticket.uid.toString()}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w100,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
-                                SizedBox(height: 10.0),
-                                _tabWidget(context, widget.ticketList),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 5.h),
+                      SizedBox(height: 5.0),
+                      Text(
+                        ticket.subject.toString().capitalizeFirstofEach,
+                        style: TextStyle(
+                          fontSize: 16.0.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      Text(
+                        constants.notificationDate('${ticket.date.toString()}'),
+                        style: TextStyle(
+                          fontSize: 16.0.sp,
+                          fontWeight: FontWeight.w100,
+                        ),
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      Row(
+                        children: [
+                          Spacer(
+                            flex: 1,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      _tabWidget(context, ticket),
                     ],
                   ),
                 ),
-              );
-            },
-          ),
-        ));
+              ],
+            ),
+            SizedBox(height: 5.h),
+          ],
+        ),
+      ),
+    );
   }
 
-  Widget _tabWidget(BuildContext context, var ticketList) {
+  Widget _tabWidget(BuildContext context, Ticket ticketList) {
+    for (var historyData in ticketList.history) {
+      fullName = historyData.owner.fullname;
+      date = historyData.date.toString();
+      print('History fullname : $fullName & $date');
+    }
     return Container(
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <
           Widget>[
@@ -358,7 +393,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    constants.notificationDate(
+                                                    constants.changeDateFormat(
                                                         '$date'),
                                                     style: TextStyle(
                                                         fontSize: 14,
@@ -386,11 +421,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                             Expanded(
                               child: Container(
                                 child: //_getChatWidget(context, ticketList),
-                                    widget.ticketList.comments != null &&
-                                            widget
-                                                .ticketList.comments.isNotEmpty
-                                        ? _getChatWidget(
-                                            context, widget.ticketList)
+                                    ticketList.comments != null &&
+                                            ticketList.comments.isNotEmpty
+                                        ? _getChatWidget(context, ticketList)
                                         : Container(
                                             alignment: Alignment.center,
                                             child: Center(
@@ -410,10 +443,6 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                       controller: addCommentController,
                                       style: TextStyle(fontSize: 16.0.sp),
                                       focusNode: focusNode,
-                                      onTap: () {
-                                        //isSearchVisible = false;
-                                        //_patientDetailOrSearch();
-                                      },
                                       //controller: textEditingController,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.allow(RegExp(
@@ -424,9 +453,22 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                           width: 50.0.h,
                                           height: 50.0.h,
                                           child: FlatButton(
-                                              onPressed: () {
-                                                //recordIds.clear();
-                                                //FetchRecords(0, true, true, false, recordIds);
+                                              onPressed: () async {
+                                                FilePickerResult result =
+                                                    await FilePicker.platform
+                                                        .pickFiles(
+                                                  type: FileType.custom,
+                                                  allowedExtensions: [
+                                                    'jpg',
+                                                    'pdf'
+                                                  ],
+                                                );
+                                                if (result != null) {
+                                                  File file = File(
+                                                      result.files.single.path);
+                                                  uploadFile(
+                                                      widget.ticket.sId, file);
+                                                }
                                               },
                                               child: new Icon(
                                                 Icons.attach_file,
@@ -474,8 +516,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                     child: RawMaterialButton(
                                       onPressed: () {
                                         onSendMessage(addCommentController.text,
-                                            widget.ticketList);
-                                        addCommentController.clear();
+                                            widget.ticket);
                                       },
                                       elevation: 2.0,
                                       fillColor: Colors.white,
@@ -532,45 +573,54 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                       Center(
                         child: Container(
                             alignment: Alignment.center,
-                            child:
-                                /*widget.ticketList.attachments != null &&
-                                    widget.ticketList.attachments.isNotEmpty
-                                ? */
-                                Container(
-                              alignment: Alignment.topCenter,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: [
-                                    Wrap(
-                                      spacing: 5.0,
-                                      runSpacing: 5.0,
-                                      children: List<Widget>.generate(
-                                        5,
-                                        //widget.ticketList.attachments,
-                                        (int index) {
-                                          return ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(12.0),
-                                            child: Image.asset(
-                                              'assets/icons/placeholder.jpg',
-                                              height: 100.h,
-                                              width: 100.w,
+                            child: ticketList.attachments != null &&
+                                    ticketList.attachments.isNotEmpty
+                                ? Container(
+                                    alignment: Alignment.topCenter,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        children: [
+                                          Wrap(
+                                            spacing: 5.0,
+                                            runSpacing: 5.0,
+                                            children: List<Widget>.generate(
+                                              ticketList.attachments.length,
+                                              (int index) {
+                                                return InkWell(
+                                                    child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12.0),
+                                                      child: Image.asset(
+                                                        'assets/icons/placeholder.jpg',
+                                                        height: 100.h,
+                                                        width: 100.w,
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) => FullPhoto(
+                                                                  url: ticketList
+                                                                      .attachments[
+                                                                          index]
+                                                                      .path
+                                                                      .toString())));
+                                                    });
+                                              },
                                             ),
-                                          );
-                                        },
+                                          )
+                                        ],
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                            /*: Center(
+                                    ),
+                                  )
+                                : Center(
                                     child: Container(
                                       child:
                                           Text('No attachments available !!'),
                                     ),
-                                  )*/
-                            ),
+                                  )),
                       ),
                     ])),
               )
@@ -600,7 +650,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
     }
   }
 
-  Widget _getChatWidget(BuildContext context, var ticketList) {
+  Widget _getChatWidget(BuildContext context, Ticket ticketList) {
+    print('comments length=======');
+    print(ticketList.comments.length);
     return ScrollablePositionedList.builder(
       physics: BouncingScrollPhysics(),
       itemCount: ticketList.comments.length,
@@ -610,7 +662,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            isUser != null && isUser
+            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
+                            .isAgent !=
+                        null &&
+                    ticketList.comments[ticketList.comments.length - 1 - i]
+                            .owner.role.isAgent ==
+                        false
                 ? Container(
                     alignment: Alignment.bottomRight,
                     child: Row(
@@ -644,8 +701,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                              child: ticketList.comments[i].comment != null
-                                  ? Text('${ticketList.comments[i].comment}',
+                              child: ticketList
+                                          .comments[ticketList.comments.length -
+                                              1 -
+                                              i]
+                                          .comment !=
+                                      null
+                                  ? Text(
+                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
                                       style: TextStyle(color: Colors.white))
                                   : Text('Hi I have a query !!',
                                       style: TextStyle(color: Colors.white)),
@@ -699,93 +762,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                       ],
                     ),
                   )
-                : Container(
-                    alignment: Alignment.bottomRight,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Card(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
-                                document[STR_CONTENT],
-                                style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
-                              ),*/
-                              child: Text('Hi I have a query !!',
-                                  style: TextStyle(color: Colors.white)),
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/maya/maya_india_main.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
-                              ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                : Container(),
             SizedBox(height: 15.h),
-            isUser != null && isUser == false
+            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
+                            .isAgent !=
+                        null &&
+                    ticketList.comments[ticketList.comments.length - 1 - i]
+                        .owner.role.isAgent
                 ? Container(
                     alignment: Alignment.bottomLeft,
                     child: Row(
@@ -865,114 +848,44 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
                                 style: TextStyle(
                                     color: Color(CommonUtil().getMyPrimaryColor())),
                               ),*/
-                              child: ticketList.comments[i].comment != null
-                                  ? Text('${ticketList.comments[i].comment}',
-                                      style: TextStyle(color: Colors.white))
+                              child: ticketList
+                                          .comments[ticketList.comments.length -
+                                              1 -
+                                              i]
+                                          .comment !=
+                                      null
+                                  ? Text(
+                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
+                                      style: TextStyle(color: Colors.black))
                                   : Text('Hi !!',
-                                      style: TextStyle(color: Colors.white)),
+                                      style: TextStyle(color: Colors.black)),
                             )),
                       ],
                     ),
                   )
-                : Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/user/profile_pic_ph.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
-                              ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                        ),
-                        Card(
-                            color: Colors.grey[200],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
-                                document[STR_CONTENT],
-                                style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
-                              ),*/
-                              child: Text('Hi !!',
-                                  style: TextStyle(color: Colors.white)),
-                            )),
-                      ],
-                    ),
-                  ),
+                : Container(),
           ],
         );
       },
     );
   }
 
+  String _parseHtmlString(String htmlString) {
+    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+
+    return htmlString.replaceAll(exp, '');
+  }
+
   void onSendMessage(var comment, var ticketList) {
     try {
       strConstants.tckComment = comment;
-      strConstants.tckID = ticketList.id;
+      strConstants.tckID = ticketList.sId; //1038
       print(
           'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
       ticketViewModel.userTicketService.commentTicket().then((value) {
         if (value != null) {
+          addCommentController.clear();
+          callTicketDetailsApi();
           print('Hitting Send Comments API .. : ${value.toJson()}');
         } else {
           print('Failed Sending Comments ..');
@@ -984,6 +897,28 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
       });
     } catch (e) {
       print('Comment ticket exception : ${e.toString()}');
+      return null;
+    }
+  }
+
+  void uploadFile(String ticketId, file) {
+    try {
+      ticketViewModel.userTicketService
+          .uploadAttachment(ticketId, file)
+          .then((value) {
+        if (value != null) {
+          callTicketDetailsApi();
+          print('Hitting Send Attachment API .. : ${value.toJson()}');
+        } else {
+          print('Failed Sending Attachment ..');
+          return null;
+        }
+      }).catchError((e) {
+        print('Attachment ticket exception in catch error: ${e.toString()}');
+        return null;
+      });
+    } catch (e) {
+      print('Attachment ticket exception : ${e.toString()}');
       return null;
     }
   }
