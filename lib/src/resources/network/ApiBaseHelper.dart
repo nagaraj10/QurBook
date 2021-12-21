@@ -1502,6 +1502,63 @@ class ApiBaseHelper {
     }
   }
 
+  Future<dynamic> uploadAttachment(
+      String url, String ticketId, File image) async {
+    var authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var filename = image.path.split('/').last;
+    final fileType = filename.split('.')[1];
+
+    var request = new http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
+    request.fields['ticketId'] = ticketId;
+    request.fields['patientUserId'] = userId;
+    request.files.add(http.MultipartFile.fromBytes(
+        'attachment', await image.readAsBytes(),
+        contentType: new MediaType('image', 'jpeg')));
+    Map<String, String> headers = await headerRequest.getAuth();
+    Map<String, String> newHeaders = <String, String>{
+      'Content-Type': 'multipart/form-data'
+    };
+    request.headers.addAll(headers);
+
+    request.send().then((value) {
+      print('=====codes');
+      print(value.statusCode);
+    });
+
+    final dio = Dio();
+    // dio.options.headers['Content-Type'] = 'application/json';
+    dio.options.headers['Authorization'] = authToken;
+    dio.options.contentType = 'multipart/form-data';
+
+    // dio.options.headers['accept'] = 'application/json';
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
+
+    final FormData formData = FormData.fromMap({
+      'attachment':
+          await MultipartFile.fromFile(image.path, filename: filename),
+      'ticketId': ticketId,
+      'patientUserId': userId,
+    });
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+      print('==============code============');
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response?.data;
+      } else {
+        return response?.data;
+      }
+    } on DioError catch (e) {
+      print('==============dio============');
+      print(e.toString());
+      return response?.data;
+    }
+  }
+
   Future<dynamic> getDeviceSelection(String url) async {
     var responseJson;
     try {
@@ -2027,6 +2084,80 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  // API BASE HELPER CLASS
+
+// True desk API List for no of tickets -- Yogeshwar
+
+  Future<dynamic> getTicketList(url) async {
+    var responseJson;
+    var token = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print('My access token : $token');
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  // True desk API List for no of ticket types -- Yogeshwar
+  Future<dynamic> getTicketTypesList(url) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getAuth());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  // True desk Create Ticket -- Yogeshwar
+  Future<dynamic> createTicket(url) async {
+    var responseJson;
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    try {
+      var bodyData = {
+        'subject': Constants.tckTitle,
+        'issue': Constants.tckDesc,
+        'type': Constants.ticketType, //ask
+        'priority': Constants.tckPriority, //ask
+        'preferredDate': Constants.tckPrefDate,
+        'patientUserId': userid
+      };
+      var response = await ApiServices.post(_baseUrl + url,
+          body: json.encode(bodyData),
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  // True desk - Get user list of comments
+  Future<dynamic> commentsForTicket(url) async {
+    var responseJson;
+    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    try {
+      var bodyData = {
+        'comment': Constants.tckComment,
+        '_id': Constants.tckID,
+        'patientUserId': userid
+      };
+      var response = await ApiServices.post(_baseUrl + url,
+          body: json.encode(bodyData),
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> retryPayment(String url) async {
     var responseJson;
     try {
@@ -2039,12 +2170,12 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-}
 
-void exitFromApp() async {
-  await PreferenceUtil.clearAllData().then((value) {
-    gett.Get.offAll(PatientSignInScreen());
-  });
+  void exitFromApp() async {
+    await PreferenceUtil.clearAllData().then((value) {
+      gett.Get.offAll(PatientSignInScreen());
+    });
+  }
 }
 
 abstract class InnerException {

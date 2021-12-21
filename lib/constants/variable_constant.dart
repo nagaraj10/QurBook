@@ -678,6 +678,11 @@ const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
 const notificationResponseMethod = 'notificationResponse';
 
+// True Desk
+
+const String strNoTicketsRaised = 'No Ticket Items Available !!';
+const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
+
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 //decode code

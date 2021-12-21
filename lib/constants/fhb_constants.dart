@@ -618,6 +618,23 @@ const String STR_NO = 'no';
 const String UnitPreference = 'Unit Preferences';
 const String STR_DATE_FORMAT = 'yyyy-MM-dd';
 const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
+// True desk
+const String strMyTickets = 'Tickets';
+const String strAddMyTicket = 'Add New Ticket';
+const String strSubmitNewTicket = 'SUBMIT TICKET';
+const String strTicketTitle = 'Title';
+const String strTicketDesc = 'Description';
+const String strTicketPreferredDate = 'Preferred Date';
+const String strDetailsButton = 'Details';
+
+var tckTitle = 'title';
+var tckDesc = 'desc';
+var tckPrefDate = 'pref_date';
+var ticketType = 'ticket type';
+var tckPriority = 'ticket priority';
+var tckID = 'ticket_id';
+var tckComment = 'ticket_comment';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;

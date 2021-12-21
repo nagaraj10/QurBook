@@ -34,3 +34,14 @@ final lightTheme = ThemeData(
 
 const String actionColor = '#6d35de';
 const String colorBlack = '#000000';
+
+// Convert Hex color to color
+Color getColorFromHex(String hexColor) {
+  hexColor = hexColor.toUpperCase().replaceAll('#', '');
+
+  if (hexColor.length == 6) {
+    hexColor = 'FF' + hexColor;
+  }
+
+  return Color(int.parse(hexColor, radix: 16));
+}
