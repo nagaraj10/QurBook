@@ -290,6 +290,15 @@ const String qr_careGiverList = 'careGiverList';
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
-const String qr_code_tags='TAGS';
+const String qr_code_tags = 'TAGS';
 
-const String retry_payment='appointment/check-retry-appointment?id=';
+const String retry_payment = 'appointment/check-retry-appointment?id=';
+
+// True desk
+
+const String qr_get_tickets = 'trudesk/ticket/list';
+const String qr_get_ticket_details = 'trudesk/ticket/details';
+const String qr_get_ticket_types = 'trudesk/ticket/types';
+const String qr_create_ticket = 'trudesk/create/ticket/by-patient';
+const String qr_comment_ticket = 'trudesk/ticket/comment';
+const String qr_upload_attachment = 'trudesk/tickets/uploadattachment';
