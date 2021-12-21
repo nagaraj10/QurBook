@@ -33,6 +33,7 @@ class MyPlanListModel {
 class MyPlanListResult {
   String packageid;
   String title;
+  String tags;
   String docid;
   String price;
   String paid;
@@ -54,6 +55,7 @@ class MyPlanListResult {
   MyPlanListResult(
       {this.packageid,
       this.title,
+      this.tags,
       this.docid,
       this.price,
       this.paid,
@@ -75,6 +77,7 @@ class MyPlanListResult {
     return MyPlanListResult(
         packageid: json['packageid'],
         title: json['title'],
+        tags: json['tags'],
         docid: json['docid'],
         price: json['price'],
         paid: json['paid'],
@@ -107,6 +110,7 @@ class MyPlanListResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['packageid'] = this.packageid;
     data['title'] = this.title;
+    data['tags'] = this.tags;
     data['docid'] = this.docid;
     data['price'] = this.price;
     data['paid'] = this.paid;
