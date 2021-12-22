@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/landing/service/landing_service.dart';
 import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -150,10 +151,25 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   checkCpUser() async {
+    print('working');
+    LandingService.getMemberShipDetails();
+
+    // landingViewModel.getMembershipDetails().then((value) async {
+    //   if (value.isSuccess) {
+    //     MyProfileResult cpUser = await getIsCpUser();
+    //     showDialog(
+    //         barrierDismissible: false,
+    //         context: context,
+    //         builder: (BuildContext context) {
+    //           return CorpUsersWelcomeDialog(cpUser);
+    //         });
+    //   }
+    // });
     MyProfileResult cpUser = await getIsCpUser();
     bool isShown =
         await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
-    if (cpUser.isCpUser && !isShown) {
+    print('isShown' + isShown.toString());
+    if (true) {
       showDialog(
           barrierDismissible: false,
           context: context,

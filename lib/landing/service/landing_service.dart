@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/landing/model/membership_detail_response.dart';
+
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_query.dart' as variable;
@@ -23,5 +25,24 @@ class LandingService {
       url,
     );
     return QurPlanDashboardModel.fromJson(response ?? '');
+  }
+
+  static Future<MemberShipDetailResponse> getMemberShipDetails() async {
+    print('call working');
+
+    var _helper = ApiBaseHelper();
+    final userId = PreferenceUtil.getStringValue(KEY_USERID);
+    final url = variable.qr_qur_plan_dashboard +
+        variable.qr_membership +
+        userId +
+        variable.qr_organizationid;
+    print('======working========');
+
+    var response = await _helper.getMemberShipDetails(
+      url,
+    );
+    print('======resp========');
+    print(response);
+    return MemberShipDetailResponse.fromJson(response ?? '');
   }
 }

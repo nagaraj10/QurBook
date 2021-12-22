@@ -168,6 +168,9 @@ const String qr_reference_doctor = 'reference-doctor/';
 const String qr_non_qurpro = 'non-qurpro-doctor';
 const String qr_non_qurpro_hospital = 'non-qurpro-hospital';
 
+const String qr_membership = 'plan-subscription-info/membership-details?userId=';
+const String qr_organizationid = '&healthOrganizationId=';
+
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';
 
@@ -280,6 +283,7 @@ const String qr_healthOrganizationList = 'healthOrganizationsList?';
 const String qr_qur_plan_dashboard = 'qur-plan-dashboard?';
 const String qr_userid_dashboard = '&userId=';
 const String qr_date = '&date=';
+
 
 const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';
