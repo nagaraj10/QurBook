@@ -45,7 +45,7 @@ class CreateAppointmentService {
     } else {
       slotInput[qr_parent_appointment] = '';
     }
-    slotInput[qr_discountType] = isCSRDiscount
+    slotInput[qr_discountType] = isCSRDiscount ?? false
         ? qr_csr_discount
         : isResidentDoctorMembership
             ? qr_MEMBERSHIP_DISCOUNT

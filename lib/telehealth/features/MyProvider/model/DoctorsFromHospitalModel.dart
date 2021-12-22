@@ -105,22 +105,25 @@ class DoctorFromHos {
   String lastModifiedBy;
   String lastModifiedOn;
   UserResponse user;
+  bool isResident = false;
   List<DoctorLanguageCollection> doctorLanguageCollection;
   List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
 
-  DoctorFromHos(
-      {this.id,
-      this.specialization,
-      this.isTelehealthEnabled,
-      this.isMciVerified,
-      this.isActive,
-      this.isWelcomeMailSent,
-      this.createdOn,
-      this.lastModifiedBy,
-      this.lastModifiedOn,
-      this.user,
-      this.doctorLanguageCollection,
-      this.doctorProfessionalDetailCollection});
+  DoctorFromHos({
+    this.id,
+    this.specialization,
+    this.isTelehealthEnabled,
+    this.isMciVerified,
+    this.isActive,
+    this.isWelcomeMailSent,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.user,
+    this.doctorLanguageCollection,
+    this.doctorProfessionalDetailCollection,
+    this.isResident,
+  });
 
   DoctorFromHos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -148,6 +151,7 @@ class DoctorFromHos {
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
+    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -174,6 +178,7 @@ class DoctorFromHos {
           .map((v) => v.toJson())
           .toList();
     }
+    data['isResident'] = isResident;
     return data;
   }
 }

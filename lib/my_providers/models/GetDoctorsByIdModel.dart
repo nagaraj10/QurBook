@@ -13,7 +13,7 @@ class GetDoctorsByIdModel {
     isSuccess = json['isSuccess'];
     message = json['message'];
     result =
-    json['result'] != null ? DoctorResult.fromJson(json['result']) : null;
+        json['result'] != null ? DoctorResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -37,23 +37,26 @@ class DoctorResult {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  bool isResident = false;
   User user;
   List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
   List<DoctorLanguageCollection> doctorLanguageCollection;
 
-  DoctorResult(
-      {this.id,
-        this.specialization,
-        this.isTelehealthEnabled,
-        this.isMciVerified,
-        this.isActive,
-        this.isWelcomeMailSent,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.user,
-        this.doctorProfessionalDetailCollection,
-        this.doctorLanguageCollection});
+  DoctorResult({
+    this.id,
+    this.specialization,
+    this.isTelehealthEnabled,
+    this.isMciVerified,
+    this.isActive,
+    this.isWelcomeMailSent,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.user,
+    this.doctorProfessionalDetailCollection,
+    this.doctorLanguageCollection,
+    this.isResident,
+  });
 
   DoctorResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -68,7 +71,7 @@ class DoctorResult {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-      <DoctorProfessionalDetailCollection>[];
+          <DoctorProfessionalDetailCollection>[];
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection
             .add(DoctorProfessionalDetailCollection.fromJson(v));
@@ -80,6 +83,7 @@ class DoctorResult {
         doctorLanguageCollection.add(DoctorLanguageCollection.fromJson(v));
       });
     }
+    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -97,14 +101,14 @@ class DoctorResult {
       data['user'] = user.toJson();
     }
     if (doctorProfessionalDetailCollection != null) {
-      data['doctorProfessionalDetailCollection'] = doctorProfessionalDetailCollection
-          .map((v) => v.toJson())
-          .toList();
+      data['doctorProfessionalDetailCollection'] =
+          doctorProfessionalDetailCollection.map((v) => v.toJson()).toList();
     }
     if (doctorLanguageCollection != null) {
       data['doctorLanguageCollection'] =
           doctorLanguageCollection.map((v) => v.toJson()).toList();
     }
+    data['isResident'] = isResident;
     return data;
   }
 }
