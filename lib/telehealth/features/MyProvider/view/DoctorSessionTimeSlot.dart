@@ -218,7 +218,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             return ErrorsWidget();
           } else {
             return (snapshot?.data?.isSuccess != null &&
-                    !snapshot?.data?.isSuccess && (snapshot?.data?.message ?? '').isNotEmpty)
+                    !snapshot?.data?.isSuccess &&
+                    (snapshot?.data?.message ?? '').isNotEmpty)
                 ? Column(
                     children: <Widget>[
                       SizedBoxWidget(

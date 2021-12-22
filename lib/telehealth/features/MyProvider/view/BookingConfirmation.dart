@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
@@ -10,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -158,7 +160,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String INR_Price = '';
   String btnLabelChange = payNow;
-
+  bool isMembershipDiscount = false;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -175,7 +177,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
-
+    showDialogForMembershipDiscount();
     INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp &&
             widget.isFromFollowUpTake == false &&
             isFollowUp())
@@ -750,17 +752,40 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           ? getFeesFromHospital(
                               widget.resultFromHospitalList[
                                   widget.doctorListIndex],
-                              true)
+                              true,
+                            )
                           : getFees(
-                              widget.healthOrganizationResult[widget.i], true),
-                      commonWidgets.getMoneyWithForamt(widget.isFromHospital
-                          ? getFeesFromHospital(
-                              widget.resultFromHospitalList[
-                                  widget.doctorListIndex],
-                              false)
-                          : getFees(widget.healthOrganizationResult[widget.i],
-                              false))),
+                              widget.healthOrganizationResult[widget.i],
+                              true,
+                            ),
+                      commonWidgets.getMoneyWithForamt(
+                        widget.isFromHospital
+                            ? getFeesFromHospital(
+                                widget.resultFromHospitalList[
+                                    widget.doctorListIndex],
+                                false,
+                              )
+                            : getFees(
+                                widget.healthOrganizationResult[widget.i],
+                                false,
+                              ),
+                      ),
+                    ),
               SizedBoxWidget(height: 15.0),
+              isMembershipDiscount
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        getMembershipCheckBox(
+                          widget.isFromHospital
+                              ? widget.resultFromHospitalList[
+                                  widget.doctorListIndex]
+                              : widget.healthOrganizationResult[widget.i],
+                        ),
+                        SizedBoxWidget(height: 15.0),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               Container(
                 child: Center(
                   child: Text(
@@ -1221,7 +1246,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.shorturl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      true,value?.result?.appointmentInfo?.id);
+                      true,
+                      value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(
@@ -1238,7 +1264,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.longurl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      false,value?.result?.appointmentInfo?.id);
+                      false,
+                      value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(noUrl, Colors.red);
@@ -1269,7 +1296,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
   }
 
-  goToPaymentPage(String longurl, String paymentId, bool isRazor,String appointmentId) {
+  goToPaymentPage(
+      String longurl, String paymentId, bool isRazor, String appointmentId) {
     CommonUtil.recordIds.clear();
     CommonUtil.notesId.clear();
     CommonUtil.voiceIds.clear();
@@ -1369,17 +1397,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: Row(
                     children: [
                       Container(
-                          constraints: BoxConstraints(
-                              maxWidth: 160.w),
+                          constraints: BoxConstraints(maxWidth: 160.w),
                           child: widget.isFromHospital
                               ? commonWidgets.setDoctornameForHos(widget
-                              .resultFromHospitalList[widget.doctorListIndex]
-                              .doctor
-                              .user)
+                                  .resultFromHospitalList[
+                                      widget.doctorListIndex]
+                                  .doctor
+                                  .user)
                               : commonWidgets.setDoctorname(widget
-                              .isFromFollowReschedule
-                              ? widget.docsReschedule[widget.doctorListPos].user
-                              : widget.docs[widget.doctorListPos].user)),
+                                      .isFromFollowReschedule
+                                  ? widget
+                                      .docsReschedule[widget.doctorListPos].user
+                                  : widget.docs[widget.doctorListPos].user)),
 
                       //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
@@ -1666,6 +1695,184 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         .associateRecords(doctorId, userId, healthRecords);
 
     return associateResponseList;
+  }
+
+  String getMembershipDiscount(HealthOrganizationResult result) {
+    String originalFees;
+    String discount;
+    if (result.doctorFeeCollection != null) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+            discount = result.doctorFeeCollection[i].fee;
+          } else if (feesCode == CONSULTING && isActive) {
+            originalFees = result.doctorFeeCollection[i].fee;
+          }
+        }
+      }
+    }
+    if (discount != null &&
+        discount != '' &&
+        originalFees != null &&
+        originalFees != '') {
+      if (discount != '0.00' && discount != '0') {
+        try {
+          discount = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(discount))
+              .toString();
+        } catch (e) {}
+        if (originalFees.contains(',')) {
+          originalFees = originalFees.replaceAll(',', '');
+        }
+        return getDiscountedFee(
+            double.parse(discount), double.parse(originalFees));
+      }
+    }
+    return '';
+  }
+
+  Widget getMembershipCheckBox(HealthOrganizationResult result) {
+    Widget widget;
+    String originalFees = '0';
+    String discount = '0';
+    if (result.doctorFeeCollection != null) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+            discount = result.doctorFeeCollection[i].fee;
+          } else if (feesCode == CONSULTING && isActive) {
+            originalFees = result.doctorFeeCollection[i].fee;
+          }
+        }
+      }
+    }
+    if (discount != null &&
+        discount != '' &&
+        originalFees != null &&
+        originalFees != '') {
+      if (discount != '0.00' && discount != '0') {
+        try {
+          discount = new CommonUtil()
+              .doubleWithoutDecimalToInt(double.parse(discount))
+              .toString();
+        } catch (e) {
+          widget = SizedBox.shrink();
+        }
+        if (originalFees.contains(',')) {
+          originalFees = originalFees.replaceAll(',', '');
+        }
+        INR_Price = getDiscountedFee(
+            double.parse(discount), double.parse(originalFees));
+        if (INR_Price == '0' || INR_Price == '0.00') {
+          btnLabelChange = bookNow;
+        } else {
+          btnLabelChange = payNow;
+        }
+        widget = Container(
+          child: Center(
+            child: CheckboxListTile(
+              title: Text(
+                "Qurhealth Discount (" + discount + '%)',
+                style: TextStyle(color: Colors.grey),
+              ),
+              value: true,
+              activeColor: Colors.grey,
+              onChanged: null,
+              controlAffinity:
+                  ListTileControlAffinity.leading, //  <-- leading Checkbox
+            ),
+          ),
+        );
+      } else {
+        widget = SizedBox.shrink();
+      }
+    } else {}
+    return widget;
+  }
+
+  getDoctorFeeCollection(HealthOrganizationResult result, String type) {
+    if (result.doctorFeeCollection != null) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == type && isActive) {
+            return result.doctorFeeCollection[i];
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  bool checkForMembershipDiscount(HealthOrganizationResult result) {
+    bool isMembershipDiscount = false;
+    if (result.doctorFeeCollection != null) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+            isMembershipDiscount = true;
+          }
+        }
+      }
+    }
+    return isMembershipDiscount;
+  }
+
+  showDialogForMembershipDiscount() async {
+    if (checkForMembershipDiscount(
+      widget.isFromHospital
+          ? widget.resultFromHospitalList[widget.doctorListIndex]
+          : widget.healthOrganizationResult[widget.i],
+    )) {
+      String discount = getMembershipDiscount(widget.isFromHospital
+          ? widget.resultFromHospitalList[widget.doctorListIndex]
+          : widget.healthOrganizationResult[widget.i]);
+      if ((discount ?? '').isNotEmpty) {
+        await Future.delayed(Duration(seconds: 1));
+        final val = await Get.dialog(
+          AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: Text(
+                    'Congratulations! Your appointment fee is revised to $discount INR as part of your membership benefit',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  onPressed: () => Get.back(
+                    result: true,
+                  ),
+                  child: Text(
+                    Constants.okButton,
+                  ),
+                )
+              ],
+            ),
+          ),
+          barrierDismissible: false,
+        );
+
+        setState(() {
+          isMembershipDiscount = true;
+        });
+      }
+    }
   }
 
   String getFees(HealthOrganizationResult result, bool isCSRDiscount) {

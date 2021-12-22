@@ -111,7 +111,9 @@ const String qr_is_followup = 'isFollowUp';
 const String qr_health_record_ref = 'healthRecordReference';
 const String qr_parent_appointment = 'parentAppointment';
 const String qr_is_csr_discount = 'isCsrDiscount';
-
+const String qr_discountType = 'discountType';
+const String qr_csr_discount = 'CSR_DISCOUNT';
+const String qr_MEMBERSHIP_DISCOUNT = 'MEMBERSHIP_DISCOUNT';
 const String qr_payment_id = 'paymentId';
 const String qr_appoint_id = 'appointmentId';
 const String qr_payment_order_id = 'paymentOrderId';
@@ -290,6 +292,6 @@ const String qr_careGiverList = 'careGiverList';
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
-const String qr_code_tags='TAGS';
+const String qr_code_tags = 'TAGS';
 
-const String retry_payment='appointment/check-retry-appointment?id=';
+const String retry_payment = 'appointment/check-retry-appointment?id=';
