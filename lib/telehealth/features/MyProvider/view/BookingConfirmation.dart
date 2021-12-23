@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
@@ -10,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -158,7 +160,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String INR_Price = '';
   String btnLabelChange = payNow;
-
+  bool isMembershipDiscount = false;
+  String MembershipDiscountPercent;
+  bool isResident = false;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -175,7 +179,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     getCategoryList();
     getDataFromWidget();
     setLengthValue();
-
+    showDialogForMembershipDiscount();
     INR_Price = commonWidgets.getMoneyWithForamt((widget.isFromFollowUpApp &&
             widget.isFromFollowUpTake == false &&
             isFollowUp())
@@ -236,7 +240,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         .toString();
     doctorSessionId = widget.sessionData[widget.rowPosition].doctorSessionId;
     scheduleDate = CommonUtil.dateConversionToApiFormat(widget.selectedDate);
-
+    isResident = widget.isFromHospital
+        ? widget
+            .resultFromHospitalList[widget.doctorListIndex].doctor.isResident
+        : widget.isFromFollowReschedule
+            ? widget.docsReschedule[widget.doctorListPos].isResident
+            : widget.docs[widget.doctorListPos].isResident;
     doctorId = widget.isFromHospital
         ? widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.id
         : widget.isFromFollowReschedule
@@ -750,17 +759,35 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           ? getFeesFromHospital(
                               widget.resultFromHospitalList[
                                   widget.doctorListIndex],
-                              true)
+                              true,
+                            )
                           : getFees(
-                              widget.healthOrganizationResult[widget.i], true),
-                      commonWidgets.getMoneyWithForamt(widget.isFromHospital
-                          ? getFeesFromHospital(
-                              widget.resultFromHospitalList[
-                                  widget.doctorListIndex],
-                              false)
-                          : getFees(widget.healthOrganizationResult[widget.i],
-                              false))),
+                              widget.healthOrganizationResult[widget.i],
+                              true,
+                            ),
+                      commonWidgets.getMoneyWithForamt(
+                        widget.isFromHospital
+                            ? getFeesFromHospital(
+                                widget.resultFromHospitalList[
+                                    widget.doctorListIndex],
+                                false,
+                              )
+                            : getFees(
+                                widget.healthOrganizationResult[widget.i],
+                                false,
+                              ),
+                      ),
+                    ),
               SizedBoxWidget(height: 15.0),
+              isMembershipDiscount
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        getMembershipDiscountCheckBox(),
+                        SizedBoxWidget(height: 15.0),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               Container(
                 child: Center(
                   child: Text(
@@ -826,23 +853,26 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               } else {
                                 if (btnLabelChange == bookNow) {
                                   bookAppointment(
-                                      createdBy,
-                                      selectedId,
-                                      doctorSessionId,
-                                      scheduleDate,
-                                      slotNumber,
-                                      (healthRecords != null &&
-                                              healthRecords.length > 0)
-                                          ? true
-                                          : false,
-                                      isFollowUp(),
-                                      (healthRecords != null &&
-                                              healthRecords.length > 0)
-                                          ? healthRecords
-                                          : [],
-                                      doc: widget.isFollowUp
-                                          ? widget.doctorsData
-                                          : null);
+                                    createdBy,
+                                    selectedId,
+                                    doctorSessionId,
+                                    scheduleDate,
+                                    slotNumber,
+                                    (healthRecords != null &&
+                                            healthRecords.length > 0)
+                                        ? true
+                                        : false,
+                                    isFollowUp(),
+                                    (healthRecords != null &&
+                                            healthRecords.length > 0)
+                                        ? healthRecords
+                                        : [],
+                                    doc: widget.isFollowUp
+                                        ? widget.doctorsData
+                                        : null,
+                                    isResidentDoctorMembership:
+                                        isMembershipDiscount,
+                                  );
                                 } else {
                                   _displayDialog(context);
                                 }
@@ -1022,26 +1052,29 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         addHealthRecords();
                                         Navigator.pop(context);
                                         bookAppointment(
-                                            createdBy,
-                                            selectedId,
-                                            doctorSessionId,
-                                            scheduleDate,
-                                            slotNumber,
-                                            (healthRecords != null &&
-                                                    healthRecords.length > 0)
-                                                ? true
-                                                : false,
-                                            (widget.isFromFollowUpApp &&
-                                                widget.isFromFollowUpTake ==
-                                                    false &&
-                                                isFollowUp()),
-                                            (healthRecords != null &&
-                                                    healthRecords.length > 0)
-                                                ? healthRecords
-                                                : [],
-                                            doc: widget.isFollowUp
-                                                ? widget.doctorsData
-                                                : null);
+                                          createdBy,
+                                          selectedId,
+                                          doctorSessionId,
+                                          scheduleDate,
+                                          slotNumber,
+                                          (healthRecords != null &&
+                                                  healthRecords.length > 0)
+                                              ? true
+                                              : false,
+                                          (widget.isFromFollowUpApp &&
+                                              widget.isFromFollowUpTake ==
+                                                  false &&
+                                              isFollowUp()),
+                                          (healthRecords != null &&
+                                                  healthRecords.length > 0)
+                                              ? healthRecords
+                                              : [],
+                                          doc: widget.isFollowUp
+                                              ? widget.doctorsData
+                                              : null,
+                                          isResidentDoctorMembership:
+                                              isMembershipDiscount,
+                                        );
                                       },
                                       child: TextWidget(
                                         text: ok,
@@ -1097,42 +1130,48 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   Future<CreateAppointmentModel> bookAppointmentCall(
-      String createdBy,
-      String bookedFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      bool isFollowUp,
-      List<String> healthRecords,
-      bool isCSRDiscount,
-      {Past doc}) async {
+    String createdBy,
+    String bookedFor,
+    String doctorSessionId,
+    String scheduleDate,
+    String slotNumber,
+    bool isMedicalShared,
+    bool isFollowUp,
+    List<String> healthRecords,
+    bool isCSRDiscount, {
+    Past doc,
+    bool isResidentDoctorMembership = false,
+  }) async {
     CreateAppointmentModel bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
-            createdBy,
-            bookedFor,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            isMedicalShared,
-            isFollowUp,
-            healthRecords,
-            isCSRDiscount,
-            doc: doc);
+      createdBy,
+      bookedFor,
+      doctorSessionId,
+      scheduleDate,
+      slotNumber,
+      isMedicalShared,
+      isFollowUp,
+      healthRecords,
+      isCSRDiscount,
+      doc: doc,
+      isResidentDoctorMembership: isResidentDoctorMembership,
+    );
 
     return bookAppointmentModel;
   }
 
   bookAppointment(
-      String createdBy,
-      String bookedFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      bool isFollowUp,
-      List<String> healthRecords,
-      {Past doc}) {
+    String createdBy,
+    String bookedFor,
+    String doctorSessionId,
+    String scheduleDate,
+    String slotNumber,
+    bool isMedicalShared,
+    bool isFollowUp,
+    List<String> healthRecords, {
+    Past doc,
+    bool isResidentDoctorMembership = false,
+  }) {
     setState(() {
       pr.show();
     });
@@ -1143,16 +1182,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             .then((value) {
           if (value != null && value.isSuccess) {
             bookAppointmentOnly(
-                createdBy,
-                bookedFor,
-                doctorSessionId,
-                scheduleDate,
-                slotNumber,
-                isMedicalShared,
-                isFollowUp,
-                healthRecords,
-                checkedValue,
-                doc: doc);
+              createdBy,
+              bookedFor,
+              doctorSessionId,
+              scheduleDate,
+              slotNumber,
+              isMedicalShared,
+              isFollowUp,
+              healthRecords,
+              checkedValue,
+              doc: doc,
+              isResidentDoctorMembership: isResidentDoctorMembership,
+            );
           } else {
             pr.hide();
             toast.getToast(errAssociateRecords, Colors.red);
@@ -1160,16 +1201,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         });
       } else {
         bookAppointmentOnly(
-            createdBy,
-            bookedFor,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            isMedicalShared,
-            isFollowUp,
-            healthRecords,
-            checkedValue,
-            doc: doc);
+          createdBy,
+          bookedFor,
+          doctorSessionId,
+          scheduleDate,
+          slotNumber,
+          isMedicalShared,
+          isFollowUp,
+          healthRecords,
+          checkedValue,
+          doc: doc,
+          isResidentDoctorMembership: isResidentDoctorMembership,
+        );
       }
     } catch (e) {
       pr.hide();
@@ -1178,28 +1221,31 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   bookAppointmentOnly(
-      String createdBy,
-      String bookedFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      bool isFollowUp,
-      List<String> healthRecords,
-      bool isCSRDiscount,
-      {Past doc}) {
+    String createdBy,
+    String bookedFor,
+    String doctorSessionId,
+    String scheduleDate,
+    String slotNumber,
+    bool isMedicalShared,
+    bool isFollowUp,
+    List<String> healthRecords,
+    bool isCSRDiscount, {
+    Past doc,
+    bool isResidentDoctorMembership = false,
+  }) {
     bookAppointmentCall(
-            createdBy,
-            bookedFor,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            isMedicalShared,
-            isFollowUp,
-            healthRecords,
-            isCSRDiscount,
-            doc: doc)
-        .then((value) {
+      createdBy,
+      bookedFor,
+      doctorSessionId,
+      scheduleDate,
+      slotNumber,
+      isMedicalShared,
+      isFollowUp,
+      healthRecords,
+      isCSRDiscount,
+      doc: doc,
+      isResidentDoctorMembership: isResidentDoctorMembership,
+    ).then((value) {
       if (value != null) {
         if (value.isSuccess != null &&
             value.message != null &&
@@ -1221,7 +1267,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.shorturl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      true,value?.result?.appointmentInfo?.id);
+                      true,
+                      value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(
@@ -1238,7 +1285,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       value?.result?.paymentInfo?.payload?.paymentGatewayDetail
                           ?.responseInfo?.longurl,
                       value?.result?.paymentInfo?.payload?.payment?.id,
-                      false,value?.result?.appointmentInfo?.id);
+                      false,
+                      value?.result?.appointmentInfo?.id);
                 } else {
                   pr.hide();
                   toast.getToast(noUrl, Colors.red);
@@ -1269,7 +1317,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
   }
 
-  goToPaymentPage(String longurl, String paymentId, bool isRazor,String appointmentId) {
+  goToPaymentPage(
+      String longurl, String paymentId, bool isRazor, String appointmentId) {
     CommonUtil.recordIds.clear();
     CommonUtil.notesId.clear();
     CommonUtil.voiceIds.clear();
@@ -1369,17 +1418,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: Row(
                     children: [
                       Container(
-                          constraints: BoxConstraints(
-                              maxWidth: 160.w),
+                          constraints: BoxConstraints(maxWidth: 160.w),
                           child: widget.isFromHospital
                               ? commonWidgets.setDoctornameForHos(widget
-                              .resultFromHospitalList[widget.doctorListIndex]
-                              .doctor
-                              .user)
+                                  .resultFromHospitalList[
+                                      widget.doctorListIndex]
+                                  .doctor
+                                  .user)
                               : commonWidgets.setDoctorname(widget
-                              .isFromFollowReschedule
-                              ? widget.docsReschedule[widget.doctorListPos].user
-                              : widget.docs[widget.doctorListPos].user)),
+                                      .isFromFollowReschedule
+                                  ? widget
+                                      .docsReschedule[widget.doctorListPos].user
+                                  : widget.docs[widget.doctorListPos].user)),
 
                       //commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
@@ -1668,6 +1718,135 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return associateResponseList;
   }
 
+  Container getMembershipDiscountCheckBox() {
+    return (MembershipDiscountPercent ?? '').isNotEmpty
+        ? Container(
+            child: Center(
+              child: CheckboxListTile(
+                title: Text(
+                  "Qurhealth Discount (" + MembershipDiscountPercent + '%)',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                value: true,
+                activeColor: Colors.grey,
+                onChanged: null,
+                controlAffinity:
+                    ListTileControlAffinity.leading, //  <-- leading Checkbox
+              ),
+            ),
+          )
+        : Container();
+  }
+
+  showDialogForMembershipDiscount() async {
+    if (!isResident) return;
+    String originalFees;
+    String discountPercent;
+    String discount;
+    if (widget.isFromHospital) {
+      ResultFromHospital result =
+          widget.resultFromHospitalList[widget.doctorListIndex];
+      if (result.doctorFeeCollection != null) {
+        if (result.doctorFeeCollection.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+            String feesCode = result.doctorFeeCollection[i].feeType.code;
+            bool isActive = result.doctorFeeCollection[i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+              discountPercent = result.doctorFeeCollection[i].fee;
+            } else if (feesCode == CONSULTING && isActive) {
+              originalFees = result.doctorFeeCollection[i].fee;
+            }
+          }
+        }
+      }
+    } else {
+      HealthOrganizationResult result =
+          widget.healthOrganizationResult[widget.i];
+      if (result.doctorFeeCollection != null) {
+        if (result.doctorFeeCollection.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+            String feesCode = result.doctorFeeCollection[i].feeType.code;
+            bool isActive = result.doctorFeeCollection[i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+              discountPercent = result.doctorFeeCollection[i].fee;
+            } else if (feesCode == CONSULTING && isActive) {
+              originalFees = result.doctorFeeCollection[i].fee;
+            }
+          }
+        }
+      }
+    }
+
+    if ((discountPercent ?? '').isNotEmpty && (originalFees ?? '').isNotEmpty) {
+      if (discountPercent != '0.00' && discountPercent != '0') {
+        try {
+          discountPercent = CommonUtil()
+              .doubleWithoutDecimalToInt(
+                double.parse(discountPercent),
+              )
+              .toString();
+        } catch (e) {
+          return;
+        }
+        if (originalFees.contains(',')) {
+          originalFees = originalFees.replaceAll(',', '');
+        }
+        discount = getDiscountedFee(
+          double.parse(discountPercent),
+          double.parse(originalFees),
+          twoDecimal: true,
+        );
+      }
+
+      if ((discount ?? '').isNotEmpty) {
+        MembershipDiscountPercent = discountPercent;
+        await Future.delayed(Duration(seconds: 1));
+        final val = await Get.dialog(
+          AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: Text(
+                    'Congratulations! Your appointment fee is revised to $discount INR as part of your membership benefit',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                ElevatedButton(
+                  onPressed: () => Get.back(
+                    result: true,
+                  ),
+                  child: Text(
+                    Constants.okButton,
+                  ),
+                )
+              ],
+            ),
+          ),
+          barrierDismissible: false,
+        );
+        setState(
+          () {
+            isMembershipDiscount = true;
+            INR_Price = discount;
+            if (INR_Price == '0' || INR_Price == '0.00') {
+              btnLabelChange = bookNow;
+            } else {
+              btnLabelChange = payNow;
+            }
+          },
+        );
+      }
+    }
+  }
+
   String getFees(HealthOrganizationResult result, bool isCSRDiscount) {
     String fees;
     if (result.doctorFeeCollection != null) {
@@ -1812,17 +1991,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       //normal appointment
       if (btnLabelChange == bookNow) {
         bookAppointment(
-            createdBy,
-            selectedId,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            (healthRecords != null && healthRecords.length > 0) ? true : false,
-            isFollowUp(),
-            (healthRecords != null && healthRecords.length > 0)
-                ? healthRecords
-                : [],
-            doc: widget.isFollowUp ? widget.doctorsData : null);
+          createdBy,
+          selectedId,
+          doctorSessionId,
+          scheduleDate,
+          slotNumber,
+          (healthRecords != null && healthRecords.length > 0) ? true : false,
+          isFollowUp(),
+          (healthRecords != null && healthRecords.length > 0)
+              ? healthRecords
+              : [],
+          doc: widget.isFollowUp ? widget.doctorsData : null,
+          isResidentDoctorMembership: isMembershipDiscount,
+        );
       } else {
         _displayDialog(context);
       }
@@ -1855,24 +2036,26 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }
 
-  String getDiscountedFee(double percent, double price) {
+  String getDiscountedFee(
+    double percent,
+    double price, {
+    bool twoDecimal = false,
+  }) {
     var discountedPrice;
     String priceLast;
-
     if (percent != null && price != null && percent != '' && price != '') {
       discountedPrice = (percent / 100) * price;
-
       price = price - discountedPrice;
-
       try {
-        priceLast = new CommonUtil()
-            .doubleWithoutDecimalToInt(double.parse(price.toString()))
-            .toString();
+        priceLast = twoDecimal
+            ? price.toStringAsFixed(2)
+            : new CommonUtil()
+                .doubleWithoutDecimalToInt(double.parse(price.toString()))
+                .toString();
       } catch (e) {
         return price.toString();
       }
     }
-
     return priceLast.toString();
   }
 }

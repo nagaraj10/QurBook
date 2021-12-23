@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/landing/model/membership_detail_response.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../model/qur_plan_dashboard_model.dart';
@@ -81,6 +82,8 @@ class LandingViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<MemberShipDetailResponse> getMembershipDetails() async => await LandingService.getMemberShipDetails();
 
   Future<DashboardModel> getQurPlanWidgetsData({
     bool needNotify = false,

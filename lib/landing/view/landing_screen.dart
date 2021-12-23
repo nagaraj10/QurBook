@@ -9,6 +9,9 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/landing/service/landing_service.dart';
+import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
@@ -86,6 +89,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+    checkCpUser();
     mInitialTime = DateTime.now();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
@@ -137,6 +141,29 @@ class _LandingScreenState extends State<LandingScreen> {
       }
     } catch (e) {
       print(e.toString());
+    }
+  }
+
+  Future<MyProfileResult> getIsCpUser() async {
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    return myProfile.result;
+  }
+
+  checkCpUser() async {
+    var value = await LandingService.getMemberShipDetails();
+    if (value.isSuccess) {
+      bool isShown =
+          await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
+      if (!isShown) {
+        MyProfileResult cpUser = await getIsCpUser();
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return CorpUsersWelcomeDialog(cpUser, value.result[0]);
+            });
+      }
     }
   }
 

@@ -22,6 +22,7 @@ const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
+const String KEY_CORP_USER_MESSAGE = 'corpusermessageshown';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
