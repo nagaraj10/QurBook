@@ -28,21 +28,13 @@ class LandingService {
   }
 
   static Future<MemberShipDetailResponse> getMemberShipDetails() async {
-    print('call working');
-
     var _helper = ApiBaseHelper();
     final userId = PreferenceUtil.getStringValue(KEY_USERID);
-    final url = variable.qr_qur_plan_dashboard +
-        variable.qr_membership +
-        userId +
-        variable.qr_organizationid;
-    print('======working========');
+    final url = variable.qr_membership + userId + variable.qr_organizationid;
 
     var response = await _helper.getMemberShipDetails(
       url,
     );
-    print('======resp========');
-    print(response);
     return MemberShipDetailResponse.fromJson(response ?? '');
   }
 }

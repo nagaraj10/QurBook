@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/landing/model/membership_detail_response.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 
 class CorpUsersWelcomeDialog extends StatelessWidget {
-  const CorpUsersWelcomeDialog(this.cpUser, {Key key}) : super(key: key);
-  final MyProfileResult cpUser;
+  const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key key})
+      : super(key: key);
+  final Result result;
+  final cpUser;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -76,7 +79,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    platinum,
+                    result.planName,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

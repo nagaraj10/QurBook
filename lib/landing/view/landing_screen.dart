@@ -151,31 +151,19 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   checkCpUser() async {
-    print('working');
-    LandingService.getMemberShipDetails();
-
-    // landingViewModel.getMembershipDetails().then((value) async {
-    //   if (value.isSuccess) {
-    //     MyProfileResult cpUser = await getIsCpUser();
-    //     showDialog(
-    //         barrierDismissible: false,
-    //         context: context,
-    //         builder: (BuildContext context) {
-    //           return CorpUsersWelcomeDialog(cpUser);
-    //         });
-    //   }
-    // });
-    MyProfileResult cpUser = await getIsCpUser();
-    bool isShown =
-        await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
-    print('isShown' + isShown.toString());
-    if (true) {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (BuildContext context) {
-            return CorpUsersWelcomeDialog(cpUser);
-          });
+    var value = await LandingService.getMemberShipDetails();
+    if (value.isSuccess) {
+      bool isShown =
+          await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
+      if (!isShown) {
+        MyProfileResult cpUser = await getIsCpUser();
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (BuildContext context) {
+              return CorpUsersWelcomeDialog(cpUser, value.result[0]);
+            });
+      }
     }
   }
 
