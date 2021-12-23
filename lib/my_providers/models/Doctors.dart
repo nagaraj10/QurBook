@@ -17,22 +17,24 @@ class Doctors {
   bool isDefault;
   String providerPatientMappingId;
   List<String> sharedCategories;
-
-  Doctors(
-      {this.id,
-      this.specialization,
-      this.isTelehealthEnabled,
-      this.isMciVerified,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedBy,
-      this.lastModifiedOn,
-      this.user,
-      this.doctorProfessionalDetailCollection,
-      this.doctorLanguageCollection,
-      this.isDefault,
-      this.providerPatientMappingId,
-      this.sharedCategories});
+  bool isResident = false;
+  Doctors({
+    this.id,
+    this.specialization,
+    this.isTelehealthEnabled,
+    this.isMciVerified,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.user,
+    this.doctorProfessionalDetailCollection,
+    this.doctorLanguageCollection,
+    this.isDefault,
+    this.providerPatientMappingId,
+    this.sharedCategories,
+    this.isResident,
+  });
 
   Doctors.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -64,6 +66,7 @@ class Doctors {
         json['sharedCategories'] != null) {
       sharedCategories = json['sharedCategories'].cast<String>();
     }
+    isResident = json['isResident'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
@@ -80,9 +83,8 @@ class Doctors {
       data['user'] = user.toJson();
     }
     if (doctorProfessionalDetailCollection != null) {
-      data['doctorProfessionalDetailCollection'] = doctorProfessionalDetailCollection
-          .map((v) => v.toJson())
-          .toList();
+      data['doctorProfessionalDetailCollection'] =
+          doctorProfessionalDetailCollection.map((v) => v.toJson()).toList();
     }
     if (doctorLanguageCollection != null) {
       data['doctorLanguageCollection'] =
@@ -91,7 +93,7 @@ class Doctors {
     data['isDefault'] = isDefault;
     data['providerPatientMappingId'] = providerPatientMappingId;
     data['sharedCategories'] = sharedCategories;
-
+    data['isResident'] = isResident;
     return data;
   }
 }

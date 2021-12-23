@@ -8,29 +8,33 @@ class CreateAppointMentViewModel {
   CreateAppointmentModel bookAppointment = CreateAppointmentModel();
 
   Future<CreateAppointmentModel> putBookAppointment(
-      String createdBy,
-      String bookedFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      bool isFollowUp,
-      List<String> healthRecords,
-      bool isCSRDiscount,
-      {Past doc}) async {
+    String createdBy,
+    String bookedFor,
+    String doctorSessionId,
+    String scheduleDate,
+    String slotNumber,
+    bool isMedicalShared,
+    bool isFollowUp,
+    List<String> healthRecords,
+    bool isCSRDiscount, {
+    Past doc,
+    bool isResidentDoctorMembership = false,
+  }) async {
     try {
       CreateAppointmentModel bookAppointmentModel =
           await createAppointmentService.bookAppointment(
-              createdBy,
-              bookedFor,
-              doctorSessionId,
-              scheduleDate,
-              slotNumber,
-              isMedicalShared,
-              isFollowUp,
-              healthRecords,
-              isCSRDiscount,
-              doc: doc);
+        createdBy,
+        bookedFor,
+        doctorSessionId,
+        scheduleDate,
+        slotNumber,
+        isMedicalShared,
+        isFollowUp,
+        healthRecords,
+        isCSRDiscount,
+        doc: doc,
+        isResidentDoctorMembership: isResidentDoctorMembership,
+      );
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
     } catch (e) {}

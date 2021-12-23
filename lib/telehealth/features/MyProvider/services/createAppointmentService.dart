@@ -9,16 +9,18 @@ class CreateAppointmentService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<CreateAppointmentModel> bookAppointment(
-      String createdBy,
-      String bookedFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      bool isFollowUp,
-      List<String> healthRecords,
-      bool isCSRDiscount,
-      {Past doc}) async {
+    String createdBy,
+    String bookedFor,
+    String doctorSessionId,
+    String scheduleDate,
+    String slotNumber,
+    bool isMedicalShared,
+    bool isFollowUp,
+    List<String> healthRecords,
+    bool isCSRDiscount, {
+    Past doc,
+    bool isResidentDoctorMembership = false,
+  }) async {
     var slotInput = {};
     slotInput[qr_created_by] = createdBy;
     slotInput[qr_booked_for] = bookedFor;
@@ -43,10 +45,15 @@ class CreateAppointmentService {
     } else {
       slotInput[qr_parent_appointment] = '';
     }
-    slotInput[qr_is_csr_discount] = isCSRDiscount;
+    slotInput[qr_discountType] = isCSRDiscount ?? false
+        ? qr_csr_discount
+        : isResidentDoctorMembership
+            ? qr_MEMBERSHIP_DISCOUNT
+            : 'nil';
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
-    final response = await _helper.bookAppointment(qr_bookAppointment, jsonString);
+    final response =
+        await _helper.bookAppointment(qr_bookAppointment, jsonString);
     print(response);
     return CreateAppointmentModel.fromJson(response);
   }
