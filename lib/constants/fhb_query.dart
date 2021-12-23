@@ -170,6 +170,10 @@ const String qr_reference_doctor = 'reference-doctor/';
 const String qr_non_qurpro = 'non-qurpro-doctor';
 const String qr_non_qurpro_hospital = 'non-qurpro-hospital';
 
+const String qr_membership =
+    'plan-subscription-info/membership-details?userId=';
+const String qr_organizationid = '&healthOrganizationId=';
+
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';
 
