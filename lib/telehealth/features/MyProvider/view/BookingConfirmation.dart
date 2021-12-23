@@ -1743,18 +1743,35 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     String originalFees;
     String discountPercent;
     String discount;
-    HealthOrganizationResult result = widget.isFromHospital
-        ? widget.resultFromHospitalList[widget.doctorListIndex]
-        : widget.healthOrganizationResult[widget.i];
-    if (result.doctorFeeCollection != null) {
-      if (result.doctorFeeCollection.length > 0) {
-        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
-          String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive = result.doctorFeeCollection[i].isActive;
-          if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
-            discountPercent = result.doctorFeeCollection[i].fee;
-          } else if (feesCode == CONSULTING && isActive) {
-            originalFees = result.doctorFeeCollection[i].fee;
+    if (widget.isFromHospital) {
+      ResultFromHospital result =
+          widget.resultFromHospitalList[widget.doctorListIndex];
+      if (result.doctorFeeCollection != null) {
+        if (result.doctorFeeCollection.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+            String feesCode = result.doctorFeeCollection[i].feeType.code;
+            bool isActive = result.doctorFeeCollection[i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+              discountPercent = result.doctorFeeCollection[i].fee;
+            } else if (feesCode == CONSULTING && isActive) {
+              originalFees = result.doctorFeeCollection[i].fee;
+            }
+          }
+        }
+      }
+    } else {
+      HealthOrganizationResult result =
+          widget.healthOrganizationResult[widget.i];
+      if (result.doctorFeeCollection != null) {
+        if (result.doctorFeeCollection.length > 0) {
+          for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+            String feesCode = result.doctorFeeCollection[i].feeType.code;
+            bool isActive = result.doctorFeeCollection[i].isActive;
+            if (feesCode == qr_MEMBERSHIP_DISCOUNT && isActive) {
+              discountPercent = result.doctorFeeCollection[i].fee;
+            } else if (feesCode == CONSULTING && isActive) {
+              originalFees = result.doctorFeeCollection[i].fee;
+            }
           }
         }
       }
