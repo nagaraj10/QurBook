@@ -246,7 +246,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             openURLFromNotification(data)
         } else if (data[Constants.PROP_REDIRECT_TO] == "mycartdetails") {
             renewNotification(data)
-        } else {
+        }else if (data[Constants.PROP_REDIRECT_TO] == "myplandetails") {
+            myPlanDetailsNotification(data)
+        }
+        else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
@@ -696,6 +699,66 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setSound(ack_sound)
             .setAutoCancel(true)
             .build()
+        nsManager.notify(NS_ID, notification)
+    }
+
+    private fun myPlanDetailsNotification(data: Map<String, String> = HashMap()) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val PAT_NAME = data[getString(R.string.pat_name)]
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                CHANNEL_RENEW,
+                getString(R.string.channel_renew),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_renew_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+
+        val onTapNS = Intent(this, OnTapNotification::class.java)
+        callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
+        callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.MY_PLAN_DETAILS)
+        callBackIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
+        callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        callBackIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        callBackIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
+        val callBackPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentIntent(onTapPendingIntent)
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setWhen(0)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID, notification)
     }
 

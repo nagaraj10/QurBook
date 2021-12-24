@@ -49,6 +49,7 @@ object Constants {
     val PROP_ACCEPT ="accept"
     val PROP_RENEW ="Renew"
     val PROP_CALLBACK ="Callback"
+    val MY_PLAN_DETAILS ="myPlanDetails"
     val PROP_PLANID ="planId"
     val PROP_DECLINE ="decline"
     val PROP_PROVIDER_REQID ="providerRequestId"

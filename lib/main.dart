@@ -659,8 +659,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }
-        else if (passedValArr[1] == 'manageActivities') {
+        } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'manageActivities',
@@ -668,8 +667,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen()).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }
-        else {
+        } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointment_list',
@@ -795,6 +793,7 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
+      } else if (passedValArr[0] == 'myPlanDetails') {
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -1063,17 +1062,12 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: 'mycart',
               bundle: parsedData[2],
             );
-          }
-          else if (parsedData[1] == 'manageActivities') {
-
+          } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',
               bundle: parsedData[2],
             );
-
-          }
-
-          else {
+          } else {
             return SplashScreen(
               nsRoute: '',
             );
