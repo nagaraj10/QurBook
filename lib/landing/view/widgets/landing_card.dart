@@ -42,232 +42,239 @@ class LandingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.all(0.0.sp),
-    child: Material(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20.0.sp),
-          topRight: Radius.circular(20.0.sp),
-        ),
-      ),
-      elevation: 5,
-      color: Colors.white,
-      shadowColor: Colors.black54,
-      child: Stack(
-        children: [
-          InkWell(
-            onTap: onPressed,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border(
-                  bottom: BorderSide(
-                    color: color,
-                    width: 2.0.h,
-                  ),
-                ),
-              ),
-              padding: EdgeInsets.all(
-                20.0.sp,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    title ?? '',
-                    style: TextStyle(
-                      fontSize: 18.0.sp,
-                      color: color,
-                      // fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Visibility(
-                    visible: onLinkPressed == null &&
-                        isEnabled &&
-                        (alerts ?? '').isNotEmpty,
-                    child: Text(
-                      alerts ?? '',
-                      style: TextStyle(
-                        fontSize: alertsColor != null ? 14.0.sp : 12.0.sp,
-                        color: alertsColor ?? Colors.black54,
-                        decoration: onLinkPressed != null
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                      ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Visibility(
-                    visible: onLinkPressed != null &&
-                        isEnabled &&
-                        (alerts ?? '').isNotEmpty,
-                    child: InkWell(
-                      onTap: onLinkPressed,
-                      child: Text(
-                        alerts ?? '',
-                        style: TextStyle(
-                          fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
-                          color: Colors.black54,
-                          decoration: onLinkPressed != null
-                              ? TextDecoration.underline
-                              : TextDecoration.none,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
+        padding: EdgeInsets.all(0.0.sp),
+        child: Material(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.0.sp),
+              topRight: Radius.circular(20.0.sp),
+            ),
+          ),
+          elevation: 5,
+          color: Colors.white,
+          shadowColor: Colors.black54,
+          child: Stack(
+            children: [
+              InkWell(
+                onTap: onPressed,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border(
+                      bottom: BorderSide(
+                        color: color,
+                        width: 2.0.h,
                       ),
                     ),
                   ),
-                  Visibility(
-                    visible: isEnabled && (eventName ?? '').isNotEmpty,
-                    child: InkWell(
-                      child: Text(
-                        (eventName ?? '').isNotEmpty
-                            ? toBeginningOfSentenceCase(
-                            eventName?.trim() ?? '')
-                            : '',
-                        style: TextStyle(
-                          fontSize: 12.0.sp,
-                          color: Colors.black54,
-                          height: 1.3.h,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                  padding: EdgeInsets.all(
+                    20.0.sp,
                   ),
-                  Visibility(
-                    visible: isEnabled && (lastStatus ?? '').isNotEmpty,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          lastStatus ?? '',
-                          style: TextStyle(
-                            fontSize: 12.0.sp,
-                            color: Colors.black54,
-                            decoration: TextDecoration.none,
-                            height: 1.3.h,
-                          ),
-                          textAlign: TextAlign.end,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Visibility(
-                  //   visible: onLinkPressed != null &&
-                  //       isEnabled &&
-                  //       (alerts ?? '').isNotEmpty,
-                  //   child: InkWell(
-                  //     onTap: onLinkPressed,
-                  //     child: Text(
-                  //       alerts ?? '',
-                  //       style: TextStyle(
-                  //         fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
-                  //         color: Colors.black54,
-                  //         decoration: onLinkPressed != null
-                  //             ? TextDecoration.underline
-                  //             : TextDecoration.none,
-                  //       ),
-                  //       maxLines: 3,
-                  //       overflow: TextOverflow.ellipsis,
-                  //     ),
-                  //   ),
-                  // ),
-                  Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SvgPicture.asset(
-                        icon,
-                        width: 40.0.sp,
-                        height: 40.0.sp,
+                      Text(
+                        title ?? '',
+                        style: TextStyle(
+                          fontSize: 18.0.sp,
+                          color: color,
+                          // fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      Spacer(),
                       Visibility(
-                        visible: onAddPressed != null,
-                        child: Container(
-                          height: 30.0.sp,
-                          width: 30.0.sp,
-                          child: FloatingActionButton(
-                            onPressed: onAddPressed ?? () {},
-                            elevation: 2,
-                            backgroundColor: color,
-                            heroTag: title,
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
+                        visible: onLinkPressed == null &&
+                            isEnabled &&
+                            (alerts ?? '').isNotEmpty,
+                        child: Text(
+                          alerts ?? '',
+                          style: TextStyle(
+                            fontSize: alertsColor != null ? 14.0.sp : 12.0.sp,
+                            color: alertsColor ?? Colors.black54,
+                            decoration: onLinkPressed != null
+                                ? TextDecoration.underline
+                                : TextDecoration.none,
+                          ),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Visibility(
+                        visible: onLinkPressed != null &&
+                            isEnabled &&
+                            (alerts ?? '').isNotEmpty,
+                        child: InkWell(
+                          onTap: onLinkPressed,
+                          child: Text(
+                            alerts ?? '',
+                            style: TextStyle(
+                              fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
+                              color: Colors.black54,
+                              decoration: onLinkPressed != null
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
                             ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ),
                       Visibility(
-                        visible: onTicketPressed != null,
-                        child: Container(
-                          height: 40.0.sp,
-                          width: 40.0.sp,
-                          child: FloatingActionButton(
-                            onPressed: onTicketPressed ?? () {},
-                            elevation: 2,
-                            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                            heroTag: title,
-                            child: new Stack(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: new Image.asset('assets/icons/10.png',height: 25,width: 25,),
+                        visible: isEnabled && (eventName ?? '').isNotEmpty,
+                        child: InkWell(
+                          child: Text(
+                            (eventName ?? '').isNotEmpty
+                                ? toBeginningOfSentenceCase(
+                                    eventName?.trim() ?? '')
+                                : '',
+                            style: TextStyle(
+                              fontSize: 12.0.sp,
+                              color: Colors.black54,
+                              height: 1.3.h,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isEnabled && (lastStatus ?? '').isNotEmpty,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              lastStatus ?? '',
+                              style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: Colors.black54,
+                                decoration: TextDecoration.none,
+                                height: 1.3.h,
+                              ),
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Visibility(
+                      //   visible: onLinkPressed != null &&
+                      //       isEnabled &&
+                      //       (alerts ?? '').isNotEmpty,
+                      //   child: InkWell(
+                      //     onTap: onLinkPressed,
+                      //     child: Text(
+                      //       alerts ?? '',
+                      //       style: TextStyle(
+                      //         fontSize: alertsColor != null ? 12.0.sp : 12.0.sp,
+                      //         color: Colors.black54,
+                      //         decoration: onLinkPressed != null
+                      //             ? TextDecoration.underline
+                      //             : TextDecoration.none,
+                      //       ),
+                      //       maxLines: 3,
+                      //       overflow: TextOverflow.ellipsis,
+                      //     ),
+                      //   ),
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SvgPicture.asset(
+                            icon,
+                            width: 40.0.sp,
+                            height: 40.0.sp,
+                          ),
+                          Spacer(),
+                          Visibility(
+                            visible: onAddPressed != null,
+                            child: Container(
+                              height: 30.0.sp,
+                              width: 30.0.sp,
+                              child: FloatingActionButton(
+                                onPressed: onAddPressed ?? () {},
+                                elevation: 2,
+                                backgroundColor: color,
+                                heroTag: title,
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.white,
                                 ),
-                                ticketsCount != null ? Positioned(
-                                  right: 5,
-                                  left: 5,
-                                  child: new Container(
-                                    padding: EdgeInsets.all(1),
-                                    decoration: new BoxDecoration(
-                                      color: Colors.yellow,
-                                      borderRadius:
-                                      BorderRadius.circular(6),
-                                    ),
-                                    constraints: BoxConstraints(
-                                      minWidth: 5,
-                                      minHeight: 5,
-                                    ),
-                                    child: new Text(
-                                      ticketsCount,
-                                      style: new TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 8,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ):Container(),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          Visibility(
+                            visible: onTicketPressed != null,
+                            child: Container(
+                              height: 40.0.sp,
+                              width: 40.0.sp,
+                              child: FloatingActionButton(
+                                onPressed: onTicketPressed ?? () {},
+                                elevation: 2,
+                                backgroundColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                                heroTag: title,
+                                child: new Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: new Image.asset(
+                                        'assets/icons/10.png',
+                                        height: 35,
+                                        width: 35,
+                                      ),
+                                    ),
+                                    ticketsCount != null
+                                        ? Positioned(
+                                            right: 5,
+                                            left: 5,
+                                            child: new Container(
+                                              padding: EdgeInsets.all(1),
+                                              decoration: new BoxDecoration(
+                                                color: Colors.yellow,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                minWidth: 5,
+                                                minHeight: 5,
+                                              ),
+                                              child: new Text(
+                                                ticketsCount,
+                                                style: new TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 8,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ),
-          Visibility(
-            visible: false && !isEnabled,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0.sp),
-                  topRight: Radius.circular(20.0.sp),
                 ),
               ),
-            ),
+              Visibility(
+                visible: false && !isEnabled,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0.sp),
+                      topRight: Radius.circular(20.0.sp),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }
