@@ -113,10 +113,11 @@ class FHBBasicWidget {
   }
 
   Widget getTextFieldWithNoCallbacks(
-      BuildContext context, TextEditingController searchController) {
+      BuildContext context, TextEditingController searchController,{bool isFileField}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          enabled:isFileField??false,
           controller: searchController,
         ));
   }
