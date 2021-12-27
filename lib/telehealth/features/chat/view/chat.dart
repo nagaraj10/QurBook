@@ -44,6 +44,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/ShowImage.dart';
 import 'package:open_file/open_file.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -181,6 +182,9 @@ class ChatScreenState extends State<ChatScreen> {
   String patientName;
   String patientPicUrl;
   bool isFromVideoCall;
+  var pdfFile;
+  String jpefFile;
+  String authToken;
 
   //final TextEditingController textEditingController = TextEditingController();
 
@@ -238,6 +242,8 @@ class ChatScreenState extends State<ChatScreen> {
     focusNode.addListener(onFocusChange);
     groupChatId = '';
 
+    setAuthToken();
+
     isLoading = false;
     isShowSticker = false;
     imageUrl = '';
@@ -254,6 +260,10 @@ class ChatScreenState extends State<ChatScreen> {
     set_up_audios();
 
     textEditingController.text = widget?.message;
+  }
+
+  void setAuthToken() async {
+    authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
   initLoader() async {
@@ -728,44 +738,92 @@ class ChatScreenState extends State<ChatScreen> {
           ),
         );
       } else {
+        await downloadFile(fileType, fileUrl);
         await ImageGallerySaver.saveFile(fileUrl).then((res) {
           setState(() {
             downloadStatus = true;
           });
         });
+        Scaffold.of(contxt).showSnackBar(SnackBar(
+          content: const Text(
+            variable.strFileDownloaded,
+          ),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          action: SnackBarAction(
+            label: 'Open',
+            onPressed: () async {
+              await OpenFile.open(
+                pdfFile,
+              );
+            },
+          ),
+        ));
       }
     } else {
       _currentImage = fileUrl;
       try {
-        CommonUtil.downloadFile(_currentImage, fileType).then((filePath) async {
-          if (Platform.isAndroid) {
-            Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: Text(
-                variable.strFileDownloaded,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                ),
+        await downloadFile(fileType, fileUrl);
+        //final file = await CommonUtil.downloadFile(fileUrl, fileType);
+        if (Platform.isAndroid) {
+          Scaffold.of(contxt).showSnackBar(SnackBar(
+            content: Text(
+              variable.strFileDownloaded,
+              style: TextStyle(
+                fontSize: 16.0.sp,
               ),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              action: SnackBarAction(
-                label: 'Open',
-                onPressed: () async {
-                  await OpenFile.open(
-                    filePath.path,
-                  );
+            ),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            action: SnackBarAction(
+              label: 'Open',
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ShowImage(
+                              filePath: jpefFile,
+                            )));
 
-                  // final controller = Get.find<PDFViewController>();
-                  // final data =
-                  //     OpenPDF(type: PDFLocation.Path, path: filePath.path);
-                  // controller.data = data;
-                  // Get.to(() => PDFView());
-                },
-              ),
-            ));
-          }
-        });
+                // final controller = Get.find<PDFViewController>();
+                // final data =
+                //     OpenPDF(type: PDFLocation.Path, path: filePath.path);
+                // controller.data = data;
+                // Get.to(() => PDFView());
+              },
+            ),
+          ));
+        }
       } catch (e) {}
     }
+  }
+
+  Future<bool> downloadFile(String fileType, String fileUrl) async {
+    await FHBUtils.createFolderInAppDocDirClone(
+            variable.stAudioPath, fileUrl.split('/').last)
+        .then((filePath) async {
+      var file;
+      if (fileType == '.pdf') {
+        file = File('$filePath');
+      } else {
+        file = File('$filePath');
+      }
+      final request = await ApiServices.get(
+        fileUrl,
+        headers: {
+          HttpHeaders.authorizationHeader: authToken,
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
+        },
+      );
+      final bytes = request.bodyBytes; //close();
+      await file.writeAsBytes(bytes);
+
+      setState(() {
+        if (fileType == '.pdf') {
+          pdfFile = file.path;
+        } else {
+          jpefFile = file.path;
+        }
+      });
+    });
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
@@ -890,8 +948,8 @@ class ChatScreenState extends State<ChatScreen> {
                               goToPDFViewBasedonURL(document[STR_CONTENT]);
                             },
                             onLongPress: () {
-                              openDownloadAlert(document[STR_CONTENT], context,
-                                  false, '.pdf');
+                              openDownloadAlert(
+                                  document[STR_CONTENT], context, true, '.pdf');
                             },
                             child: Container(
                               constraints: BoxConstraints(
@@ -1122,7 +1180,7 @@ class ChatScreenState extends State<ChatScreen> {
                                   },
                                   onLongPress: () {
                                     openDownloadAlert(document[STR_CONTENT],
-                                        context, false, '.pdf');
+                                        context, true, '.pdf');
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
