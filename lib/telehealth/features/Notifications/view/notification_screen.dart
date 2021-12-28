@@ -9,6 +9,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
@@ -249,24 +250,20 @@ class _NotificationScreen extends State<NotificationScreen> {
     );
   }
 
-  void callClearAllApi(){
+  void callClearAllApi() {
     var body = {};
     body["medium"] = "Push";
     body["clearIds"] = [];
     body["isClearAll"] = true;
     print(body);
-    FetchNotificationService()
-        .clearNotifications(body)
-        .then((data) {
+    FetchNotificationService().clearNotifications(body).then((data) {
       if (data != null && data) {
-        Provider.of<FetchNotificationViewModel>(context,
-            listen: false)
-        //..clearNotifications()
+        Provider.of<FetchNotificationViewModel>(context, listen: false)
+          //..clearNotifications()
           ..fetchNotifications();
       } else {
-        Provider.of<FetchNotificationViewModel>(context,
-            listen: false)
-        //..clearNotifications()
+        Provider.of<FetchNotificationViewModel>(context, listen: false)
+          //..clearNotifications()
           ..fetchNotifications();
       }
     });
@@ -436,6 +433,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               payload?.redirectTo,
                             );
                           } else if (payload?.redirectTo == 'regiment_screen') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo ==
+                              parameters.myPlanDetails) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -950,6 +953,25 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "AppointmentTransactionCancelledMidway":
+        readUnreadAction(result);
+        break;
+      case myPlanDetails:
+        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+        if ((result?.messageDetails?.payload?.userId == userId) &&
+            ((result?.messageDetails?.payload?.planId ?? '').isNotEmpty)) {
+          Get.to(
+            () => MyPlanDetail(
+              packageId: result?.messageDetails?.payload?.planId,
+              showRenew: false,
+              templateName: result?.messageDetails?.payload?.templateName,
+            ),
+          );
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(
+            result?.messageDetails?.payload?.patientName,
+            redirect: parameters.myPlanDetails,
+          );
+        }
         readUnreadAction(result);
         break;
       case "sheela":

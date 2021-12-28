@@ -306,6 +306,25 @@ class IosNotificationHandler {
       } else {
         CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
       }
+    } else if (model.redirect == parameters.myPlanDetails &&
+        (model.planId ?? '').isNotEmpty) {
+      final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      if (model.userId == userId) {
+        Get.to(
+          () => MyPlanDetail(
+            packageId: model.planId,
+            showRenew: false,
+            templateName: model.templateName,
+          ),
+        ).then((value) {
+          renewAction = false;
+        });
+      } else {
+        CommonUtil.showFamilyMemberPlanExpiryDialog(
+          model.patientName,
+          redirect: parameters.myPlanDetails,
+        );
+      }
     } else if (model.redirect == 'googlefit') {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
