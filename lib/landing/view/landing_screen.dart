@@ -89,7 +89,6 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
-    checkCpUser();
     mInitialTime = DateTime.now();
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
@@ -155,6 +154,7 @@ class _LandingScreenState extends State<LandingScreen> {
     if (value.isSuccess) {
       bool isShown =
           await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
+
       if (isShown == null || !isShown) {
         MyProfileResult cpUser = await getIsCpUser();
         showDialog(
@@ -656,6 +656,7 @@ class _LandingScreenState extends State<LandingScreen> {
         DynamicLinks.processDynamicLink(deepLink);
       } catch (e) {}
     }
+    checkCpUser();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
