@@ -1579,7 +1579,11 @@ class CommonUtil {
           ? await FHBUtils.createFolderInAppDocDirForIOS('images')
           : await FHBUtils.createFolderInAppDocDir('images');
 
-      var file = File('$dir/${basename(url)}$extension');
+      String imageName;
+      if(url.contains('/')){
+        imageName=url.split('/').last;
+      }
+      var file = File('$dir/${imageName}$extension');
       await file.writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -1810,14 +1814,14 @@ class CommonUtil {
     }
   }
 
-  static showFamilyMemberPlanExpiryDialog(String pateintName) async {
+  static showFamilyMemberPlanExpiryDialog(String pateintName,{String redirect = myCartDetails}) async {
     await Get.defaultDialog(
       content: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 16,
         ),
         child: Text(
-          "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+          redirect == myCartDetails ? "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list" : "Switch to $pateintName profile in Home screen and Tap on the notification from the Notifications list",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,

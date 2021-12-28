@@ -566,7 +566,7 @@ class CommonDialogBox {
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
-                        context, memoController),
+                        context, memoController,isFileField:true),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -673,7 +673,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -813,7 +813,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -984,7 +984,7 @@ class CommonDialogBox {
                   fhbBasicWidget.getTextForAlertDialog(
                       context, CommonConstants.strMemo),
                   fhbBasicWidget.getTextFieldWithNoCallbacks(
-                      context, memoController),
+                      context, memoController,isFileField:true),
                   SizedBox(
                     height: 15.0.h,
                   ),
@@ -1150,7 +1150,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -1313,7 +1313,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -1454,7 +1454,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -1601,7 +1601,7 @@ class CommonDialogBox {
                 ),
                 fhbBasicWidget.getTextForAlertDialog(
                     context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
                 SizedBox(
                   height: 15.0.h,
                 ),
@@ -1935,7 +1935,15 @@ class CommonDialogBox {
         postMediaData[Constants.keyDoctor] = doctorsData;
         postMediaData[Constants.keyLab] = labData;
       }
-      postMediaData[parameters.strfileName] = fileName.text;
+      if(imagePath!=null && imagePath.length>0 && imagePath.length==1){
+        final folderName = File(imagePath[0]);
+        final fileNoun = folderName.path.split('/').last;
+        if(fileNoun.contains('.pdf')){
+          postMediaData[parameters.strfileName] = fileName.text+'.pdf';
+        }
+      }else {
+        postMediaData[parameters.strfileName] = fileName.text;
+      }
 
       postMainData[parameters.strmetaInfo] = postMediaData;
       if (modeOfSave) {

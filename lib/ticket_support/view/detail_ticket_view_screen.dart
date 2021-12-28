@@ -38,7 +38,8 @@ class DetailedTicketView extends StatefulWidget {
   }
 }
 
-class _DetailedTicketViewState extends State<DetailedTicketView> {
+class _DetailedTicketViewState extends State<DetailedTicketView>
+    with SingleTickerProviderStateMixin {
   TicketViewModel ticketViewModel = TicketViewModel();
   final FocusNode focusNode = FocusNode();
   final ItemScrollController listScrollController = ItemScrollController();
@@ -60,10 +61,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
   ];
 
   Future<TicketDetailResponseModel> future;
-
+  TabController _controller;
+  int selectedTab = 0;
   @override
   void initState() {
     super.initState();
+    _controller = TabController(vsync: this, length: 3);
+    _controller.addListener(_handleTabSelection);
     callTicketDetailsApi();
     // _getHistoryData(widget.ticketUid);
   }
@@ -239,10 +243,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
         SizedBox(height: 20.0),
         DefaultTabController(
             length: 3, // length of tabs
-            initialIndex: 0,
+            initialIndex: selectedTab,
             child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
               Container(
                 child: TabBar(
+                  onTap: (value) {
+                    selectedTab = value;
+                  },
                   labelStyle: TextStyle(fontSize: 14),
                   isScrollable: false,
                   labelColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -921,6 +928,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView> {
       print('Attachment ticket exception : ${e.toString()}');
       return null;
     }
+  }
+
+  void _handleTabSelection() {
+    print('working tab');
+    selectedTab = _controller.index;
   }
 }
 
