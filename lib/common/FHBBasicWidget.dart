@@ -40,7 +40,7 @@ class FHBBasicWidget {
 
   UnitsMesurements unitsMesurements;
 
-  setValues(String unitsTosearch, String range) async{
+  setValues(String unitsTosearch, String range) async {
     await commonConstants
         .getValuesForUnit(unitsTosearch, range)
         .then((unitsMesurementsClone) {
@@ -97,7 +97,8 @@ class FHBBasicWidget {
     );
   }
 
-  Widget getTextFieldForDialogWithControllerAndPressed(BuildContext context,
+  Widget getTextFieldForDialogWithControllerAndPressed(
+      BuildContext context,
       Function(BuildContext context, String searchParam) onTextFieldtap,
       TextEditingController searchController,
       String searchParam) {
@@ -111,17 +112,19 @@ class FHBBasicWidget {
         ));
   }
 
-  Widget getTextFieldWithNoCallbacks(BuildContext context,
-      TextEditingController searchController) {
+  Widget getTextFieldWithNoCallbacks(
+      BuildContext context, TextEditingController searchController,
+      {bool isFileField}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          enabled: isFileField ?? false,
           controller: searchController,
         ));
   }
 
-  Widget getTextFieldWithNoCallbacksForMemo(BuildContext context,
-      TextEditingController searchController) {
+  Widget getTextFieldWithNoCallbacksForMemo(
+      BuildContext context, TextEditingController searchController) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -144,7 +147,8 @@ class FHBBasicWidget {
     scaffoldstate.currentState.showSnackBar(snackBar);
   }
 
-  Widget getTextFieldForDate(BuildContext context,
+  Widget getTextFieldForDate(
+      BuildContext context,
       TextEditingController dateController,
       Function(DateTime dateTime, String selectedDate) onDateSelected) {
     return Container(
@@ -154,11 +158,11 @@ class FHBBasicWidget {
           controller: dateController,
           decoration: InputDecoration(
               suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  return _selectDate(context, onDateSelected, dateTime);
-                },
-              )),
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+              return _selectDate(context, onDateSelected, dateTime);
+            },
+          )),
         ));
   }
 
@@ -210,23 +214,23 @@ class FHBBasicWidget {
 // Find the Scaffold in the widget tree and use it to show a SnackBar.
     return Container(
         child: Center(
-          child: Text(msg),
-        ));
+      child: Text(msg),
+    ));
   }
 
   Widget getProfilePicWidget(ProfilePicThumbnailMain profilePicThumbnail) {
     return profilePicThumbnail != null
         ? Image.memory(
-      Uint8List.fromList(profilePicThumbnail.data),
-      height: 50.0.h,
-      width: 50.0.h,
-      fit: BoxFit.cover,
-    )
+            Uint8List.fromList(profilePicThumbnail.data),
+            height: 50.0.h,
+            width: 50.0.h,
+            fit: BoxFit.cover,
+          )
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      height: 50.0.h,
-      width: 50.0.h,
-    );
+            color: Color(fhbColors.bgColorContainer),
+            height: 50.0.h,
+            width: 50.0.h,
+          );
   }
 
   Widget getProfilePicWidgeUsingUrl(MyProfileModel myProfile) {
@@ -280,7 +284,8 @@ class FHBBasicWidget {
     );
   }
 
-  Widget getTextFiledWithHintAndSuffixText(BuildContext context,
+  Widget getTextFiledWithHintAndSuffixText(
+      BuildContext context,
       String hintTextValue,
       String suffixTextValue,
       TextEditingController controllerValue,
@@ -288,12 +293,13 @@ class FHBBasicWidget {
       String error,
       String unitsTosearch,
       {String range,
-        String device, bool showLabel}) {
+      String device,
+      bool showLabel}) {
     var errorValue = error;
     if (showLabel == null) {
       showLabel = true;
     }
-    print('*****************'+showLabel.toString());
+    print('*****************' + showLabel.toString());
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -380,14 +386,13 @@ class FHBBasicWidget {
         await Navigator.of(context)
             .push(
           MaterialPageRoute(
-            builder: (context) =>
-                AudioRecorder(
-                  arguments: AudioScreenArguments(fromVoice: false),
-                ),
+            builder: (context) => AudioRecorder(
+              arguments: AudioScreenArguments(fromVoice: false),
+            ),
           ),
         )
             .then(
-              (results) {
+          (results) {
             if (results != null) {
               if (results.containsKey(Constants.keyAudioFile)) {
                 containsAudio = true;
@@ -401,44 +406,45 @@ class FHBBasicWidget {
     );
   }
 
-  Widget getAudioIconWithFile(String audioPathMain,
+  Widget getAudioIconWithFile(
+      String audioPathMain,
       bool containsAudioMain,
       Function(bool containsAudio, String audioPath) updateUI,
       BuildContext context,
       List<String> imagePath,
       Function(BuildContext context, List<String> imagePath)
-      onPostDataToServer) {
+          onPostDataToServer) {
     return containsAudioMain
         ? Column(
-      children: <Widget>[
-        AudioWidget(audioPathMain, (containsAudio, audioPath) {
-          audioPathMain = audioPath;
-          containsAudioMain = containsAudio;
+            children: <Widget>[
+              AudioWidget(audioPathMain, (containsAudio, audioPath) {
+                audioPathMain = audioPath;
+                containsAudioMain = containsAudio;
 
-          updateUI(containsAudioMain, audioPathMain);
-        }),
-        Padding(
-          padding: const EdgeInsets.all(8),
-        ),
-        getSaveButton(() {
-          onPostDataToServer(context, imagePath);
-        })
-      ],
-    )
+                updateUI(containsAudioMain, audioPathMain);
+              }),
+              Padding(
+                padding: const EdgeInsets.all(8),
+              ),
+              getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            ],
+          )
         : Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        getMicIcon(context, containsAudioMain, audioPathMain,
-                (containsAudio, audioPath) {
-              audioPathMain = audioPath;
-              containsAudioMain = containsAudio;
-              updateUI(containsAudioMain, audioPathMain);
-            }),
-        getSaveButton(() {
-          onPostDataToServer(context, imagePath);
-        })
-      ],
-    );
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              getMicIcon(context, containsAudioMain, audioPathMain,
+                  (containsAudio, audioPath) {
+                audioPathMain = audioPath;
+                containsAudioMain = containsAudio;
+                updateUI(containsAudioMain, audioPathMain);
+              }),
+              getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            ],
+          );
   }
 
   Widget getPopmenuItem(Doctors element, Function onAddClick) {
@@ -465,9 +471,8 @@ class FHBBasicWidget {
 
   Future<bool> exitApp(BuildContext context, Function logout) {
     return showDialog(
-      context: context,
-      builder: (context) =>
-          AlertDialog(
+          context: context,
+          builder: (context) => AlertDialog(
             title: Text(
               variable.strLogout,
               style: TextStyle(
@@ -497,12 +502,12 @@ class FHBBasicWidget {
               ),
             ],
           ),
-    ) ??
+        ) ??
         false;
   }
 
-  static customShowCaseNew(GlobalKey _key, String desc, Widget _child,
-      String title,
+  static customShowCaseNew(
+      GlobalKey _key, String desc, Widget _child, String title,
       {BuildContext context}) {
     return Showcase.withWidget(
         key: _key,
@@ -513,14 +518,8 @@ class FHBBasicWidget {
         child: _child,
         overlayColor: Colors.black,
         overlayOpacity: 0.8,
-        height: MediaQuery
-            .of(context)
-            .size
-            .height - 200,
-        width: MediaQuery
-            .of(context)
-            .size
-            .width,
+        height: MediaQuery.of(context).size.height - 200,
+        width: MediaQuery.of(context).size.width,
         container: Container(
             height: 120.0.h,
             margin: const EdgeInsets.symmetric(
@@ -587,8 +586,8 @@ class FHBBasicWidget {
             )));
   }
 
-  static customShowCase(GlobalKey _key, String desc, Widget _child,
-      String title) {
+  static customShowCase(
+      GlobalKey _key, String desc, Widget _child, String title) {
     return Showcase.withWidget(
         key: _key,
         disableAnimation: false,
@@ -666,8 +665,8 @@ class FHBBasicWidget {
             )));
   }
 
-  static Widget getRefreshContainerButton(String errorMsg,
-      Function onRefreshPressed) {
+  static Widget getRefreshContainerButton(
+      String errorMsg, Function onRefreshPressed) {
     return ErrorsWidget();
     // return Container(
     //   color: Color(fhbColors.bgColorContainer),
@@ -685,12 +684,11 @@ class FHBBasicWidget {
     // );
   }
 
-  Future<bool> showDialogWithTwoButtons(BuildContext context, Function logout,
-      String title, String msg) {
+  Future<bool> showDialogWithTwoButtons(
+      BuildContext context, Function logout, String title, String msg) {
     return showDialog(
-      context: context,
-      builder: (context) =>
-          AlertDialog(
+          context: context,
+          builder: (context) => AlertDialog(
             title: Text(
               title,
               style: TextStyle(
@@ -720,11 +718,12 @@ class FHBBasicWidget {
               ),
             ],
           ),
-    ) ??
+        ) ??
         false;
   }
 
-  Widget getRichTextFieldWithNoCallbacks(BuildContext context,
+  Widget getRichTextFieldWithNoCallbacks(
+      BuildContext context,
       TextEditingController searchController,
       String hintText,
       int length,
@@ -740,7 +739,7 @@ class FHBBasicWidget {
             errorText: errorValue == '' ? null : errorValue,
             errorMaxLines: 2,
             disabledBorder:
-            OutlineInputBorder(borderSide: BorderSide(width: 5)),
+                OutlineInputBorder(borderSide: BorderSide(width: 5)),
             hintStyle: TextStyle(fontSize: 15.0.sp),
             hintText: hintText,
             border: OutlineInputBorder(
@@ -762,7 +761,8 @@ class FHBBasicWidget {
     );
   }
 
-  Widget getErrorMsgForUnitEntered(BuildContext context,
+  Widget getErrorMsgForUnitEntered(
+      BuildContext context,
       String hintTextValue,
       String suffixTextValue,
       TextEditingController controllerValue,
@@ -771,10 +771,10 @@ class FHBBasicWidget {
       String unitsTosearch,
       String deviceName,
       {String range,
-        String device}) {
+      String device}) {
     var node = FocusScope.of(context);
 
-    setValues(unitsTosearch,range??'');
+    setValues(unitsTosearch, range ?? '');
 
     var valueEnterd = '';
     var errorValue = error;
@@ -799,15 +799,13 @@ class FHBBasicWidget {
                       unitsMesurements.minValue.toString() +
                       variable.strAnd +
                       unitsMesurements.maxValue.toString(),
-                  confirm: 'Confirm',
-                  onPressedConfirm: () {
-                    Navigator.pop(context);
-                    node.nextFocus();
-                  },
-                  onPressedCancel: () {
-                    controllerValue.text = '';
-                    Navigator.pop(context);
-                  });
+                  confirm: 'Confirm', onPressedConfirm: () {
+                Navigator.pop(context);
+                node.nextFocus();
+              }, onPressedCancel: () {
+                controllerValue.text = '';
+                Navigator.pop(context);
+              });
             } else {
               node.nextFocus();
             }
@@ -890,15 +888,13 @@ class FHBBasicWidget {
                           unitsMesurements.minValue.toString() +
                           variable.strAnd +
                           unitsMesurements.maxValue.toString(),
-                      confirm: 'Confirm',
-                      onPressedConfirm: () {
-                        Navigator.pop(context);
-                        node.nextFocus();
-                      },
-                      onPressedCancel: () {
-                        controllerValue.text = '';
-                        Navigator.pop(context);
-                      });
+                      confirm: 'Confirm', onPressedConfirm: () {
+                    Navigator.pop(context);
+                    node.nextFocus();
+                  }, onPressedCancel: () {
+                    controllerValue.text = '';
+                    Navigator.pop(context);
+                  });
                 } else {
                   node.nextFocus();
                 }
@@ -1022,8 +1018,10 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   final int decimalRange;
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, // unused.
-      TextEditingValue newValue,) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue, // unused.
+    TextEditingValue newValue,
+  ) {
     var newSelection = newValue.selection;
     var truncated = newValue.text;
 
@@ -1031,9 +1029,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       var value = newValue.text;
 
       if (value.contains('.') &&
-          value
-              .substring(value.indexOf('.') + 1)
-              .length > decimalRange) {
+          value.substring(value.indexOf('.') + 1).length > decimalRange) {
         truncated = oldValue.text;
         newSelection = oldValue.selection;
       } else if (value == '.') {

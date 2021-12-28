@@ -574,7 +574,7 @@ class CommonDialogBox {
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
-                        context, memoController),
+                        context, memoController,isFileField:true),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -671,27 +671,27 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            if (modeOfSave)
-              fhbBasicWidget.getSaveButton(() {
-                onPostDataToServer(context, imagePath);
-              })
-            else
-              containsAudioMain
-                  ? fhbBasicWidget.getAudioIconWithFile(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                if (modeOfSave)
+                  fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                else
+                  containsAudioMain
+                      ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
                       (containsAudio, audioPath) {
@@ -811,71 +811,71 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            Container(
-                width: 1.sw - 60,
-                child: GestureDetector(
-                    onTap: () => _selectDate(context, dateOfVisit),
-                    child: TextField(
-                      readOnly: true,
-                      controller: dateOfVisit,
-                      decoration: InputDecoration(
-                          labelText: CommonConstants.exprityDate,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              Icons.calendar_today,
-                              size: 24.0.sp,
-                            ),
-                            onPressed: () =>
-                                _selectDateFuture(context, dateOfVisit),
-                          )),
-                    ))),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            Center(
-              child: DropdownButton(
-                hint: Text('Select ID Type'),
-                value: selectedMediaData,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedMediaData = newValue;
-                    PreferenceUtil.saveMediaData(
-                        Constants.KEY_MEDIADATA, selectedMediaData);
-                  });
-                },
-                items: mediaDataAry.map((idType) {
-                  return DropdownMenuItem(
-                    value: idType,
-                    child: new Text(
-                      idType.name,
-                      style: new TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            modeOfSave
-                ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                : containsAudioMain
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                Container(
+                    width: 1.sw - 60,
+                    child: GestureDetector(
+                        onTap: () => _selectDate(context, dateOfVisit),
+                        child: TextField(
+                          readOnly: true,
+                          controller: dateOfVisit,
+                          decoration: InputDecoration(
+                              labelText: CommonConstants.exprityDate,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.calendar_today,
+                                  size: 24.0.sp,
+                                ),
+                                onPressed: () =>
+                                    _selectDateFuture(context, dateOfVisit),
+                              )),
+                        ))),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                Center(
+                  child: DropdownButton(
+                    hint: Text('Select ID Type'),
+                    value: selectedMediaData,
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedMediaData = newValue;
+                        PreferenceUtil.saveMediaData(
+                            Constants.KEY_MEDIADATA, selectedMediaData);
+                      });
+                    },
+                    items: mediaDataAry.map((idType) {
+                      return DropdownMenuItem(
+                        value: idType,
+                        child: new Text(
+                          idType.name,
+                          style: new TextStyle(color: Colors.black),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                modeOfSave
+                    ? fhbBasicWidget.getSaveButton(() {
+                  onPostDataToServer(context, imagePath);
+                })
+                    : containsAudioMain
                     ? fhbBasicWidget
                         .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
@@ -968,50 +968,52 @@ class CommonDialogBox {
           ),
           content: SingleChildScrollView(
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              fhbBasicWidget.getTextForAlertDialog(
-                  context, CommonConstants.strFileName),
-              fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-              SizedBox(
-                height: 15.0.h,
-              ),
-              fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                  context,
-                  CommonConstants.strValue,
-                  commonConstants.glucometerUNIT,
-                  deviceController, (errorValue) {
-                setState(() {
-                  errGluco = errorValue;
-                });
-              }, errGluco, variable.strGlucUnit,
-                  range: isSelected[0] == true ? 'Fast' : 'PP'),
-              SizedBox(
-                height: 15.0.h,
-              ),
-              fhbBasicWidget.getTextForAlertDialog(
-                  context, CommonConstants.strMemo),
-              fhbBasicWidget.getTextFieldWithNoCallbacks(
-                  context, memoController),
-              SizedBox(
-                height: 15.0.h,
-              ),
-              fhbBasicWidget.getTextForAlertDialog(
-                  context, CommonConstants.strTimeTaken),
-              ToggleButtons(
-                borderColor: Colors.black,
-                fillColor: Colors.grey[100],
-                borderWidth: 2,
-                selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
-                selectedColor: Color(CommonUtil().getMyPrimaryColor()),
-                borderRadius: BorderRadius.circular(10),
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(
-                      variable.strbfood,
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  fhbBasicWidget.getTextForAlertDialog(
+                      context, CommonConstants.strFileName),
+                  fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                  SizedBox(
+                    height: 15.0.h,
+                  ),
+                  fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                      context,
+                      CommonConstants.strValue,
+                      commonConstants.glucometerUNIT,
+                      deviceController, (errorValue) {
+                    setState(() {
+                      errGluco = errorValue;
+                    });
+                  }, errGluco, variable.strGlucUnit,
+                      range: isSelected[0] == true ? 'Fast' : 'PP'),
+                  SizedBox(
+                    height: 15.0.h,
+                  ),
+                  fhbBasicWidget.getTextForAlertDialog(
+                      context, CommonConstants.strMemo),
+                  fhbBasicWidget.getTextFieldWithNoCallbacks(
+                      context, memoController,isFileField:true),
+                  SizedBox(
+                    height: 15.0.h,
+                  ),
+                  fhbBasicWidget.getTextForAlertDialog(
+                      context, CommonConstants.strTimeTaken),
+                  ToggleButtons(
+                    borderColor: Colors.black,
+                    fillColor: Colors.grey[100],
+                    borderWidth: 2,
+                    selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
+                    selectedColor: Color(CommonUtil().getMyPrimaryColor()),
+                    borderRadius: BorderRadius.circular(10),
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          variable.strbfood,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -1153,59 +1155,37 @@ class CommonDialogBox {
             ),
             Row(
               children: [
-                Expanded(
-                    flex: 2,
-                    child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                        context,
-                        CommonConstants.strTemperature,
-                        tempMainUnit,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errTemp = errorValue;
-                      });
-                    }, errTemp, tempMainUnit,
-                        range: "", device: "Temp", showLabel: false)),
-                SizedBox(width: 20),
-                Container(
-                    width: 50,
-                    child: GestureDetector(
-                      child: fhbBasicWidget.getTextForAlertDialog(
-                          context, tempMainUnit),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => ChooseUnit(),
-                          ),
-                        ).then(
-                          (value) {
-                            tempMainUnit = PreferenceUtil.getStringValue(
-                                Constants.STR_KEY_TEMP);
-                            updateUnit(tempMainUnit);
-                            tempUnit = tempMainUnit;
-                            setState(() {});
-                          },
-                        );
-                      },
-                    ))
-              ],
-            ),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            if (modeOfSave)
-              fhbBasicWidget.getSaveButton(() {
-                onPostDataToServer(context, imagePath);
-              })
-            else
-              containsAudioMain
-                  ? fhbBasicWidget.getAudioIconWithFile(
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strTemperature,
+                    commonConstants.tempUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errTemp = errorValue;
+                  });
+                }, errTemp, commonConstants.tempUNIT, range: "", device: "Temp"),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                if (modeOfSave)
+                  fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                else
+                  containsAudioMain
+                      ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
                       (containsAudio, audioPath) {
@@ -1353,58 +1333,37 @@ class CommonDialogBox {
             ),
             Row(
               children: [
-                Expanded(
-                    flex: 2,
-                    child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                        context,
-                        CommonConstants.strWeight,
-                        weightUnit,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errWeight = errorValue;
-                      });
-                    }, errWeight, weightUnit, range: "", showLabel: false)),
-                SizedBox(width: 20),
-                Container(
-                    width: 50,
-                    child: GestureDetector(
-                      child: fhbBasicWidget.getTextForAlertDialog(
-                          context, weightUnit),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => ChooseUnit(),
-                          ),
-                        ).then(
-                          (value) {
-                            weightUnit = PreferenceUtil.getStringValue(
-                                Constants.STR_KEY_WEIGHT);
-                            updateUnit(weightUnit);
-                            weightMainUnit = weightUnit;
-                            setState(() {});
-                          },
-                        );
-                      },
-                    ))
-              ],
-            ),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            if (modeOfSave)
-              fhbBasicWidget.getSaveButton(() {
-                onPostDataToServer(context, imagePath);
-              })
-            else
-              containsAudioMain
-                  ? fhbBasicWidget.getAudioIconWithFile(
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strWeight,
+                    commonConstants.weightUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errWeight = errorValue;
+                  });
+                }, errWeight, commonConstants.weightUNIT, range: ""),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                if (modeOfSave)
+                  fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                else
+                  containsAudioMain
+                      ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
                       (containsAudio, audioPath) {
@@ -1501,49 +1460,49 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strOxygenSaturation,
-                commonConstants.poOxySatUNIT,
-                deviceController, (errorValue) {
-              setState(() {
-                errPoOs = errorValue;
-              });
-            }, errPoOs, variable.strpulseUnit, range: ""),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                commonConstants.poPulseUNIT,
-                pulse, (errorValue) {
-              setState(() {
-                errPoPulse = errorValue;
-              });
-            }, errPoPulse, variable.strpulse, range: ""),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            modeOfSave
-                ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                : containsAudioMain
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strOxygenSaturation,
+                    commonConstants.poOxySatUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errPoOs = errorValue;
+                  });
+                }, errPoOs, variable.strpulseUnit, range: ""),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strPulse,
+                    commonConstants.poPulseUNIT,
+                    pulse, (errorValue) {
+                  setState(() {
+                    errPoPulse = errorValue;
+                  });
+                }, errPoPulse, variable.strpulse, range: ""),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                modeOfSave
+                    ? fhbBasicWidget.getSaveButton(() {
+                  onPostDataToServer(context, imagePath);
+                })
+                    : containsAudioMain
                     ? fhbBasicWidget
                         .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
@@ -1636,61 +1595,61 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strSystolicPressure,
-                commonConstants.bpDPUNIT,
-                deviceController, (errorValue) {
-              setState(() {
-                errForbpSp = errorValue;
-              });
-            }, errForbpSp, variable.strbpunit, range: "Sys"),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strDiastolicPressure,
-                commonConstants.bpDPUNIT,
-                diaStolicPressure, (errorValue) {
-              setState(() {
-                errFForbpDp = errorValue;
-              });
-            }, errFForbpDp, variable.strbpunit, range: "Dia"),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                commonConstants.bpPulseUNIT,
-                pulse, (errorValue) {
-              setState(() {
-                errForbpPulse = errorValue;
-              });
-            }, errForbpPulse, variable.strpulse, range: ""),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
-            SizedBox(
-              height: 15.0.h,
-            ),
-            modeOfSave
-                ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                : containsAudioMain
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strFileName),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strSystolicPressure,
+                    commonConstants.bpDPUNIT,
+                    deviceController, (errorValue) {
+                  setState(() {
+                    errForbpSp = errorValue;
+                  });
+                }, errForbpSp, variable.strbpunit, range: "Sys"),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strDiastolicPressure,
+                    commonConstants.bpDPUNIT,
+                    diaStolicPressure, (errorValue) {
+                  setState(() {
+                    errFForbpDp = errorValue;
+                  });
+                }, errFForbpDp, variable.strbpunit, range: "Dia"),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                    context,
+                    CommonConstants.strPulse,
+                    commonConstants.bpPulseUNIT,
+                    pulse, (errorValue) {
+                  setState(() {
+                    errForbpPulse = errorValue;
+                  });
+                }, errForbpPulse, variable.strpulse, range: ""),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                fhbBasicWidget.getTextForAlertDialog(
+                    context, CommonConstants.strMemo),
+                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
+                SizedBox(
+                  height: 15.0.h,
+                ),
+                modeOfSave
+                    ? fhbBasicWidget.getSaveButton(() {
+                  onPostDataToServer(context, imagePath);
+                })
+                    : containsAudioMain
                     ? fhbBasicWidget
                         .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
@@ -2016,7 +1975,15 @@ class CommonDialogBox {
         postMediaData[Constants.keyDoctor] = doctorsData;
         postMediaData[Constants.keyLab] = labData;
       }
-      postMediaData[parameters.strfileName] = fileName.text;
+      if(imagePath!=null && imagePath.length>0 && imagePath.length==1){
+        final folderName = File(imagePath[0]);
+        final fileNoun = folderName.path.split('/').last;
+        if(fileNoun.contains('.pdf')){
+          postMediaData[parameters.strfileName] = fileName.text+'.pdf';
+        }
+      }else {
+        postMediaData[parameters.strfileName] = fileName.text;
+      }
 
       postMainData[parameters.strmetaInfo] = postMediaData;
       if (modeOfSave) {

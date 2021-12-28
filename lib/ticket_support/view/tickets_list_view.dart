@@ -58,7 +58,6 @@ class _TicketsList extends State<TicketsList> {
       future: ticketViewModel.getTicketsList(),
       builder: (context, snapshot) {
         print('=================');
-        print(snapshot.data.tickets.length);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
@@ -74,7 +73,7 @@ class _TicketsList extends State<TicketsList> {
           );
         } else if (snapshot.hasError) {
           return ErrorsWidget();
-        } else {
+        } else if (snapshot.connectionState == ConnectionState.done) {
           //return ticketListTest(context);
           if (snapshot?.hasData && snapshot?.data != null) {
             print(snapshot.data.tickets.length.toString());
@@ -97,6 +96,19 @@ class _TicketsList extends State<TicketsList> {
               ),
             );
           }
+        } else {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
         }
       },
     );
