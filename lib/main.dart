@@ -442,6 +442,7 @@ class _MyFHBState extends State<MyFHB> {
     var patientPic = '';
     var callType = '';
     _msgListener.value = _msg;
+    print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
     if (cMsg.isNotEmpty || cMsg != null) {
       if (cMsg == 'chat') {
@@ -743,6 +744,28 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
+      } else if (passedValArr[1] == 'myplandetails') {
+        final planid = passedValArr[1];
+        final template = passedValArr[2];
+        final userId = passedValArr[3];
+        final patName = passedValArr[4];
+        final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
+        if (currentUserId == userId) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myplan_deatails',
+            'navigationPage': 'My Plan Details',
+          });
+          Get.to(
+            MyPlanDetail(
+              packageId: planid,
+              showRenew: true,
+              templateName: template,
+            ),
+          );
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+        }
       } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
@@ -793,7 +816,6 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
-      } else if (passedValArr[0] == 'myPlanDetails') {
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];

@@ -227,6 +227,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     }
 
     private fun createNotification4Ack(data: Map<String, String> = HashMap()) {
+        Log.e("notification data",data.toString())
         //createNotificationCancelAppointment(data)
         if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
@@ -724,13 +725,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
 
         val onTapNS = Intent(this, OnTapNotification::class.java)
-        callBackIntent.putExtra(getString(R.string.nsid), NS_ID)
-        callBackIntent.putExtra(Intent.EXTRA_TEXT, Constants.MY_PLAN_DETAILS)
-        callBackIntent.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
-        callBackIntent.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
-        callBackIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
-        callBackIntent.putExtra(getString(R.string.pat_name), PAT_NAME)
-        val callBackPendingIntent = PendingIntent.getBroadcast(
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(Intent.EXTRA_TEXT, Constants.MY_PLAN_DETAILS)
+        onTapNS.putExtra(Constants.PROP_PLANID, data[Constants.PROP_PLANID])
+        onTapNS.putExtra(Constants.PROP_TEMP_NAME, data[Constants.PROP_TEMP_NAME])
+        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
+        val onTapPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,
             onTapNS,
