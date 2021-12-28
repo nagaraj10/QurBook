@@ -764,7 +764,8 @@ class _MyFHBState extends State<MyFHB> {
             ),
           );
         } else {
-          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+          CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
+              redirect: "myplandetails");
         }
       } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];

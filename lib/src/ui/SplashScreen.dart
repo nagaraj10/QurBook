@@ -479,7 +479,8 @@ class _SplashScreenState extends State<SplashScreen> {
                           ).then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
-                          CommonUtil.showFamilyMemberPlanExpiryDialog(patName);
+                          CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
+                              redirect: widget.nsRoute);
                         }
                       } else {
                         //TODO if its Callback just show the message alone
