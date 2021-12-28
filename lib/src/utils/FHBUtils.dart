@@ -12,6 +12,7 @@ import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FHBUtils {
@@ -312,8 +313,9 @@ class FHBUtils {
     }
   }
 
-  static Future<String> createFolderInAppDocDirClone(String folderName,String fileType) async {
-   /* Directory _appDocDirFolder;
+  static Future<String> createFolderInAppDocDirClone(
+      String folderName, String fileType) async {
+    /* Directory _appDocDirFolder;
     //Create Directory with app name
     final Directory _appDocDir = await getTemporaryDirectory();
     _appDocDirFolder = Directory(_appDocDir.path);
@@ -328,27 +330,36 @@ class FHBUtils {
       return _appDocDirNewFolder.path;
     }*/
 
-    Directory appDocDir = Platform.isAndroid
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-    if (Platform.isAndroid) {
-      Directory(appDocDir.path.split('Android')[0] + '${DBConstants.appName}')
-          .createSync();
-    }
+    // var status = await Permission.manageExternalStorage.status;
+    // if (status.isGranted) {
+    //   return await createDir(folderName,fileType);
+    // } else {
+    //   var request=await Permission.manageExternalStorage.request();
+    //   if(request.isGranted){
+    //     return await createDir(folderName,fileType);
+    //   }else{
+    //     return "";
+    //   }
+    // }
+    return await createDir(folderName, fileType);
+  }
 
-    String path = Platform.isIOS
-        ? appDocDir.path + '/$fileType'
-        : appDocDir.path.split('Android')[0] +
-        '${DBConstants.appName}/$fileType';
-    print(path);
-    File file = File(path);
-    if (!await file.exists()) {
-      await file.create();
-    } else {
-      await file.delete();
-      await file.create();
+  static Future<String> createDir(String folderName, String fileType) async {
+    try {
+      List<Directory> appDocDir = Platform.isAndroid
+          ? await getExternalCacheDirectories()
+          : [await getApplicationDocumentsDirectory()];
+
+      print(appDocDir);
+      String path = Platform.isIOS
+          ? appDocDir[0].path + '/$fileType'
+          : appDocDir[0].path + '/$fileType';
+      print(path);
+      return path;
+    } catch (e) {
+      debugPrint(e.toString());
+      return "";
     }
-    return path;
   }
 
   static Future<String> abstractUserData() async {
@@ -542,5 +553,24 @@ class FHBUtils {
       return true;
     }
     return false;
+  }
+
+  // Preferred date for creating ticket - true desk
+  String getPreferredDateString(String strDate) {
+    String formattedDate = '';
+
+    if (strDate != null && strDate != '') {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate = DateFormat('MMM dd yyyy')
+            .format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate = DateFormat('yyyy MMM dd')
+            .format(DateTime.parse(strDate).toLocal());
+      } else {
+        formattedDate = DateFormat('dd MMM yyyy')
+            .format(DateTime.parse(strDate).toLocal());
+      }
+    }
+    return formattedDate;
   }
 }

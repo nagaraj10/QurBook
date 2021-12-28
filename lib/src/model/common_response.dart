@@ -7,8 +7,13 @@ class CommonResponse {
 
   CommonResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'];
+    try{
+      message = json['message'];
+      result = json['result'];
+    }catch(e){
+
+    }
+
   }
 
   Map<String, dynamic> toJson() {

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/colors/fhb_colors.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 
@@ -14,20 +16,24 @@ class LandingCard extends StatelessWidget {
     this.alerts,
     this.onPressed,
     this.onAddPressed,
+    this.onTicketPressed,
     this.isEnabled = true,
     this.onLinkPressed,
     this.alertsColor,
     this.eventName,
     this.onEventPressed,
+    this.ticketsCount,
   });
 
   final String title;
+  final String ticketsCount;
   final String icon;
   final Color color;
   final String lastStatus;
   final String alerts;
   final Function onPressed;
   final Function onAddPressed;
+  final Function onTicketPressed;
   final bool isEnabled;
   final Function onLinkPressed;
   final Color alertsColor;
@@ -179,6 +185,7 @@ class LandingCard extends StatelessWidget {
                             width: 40.0.sp,
                             height: 40.0.sp,
                           ),
+                          Spacer(),
                           Visibility(
                             visible: onAddPressed != null,
                             child: Container(
@@ -192,6 +199,58 @@ class LandingCard extends StatelessWidget {
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: onTicketPressed != null,
+                            child: Container(
+                              height: 40.0.sp,
+                              width: 40.0.sp,
+                              child: FloatingActionButton(
+                                onPressed: onTicketPressed ?? () {},
+                                elevation: 2,
+                                backgroundColor:
+                                    Color(CommonUtil().getMyPrimaryColor()),
+                                heroTag: title,
+                                child: new Stack(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: new Image.asset(
+                                        'assets/icons/10.png',
+                                        height: 35,
+                                        width: 35,
+                                      ),
+                                    ),
+                                    ticketsCount != null
+                                        ? Positioned(
+                                            right: 5,
+                                            left: 5,
+                                            child: new Container(
+                                              padding: EdgeInsets.all(1),
+                                              decoration: new BoxDecoration(
+                                                color: Colors.yellow,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              constraints: BoxConstraints(
+                                                minWidth: 5,
+                                                minHeight: 5,
+                                              ),
+                                              child: new Text(
+                                                ticketsCount,
+                                                style: new TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 8,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          )
+                                        : Container(),
+                                  ],
                                 ),
                               ),
                             ),

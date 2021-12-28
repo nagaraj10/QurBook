@@ -16,6 +16,13 @@ const String strRemiderPostFrequency14 = 'PlanExpiryReminderPostfrequency14';
 String notificationDate(String value) =>
     DateFormat('dd MMM yyyy').format(DateTime.parse(value)).toString();
 
+String changeDateFormat(String value) {
+  var pos = value.lastIndexOf('.');
+  String lastElementRemoved = (pos != -1) ? value.substring(0, pos) : value;
+  String result = lastElementRemoved.replaceAll("T", " ");
+  return DateFormat('dd MMM yyyy').format(DateTime.parse(result)).toString();
+}
+
 String notificationTime(String value) =>
     DateFormat('hh:mm a').format(DateTime.parse(value)).toString();
 

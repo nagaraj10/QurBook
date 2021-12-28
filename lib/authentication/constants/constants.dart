@@ -28,6 +28,16 @@ const String strverificationCode = 'verificationCode';
 const String strFromSignUp = 'AfterSignup';
 const String strFromVerifyFamilyMember = 'VerifyFamilyMember';
 
+//Strings used in welcome message corp user
+const String welcome = 'Welcome!';
+const String corporate = 'Corporate';
+const String qurhealthSolutions = 'QurHealth Solutions';
+const String membership = 'Membership';
+const String platinum = 'Platinum';
+const String getStarted = 'Let\'s Get Started';
+const String longDescription = 'Bringing you the best-in-class health ecosystem partners for all your health care needs.';
+const String careEmployees = 'Cares for its employees and\ntheir family health';
+
 //Strings used in VerifyPatient
 const String strSource = 'myFHBMobile';
 const String strVerify = 'Verify';
@@ -138,7 +148,8 @@ const Pattern patternPassword =
     r'^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,20})';
 const Pattern patternEmail =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-const Pattern patternEmailAdress='[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+(?!.*?\.\.)[^@]+';
+const Pattern patternEmailAdress =
+    '[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+(?!.*?\.\.)[^@]+';
 //Strings used in OtpScreenVerify
 const String strToken = 'token';
 const String strUserId = 'userId';
@@ -197,10 +208,8 @@ const String strsupportEmail =
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 
-const String strNoPlansCheckFree = 'No plans found. Please check All Free Plans tab';
-
-
-
+const String strNoPlansCheckFree =
+    'No plans found. Please check All Free Plans tab';
 
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(

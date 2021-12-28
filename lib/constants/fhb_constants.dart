@@ -22,6 +22,7 @@ const String FAQ = 'FAQ';
 const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
+const String KEY_CORP_USER_MESSAGE = 'corpusermessageshown';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
@@ -602,6 +603,23 @@ const String STR_NOTES_HINT =
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
+
+// True desk
+const String strMyTickets = 'Tickets';
+const String strAddMyTicket = 'Add New Ticket';
+const String strSubmitNewTicket = 'SUBMIT TICKET';
+const String strTicketTitle = 'Title';
+const String strTicketDesc = 'Description';
+const String strTicketPreferredDate = 'Preferred Date';
+const String strDetailsButton = 'Details';
+
+var tckTitle = 'title';
+var tckDesc = 'desc';
+var tckPrefDate = 'pref_date';
+var ticketType = 'ticket type';
+var tckPriority = 'ticket priority';
+var tckID = 'ticket_id';
+var tckComment = 'ticket_comment';
 
 double height = 0.0;
 double width = 0.0;

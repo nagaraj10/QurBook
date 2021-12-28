@@ -111,7 +111,9 @@ const String qr_is_followup = 'isFollowUp';
 const String qr_health_record_ref = 'healthRecordReference';
 const String qr_parent_appointment = 'parentAppointment';
 const String qr_is_csr_discount = 'isCsrDiscount';
-
+const String qr_discountType = 'discountType';
+const String qr_csr_discount = 'CSR_DISCOUNT';
+const String qr_MEMBERSHIP_DISCOUNT = 'MEMBERSHIP_DISCOUNT';
 const String qr_payment_id = 'paymentId';
 const String qr_appoint_id = 'appointmentId';
 const String qr_payment_order_id = 'paymentOrderId';
@@ -167,6 +169,10 @@ const String qr_skip = 'skip=';
 const String qr_reference_doctor = 'reference-doctor/';
 const String qr_non_qurpro = 'non-qurpro-doctor';
 const String qr_non_qurpro_hospital = 'non-qurpro-hospital';
+
+const String qr_membership =
+    'plan-subscription-info/membership-details?userId=';
+const String qr_organizationid = '&healthOrganizationId=';
 
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';
@@ -290,6 +296,15 @@ const String qr_careGiverList = 'careGiverList';
 const String qr_createSubscribe = 'payment/plan-subscription-create-payment';
 const String qr_add_cart = 'cart/add-product';
 
-const String qr_code_tags='TAGS';
+const String qr_code_tags = 'TAGS';
 
-const String retry_payment='appointment/check-retry-appointment?id=';
+const String retry_payment = 'appointment/check-retry-appointment?id=';
+
+// True desk
+
+const String qr_get_tickets = 'trudesk/ticket/list';
+const String qr_get_ticket_details = 'trudesk/ticket/details';
+const String qr_get_ticket_types = 'trudesk/ticket/types';
+const String qr_create_ticket = 'trudesk/create/ticket/by-patient';
+const String qr_comment_ticket = 'trudesk/ticket/comment';
+const String qr_upload_attachment = 'trudesk/tickets/uploadattachment';
