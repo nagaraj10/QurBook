@@ -744,7 +744,7 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
-      } else if (passedValArr[1] == 'myplandetails') {
+      } else if (passedValArr[0] == 'myplandetails') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
         final userId = passedValArr[3];
@@ -759,7 +759,7 @@ class _MyFHBState extends State<MyFHB> {
           Get.to(
             MyPlanDetail(
               packageId: planid,
-              showRenew: true,
+              showRenew: false,
               templateName: template,
             ),
           );
@@ -1126,6 +1126,16 @@ class _MyFHBState extends State<MyFHB> {
           );
         } else if (navRoute.split('&')[0] == 'Renew' ||
             navRoute.split('&')[0] == 'Callback') {
+          return SplashScreen(
+            nsRoute: navRoute.split('&')[0],
+            bundle: {
+              'planid': '${navRoute.split('&')[1]}',
+              'template': '${navRoute.split('&')[2]}',
+              'userId': '${navRoute.split('&')[3]}',
+              'patName': '${navRoute.split('&')[4]}'
+            },
+          );
+        } else if (navRoute.split('&')[0] == 'myplandetails') {
           return SplashScreen(
             nsRoute: navRoute.split('&')[0],
             bundle: {

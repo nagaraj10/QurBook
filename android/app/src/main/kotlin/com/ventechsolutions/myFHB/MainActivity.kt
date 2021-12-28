@@ -457,14 +457,12 @@ class MainActivity : FlutterActivity() {
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
         } else if ((planId != null && planId != "") && (templateName != null && templateName != "") && (userId != null && userId != "") && (patName != null && patName != "")) {
-            if ((sharedValue == Constants.PROP_RENEW) || (sharedValue == Constants.PROP_CALLBACK) || (sharedValue == Constants.MY_PLAN_DETAILS)) {
+            if ((sharedValue == Constants.PROP_RENEW) || (sharedValue == Constants.PROP_CALLBACK)) {
                 sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
+            }else  if (redirect_to == Constants.MY_PLAN_DETAILS) {
+                sharedValue = "myplandetails&${planId}&${"$templateName"}&${userId}&${patName}"
             }
-        }else if(planId != null && planId != ""){
-            if (redirect_to == Constants.MY_PLAN_DETAILS) {
-                sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
-            }
-        } else if (appLog != null && appLog == "FETCH_LOG") {
+        }else if (appLog != null && appLog == "FETCH_LOG") {
             sharedValue = appLog
         } else {
             if (HRMId != null && HRMId != "") {

@@ -333,23 +333,20 @@ class _SplashScreenState extends State<SplashScreen> {
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myRecords' &&
                         (widget.templateName != null &&
-                            widget.templateName != '')
-                        ) {
+                            widget.templateName != '')) {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'myRecords',
                         'navigationPage': '${widget.templateName}',
                       });
 
-                      if(widget.bundle != null && widget.bundle != ''){
+                      if (widget.bundle != null && widget.bundle != '') {
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, [widget.bundle], true);
-                      }else{
+                      } else {
                         CommonUtil().navigateToMyRecordsCategory(
                             widget.templateName, null, true);
                       }
-
-
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -456,13 +453,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       )).then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'Renew' ||
-                        widget.nsRoute == 'Callback') {
+                        widget.nsRoute == 'Callback' ||
+                        widget.nsRoute == 'myplandetails') {
                       final planid = widget?.bundle['planid'];
                       final template = widget?.bundle['template'];
                       final userId = widget?.bundle['userId'];
                       final patName = widget?.bundle['patName'];
                       //TODO if its Renew take the user into plandetail view
-                      if (widget.nsRoute == 'Renew') {
+                      if (widget.nsRoute == 'Renew' ||
+                          widget.nsRoute == 'myplandetails') {
                         final currentUserId =
                             PreferenceUtil.getStringValue(KEY_USERID);
                         if (currentUserId == userId) {
@@ -474,7 +473,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           Get.to(
                             MyPlanDetail(
                               packageId: planid,
-                              showRenew: true,
+                              showRenew: widget.nsRoute != 'myplandetails',
                               templateName: template,
                             ),
                           ).then((value) => PageNavigator.goToPermanent(
@@ -499,17 +498,16 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
                       });
-                    }else if (widget.nsRoute == 'manageActivities') {
+                    } else if (widget.nsRoute == 'manageActivities') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'manageActivities',
                         'navigationPage': 'Manage Activities',
                       });
-                      Get.to(ManageActivitiesScreen(
-                      )).then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
-                    }
-                    else {
+                      Get.to(ManageActivitiesScreen()).then((value) =>
+                          PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                    } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
                         'ns_type': 'landing',
