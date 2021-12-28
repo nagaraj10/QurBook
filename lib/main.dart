@@ -442,6 +442,7 @@ class _MyFHBState extends State<MyFHB> {
     var patientPic = '';
     var callType = '';
     _msgListener.value = _msg;
+    print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
     if (cMsg.isNotEmpty || cMsg != null) {
       if (cMsg == 'chat') {
@@ -659,8 +660,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }
-        else if (passedValArr[1] == 'manageActivities') {
+        } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'manageActivities',
@@ -668,8 +668,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen()).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
-        }
-        else {
+        } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'appointment_list',
@@ -745,6 +744,29 @@ class _MyFHBState extends State<MyFHB> {
           'navigationPage': 'Browser page',
         });
         CommonUtil().launchURL(urlInfo);
+      } else if (passedValArr[0] == 'myplandetails') {
+        final planid = passedValArr[1];
+        final template = passedValArr[2];
+        final userId = passedValArr[3];
+        final patName = passedValArr[4];
+        final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
+        if (currentUserId == userId) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'myplan_deatails',
+            'navigationPage': 'My Plan Details',
+          });
+          Get.to(
+            MyPlanDetail(
+              packageId: planid,
+              showRenew: false,
+              templateName: template,
+            ),
+          );
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
+              redirect: "myplandetails");
+        }
       } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
@@ -1063,17 +1085,12 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: 'mycart',
               bundle: parsedData[2],
             );
-          }
-          else if (parsedData[1] == 'manageActivities') {
-
+          } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',
               bundle: parsedData[2],
             );
-
-          }
-
-          else {
+          } else {
             return SplashScreen(
               nsRoute: '',
             );
@@ -1110,6 +1127,16 @@ class _MyFHBState extends State<MyFHB> {
           );
         } else if (navRoute.split('&')[0] == 'Renew' ||
             navRoute.split('&')[0] == 'Callback') {
+          return SplashScreen(
+            nsRoute: navRoute.split('&')[0],
+            bundle: {
+              'planid': '${navRoute.split('&')[1]}',
+              'template': '${navRoute.split('&')[2]}',
+              'userId': '${navRoute.split('&')[3]}',
+              'patName': '${navRoute.split('&')[4]}'
+            },
+          );
+        } else if (navRoute.split('&')[0] == 'myplandetails') {
           return SplashScreen(
             nsRoute: navRoute.split('&')[0],
             bundle: {
