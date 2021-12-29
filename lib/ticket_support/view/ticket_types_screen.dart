@@ -164,83 +164,63 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   Widget myTicketTypesListItem(
       BuildContext context, int i, List<TicketTypesResult> ticketList) {
     return Container(
-      child: Expanded(
-        child: Row(
-          children: [
-            Padding(
-                padding: EdgeInsets.all(8.0.sp),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              CreateTicketScreen(ticketList[i])),
-                    );
-                  },
-                  child: Container(
-                    height: 150.h,
-                    width: MediaQuery.of(context).size.width / 3.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(
-                              12.0) //                 <--- border radius here
-                          ),
-                      border: Border.all(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                      ),
-                      color: Colors.transparent,
+      child: Padding(
+          padding: EdgeInsets.all(8.0.sp),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CreateTicketScreen(ticketList[i])),
+              );
+            },
+            child: Container(
+              height: 150.h,
+              width: MediaQuery.of(context).size.width / 3.6,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(
+                        12.0) //                 <--- border radius here
                     ),
-                    padding: EdgeInsets.all(
-                      15.0.sp,
-                    ),
-                    child: Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ShaderMask(
-                                shaderCallback: (bounds) {
-                                  return LinearGradient(
-                                      begin: Alignment.centerLeft,
-                                      end: Alignment.centerRight,
-                                      colors: [
-                                        Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        Color(new CommonUtil()
-                                            .getMyGredientColor())
-                                      ]).createShader(bounds);
-                                },
-                                blendMode: BlendMode.srcATop,
-                                child:
-                                    getTicketTypeImages(context, ticketList[i]),
-                              ),
-                            ],
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Text(
-                              ticketList[i].name,
-                              overflow: TextOverflow.visible,
-                              style: TextStyle(
-                                fontSize: 14.0.sp,
-                                fontWeight: FontWeight.w500,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                border: Border.all(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                ),
+                color: Colors.transparent,
+              ),
+              padding: EdgeInsets.all(
+                15.0.sp,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ShaderMask(
+                    shaderCallback: (bounds) {
+                      return LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Color(new CommonUtil().getMyPrimaryColor()),
+                            Color(new CommonUtil().getMyGredientColor())
+                          ]).createShader(bounds);
+                    },
+                    blendMode: BlendMode.srcATop,
+                    child: getTicketTypeImages(context, ticketList[i]),
+                  ),
+                  Text(
+                    ticketList[i].name,
+                    overflow: TextOverflow.visible,
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                      fontWeight: FontWeight.w500,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
 
-                                // fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // fontWeight: FontWeight.w600,
                     ),
                   ),
-                )),
-          ],
-        ),
-      ),
+                ],
+              ),
+            ),
+          )),
     );
   }
 
