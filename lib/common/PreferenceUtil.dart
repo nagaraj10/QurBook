@@ -196,9 +196,11 @@ class PreferenceUtil {
     return instance.setString(keyPreferredLab, labData);
   }
 
-  static Future<bool> isCorpUserWelcomeMessageDialogShown( bool isCorpUserWelcomeMessageDialogShown) async {
+  static Future<bool> isCorpUserWelcomeMessageDialogShown(
+      bool isCorpUserWelcomeMessageDialogShown) async {
     final instance = await _prefs;
-    return instance.setBool(Constants.KEY_CORP_USER_MESSAGE, isCorpUserWelcomeMessageDialogShown);
+    return instance.setBool(
+        Constants.KEY_CORP_USER_MESSAGE, isCorpUserWelcomeMessageDialogShown);
   }
 
   static Future<bool> getIsCorpUserWelcomeMessageDialogShown() async {
