@@ -761,6 +761,7 @@ class ChatScreenState extends State<ChatScreen> {
       }
     } else {
       _currentImage = fileUrl;
+      List<String> imageList=new List();
       try {
         await downloadFile(fileType, fileUrl);
         //final file = await CommonUtil.downloadFile(fileUrl, fileType);
@@ -780,6 +781,7 @@ class ChatScreenState extends State<ChatScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ShowImage(
+                              filePathList: imageList,
                               filePath: jpefFile,
                             )));
 
