@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/widgets/ShowImage.dart';
 import 'package:open_file/open_file.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
@@ -105,6 +106,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   String authToken;
 
   var pdfFile;
+  String jpefFile;
+
   List<HealthRecordCollection> mediMasterId = [];
   FlutterToast toast = FlutterToast();
 
@@ -544,28 +547,39 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         });
       }
     } else {
+      List<String> imageList=new List();
+      imageList.add(jpefFile);
       if (imagesPathMain.length > 1) {
         DownloadMultipleImages(imagesPathMain).downloadFilesFromServer(contxt);
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          await CommonUtil.downloadFile(
-                  _currentImage.healthRecordUrl, _currentImage.fileType)
-              .then((filePath) async {
+          await downloadImageFile(_currentImage.fileType, _currentImage.healthRecordUrl);
+          //final file = await CommonUtil.downloadFile(fileUrl, fileType);
+          if (Platform.isAndroid) {
             Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(
+              content: Text(
                 variable.strFileDownloaded,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
               ),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  await OpenFile.open(
-                    filePath.path,
-                  );
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShowImage(
+                            filePathList: imageList,
+                          )));
+
+
                 },
               ),
             ));
+          }
 
             /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
                 .then((value) {
@@ -581,7 +595,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 ));
               }
             });*/
-          });
+
         } catch (e) {
           print('$e exception thrown');
         }
@@ -1550,6 +1564,36 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       });
     });
     return isAudioDownload;
+  }
+
+  Future<bool> downloadImageFile(String fileType, String fileUrl) async {
+    await FHBUtils.createFolderInAppDocDirClone(
+        variable.stAudioPath, fileUrl.split('/').last)
+        .then((filePath) async {
+      var file;
+      if (fileType == '.pdf') {
+        file = File('$filePath');
+      } else {
+        file = File('$filePath');
+      }
+      final request = await ApiServices.get(
+        fileUrl,
+        headers: {
+          HttpHeaders.authorizationHeader: authToken,
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
+        },
+      );
+      final bytes = request.bodyBytes; //close();
+      await file.writeAsBytes(bytes);
+
+      setState(() {
+        if (fileType == '.pdf') {
+          pdfFile = file.path;
+        } else {
+          jpefFile = file.path;
+        }
+      });
+    });
   }
 
   Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
