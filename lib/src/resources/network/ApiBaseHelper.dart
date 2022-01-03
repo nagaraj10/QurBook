@@ -1711,7 +1711,6 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getMemberShipDetails(String url) async {
-    print(await headerRequest.getAuths());
     var headers = headerRequest.getAuths();
     var responseJson;
     try {
