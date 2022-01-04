@@ -4037,6 +4037,15 @@ class CommonUtil {
         });
   }
 
+  String getMemberShipID() {
+    return PreferenceUtil.getStringValue(Constants.keyMembeShipID) ?? "";
+  }
+  String getClaimAmount() {
+    return PreferenceUtil.getStringValue(Constants.keyClaimAmount) ?? "";
+  }
+  String getHealthOrganizationID() {
+    return PreferenceUtil.getStringValue(Constants.keyHealthOrganizationId) ?? "";
+  }
   num doubleWithoutDecimalToInt(double val) {
     return val % 1 == 0 ? val.toInt() : val;
   }

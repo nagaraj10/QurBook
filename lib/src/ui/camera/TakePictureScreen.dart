@@ -64,7 +64,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   bool isFlash = false;
   bool _hasFlashlight = false;
   String deviceName;
-
   @override
   void initState() {
     Constants.mInitialTime = DateTime.now();
@@ -102,6 +101,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   initFlashlight() async {
    // bool hasFlash = await Flashlight.hasFlashlight;
+    categoryName=await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     setState(() {
       _hasFlashlight = false;
     });
@@ -380,7 +380,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               child: FHBBasicWidget.customShowCase(
                                   _attachments,
                                   Constants.ATTACH_DESC,
-                                  IconButton(
+                                  Visibility(child: IconButton(
                                     icon: new ImageIcon(
                                       AssetImage(variable.icon_attach),
                                       color: Colors.white,
@@ -405,7 +405,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                         }
                                       }
                                     },
-                                  ),
+                                  ),visible:categoryName=="Claim Records"?false:true),
                                   Constants.ATTACH_TITLE),
                             ),
                           ),
