@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/landing/model/membership_detail_response.dart';
 import '../../common/CommonUtil.dart';
@@ -20,6 +21,7 @@ class LandingViewModel extends ChangeNotifier {
   DashboardModel widgetsData;
   bool isLoadDone = true;
   bool isURLCome = false;
+  bool isUserMainId = true;
 
   void changeSearchBar({bool isEnabled = false, bool needNotify = true}) {
     isSearchVisible = isEnabled;
@@ -61,6 +63,22 @@ class LandingViewModel extends ChangeNotifier {
     if (needNotify) {
       notifyListeners();
     }
+  }
+
+  Future<bool> checkIfUserIdSame()async {
+    final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+    await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+
+    if (userId != userIdMain) {
+      isUserMainId = false;
+    }else{
+      isUserMainId = true;
+
+    }
+    return isUserMainId;
+
+
   }
 
   Future<void> getQurPlanDashBoard({bool needNotify = false}) async {

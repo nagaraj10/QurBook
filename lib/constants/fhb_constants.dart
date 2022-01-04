@@ -367,6 +367,7 @@ const String CONSULTING = 'CONSULTING';
 const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
+const String HEALTH_RECORDMETAIDS = 'healthRecordMetaIds';
 const String INR = 'INR ';
 const String USD = '\$ ';
 const String FREE = 'FREE';
@@ -620,6 +621,11 @@ var ticketType = 'ticket type';
 var tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
+
+const String keyMembeShipID = 'memberShipID';
+const String keyClaimAmount = 'claimAmt';
+const String keyHealthOrganizationId= 'healthOrganizationID';
+
 
 double height = 0.0;
 double width = 0.0;

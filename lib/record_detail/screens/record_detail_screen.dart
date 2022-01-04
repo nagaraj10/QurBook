@@ -505,6 +505,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           SnackBar(
             content: const Text(variable.strFileDownloaded),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            duration: const Duration(minutes: 5),
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -532,6 +533,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               variable.strFileDownloaded,
             ),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            duration: const Duration(minutes: 5),
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -556,6 +558,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               content: const Text(
                 variable.strFileDownloaded,
               ),
+              duration: const Duration(minutes: 5),
               backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
               action: SnackBarAction(
                 label: 'Open',

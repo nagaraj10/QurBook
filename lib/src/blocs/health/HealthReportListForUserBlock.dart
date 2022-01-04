@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
+
 import '../../../record_detail/model/DoctorImageResponse.dart';
 import '../../../record_detail/model/ImageDocumentResponse.dart';
 import '../../../record_detail/model/MetaDataMovedResponse.dart';
@@ -34,6 +36,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   StreamController _imageListController;
 
   StreamController _healthRecordController;
+  StreamController _claimController;
 
   StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
       _categoryListControlller.sink;
@@ -80,6 +83,11 @@ class HealthReportListForUserBlock implements BaseBloc {
   Stream<ApiResponse<HealthRecordSuccess>> get healthRecordStream =>
       _healthRecordController.stream;
 
+  StreamSink<ApiResponse<ClaimSuccess>> get claimSink =>
+      _claimController.sink;
+  Stream<ApiResponse<ClaimSuccess>> get claimStream =>
+      _claimController.stream;
+
   @override
   void dispose() {
     _categoryListControlller?.close();
@@ -92,6 +100,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     _metaDataUpdateController?.close();
     _imageListController?.close();
     _healthRecordController?.close();
+    _claimController?.close();
   }
 
   HealthReportListForUserBlock() {
@@ -114,6 +123,8 @@ class HealthReportListForUserBlock implements BaseBloc {
         StreamController<ApiResponse<List<ImageDocumentResponse>>>();
     _healthRecordController =
         StreamController<ApiResponse<HealthRecordSuccess>>();
+    _claimController =
+        StreamController<ApiResponse<ClaimSuccess>>();
   }
 
   Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
@@ -277,6 +288,20 @@ class HealthReportListForUserBlock implements BaseBloc {
     return healthRecordSuccess;
   }
 
+  Future<HealthRecordSuccess> createHealtRecordsClaims(
+      String jsonData, List<String> imagePaths, String audioPath) async {
+    HealthRecordSuccess healthRecordSuccess;
+    healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
+    try {
+      healthRecordSuccess = await _healthReportListForUserRepository
+          .createMediaDataClaim(jsonData, imagePaths, audioPath);
+      // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
+    } catch (e) {
+      healthRecordSink.add(ApiResponse.error(e.toString()));
+    }
+    return healthRecordSuccess;
+  }
+
   Future<HealthRecordSuccess> updateHealthRecords(String jsonData,
       List<String> imagePaths, String audioPath, String metaId) async {
     HealthRecordSuccess healthRecordSuccess;
@@ -304,4 +329,19 @@ class HealthReportListForUserBlock implements BaseBloc {
     }
     return healthRecordSuccess;
   }
+
+  Future<ClaimSuccess> createClaim(
+      String jsonData) async {
+    ClaimSuccess claimSuccess;
+    claimSink.add(ApiResponse.loading(variable.strSubmitting));
+    try {
+      claimSuccess = await _healthReportListForUserRepository
+          .createClaimRecord(jsonData);
+      // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
+    } catch (e) {
+      claimSink.add(ApiResponse.error(e.toString()));
+    }
+    return claimSuccess;
+  }
+
 }

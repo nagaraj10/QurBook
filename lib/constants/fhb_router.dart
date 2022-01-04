@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
+import 'package:myfhb/claim/screen/ClaimList.dart';
+import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/plan_wizard/view/plan_wizard_screen.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
 import 'router_variable.dart' as router;
@@ -125,6 +127,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
         AudioRecorder(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_PlanWizard: (BuildContext context) => PlanWizardScreen(),
     router.rt_AddProviderPlan: (BuildContext context) => AddProviderPlan(""),
+    router.rt_ClaimResult: (BuildContext context) => ClaimList(),
+    router.rt_ClaimCreate: (BuildContext context) => ClaimRecordCreate(),
   };
 
   return fhbRouter;

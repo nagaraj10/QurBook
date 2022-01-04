@@ -128,7 +128,7 @@ class MayaConvUI extends StatelessWidget {
             children: <Widget>[
               Text(
                 c.text,
-                style: Theme.of(context).textTheme.body1.apply(
+                style: Theme.of(context).textTheme.bodyText1.apply(
                       color: Colors.white,
                     ),
               ),

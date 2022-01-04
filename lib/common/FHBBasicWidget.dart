@@ -27,6 +27,8 @@ import '../constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
 import 'dart:math' as math;
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
+
 
 class FHBBasicWidget {
   FHBBasicWidget();
@@ -40,7 +42,7 @@ class FHBBasicWidget {
 
   UnitsMesurements unitsMesurements;
 
-  setValues(String unitsTosearch, String range) async{
+  setValues(String unitsTosearch, String range) async {
     await commonConstants
         .getValuesForUnit(unitsTosearch, range)
         .then((unitsMesurementsClone) {
@@ -113,13 +115,40 @@ class FHBBasicWidget {
   }
 
   Widget getTextFieldWithNoCallbacks(
-      BuildContext context, TextEditingController searchController,{bool isFileField}) {
+      BuildContext context, TextEditingController searchController,
+      {bool isFileField}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
-          enabled:isFileField??false,
+          enabled: isFileField ?? false,
           controller: searchController,
         ));
+  }
+
+  Widget getTextFieldWithNoCallbacksClaim(
+      BuildContext context, TextEditingController searchController,
+      {bool isFileField}) {
+    return Container(
+        width: 1.sw - 80,
+        child: TextField(
+            enabled: isFileField ?? false,
+            controller: searchController,
+            style:getTextStyleForValue(),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(left:20.0),
+            )));
+  }
+
+  getTextStyleForValue() {
+    return TextStyle(
+        fontWeight: FontWeight.w800, fontSize: fhbStyles.fnt_category);
+  }
+
+  getTextStyleForTags() {
+    return TextStyle(
+        fontWeight: FontWeight.w800,
+        fontSize: fhbStyles.fnt_doc_specialist,
+        color: Colors.grey[600]);
   }
 
   Widget getTextFieldWithNoCallbacksForMemo(
@@ -139,6 +168,17 @@ class FHBBasicWidget {
           hintText,
           style: TextStyle(fontSize: 16.0.sp),
         ));
+  }
+
+  Widget getTextForAlertDialogClaim(BuildContext context, String hintText) {
+    return Container(
+        width: 1.sw - 80,
+        child: Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Text(
+              hintText,
+              style: getTextStyleForTags(),
+            )));
   }
 
   void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
@@ -765,7 +805,7 @@ class FHBBasicWidget {
       String device}) {
     var node = FocusScope.of(context);
 
-    setValues(unitsTosearch,range??'');
+    setValues(unitsTosearch, range ?? '');
 
     var valueEnterd = '';
     var errorValue = error;

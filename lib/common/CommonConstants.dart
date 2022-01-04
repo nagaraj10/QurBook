@@ -151,6 +151,12 @@ class CommonConstants {
 
   static String strExpDateEmpty = 'Please Enter Expiry Date';
 
+  //for claims
+  static String strBillNameEmpty = 'Please Enter Bill Name';
+  static String strBillDateEmpty = 'Please Enter Bill Date';
+  static String strClaimAmtEmpty = 'Please Enter Claim Amount';
+
+
   //From senthil
 
   static String add_family = 'Add Family';
@@ -286,6 +292,14 @@ class CommonConstants {
 
   static var weightDarkColor = 0xff1abadd;
   static var weightlightColor = 0xff3ed4f5;
+
+  // String for claim
+  static String strBillName = 'Bill Name *';
+  static String strClaimType = 'Claim Type *';
+  static String strBillDate = 'Bill Date *';
+  static String strClaimAmt = 'Claim Amount';
+  static String strFamilyMember = 'FamilyMember';
+
 
   factory CommonConstants() => _instance;
 
