@@ -234,7 +234,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                   maxLength: 5,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
-
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
