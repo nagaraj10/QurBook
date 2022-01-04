@@ -122,7 +122,7 @@ class _ClaimListState extends State<ClaimList> {
 
   getAppBar() {
     return PreferredSize(
-        preferredSize: Size.fromHeight(300.0), // here the desired height
+        preferredSize: Size.fromHeight(280.0), // here the desired height
         child: AppBar(
             automaticallyImplyLeading: false,
             flexibleSpace: Container(
@@ -459,7 +459,7 @@ class _ClaimListState extends State<ClaimList> {
                                     ?.billDate),
                                 style:getTextStyleForTags()),
                             Text(
-                                claimResultList[index]
+                                "Rs "+claimResultList[index]
                                     ?.documentMetadata[0]
                                     ?.claimAmount,
                                 style: TextStyle(
