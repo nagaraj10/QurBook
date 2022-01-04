@@ -170,15 +170,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                IconButton(
+                                Visibility(child: IconButton(
                                   onPressed: () {
                                     if (widget.imagePath.isNotEmpty) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ImageSlider(
-                                                imageList: null,
-                                              )));
+
                                     }
                                   },
                                   icon: Icon(
@@ -186,7 +181,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                                     color: Colors.white,
                                     size: 24.0.sp,
                                   ),
-                                ),
+                                ),visible: false,),
                                 Text(
                                   '$index /$length',
                                   style: TextStyle(color: Colors.white),
@@ -687,7 +682,27 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           builder: (context) => AlertDialog(
             title: Text(variable.strAPP_NAME),
             content: Text(validationMsg),
-          ));
+              actions: <Widget>[
+          Row(
+          mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              //mainAxisAlignment: MainAxisAlignment.center,
+              //crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  child:  Center(child:TextButton(
+                      child: const Text('Ok',style: TextStyle(color: Colors.white),),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )),
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
+
+
+                ),
+
+              ]
+          )]));
     }
   }
 
