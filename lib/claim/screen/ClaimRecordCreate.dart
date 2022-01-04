@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -48,8 +49,7 @@ class ClaimRecordCreate extends StatefulWidget {
   ClaimRecordCreate({this.imagePath});
 
   @override
-  _ClaimRecordCreateState createState() =>
-      _ClaimRecordCreateState();
+  _ClaimRecordCreateState createState() => _ClaimRecordCreateState();
 }
 
 class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
@@ -77,12 +77,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   bool isFamilyChanged = false;
 
   SharedByUsers selectedUser;
-  var selectedId = '',
-      createdBy = '';
+  var selectedId = '', createdBy = '';
   String categoryName;
   String categoryID;
   String validationMsg;
-  String selectedClaimType="Pharmacy";
+  String selectedClaimType = "Pharmacy";
 
   CategoryResult categoryDataObj = CategoryResult();
   MediaResult mediaDataObj = MediaResult();
@@ -91,19 +90,26 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   HealthReportListForUserBlock();
   HealthReportListForUserRepository _healthReportListForUserRepository;
 
-
   FlutterToast toast = FlutterToast();
 
+  String claimAmountTotal;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _healthReportListForUserRepository=new HealthReportListForUserRepository();
+    _healthReportListForUserRepository =
+    new HealthReportListForUserRepository();
     if (widget.imagePath.isNotEmpty) {
       length = widget.imagePath.length;
       index = 1;
     }
+
+    claimAmountTotal = new CommonUtil().getClaimAmount();
+    claimAmountTotal = json.decode(claimAmountTotal);
+    claimAmountTotal = claimAmountTotal.contains(".")
+        ? claimAmountTotal.split(".")[0]
+        : claimAmountTotal;
     setAuthToken();
     initializeData();
 
@@ -170,10 +176,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ImageSlider(
-                                                    imageList: null,
-                                                  )));
+                                              builder: (context) => ImageSlider(
+                                                imageList: null,
+                                              )));
                                     }
                                   },
                                   icon: Icon(
@@ -200,7 +205,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                         child: Text(""),
                       );
                     },
-
                   ),
                 ),
                 fhbBasicWidget.getTextForAlertDialogClaim(
@@ -214,7 +218,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 ),
                 fhbBasicWidget.getTextForAlertDialogClaim(
                     context, CommonConstants.strClaimType),
-                Padding(child:getClaimType(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
+                Padding(
+                  child: getClaimType(),
+                  padding:
+                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                ),
                 SizedBox(
                   height: 10.0.h,
                 ),
@@ -231,15 +239,15 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                   cursorColor: Color(CommonUtil().getMyPrimaryColor()),
                   controller: claimAmount,
                   enableInteractiveSelection: false,
-                  maxLength: 5,
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
+                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16.0.sp,
                       color: ColorUtils.blackcolor),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left:20.0),
+                    contentPadding: EdgeInsets.only(left: 20.0),
                     hintText: CommonConstants.strClaimAmt,
                     counterText: '',
                     labelStyle: TextStyle(
@@ -251,8 +259,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                       color: ColorUtils.myFamilyGreyColor,
                       fontWeight: FontWeight.w400,
                     ),
-
-
                   ),
                 ),
                 SizedBox(
@@ -378,7 +384,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
-
   showBillEntryWidget() {
     return Column(
       children: [
@@ -399,13 +404,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     );
   }
 
-  void dateOfBirthTapped(BuildContext context,
-      TextEditingController dateOfVisit) {
+  void dateOfBirthTapped(
+      BuildContext context, TextEditingController dateOfVisit) {
     _selectDate(context, dateOfVisit);
   }
 
-  Future<void> _selectDate(BuildContext context,
-      TextEditingController dateOfVisitSample) async {
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController dateOfVisitSample) async {
     var dateTime = DateTime.now();
 
     final picked = await showDatePicker(
@@ -550,7 +555,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           border: Border.all(
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
-        child:  DropdownButton<SharedByUsers>(
+        child: DropdownButton<SharedByUsers>(
           value: selectedUser,
           underline: SizedBox(),
           isExpanded: true,
@@ -564,31 +569,29 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             ],
           ),
           items: _familyNames
-              .map((SharedByUsers user) =>
-              DropdownMenuItem(
-                child: Row(
-                  children: <Widget>[
-                    SizedBoxWidget(width: 20),
-                    Text(
-                        user.child == null
-                            ? 'Self'
-                            : ((user?.child?.firstName ?? '') +
-                            ' ' +
-                            (user?.child?.lastName ?? ''))
-                            ?.capitalizeFirstofEach ??
-                            '',
-                        style: TextStyle(
-                          fontSize: 14.0.sp,
-                        )),
-                  ],
-                ),
-                value: user,
-              ))
+              .map((SharedByUsers user) => DropdownMenuItem(
+            child: Row(
+              children: <Widget>[
+                SizedBoxWidget(width: 20),
+                Text(
+                    user.child == null
+                        ? 'Self'
+                        : ((user?.child?.firstName ?? '') +
+                        ' ' +
+                        (user?.child?.lastName ?? ''))
+                        ?.capitalizeFirstofEach ??
+                        '',
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                    )),
+              ],
+            ),
+            value: user,
+          ))
               .toList(),
           onChanged: (SharedByUsers user) {
             isFamilyChanged = true;
             setState(() {
-
               if (user.child != null) {
                 if (user.child.id != null) {
                   selectedId = user.child.id;
@@ -609,8 +612,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     );
   }
 
-  Widget _showDateOfVisit(BuildContext context,
-      TextEditingController dateOfVisit) {
+  Widget _showDateOfVisit(
+      BuildContext context, TextEditingController dateOfVisit) {
     return GestureDetector(
       onTap: () {
         dateOfBirthTapped(context, dateOfVisit);
@@ -672,33 +675,37 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           .createHealtRecordsClaims(params.toString(), widget.imagePath, null)
           .then((value) {
         if (value != null && value.isSuccess) {
-
           createClaim(value.result[0].id);
-
         } else {
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
         }
       });
-    }
-    else {
+    } else {
       await showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
-                title: Text(variable.strAPP_NAME),
-                content: Text(validationMsg),
-              ));
+          builder: (context) => AlertDialog(
+            title: Text(variable.strAPP_NAME),
+            content: Text(validationMsg),
+          ));
     }
   }
-
 
   bool doValidationbeforeSubmitting() {
     bool condition = true;
     if (fileName.text != "" && fileName.text != null) {
       if (billDate.text != "" && billDate.text != null) {
-        if (claimAmount.text != "" && claimAmount.text != null && int.parse(claimAmount.text)>0) {
-          condition = true;
+        if (claimAmount.text != "" &&
+            claimAmount.text != null &&
+            int.parse(claimAmount.text) > 0) {
+          if (int.parse(claimAmount.text) < int.parse(claimAmountTotal)) {
+            condition = true;
+          } else {
+            condition = false;
+            validationMsg = "Current balance is  " +
+                claimAmountTotal +
+                " INR. Please enter a lesser amount";
+          }
         } else {
           condition = false;
           validationMsg = CommonConstants.strClaimAmtEmpty;
@@ -717,65 +724,60 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   void createClaim(String healthRecordID) {
     var postMediaData = Map<String, dynamic>();
     var membership = {};
-    String memberShipId=new CommonUtil().getMemberShipID();
-    String claimAmountTotal=new CommonUtil().getClaimAmount();
-    claimAmountTotal=json.decode(claimAmountTotal);
-    claimAmountTotal=claimAmountTotal.contains(".")?claimAmountTotal.split(".")[0]:claimAmountTotal;
-    String healthOrganizationID=new CommonUtil().getHealthOrganizationID();
-    membership[qr_str_id]=json.decode(memberShipId);
-    postMediaData[qr_membership_tag]=membership;
+    String memberShipId = new CommonUtil().getMemberShipID();
+
+    String healthOrganizationID = new CommonUtil().getHealthOrganizationID();
+    membership[qr_str_id] = json.decode(memberShipId);
+    postMediaData[qr_membership_tag] = membership;
 
     var submittedBY = {};
-    submittedBY[qr_str_id]=createdBy;
-    postMediaData[qr_submittedby]=submittedBY;
+    submittedBY[qr_str_id] = createdBy;
+    postMediaData[qr_submittedby] = submittedBY;
 
     var submittedFor = {};
-    submittedFor[qr_str_id]=selectedId;
-    postMediaData[qr_submittedfor]=submittedFor;
-    int claimAmt=int.parse(claimAmountTotal);
+    submittedFor[qr_str_id] = selectedId;
+    postMediaData[qr_submittedfor] = submittedFor;
+    double claimAmt = double.parse(claimAmountTotal);
 
-    postMediaData[qr_remark]="";
-    postMediaData[qr_ClaimAmountTotal]=claimAmt;
-    postMediaData[qr_health_org_id]=json.decode(healthOrganizationID);
+    postMediaData[qr_remark] = "";
+    postMediaData[qr_ClaimAmountTotal] = claimAmt;
+    postMediaData[qr_health_org_id] = json.decode(healthOrganizationID);
 
-    var documentType=[];
+    var documentType = [];
     var billType = Map<String, dynamic>();
 
-    billType[qr_billName]=fileName.text;
-    billType[qr_billDate]=billDate.text;
-    billType[qr_claimType]=selectedClaimType;
-    billType[qr_memoText]="";
-    billType[qr_healthRecordId]=healthRecordID;
-    billType[qr_claimAmount]=claimAmount.text;
+    billType[qr_billName] = fileName.text;
+    billType[qr_billDate] = billDate.text;
+    billType[qr_claimType] = selectedClaimType;
+    billType[qr_memoText] = "";
+    billType[qr_healthRecordId] = healthRecordID;
+    billType[qr_claimAmount] = claimAmount.text;
 
-    documentType=[billType];
-    postMediaData[qr_documentMetadata]=documentType;
+    documentType = [billType];
+    postMediaData[qr_documentMetadata] = documentType;
 
     final params = json.encode(postMediaData);
     print(params);
 
-    _healthReportListForUserRepository.createClaimRecord(params).then((value){
-      if(value != null && value.isSuccess){
+    _healthReportListForUserRepository.createClaimRecord(params).then((value) {
+      if (value != null && value.isSuccess) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>  ClaimList()));
-
-      }else{
+            context, MaterialPageRoute(builder: (context) => ClaimList()));
+      } else {
         Navigator.pop(context);
         Navigator.pop(context);
-        toast.getToast(value.diagnostics?.message??"Error Occured While Creating Claim", Colors.red);
+        toast.getToast(
+            value.diagnostics?.message ?? "Error Occured While Creating Claim",
+            Colors.red);
       }
     });
-
-
   }
 
   Widget getClaimType() {
-    return  Container(
+    return Container(
       width: 1.sw - 40,
       child: DropdownButton<String>(
         isExpanded: true,
@@ -804,8 +806,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           });
         },
       ),
-
     );
   }
-
 }
