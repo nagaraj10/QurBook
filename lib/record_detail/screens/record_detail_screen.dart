@@ -462,11 +462,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               size: 24.0.sp,
             ),
             SizedBox(width: 10.0.w),
-            Text(variable.strAddVoiceNote,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                ))
+            Text(
+              variable.strAddVoiceNote,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -494,11 +498,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
 
     HealthRecordCollection _currentImage;
-    Scaffold.of(contxt).showSnackBar(SnackBar(
-      content: const Text(variable.strDownloadStart),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-    ));
-
+    Scaffold.of(contxt).showSnackBar(
+      SnackBar(
+        content: const Text(
+          variable.strDownloadStart,
+        ),
+        backgroundColor: Color(
+          CommonUtil().getMyPrimaryColor(),
+        ),
+      ),
+    );
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
       if (Platform.isIOS) {
@@ -508,7 +517,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           SnackBar(
             content: const Text(variable.strFileDownloaded),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            duration: const Duration(minutes: 5),
             action: SnackBarAction(
               label: 'Open',
               onPressed: () async {
@@ -527,64 +535,70 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ),
         );
       } else {
-        await ImageGallerySaver.saveFile(pdfFile).then((res) {
-          setState(() {
-            downloadStatus = true;
-          });
-          Scaffold.of(contxt).showSnackBar(SnackBar(
-            content: const Text(
-              variable.strFileDownloaded,
-            ),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            duration: const Duration(minutes: 5),
-            action: SnackBarAction(
-              label: 'Open',
-              onPressed: () async {
-                await OpenFile.open(
-                  pdfFile,
-                );
-              },
-            ),
-          ));
-        });
+        await ImageGallerySaver.saveFile(pdfFile).then(
+          (res) {
+            setState(() {
+              downloadStatus = true;
+            });
+            Scaffold.of(contxt).showSnackBar(
+              SnackBar(
+                content: const Text(
+                  variable.strFileDownloaded,
+                ),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                action: SnackBarAction(
+                  label: 'Open',
+                  onPressed: () async {
+                    await OpenFile.open(
+                      pdfFile,
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
       }
     } else {
-      List<String> imageList=new List();
-      imageList.add(jpefFile);
+      List<String> imageList = [];
+
       if (imagesPathMain.length > 1) {
         DownloadMultipleImages(imagesPathMain).downloadFilesFromServer(contxt);
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          await downloadImageFile(_currentImage.fileType, _currentImage.healthRecordUrl);
+          await downloadImageFile(
+              _currentImage.fileType, _currentImage.healthRecordUrl);
           //final file = await CommonUtil.downloadFile(fileUrl, fileType);
+          imageList.add(jpefFile);
           if (Platform.isAndroid) {
-            Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: Text(
-                variable.strFileDownloaded,
-                style: TextStyle(
-                  fontSize: 16.0.sp,
+            Scaffold.of(contxt).showSnackBar(
+              SnackBar(
+                content: Text(
+                  variable.strFileDownloaded,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
                 ),
-              ),
-              duration: const Duration(minutes: 5),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              action: SnackBarAction(
-                label: 'Open',
-                onPressed: () async {
-                  await Navigator.push(
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                action: SnackBarAction(
+                  label: 'Open',
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ShowImage(
-                            filePathList: imageList,
-                          )));
-
-
-                },
+                        builder: (context) => ShowImage(
+                          filePathList: imageList,
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ));
+            );
           }
 
-            /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
+          /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
                 .then((value) {
               if (value) {
                 Scaffold.of(contxt).showSnackBar(SnackBar(
@@ -1291,8 +1305,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          widget.data.metadata.healthRecordType.name !=
-                  AppConstants.voiceNotes
+          widget.data.metadata.healthRecordType.name != AppConstants.voiceNotes
               ? (imagesPath != null && imagesPath.isNotEmpty)
                   ? Expanded(
                       child: CarouselSlider(
@@ -1515,7 +1528,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
-    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,fileType == '.mp3'?'${widget.data.metadata.fileName}' + fileType:widget.data.metadata.fileName)
+    await FHBUtils.createFolderInAppDocDirClone(
+            variable.stAudioPath,
+            fileType == '.mp3'
+                ? '${widget.data.metadata.fileName}' + fileType
+                : widget.data.metadata.fileName)
         .then((filePath) async {
       var bytes = await _loadFileBytes(url,
           onError: (exception) =>
@@ -1541,7 +1558,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadFile(
       HealthRecordCollection audioMediaId, String fileType) async {
-    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,widget.data.metadata.fileName)
+    await FHBUtils.createFolderInAppDocDirClone(
+            variable.stAudioPath, widget.data.metadata.fileName)
         .then((filePath) async {
       var file = File('$filePath' /*+ fileType*/);
       final request = await ApiServices.get(
@@ -1570,33 +1588,34 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Future<bool> downloadImageFile(String fileType, String fileUrl) async {
-    await FHBUtils.createFolderInAppDocDirClone(
-        variable.stAudioPath, fileUrl.split('/').last)
-        .then((filePath) async {
-      var file;
-      if (fileType == '.pdf') {
-        file = File('$filePath');
-      } else {
-        file = File('$filePath');
-      }
-      final request = await ApiServices.get(
-        fileUrl,
-        headers: {
-          HttpHeaders.authorizationHeader: authToken,
-          Constants.KEY_OffSet: CommonUtil().setTimeZone()
-        },
-      );
-      final bytes = request.bodyBytes; //close();
-      await file.writeAsBytes(bytes);
+    var filePath = await FHBUtils.createFolderInAppDocDirClone(
+        variable.stAudioPath, fileUrl.split('/').last);
+    var file;
+    if (fileType == '.pdf') {
+      file = File('$filePath');
+    } else {
+      file = File('$filePath');
+    }
+    final request = await ApiServices.get(
+      fileUrl,
+      headers: {
+        HttpHeaders.authorizationHeader: authToken,
+        Constants.KEY_OffSet: CommonUtil().setTimeZone()
+      },
+    );
+    final bytes = request.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
 
-      setState(() {
+    setState(
+      () {
         if (fileType == '.pdf') {
           pdfFile = file.path;
         } else {
           jpefFile = file.path;
         }
-      });
-    });
+      },
+    );
+    return true;
   }
 
   Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
