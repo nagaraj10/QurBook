@@ -353,6 +353,7 @@ const String strDownloadStart = 'Download Started';
 const String strFilesDownloaded = 'All Files are downloaded, view in Gallery';
 const String strFilesView = 'File downloaded, view in Gallery';
 const String strFileDownloaded = 'File downloaded';
+const String strFileDownloadeding = 'File downloading';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After Meal';
 const String strDateFormatDay = 'dd/MM/yyyy';
