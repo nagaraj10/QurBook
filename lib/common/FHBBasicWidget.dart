@@ -136,12 +136,18 @@ class FHBBasicWidget {
             style:getTextStyleForValue(),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left:20.0),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
             )));
   }
 
   getTextStyleForValue() {
     return TextStyle(
-        fontWeight: FontWeight.w800, fontSize: fhbStyles.fnt_category);
+        color: Colors.black, fontSize: fhbStyles.fnt_category);
   }
 
   getTextStyleForTags() {

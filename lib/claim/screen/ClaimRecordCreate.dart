@@ -215,8 +215,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 ),
                 fhbBasicWidget.getTextForAlertDialogClaim(
                     context, CommonConstants.strClaimType),
-                 getClaimType(),
-
+                SizedBox(
+                  height: 10.0.h,
+                ),
+                getClaimType(),
 
                 SizedBox(
                   height: 10.0.h,
@@ -228,7 +230,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                   height: 15.0.h,
                 ),
                 fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strClaimAmt+" (\u{20B9}) *"),
+                    context, CommonConstants.strClaimAmt + " (\u{20B9}) *"),
 
                 TextField(
                   enabled: true,
@@ -240,7 +242,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                   inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
                   style: fhbBasicWidget.getTextStyleForValue(),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 20.0),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300]),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300]),
+                    ),
+                    contentPadding: EdgeInsets.only(left:20.0),
                     counterText: '',
                     labelStyle: TextStyle(
                         fontSize: 15.0.sp,
@@ -261,7 +269,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 SizedBox(
                   height: 15.0.h,
                 ),
-                (familyData!=null && familyData.result?.sharedByUsers!=null && familyData.result?.sharedByUsers.length>0)?dropDownButton(familyData.result?.sharedByUsers):getDropdown(),
+                (familyData != null &&
+                        familyData.result?.sharedByUsers != null &&
+                        familyData.result?.sharedByUsers.length > 0)
+                    ? dropDownButton(familyData.result?.sharedByUsers)
+                    : getDropdown(),
                 //Padding(child:_familyNames!=null && _familyNames.length>0?dropDownButton(_familyNames):getDropdown(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
 
                 SizedBox(
@@ -538,7 +550,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       }
     }
 
-   /* return Container(
+    /* return Container(
       width: 1.sw - 40,
       child: Container(
         child: DropdownButton<SharedByUsers>(
@@ -601,7 +613,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       },
       child: Container(
           child: TextField(
-            style: fhbBasicWidget.getTextStyleForValue(),
+
+        style: fhbBasicWidget.getTextStyleForValue(),
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: dateOfVisit,
         readOnly: true,
@@ -611,7 +624,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           dateOfBirthFocus.unfocus();
         },
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[300]),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[300]),
+          ),
+          contentPadding: EdgeInsets.only(left: 20,top:10,bottom: 10),
           suffixIcon: IconButton(
             icon: Icon(Icons.calendar_today),
             onPressed: () {
@@ -783,21 +802,26 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     return Container(
       child: DropdownButton<String>(
         isExpanded: true,
-        hint: Text(
+        hint: Padding(
+        child:Text(
           CommonConstants.strClaimType,
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
-        ),
+        ),padding: EdgeInsets.only(left: 20,top: 10,bottom: 20),
+      ),
         value: selectedClaimType != null
             ? toBeginningOfSentenceCase(selectedClaimType.toLowerCase())
             : "",
         items: variable.claimType.map((eachGender) {
           return DropdownMenuItem(
-            child: Padding(child:Text(
-              eachGender,
-              style: fhbBasicWidget.getTextStyleForValue(),
-            ),padding: EdgeInsets.only(left: 20),),
+            child: Padding(
+              child: Text(
+                eachGender,
+                style: fhbBasicWidget.getTextStyleForValue(),
+              ),
+              padding: EdgeInsets.only(left: 20,top: 10,bottom: 20),
+            ),
             value: eachGender,
           );
         }).toList(),
@@ -811,39 +835,43 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   }
 
   Widget getFamilyDropDown() {
-    return  Container(
+    return Container(
       width: 1.sw - 40,
       child: DropdownButton<SharedByUsers>(
         isExpanded: true,
         value: selectedUser,
         hint: Row(
           children: <Widget>[
-        Padding(child:Text(parameters.self,
-                style: fhbBasicWidget.getTextStyleForValue()),padding: EdgeInsets.only(left:20),),
+            Padding(
+              child: Text(parameters.self,
+                  style: fhbBasicWidget.getTextStyleForValue()),
+                padding: EdgeInsets.only(left: 20,top: 10,bottom: 20)            ),
           ],
         ),
         items: _familyNames
             .map((SharedByUsers user) => DropdownMenuItem(
-          child: Row(
-            children: <Widget>[
-              Padding(child:Text(
-                  user.child == null
-                      ? 'Self'
-                      : ((user?.child?.firstName ?? '') +
-                      ' ' +
-                      (user?.child?.lastName ?? ''))
-                      ?.capitalizeFirstofEach ??
-                      '',
-                  style: fhbBasicWidget.getTextStyleForValue()),padding: EdgeInsets.only(left:20),),
-            ],
-          ),
-          value: user,
-        ))
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        child: Text(
+                            user.child == null
+                                ? 'Self'
+                                : ((user?.child?.firstName ?? '') +
+                                            ' ' +
+                                            (user?.child?.lastName ?? ''))
+                                        ?.capitalizeFirstofEach ??
+                                    '',
+                            style: fhbBasicWidget.getTextStyleForValue()),
+                          padding: EdgeInsets.only(left: 20,top: 10,bottom: 20)                      ),
+                    ],
+                  ),
+                  value: user,
+                ))
             .toList(),
         onChanged: (SharedByUsers user) {
           isFamilyChanged = true;
           setState(() {
-            selectedUser=user;
+            selectedUser = user;
             if (user.child != null) {
               if (user.child.id != null) {
                 selectedId = user.child.id;
