@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
@@ -137,7 +138,7 @@ class DynamicLinks {
               includeText: qr_careGiverList,
             );
             Get.offAll(
-              ChatHomeScreen(
+              ChatUserList(
                 isDynamicLink: true,
                 careGiversList: widgetsData?.careGiverList ?? [],
               ),

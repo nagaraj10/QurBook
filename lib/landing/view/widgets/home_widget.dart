@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
@@ -424,7 +425,7 @@ class HomeWidget extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChatHomeScreen(
+                              builder: (context) => ChatUserList(
                                 careGiversList:
                                 dashboardData?.careGiverList ?? [],
                               ),

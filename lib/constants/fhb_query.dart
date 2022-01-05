@@ -301,7 +301,7 @@ const String qr_add_cart = 'cart/add-product';
 
 const String qr_code_tags = 'TAGS';
 
-const String retry_payment = 'appointment/check-retry-appointment?id=';
+
 
 // True desk
 
@@ -327,4 +327,14 @@ const String qr_billDate = 'bill_date';
 const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
+
+//chat
+
+const String retry_payment = 'appointment/check-retry-appointment?id=';
+
+const String qr_chat_socket_history = 'chat/get-message-history';
+
+const String qr_chat_socket_init_chat_doc_pat = 'chat/initiate-doctor-patient-chat';
+
+const String qr_chat_socket_init_chat_pat_doc = 'chat/initiate-patient-doctor-chat';
 

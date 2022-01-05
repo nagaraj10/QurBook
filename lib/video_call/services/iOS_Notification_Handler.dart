@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -171,7 +173,7 @@ class IosNotificationHandler {
         'navigationPage': 'Tele Health Chat list',
       });
       isAlreadyLoaded
-          ? Get.to(ChatHomeScreen())
+          ? Get.to(ChatUserList())
           : Get.to(SplashScreen(
               nsRoute: parameters.chat,
             ));
@@ -200,7 +202,7 @@ class IosNotificationHandler {
             model.patientName != null &&
             model.patientPicture != null) {
           Get.to(
-            Chat(
+            ChatDetail(
               peerId: model.doctorId,
               peerName: model.doctorName,
               peerAvatar: model.doctorPicture,
@@ -212,7 +214,7 @@ class IosNotificationHandler {
             ),
           );
         } else {
-          Get.to(ChatHomeScreen());
+          Get.to(ChatUserList());
         }
       } else {
         Get.to(SplashScreen(

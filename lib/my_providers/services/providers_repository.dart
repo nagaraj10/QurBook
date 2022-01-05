@@ -1,5 +1,7 @@
 import 'dart:convert' as convert;
 
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
+
 import '../../common/CommonConstants.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
@@ -210,7 +212,7 @@ class ProvidersListRepository {
         patientIdEqualTo +
         patientId +
         doctorIdEqualTo +
-        doctorId);
+        doctorId+isDoctor);
     return AppointmentDetailModel.fromJson(response);
   }
 

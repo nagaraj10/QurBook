@@ -26,9 +26,10 @@ class AppointmentResult {
   Past past;
   DeviceToken deviceToken;
   bool isCaregiver;
+  ChatList chatList;
 
   AppointmentResult(
-      {this.upcoming, this.past, this.deviceToken, this.isCaregiver});
+      {this.upcoming, this.past, this.deviceToken, this.isCaregiver, this.chatList});
 
   AppointmentResult.fromJson(Map<String, dynamic> json) {
     upcoming = json['upcoming'] != null
@@ -39,6 +40,9 @@ class AppointmentResult {
         ? new DeviceToken.fromJson(json['deviceToken'])
         : null;
     isCaregiver = json['isCaregiver'];
+    chatList = json['chatList'] != null
+        ? new ChatList.fromJson(json['chatList'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -53,6 +57,11 @@ class AppointmentResult {
       data['deviceToken'] = this.deviceToken.toJson();
     }
     data['isCaregiver'] = this.isCaregiver;
+
+    if (this.chatList != null) {
+      data['chatList'] = this.chatList.toJson();
+    }
+
     return data;
   }
 }
@@ -502,4 +511,86 @@ class Payload {
     data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
+}
+
+class ChatList {
+
+  /* String chatListId;
+
+  String peerId;
+
+  String userId;
+
+  var peerSocketId;
+
+  var userSocketId;
+
+  var actualUserId;*/
+
+  bool isDisable;
+
+  //var isMuted;
+
+
+  ChatList({ /*this.chatListId,
+
+      this.peerId,
+
+      this.userId,
+
+      this.peerSocketId,
+
+      this.userSocketId,
+
+      this.actualUserId,*/
+
+    this.isDisable,
+
+    /*this.isMuted*/
+  });
+
+
+  ChatList.fromJson(Map<String, dynamic> json) {
+
+    /*chatListId = json['chatListId'];
+
+    peerId = json['peerId'];
+
+    userId = json['userId'];
+
+    peerSocketId = json['peerSocketId'];
+
+    userSocketId = json['userSocketId'];
+
+    actualUserId = json['actualUserId'];*/
+
+    isDisable = json['isDisable'] != null ? json['isDisable'] : false;
+
+    //isMuted = json['isMuted'];
+
+  }
+
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    /* data['chatListId'] = this.chatListId;
+
+    data['peerId'] = this.peerId;
+
+    data['userId'] = this.userId;
+
+    data['peerSocketId'] = this.peerSocketId;
+
+    data['userSocketId'] = this.userSocketId;
+
+    data['actualUserId'] = this.actualUserId;*/
+
+    data['isDisable'] = this.isDisable;
+
+    //data['isMuted'] = this.isMuted;
+
+    return data;
+  }
+
 }

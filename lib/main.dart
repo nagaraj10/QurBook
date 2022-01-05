@@ -24,6 +24,9 @@ import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'chat_socket/view/ChatDetail.dart';
+import 'chat_socket/view/ChatUserList.dart';
+import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'constants/router_variable.dart';
 import 'regiment/models/regiment_arguments.dart';
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
@@ -451,7 +454,7 @@ class _MyFHBState extends State<MyFHB> {
           'ns_type': 'chat',
           'navigationPage': 'Tele Health Chat list',
         });
-        Get.to(ChatHomeScreen());
+        Get.to(ChatUserList());
       } else if (cMsg == 'FETCH_LOG') {
         CommonUtil.sendLogToServer();
       }
@@ -640,7 +643,7 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Chat Screen',
           });
           final chatParsedData = passedValArr[2]?.split('|');
-          Get.to(Chat(
+          Get.to(ChatDetail(
             peerId: chatParsedData[0],
             peerName: chatParsedData[1],
             peerAvatar: chatParsedData[2],
@@ -942,6 +945,9 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<VideoRequestProvider>(
           create: (_) => VideoRequestProvider(),
+        ),
+        provider.ChangeNotifierProvider<ChatSocketViewModel>(
+          create: (_) => ChatSocketViewModel(),
         ),
       ],
       child: LayoutBuilder(builder: (context, constraints) {
