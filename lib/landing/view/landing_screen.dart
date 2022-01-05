@@ -2,26 +2,30 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/service/landing_service.dart';
 import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+import 'package:provider/provider.dart';
+
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../authentication/view/login_screen.dart';
 import '../../colors/fhb_colors.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonDialogBox.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
@@ -29,8 +33,6 @@ import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart' as variable;
-import 'landing_arguments.dart';
-import '../view_model/landing_view_model.dart';
 import '../../reminders/QurPlanReminders.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
 import '../../src/model/user/MyProfileModel.dart';
@@ -38,18 +40,15 @@ import '../../src/resources/repository/health/HealthReportListForUserRepository.
 import '../../src/ui/MyRecord.dart';
 import '../../src/ui/MyRecordsArguments.dart';
 import '../../src/ui/bot/SuperMaya.dart';
-import '../../src/ui/bot/common/botutils.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/appointments/view/appointmentsMain.dart';
 import '../../telehealth/features/chat/view/BadgeIcon.dart';
 import '../../telehealth/features/chat/view/home.dart';
-import '../../video_call/model/NotificationModel.dart';
-import 'package:provider/provider.dart';
-
+import '../view_model/landing_view_model.dart';
+import 'landing_arguments.dart';
 import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
 
 class LandingScreen extends StatefulWidget {
   static _LandingScreenState of(BuildContext context) =>
@@ -85,13 +84,18 @@ class _LandingScreenState extends State<LandingScreen> {
   bool pulseOximeter = true;
   bool thermoMeter = true;
   bool weighScale = true;
+  var userId;
 
   @override
   void initState() {
     super.initState();
     mInitialTime = DateTime.now();
     dbInitialize();
+
+    userId = PreferenceUtil.getStringValue(KEY_USERID);
+
     QurPlanReminders.getTheRemindersFromAPI();
+    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
 
     var profilebanner =
@@ -111,13 +115,50 @@ class _LandingScreenState extends State<LandingScreen> {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
     }
-    Provider.of<LandingViewModel>(context, listen: false)
-        .checkIfUserIdSame();
+    Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
 
     Future.delayed(Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
           changeTabToAppointments();
+        }
+      }
+    });
+
+    initSocket();
+  }
+
+  void initSocket() {
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .emitWithAck(getChatsList, {
+      'userId': userId,
+      'isCaregiverFilter': false,
+      'careGiverList': []
+    }, ack: (userList) {
+      if (userList != null) {
+        UserChatListModel userChatList = UserChatListModel.fromJson(userList);
+
+        if (userChatList != null) {
+          // update Total count
+
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(userChatList);
+        }
+      }
+    });
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .on(notifyChatList, (data) {
+      if (data != null) {
+        UserChatListModel userChatList = UserChatListModel.fromJson(data);
+
+        if (userChatList != null) {
+          print('notifyChatListCount123 : $userChatList');
+
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(userChatList);
         }
       }
     });
@@ -302,10 +343,10 @@ class _LandingScreenState extends State<LandingScreen> {
                                     checkIfUserIdSame();
                                     landingViewModel.getQurPlanDashBoard(
                                         needNotify: true);
-                                    landingViewModel.checkIfUserIdSame(
-                                        ).then((value){
-                                      isUserMainId=value;
-
+                                    landingViewModel
+                                        .checkIfUserIdSame()
+                                        .then((value) {
+                                      isUserMainId = value;
                                     });
                                     setState(() {});
                                     (context as Element).markNeedsBuild();
@@ -387,7 +428,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon: getChatIcon(),
+                    icon: getChatSocketIcon(),
                     title: Text(
                       variable.strChat,
                       style: TextStyle(
@@ -504,7 +545,7 @@ class _LandingScreenState extends State<LandingScreen> {
     Widget landingTab;
     switch (landingViewModel.currentTabIndex) {
       case 1:
-        landingTab = ChatHomeScreen(
+        landingTab = ChatUserList(
           isHome: true,
           onBackPressed: onBackPressed,
         );
@@ -586,6 +627,21 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
+  Widget getChatSocketIcon() {
+    return BadgeIcon(
+      icon: GestureDetector(
+        child: ImageIcon(
+          const AssetImage(variable.icon_chat),
+          color: landingViewModel.currentTabIndex == 1
+              ? Color(CommonUtil().getMyPrimaryColor())
+              : Colors.black54,
+        ),
+      ),
+      badgeColor: ColorUtils.countColor,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context)?.chatTotalCount,
+    );
+  }
+
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     final userIdMain =
@@ -598,9 +654,11 @@ class _LandingScreenState extends State<LandingScreen> {
       await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
     if (userId != null && userId.isNotEmpty) {
-      MyProfileModel value =
-          await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
-      myProfile = value;
+      try {
+        MyProfileModel value =
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+        myProfile = value;
+      } catch (e) {}
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
@@ -779,20 +837,17 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
   }
 
-  void checkIfUserIdSame()async {
+  void checkIfUserIdSame() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     final userIdMain =
-    await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
 
-
-    setState((){
+    setState(() {
       if (userId != userIdMain) {
         isUserMainId = false;
-      }else{
+      } else {
         isUserMainId = true;
-
       }
     });
-
   }
 }

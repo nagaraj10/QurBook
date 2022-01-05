@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -70,6 +71,7 @@ class _MyControllersState extends State<MyControllers> {
       Provider.of<VideoIconProvider>(Get.context, listen: false);
   final videoRequestStatus =
       Provider.of<VideoRequestProvider>(Get.context, listen: false);
+
   //final myDB = Firestore.instance;
 
   @override
@@ -264,7 +266,7 @@ class _MyControllersState extends State<MyControllers> {
                 padding: const EdgeInsets.all(8.0),
                 child: IconButton(
                   onPressed: () {
-                    chatViewModel.storePatientDetailsToFCM(
+                    /* chatViewModel.storePatientDetailsToFCM(
                         widget.doctorId,
                         widget.doctorName,
                         widget.doctorPicUrl,
@@ -272,7 +274,19 @@ class _MyControllersState extends State<MyControllers> {
                         widget.patientName,
                         widget.patientPicUrl,
                         context,
-                        true);
+                        true);*/
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatDetail(
+                                peerId: widget.doctorId,
+                                peerAvatar: widget.doctorPicUrl,
+                                peerName: widget.doctorName,
+                                patientId: widget.patientId,
+                                patientName: widget.patientName,
+                                patientPicture: widget.patientPicUrl,
+                                isFromVideoCall: true,
+                                isCareGiver: false)));
                   },
                   icon: Image.asset('assets/icons/ic_chat.png'),
                   //iconSize: 33,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/bottomnavigation_item.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -83,7 +84,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
         mTabIndex: widget.arguments.thTabIndex,
       ),
       SuperMaya(),
-      ChatHomeScreen(),
+      //ChatHomeScreen(),
+      ChatUserList(),
       MyRecords(
         argument: MyRecordsArgument(),
       ),

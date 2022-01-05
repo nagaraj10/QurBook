@@ -1153,12 +1153,11 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getMetaIdURL(
-      List<String> recordIds, String patientId) async {
+  Future<dynamic> getMetaIdURL(List<String> recordIds, String patientId) async {
     final inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDMETAIDS] = recordIds;
-  //  final jsonString = json.encode(inputBody);
+    //  final jsonString = json.encode(inputBody);
     var jsonString = convert.jsonEncode(inputBody);
     print(jsonString);
     var response = await getApiForGetMetaURL(jsonString);
@@ -1167,10 +1166,10 @@ class ApiBaseHelper {
 
   Future<dynamic> getApiForGetMetaURL(String jsonBody) async {
     var responseJson;
-    String jsonBodyNew=jsonBody.replaceAll("'\n'", "");
+    String jsonBodyNew = jsonBody.replaceAll("'\n'", "");
     try {
       var response = await ApiServices.post(
-          _baseUrl + qr_health_record +  qr_filter,
+          _baseUrl + qr_health_record + qr_filter,
           headers: await headerRequest.getRequestHeader(),
           body: jsonBodyNew);
       responseJson = _returnResponse(response);
@@ -1343,7 +1342,7 @@ class ApiBaseHelper {
         'metadata': payload,
         'userId': id,
         'isBookmarked': false,
-        'isClaimRecord':true ,
+        'isClaimRecord': true,
       });
 
       for (final image in imagePaths) {
@@ -1392,6 +1391,7 @@ class ApiBaseHelper {
       return response;
     }
   }
+
   Future<bool> uploadLogData(String logPath, String fileName) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final value = await MultipartFile.fromFile(logPath, filename: fileName);
@@ -2274,6 +2274,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   Future<dynamic> getClaimList(String url) async {
     print(await headerRequest.getAuths());
     var headers = headerRequest.getAuths();
@@ -2304,6 +2305,98 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> uploadChatDocument(String url, String image, String userId,
+      String peerId, String groupId) async {
+    var authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    final dio = Dio();
+
+    dio.options.headers['content-type'] = 'multipart/form-data';
+
+    dio.options.headers['authorization'] = authToken;
+
+    dio.options.headers['accept'] = 'application/json';
+
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
+
+    FormData formData;
+
+    var mapSub = Map<String, dynamic>();
+
+    mapSub["id"] = groupId;
+
+    mapSub["idTo"] = peerId;
+
+    mapSub["idFrom"] = userId;
+
+    var params = json.encode(mapSub);
+
+    formData = FormData.fromMap({'data': params.toString()});
+
+    final fileName = File(image);
+
+    final fileNoun = fileName.path.split('/').last;
+
+    formData.files.addAll([
+      MapEntry('fileName',
+          await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+    ]);
+
+    var response;
+
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+
+        return response?.data;
+      } else {
+        return response?.data;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+
+      print(e);
+
+      return response?.data;
+    } catch (f) {
+      print(f.toString());
+    }
+  }
+
+  Future<dynamic> getChatHistory(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> initNewChat(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
 
 /*
   Future<dynamic> getMemberShipDetails(String url) async {

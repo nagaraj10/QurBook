@@ -150,3 +150,5 @@ const String strDoctorCancellationCharges='doctorCancellationCharge';
 const String strFinalRefundAmount='finalRefundAmount';
 const String strOFFMODE='OFFMOD';
 
+const String strChatListId='chatListId';
+

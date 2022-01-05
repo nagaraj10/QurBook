@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -86,6 +89,10 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     //setReminder();
     CommonUtil().ListenForTokenUpdate();
+
+    Provider.of<ChatSocketViewModel>(Get.context)
+        ?.initSocket();
+
   }
 
   void setReminder() {
@@ -191,7 +198,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       if (widget.bundle != null && widget.bundle != '') {
                         var chatParsedData = widget.bundle?.split('|');
-                        Get.to(Chat(
+                        Get.to(ChatDetail(
                           peerId: chatParsedData[0],
                           peerName: chatParsedData[1],
                           peerAvatar: chatParsedData[2],
@@ -204,7 +211,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         )).then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       } else {
-                        Get.to(ChatHomeScreen()).then((value) =>
+                        Get.to(ChatUserList()).then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
