@@ -36,7 +36,7 @@ class _ClaimListState extends State<ClaimList> {
   String memberShipType = "",
       memberShipEndDate = "",
       ClaimAmount = "",
-      memberShipId = "";
+      memberShipId = "",memberShipName="";
 
   List<CategoryResult> categoryDataList = new List();
   CategoryResponseListRepository _categoryResponseListRepository;
@@ -59,7 +59,7 @@ class _ClaimListState extends State<ClaimList> {
     return Scaffold(
         extendBodyBehindAppBar: true,
         appBar: PreferredSize(
-            preferredSize: Size.fromHeight(1.sh * 0.12), child: getAppBar()),
+            preferredSize: Size.fromHeight(1.sh * 0.16), child: getAppBar()),
         body: Container(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -128,7 +128,7 @@ class _ClaimListState extends State<ClaimList> {
 
   getAppBar() {
     return PreferredSize(
-        preferredSize: Size.fromHeight(280.0), // here the desired height
+        preferredSize: Size.fromHeight(350.0), // here the desired height
         child: AppBar(
             elevation: 0,
             automaticallyImplyLeading: false,
@@ -209,14 +209,14 @@ class _ClaimListState extends State<ClaimList> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Membership Type : " + memberShipType,
+          "Membership Type : " + memberShipType+ " ( "+memberShipName+" )",
           style: TextStyle(
               fontFamily: variable.font_poppins,
               fontSize: 14.0.sp,
               color: Colors.white),
         ),
         Text(
-          'Membership End Date :' + memberShipEndDate,
+          'Membership End Date : ' + memberShipEndDate,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
@@ -249,6 +249,7 @@ class _ClaimListState extends State<ClaimList> {
               snapshot?.data?.result != null) {
             if (snapshot.data.isSuccess) {
               memberShipType = snapshot.data.result[0].planName;
+              memberShipName = snapshot.data.result[0].healthOrganizationName;
               memberShipEndDate = snapshot.data.result[0].planEndDate;
               memberShipId = snapshot.data.result[0].id;
               PreferenceUtil.save(Constants.keyMembeShipID, memberShipId);
@@ -299,7 +300,7 @@ class _ClaimListState extends State<ClaimList> {
 
   getClaimAmount() {
     return Text(
-      "Clain Amount Balance : " + ClaimAmount,
+      "Claim Amount Balance : " + ClaimAmount,
       style: TextStyle(
           fontFamily: variable.font_poppins,
           fontSize: 16.0.sp,
@@ -535,12 +536,14 @@ class _ClaimListState extends State<ClaimList> {
   getColorBasedOnSatus(String status) {
 
     switch (status) {
-      case "Claim initiated":
+      case "Submitted":
         return Colors.amber;
       case "Claim rejected":
         return Colors.red;
       case "Claim accepted":
         return Colors.green;
+      default:
+        return Color(new CommonUtil().getMyPrimaryColor());
     }
   }
 }

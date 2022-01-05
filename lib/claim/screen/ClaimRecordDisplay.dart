@@ -276,7 +276,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   void initializeData() {
     billName = widget.claimResult[widget.index]?.documentMetadata[0].billName;
     claimNo = widget.claimResult[widget.index]?.claimNumber;
-    amount = widget.claimResult[widget.index]?.documentMetadata[0].claimAmount;
+    amount =variable.strRs+". "+widget.claimResult[widget.index]?.documentMetadata[0].claimAmount;
     final df = new DateFormat('dd-MMM-yyyy');
 
     submittedDate = df.format(DateTime.parse(widget.claimResult[widget.index]?.createdOn));
