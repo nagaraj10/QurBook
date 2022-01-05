@@ -151,6 +151,14 @@ class FHBBasicWidget {
         color: Colors.grey[600]);
   }
 
+  String currency(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    var format = NumberFormat.simpleCurrency(locale: locale.toString());
+    print("CURRENCY SYMBOL ${format.currencySymbol}"); // $
+    print("CURRENCY NAME ${format.currencyName}");
+    return format.currencySymbol;// USD
+  }
+
   Widget getTextFieldWithNoCallbacksForMemo(
       BuildContext context, TextEditingController searchController) {
     return Container(
