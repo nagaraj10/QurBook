@@ -208,6 +208,21 @@ class PreferenceUtil {
     return instance.getBool(Constants.KEY_CORP_USER_MESSAGE);
   }
 
+  static Future<bool> saveActiveMembershipStatus(bool membershipStatus) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_IS_Active_Membership,
+      membershipStatus,
+    );
+  }
+
+  static Future<bool> getActiveMembershipStatus() async {
+    final instance = await _prefs;
+    return instance.getBool(
+      Constants.KEY_IS_Active_Membership,
+    );
+  }
+
   static Future<DoctorIds> getPreferedDoctor(String keyPreferredDoctor) async {
     if (_prefsInstance == null) {}
     return DoctorIds.fromJson(

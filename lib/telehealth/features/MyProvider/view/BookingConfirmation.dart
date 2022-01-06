@@ -754,30 +754,32 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ),
               isFollowUp()
                   ? SizedBox.shrink()
-                  : getCSRCheckBox(
-                      widget.isFromHospital
-                          ? getFeesFromHospital(
-                              widget.resultFromHospitalList[
-                                  widget.doctorListIndex],
-                              true,
-                            )
-                          : getFees(
-                              widget.healthOrganizationResult[widget.i],
-                              true,
-                            ),
-                      commonWidgets.getMoneyWithForamt(
-                        widget.isFromHospital
-                            ? getFeesFromHospital(
-                                widget.resultFromHospitalList[
-                                    widget.doctorListIndex],
-                                false,
-                              )
-                            : getFees(
-                                widget.healthOrganizationResult[widget.i],
-                                false,
-                              ),
-                      ),
-                    ),
+                  : isMembershipDiscount
+                      ? SizedBox.shrink()
+                      : getCSRCheckBox(
+                          widget.isFromHospital
+                              ? getFeesFromHospital(
+                                  widget.resultFromHospitalList[
+                                      widget.doctorListIndex],
+                                  true,
+                                )
+                              : getFees(
+                                  widget.healthOrganizationResult[widget.i],
+                                  true,
+                                ),
+                          commonWidgets.getMoneyWithForamt(
+                            widget.isFromHospital
+                                ? getFeesFromHospital(
+                                    widget.resultFromHospitalList[
+                                        widget.doctorListIndex],
+                                    false,
+                                  )
+                                : getFees(
+                                    widget.healthOrganizationResult[widget.i],
+                                    false,
+                                  ),
+                          ),
+                        ),
               SizedBoxWidget(height: 15.0),
               isMembershipDiscount
                   ? Column(
@@ -800,7 +802,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   ),
                 ),
               ),
-              SizedBoxWidget(height: 20.0),
+              SizedBoxWidget(
+                height: 20.0,
+              ),
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: Row(
@@ -1724,7 +1728,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Center(
               child: CheckboxListTile(
                 title: Text(
-                  "Qurhealth Discount (" + MembershipDiscountPercent + '%)',
+                  "Membership Discount (" + MembershipDiscountPercent + '%)',
                   style: TextStyle(color: Colors.grey),
                 ),
                 value: true,
@@ -1743,6 +1747,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     String originalFees;
     String discountPercent;
     String discount;
+    bool isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
+    if (!(isActiveMember ?? false)) return;
     if (widget.isFromHospital) {
       ResultFromHospital result =
           widget.resultFromHospitalList[widget.doctorListIndex];
@@ -1800,7 +1806,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
       if ((discount ?? '').isNotEmpty) {
         MembershipDiscountPercent = discountPercent;
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         final val = await Get.dialog(
           AlertDialog(
             content: Column(
@@ -1834,7 +1840,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         );
         setState(
           () {
-            isMembershipDiscount = true;
+            isMembershipDiscount = isActiveMember ?? false;
             INR_Price = discount;
             if (INR_Price == '0' || INR_Price == '0.00') {
               btnLabelChange = bookNow;
