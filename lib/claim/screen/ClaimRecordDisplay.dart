@@ -235,41 +235,49 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       color: Colors.black87,
       child: Padding(
           padding: EdgeInsets.all(10),
-          child: Expanded(
-              flex: 1,
-              child: CarouselSlider(
-                carouselController: carouselSlider,
-                options: CarouselOptions(
-                  height: 1.sh,
-                  initialPage: 0,
-                  enlargeCenterPage: true,
-                  reverse: false,
-                  enableInfiniteScroll: false,
-                  // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (index, carouselPageChangedReason) {
-                    setState(() {
-                      _current = index;
-                    });
+          child: Column(children: [Expanded(
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              items: imagesPath.map((imgUrl) {
+                return Builder(
+                  builder: (context) {
+                    return Container(
+                        height: double.infinity,
+                        child: Image.network(
+                          imgUrl.healthRecordUrl,
+                          height: 200.0.h,
+                          width: 200.0.h,
+                          headers: {
+                            HttpHeaders.authorizationHeader: authToken
+                          },
+                        ));
+                    /*Container(
+                                height: double.infinity,
+                                child: Image.memory(
+                                  Uint8List.fromList(imgUrl),
+                                  fit: BoxFit.fill,
+                                ),
+                              );*/
                   },
-                ),
-                items: imagesPath.map((imgUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          height: double.infinity,
-                          child: Image.network(
-                            imgUrl.healthRecordUrl,
-                            height: 200.0.h,
-                            width: 200.0.h,
-                            headers: {
-                              HttpHeaders.authorizationHeader: authToken
-                            },
-                          ));
-                    },
-                  );
-                }).toList(),
-              ))),
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 400.0.h,
+                //width: 1.sw,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
+            ),
+          )],)),
     );
   }
 
