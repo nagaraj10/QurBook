@@ -205,11 +205,12 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   getMemberTypeAndEndDate() {
+    String memberShipValue=(memberShipType!=null && memberShipType!="")?(memberShipType+ " ( "+memberShipName+" )"):" ";
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Membership Type : " + memberShipType+ " ( "+memberShipName+" )",
+          'Membership Type : '+memberShipValue,
           style: TextStyle(
               fontFamily: variable.font_poppins,
               fontSize: 14.0.sp,
@@ -299,8 +300,9 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   getClaimAmount() {
+    String claimAmountValue=(ClaimAmount!=null && ClaimAmount!="")?'\u{20B9} '+ClaimAmount:"";
     return Text(
-      "Claim Amount Balance : " + ClaimAmount,
+      "Claim Amount Balance : " +claimAmountValue,
       style: TextStyle(
           fontFamily: variable.font_poppins,
           fontSize: 16.0.sp,
