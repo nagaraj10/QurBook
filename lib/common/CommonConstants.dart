@@ -298,7 +298,8 @@ class CommonConstants {
   static String strClaimType = 'Claim Type *';
   static String strBillDate = 'Bill Date *';
   static String strClaimAmt = 'Claim Amount';
-  static String strFamilyMember = 'FamilyMember';
+  static String strClaimAmtWithStar = 'Claim Amount *';
+  static String strFamilyMember = 'Family Member *';
 
 
   factory CommonConstants() => _instance;

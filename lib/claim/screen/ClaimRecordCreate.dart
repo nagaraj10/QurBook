@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
@@ -129,160 +130,174 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color(fhbColors.bgColorContainer),
-        key: scaffold_state,
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          title: AutoSizeText(
-            "My Claim",
-            maxLines: 1,
-            maxFontSize: 16,
-          ),
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                size: 24.0.sp,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              }),
+      backgroundColor: const Color(fhbColors.bgColorContainer),
+      key: scaffold_state,
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        title: AutoSizeText(
+          "My Claim",
+          maxLines: 1,
+          maxFontSize: 16,
         ),
-        body: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[
-            ListView(
-              children: <Widget>[
-                Container(
-                    constraints: BoxConstraints(
-                      maxHeight: 300.0.h,
-                    ),
-                    color: Colors.black87,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                            flex: 4,
-                            child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: getCarousalImage(widget.imagePath))),
-                        Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Visibility(child: IconButton(
-                                  onPressed: () {
-                                    if (widget.imagePath.isNotEmpty) {
-
-                                    }
-                                  },
-                                  icon: Icon(
-                                    Icons.fullscreen,
-                                    color: Colors.white,
-                                    size: 24.0.sp,
-                                  ),
-                                ),visible: false,),
-                                Text(
-                                  '$index /$length',
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      ],
-                    )),
-                Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Builder(
-                    builder: (contxt) {
-                      return Container(
-                        child: Text(""),
-                      );
-                    },
-                  ),
-                ),
-                fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strBillName),
-                fhbBasicWidget.getTextFieldWithNoCallbacksClaim(
-                    context, fileName,
-                    isFileField: true),
-
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strClaimType),
-                Padding(
-                  child: getClaimType(),
-                  padding:
-                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                ),
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strBillDate),
-                _showDateOfVisit(context, billDate),
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strClaimAmt),
-                TextField(
-                  enabled: true,
-                  cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-                  controller: claimAmount,
-                  enableInteractiveSelection: false,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.0.sp,
-                      color: ColorUtils.blackcolor),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 20.0),
-                    hintText: CommonConstants.strClaimAmt,
-                    counterText: '',
-                    labelStyle: TextStyle(
-                        fontSize: 15.0.sp,
-                        fontWeight: FontWeight.w400,
-                        color: ColorUtils.myFamilyGreyColor),
-                    hintStyle: TextStyle(
-                      fontSize: 16.0.sp,
-                      color: ColorUtils.myFamilyGreyColor,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialogClaim(
-                    context, CommonConstants.strFamilyMember),
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                getDropdown(),
-                //Padding(child:_familyNames!=null && _familyNames.length>0?dropDownButton(_familyNames):getDropdown(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
-
-                SizedBox(
-                  height: 10.0.h,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _showClaimButton(),
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0.h,
-                ),
-              ],
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 24.0.sp,
             ),
-          ],
-        ));
+            onPressed: () {
+              Navigator.of(context).pop();
+            }),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Container(
+              constraints: BoxConstraints(
+                maxHeight: 300.0.h,
+              ),
+              color: Colors.black87,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      flex: 4,
+                      child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: getCarousalImage(widget.imagePath))),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20, right: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Visibility(
+                            child: IconButton(
+                              onPressed: () {
+                                if (widget.imagePath.isNotEmpty) {}
+                              },
+                              icon: Icon(
+                                Icons.fullscreen,
+                                color: Colors.white,
+                                size: 24.0.sp,
+                              ),
+                            ),
+                            visible: false,
+                          ),
+                          Text(
+                            '$index /$length',
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              )),
+          Padding(
+            padding: EdgeInsets.all(5),
+            child: Builder(
+              builder: (contxt) {
+                return Container(
+                  child: Text(""),
+                );
+              },
+            ),
+          ),
+          fhbBasicWidget.getTextForAlertDialogClaim(
+              context, CommonConstants.strBillName),
+          fhbBasicWidget.getTextFieldWithNoCallbacksClaim(context, fileName,
+              isFileField: true),
+
+          SizedBox(
+            height: 10.0.h,
+          ),
+          fhbBasicWidget.getTextForAlertDialogClaim(
+              context, CommonConstants.strClaimType),
+          SizedBox(
+            height: 10.0.h,
+          ),
+          getClaimType(),
+
+          SizedBox(
+            height: 10.0.h,
+          ),
+          fhbBasicWidget.getTextForAlertDialogClaim(
+              context, CommonConstants.strBillDate),
+          _showDateOfVisit(context, billDate),
+          SizedBox(
+            height: 15.0.h,
+          ),
+          fhbBasicWidget.getTextForAlertDialogClaim(
+              context, CommonConstants.strClaimAmt + " (\u{20B9}) *"),
+
+          TextField(
+            enabled: true,
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            controller: claimAmount,
+            enableInteractiveSelection: false,
+            keyboardType: TextInputType.number,
+            textInputAction: TextInputAction.done,
+            inputFormatters: [WhitelistingTextInputFormatter.digitsOnly],
+            style: fhbBasicWidget.getTextStyleForValue(),
+            decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              contentPadding: EdgeInsets.only(left: 20.0),
+              counterText: '',
+              labelStyle: TextStyle(
+                  fontSize: 15.0.sp,
+                  fontWeight: FontWeight.w400,
+                  color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 16.0.sp,
+                color: ColorUtils.myFamilyGreyColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 15.0.h,
+          ),
+          fhbBasicWidget.getTextForAlertDialogClaim(
+              context, CommonConstants.strFamilyMember),
+          SizedBox(
+            height: 15.0.h,
+          ),
+
+          (familyData != null &&
+              familyData.result?.sharedByUsers != null &&
+              familyData.result?.sharedByUsers.length > 0)
+              ? FittedBox(
+              fit: BoxFit.cover,
+              child: Row(
+                children: [
+                  dropDownButton(familyData.result?.sharedByUsers)
+                ],
+              ))
+              : FittedBox(
+              fit: BoxFit.cover,
+              child: Row(
+                children: [getDropdown()],
+              )),
+          //Padding(child:_familyNames!=null && _familyNames.length>0?dropDownButton(_familyNames):getDropdown(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
+
+          SizedBox(
+            height: 10.0.h,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              _showClaimButton(),
+            ],
+          ),
+          SizedBox(
+            height: 20.0.h,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getCarousalImage(List<String> imagesPath) {
@@ -443,7 +458,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         ),
         child: Center(
           child: Text(
-            'Add Claim',
+            'Save',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
@@ -541,15 +556,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       }
     }
 
-    return SizedBoxWithChild(
-      height: 30,
-      width: double.infinity,
+    /* return Container(
+      width: 1.sw - 40,
       child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(
-              color: Colors.grey, style: BorderStyle.solid, width: 0.80),
-        ),
         child: DropdownButton<SharedByUsers>(
           value: selectedUser,
           underline: SizedBox(),
@@ -565,24 +574,24 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           ),
           items: _familyNames
               .map((SharedByUsers user) => DropdownMenuItem(
-            child: Row(
-              children: <Widget>[
-                SizedBoxWidget(width: 20),
-                Text(
-                    user.child == null
-                        ? 'Self'
-                        : ((user?.child?.firstName ?? '') +
-                        ' ' +
-                        (user?.child?.lastName ?? ''))
-                        ?.capitalizeFirstofEach ??
-                        '',
-                    style: TextStyle(
-                      fontSize: 14.0.sp,
-                    )),
-              ],
-            ),
-            value: user,
-          ))
+                    child: Row(
+                      children: <Widget>[
+                        SizedBoxWidget(width: 20),
+                        Text(
+                            user.child == null
+                                ? 'Self'
+                                : ((user?.child?.firstName ?? '') +
+                                            ' ' +
+                                            (user?.child?.lastName ?? ''))
+                                        ?.capitalizeFirstofEach ??
+                                    '',
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                            )),
+                      ],
+                    ),
+                    value: user,
+                  ))
               .toList(),
           onChanged: (SharedByUsers user) {
             isFamilyChanged = true;
@@ -598,13 +607,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           },
         ),
       ),
-    );
-  }
-
-  _showClaimAmountWidget() {
-    return Column(
-      children: [Text("Claim Amouunt")],
-    );
+    );*/
+    return getFamilyDropDown();
   }
 
   Widget _showDateOfVisit(
@@ -615,6 +619,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       },
       child: Container(
           child: TextField(
+            style: fhbBasicWidget.getTextStyleForValue(),
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfVisit,
             readOnly: true,
@@ -624,7 +629,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               dateOfBirthFocus.unfocus();
             },
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(20.0),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
               suffixIcon: IconButton(
                 icon: Icon(Icons.calendar_today),
                 onPressed: () {
@@ -680,29 +691,30 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(variable.strAPP_NAME),
-            content: Text(validationMsg),
+              title: Text(variable.strAPP_NAME),
+              content: Text(validationMsg),
               actions: <Widget>[
-          Row(
-          mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              //mainAxisAlignment: MainAxisAlignment.center,
-              //crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child:  Center(child:TextButton(
-                      child: const Text('Ok',style: TextStyle(color: Colors.white),),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )),
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-
-
-                ),
-
-              ]
-          )]));
+                Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        child: Center(
+                            child: TextButton(
+                              child: const Text(
+                                'Ok',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            )),
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                      ),
+                    ])
+              ]));
     }
   }
 
@@ -793,31 +805,87 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
   Widget getClaimType() {
     return Container(
-      width: 1.sw - 40,
       child: DropdownButton<String>(
         isExpanded: true,
-        hint: Text(
-          CommonConstants.genderWithStar,
-          style: TextStyle(
-            fontSize: 16.0.sp,
+        hint: Padding(
+          child: Text(
+            CommonConstants.strClaimType,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
           ),
+          padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
         ),
         value: selectedClaimType != null
             ? toBeginningOfSentenceCase(selectedClaimType.toLowerCase())
             : "",
         items: variable.claimType.map((eachGender) {
           return DropdownMenuItem(
-            child: Text(eachGender,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0.sp,
-                    color: ColorUtils.blackcolor)),
+            child: Padding(
+              child: Text(
+                eachGender,
+                style: fhbBasicWidget.getTextStyleForValue(),
+              ),
+              padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+            ),
             value: eachGender,
           );
         }).toList(),
         onChanged: (newSelectedValue) {
           setState(() {
             selectedClaimType = newSelectedValue;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget getFamilyDropDown() {
+    return Container(
+      width: 1.sw - 40,
+      child: DropdownButton<SharedByUsers>(
+        isExpanded: true,
+        value: selectedUser,
+        hint: Row(
+          children: <Widget>[
+            Padding(
+                child: Text(parameters.self,
+                    style: fhbBasicWidget.getTextStyleForValue()),
+                padding: EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+          ],
+        ),
+        items: _familyNames
+            .map((SharedByUsers user) => DropdownMenuItem(
+          child: Row(
+            children: <Widget>[
+              Padding(
+                  child: Text(
+                      user.child == null
+                          ? 'Self'
+                          : ((user?.child?.firstName ?? '') +
+                          ' ' +
+                          (user?.child?.lastName ?? ''))
+                          ?.capitalizeFirstofEach ??
+                          '',
+                      style: fhbBasicWidget.getTextStyleForValue()),
+                  padding:
+                  EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+            ],
+          ),
+          value: user,
+        ))
+            .toList(),
+        onChanged: (SharedByUsers user) {
+          isFamilyChanged = true;
+          setState(() {
+            selectedUser = user;
+            if (user.child != null) {
+              if (user.child.id != null) {
+                selectedId = user.child.id;
+              }
+            } else {
+              selectedId = createdBy;
+            }
           });
         },
       ),

@@ -102,18 +102,18 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                     ),
                     color: Colors.black87,
                     child: (getRecordIdsFilter != null &&
-                            getRecordIdsFilter.result != null &&
-                            getRecordIdsFilter.result.length > 0 &&
-                            getRecordIdsFilter
-                                    .result[0].healthRecordCollection !=
-                                null &&
-                            getRecordIdsFilter
-                                    .result[0].healthRecordCollection.length >
-                                0)
+                        getRecordIdsFilter.result != null &&
+                        getRecordIdsFilter.result.length > 0 &&
+                        getRecordIdsFilter
+                            .result[0].healthRecordCollection !=
+                            null &&
+                        getRecordIdsFilter
+                            .result[0].healthRecordCollection.length >
+                            0)
                         ? getWidgetForImages(
-                            getRecordIdsFilter.result[0].healthRecordCollection)
+                        getRecordIdsFilter.result[0].healthRecordCollection)
                         : getImageFromMetaId(widget.claimResult[widget.index]
-                            ?.documentMetadata[0]?.healthRecordId)),
+                        ?.documentMetadata[0]?.healthRecordId)),
                 Padding(
                   padding: EdgeInsets.all(5),
                   child: Builder(
@@ -188,9 +188,9 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                             flex:1,
                             child:  Text("Plan",style:getTextStyleForTags())),
                         Text(":"),
-                    Expanded(
-                      flex:2,
-                      child:  Text("   "+plan??"",style:getTextStyleForValue()))
+                        Expanded(
+                            flex:2,
+                            child:  Text("   "+plan??"",style:getTextStyleForValue()))
                       ],
                     )),
                 getDivider(),
@@ -202,9 +202,9 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                             flex:1,
                             child: Text("Family Member",style:getTextStyleForTags())),
                         Text(":"),
-                    Expanded(
-                      flex:2,
-                      child:  Text("   "+familyMember??"",style:getTextStyleForValue()),)
+                        Expanded(
+                          flex:2,
+                          child:  Text("   "+familyMember??"",style:getTextStyleForValue()),)
                       ],
                     )),
                 getDivider(),
@@ -216,9 +216,9 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                             flex:1,
                             child: Text("Status",style:getTextStyleForTags())),
                         Text(":"),
-                    Expanded(
-                      flex:2,
-                      child:  Text("   "+status??"",style:getTextStyleForValue()))
+                        Expanded(
+                            flex:2,
+                            child:  Text("   "+status??"",style:getTextStyleForValue()))
                       ],
                     )),
               ],
@@ -235,48 +235,56 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       color: Colors.black87,
       child: Padding(
           padding: EdgeInsets.all(10),
-          child: Expanded(
-              flex: 1,
-              child: CarouselSlider(
-                carouselController: carouselSlider,
-                options: CarouselOptions(
-                  height: 1.sh,
-                  initialPage: 0,
-                  enlargeCenterPage: true,
-                  reverse: false,
-                  enableInfiniteScroll: false,
-                  // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (index, carouselPageChangedReason) {
-                    setState(() {
-                      _current = index;
-                    });
+          child: Column(children: [Expanded(
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              items: imagesPath.map((imgUrl) {
+                return Builder(
+                  builder: (context) {
+                    return Container(
+                        height: double.infinity,
+                        child: Image.network(
+                          imgUrl.healthRecordUrl,
+                          height: 200.0.h,
+                          width: 200.0.h,
+                          headers: {
+                            HttpHeaders.authorizationHeader: authToken
+                          },
+                        ));
+                    /*Container(
+                                height: double.infinity,
+                                child: Image.memory(
+                                  Uint8List.fromList(imgUrl),
+                                  fit: BoxFit.fill,
+                                ),
+                              );*/
                   },
-                ),
-                items: imagesPath.map((imgUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          height: double.infinity,
-                          child: Image.network(
-                            imgUrl.healthRecordUrl,
-                            height: 200.0.h,
-                            width: 200.0.h,
-                            headers: {
-                              HttpHeaders.authorizationHeader: authToken
-                            },
-                          ));
-                    },
-                  );
-                }).toList(),
-              ))),
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 400.0.h,
+                //width: 1.sw,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
+            ),
+          )],)),
     );
   }
 
   void initializeData() {
     billName = widget.claimResult[widget.index]?.documentMetadata[0].billName;
     claimNo = widget.claimResult[widget.index]?.claimNumber;
-    amount = widget.claimResult[widget.index]?.documentMetadata[0].claimAmount;
+    amount =variable.strRs+". "+widget.claimResult[widget.index]?.documentMetadata[0].claimAmount;
     final df = new DateFormat('dd-MMM-yyyy');
 
     submittedDate = df.format(DateTime.parse(widget.claimResult[widget.index]?.createdOn));
@@ -351,8 +359,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ImageSlider(
-                                    imageList: healthRecordCollection,
-                                  )));
+                                imageList: healthRecordCollection,
+                              )));
                     }
                   },
                   icon: Icon(
