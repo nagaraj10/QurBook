@@ -148,7 +148,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               Navigator.of(context).pop();
             }),
       ),
-      body: ListView(
+      body: SingleChildScrollView(child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
               constraints: BoxConstraints(
@@ -296,7 +297,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             height: 20.0.h,
           ),
         ],
-      ),
+      )),
     );
   }
 
@@ -556,58 +557,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       }
     }
 
-    /* return Container(
-      width: 1.sw - 40,
-      child: Container(
-        child: DropdownButton<SharedByUsers>(
-          value: selectedUser,
-          underline: SizedBox(),
-          isExpanded: true,
-          hint: Row(
-            children: <Widget>[
-              SizedBoxWidget(width: 20),
-              Text(parameters.self,
-                  style: TextStyle(
-                    fontSize: 14.0.sp,
-                  )),
-            ],
-          ),
-          items: _familyNames
-              .map((SharedByUsers user) => DropdownMenuItem(
-                    child: Row(
-                      children: <Widget>[
-                        SizedBoxWidget(width: 20),
-                        Text(
-                            user.child == null
-                                ? 'Self'
-                                : ((user?.child?.firstName ?? '') +
-                                            ' ' +
-                                            (user?.child?.lastName ?? ''))
-                                        ?.capitalizeFirstofEach ??
-                                    '',
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                            )),
-                      ],
-                    ),
-                    value: user,
-                  ))
-              .toList(),
-          onChanged: (SharedByUsers user) {
-            isFamilyChanged = true;
-            setState(() {
-              if (user.child != null) {
-                if (user.child.id != null) {
-                  selectedId = user.child.id;
-                }
-              } else {
-                selectedId = createdBy;
-              }
-            });
-          },
-        ),
-      ),
-    );*/
+
     return getFamilyDropDown();
   }
 
@@ -842,7 +792,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
   Widget getFamilyDropDown() {
     return Container(
-      width: 1.sw - 40,
+      width: 1.sw ,
       child: DropdownButton<SharedByUsers>(
         isExpanded: true,
         value: selectedUser,

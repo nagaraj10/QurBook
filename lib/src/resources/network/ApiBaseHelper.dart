@@ -2304,6 +2304,23 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getClaimListDetails(String url) async {
+    print(await headerRequest.getAuths());
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 
 /*
   Future<dynamic> getMemberShipDetails(String url) async {
