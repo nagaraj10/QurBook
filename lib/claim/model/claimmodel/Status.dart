@@ -7,7 +7,7 @@ class Status {
   bool isActive;
   String createdBy;
   String createdOn;
-  Null lastModifiedOn;
+  String lastModifiedOn;
 
   Status(
       {this.id,
@@ -21,15 +21,15 @@ class Status {
         this.lastModifiedOn});
 
   Status.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-    sortOrder = json['sortOrder'];
-    isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
+    id = json['id']!=null?json['id']:"";
+    code = json['code']!=null?json['code']:"";
+    name = json['name']!=null?json['name']:"";
+    description = json['description']!=null?json['description']:"";
+    sortOrder = json['sortOrder']!=null?json['sortOrder']:"";
+    isActive = json['isActive']!=null?json['isActive']:"";
+    createdBy = json['createdBy']!=null?json['createdBy']:"";
+    createdOn = json['createdOn']!=null?json['createdOn']:"";
+    lastModifiedOn = json['lastModifiedOn']!=null?json['lastModifiedOn']:"";
   }
 
   Map<String, dynamic> toJson() {
