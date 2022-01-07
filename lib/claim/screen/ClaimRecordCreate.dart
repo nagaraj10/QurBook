@@ -725,7 +725,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         if (claimAmount.text != "" &&
             claimAmount.text != null &&
             int.parse(claimAmount.text) > 0) {
-          if (int.parse(claimAmount.text) < int.parse(claimAmountTotal)) {
+          if (int.parse(claimAmount.text) <= int.parse(claimAmountTotal)) {
             condition = true;
           } else {
             condition = false;
