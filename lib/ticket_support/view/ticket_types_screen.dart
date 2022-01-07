@@ -131,7 +131,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 children: [
                   GridView.builder(
                     gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 2,
                         childAspectRatio: 1,
                         mainAxisSpacing: 0.5,
                         crossAxisSpacing: 0.5),
@@ -176,7 +176,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             },
             child: Container(
               height: 150.h,
-              width: MediaQuery.of(context).size.width / 3.6,
+              width: MediaQuery.of(context).size.width / 2.6,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(
                         12.0) //                 <--- border radius here
