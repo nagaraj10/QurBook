@@ -111,8 +111,7 @@ class _LandingScreenState extends State<LandingScreen> {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
     }
-    Provider.of<LandingViewModel>(context, listen: false)
-        .checkIfUserIdSame();
+    Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
 
     Future.delayed(Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
@@ -302,10 +301,10 @@ class _LandingScreenState extends State<LandingScreen> {
                                     checkIfUserIdSame();
                                     landingViewModel.getQurPlanDashBoard(
                                         needNotify: true);
-                                    landingViewModel.checkIfUserIdSame(
-                                        ).then((value){
-                                      isUserMainId=value;
-
+                                    landingViewModel
+                                        .checkIfUserIdSame()
+                                        .then((value) {
+                                      isUserMainId = value;
                                     });
                                     setState(() {});
                                     (context as Element).markNeedsBuild();
@@ -670,7 +669,7 @@ class _LandingScreenState extends State<LandingScreen> {
         DynamicLinks.processDynamicLink(deepLink);
       } catch (e) {}
     }
-    checkCpUser();
+    //checkCpUser();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -779,20 +778,17 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
   }
 
-  void checkIfUserIdSame()async {
+  void checkIfUserIdSame() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     final userIdMain =
-    await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
 
-
-    setState((){
+    setState(() {
       if (userId != userIdMain) {
         isUserMainId = false;
-      }else{
+      } else {
         isUserMainId = true;
-
       }
     });
-
   }
 }
