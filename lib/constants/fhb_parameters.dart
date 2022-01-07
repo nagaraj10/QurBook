@@ -599,6 +599,8 @@ const String make_a_choice = 'Make a Choice!';
 const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
+const String gcmClaimId = 'gcm.notification.claimId';
+
 const String gcmplanId = 'gcm.notification.planId';
 const String gcmpatientName = 'gcm.notification.patientName';
 
@@ -694,7 +696,8 @@ const String isWeb = 'isWeb';
 const String planId = 'planId';
 const String myCartDetails = 'mycartdetails';
 const String myPlanDetails = 'myplandetails';
-
+const String claimList = 'claimList';
+const String claimId = 'claimId';
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
 const String strDoctorSession = 'doctorSession';

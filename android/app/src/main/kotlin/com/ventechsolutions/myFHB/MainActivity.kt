@@ -411,6 +411,8 @@ class MainActivity : FlutterActivity() {
         templateName = intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         var redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
+        var claimId = intent.getStringExtra(Constants.PROP_CLAIM_ID)
+
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
         val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
@@ -430,7 +432,9 @@ class MainActivity : FlutterActivity() {
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
-        } else if (externalLink != null && externalLink != "") {
+        } else if(){
+
+        }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
             sharedValue = "openurl&$externalLink"
