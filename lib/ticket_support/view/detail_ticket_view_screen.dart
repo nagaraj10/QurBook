@@ -119,7 +119,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          return detailView(snapshot.data.result.ticket);
+          return SingleChildScrollView(
+              child: detailView(snapshot.data.result.ticket));
         }
       },
     );
@@ -322,6 +323,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         child: Container(
                           padding: EdgeInsets.only(left: 80.w, right: 70.w),
                           child: ListView.builder(
+                            shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
                               return new Stack(
                                 children: <Widget>[
