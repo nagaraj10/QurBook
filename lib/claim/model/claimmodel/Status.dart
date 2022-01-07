@@ -1,12 +1,12 @@
 class Status {
-  String id;
-  String code;
-  String name;
-  String description;
+  dynamic id;
+  dynamic code;
+  dynamic name;
+  dynamic description;
   int sortOrder;
   bool isActive;
-  String createdBy;
-  String createdOn;
+  dynamic createdBy;
+  dynamic createdOn;
   String lastModifiedOn;
 
   Status(

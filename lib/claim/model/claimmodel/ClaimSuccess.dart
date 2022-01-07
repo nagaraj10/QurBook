@@ -1,8 +1,8 @@
 
 class ClaimSuccess {
-  bool isSuccess;
-  String message;
-  String result;
+  dynamic isSuccess;
+  dynamic message;
+  dynamic result;
   Diagnostics diagnostics;
 
   ClaimSuccess({this.isSuccess, this.message, this.result});
@@ -35,7 +35,7 @@ class ClaimSuccess {
 }
 
 class Diagnostics {
-  String message;
+  dynamic message;
 
   Diagnostics({this.message});
 
