@@ -151,8 +151,8 @@ class HomeWidget extends StatelessWidget {
                           : null,
                       icon: variable.icon_my_health_regimen,
                       color: Color(CommonConstants.pulselightColor),
-                      onPressed: activePlanCount > 0
-                          ? () async {
+                      onPressed:/* activePlanCount > 0
+                          ?*/ () async {
                         final userId = PreferenceUtil.getStringValue(
                             constants.KEY_USERID);
                         Provider.of<RegimentViewModel>(
@@ -169,8 +169,8 @@ class HomeWidget extends StatelessWidget {
                             constants.KEY_USERID);
                         refresh(userId != newUserId);
                         await landingViewModel.getQurPlanDashBoard();
-                      }
-                          : null,
+                      },
+                        /*  : null,*/
                       // onAddPressed: () async {
                       //   var userId = PreferenceUtil.getStringValue(
                       //       constants.KEY_USERID);

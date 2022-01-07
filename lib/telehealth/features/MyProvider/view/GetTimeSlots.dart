@@ -25,7 +25,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-    as AppointmentConstant;
+as AppointmentConstant;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
@@ -58,28 +58,28 @@ class GetTimeSlots extends StatelessWidget {
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
-      AddFamilyUserInfoRepository();
+  AddFamilyUserInfoRepository();
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
-      this.docs,
-      this.docsReschedule,
-      this.j,
-      this.doctorListIndex,
-      this.selectedDate,
-      this.isReshedule,
-      this.doctorsData,
-      this.healthOrganizationResult,
-      this.resultFromHospitalList,
-      this.doctorListPos,
-      this.closePage,
-      this.isRefresh,
-      this.isFromNotification,
-      this.isFromHospital,
-      this.body,
-      this.isFromFollowReschedule,
-      this.isFromFollowUpApp,
-      this.isFromFollowUpTake});
+        this.docs,
+        this.docsReschedule,
+        this.j,
+        this.doctorListIndex,
+        this.selectedDate,
+        this.isReshedule,
+        this.doctorsData,
+        this.healthOrganizationResult,
+        this.resultFromHospitalList,
+        this.doctorListPos,
+        this.closePage,
+        this.isRefresh,
+        this.isFromNotification,
+        this.isFromHospital,
+        this.body,
+        this.isFromFollowReschedule,
+        this.isFromFollowUpApp,
+        this.isFromFollowUpTake});
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class GetTimeSlots extends StatelessWidget {
   resheduleAppoitment(BuildContext context, List<Past> appointments,
       String slotNumber, String resheduledDate, String doctorSessionId) {
     resheduleAppointment(
-            context, appointments, slotNumber, resheduledDate, doctorSessionId)
+        context, appointments, slotNumber, resheduledDate, doctorSessionId)
         .then((value) {
       if (isFromNotification == true) {
         if (body != null && body != '') {
@@ -206,18 +206,18 @@ class GetTimeSlots extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) => TelehealthProviders(
-                          arguments: HomeScreenArguments(selectedIndex: 0),
-                        )),
-                (Route<dynamic> route) => route.isFirst).then((value) {});
+                      arguments: HomeScreenArguments(selectedIndex: 0),
+                    )),
+                    (Route<dynamic> route) => route.isFirst).then((value) {});
           });
         } else {
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                   builder: (context) => TelehealthProviders(
-                        arguments: HomeScreenArguments(selectedIndex: 0),
-                      )),
-              (Route<dynamic> route) => route.isFirst).then((value) {});
+                    arguments: HomeScreenArguments(selectedIndex: 0),
+                  )),
+                  (Route<dynamic> route) => route.isFirst).then((value) {});
         }
       } else {
         if (body != null && body != '') {
@@ -257,7 +257,7 @@ class GetTimeSlots extends StatelessWidget {
       bookingIds.add(appointments[i].bookingId);
     }
     ResheduleAppointmentViewModel reshedule =
-        Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
+    Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
     ResheduleModel resheduleAppointment = await reshedule.resheduleAppointment(
         bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
@@ -291,11 +291,23 @@ class GetTimeSlots extends StatelessWidget {
                       myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0],
-                            context,
-                            rowPosition,
-                            itemPosition);
+                        if(myProfile.result.userAddressCollection3[0].addressLine1!= null &&
+                            myProfile.result.userAddressCollection3[0].addressLine1.isNotEmpty) {
+                          if(myProfile.result.userAddressCollection3[0].pincode!= null &&
+                              myProfile.result.userAddressCollection3[0].pincode.isNotEmpty) {
+                            patientAddressCheck(
+                                myProfile.result.userAddressCollection3[0],
+                                context,
+                                rowPosition,
+                                itemPosition);
+                          }else{
+                            CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
+
+                          }
+                        }else{
+                          CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
+
+                        }
                       } else {
                         //toast.getToast(noAddress, Colors.red);
                         CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');

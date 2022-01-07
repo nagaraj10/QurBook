@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/landing/service/landing_service.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -41,33 +43,33 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   bool isFromHospital;
   dynamic body;
   bool isFromFollowOrReschedule;
-
   bool isFromFollowUpApp;
   bool isFromFollowUpTake;
 
-  DoctorSessionTimeSlot(
-      {this.doctorId,
-      this.date,
-      this.docs,
-      this.docsReschedule,
-      this.i,
-      this.doctorListIndex,
-      this.isReshedule,
-      this.doctorsData,
-      this.healthOrganizationId,
-      this.healthOrganizationResult,
-      this.resultFromHospitalList,
-      this.doctorListPos,
-      this.closePage,
-      this.refresh,
-      this.isFromNotification,
-      this.onChanged,
-      this.onUserChangedDate,
-      this.isFromHospital,
-      this.body,
-      this.isFromFollowOrReschedule,
-      this.isFromFollowUpApp,
-      this.isFromFollowUpTake});
+  DoctorSessionTimeSlot({
+    this.doctorId,
+    this.date,
+    this.docs,
+    this.docsReschedule,
+    this.i,
+    this.doctorListIndex,
+    this.isReshedule,
+    this.doctorsData,
+    this.healthOrganizationId,
+    this.healthOrganizationResult,
+    this.resultFromHospitalList,
+    this.doctorListPos,
+    this.closePage,
+    this.refresh,
+    this.isFromNotification,
+    this.onChanged,
+    this.onUserChangedDate,
+    this.isFromHospital,
+    this.body,
+    this.isFromFollowOrReschedule,
+    this.isFromFollowUpApp,
+    this.isFromFollowUpTake,
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -87,17 +89,21 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     mInitialTime = DateTime.now();
     super.initState();
     getSelectedValue();
+    updateMembershipStatus();
   }
 
   @override
   void dispose() {
     super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Doctor Session Time Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    fbaLog(
+      eveName: 'qurbook_screen_event',
+      eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'Doctor Session Time Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      },
+    );
   }
 
   getSelectedValue() {
@@ -115,10 +121,19 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
       } else {
         sValue = DateTime.now();
       }
-      setState(() {
-        _selectedValue = sValue;
-      });
+      setState(
+        () {
+          _selectedValue = sValue;
+        },
+      );
     }
+  }
+
+  updateMembershipStatus() async {
+    var value = await LandingService.getMemberShipDetails();
+    PreferenceUtil.saveActiveMembershipStatus(
+      value.isSuccess ? (value.result ?? []).length > 0 : false,
+    );
   }
 
   @override

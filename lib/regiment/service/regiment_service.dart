@@ -56,10 +56,10 @@ class RegimentService {
             {
               "method": "get",
               "data":
-              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms${variable
-                  .qr_patientEqaul}$userId",
+                  "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms${variable.qr_patientEqaul}$userId",
             },
           ),
+          timeOutSeconds: 60,
         );
       }
 
@@ -72,8 +72,11 @@ class RegimentService {
         );
       }
     } catch (e) {
-      print(e);
-      throw Exception('$e was thrown');
+      print(e.toString());
+
+      return RegimentResponseModel(
+        regimentsList: [],
+      );
     }
   }
 
