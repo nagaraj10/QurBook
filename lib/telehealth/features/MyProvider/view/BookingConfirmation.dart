@@ -1783,7 +1783,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         }
       }
     }
-
+    if (widget.isFromFollowUpApp &&
+        widget.isFromFollowUpTake == false &&
+        isFollowUp()) {
+      originalFees = getFollowUpFee();
+    }
     if ((discountPercent ?? '').isNotEmpty && (originalFees ?? '').isNotEmpty) {
       if (discountPercent != '0.00' && discountPercent != '0') {
         try {
