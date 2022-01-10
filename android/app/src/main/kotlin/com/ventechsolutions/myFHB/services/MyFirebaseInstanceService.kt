@@ -40,7 +40,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        //Log.d(TAG, "From: " + remoteMessage.from)
+        Log.d(TAG, "From: " + remoteMessage.data)
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
@@ -764,9 +764,10 @@ claimDetailsNotification(data)
         val onTapNS = Intent(this, OnTapNotification::class.java)
         onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
-        onTapNS.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CLAIM_ID)
-        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
         onTapNS.putExtra(Constants.PROP_CLAIM_ID, data[Constants.PROP_CLAIM_ID])
+        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+
         val onTapPendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
                 NS_ID,

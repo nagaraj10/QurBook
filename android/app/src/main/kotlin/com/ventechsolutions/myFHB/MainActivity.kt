@@ -411,7 +411,7 @@ class MainActivity : FlutterActivity() {
         templateName = intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         var redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
-        var claimId = intent.getStringExtra(Constants.PROP_CLAIM_ID)
+        val claimId = intent.getStringExtra(Constants.PROP_CLAIM_ID)
 
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
@@ -432,8 +432,8 @@ class MainActivity : FlutterActivity() {
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
-        } else if(redirect_to==Constants.PROP_CLAIM_ID){
-            sharedValue = "$sharedValue&${claimId}&${userId}"
+        } else if(redirect_to=="claimList"){
+            sharedValue = "${redirect_to}&${claimId}&${userId}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
@@ -492,6 +492,7 @@ class MainActivity : FlutterActivity() {
             }
 
         }
+        Log.e("MainActivity","dataIntent: "+sharedValue)
         if (::mEventChannel.isInitialized) {
             mEventChannel.success(sharedValue)
         }

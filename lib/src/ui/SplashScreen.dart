@@ -500,7 +500,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
                       });
-                    } else if (widget.nsRoute == 'claimId') {
+                    } else if (widget.nsRoute == 'claimList') {
                       final userId = widget?.bundle['userId'];
                       final claimId = widget?.bundle['claimId'];
                       Get.to(

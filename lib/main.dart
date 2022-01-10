@@ -768,14 +768,14 @@ class _MyFHBState extends State<MyFHB> {
           CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
               redirect: "myplandetails");
         }
-      } else if (passedValArr[0] == 'claimId') {
+      } else if (passedValArr[0] == 'claimList') {
         final claimId = passedValArr[1];
         final userId = passedValArr[2];
         final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
         fbaLog(eveParams: {
           'eventTime': '${DateTime.now()}',
-          'ns_type': 'myplan_deatails',
-          'navigationPage': 'My Plan Details',
+          'ns_type': 'claim_Details',
+          'navigationPage': 'Claim Record Display',
         });
         Get.to(
           ClaimRecordDisplay(
