@@ -1161,6 +1161,15 @@ class _MyFHBState extends State<MyFHB> {
               'patName': '${navRoute.split('&')[4]}'
             },
           );
+        }else if (navRoute.split('&')[0] == 'claimList') {
+
+          return SplashScreen(
+            nsRoute: navRoute.split('&')[0],
+            bundle: {
+              'claimId': '${navRoute.split('&')[1]}',
+              'userId': '${navRoute.split('&')[2]}'
+            },
+          );
         } else {
           return StartTheCall();
         }
