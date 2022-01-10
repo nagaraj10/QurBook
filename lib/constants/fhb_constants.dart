@@ -23,6 +23,8 @@ const String RateUs = 'Rate us';
 const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
 const String KEY_CORP_USER_MESSAGE = 'corpusermessageshown';
+const String KEY_IS_Active_Membership = 'isactivemembership';
+
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
@@ -379,6 +381,7 @@ const String CONSULTING = 'CONSULTING';
 const String CSR_DISCOUNT = 'CSR_DISCOUNT';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
+const String HEALTH_RECORDMETAIDS = 'healthRecordMetaIds';
 const String INR = 'INR ';
 const String USD = '\$ ';
 const String FREE = 'FREE';
@@ -635,6 +638,10 @@ var ticketType = 'ticket type';
 var tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
+
+const String keyMembeShipID = 'memberShipID';
+const String keyClaimAmount = 'claimAmt';
+const String keyHealthOrganizationId = 'healthOrganizationID';
 
 double height = 0.0;
 double width = 0.0;

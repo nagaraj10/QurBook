@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
@@ -27,7 +28,6 @@ import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/model/TagsResult.dart';
-
 
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -196,6 +196,27 @@ class HealthReportListForUserRepository {
     return HealthRecordSuccess.fromJson(response.data);
   }
 
+  Future<HealthRecordSuccess> createMediaDataClaim(
+      String jsonString, List<String> imagePaths, String audioPath) async {
+    String id;
+
+    try {
+      String familyId =
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      if (familyId.length > 0) {
+        id = familyId;
+      } else {
+        id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      }
+    } catch (e) {
+      id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+
+    var response = await _helper.createMediaDataClaim(
+        query.qr_health_record, jsonString, imagePaths, audioPath, id);
+    return HealthRecordSuccess.fromJson(response.data);
+  }
+
   Future<HealthRecordSuccess> updateHealthRecords(String jsonString,
       List<String> imagePaths, String audioPath, String metaId) async {
     String id;
@@ -257,21 +278,21 @@ class HealthReportListForUserRepository {
   }
 
   Future<CreateDeviceSelectionModel> createDeviceSelection(
-    bool allowDigit,
-    bool allowDevice,
-    bool googleFit,
-    bool healthFit,
-    bool bpMonitor,
-    bool gluco,
-    bool pulseOximeter,
-    bool thermo,
-    bool weighScale,
-    String userId,
-    String preferred_language,
-    String qa_subscription,
-    int priColor,
-    int greColor,List<Tags> tags
-  ) async {
+      bool allowDigit,
+      bool allowDevice,
+      bool googleFit,
+      bool healthFit,
+      bool bpMonitor,
+      bool gluco,
+      bool pulseOximeter,
+      bool thermo,
+      bool weighScale,
+      String userId,
+      String preferred_language,
+      String qa_subscription,
+      int priColor,
+      int greColor,
+      List<Tags> tags) async {
     var body = jsonEncode({
       "userId": userId,
       'profileSetting': {
@@ -288,7 +309,8 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription
-      },'tags':tags
+      },
+      'tags': tags
     });
 
     final response = await _helper.createDeviceSelection(
@@ -310,7 +332,9 @@ class HealthReportListForUserRepository {
       String preferred_language,
       String qa_subscription,
       int priColor,
-      int greColor,PreferredMeasurement preferredMeasurement,List<Tags> tagsList) async {
+      int greColor,
+      PreferredMeasurement preferredMeasurement,
+      List<Tags> tagsList) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -327,17 +351,16 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
-        'preferred_measurement':preferredMeasurement
-        
+        'preferred_measurement': preferredMeasurement
       },
-      'tags':tagsList
+      'tags': tagsList
     });
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
   }
 
-  Future<UpdateDeviceModel> updateUnitPreferences(String body) async{
+  Future<UpdateDeviceModel> updateUnitPreferences(String body) async {
     //var body=jsonEncode(profileSettings);
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
@@ -348,8 +371,7 @@ class HealthReportListForUserRepository {
     TagsResult tagResult;
     var addressQuery = [query.qr_code_tags];
 
-    final response = await _helper
-        .getTags(addressQuery.toString());
+    final response = await _helper.getTags(addressQuery.toString());
     return TagsResult.fromJson(response);
   }
 
@@ -391,4 +413,7 @@ class HealthReportListForUserRepository {
     return DeleteDeviceHealthRecord.fromJson(response);
   }
 
-      }
+  Future<ClaimSuccess> createClaimRecord(String jsonString) async {
+    var response = await _helper.createClaimRecord(query.qr_claim, jsonString);
+  }
+}

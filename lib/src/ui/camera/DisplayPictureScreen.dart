@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -343,6 +344,15 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               fileName,
               dateOfVisit,
               '');
+          break;
+        case Constants.STR_CLAIMSRECORD:
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClaimRecordCreate(imagePath: widget.imagePath,),
+            ),
+          );
           break;
       }
     } else {

@@ -315,32 +315,6 @@ class FHBUtils {
 
   static Future<String> createFolderInAppDocDirClone(
       String folderName, String fileType) async {
-    /* Directory _appDocDirFolder;
-    //Create Directory with app name
-    final Directory _appDocDir = await getTemporaryDirectory();
-    _appDocDirFolder = Directory(_appDocDir.path);
-
-    if (await _appDocDirFolder.exists()) {
-      //if folder already exists return path
-      return _appDocDirFolder.path;
-    } else {
-      //if folder not exists create folder and then return its path
-      final Directory _appDocDirNewFolder =
-          await _appDocDirFolder.create(recursive: true);
-      return _appDocDirNewFolder.path;
-    }*/
-
-    // var status = await Permission.manageExternalStorage.status;
-    // if (status.isGranted) {
-    //   return await createDir(folderName,fileType);
-    // } else {
-    //   var request=await Permission.manageExternalStorage.request();
-    //   if(request.isGranted){
-    //     return await createDir(folderName,fileType);
-    //   }else{
-    //     return "";
-    //   }
-    // }
     return await createDir(folderName, fileType);
   }
 

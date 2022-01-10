@@ -27,6 +27,8 @@ import '../constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
 import 'dart:math' as math;
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
+
 
 class FHBBasicWidget {
   FHBBasicWidget();
@@ -123,6 +125,46 @@ class FHBBasicWidget {
         ));
   }
 
+  Widget getTextFieldWithNoCallbacksClaim(
+      BuildContext context, TextEditingController searchController,
+      {bool isFileField}) {
+    return Container(
+        width: 1.sw,
+        child: TextField(
+            enabled: isFileField ?? false,
+            controller: searchController,
+            style:getTextStyleForValue(),
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(left:20.0),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+            )));
+  }
+
+  getTextStyleForValue() {
+    return TextStyle(
+        color: Colors.black, fontSize: fhbStyles.fnt_category);
+  }
+
+  getTextStyleForTags() {
+    return TextStyle(
+        fontWeight: FontWeight.w800,
+        fontSize: fhbStyles.fnt_doc_specialist,
+        color: Colors.grey[600]);
+  }
+
+  String currency(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    var format = NumberFormat.simpleCurrency(locale: locale.toString());
+    print("CURRENCY SYMBOL ${format.currencySymbol}"); // $
+    print("CURRENCY NAME ${format.currencyName}");
+    return format.currencySymbol;// USD
+  }
+
   Widget getTextFieldWithNoCallbacksForMemo(
       BuildContext context, TextEditingController searchController) {
     return Container(
@@ -140,6 +182,17 @@ class FHBBasicWidget {
           hintText,
           style: TextStyle(fontSize: 16.0.sp),
         ));
+  }
+
+  Widget getTextForAlertDialogClaim(BuildContext context, String hintText) {
+    return Container(
+        width: 1.sw - 80,
+        child: Padding(
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Text(
+              hintText,
+              style: getTextStyleForTags(),
+            )));
   }
 
   void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {

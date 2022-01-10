@@ -59,6 +59,9 @@ List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
 List<String> genderArray = ['Male', 'Female', 'Others'];
 List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
+List<String> claimType = ['Pharmacy', 'Consultation', 'Lab fee'];
+
+
 const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
@@ -209,6 +212,7 @@ const String icon_settings = 'assets/icons/settings.svg';
 const String icon_modified = 'assets/icons/modified.svg';
 const String icon_mandatory = 'assets/icons/mandatory.svg';
 const String icon_language = 'assets/icons/language.png';
+const String icon_claim = 'assets/icons/claim.svg';
 
 //For Apple Health Settings Info
 const String apple_health_settings_info = 'assets/settings/health.jpg';
@@ -305,6 +309,8 @@ const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
+const String strMyClaims = 'My Claims';
+
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
@@ -347,6 +353,7 @@ const String strDownloadStart = 'Download Started';
 const String strFilesDownloaded = 'All Files are downloaded, view in Gallery';
 const String strFilesView = 'File downloaded, view in Gallery';
 const String strFileDownloaded = 'File downloaded';
+const String strFileDownloadeding = 'File downloading';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After Meal';
 const String strDateFormatDay = 'dd/MM/yyyy';

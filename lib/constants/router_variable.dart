@@ -48,3 +48,6 @@ const String rt_chooseUnit = '/choose-unit';
 const String cn_AddProvider = 'add_providers';
 
 const String cn_teleheathProvider = 'tele_providers';
+const String rt_ClaimResult = '/claim-result';
+const String rt_ClaimCreate = '/claim-create';
+

@@ -75,7 +75,7 @@ class _LandingScreenState extends State<LandingScreen> {
   File imageURIProfile;
   LandingViewModel landingViewModel;
   CommonUtil commonUtil = CommonUtil();
-
+  bool isUserMainId = true;
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
@@ -99,6 +99,7 @@ class _LandingScreenState extends State<LandingScreen> {
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
+    checkIfUserIdSame();
     if (widget.landingArguments?.needFreshLoad ?? true) {
       try {
         commonUtil.versionCheck(context);
@@ -110,6 +111,7 @@ class _LandingScreenState extends State<LandingScreen> {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
     }
+    Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
 
     Future.delayed(Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
@@ -151,6 +153,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   checkCpUser() async {
     var value = await LandingService.getMemberShipDetails();
+    PreferenceUtil.saveActiveMembershipStatus(
+        value.isSuccess ? (value.result ?? []).length > 0 : false);
     if (value.isSuccess) {
       bool isShown =
           await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
@@ -296,8 +300,14 @@ class _LandingScreenState extends State<LandingScreen> {
                                   _key,
                                   () {
                                     profileData = getMyProfile();
+                                    checkIfUserIdSame();
                                     landingViewModel.getQurPlanDashBoard(
                                         needNotify: true);
+                                    landingViewModel
+                                        .checkIfUserIdSame()
+                                        .then((value) {
+                                      isUserMainId = value;
+                                    });
                                     setState(() {});
                                     (context as Element).markNeedsBuild();
                                   },
@@ -326,6 +336,7 @@ class _LandingScreenState extends State<LandingScreen> {
             drawer: NavigationDrawer(
               myProfile: myProfile,
               moveToLoginPage: moveToLoginPage,
+              userChangedbool: landingViewModel.isUserMainId,
               refresh: (userChanged) => refresh(
                 userChanged: userChanged,
               ),
@@ -578,6 +589,12 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(constants.KEY_USERID);
+
+    if (userId != userIdMain) {
+      isUserMainId = false;
+    }
     try {
       await getDeviceSelectionValues().then((value) => {});
     } catch (e) {}
@@ -656,7 +673,7 @@ class _LandingScreenState extends State<LandingScreen> {
         DynamicLinks.processDynamicLink(deepLink);
       } catch (e) {}
     }
-    checkCpUser();
+    //checkCpUser();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -763,5 +780,19 @@ class _LandingScreenState extends State<LandingScreen> {
     try {
       await CommonUtil().getUserProfileData();
     } catch (e) {}
+  }
+
+  void checkIfUserIdSame() async {
+    final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
+
+    setState(() {
+      if (userId != userIdMain) {
+        isUserMainId = false;
+      } else {
+        isUserMainId = true;
+      }
+    });
   }
 }

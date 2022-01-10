@@ -257,6 +257,9 @@ const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 const String getEventId = 'activity-master/save-personal-plan-symptom';
 
+const String getCreditBalnce='credit-balance/';
+const String getClaimWithQues='claim?userId=';
+
 const String qr_health_conditions = 'Action=GetMenu';
 
 const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
@@ -308,3 +311,21 @@ const String qr_get_ticket_types = 'trudesk/ticket/types';
 const String qr_create_ticket = 'trudesk/create/ticket/by-patient';
 const String qr_comment_ticket = 'trudesk/ticket/comment';
 const String qr_upload_attachment = 'trudesk/tickets/uploadattachment';
+
+///for claims
+const String qr_submittedby = 'submittedBy';
+const String qr_submittedfor = 'submittedFor';
+const String qr_ClaimAmountTotal = 'claimAmountTotal';
+const String qr_remark = 'remark';
+const String qr_documentMetadata = 'documentMetadata';
+const String qr_membership_tag = 'membership';
+
+const String qr_billName = 'bill_name';
+const String qr_claimType = 'claim_type';
+const String qr_claimAmount= 'claim_amount';
+const String qr_billDate = 'bill_date';
+const String qr_healthRecordId = 'health_record_id';
+const String qr_memoText = 'memo_text';
+const String qr_claim = 'claim';
+const String qr_claim_with_slash = 'claim/';
+

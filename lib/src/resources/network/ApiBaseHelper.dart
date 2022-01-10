@@ -566,6 +566,8 @@ class ApiBaseHelper {
         }
         break;
       case 500:
+        print(response.body.toString());
+
         try {
           if (forDoctorSearch) {
             final responseJson = convert.jsonDecode(response.body.toString());
@@ -1151,23 +1153,25 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<GetRecordIdsFilter> getMetaIdURL(
-      List<String> recordIds, String patientId) async {
+  Future<dynamic> getMetaIdURL(List<String> recordIds, String patientId) async {
     final inputBody = {};
     inputBody[strUserId] = patientId;
-    inputBody[HEALTH_RECORDIDS] = recordIds;
-    final jsonString = convert.jsonEncode(inputBody);
+    inputBody[HEALTH_RECORDMETAIDS] = recordIds;
+    //  final jsonString = json.encode(inputBody);
+    var jsonString = convert.jsonEncode(inputBody);
+    print(jsonString);
     var response = await getApiForGetMetaURL(jsonString);
-    return GetRecordIdsFilter.fromJson(response);
+    return response;
   }
 
   Future<dynamic> getApiForGetMetaURL(String jsonBody) async {
     var responseJson;
+    String jsonBodyNew = jsonBody.replaceAll("'\n'", "");
     try {
       var response = await ApiServices.post(
-          _baseUrl + qr_health_record + qr_slash + qr_filter,
+          _baseUrl + qr_health_record + qr_filter,
           headers: await headerRequest.getRequestHeader(),
-          body: jsonBody);
+          body: jsonBodyNew);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1272,6 +1276,73 @@ class ApiBaseHelper {
         'metadata': payload,
         'userId': id,
         'isBookmarked': false,
+      });
+
+      for (final image in imagePaths) {
+        final fileName = File(image);
+        final fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry('fileName',
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+
+      if (audioPath != null && audioPath != '') {
+        var fileName = File(audioPath);
+        final fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry('fileName',
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+    } else {
+      formData = FormData.fromMap(
+          {'metadata': payload, 'userId': id, 'isBookmarked ': false});
+
+      if (audioPath != null && audioPath != '') {
+        var fileName = File(audioPath);
+        var fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry('fileName',
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+    }
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
+    }
+  }
+
+  Future<dynamic> createMediaDataClaim(String url, String payload,
+      List<String> imagePaths, String audioPath, String id) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final dio = Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers['authorization'] = authToken;
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
+
+    FormData formData;
+
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      formData = FormData.fromMap({
+        'metadata': payload,
+        'userId': id,
+        'isBookmarked': false,
+        'isClaimRecord': true,
       });
 
       for (final image in imagePaths) {
@@ -1711,7 +1782,6 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getMemberShipDetails(String url) async {
-    print(await headerRequest.getAuths());
     var headers = headerRequest.getAuths();
     var responseJson;
     try {
@@ -2188,11 +2258,92 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  void exitFromApp() async {
-    await PreferenceUtil.clearAllData().then((value) {
-      gett.Get.offAll(PatientSignInScreen());
-    });
+  Future<dynamic> getCredit(String url) async {
+    print(await headerRequest.getAuths());
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
+
+  Future<dynamic> getClaimList(String url) async {
+    print(await headerRequest.getAuths());
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> createClaimRecord(String url, String jsonBody) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonBody);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getClaimListDetails(String url) async {
+    print(await headerRequest.getAuths());
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+/*
+  Future<dynamic> getMemberShipDetails(String url) async {
+    MemberShipDetails responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader());
+      //responseJson = _returnResponse(response);
+      responseJson = MemberShipDetails.fromJson(json.decode(response.body));
+      print(responseJson.toJson());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+*/
+
+}
+
+void exitFromApp() async {
+  await PreferenceUtil.clearAllData().then((value) {
+    gett.Get.offAll(PatientSignInScreen());
+  });
 }
 
 abstract class InnerException {
