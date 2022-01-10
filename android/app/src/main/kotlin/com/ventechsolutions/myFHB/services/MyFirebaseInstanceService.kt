@@ -766,6 +766,7 @@ claimDetailsNotification(data)
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CLAIM_ID)
         onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        onTapNS.putExtra(Constants.PROP_CLAIM_ID, data[Constants.PROP_CLAIM_ID])
         val onTapPendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
                 NS_ID,

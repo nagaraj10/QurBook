@@ -432,8 +432,8 @@ class MainActivity : FlutterActivity() {
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue = "$sharedValue"
-        } else if(){
-
+        } else if(redirect_to==Constants.PROP_CLAIM_ID){
+            sharedValue = "$sharedValue&${claimId}&${userId}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
