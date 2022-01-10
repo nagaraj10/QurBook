@@ -310,14 +310,14 @@ class IosNotificationHandler {
       }
     } else if (model.redirect == parameters.claimList &&
         model.claimId != null) {
-      final userId = PreferenceUtil.getStringValue(KEY_USERID);
-      if (model.userId == userId) {
-        Get.to(
-          () => ClaimRecordDisplay(
-            claimID: model.claimId,
-          ),
-        );
-      }
+      // final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      // if (model.userId == userId) {
+      Get.to(
+        () => ClaimRecordDisplay(
+          claimID: model.claimId,
+        ),
+      );
+      // }
     } else if (model.redirect == parameters.myPlanDetails &&
         (model.planId ?? '').isNotEmpty) {
       final userId = PreferenceUtil.getStringValue(KEY_USERID);
