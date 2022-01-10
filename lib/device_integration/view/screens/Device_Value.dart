@@ -6,6 +6,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
@@ -50,9 +52,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
       {this.device_name,
-      this.device_icon,
-      this.sheelaRequestString,
-      this.deviceNameForAdding});
+        this.device_icon,
+        this.sheelaRequestString,
+        this.deviceNameForAdding});
 
   final String device_name;
   final String device_icon;
@@ -87,7 +89,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   List<bool> isSelected = List(3);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
-      HealthReportListForUserBlock();
+  HealthReportListForUserBlock();
 
   List<String> imagePathMain = List();
 
@@ -102,6 +104,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   String tempUnit='c';
   String weightUnit='kg';
 
+  bool isTouched = true;
+
+  bool isPounds = false;
+  bool isKg = false;
+
+  bool isCele = false;
+  bool isFaren = false;
+
+  bool isInchFeet = false;
+  bool isCenti = false;
+
+  GetDeviceSelectionModel selectionResult;
+  PreferredMeasurement preferredMeasurement;
+  ProfileSetting profileSetting;
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+  HealthReportListForUserRepository();
+
+  Height heightObj,weightObj,tempObj;
+  String userMappingId='';
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -117,6 +139,127 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     });
   }
 
+  Widget getAppColorsAndDeviceValues() {
+    final _devicesmodel = Provider.of<DevicesViewModel>(context);
+
+    return profileSetting==null?FutureBuilder<GetDeviceSelectionModel>(
+      future: getProfileSetings(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CommonCircularIndicator();
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          return getBody(_devicesmodel);
+        }
+      },
+    ):getBody(_devicesmodel);
+  }
+
+  Future<GetDeviceSelectionModel> getProfileSetings() async {
+    await healthReportListForUserRepository
+        .getDeviceSelection()
+        .then((value) async {
+      if (value.isSuccess) {
+        selectionResult = value;
+        if (value.result != null && value.result.length > 0) {
+          if (value.result[0] != null) {
+            profileSetting  = value.result[0].profileSetting;
+            userMappingId=value.result[0].id;
+
+            if (profileSetting != null) {
+              if (profileSetting.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting.preferredMeasurement;
+                weightObj=preferredMeasurement.weight;
+
+                await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                    preferredMeasurement.weight?.unitCode);
+                if (preferredMeasurement.weight?.unitCode ==
+                    Constants.STR_VAL_WEIGHT_IND) {
+                  isKg = true;
+                  isPounds = false;
+                } else {
+                  isKg = false;
+                  isPounds = true;
+                }
+
+                await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                    preferredMeasurement.height?.unitCode);
+
+                heightObj=preferredMeasurement.height;
+
+                if (preferredMeasurement.height?.unitCode ==
+                    Constants.STR_VAL_HEIGHT_IND) {
+                  isInchFeet = true;
+                  isCenti = false;
+                } else {
+                  isInchFeet = false;
+                  isCenti = true;
+                }
+
+                await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                    preferredMeasurement.temperature?.unitCode);
+                tempObj=preferredMeasurement.temperature;
+
+                if (preferredMeasurement.temperature?.unitCode ==
+                    Constants.STR_VAL_TEMP_IND) {
+                  isFaren = true;
+                  isCele = false;
+                } else {
+                  isFaren = false;
+                  isCele = true;
+                }
+
+                return selectionResult;
+              } else {
+                if (CommonUtil.REGION_CODE != "IN") {
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+
+                  heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_US,unitName:'feet/Inches');
+                  weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_US,unitName:'pounds');
+                  tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_US,unitName:'celsius');
+                  isKg = true;
+                  isPounds = false;
+
+                  isInchFeet = true;
+                  isCenti = false;
+
+                  isFaren = true;
+                  isCele = false;
+                } else {
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
+
+                  heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_IND,unitName:'centimeters');
+                  weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_IND,unitName:'kilograms');
+                  tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_IND,unitName:'farenheit');
+                  isKg = false;
+                  isPounds = true;
+
+                  isInchFeet = false;
+                  isCenti = true;
+
+                  isFaren = false;
+                  isCele = true;
+                }
+                return selectionResult;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -124,13 +267,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Device Value Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
@@ -161,16 +303,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       ),
       body: Container(
         color: Colors.grey[200],
-        child: Column(
-          children: [
-            SizedBoxWidget(height: 5.0.h),
-            Container(child: getAddDeviceReadings()),
-            SizedBoxWidget(height: 5.0.h),
-            Expanded(
-              child: getValues(context, _devicesmodel),
-            ),
-          ],
-        ),
+        child: getAppColorsAndDeviceValues() ,
       ),
       floatingActionButton: IconButton(
         icon: Image.asset(icon_mayaMain),
@@ -215,7 +348,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         Container(
           child: Padding(
             padding:
-                const EdgeInsets.only(left: 8, top: 4, right: 8, bottom: 0),
+            const EdgeInsets.only(left: 8, top: 4, right: 8, bottom: 0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -226,18 +359,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   onPressed: onOkClicked
                       ? () {}
                       : () async {
-                          onOkClicked = true;
+                    onOkClicked = true;
 
-                          FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              createDeviceRecords(widget.deviceNameForAdding);
-                            } else {
-                              onOkClicked = false;
-                              FHBBasicWidget().showInSnackBar(
-                                  STR_NO_CONNECTIVITY, scaffold_state);
-                            }
-                          });
-                        } /*() {
+                    FHBUtils().check().then((intenet) {
+                      if (intenet != null && intenet) {
+                        createDeviceRecords(widget.deviceNameForAdding);
+                      } else {
+                        onOkClicked = false;
+                        FHBBasicWidget().showInSnackBar(
+                            STR_NO_CONNECTIVITY, scaffold_state);
+                      }
+                    });
+                  } /*() {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
@@ -469,9 +602,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                title: Text(variable.strAPP_NAME),
-                content: Text(validationMsg),
-              ));
+            title: Text(variable.strAPP_NAME),
+            content: Text(validationMsg),
+          ));
     }
   }
 
@@ -488,26 +621,26 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else if ((isSelected[0] == null &&
+            isSelected[1] == false &&
+            isSelected[2] == false) ||
+            (isSelected[0] == false &&
+                isSelected[1] == null &&
+                isSelected[2] == null) ||
+            (isSelected[0] == null &&
                 isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == null &&
                 isSelected[2] == false) ||
             (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == null &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == false)||
-                (isSelected[0] == null &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false)) {
+                isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == false &&
+                isSelected[2] == false)||
+            (isSelected[0] == null &&
+                isSelected[1] == null &&
+                isSelected[2] == false)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -582,7 +715,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
-        //height: 70.0.h,
+      //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -640,7 +773,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.0.sp,
                                       color:
-                                          Color(CommonConstants.bplightColor)),
+                                      Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -685,16 +818,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           )),
                       Expanded(
                           child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Dia',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.bplightColor)),
-                            softWrap: true,
-                          ),
-                          /*Container(
+                            children: <Widget>[
+                              Text(
+                                'Dia',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.0.sp,
+                                    color: Color(CommonConstants.bplightColor)),
+                                softWrap: true,
+                              ),
+                              /*Container(
                                 constraints: BoxConstraints(maxWidth: 100),
                                 child: TextFormField(
                                     controller: diaStolicPressure,
@@ -719,19 +852,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                     cursorWidth: 0.5,
                                     onSaved: (input) => setState(() {})),
                               ),*/
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strDiastolicPressure,
-                              commonConstants.bpDPUNIT,
-                              diaStolicPressure, (errorValue) {
-                            setState(() {
-                              errorMsgDia = errorValue;
-                              errorMsg = errorMsgDia;
-                            });
-                          }, errorMsgDia, variable.strbpunit, deviceName,
-                              range: "Dia")
-                        ],
-                      )),
+                              fhbBasicWidget.getErrorMsgForUnitEntered(
+                                  context,
+                                  CommonConstants.strDiastolicPressure,
+                                  commonConstants.bpDPUNIT,
+                                  diaStolicPressure, (errorValue) {
+                                setState(() {
+                                  errorMsgDia = errorValue;
+                                  errorMsg = errorMsgDia;
+                                });
+                              }, errorMsgDia, variable.strbpunit, deviceName,
+                                  range: "Dia")
+                            ],
+                          )),
                       Expanded(
                           flex: 1,
                           child: Padding(
@@ -745,7 +878,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.0.sp,
                                       color:
-                                          Color(CommonConstants.bplightColor)),
+                                      Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -808,7 +941,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
 
     return Container(
-        //height: 70.0.h,
+      //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -946,7 +1079,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
-        //height: 70.0.h,
+      //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -994,39 +1127,39 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Expanded(
                       child: Column(
-                    children: <Widget>[
-                      Text(
-                        'SPO2',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.0.sp,
-                            color: Color(CommonConstants.pulselightColor)),
-                        softWrap: true,
-                      ),
-                      fhbBasicWidget.getErrorMsgForUnitEntered(
-                          context,
-                          CommonConstants.strOxygenSaturation,
-                          commonConstants.poOxySatUNIT,
-                          deviceController, (errorValue) {
-                        setState(() {
-                          errorMsg = errorValue;
-                        });
-                      }, errorMsg, variable.strpulseUnit, deviceName,
-                          range: ""),
-                    ],
-                  )),
+                        children: <Widget>[
+                          Text(
+                            'SPO2',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.0.sp,
+                                color: Color(CommonConstants.pulselightColor)),
+                            softWrap: true,
+                          ),
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                              context,
+                              CommonConstants.strOxygenSaturation,
+                              commonConstants.poOxySatUNIT,
+                              deviceController, (errorValue) {
+                            setState(() {
+                              errorMsg = errorValue;
+                            });
+                          }, errorMsg, variable.strpulseUnit, deviceName,
+                              range: ""),
+                        ],
+                      )),
                   Expanded(
                       child: Column(
-                    children: <Widget>[
-                      Text(
-                        'PRBpm',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14.0.sp,
-                            color: Color(CommonConstants.pulselightColor)),
-                        softWrap: true,
-                      ),
-                      /* Container(
+                        children: <Widget>[
+                          Text(
+                            'PRBpm',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.0.sp,
+                                color: Color(CommonConstants.pulselightColor)),
+                            softWrap: true,
+                          ),
+                          /* Container(
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
@@ -1054,17 +1187,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 cursorWidth: 0.5,
                                 onSaved: (input) => setState(() {})),
                           ),*/
-                      fhbBasicWidget.getErrorMsgForUnitEntered(
-                          context,
-                          CommonConstants.strPulse,
-                          commonConstants.poPulseUNIT,
-                          pulse, (errorValue) {
-                        setState(() {
-                          errorMsg = errorValue;
-                        });
-                      }, errorMsg, variable.strpulse, deviceName, range: ""),
-                    ],
-                  ))
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                              context,
+                              CommonConstants.strPulse,
+                              commonConstants.poPulseUNIT,
+                              pulse, (errorValue) {
+                            setState(() {
+                              errorMsg = errorValue;
+                            });
+                          }, errorMsg, variable.strpulse, deviceName, range: ""),
+                        ],
+                      ))
                 ],
               ),
             ),
@@ -1080,7 +1213,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
 
     return Container(
-        //height: 70.0.h,
+      //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1173,7 +1306,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 (value) {
                               weightUnit = PreferenceUtil.getStringValue(
                                   Constants.STR_KEY_WEIGHT);
-                               setState(() {});
+                              setState(() {});
                             },
                           );
                         }),
@@ -1189,7 +1322,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getCardForGlucometer(String deviceName) {
     return Container(
-        //height: 70.0.h,
+      //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1253,15 +1386,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       });
                     }, errorMsg, variable.strGlucUnit, deviceName,
                         range: ((isSelected[0] == null &&
-                                    isSelected[1] == false) ||
-                                (isSelected[0] == false &&
-                                    isSelected[1] == null) ||
-                                (isSelected[0] == null &&
-                                    isSelected[1] == null))
+                            isSelected[1] == false) ||
+                            (isSelected[0] == false &&
+                                isSelected[1] == null) ||
+                            (isSelected[0] == null &&
+                                isSelected[1] == null))
                             ? 'Random'
                             : isSelected[0] == true
-                                ? 'Fast'
-                                : 'PP')
+                            ? 'Fast'
+                            : 'PP')
                   ],
                 )),
             SizedBox(
@@ -1274,85 +1407,85 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 children: [
                   Expanded(
                       child: Column(
-                    children: <Widget>[
-                      Text(
-                        'Fasting',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
-                            color: Colors.grey),
-                        softWrap: true,
-                      ),
-                      Container(
-                          width: 50.0.w,
-                          constraints: BoxConstraints(maxWidth: 100.0.w),
-                          child: MyCheckbox(
-                              value: isSelected[0],
-                              onChanged: (value) {
-                                setState(() {
-                                  isSelected[0] = value;
-                                  isSelected[1] = null;
-                                  isSelected[2] = null;
-                                });
-                              })),
-                    ],
-                  )),
+                        children: <Widget>[
+                          Text(
+                            'Fasting',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0.sp,
+                                color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          Container(
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
+                              child: MyCheckbox(
+                                  value: isSelected[0],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSelected[0] = value;
+                                      isSelected[1] = null;
+                                      isSelected[2] = null;
+                                    });
+                                  })),
+                        ],
+                      )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
                       child: Column(
-                    children: <Widget>[
-                      Text(
-                        'PP',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
-                            color: Colors.grey),
-                        softWrap: true,
-                      ),
-                      Container(
-                          width: 50.0.w,
-                          constraints: BoxConstraints(maxWidth: 100.0.w),
-                          child: MyCheckbox(
-                              value: isSelected[1],
-                              onChanged: (value) {
-                                setState(() {
-                                  isSelected[1] = value;
-                                  isSelected[0] = null;
-                                  isSelected[2] = null;
-                                });
-                              })),
-                    ],
-                  )),
+                        children: <Widget>[
+                          Text(
+                            'PP',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0.sp,
+                                color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          Container(
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
+                              child: MyCheckbox(
+                                  value: isSelected[1],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSelected[1] = value;
+                                      isSelected[0] = null;
+                                      isSelected[2] = null;
+                                    });
+                                  })),
+                        ],
+                      )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
                       child: Column(
-                    children: <Widget>[
-                      Text(
-                        'Random',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12.0.sp,
-                            color: Colors.grey),
-                        softWrap: true,
-                      ),
-                      Container(
-                          width: 50.0.w,
-                          constraints: BoxConstraints(maxWidth: 100.0.w),
-                          child: MyCheckbox(
-                              value: isSelected[2],
-                              onChanged: (value) {
-                                setState(() {
-                                  isSelected[2] = value;
-                                  isSelected[0] = null;
-                                  isSelected[1] = null;
-                                });
-                              })),
-                    ],
-                  ))
+                        children: <Widget>[
+                          Text(
+                            'Random',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12.0.sp,
+                                color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          Container(
+                              width: 50.0.w,
+                              constraints: BoxConstraints(maxWidth: 100.0.w),
+                              child: MyCheckbox(
+                                  value: isSelected[2],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSelected[2] = value;
+                                      isSelected[0] = null;
+                                      isSelected[1] = null;
+                                    });
+                                  })),
+                        ],
+                      ))
                 ],
               ),
             ),
@@ -1387,7 +1520,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 final translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<BPResult> bpResultNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                translis?.isNotEmpty ? translis?.first : [];
                 bpResultNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
@@ -1396,56 +1529,56 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return bpResult?.isNotEmpty
                     ? GroupedListView<BPResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: bpResult,
-                        sort: false,
-                        groupSeparatorBuilder: (value) => Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15.0.w),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: bpResult,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForBp(
-                              bpResult[index].sourceType,
-                              getFormattedDateTime(
-                                  bpResult[index].startDateTime),
-                              '${bpResult[index].systolic}',
-                              '${bpResult[index].diastolic}',
-                              '',
-                              'Systolic',
-                              'Diastolic',
-                              '',
-                              getFormattedTime(bpResult[index].startDateTime),
-                              bpResult[index].bpm != null
-                                  ? bpResult[index].bpm.toString()
-                                  : '',
-                              bpResult[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForBp(
+                        bpResult[index].sourceType,
+                        getFormattedDateTime(
+                            bpResult[index].startDateTime),
+                        '${bpResult[index].systolic}',
+                        '${bpResult[index].diastolic}',
+                        '',
+                        'Systolic',
+                        'Diastolic',
+                        '',
+                        getFormattedTime(bpResult[index].startDateTime),
+                        bpResult[index].bpm != null
+                            ? bpResult[index].bpm.toString()
+                            : '',
+                        bpResult[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              'No health record details available.',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1461,7 +1594,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<GVResult> translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
@@ -1470,57 +1603,57 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<GVResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (value) => Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15.0.w),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForGulcose(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].bloodGlucoseLevel}',
-                              translist[index].mealContext == null ||
-                                      translist[index].mealContext == ''
-                                  ? 'Random'
-                                  : translist[index].mealContext,
-                              '',
-                              'Blood Glucose',
-                              'Meal Type',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              translist[index].bgUnit,
-                              translist[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForGulcose(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].bloodGlucoseLevel}',
+                        translist[index].mealContext == null ||
+                            translist[index].mealContext == ''
+                            ? 'Random'
+                            : translist[index].mealContext,
+                        '',
+                        'Blood Glucose',
+                        'Meal Type',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        translist[index].bgUnit,
+                        translist[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              'No health record details available.',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1536,7 +1669,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<OxyResult> translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
@@ -1545,55 +1678,55 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 // final List<DeviceIntervalData> deviceFullList = translis.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<OxyResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (value) => Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15.0.w),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForOxygen(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              '${translist[index].oxygenSaturation}',
-                              '',
-                              '',
-                              'SPO2',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              '',
-                              translist[index].bpm,
-                              translist[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForOxygen(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        '${translist[index].oxygenSaturation}',
+                        '',
+                        '',
+                        'SPO2',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        '',
+                        translist[index].bpm,
+                        translist[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              'No health record details available.',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1609,7 +1742,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<WVResult> translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
                       .compareTo(translisCopy.dateTimeValue);
@@ -1618,54 +1751,54 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<WVResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (value) => Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15.0.w),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForTempWeight(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              translist[index].weight,
-                              '',
-                              '',
-                              'Weight',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              translist[index].weightUnit,
-                              translist[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        translist[index].weight,
+                        '',
+                        '',
+                        'Weight',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        translist[index].weightUnit,
+                        translist[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              'No health record details available.',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1682,8 +1815,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 //List<WVResult> translist = translis.first;
                 final List<TMPResult> translistNew = translis?.isNotEmpty
                     ? translis?.isNotEmpty
-                        ? translis?.first
-                        : []
+                    ? translis?.first
+                    : []
                     : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue
@@ -1693,54 +1826,54 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<TMPResult, String>(
-                        groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
-                        sort: false,
-                        groupSeparatorBuilder: (value) => Padding(
-                          padding: const EdgeInsets.all(6),
-                          child: Row(
-                            children: [
-                              SizedBoxWidget(width: 15.0.w),
-                              Text(
-                                todayDate != value ? value : 'Today, ' + value,
-                                style: TextStyle(
-                                    fontSize: 14.0.sp,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
                         ),
-                        indexedItemBuilder: (context, i, index) {
-                          return buildRowForTempWeight(
-                              translist[index].sourceType,
-                              getFormattedDateTime(
-                                  translist[index].startDateTime),
-                              translist[index].temperature,
-                              '',
-                              '',
-                              'Temperature',
-                              '',
-                              '',
-                              getFormattedTime(translist[index].startDateTime),
-                              translist[index].temperatureUnit,
-                              translist[index].deviceId);
-                        },
-                      )
+                      ],
+                    ),
+                  ),
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(
+                            translist[index].startDateTime),
+                        translist[index].temperature,
+                        '',
+                        '',
+                        'Temperature',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        translist[index].temperatureUnit,
+                        translist[index].deviceId);
+                  },
+                )
                     : Container(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 40, right: 40),
-                            child: Text(
-                              'No health record details available.',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(fontFamily: variable.font_roboto),
-                            ),
-                          ),
-                        ),
-                      );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style:
+                        TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
               });
         }
         break;
@@ -1817,7 +1950,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Center(
                       child: Text(time,
                           style:
-                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -1833,125 +1966,125 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Text(
-                              valuename1,
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 13.0.sp),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(height: 5.0.h),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  value1 == '' ? '' : value1,
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBoxWidget(
-                                  width: 2.0.w,
-                                ),
-                                Text(
-                                  value1 == '' ? '' : 'mm Hg',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 11.0.sp),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Text(
+                        valuename1,
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 13.0.sp),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 5.0.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            value1 == '' ? '' : value1,
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBoxWidget(
+                            width: 2.0.w,
+                          ),
+                          Text(
+                            value1 == '' ? '' : 'mm Hg',
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 11.0.sp),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBox(),
                 valuename2 != ''
                     ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Text(
-                              valuename2 == '' ? '' : valuename2,
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 13.0.sp),
-                            ),
-                            SizedBox(
-                              height: 5.0.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  value2,
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBoxWidget(
-                                  width: 2,
-                                ),
-                                Text(
-                                  value1 == '' ? '' : 'mm Hg',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 11.0.sp),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Text(
+                        valuename2 == '' ? '' : valuename2,
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 13.0.sp),
+                      ),
+                      SizedBox(
+                        height: 5.0.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            value2,
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBoxWidget(
+                            width: 2,
+                          ),
+                          Text(
+                            value1 == '' ? '' : 'mm Hg',
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 11.0.sp),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBox(),
                 bpm != ''
                     ? Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Text(
-                              'Pulse',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 13.0.sp),
-                            ),
-                            SizedBox(
-                              height: 5.0.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  bpm != '' ? bpm : '',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                SizedBoxWidget(
-                                  width: 2,
-                                ),
-                                Text(
-                                  bpm == '' ? '' : CommonConstants.strPulseUnit,
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 11.0.sp),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Text(
+                        'Pulse',
+                        style: TextStyle(
+                            color: Colors.black, fontSize: 13.0.sp),
+                      ),
+                      SizedBox(
+                        height: 5.0.h,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            bpm != '' ? bpm : '',
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBoxWidget(
+                            width: 2,
+                          ),
+                          Text(
+                            bpm == '' ? '' : CommonConstants.strPulseUnit,
+                            style: TextStyle(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                fontSize: 11.0.sp),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBox(),
                 getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
@@ -2082,7 +2215,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       Text(
                         getMealText(value2),
                         style:
-                            TextStyle(color: Colors.black, fontSize: 13.0.sp),
+                        TextStyle(color: Colors.black, fontSize: 13.0.sp),
                       ),
                       SizedBox(
                         height: 5.0.h,
@@ -2241,7 +2374,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Center(
                       child: Text(time,
                           style:
-                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -2254,46 +2387,46 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Column(
-                              children: [
-                                Text(
-                                  valuename1,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 13.0.sp),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      (value1 != '' && value1 != null)  ? value1 : '',
-                                      style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    SizedBoxWidget(
-                                      width: 2,
-                                    ),
-                                    Text(
-                                      (unit != '' && unit != null) ? unit : '',
-                                      style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 14.0.sp),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Column(
+                        children: [
+                          Text(
+                            valuename1,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 13.0.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                (value1 != '' && value1 != null)  ? value1 : '',
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              SizedBoxWidget(
+                                width: 2,
+                              ),
+                              Text(
+                                (unit != '' && unit != null) ? unit : '',
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 14.0.sp),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBoxWidget(),
                 getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
@@ -2357,7 +2490,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                     Center(
                       child: Text(time,
                           style:
-                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -2370,73 +2503,73 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Column(
-                              children: [
-                                Text(
-                                  valuename1,
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 13.0.sp),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      value1 == '' ? '' : value1,
-                                      style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    SizedBoxWidget(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      unit != '' ? unit : '',
-                                      style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 14.0.sp),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Column(
+                        children: [
+                          Text(
+                            valuename1,
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 13.0.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                value1 == '' ? '' : value1,
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              SizedBoxWidget(
+                                width: 5,
+                              ),
+                              Text(
+                                unit != '' ? unit : '',
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 14.0.sp),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBoxWidget(),
                 bpm != ''
                     ? Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 5.0.h),
-                            Column(
-                              children: [
-                                Text(
-                                  'PRBpm',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 13.0.sp),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      bpm == '' ? '' : bpm,
-                                      style: TextStyle(
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    /* SizedBoxWidget(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: 5.0.h),
+                      Column(
+                        children: [
+                          Text(
+                            'PRBpm',
+                            style: TextStyle(
+                                color: Colors.black, fontSize: 13.0.sp),
+                            textAlign: TextAlign.center,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                bpm == '' ? '' : bpm,
+                                style: TextStyle(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 15.0.sp,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              /* SizedBoxWidget(
                               width: 5,
                             ),
                             Text(
@@ -2446,13 +2579,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       new CommonUtil().getMyPrimaryColor()),
                                   fontSize: 14.0.sp),
                             ),*/
-                                  ],
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
                     : SizedBoxWidget(),
                 getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)
@@ -2498,5 +2631,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
     }
+  }
+
+  getBody(DevicesViewModel devicesmodel) {
+    return Column(
+      children: [
+        SizedBoxWidget(height: 5.0.h),
+        Container(child: getAddDeviceReadings()),
+        SizedBoxWidget(height: 5.0.h),
+        Expanded(
+          child: getValues(context, devicesmodel),
+        ),
+      ],
+    );
   }
 }
