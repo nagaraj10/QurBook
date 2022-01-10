@@ -10,9 +10,11 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
   const CorpUsersWelcomeDialog(this.cpUser, this.result, {Key key})
       : super(key: key);
   final Result result;
-  final cpUser;
+  final MyProfileResult cpUser;
   @override
   Widget build(BuildContext context) {
+    String firstName=cpUser.firstName??'';
+    String lastName=cpUser.lastName??'';
     return Dialog(
       insetPadding: EdgeInsets.only(left: 25, right: 25),
       shape: RoundedRectangleBorder(
@@ -39,7 +41,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 15),
                   Text(
-                    cpUser.firstName ?? '',
+                    firstName+' '+lastName,
                     style: TextStyle(
                         color: themeColor,
                         fontWeight: FontWeight.w500,
@@ -52,7 +54,7 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    qurhealthSolutions,
+                    result.healthOrganizationName,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
@@ -68,15 +70,15 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                         fontSize: 16),
                   ),
-                  SizedBox(height: 15),
-                  Text(
-                    membership,
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey[400],
-                        fontWeight: FontWeight.normal,
-                        fontSize: 16),
-                  ),
+                  // SizedBox(height: 15),
+                  // Text(
+                  //   membership,
+                  //   style: TextStyle(
+                  //       fontStyle: FontStyle.italic,
+                  //       color: Colors.grey[400],
+                  //       fontWeight: FontWeight.normal,
+                  //       fontSize: 16),
+                  // ),
                   SizedBox(height: 5),
                   Text(
                     result.planName,
