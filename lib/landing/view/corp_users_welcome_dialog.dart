@@ -47,11 +47,6 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                         fontSize: 20),
                   ),
-                  SizedBox(height: 15),
-                  Text(
-                    corporate,
-                    style: TextStyle(color: Colors.grey),
-                  ),
                   SizedBox(height: 8),
                   Center(
                     child: Text(
