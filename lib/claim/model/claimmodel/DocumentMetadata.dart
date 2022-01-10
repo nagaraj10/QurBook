@@ -1,10 +1,10 @@
 class DocumentMetadata {
-  String billDate;
-  String billName;
-  String memoText;
-  String claimType;
-  String claimAmount;
-  String healthRecordId;
+  dynamic billDate;
+  dynamic billName;
+  dynamic memoText;
+  dynamic claimType;
+  dynamic claimAmount;
+  dynamic healthRecordId;
 
   DocumentMetadata(
       {this.billDate,
@@ -19,7 +19,7 @@ class DocumentMetadata {
     billName = json['bill_name'];
     memoText = json['memo_text'];
     claimType = json['claim_type'];
-    claimAmount = json['claim_amount'];
+    claimAmount = json['claim_amount'].toString();
     healthRecordId = json['health_record_id'];
   }
 

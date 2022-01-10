@@ -153,6 +153,8 @@ class _LandingScreenState extends State<LandingScreen> {
 
   checkCpUser() async {
     var value = await LandingService.getMemberShipDetails();
+    PreferenceUtil.saveActiveMembershipStatus(
+        value.isSuccess ? (value.result ?? []).length > 0 : false);
     if (value.isSuccess) {
       bool isShown =
           await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();

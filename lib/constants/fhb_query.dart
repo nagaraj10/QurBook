@@ -327,4 +327,5 @@ const String qr_billDate = 'bill_date';
 const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
+const String qr_claim_with_slash = 'claim/';
 
