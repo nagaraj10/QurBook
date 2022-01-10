@@ -160,7 +160,6 @@ class _LandingScreenState extends State<LandingScreen> {
           await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
 
       if (isShown == null || !isShown) {
-      // if (true) {
         MyProfileResult cpUser = await getIsCpUser();
         showDialog(
             barrierDismissible: false,

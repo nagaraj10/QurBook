@@ -53,12 +53,15 @@ class CorpUsersWelcomeDialog extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    result.healthOrganizationName,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 20),
+                  Center(
+                    child: Text(
+                      result.healthOrganizationName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20),
+                    ),
                   ),
                   SizedBox(height: 8),
                   Text(
