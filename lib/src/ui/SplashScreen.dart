@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -499,6 +500,15 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
                       });
+                    } else if (widget.nsRoute == 'claimList') {
+                      final userId = widget?.bundle['userId'];
+                      final claimId = widget?.bundle['claimId'];
+                      Get.to(
+                        ClaimRecordDisplay(
+                          claimID: claimId,
+                        ),
+                      ).then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
                     } else if (widget.nsRoute == 'manageActivities') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

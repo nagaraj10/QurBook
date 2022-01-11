@@ -30,6 +30,8 @@ object Constants {
     val PROP_MODE = "mode"
     val PROP_MSG = "message"
     val PROP_IS_CLOSE = "isClose"
+    val PROP_CLAIM_ID = "claimId"
+
     val PROP_START = "start"
     val PROP_STOP = "stop"
     val PROP_NAME = "name"
