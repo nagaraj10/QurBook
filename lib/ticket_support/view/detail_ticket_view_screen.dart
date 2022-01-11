@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -552,42 +553,42 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                     ),
                                   ),
                                 ),
-                                Flexible(
-                                  flex: 1,
-                                  child: new Container(
-                                    child: RawMaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .push(
-                                          MaterialPageRoute(
-                                            builder: (context) => AudioRecorder(
-                                              arguments: AudioScreenArguments(
-                                                fromVoice: false,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                            .then((results) {
-                                          /*String audioPath = results[Constants.keyAudioFile];
-                                        if (audioPath != null && audioPath != '') {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          uploadFile(audioPath);
-                                        }*/
-                                        });
-                                      },
-                                      elevation: 2.0,
-                                      fillColor: Colors.white,
-                                      child: Icon(Icons.mic,
-                                          size: 25.0,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                      padding: EdgeInsets.all(12.0),
-                                      shape: CircleBorder(),
-                                    ),
-                                  ),
-                                )
+                                // Flexible(
+                                //   flex: 1,
+                                //   child: new Container(
+                                //     child: RawMaterialButton(
+                                //       onPressed: () {
+                                //         Navigator.of(context)
+                                //             .push(
+                                //           MaterialPageRoute(
+                                //             builder: (context) => AudioRecorder(
+                                //               arguments: AudioScreenArguments(
+                                //                 fromVoice: false,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         )
+                                //             .then((results) {
+                                //           /*String audioPath = results[Constants.keyAudioFile];
+                                //         if (audioPath != null && audioPath != '') {
+                                //           setState(() {
+                                //             isLoading = true;
+                                //           });
+                                //           uploadFile(audioPath);
+                                //         }*/
+                                //         });
+                                //       },
+                                //       elevation: 2.0,
+                                //       fillColor: Colors.white,
+                                //       child: Icon(Icons.mic,
+                                //           size: 25.0,
+                                //           color: Color(CommonUtil()
+                                //               .getMyPrimaryColor())),
+                                //       padding: EdgeInsets.all(12.0),
+                                //       shape: CircleBorder(),
+                                //     ),
+                                //   ),
+                                // )
                               ],
                             ),
                           ],
@@ -946,17 +947,20 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   void uploadFile(String ticketId, file) {
     try {
+      FlutterToast().getToast('Uploading Please Wait..', Colors.grey);
       ticketViewModel.userTicketService
           .uploadAttachment(ticketId, file)
           .then((value) {
-        if (value != null) {
+
+        if (value) {
+          FlutterToast().getToast('Uploaded Successfully', Colors.grey);
           callTicketDetailsApi();
-          print('Hitting Send Attachment API .. : ${value.toJson()}');
         } else {
-          print('Failed Sending Attachment ..');
+          FlutterToast().getToast('Uploaded Failed', Colors.red);
           return null;
         }
       }).catchError((e) {
+        FlutterToast().getToast('Uploaded Failed', Colors.red);
         print('Attachment ticket exception in catch error: ${e.toString()}');
         return null;
       });
@@ -967,11 +971,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   void _handleTabSelection() {
-    print('working tab');
     selectedTab = _controller.index;
   }
 
   Future<void> openIntent(String string) async {
+    FlutterToast().getToast('Please wait', Colors.grey);
     String path = await downloadFile(string);
     print(path);
     if (string.split('.').last == 'pdf') {

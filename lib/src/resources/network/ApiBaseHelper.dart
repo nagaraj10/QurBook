@@ -1573,7 +1573,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> uploadAttachment(
+  Future<bool> uploadAttachment(
       String url, String ticketId, File image) async {
     var authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1601,18 +1601,18 @@ class ApiBaseHelper {
     var response;
     try {
       response = await dio.post(_baseUrl + url, data: formData);
-
+      print('upload code: '+response.statusCode.toString());
       if (response.statusCode == 200) {
-        print(response.data.toString());
-        return response;
+        print('upload response: '+response.data.toString());
+        return response.data['isSuccess'];
       } else {
-        return response;
+        return response.data['isSuccess'];
       }
     } on DioError catch (e) {
       print("dio attachment error");
       print(e.toString());
       print(e);
-      return response;
+      return false;
     }
   }
 

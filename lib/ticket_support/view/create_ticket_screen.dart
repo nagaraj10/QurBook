@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -306,9 +307,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
         ticketViewModel.createTicket().then((value) {
           if (value != null) {
-            Navigator.of(context, rootNavigator: true).pop();
+            FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
+
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
             print('Hitting API .. : ${value.toJson()}');
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
             );

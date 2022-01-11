@@ -51,21 +51,10 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           ),
           title: Text(constants.strMyTickets),
         ),
-        body: Stack(
-          fit: StackFit.expand,
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: getTicketTypes(),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ));
+        body:  Container(
+          child: getTicketTypes(),
+        ),
+    );
   }
 
   Widget getTicketTypes() {
@@ -92,12 +81,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           if (snapshot?.hasData &&
               snapshot?.data?.ticketTypeResults != null &&
               snapshot?.data?.ticketTypeResults.isNotEmpty) {
-            return SafeArea(
-                child: SizedBox(
-                    height: 1.sh / 1.3,
-                    child: Container(
-                        child:
-                            ticketTypesList(snapshot.data.ticketTypeResults))));
+            return Container(
+                child:
+                    ticketTypesList(snapshot.data.ticketTypeResults));
           } else {
             return SafeArea(
               child: SizedBox(
@@ -121,30 +107,27 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget ticketTypesList(List<TicketTypesResult> ticketTypesList) {
+    var size = MediaQuery.of(context).size;
+
+    /*24 is for notification bar on Android*/
+    final double itemHeight = (size.height - kToolbarHeight - 24) / 4;
+    final double itemWidth = size.width / 2;
     return (ticketTypesList != null && ticketTypesList.isNotEmpty)
         ? Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
-              child: Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                direction: Axis.horizontal,
-                children: [
-                  GridView.builder(
-                    gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                        mainAxisSpacing: 0.5,
-                        crossAxisSpacing: 0.5),
-                    shrinkWrap: true,
-                    padding: EdgeInsets.only(
-                      bottom: 8.0.h,
-                    ),
-                    itemBuilder: (ctx, i) {
-                      return myTicketTypesListItem(ctx, i, ticketTypesList);
-                    },
-                    itemCount: ticketTypesList.length,
-                  ),
-                ],
+              child: GridView.builder(
+                gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: (itemWidth / itemHeight),),
+                shrinkWrap: true,
+                padding: EdgeInsets.only(
+                  bottom: 8.0.h,
+                ),
+                itemBuilder: (ctx, i) {
+                  return myTicketTypesListItem(ctx, i, ticketTypesList);
+                },
+                itemCount: ticketTypesList.length,
               ),
             ),
           )
@@ -168,7 +151,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           padding: EdgeInsets.all(8.0.sp),
           child: InkWell(
             onTap: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => CreateTicketScreen(ticketList[i])),
@@ -225,19 +208,19 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   }
 
   Widget getTicketTypeImages(BuildContext context, var ticketListData) {
-    if (ticketListData.name != null) {
+    if (ticketListData.iconUrl != null) {
       return CachedNetworkImage(
-        imageUrl: ticketListData.name,
+        imageUrl: ticketListData.iconUrl,
         placeholder: (context, url) => CommonCircularIndicator(),
         errorWidget: (context, url, error) => Image.asset(
           'assets/icons/10.png',
-          height: 45.sp,
-          width: 45.sp,
+          height: 60,
+          width: 60,
           color: Color(CommonUtil().getMyPrimaryColor()),
         ),
         imageBuilder: (context, imageProvider) => Container(
-          width: 80,
-          height: 80,
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
@@ -246,9 +229,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
       );
     } else {
       return Image.asset(
-        'assets/icons/01.png',
-        width: 60.0.sp,
-        height: 60.0.sp,
+        'assets/icons/10.png',
+        width: 60,
+        height: 60,
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
     }
