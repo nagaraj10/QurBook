@@ -31,7 +31,7 @@ class NotificationModel {
   CallArguments callArguments;
   bool isWeb;
   String callType;
-
+  String claimId;
   Map<int, dynamic> redirectData;
   String planId;
 
@@ -57,6 +57,7 @@ class NotificationModel {
     this.planId,
     this.callType,
     this.isWeb,
+    this.claimId,
   });
 
   Map<String, dynamic> toMap() {
@@ -79,6 +80,7 @@ class NotificationModel {
       'planId': planId,
       'callType': callType,
       'isWeb': isWeb,
+      'claimId': claimId,
     };
   }
 
@@ -100,6 +102,7 @@ class NotificationModel {
     externalLink = message['externalLink'];
     callType = message['callType'];
     isWeb = message['isWeb'];
+    claimId = message['claimId'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -190,7 +193,12 @@ class NotificationModel {
         if (message[parameters.gcmExternalLink] != null) {
           externalLink = message[parameters.gcmExternalLink];
         }
-
+        if ((message[parameters.claimId] ?? '').isNotEmpty) {
+          claimId = message[parameters.claimId];
+        }
+        if ((message[parameters.gcmClaimId] ?? '').isNotEmpty) {
+          claimId = message[parameters.gcmClaimId];
+        }
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
@@ -304,6 +312,12 @@ class NotificationModel {
     }
     if (message[parameters.patientPicture] != null) {
       patientPicture = message[parameters.patientPicture];
+    }
+    if ((message[parameters.claimId] ?? '').isNotEmpty) {
+      claimId = message[parameters.claimId];
+    }
+    if ((message[parameters.gcmClaimId] ?? '').isNotEmpty) {
+      claimId = message[parameters.gcmClaimId];
     }
     if (message[parameters.planId] != null) {
       planId = message[parameters.planId];

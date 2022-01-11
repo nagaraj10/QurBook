@@ -35,8 +35,8 @@ const String qurhealthSolutions = 'QurHealth Solutions';
 const String membership = 'Membership';
 const String platinum = 'Platinum';
 const String getStarted = 'Let\'s Get Started';
-const String longDescription = 'Bringing you the best-in-class health ecosystem partners for all your health care needs.';
-const String careEmployees = 'Cares for its employees and\ntheir family health';
+const String longDescription = 'Membership for Qurbook app\nThat brings you the best-in-class health ecosystem partners for all your healthcare needs.';
+const String careEmployees = 'Cares for its employees and\ntheir family\'s health\n&\nHas offered you the';
 
 //Strings used in VerifyPatient
 const String strSource = 'myFHBMobile';

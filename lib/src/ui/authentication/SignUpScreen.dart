@@ -271,6 +271,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 enteredMobNumber: widget.enteredMobNumber,
                 selectedCountryCode: widget.selectedCountryCode,
                 fromSignIn: false,
+                fromSignUp: true,
                 forEmailVerify: false,
               );
             },

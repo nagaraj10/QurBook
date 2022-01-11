@@ -163,6 +163,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   bool isMembershipDiscount = false;
   String MembershipDiscountPercent;
   bool isResident = false;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -1782,7 +1783,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         }
       }
     }
-
+    if (widget.isFromFollowUpApp &&
+        widget.isFromFollowUpTake == false &&
+        isFollowUp()) {
+      originalFees = getFollowUpFee();
+    }
     if ((discountPercent ?? '').isNotEmpty && (originalFees ?? '').isNotEmpty) {
       if (discountPercent != '0.00' && discountPercent != '0') {
         try {
@@ -1927,9 +1932,38 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0],
-                            context);
+                        if (myProfile.result.userAddressCollection3[0]
+                                    .addressLine1 !=
+                                null &&
+                            myProfile.result.userAddressCollection3[0]
+                                .addressLine1.isNotEmpty &&
+                            myProfile
+                                    .result.userAddressCollection3[0].pincode !=
+                                null &&
+                            myProfile.result.userAddressCollection3[0].pincode
+                                .isNotEmpty) {
+                          if (myProfile.result.userAddressCollection3[0]
+                                      .addressLine1 !=
+                                  null &&
+                              myProfile.result.userAddressCollection3[0]
+                                  .addressLine1.isNotEmpty) {
+                            if (myProfile.result.userAddressCollection3[0]
+                                        .pincode !=
+                                    null &&
+                                myProfile.result.userAddressCollection3[0]
+                                    .pincode.isNotEmpty) {
+                              patientAddressCheck(
+                                  myProfile.result.userAddressCollection3[0],
+                                  context);
+                            } else {
+                              showInSnackBar(noZipcode, 'Add');
+                            }
+                          } else {
+                            showInSnackBar(noAddress1, 'Add');
+                          }
+                        } else {
+                          showInSnackBar(no_addr1_zip, 'Add');
+                        }
                       } else {
                         //toast.getToast(noAddress, Colors.red);
                         showInSnackBar(noAddressFamily, 'Add');
