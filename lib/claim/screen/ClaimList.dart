@@ -144,7 +144,7 @@ class _ClaimListState extends State<ClaimList> {
                     1.0
                   ])),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: <Widget>[
@@ -391,18 +391,18 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   cliamWidgetList(int index, List<ClaimListResult> claimResultList) {
-    if(claimResultList[index].documentMetadata!=null && claimResultList[index].documentMetadata.length>0) {
+    if (claimResultList[index].documentMetadata != null &&
+        claimResultList[index].documentMetadata.length > 0) {
       return InkWell(
           onTap: () {
             FocusManager.instance.primaryFocus.unfocus();
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ClaimRecordDisplay(
-                        claimID: claimResultList[index]?.id,
-                        closePage: (value) {},
-                      ),
+                  builder: (context) => ClaimRecordDisplay(
+                    claimID: claimResultList[index]?.id,
+                    closePage: (value) {},
+                  ),
                 ));
           },
           child: Container(
@@ -432,87 +432,90 @@ class _ClaimListState extends State<ClaimList> {
                           flex: 2,
                           child: Container(
                               child: Column(
-                                children: [
-                                  Row(children: [
-                                    Text(
-                                        toBeginningOfSentenceCase(
+                            children: [
+                              Row(children: [
+                                Text(
+                                    toBeginningOfSentenceCase(
                                             claimResultList[index]
                                                 ?.submittedFor
                                                 ?.firstName) +
-                                            " " +
-                                            toBeginningOfSentenceCase(
-                                                claimResultList[index]
-                                                    ?.submittedFor
-                                                    ?.lastName),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: fhbStyles.fnt_doc_name))
-                                  ]),
-                                  Row(
-                                    children: [
-                                      Text("Claim no :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " +
-                                          claimResultList[index]?.claimNumber,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Membership :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " + memberShipType,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Bill Name :",
-                                          style: getTextStyleForTags()),
-                                      Text(
-                                          " " +
+                                        " " +
+                                        toBeginningOfSentenceCase(
+                                            claimResultList[index]
+                                                ?.submittedFor
+                                                ?.lastName),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: fhbStyles.fnt_doc_name))
+                              ]),
+                              Row(
+                                children: [
+                                  Text("Claim no :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " + claimResultList[index]?.claimNumber,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Membership :",
+                                      style: getTextStyleForTags()),
+                                  Text(" " + memberShipType,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Bill Name :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " +
                                               claimResultList[index]
                                                   ?.documentMetadata[0]
-                                                  ?.billName??'',
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
+                                                  ?.billName ??
+                                          '',
+                                      style: getTextStyleForValue())
                                 ],
-                              ))),
+                              ),
+                            ],
+                          ))),
                       Expanded(
                           flex: 1,
                           child: Container(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      getFormattedBillDate(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  getFormattedBillDate(claimResultList[index]
+                                          ?.documentMetadata[0]
+                                          ?.billDate ??
+                                      ''),
+                                  style: getTextStyleForTags()),
+                              Text(
+                                  "Rs " +
                                           claimResultList[index]
                                               ?.documentMetadata[0]
-                                              ?.billDate??''),
-                                      style: getTextStyleForTags()),
-                                  Text(
-                                      "Rs " +
+                                              ?.claimAmount ??
+                                      '',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: fhbStyles.fnt_doc_name)),
+                              Text("status",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: Colors.grey[600])),
+                              Text(claimResultList[index]?.status.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: getColorBasedOnSatus(
                                           claimResultList[index]
-                                              ?.documentMetadata[0]
-                                              ?.claimAmount??'',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w800,
-                                          fontSize: fhbStyles.fnt_doc_name)),
-                                  Text("status",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: Colors.grey[600])),
-                                  Text(claimResultList[index]?.status.name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: getColorBasedOnSatus(
-                                              claimResultList[index]?.status
-                                                  .name))),
-                                ],
-                              ))),
+                                              ?.status
+                                              .name))),
+                            ],
+                          ))),
                     ],
                   ),
                 ],

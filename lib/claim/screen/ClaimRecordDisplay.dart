@@ -49,7 +49,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       amount = "",
       plan = "",
       familyMember = "",
-      status = "";
+      status = "",
+      remark = "";
   ClaimListRepository claimListRepository;
   ClaimListBloc claimListBloc;
   GetRecordIdsFilter getRecordIdsFilter;
@@ -234,6 +235,29 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         style: getTextStyleForValue()))
               ],
             )),
+        if (remark != null && remark != '') getRemarkWidget(),
+      ],
+    );
+  }
+
+  getRemarkWidget() {
+    return Column(
+      children: [
+        getDivider(),
+        Padding(
+            padding: EdgeInsets.all(15),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Text("Remarks", style: getTextStyleForTags())),
+                Text(" :   "),
+                Expanded(
+                    flex: 2,
+                    child: Text(remark.toString() ?? '',
+                        style: getTextStyleForValue()))
+              ],
+            )),
       ],
     );
   }
@@ -308,6 +332,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       submittedDate =
           df.format(DateTime.parse(claimRecordDetails?.result?.submitDate));
       status = claimRecordDetails?.result?.status;
+      remark = claimRecordDetails?.result?.remark ?? '';
       plan = claimRecordDetails?.result?.planDescription;
       familyMember = claimRecordDetails?.result?.submittedForFirstName +
           " " +
@@ -414,8 +439,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   }
 
   getTextStyleForValue() {
-    return TextStyle(
-        fontWeight: FontWeight.w800, fontSize: fhbStyles.fnt_doc_name);
+    return TextStyle(fontSize: fhbStyles.fnt_doc_name, color: Colors.black);
   }
 
   getTextStyleForTags() {
