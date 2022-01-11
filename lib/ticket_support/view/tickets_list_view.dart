@@ -191,7 +191,7 @@ class _TicketsList extends State<TicketsList> {
                                 maxLines: 2,
                               ),
                               Text(
-                                'Open',
+                                ticketList[i].status == 0 ? 'Open' : 'Closed',
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w600,
@@ -245,7 +245,7 @@ class _TicketsList extends State<TicketsList> {
                           ),
                           Text(
                             constants.notificationDate(
-                                '${ticketList[i].date.toString()}'),
+                                '${ticketList[i].preferredDate.toString()}'),
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.w100,

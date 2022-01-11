@@ -1573,7 +1573,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> uploadAttachment(
+  Future<bool> uploadAttachment(
       String url, String ticketId, File image) async {
     var authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1581,52 +1581,38 @@ class ApiBaseHelper {
     var filename = image.path.split('/').last;
     final fileType = filename.split('.')[1];
 
-    var request = new http.MultipartRequest("POST", Uri.parse(_baseUrl + url));
-    request.fields['ticketId'] = ticketId;
-    request.fields['patientUserId'] = userId;
-    request.files.add(http.MultipartFile.fromBytes(
-        'attachment', await image.readAsBytes(),
-        contentType: new MediaType('image', 'jpeg')));
-    Map<String, String> headers = await headerRequest.getAuth();
-    Map<String, String> newHeaders = <String, String>{
-      'Content-Type': 'multipart/form-data'
-    };
-    request.headers.addAll(headers);
-
-    request.send().then((value) {
-      print('=====codes');
-      print(value.statusCode);
-    });
-
-    final dio = Dio();
-    // dio.options.headers['Content-Type'] = 'application/json';
-    dio.options.headers['Authorization'] = authToken;
-    dio.options.contentType = 'multipart/form-data';
-
-    // dio.options.headers['accept'] = 'application/json';
+    var dio = Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers['authorization'] = 'Bearer ' + authToken;
+    dio.options.headers['accept'] = 'application/json';
     dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-    final FormData formData = FormData.fromMap({
-      'attachment':
-          await MultipartFile.fromFile(image.path, filename: filename),
+    FormData formData = FormData.fromMap({
       'ticketId': ticketId,
       'patientUserId': userId,
     });
+
+    var fileNoun = image.path.split('/').last;
+    formData.files.add(
+      MapEntry('attachment',
+          await MultipartFile.fromFile(image.path, filename: fileNoun)),
+    );
+
     var response;
     try {
       response = await dio.post(_baseUrl + url, data: formData);
-      print('==============code============');
-      print(response.statusCode);
+      print('upload code: '+response.statusCode.toString());
       if (response.statusCode == 200) {
-        print(response.data.toString());
-        return response?.data;
+        print('upload response: '+response.data.toString());
+        return response.data['isSuccess'];
       } else {
-        return response?.data;
+        return response.data['isSuccess'];
       }
     } on DioError catch (e) {
-      print('==============dio============');
+      print("dio attachment error");
       print(e.toString());
-      return response?.data;
+      print(e);
+      return false;
     }
   }
 

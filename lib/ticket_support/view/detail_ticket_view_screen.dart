@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -5,13 +6,22 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
@@ -63,17 +73,21 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   Future<TicketDetailResponseModel> future;
   TabController _controller;
   int selectedTab = 0;
+  String authToken = '';
   @override
   void initState() {
     super.initState();
     _controller = TabController(vsync: this, length: 3);
     _controller.addListener(_handleTabSelection);
     callTicketDetailsApi();
+
     // _getHistoryData(widget.ticketUid);
   }
 
-  callTicketDetailsApi() {
+  callTicketDetailsApi() async {
+    var token = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     setState(() {
+      authToken = token;
       future = ticketViewModel.getTicketDetail(widget.ticket.uid.toString());
     });
   }
@@ -152,7 +166,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             maxLines: 2,
                           ),
                           Text(
-                            'Open',
+                            widget.ticket.status == 0 ? 'Open' : 'Closed',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,
@@ -202,7 +216,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         maxLines: 2,
                       ),
                       Text(
-                        constants.notificationDate('${ticket.date.toString()}'),
+                        constants.notificationDate(
+                            '${ticket.preferredDate.toString()}'),
                         style: TextStyle(
                           fontSize: 16.0.sp,
                           fontWeight: FontWeight.w100,
@@ -538,42 +553,42 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                     ),
                                   ),
                                 ),
-                                Flexible(
-                                  flex: 1,
-                                  child: new Container(
-                                    child: RawMaterialButton(
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .push(
-                                          MaterialPageRoute(
-                                            builder: (context) => AudioRecorder(
-                                              arguments: AudioScreenArguments(
-                                                fromVoice: false,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                            .then((results) {
-                                          /*String audioPath = results[Constants.keyAudioFile];
-                                        if (audioPath != null && audioPath != '') {
-                                          setState(() {
-                                            isLoading = true;
-                                          });
-                                          uploadFile(audioPath);
-                                        }*/
-                                        });
-                                      },
-                                      elevation: 2.0,
-                                      fillColor: Colors.white,
-                                      child: Icon(Icons.mic,
-                                          size: 25.0,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                      padding: EdgeInsets.all(12.0),
-                                      shape: CircleBorder(),
-                                    ),
-                                  ),
-                                )
+                                // Flexible(
+                                //   flex: 1,
+                                //   child: new Container(
+                                //     child: RawMaterialButton(
+                                //       onPressed: () {
+                                //         Navigator.of(context)
+                                //             .push(
+                                //           MaterialPageRoute(
+                                //             builder: (context) => AudioRecorder(
+                                //               arguments: AudioScreenArguments(
+                                //                 fromVoice: false,
+                                //               ),
+                                //             ),
+                                //           ),
+                                //         )
+                                //             .then((results) {
+                                //           /*String audioPath = results[Constants.keyAudioFile];
+                                //         if (audioPath != null && audioPath != '') {
+                                //           setState(() {
+                                //             isLoading = true;
+                                //           });
+                                //           uploadFile(audioPath);
+                                //         }*/
+                                //         });
+                                //       },
+                                //       elevation: 2.0,
+                                //       fillColor: Colors.white,
+                                //       child: Icon(Icons.mic,
+                                //           size: 25.0,
+                                //           color: Color(CommonUtil()
+                                //               .getMyPrimaryColor())),
+                                //       padding: EdgeInsets.all(12.0),
+                                //       shape: CircleBorder(),
+                                //     ),
+                                //   ),
+                                // )
                               ],
                             ),
                           ],
@@ -596,26 +611,46 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                               ticketList.attachments.length,
                                               (int index) {
                                                 return InkWell(
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12.0),
-                                                      child: Image.asset(
-                                                        'assets/icons/placeholder.jpg',
-                                                        height: 100.h,
-                                                        width: 100.w,
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) => FullPhoto(
-                                                                  url: ticketList
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      5.0) //                 <--- border radius here
+                                                                  ),
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.grey)),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Image.asset(
+                                                          ticketList
                                                                       .attachments[
                                                                           index]
                                                                       .path
-                                                                      .toString())));
+                                                                      .toString()
+                                                                      .split(
+                                                                          '.')
+                                                                      .last ==
+                                                                  'pdf'
+                                                              ? 'assets/icons/file_placeholder.png'
+                                                              : 'assets/icons/image_placeholder.png',
+                                                          color: Colors.grey,
+                                                          height: 50.h,
+                                                          width: 50.w,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    onTap: () {
+                                                      openIntent(ticketList
+                                                          .attachments[index]
+                                                          .path
+                                                          .toString());
                                                     });
                                               },
                                             ),
@@ -912,17 +947,20 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   void uploadFile(String ticketId, file) {
     try {
+      FlutterToast().getToast('Uploading Please Wait..', Colors.grey);
       ticketViewModel.userTicketService
           .uploadAttachment(ticketId, file)
           .then((value) {
-        if (value != null) {
+
+        if (value) {
+          FlutterToast().getToast('Uploaded Successfully', Colors.grey);
           callTicketDetailsApi();
-          print('Hitting Send Attachment API .. : ${value.toJson()}');
         } else {
-          print('Failed Sending Attachment ..');
+          FlutterToast().getToast('Uploaded Failed', Colors.red);
           return null;
         }
       }).catchError((e) {
+        FlutterToast().getToast('Uploaded Failed', Colors.red);
         print('Attachment ticket exception in catch error: ${e.toString()}');
         return null;
       });
@@ -933,8 +971,47 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   void _handleTabSelection() {
-    print('working tab');
     selectedTab = _controller.index;
+  }
+
+  Future<void> openIntent(String string) async {
+    FlutterToast().getToast('Please wait', Colors.grey);
+    String path = await downloadFile(string);
+    print(path);
+    if (string.split('.').last == 'pdf') {
+      final controller = Get.find<PDFViewController>();
+      final data = OpenPDF(
+          type: PDFLocation.Path, path: path, title: string.split('/').last);
+      controller.data = data;
+      Get.to(() => PDFView());
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => FullPhoto(
+            url: "",
+            filePath: path,
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<String> downloadFile(String fileUrl) async {
+    String filePath = await FHBUtils.createFolderInAppDocDirClone(
+        "doc", fileUrl.split('/').last);
+    var file = File('$filePath' /*+ fileType*/);
+    final request = await ApiServices.post(
+      BASE_URL + 'trudesk/tickets/getAttachment',
+      body: {"fileUrl": fileUrl},
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ' + authToken,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+    );
+    final bytes = request.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    return file.path.toString();
   }
 }
 
