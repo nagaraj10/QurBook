@@ -309,6 +309,7 @@ class _FeedbacksState extends State<Feedbacks> {
   Widget getDropDown() {
     return Obx(
       () => DropdownButton<HealthRecordTypeCollection>(
+        isExpanded: true,
         items: controller.feedbackType.result.first.healthRecordTypeCollection
             .map((healthRecordType) {
           var value = healthRecordType;
