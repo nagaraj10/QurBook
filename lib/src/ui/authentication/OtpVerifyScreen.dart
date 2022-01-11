@@ -611,6 +611,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
+    if(widget.fromSignIn){
+      PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
+    }else{
+      PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
+    }
     PageNavigator.goToPermanent(context, router.rt_Landing);
   }
 

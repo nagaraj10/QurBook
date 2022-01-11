@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
+import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -306,6 +308,16 @@ class IosNotificationHandler {
       } else {
         CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
       }
+    } else if (model.redirect == parameters.claimList &&
+        model.claimId != null) {
+      // final userId = PreferenceUtil.getStringValue(KEY_USERID);
+      // if (model.userId == userId) {
+      Get.to(
+        () => ClaimRecordDisplay(
+          claimID: model.claimId,
+        ),
+      );
+      // }
     } else if (model.redirect == parameters.myPlanDetails &&
         (model.planId ?? '').isNotEmpty) {
       final userId = PreferenceUtil.getStringValue(KEY_USERID);

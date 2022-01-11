@@ -673,7 +673,7 @@ class _LandingScreenState extends State<LandingScreen> {
         DynamicLinks.processDynamicLink(deepLink);
       } catch (e) {}
     }
-    //checkCpUser();
+    checkCpUser();
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {

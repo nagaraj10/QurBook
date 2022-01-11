@@ -24,6 +24,7 @@ import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
 import 'regiment/models/regiment_arguments.dart';
 
@@ -794,6 +795,20 @@ class _MyFHBState extends State<MyFHB> {
           CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
               redirect: "myplandetails");
         }
+      } else if (passedValArr[0] == 'claimList') {
+        final claimId = passedValArr[1];
+        final userId = passedValArr[2];
+        final currentUserId = PreferenceUtil.getStringValue(KEY_USERID);
+        fbaLog(eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'claim_Details',
+          'navigationPage': 'Claim Record Display',
+        });
+        Get.to(
+          ClaimRecordDisplay(
+            claimID: claimId,
+          ),
+        );
       } else if (passedValArr[0] == 'Renew' || passedValArr[0] == 'Callback') {
         final planid = passedValArr[1];
         final template = passedValArr[2];
@@ -1171,6 +1186,15 @@ class _MyFHBState extends State<MyFHB> {
               'template': '${navRoute.split('&')[2]}',
               'userId': '${navRoute.split('&')[3]}',
               'patName': '${navRoute.split('&')[4]}'
+            },
+          );
+        }else if (navRoute.split('&')[0] == 'claimList') {
+
+          return SplashScreen(
+            nsRoute: navRoute.split('&')[0],
+            bundle: {
+              'claimId': '${navRoute.split('&')[1]}',
+              'userId': '${navRoute.split('&')[2]}'
             },
           );
         } else {
