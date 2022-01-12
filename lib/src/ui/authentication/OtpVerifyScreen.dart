@@ -22,6 +22,7 @@ class OtpVerifyScreen extends StatefulWidget {
   final String enteredMobNumber;
   final String selectedCountryCode;
   final bool fromSignIn;
+  final bool fromSignUp;
   final bool forEmailVerify;
 
   const OtpVerifyScreen(
@@ -29,6 +30,7 @@ class OtpVerifyScreen extends StatefulWidget {
       @required this.enteredMobNumber,
       @required this.selectedCountryCode,
       this.fromSignIn,
+      this.fromSignUp,
       this.forEmailVerify})
       : super(key: key);
 
@@ -611,6 +613,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
+    if(widget.fromSignUp!=null&&widget.fromSignUp){
+      PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
+    }else{
+      PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
+    }
     PageNavigator.goToPermanent(context, router.rt_Landing);
   }
 

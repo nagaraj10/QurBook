@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/src/model/common_response.dart';
+import 'package:myfhb/src/model/common_response_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/ticket_support/model/create_ticket_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
@@ -38,11 +39,11 @@ class UserTicketService {
     return _userTicketDetailModel;
   }
 
-  Future<CommonResponse> uploadAttachment(String ticketId, File image) async {
+  Future<bool> uploadAttachment(String ticketId, File image) async {
     final res = await _helper.uploadAttachment(
         query.qr_upload_attachment, ticketId, image);
-    final response = CommonResponse.fromJson(res);
-    return response;
+    // final response = CommonResponseModel.fromJson(res);
+    return res;
   }
 
   // Get List of ticket types -- Yogeshwar

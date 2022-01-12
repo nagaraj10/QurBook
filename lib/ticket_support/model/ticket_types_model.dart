@@ -37,18 +37,21 @@ class TicketTypesResult {
     this.priorities,
     this.id,
     this.name,
+    this.iconUrl,
     this.v,
   });
 
   List<Priority> priorities;
   String id;
   String name;
+  String iconUrl;
   int v;
 
   factory TicketTypesResult.fromJson(Map<String, dynamic> json) => TicketTypesResult(
     priorities: List<Priority>.from(json["priorities"].map((x) => Priority.fromJson(x))),
     id: json["_id"],
     name: json["name"],
+    iconUrl: json["iconUrl"]??null,
     v: json["__v"],
   );
 
@@ -56,6 +59,7 @@ class TicketTypesResult {
     "priorities": List<dynamic>.from(priorities.map((x) => x.toJson())),
     "_id": id,
     "name": name,
+    "iconUrl": iconUrl,
     "__v": v,
   };
 }

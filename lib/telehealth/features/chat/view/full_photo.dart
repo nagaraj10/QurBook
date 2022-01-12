@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -7,8 +9,9 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class FullPhoto extends StatelessWidget {
   final String url;
+  final String filePath;
 
-  FullPhoto({Key key, @required this.url}) : super(key: key);
+  FullPhoto({Key key, @required this.url, this.filePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +36,20 @@ class FullPhoto extends StatelessWidget {
         ),
         centerTitle: false,
       ),
-      body: FullPhotoScreen(url: url),
+      body: FullPhotoScreen(
+        url: url,
+        filePath: filePath,
+      ),
     );
   }
 }
 
 class FullPhotoScreen extends StatefulWidget {
   final String url;
+  final String filePath;
 
-  FullPhotoScreen({Key key, @required this.url}) : super(key: key);
+  FullPhotoScreen({Key key, @required this.url, this.filePath})
+      : super(key: key);
 
   @override
   State createState() => FullPhotoScreenState(url: url);
@@ -71,6 +79,10 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+    if (widget.filePath == null) {
+      return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+    } else {
+      return Container(child: Center(child: Image.file(File(widget.filePath))));
+    }
   }
 }

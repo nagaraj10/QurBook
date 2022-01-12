@@ -33,6 +33,7 @@ class OnTapNotification:BroadcastReceiver() {
         val raw_title = p1?.getStringExtra(Constants.PROP_RAWTITLE)
         val raw_body = p1?.getStringExtra(Constants.PROP_RAWBODY)
         val user_id = p1?.getStringExtra(Constants.PROB_USER_ID)
+        val claimId = p1?.getStringExtra(Constants.PROP_CLAIM_ID)
         val appLog = p1?.getStringExtra(p0?.getString(R.string.ns_type_applog))
 
         nsManager.cancel(notificationId!! as Int)
@@ -64,6 +65,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
         launchIntent?.putExtra(Constants.PROB_EXTERNAL_LINK,externalLink)
         launchIntent?.putExtra(Constants.PROB_USER_ID,user_id)
+        launchIntent?.putExtra(Constants.PROP_CLAIM_ID,claimId)
         launchIntent?.putExtra(p0.getString(R.string.ns_type_applog),appLog)
         p0.startActivity(launchIntent)
     }

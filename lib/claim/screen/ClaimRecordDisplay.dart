@@ -24,7 +24,6 @@ import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
-
 class ClaimRecordDisplay extends StatefulWidget {
   Function(String) closePage;
   final String claimID;
@@ -32,8 +31,7 @@ class ClaimRecordDisplay extends StatefulWidget {
   @override
   _ClaimRecordDisplayState createState() => _ClaimRecordDisplayState();
 
-  ClaimRecordDisplay(
-      {this.closePage, this.claimID}) {}
+  ClaimRecordDisplay({this.closePage, this.claimID}) {}
 }
 
 class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
@@ -51,7 +49,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       amount = "",
       plan = "",
       familyMember = "",
-      status = "";
+      status = "",
+      remark = "";
   ClaimListRepository claimListRepository;
   ClaimListBloc claimListBloc;
   GetRecordIdsFilter getRecordIdsFilter;
@@ -93,12 +92,14 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
-            claimRecordDetails!=null && claimRecordDetails.result!=null?getClaimDetails():getClaimDetailsFromFutureBuilder()
+            claimRecordDetails != null && claimRecordDetails.result != null
+                ? getClaimDetails()
+                : getClaimDetailsFromFutureBuilder()
           ],
         ));
   }
 
-  Widget getClaimDetails(){
+  Widget getClaimDetails() {
     initializeData();
     return ListView(
       children: <Widget>[
@@ -108,18 +109,16 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             ),
             color: Colors.black87,
             child: (getRecordIdsFilter != null &&
-                getRecordIdsFilter.result != null &&
-                getRecordIdsFilter.result.length > 0 &&
-                getRecordIdsFilter
-                    .result[0].healthRecordCollection !=
-                    null &&
-                getRecordIdsFilter
-                    .result[0].healthRecordCollection.length >
-                    0)
+                    getRecordIdsFilter.result != null &&
+                    getRecordIdsFilter.result.length > 0 &&
+                    getRecordIdsFilter.result[0].healthRecordCollection !=
+                        null &&
+                    getRecordIdsFilter.result[0].healthRecordCollection.length >
+                        0)
                 ? getWidgetForImages(
-                getRecordIdsFilter.result[0].healthRecordCollection)
-                : getImageFromMetaId(claimRecordDetails?.result?.
-            documentMetadata[0]?.healthRecordId)),
+                    getRecordIdsFilter.result[0].healthRecordCollection)
+                : getImageFromMetaId(claimRecordDetails
+                    ?.result?.documentMetadata[0]?.healthRecordId)),
         Padding(
           padding: EdgeInsets.all(5),
           child: Builder(
@@ -135,12 +134,13 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child:  Text("Bill Name",style:getTextStyleForTags())),
+                    flex: 1,
+                    child: Text("Bill Name", style: getTextStyleForTags())),
                 Text(":"),
                 Expanded(
-                    flex:2,
-                    child:  Text("   "+billName??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text("   " + billName ?? "",
+                        style: getTextStyleForValue()))
               ],
             )),
         getDivider(),
@@ -149,12 +149,13 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child:  Text("Claim no",style:getTextStyleForTags())),
+                    flex: 1,
+                    child: Text("Claim no", style: getTextStyleForTags())),
                 Text(":"),
                 Expanded(
-                    flex:2,
-                    child:  Text("   "+claimNo??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text("   " + claimNo ?? "",
+                        style: getTextStyleForValue()))
               ],
             )),
         getDivider(),
@@ -163,12 +164,14 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child: Text("Submitted date",style:getTextStyleForTags())),
+                    flex: 1,
+                    child:
+                        Text("Submitted date", style: getTextStyleForTags())),
                 Text(":"),
                 Expanded(
-                    flex:2,
-                    child:  Text("   "+submittedDate??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text("   " + submittedDate ?? "",
+                        style: getTextStyleForValue()))
               ],
             )),
         getDivider(),
@@ -177,12 +180,44 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child:  Text("Amount",style:getTextStyleForTags())),
+                    flex: 1,
+                    child: Text("Amount", style: getTextStyleForTags())),
                 Text(":"),
                 Expanded(
-                    flex:2,
-                    child:  Text("   "+amount??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text("   " + amount ?? "",
+                        style: getTextStyleForValue()))
+              ],
+            )),
+        getDivider(),
+        Padding(
+          padding: EdgeInsets.all(15),
+          child: Row(
+            children: [
+              Expanded(
+                  flex: 1, child: Text("Plan", style: getTextStyleForTags())),
+              Text(":"),
+              Expanded(
+                  flex: 2,
+                  child: Text("   " + (plan ?? " "),
+                      style: getTextStyleForValue()))
+            ],
+          ),
+        ),
+        getDivider(),
+        Padding(
+            padding: EdgeInsets.all(15),
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Text("Family Member", style: getTextStyleForTags())),
+                Text(":"),
+                Expanded(
+                  flex: 2,
+                  child: Text("   " + familyMember ?? "",
+                      style: getTextStyleForValue()),
+                )
               ],
             )),
         getDivider(),
@@ -191,45 +226,42 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child:  Text("Plan",style:getTextStyleForTags())),
+                    flex: 1,
+                    child: Text("Status", style: getTextStyleForTags())),
                 Text(":"),
                 Expanded(
-                    flex:2,
-                    child:  Text("   "+plan??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text("   " + status ?? "",
+                        style: getTextStyleForValue()))
               ],
             )),
+        if (remark != null && remark != '') getRemarkWidget(),
+      ],
+    );
+  }
+
+  getRemarkWidget() {
+    return Column(
+      children: [
         getDivider(),
         Padding(
             padding: EdgeInsets.all(15),
             child: Row(
               children: [
                 Expanded(
-                    flex:1,
-                    child: Text("Family Member",style:getTextStyleForTags())),
-                Text(":"),
+                    flex: 1,
+                    child: Text("Remarks", style: getTextStyleForTags())),
+                Text(" :   "),
                 Expanded(
-                  flex:2,
-                  child:  Text("   "+familyMember??"",style:getTextStyleForValue()),)
-              ],
-            )),
-        getDivider(),
-        Padding(
-            padding: EdgeInsets.all(15),
-            child: Row(
-              children: [
-                Expanded(
-                    flex:1,
-                    child: Text("Status",style:getTextStyleForTags())),
-                Text(":"),
-                Expanded(
-                    flex:2,
-                    child:  Text("   "+status??"",style:getTextStyleForValue()))
+                    flex: 2,
+                    child: Text(remark.toString() ?? '',
+                        style: getTextStyleForValue()))
               ],
             )),
       ],
     );
   }
+
   getCarousalImage(List<HealthRecordCollection> imagesPath) {
     return Container(
       constraints: BoxConstraints(
@@ -238,65 +270,71 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       color: Colors.black87,
       child: Padding(
           padding: EdgeInsets.all(10),
-          child: Column(children: [Expanded(
-            child: CarouselSlider(
-              carouselController: carouselSlider,
-              items: imagesPath.map((imgUrl) {
-                return Builder(
-                  builder: (context) {
-                    return Container(
-                        height: double.infinity,
-                        child: Image.network(
-                          imgUrl.healthRecordUrl,
-                          height: 200.0.h,
-                          width: 200.0.h,
-                          headers: {
-                            HttpHeaders.authorizationHeader: authToken
-                          },
-                        ));
-                    /*Container(
+          child: Column(
+            children: [
+              Expanded(
+                child: CarouselSlider(
+                  carouselController: carouselSlider,
+                  items: imagesPath.map((imgUrl) {
+                    return Builder(
+                      builder: (context) {
+                        return Container(
+                            height: double.infinity,
+                            child: Image.network(
+                              imgUrl.healthRecordUrl,
+                              height: 200.0.h,
+                              width: 200.0.h,
+                              headers: {
+                                HttpHeaders.authorizationHeader: authToken
+                              },
+                            ));
+                        /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
                                   Uint8List.fromList(imgUrl),
                                   fit: BoxFit.fill,
                                 ),
                               );*/
-                  },
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: 400.0.h,
-                //width: 1.sw,
-                initialPage: 0,
-                enlargeCenterPage: true,
-                reverse: false,
-                enableInfiniteScroll: false,
-                // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index, carouselPageChangedReason) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-              ),
-            ),
-          )],)),
+                      },
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    height: 400.0.h,
+                    //width: 1.sw,
+                    initialPage: 0,
+                    enlargeCenterPage: true,
+                    reverse: false,
+                    enableInfiniteScroll: false,
+                    // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                    scrollDirection: Axis.horizontal,
+                    onPageChanged: (index, carouselPageChangedReason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
+                ),
+              )
+            ],
+          )),
     );
   }
 
   void initializeData() {
-    if(claimRecordDetails!=null && claimRecordDetails.result!=null) {
+    if (claimRecordDetails != null && claimRecordDetails.result != null) {
       billName = claimRecordDetails?.result?.documentMetadata[0].billName;
       claimNo = claimRecordDetails?.result?.claimNumber;
-      amount = variable.strRs + ". " +
+      amount = variable.strRs +
+          ". " +
           claimRecordDetails?.result?.documentMetadata[0].claimAmount;
       final df = new DateFormat('dd-MMM-yyyy');
 
-      submittedDate = df.format(
-          DateTime.parse(claimRecordDetails?.result?.submitDate));
+      submittedDate =
+          df.format(DateTime.parse(claimRecordDetails?.result?.submitDate));
       status = claimRecordDetails?.result?.status;
+      remark = claimRecordDetails?.result?.remark ?? '';
       plan = claimRecordDetails?.result?.planDescription;
-      familyMember = claimRecordDetails?.result?.submittedForFirstName+
+      familyMember = claimRecordDetails?.result?.submittedForFirstName +
           " " +
           claimRecordDetails?.result?.submittedForLastName;
     }
@@ -366,8 +404,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ImageSlider(
-                                imageList: healthRecordCollection,
-                              )));
+                                    imageList: healthRecordCollection,
+                                  )));
                     }
                   },
                   icon: Icon(
@@ -388,22 +426,27 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
     );
   }
 
-  Widget getDivider(){
+  Widget getDivider() {
     return Divider(
       color: Colors.grey[300],
       thickness: 2.0.h,
       height: 2.0.h,
     );
   }
+
   Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
     return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
   }
 
   getTextStyleForValue() {
-    return TextStyle(fontWeight: FontWeight.w800, fontSize: fhbStyles.fnt_doc_name);
+    return TextStyle(fontSize: fhbStyles.fnt_doc_name, color: Colors.black);
   }
+
   getTextStyleForTags() {
-    return TextStyle(fontWeight: FontWeight.w800, fontSize: fhbStyles.fnt_doc_specialist,color: Colors.grey[600]);
+    return TextStyle(
+        fontWeight: FontWeight.w800,
+        fontSize: fhbStyles.fnt_doc_specialist,
+        color: Colors.grey[600]);
   }
 
   getClaimDetailsFromFutureBuilder() {
@@ -430,6 +473,4 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       },
     );
   }
-
-
 }

@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -439,6 +440,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             );
                           } else if (payload?.redirectTo ==
                               parameters.myPlanDetails) {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo ==
+                              parameters.claimList) {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -1099,6 +1106,16 @@ class _NotificationScreen extends State<NotificationScreen> {
             ),
           ),
         );
+        readUnreadAction(result);
+        break;
+      case "claimList":
+        if ((result?.messageDetails?.payload?.claimId ?? '').isNotEmpty) {
+          Get.to(
+            () => ClaimRecordDisplay(
+              claimID: result?.messageDetails?.payload?.claimId,
+            ),
+          );
+        }
         readUnreadAction(result);
         break;
       default:
