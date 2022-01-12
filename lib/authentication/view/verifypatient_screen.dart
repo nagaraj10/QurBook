@@ -53,7 +53,8 @@ class VerifyPatient extends StatefulWidget {
       this.userConfirm,
       this.userId,
       this.dataForResendOtp,
-      this.emailId});
+      this.emailId,
+      this.fromSignUp});
 
   final String PhoneNumber;
   final String from;
@@ -63,6 +64,7 @@ class VerifyPatient extends StatefulWidget {
   final RelationsShipModel relationship;
   final bool isPrimaryNoSelected;
   final bool userConfirm;
+  final bool fromSignUp;
   final String userId;
   final String emailId;
   Map<String, dynamic> dataForResendOtp;
@@ -641,6 +643,11 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
           .sendDeviceToken(
               userId, widget.emailId, widget.PhoneNumber, token, true)
           .then((value) {
+        if(widget.fromSignUp!=null&&widget.fromSignUp){
+          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
+        }else{
+          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
+        }
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);
@@ -689,6 +696,11 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
+        if(widget.fromSignUp!=null&&widget.fromSignUp){
+          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
+        }else{
+          PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
+        }
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);

@@ -121,6 +121,9 @@ const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
 const String strResendGenerateOTP = 'user-relationship/generate-otp';
 
+//tickets
+const String ticketCreatedSuccessfully='Ticket Created Successfully';
+
 //Strings used in ChangePassword
 const String strChangePasswordText =
     'OTP has been sent to the registered mobile number, enter it below to change the password';
