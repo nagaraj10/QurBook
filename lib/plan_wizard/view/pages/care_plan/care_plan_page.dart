@@ -44,6 +44,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
         .getCarePlanList('');
+
+
+
   }
 
   @override

@@ -156,6 +156,7 @@ class _ResultPage extends State<PaymentResultPage> {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
+                              Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
 
                               if (status) {
                                 //widget.closePage(STR_SUCCESS);
@@ -203,6 +204,8 @@ class _ResultPage extends State<PaymentResultPage> {
                                   Provider.of<CheckoutPageProvider>(context,
                                           listen: false)
                                       .loader(false, isNeedRelod: true);
+                                  Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
+
                                   Provider.of<RegimentViewModel>(
                                     Get.context,
                                     listen: false,

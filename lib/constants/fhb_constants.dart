@@ -619,12 +619,12 @@ const String STR_NOTES_HINT =
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
-const String UnitPreference = 'Unit Preferences';
 const String STR_DATE_FORMAT = 'yyyy-MM-dd';
 const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
+const String Rmarks_HINT = "Remarks";
+
 // True desk
 const String strMyTickets = 'Tickets';
-const String strAddMyTicket = 'Add New Ticket';
 const String strSubmitNewTicket = 'SUBMIT TICKET';
 const String strTicketTitle = 'Title';
 const String strTicketDesc = 'Description';

@@ -181,15 +181,20 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             }
 
             Future.delayed(Duration(milliseconds: 100), () {
-              bool needReload =
-                  Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.isListEmpty !=
-                      (snapshot?.data?.result.length > 0 ? true : false);
+              try {
+                bool needReload =
+                    Provider
+                        .of<PlanWizardViewModel>(context, listen: false)
+                        ?.isListEmpty !=
+                        (snapshot?.data?.result?.length > 0 ? true : false);
 
-              Provider.of<PlanWizardViewModel>(context, listen: false)
-                  ?.updateBottonLayoutEmptyList(
-                      snapshot?.data?.result.length > 0 ? true : false,
-                      needReload: needReload);
+                Provider.of<PlanWizardViewModel>(context, listen: false)
+                    ?.updateBottonLayoutEmptyList(
+                    snapshot?.data?.result?.length > 0 ? true : false,
+                    needReload: needReload);
+              }catch(e){
+
+              }
             });
 
             return carePlanList(
