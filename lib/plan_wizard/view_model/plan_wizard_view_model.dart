@@ -618,7 +618,8 @@ class PlanWizardViewModel extends ChangeNotifier {
         }
 
         Get.snackbar(
-            '', (addToCartModel?.message ?? 'Adding Failed! Try again'));
+            '', (addToCartModel?.message ?? 'Adding Failed! Try again'),backgroundColor: Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),colorText: Colors.white
+    );
       }
 
       return addToCartModel;
