@@ -510,7 +510,7 @@ class _ClaimListState extends State<ClaimList> {
                                           fontSize: fhbStyles.fnt_day,
                                           color: getColorBasedOnSatus(
                                               claimResultList[index]?.status
-                                                  .name))),
+                                                  .code))),
                                 ],
                               ))),
                     ],
@@ -542,11 +542,11 @@ class _ClaimListState extends State<ClaimList> {
 
   getColorBasedOnSatus(String status) {
     switch (status) {
-      case "Submitted":
+      case "CLAIM_INITIATED":
         return Colors.amber;
-      case "Claim rejected":
+      case "CLAIM_REJECTED":
         return Colors.red;
-      case "Claim accepted":
+      case "CLAIM_ACCEPTED":
         return Colors.green;
       default:
         return Color(new CommonUtil().getMyPrimaryColor());

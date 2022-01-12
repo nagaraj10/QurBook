@@ -607,6 +607,8 @@ const String STR_NOTES_HINT =
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
 
+const String Rmarks_HINT="Remarks";
+
 // True desk
 const String strMyTickets = 'Tickets';
 const String strAddMyTicket = 'Add New Ticket';

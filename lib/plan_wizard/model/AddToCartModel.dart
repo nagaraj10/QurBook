@@ -8,6 +8,7 @@ class AddToCartModel {
   AddToCartModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
+    if(json.containsKey('result'))
     result = json['result'];
   }
 
