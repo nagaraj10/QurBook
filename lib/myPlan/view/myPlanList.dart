@@ -55,7 +55,11 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.getCreditBalance();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
+
     PreferenceUtil.init();
 
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MyPlan);

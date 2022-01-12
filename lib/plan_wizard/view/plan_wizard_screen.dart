@@ -47,7 +47,10 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
         );
       });
     }
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.getCreditBalance();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
+    Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
     Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.isPlanWizardActive = true;
   }
