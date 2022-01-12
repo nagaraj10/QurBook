@@ -144,7 +144,7 @@ class _ClaimListState extends State<ClaimList> {
                     1.0
                   ])),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
                     children: <Widget>[

@@ -369,11 +369,16 @@ class CommonUtil {
   }
 
   static Future<void> showLoadingDialog(
-      BuildContext context, GlobalKey key, String msgToDisplay) async {
+      BuildContext context, GlobalKey key, String msgToDisplay,{bool isAutoDismiss=false}) async {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (context) {
+          if(isAutoDismiss){
+            Future.delayed(Duration(seconds: 6), () {
+              Navigator.of(context).pop(true);
+            });
+          }
           return WillPopScope(
               onWillPop: () async => true,
               child: SimpleDialog(
