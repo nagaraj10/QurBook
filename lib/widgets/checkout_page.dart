@@ -513,7 +513,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     var result =
                                                         await CheckoutPageWidgets()
                                                             .profileValidationCheckOnCart(
-                                                                context);
+                                                                context,feeZero: (value?.totalProductCount ??
+                                                            0) >
+                                                            0
+                                                            ?false:true);
                                                     if (result ?? false) {
                                                       planSubLogic(value);
                                                     }
