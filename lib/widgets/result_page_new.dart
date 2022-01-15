@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -156,21 +157,25 @@ class _ResultPage extends State<PaymentResultPage> {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
-                              Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
-
                               if (status) {
                                 //widget.closePage(STR_SUCCESS);
-                                Get.offAllNamed(router.rt_MyPlans);
+                                SchedulerBinding.instance
+                                    .addPostFrameCallback((_) async {
+                                  Get.offAllNamed(router.rt_MyPlans);
+                                });
                               } else {
                                 if (widget?.isFreePlan ?? false) {
                                   Get.back();
                                 } else {
-                                  Get.offAllNamed(
-                                    router.rt_Landing,
-                                    arguments: LandingArguments(
-                                      needFreshLoad: false,
-                                    ),
-                                  );
+                                  SchedulerBinding.instance
+                                      .addPostFrameCallback((_) async {
+                                    Get.offAllNamed(
+                                      router.rt_Landing,
+                                      arguments: LandingArguments(
+                                        needFreshLoad: false,
+                                      ),
+                                    );
+                                  });
                                 }
                               }
                             },
@@ -204,8 +209,6 @@ class _ResultPage extends State<PaymentResultPage> {
                                   Provider.of<CheckoutPageProvider>(context,
                                           listen: false)
                                       .loader(false, isNeedRelod: true);
-                                  Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
-
                                   Provider.of<RegimentViewModel>(
                                     Get.context,
                                     listen: false,
@@ -214,7 +217,10 @@ class _ResultPage extends State<PaymentResultPage> {
                                     Get.context,
                                     listen: false,
                                   ).regimentFilter = RegimentFilter.Scheduled;
-                                  await Get.offAllNamed(router.rt_Regimen);
+                                  SchedulerBinding.instance
+                                      .addPostFrameCallback((_) async {
+                                    await Get.offAllNamed(router.rt_Regimen);
+                                  });
                                 },
                                 child: Text(
                                   STR_REGIMENT.toUpperCase(),
@@ -262,9 +268,8 @@ class _ResultPage extends State<PaymentResultPage> {
     );
   }
 
-  Widget getRetryButton(){
-
-    if(!status&&!widget?.isFreePlan??false){
+  Widget getRetryButton() {
+    if (!status && !widget?.isFreePlan ?? false) {
       return FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -273,10 +278,8 @@ class _ResultPage extends State<PaymentResultPage> {
         textColor: Colors.white,
         padding: EdgeInsets.all(12.0),
         onPressed: () {
-          Provider.of<CheckoutPageProvider>(context,
-              listen: false)
+          Provider.of<CheckoutPageProvider>(context, listen: false)
               .loader(false, isNeedRelod: true);
-
 
           Navigator.pop(context);
           Navigator.pushReplacement(
@@ -305,10 +308,8 @@ class _ResultPage extends State<PaymentResultPage> {
           ),
         ),
       );
-    }else{
+    } else {
       return SizedBox.shrink();
     }
-
   }
-
 }
