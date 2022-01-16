@@ -95,11 +95,13 @@ class PlanWizardService {
     paymentInput['productType'] = 'PRD_PLAN';
     paymentInput['paidAmount'] = price;
     additionalInfo['isRenewal'] = isRenew;
-    additionalInfo['isMembershipAvail'] = isMemberShipAvail;
-    additionalInfo['remarks'] = remarks;
-    additionalInfo['PlanType'] = planType;
-    additionalInfo['actualFee'] = actualFee;
-    additionalInfo['newFee'] = isMemberShipAvail?0:price;
+    if(!isRenew) {
+      additionalInfo['isMembershipAvail'] = isMemberShipAvail;
+      additionalInfo['remarks'] = remarks;
+      additionalInfo['PlanType'] = planType;
+      additionalInfo['actualFee'] = actualFee;
+      additionalInfo['newFee'] = isMemberShipAvail ? 0 : price;
+    }
     additionalInfo['tag'] = tag;
     paymentInput['additionalInfo'] = additionalInfo;
     var jsonString = convert.jsonEncode(paymentInput);

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/feedback/Controller/FeedbackController.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import '../common/AudioWidget.dart';
@@ -141,193 +143,228 @@ class _FeedbacksState extends State<Feedbacks> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(CommonUtil().getMyGredientColor()),
-          leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                size: 24.0.sp,
-              ),
-              onPressed: () => Navigator.of(context).pop()),
-          title: Text(''),
-          centerTitle: false,
-          elevation: 0,
+      appBar: AppBar(
+        backgroundColor: Color(CommonUtil().getMyGredientColor()),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
+          onPressed: () {
+            controller.removeSelectedType();
+            Get.back();
+          },
         ),
-        body: Obx(
-          () {
-            return controller.loadingData.isTrue
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : controller.feedbackType == null
-                    ? Center(
-                        child: Text(
-                          'Please re-try after some time',
-                        ),
-                      )
-                    : Container(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                  color:
-                                      Color(CommonUtil().getMyGredientColor()),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        /*  Container(
+        title: Text(''),
+        centerTitle: false,
+        elevation: 0,
+      ),
+      body: Obx(
+        () {
+          return controller.loadingData.isTrue
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : controller.feedbackType == null
+                  ? Center(
+                      child: Text(
+                        'Please re-try after some time',
+                      ),
+                    )
+                  : Container(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                                color: Color(CommonUtil().getMyGredientColor()),
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      /*  Container(
                           height: 60.0.h,
                         ), */
-                                        Padding(
-                                          padding: EdgeInsets.all(10),
-                                          child: Image.asset(variable.icon_fhb,
-                                              width: 100.0.h, height: 100.0.h),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(left: 20),
-                                            child: Text(variable.strFeedBack,
-                                                style: TextStyle(
-                                                    fontSize: 24.0.sp,
-                                                    color: Colors.white))),
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 20),
-                                          child: Text(
-                                            variable.strFeedbackExp,
-                                            softWrap: true,
-                                            style: TextStyle(
-                                                color: Colors.white70),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )),
-                              Container(
-                                height: 10.0.h,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    getDropDown(),
-                                    SizedBox(
-                                      height: 10.0.h,
-                                    ),
-                                    _showFeedbacktextFiled(),
-                                    Divider(),
-                                    Container(
-                                      height: 10.0.h,
-                                    ),
-                                    Container(
-                                      child: Text(variable.strAttachImage),
-                                    ),
-                                    SizedBox(
-                                      height: 10.0.h,
-                                    ),
-                                    Container(
-                                      height: 80.0.h,
-                                      width: 80.0.h,
-                                      color: ColorUtils.greycolor,
-                                      child: IconButton(
-                                        icon: ImageIcon(
-                                          AssetImage(variable.icon_attach),
-                                          color: Color(
-                                              CommonUtil().getMyPrimaryColor()),
-                                          size: 32.0.sp,
-                                        ),
-                                        onPressed: loadAssets,
+                                      Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Image.asset(variable.icon_fhb,
+                                            width: 100.0.h, height: 100.0.h),
                                       ),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 20),
+                                          child: Text(variable.strFeedBack,
+                                              style: TextStyle(
+                                                  fontSize: 24.0.sp,
+                                                  color: Colors.white))),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Text(
+                                          variable.strFeedbackExp,
+                                          softWrap: true,
+                                          style:
+                                              TextStyle(color: Colors.white70),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Container(
+                              height: 10.0.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  getDropDown(),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  _showFeedbacktextFiled(),
+                                  // Divider(),
+                                  Container(
+                                    height: 10.0.h,
+                                  ),
+                                  Container(
+                                    child: Text(variable.strAttachImage),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  Container(
+                                    height: 80.0.h,
+                                    width: 80.0.h,
+                                    color: ColorUtils.greycolor,
+                                    child: IconButton(
+                                      icon: ImageIcon(
+                                        AssetImage(variable.icon_attach),
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        size: 32.0.sp,
+                                      ),
+                                      onPressed: loadAssets,
                                     ),
-                                    buildGridView(),
-                                    SizedBox(
-                                      height: 20.0.h,
-                                    ),
-                                    Container(
-                                      child: Text(variable.strAddVoice),
-                                    ),
-                                    SizedBox(
-                                      height: 10.0.h,
-                                    ),
-                                    containsAudioMain
-                                        ? AudioWidget(audioPathMain,
+                                  ),
+                                  buildGridView(),
+                                  SizedBox(
+                                    height: 20.0.h,
+                                  ),
+                                  Container(
+                                    child: Text(variable.strAddVoice),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  containsAudioMain
+                                      ? AudioWidget(audioPathMain,
+                                          (containsAudio, audioPath) {
+                                          audioPathMain = audioPath;
+                                          containsAudioMain = containsAudio;
+                                          setState(() {});
+                                        })
+                                      : Container(
+                                          height: 80.0.h,
+                                          width: 80.0.h,
+                                          color: ColorUtils.greycolor,
+                                          child: fhbBasicWidget.getMicIcon(
+                                            context,
+                                            containsAudioMain,
+                                            audioPathMain,
                                             (containsAudio, audioPath) {
-                                            audioPathMain = audioPath;
-                                            containsAudioMain = containsAudio;
-
-                                            setState(() {});
-                                          })
-                                        : Container(
-                                            height: 80.0.h,
-                                            width: 80.0.h,
-                                            color: ColorUtils.greycolor,
-                                            child: fhbBasicWidget.getMicIcon(
-                                                context,
-                                                containsAudioMain,
-                                                audioPathMain,
-                                                (containsAudio, audioPath) {
                                               audioPathMain = audioPath;
                                               containsAudioMain = containsAudio;
                                               setState(() {});
-                                            })),
-                                  ],
-                                ),
+                                            },
+                                          ),
+                                        ),
+                                ],
                               ),
-                              Center(
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(height: 20.0.h),
-                                    fhbBasicWidget.getSaveButton(() {
-                                      setState(() {
-                                        feedbackController.text.isEmpty
-                                            ? isFeedBackEmptied = true
-                                            : isFeedBackEmptied = false;
-                                        isFeedBackEmptied
-                                            ? null
-                                            : onPostDataToServer(
-                                                context, imagePaths);
-                                      });
-                                    }),
-                                    SizedBox(height: 20.0.h)
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                            Center(
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 20.0.h),
+                                  fhbBasicWidget.getSaveButton(
+                                    () {
+                                      setState(
+                                        () {
+                                          feedbackController.text.isEmpty
+                                              ? isFeedBackEmptied = true
+                                              : isFeedBackEmptied = false;
+                                          isFeedBackEmptied
+                                              ? null
+                                              : onPostDataToServer(
+                                                  context,
+                                                  imagePaths,
+                                                );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: 20.0.h)
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                      );
-          },
-        )
-
-        // This trailing comma makes auto-formatting nicer for build methods.
-        );
+                      ),
+                    );
+        },
+      ),
+    );
   }
 
   Widget getDropDown() {
     return Obx(
-      () => DropdownButton<HealthRecordTypeCollection>(
-        isExpanded: true,
-        items: controller.feedbackType.result.first.healthRecordTypeCollection
-            .map((healthRecordType) {
-          var value = healthRecordType;
-          return DropdownMenuItem<HealthRecordTypeCollection>(
-            value: value,
-            child: Text(value.name),
-          );
-        }).toList(),
-        onChanged: (changedValue) =>
-            controller.selectedType.value = changedValue,
-        value: controller.selectedType.value,
+      () => Padding(
+        padding: const EdgeInsets.only(
+          top: 8,
+          right: 16,
+        ),
+        child: DropdownButton<HealthRecordTypeCollection>(
+          isExpanded: true,
+          iconSize: 30,
+          hint: Text(
+            'Select Category',
+            style: TextStyle(
+              fontSize: 16.0.sp,
+              color: ColorUtils.myFamilyGreyColor,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          items: controller.feedbackType.result.first.healthRecordTypeCollection
+              .map((healthRecordType) {
+            var value = healthRecordType;
+            return DropdownMenuItem<HealthRecordTypeCollection>(
+              value: value,
+              child: Text(
+                value.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0.sp,
+                  color: ColorUtils.blackcolor,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (changedValue) => controller.setRecordType(changedValue),
+          value: controller.catSelected.value ? controller.selectedType : null,
+        ),
       ),
     );
   }
 
   void onPostDataToServer(BuildContext context, List<String> imagePaths) async {
+    if (!controller.catSelected.value) {
+      FlutterToast().getToast(
+        "Please select a Category",
+        Colors.red,
+      );
+      return;
+    }
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-
     final Map<String, dynamic> postMainData = {};
     final Map<String, dynamic> postMediaData = {};
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -363,6 +400,7 @@ class _FeedbacksState extends State<Feedbacks> {
       await _healthReportListForUserBlock
           .createHealtRecords(params.toString(), imagePaths, audioPathMain)
           .then((value) {
+        controller.removeSelectedType();
         if (value.isSuccess) {
           _healthReportListForUserBlock.getHelthReportLists().then((value) {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
@@ -376,19 +414,26 @@ class _FeedbacksState extends State<Feedbacks> {
     } else {
       await _healthReportListForUserBlock
           .createHealtRecords(params.toString(), imagePaths, audioPathMain)
-          .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.isSuccess) {
-          PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
-          PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-          _healthReportListForUserBlock.getHelthReportLists().then((value) {
-            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+          .then(
+        (savedMetaDataResponse) {
+          controller.removeSelectedType();
+          if (savedMetaDataResponse.isSuccess) {
+            PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+            PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
+            _healthReportListForUserBlock.getHelthReportLists().then(
+              (value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value);
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+                callFeedBackSuccess(context);
+              },
+            );
+          } else {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-            callFeedBackSuccess(context);
-          });
-        } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        }
-      });
+          }
+        },
+      );
     }
   }
 
@@ -403,43 +448,46 @@ class _FeedbacksState extends State<Feedbacks> {
       for (var i = 0; i < imagePaths.length; i++) {
         _healthReportListForUserBlock
             .saveImage(imagePaths[i], mediaMetaID, '')
-            .then((postImageResponse) {
-          if ((audioPathMain != '' && k == imagePaths.length) ||
-              (audioPathMain != '' && k == imagePaths.length - 1)) {
-            _healthReportListForUserBlock
-                .saveImage(audioPathMain, mediaMetaID, '')
-                .then((postImageResponse) {
+            .then(
+          (postImageResponse) {
+            if ((audioPathMain != '' && k == imagePaths.length) ||
+                (audioPathMain != '' && k == imagePaths.length - 1)) {
+              _healthReportListForUserBlock
+                  .saveImage(audioPathMain, mediaMetaID, '')
+                  .then((postImageResponse) {
+                _healthReportListForUserBlock
+                    .getHelthReportLists()
+                    .then((value) {
+                  PreferenceUtil.saveCompleteData(
+                      Constants.KEY_COMPLETE_DATA, value);
+
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
+                  callFeedBackSuccess(context);
+                });
+              });
+            } else if (k == imagePaths.length - 1) {
               _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value);
-
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
+
                 callFeedBackSuccess(context);
               });
-            });
-          } else if (k == imagePaths.length - 1) {
-            _healthReportListForUserBlock.getHelthReportLists().then((value) {
-              PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
+            } else if (k == imagePaths.length) {
+              _healthReportListForUserBlock.getHelthReportLists().then((value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value);
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
 
-              callFeedBackSuccess(context);
-            });
-          } else if (k == imagePaths.length) {
-            _healthReportListForUserBlock.getHelthReportLists().then((value) {
-              PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
-
-              callFeedBackSuccess(context);
-            });
-          }
-
-          k++;
-        });
+                callFeedBackSuccess(context);
+              });
+            }
+            k++;
+          },
+        );
       }
     } else {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -483,33 +531,38 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   Widget _showFeedbacktextFiled() {
-    return TextFormField(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: feedbackController,
-      keyboardType: TextInputType.text,
-      focusNode: feedbackFocus,
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (term) {
-        feedbackFocus.unfocus();
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
-        hintText: variable.strFeedBack,
-        labelStyle: TextStyle(
-            fontSize: 14.0.sp,
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 16,
+      ),
+      child: TextFormField(
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: feedbackController,
+        keyboardType: TextInputType.text,
+        focusNode: feedbackFocus,
+        textInputAction: TextInputAction.done,
+        onFieldSubmitted: (term) {
+          feedbackFocus.unfocus();
+        },
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0.sp,
+            color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
+          hintText: variable.strFeedBack,
+          labelStyle: TextStyle(
+              fontSize: 14.0.sp,
+              fontWeight: FontWeight.w400,
+              color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(
+              borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     );
   }

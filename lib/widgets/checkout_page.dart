@@ -513,7 +513,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     var result =
                                                         await CheckoutPageWidgets()
                                                             .profileValidationCheckOnCart(
-                                                                context);
+                                                                context,feeZero: (value?.totalProductCount ??
+                                                            0) >
+                                                            0
+                                                            ?false:true);
                                                     if (result ?? false) {
                                                       planSubLogic(value);
                                                     }
@@ -642,13 +645,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget _cartItem(BuildContext context, ProductList item) {
     int productValue = 0;
     if (item?.paidAmount.contains(".")) {
-      if (item?.additionalInfo?.isMembershipAvail) {
+      if (item?.additionalInfo?.isMembershipAvail??false) {
         productValue = 0;
       } else {
         productValue = double.parse(item.paidAmount).toInt();
       }
     } else {
-      if (item?.additionalInfo?.isMembershipAvail) {
+      if (item?.additionalInfo?.isMembershipAvail ?? false) {
         productValue = 0;
       } else {
         productValue = int.parse(item.paidAmount);
