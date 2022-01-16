@@ -61,7 +61,7 @@ class CheckoutPageProvider extends ChangeNotifier {
     productList = fetchingCartItemsModel?.result?.cart?.productList;
     if (productList != null && productList.length > 0) {
       productList.forEach((product) {
-        if (product?.additionalInfo.isMembershipAvail) {
+        if (product?.additionalInfo?.isMembershipAvail ?? false) {
           totalProductCount = totalProductCount + 0;
         } else {
           if (product?.paidAmount.contains(".")) {
@@ -105,9 +105,9 @@ class CheckoutPageProvider extends ChangeNotifier {
     if (value.isSuccess) {
       //item removed from cart
       try {
-        if (productList?.additionalInfo?.isMembershipAvail && productList?.additionalInfo?.planType=="CARE") {
+        if ((productList?.additionalInfo?.isMembershipAvail??false) && productList?.additionalInfo?.planType=="CARE") {
           updateCarePlanCount(false);
-        }else if(productList?.additionalInfo?.isMembershipAvail && productList?.additionalInfo?.planType=="DIET"){
+        }else if((productList?.additionalInfo?.isMembershipAvail ?? false) && productList?.additionalInfo?.planType=="DIET"){
           updateDietPlanCount(false);
 
         }
@@ -229,11 +229,11 @@ class CheckoutPageProvider extends ChangeNotifier {
 
     if(cartList!=null && cartList.length>0) {
       cartList?.forEach((cartItem) {
-        if (cartItem?.additionalInfo.isMembershipAvail && cartItem?.additionalInfo?.planType=="CARE") {
+        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) && cartItem?.additionalInfo?.planType=="CARE") {
           Provider
               .of<PlanWizardViewModel>(Get.context, listen: false)
               ?.carePlanCount--;
-        }else if(cartItem?.additionalInfo.isMembershipAvail && cartItem?.additionalInfo?.planType=="DIET"){
+        }else if((cartItem?.additionalInfo?.isMembershipAvail ?? false) && cartItem?.additionalInfo?.planType=="DIET"){
           Provider
               .of<PlanWizardViewModel>(Get.context, listen: false)
               ?.dietPlanCount--;

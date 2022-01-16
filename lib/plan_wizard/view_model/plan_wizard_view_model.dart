@@ -907,7 +907,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   void updateCareCount() {
     if (cartList != null && cartList.length > 0)
       cartList?.forEach((cartItem) {
-        if (cartItem?.additionalInfo.isMembershipAvail &&
+        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
             cartItem?.additionalInfo?.planType == "CARE") {
           carePlanCount--;
         }
@@ -917,7 +917,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   void updateDietCount() {
     if (cartList != null && cartList.length > 0)
       cartList?.forEach((cartItem) {
-        if (cartItem?.additionalInfo.isMembershipAvail &&
+        if ((cartItem?.additionalInfo?.isMembershipAvail ?? false) &&
             cartItem?.additionalInfo?.planType == "DIET") {
           dietPlanCount--;
         }
