@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/feedback/Controller/FeedbackController.dart';
+import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import '../common/AudioWidget.dart';
 import '../common/CommonConstants.dart';
 import '../common/CommonUtil.dart';
@@ -26,6 +30,7 @@ import '../src/utils/colors_utils.dart';
 import '../constants/variable_constant.dart' as variable;
 import '../colors/fhb_colors.dart' as fhbColors;
 import '../constants/fhb_parameters.dart' as parameters;
+import 'package:get/get.dart';
 
 class Feedbacks extends StatefulWidget {
   const Feedbacks();
@@ -46,15 +51,15 @@ class _FeedbacksState extends State<Feedbacks> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   List<String> imagePaths = List();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  CategoryResult categoryDataObj = CategoryResult();
-  MediaResult mediaDataObj = MediaResult();
+  //CategoryResult categoryDataObj = CategoryResult();
+  //MediaResult mediaDataObj = MediaResult();
 
   final feedbackController = TextEditingController();
   bool isFeedBackEmptied = false;
   FocusNode feedbackFocus = FocusNode();
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
-
+  final controller = Get.put(FeedbackController());
   String currentDate = '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
 
   Future<void> loadAssets() async {
@@ -130,188 +135,264 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    controller.getFeedbacktypes();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(CommonUtil().getMyGredientColor()),
         leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
-            ),
-            onPressed: () => Navigator.of(context).pop()),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            size: 24.0.sp,
+          ),
+          onPressed: () {
+            controller.removeSelectedType();
+            Get.back();
+          },
+        ),
         title: Text(''),
         centerTitle: false,
         elevation: 0,
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                  color: Color(CommonUtil().getMyGredientColor()),
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        /*  Container(
+      body: Obx(
+        () {
+          return controller.loadingData.isTrue
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : controller.feedbackType == null
+                  ? Center(
+                      child: Text(
+                        'Please re-try after some time',
+                      ),
+                    )
+                  : Container(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                                color: Color(CommonUtil().getMyGredientColor()),
+                                child: Padding(
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      /*  Container(
                           height: 60.0.h,
                         ), */
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Image.asset(variable.icon_fhb,
-                              width: 100.0.h, height: 100.0.h),
+                                      Padding(
+                                        padding: EdgeInsets.all(10),
+                                        child: Image.asset(variable.icon_fhb,
+                                            width: 100.0.h, height: 100.0.h),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 20),
+                                          child: Text(variable.strFeedBack,
+                                              style: TextStyle(
+                                                  fontSize: 24.0.sp,
+                                                  color: Colors.white))),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 20),
+                                        child: Text(
+                                          variable.strFeedbackExp,
+                                          softWrap: true,
+                                          style:
+                                              TextStyle(color: Colors.white70),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            Container(
+                              height: 10.0.h,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  getDropDown(),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  _showFeedbacktextFiled(),
+                                  // Divider(),
+                                  Container(
+                                    height: 10.0.h,
+                                  ),
+                                  Container(
+                                    child: Text(variable.strAttachImage),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  Container(
+                                    height: 80.0.h,
+                                    width: 80.0.h,
+                                    color: ColorUtils.greycolor,
+                                    child: IconButton(
+                                      icon: ImageIcon(
+                                        AssetImage(variable.icon_attach),
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        size: 32.0.sp,
+                                      ),
+                                      onPressed: loadAssets,
+                                    ),
+                                  ),
+                                  buildGridView(),
+                                  SizedBox(
+                                    height: 20.0.h,
+                                  ),
+                                  Container(
+                                    child: Text(variable.strAddVoice),
+                                  ),
+                                  SizedBox(
+                                    height: 10.0.h,
+                                  ),
+                                  containsAudioMain
+                                      ? AudioWidget(audioPathMain,
+                                          (containsAudio, audioPath) {
+                                          audioPathMain = audioPath;
+                                          containsAudioMain = containsAudio;
+                                          setState(() {});
+                                        })
+                                      : Container(
+                                          height: 80.0.h,
+                                          width: 80.0.h,
+                                          color: ColorUtils.greycolor,
+                                          child: fhbBasicWidget.getMicIcon(
+                                            context,
+                                            containsAudioMain,
+                                            audioPathMain,
+                                            (containsAudio, audioPath) {
+                                              audioPathMain = audioPath;
+                                              containsAudioMain = containsAudio;
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                            Center(
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(height: 20.0.h),
+                                  fhbBasicWidget.getSaveButton(
+                                    () {
+                                      setState(
+                                        () {
+                                          feedbackController.text.isEmpty
+                                              ? isFeedBackEmptied = true
+                                              : isFeedBackEmptied = false;
+                                          isFeedBackEmptied
+                                              ? null
+                                              : onPostDataToServer(
+                                                  context,
+                                                  imagePaths,
+                                                );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                  SizedBox(height: 20.0.h)
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        Padding(
-                            padding: EdgeInsets.only(left: 20),
-                            child: Text(variable.strFeedBack,
-                                style: TextStyle(
-                                    fontSize: 24.0.sp, color: Colors.white))),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            variable.strFeedbackExp,
-                            softWrap: true,
-                            style: TextStyle(color: Colors.white70),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-              Container(
-                height: 10.0.h,
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _showFeedbacktextFiled(),
-                    Divider(),
-                    Container(
-                      height: 10.0.h,
-                    ),
-                    Container(
-                      child: Text(variable.strAttachImage),
-                    ),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    Container(
-                      height: 80.0.h,
-                      width: 80.0.h,
-                      color: ColorUtils.greycolor,
-                      child: IconButton(
-                        icon: ImageIcon(
-                          AssetImage(variable.icon_attach),
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          size: 32.0.sp,
-                        ),
-                        onPressed: loadAssets,
                       ),
-                    ),
-                    buildGridView(),
-                    SizedBox(
-                      height: 20.0.h,
-                    ),
-                    Container(
-                      child: Text(variable.strAddVoice),
-                    ),
-                    SizedBox(
-                      height: 10.0.h,
-                    ),
-                    containsAudioMain
-                        ? AudioWidget(audioPathMain,
-                            (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
+                    );
+        },
+      ),
+    );
+  }
 
-                            setState(() {});
-                          })
-                        : Container(
-                            height: 80.0.h,
-                            width: 80.0.h,
-                            color: ColorUtils.greycolor,
-                            child: fhbBasicWidget.getMicIcon(
-                                context, containsAudioMain, audioPathMain,
-                                (containsAudio, audioPath) {
-                              audioPathMain = audioPath;
-                              containsAudioMain = containsAudio;
-                              setState(() {});
-                            })),
-                  ],
+  Widget getDropDown() {
+    return Obx(
+      () => Padding(
+        padding: const EdgeInsets.only(
+          top: 8,
+          right: 16,
+        ),
+        child: DropdownButton<HealthRecordTypeCollection>(
+          isExpanded: true,
+          iconSize: 30,
+          hint: Text(
+            'Select Category',
+            style: TextStyle(
+              fontSize: 16.0.sp,
+              color: ColorUtils.myFamilyGreyColor,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          items: controller.feedbackType.result.first.healthRecordTypeCollection
+              .map((healthRecordType) {
+            var value = healthRecordType;
+            return DropdownMenuItem<HealthRecordTypeCollection>(
+              value: value,
+              child: Text(
+                value.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0.sp,
+                  color: ColorUtils.blackcolor,
                 ),
               ),
-              Center(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 20.0.h),
-                    fhbBasicWidget.getSaveButton(() {
-                      setState(() {
-                        feedbackController.text.isEmpty
-                            ? isFeedBackEmptied = true
-                            : isFeedBackEmptied = false;
-                        isFeedBackEmptied
-                            ? null
-                            : onPostDataToServer(context, imagePaths);
-                      });
-                    }),
-                    SizedBox(height: 20.0.h)
-                  ],
-                ),
-              )
-            ],
-          ),
+            );
+          }).toList(),
+          onChanged: (changedValue) => controller.setRecordType(changedValue),
+          value: controller.catSelected.value ? controller.selectedType : null,
         ),
       ),
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
   void onPostDataToServer(BuildContext context, List<String> imagePaths) async {
+    if (!controller.catSelected.value) {
+      FlutterToast().getToast(
+        "Please select a Category",
+        Colors.red,
+      );
+      return;
+    }
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
-
     final Map<String, dynamic> postMainData = {};
     final Map<String, dynamic> postMediaData = {};
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    final catgoryDataList = PreferenceUtil.getCategoryType();
-
-    final categoryID = CommonUtil()
-        .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
-    categoryDataObj = CommonUtil()
-        .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+    // final catgoryDataList = PreferenceUtil.getCategoryType();
+    // final categoryID = CommonUtil()
+    //     .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
+    // categoryDataObj = CommonUtil()
+    //     .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
     postMediaData[parameters.strhealthRecordCategory] =
-        categoryDataObj.toJson();
-
-    var _mediaTypeBlock = MediaTypeBlock();
-
-    final mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
-
-    final metaDataFromSharedPrefernce = mediaTypesResponse.result;
-
-    mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
-        categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
-
-    postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
-
+        controller.feedbackType.result.first.toJson();
+    // var _mediaTypeBlock = MediaTypeBlock();
+    //  final mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+    // final metaDataFromSharedPrefernce = mediaTypesResponse.result;
+    // mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
+    //     categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
+    postMediaData[parameters.strhealthRecordType] =
+        controller.selectedType.toJson();
     postMediaData[variable.strfeedback] = feedbackController.text;
-    postMediaData[variable.strmemoText] = '';
-
-    postMediaData[variable.strisDraft] = false;
-
-    postMediaData[variable.strsourceName] = CommonConstants.strTridentValue;
-    postMediaData[variable.strmemoTextRaw] = variable.strmemoTextRaw;
-
-    final fileName = Constants.STR_FEEDBACKS + currentDate;
-
-    postMediaData[variable.strfileName] = fileName;
-
+    //postMediaData[variable.strmemoText] = '';
+    postMediaData[variable.strisDraft] = true;
+    postMediaData[variable.strsourceName] = CommonConstants.app_name;
+    //postMediaData[variable.strmemoTextRaw] = variable.strmemoTextRaw;
+    //  final fileName = Constants.STR_FEEDBACKS + currentDate;
+    //  postMediaData[variable.strfileName] = fileName;
     postMainData[variable.strmetaInfo] = postMediaData;
     var dateTime = DateTime.now();
-    postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
-    postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
+    // postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
+    //postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
 
     final params = json.encode(postMediaData);
 
@@ -319,12 +400,11 @@ class _FeedbacksState extends State<Feedbacks> {
       await _healthReportListForUserBlock
           .createHealtRecords(params.toString(), imagePaths, audioPathMain)
           .then((value) {
+        controller.removeSelectedType();
         if (value.isSuccess) {
           _healthReportListForUserBlock.getHelthReportLists().then((value) {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-
             callFeedBackSuccess(context);
           });
         } else {
@@ -334,22 +414,26 @@ class _FeedbacksState extends State<Feedbacks> {
     } else {
       await _healthReportListForUserBlock
           .createHealtRecords(params.toString(), imagePaths, audioPathMain)
-          .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.isSuccess) {
-          PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
-          PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-
-          _healthReportListForUserBlock.getHelthReportLists().then((value) {
-            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-
+          .then(
+        (savedMetaDataResponse) {
+          controller.removeSelectedType();
+          if (savedMetaDataResponse.isSuccess) {
+            PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+            PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
+            _healthReportListForUserBlock.getHelthReportLists().then(
+              (value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value);
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+                callFeedBackSuccess(context);
+              },
+            );
+          } else {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-
-            callFeedBackSuccess(context);
-          });
-        } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        }
-      });
+          }
+        },
+      );
     }
   }
 
@@ -364,47 +448,49 @@ class _FeedbacksState extends State<Feedbacks> {
       for (var i = 0; i < imagePaths.length; i++) {
         _healthReportListForUserBlock
             .saveImage(imagePaths[i], mediaMetaID, '')
-            .then((postImageResponse) {
-          if ((audioPathMain != '' && k == imagePaths.length) ||
-              (audioPathMain != '' && k == imagePaths.length - 1)) {
-            _healthReportListForUserBlock
-                .saveImage(audioPathMain, mediaMetaID, '')
-                .then((postImageResponse) {
+            .then(
+          (postImageResponse) {
+            if ((audioPathMain != '' && k == imagePaths.length) ||
+                (audioPathMain != '' && k == imagePaths.length - 1)) {
+              _healthReportListForUserBlock
+                  .saveImage(audioPathMain, mediaMetaID, '')
+                  .then((postImageResponse) {
+                _healthReportListForUserBlock
+                    .getHelthReportLists()
+                    .then((value) {
+                  PreferenceUtil.saveCompleteData(
+                      Constants.KEY_COMPLETE_DATA, value);
+
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
+                  callFeedBackSuccess(context);
+                });
+              });
+            } else if (k == imagePaths.length - 1) {
               _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value);
-
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
+
                 callFeedBackSuccess(context);
               });
-            });
-          } else if (k == imagePaths.length - 1) {
-            _healthReportListForUserBlock.getHelthReportLists().then((value) {
-              PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
+            } else if (k == imagePaths.length) {
+              _healthReportListForUserBlock.getHelthReportLists().then((value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value);
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
 
-              callFeedBackSuccess(context);
-            });
-          } else if (k == imagePaths.length) {
-            _healthReportListForUserBlock.getHelthReportLists().then((value) {
-              PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
-
-              callFeedBackSuccess(context);
-            });
-          }
-
-          k++;
-        });
+                callFeedBackSuccess(context);
+              });
+            }
+            k++;
+          },
+        );
       }
     } else {
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-
       callFeedBackSuccess(context);
     }
   }
@@ -445,33 +531,38 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   Widget _showFeedbacktextFiled() {
-    return TextFormField(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: feedbackController,
-      keyboardType: TextInputType.text,
-      focusNode: feedbackFocus,
-      textInputAction: TextInputAction.done,
-      onFieldSubmitted: (term) {
-        feedbackFocus.unfocus();
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
-        hintText: variable.strFeedBack,
-        labelStyle: TextStyle(
-            fontSize: 14.0.sp,
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 16,
+      ),
+      child: TextFormField(
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: feedbackController,
+        keyboardType: TextInputType.text,
+        focusNode: feedbackFocus,
+        textInputAction: TextInputAction.done,
+        onFieldSubmitted: (term) {
+          feedbackFocus.unfocus();
+        },
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0.sp,
+            color: ColorUtils.blackcolor),
+        decoration: InputDecoration(
+          errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
+          hintText: variable.strFeedBack,
+          labelStyle: TextStyle(
+              fontSize: 14.0.sp,
+              fontWeight: FontWeight.w400,
+              color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 16.0.sp,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
+          ),
+          border: UnderlineInputBorder(
+              borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
         ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
     );
   }

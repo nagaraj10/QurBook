@@ -18,6 +18,7 @@ class Payload {
     this.planId,
     this.userId,
     this.patientName,
+    this.claimId,
   });
 
   String type;
@@ -38,6 +39,7 @@ class Payload {
   String planId;
   String userId;
   String patientName;
+  String claimId;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
@@ -68,6 +70,7 @@ class Payload {
         : json["healthRecordMetaIds"];
     patientName = json["patientName"] == null ? null : json["patientName"];
     userId = json["userId"] == null ? null : json["userId"];
+    claimId = json["claimId"] == null ? null : json["claimId"];
     if (json["planId"] != null) {
       var plan = json["planId"];
       if (plan.runtimeType == String) {

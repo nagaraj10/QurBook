@@ -129,7 +129,7 @@ class FHBBasicWidget {
       BuildContext context, TextEditingController searchController,
       {bool isFileField}) {
     return Container(
-        width: 1.sw - 80,
+        width: 1.sw,
         child: TextField(
             enabled: isFileField ?? false,
             controller: searchController,

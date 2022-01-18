@@ -36,7 +36,7 @@ class Result {
   int totalCartAmount;
   Cart cart;
 
-  Result({this.productsCount, this.cart,this.totalCartAmount});
+  Result({this.productsCount, this.cart, this.totalCartAmount});
 
   Result.fromJson(Map<String, dynamic> json) {
     productsCount = json['productsCount'];
@@ -92,10 +92,15 @@ class ProductList {
   AdditionalInfo additionalInfo;
   bool isActive;
   String createdOn;
+  String paidAmount;
   String lastModifiedOn;
 
   ProductList(
-      {this.productDetail, this.isActive, this.createdOn, this.lastModifiedOn,this.additionalInfo});
+      {this.productDetail,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.additionalInfo,this.paidAmount});
 
   ProductList.fromJson(Map<String, dynamic> json) {
     productDetail = json['productDetail'] != null
@@ -107,8 +112,10 @@ class ProductList {
     additionalInfo = json['additionalInfo'] != null
         ? new AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
+    if(json.containsKey("paidAmount")){
+      paidAmount=json["paidAmount"];
+    }
   }
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -117,6 +124,7 @@ class ProductList {
     }
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
+    data['paidAmount'] = this.paidAmount;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.additionalInfo != null) {
       data['additionalInfo'] = this.additionalInfo.toJson();
@@ -196,18 +204,32 @@ class ErrorData {
 class AdditionalInfo {
   bool isRenewal;
   String tag;
+  String remarks;
+  String planType;
+  bool isMembershipAvail;
+  String actualFee;
 
   AdditionalInfo({this.isRenewal, this.tag});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    isRenewal = json['isRenewal'];
     tag = json['tag'];
+    isRenewal = json['isRenewal'];
+    if (json.containsKey("remarks")) remarks = json['remarks'];
+    if (json.containsKey("PlanType")) planType = json['PlanType'];
+    if (json.containsKey("actualFee")) actualFee = json['actualFee'];
+    if (json.containsKey("isMembershipAvail"))
+      isMembershipAvail = json['isMembershipAvail'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isRenewal'] = this.isRenewal;
     data['tag'] = this.tag;
+    data['remarks'] = this.remarks;
+    data['PlanType'] = this.planType;
+    data['actualFee'] = this.actualFee;
+    data['isRenewal'] = this.isRenewal;
+    data['isMembershipAvail'] = this.isMembershipAvail;
+
     return data;
   }
 }

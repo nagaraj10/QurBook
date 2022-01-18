@@ -369,11 +369,16 @@ class CommonUtil {
   }
 
   static Future<void> showLoadingDialog(
-      BuildContext context, GlobalKey key, String msgToDisplay) async {
+      BuildContext context, GlobalKey key, String msgToDisplay,{bool isAutoDismiss=false}) async {
     return showDialog<void>(
         context: context,
         barrierDismissible: false,
         builder: (context) {
+          if(isAutoDismiss){
+            Future.delayed(Duration(seconds: 6), () {
+              Navigator.of(context).pop(true);
+            });
+          }
           return WillPopScope(
               onWillPop: () async => true,
               child: SimpleDialog(
@@ -2884,7 +2889,7 @@ class CommonUtil {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Row(
+                      FittedBox(child:Row(
                         children: <Widget>[
                           Text(
                             'Effective Renewal Date: ',
@@ -2904,11 +2909,11 @@ class CommonUtil {
                           ),
                           Text('${formatter.format(initDate)}'),
                         ],
-                      ),
+                      )),
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Row(
+                      FittedBox(child:Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           OutlineButton(
@@ -2957,20 +2962,20 @@ class CommonUtil {
 
                               if (IsExtendable) {
                                 var response =
-                                    await Provider.of<PlanWizardViewModel>(
-                                            context,
-                                            listen: false)
-                                        ?.addToCartItem(
-                                            packageId: packageId,
-                                            price: price,
-                                            isRenew: true,
-                                            isFromAdd: strMyPlan);
+                                await Provider.of<PlanWizardViewModel>(
+                                    context,
+                                    listen: false)
+                                    ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: true,
+                                    isFromAdd: strMyPlan);
 
                                 refresh();
                                 if (moveToCart) {
                                   if ((response.message?.toLowerCase() ==
-                                          'Product already exists in cart'
-                                              .toLowerCase()) ||
+                                      'Product already exists in cart'
+                                          .toLowerCase()) ||
                                       response.isSuccess) {
                                     Get.to(CheckoutPage());
                                   }
@@ -2996,7 +3001,7 @@ class CommonUtil {
                             ),
                           ),
                         ],
-                      ),
+                      )),
                     ]),
                   ),
                 );

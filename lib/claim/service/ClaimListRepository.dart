@@ -1,4 +1,5 @@
 import 'package:myfhb/claim/model/claimmodel/ClaimListResponse.dart';
+import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
 import 'package:myfhb/claim/model/credit/CreditBalance.dart';
 import 'package:myfhb/claim/model/members/MembershipDetails.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -48,4 +49,14 @@ class ClaimListRepository{
 
     return GetRecordIdsFilter.fromJson(response);
   }
+
+  Future<ClaimRecordDetails> getClaimRecordDetails(String claimID) async {
+    final responseQuery =
+        '${variable.qr_claim_with_slash}$claimID';
+    final  response =
+    await _helper.getClaimListDetails(responseQuery);
+
+    return ClaimRecordDetails.fromJson(response);
+  }
+
 }

@@ -6,8 +6,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
@@ -38,7 +40,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        //Log.d(TAG, "From: " + remoteMessage.from)
+        Log.d(TAG, "From: " + remoteMessage.data)
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
@@ -75,7 +77,37 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     @SuppressLint("RestrictedApi")
     private fun createNotification4Call(data: Map<String, String> = HashMap()) {
-        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        Log.e("Notification","createNotification4Call")
+//        val nsManager: NotificationManager = NotificationManager.from(this)
+        val nsManager: NotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        try{
+            val _sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val importance = NotificationManager.IMPORTANCE_HIGH
+                val notificationChannel = NotificationChannel(
+                    "call",
+                    "NOTIFICATION_CHANNEL_NAME",
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                notificationChannel.enableLights(true)
+                notificationChannel.lightColor = Color.RED
+                notificationChannel.enableVibration(true)
+                notificationChannel.vibrationPattern =longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+                if (_sound != null) {
+                    val audioAttributes = AudioAttributes.Builder()
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build()
+                    notificationChannel.setSound(_sound, audioAttributes)
+                }else{
+                    Log.e("Notification","createNotification4Call: error sound")
+                }
+                nsManager.createNotificationChannel(notificationChannel)
+            }
+
         val NS_ID = 9090
         var MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
@@ -87,8 +119,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val CallType = data[getString(R.string.callType)]
         val isWeb = data[getString(R.string.web)]
         val NS_TIMEOUT = 30 * 1000L
-        val _sound: Uri =
-            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
         //listen for doctor event
         listenEvent(id = MEETING_ID!!, nsId = NS_ID)
@@ -152,12 +182,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val attributes =
                 AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCall.enableVibration(true)
             channelCall.setSound(_sound, attributes)
             manager.createNotificationChannel(channelCall)
         }
 
 
-        var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
+        var notification = NotificationCompat.Builder(this, "call")
             .setSmallIcon(android.R.drawable.ic_menu_call)
             .setLargeIcon(
                 BitmapFactory.decodeResource(
@@ -177,8 +208,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 declinePendingIntent
             )
             .setAutoCancel(true)
+            .setDefaults(Notification.DEFAULT_SOUND)
             .setFullScreenIntent(fullScreenPendingIntent, true)
-            .setSound(_sound)
             .setOngoing(true)
             .setTimeoutAfter(NS_TIMEOUT)
             .setOnlyAlertOnce(false)
@@ -188,6 +219,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         nsManager.notify(NS_ID, notification)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             AutoDismissNotification().setAlarm(this, NS_ID, NS_TIMEOUT)
+        }
+
+        }catch(e: Exception){
+            Log.e("Notification","createNotification4Call error")
+
         }
 
         /*
@@ -249,6 +285,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             renewNotification(data)
         }else if (data[Constants.PROP_REDIRECT_TO] == "myplandetails") {
             myPlanDetailsNotification(data)
+        }else if (data[Constants.PROP_REDIRECT_TO] == "claimList"){
+claimDetailsNotification(data)
         }
         else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
@@ -702,7 +740,65 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .build()
         nsManager.notify(NS_ID, notification)
     }
+    private fun claimDetailsNotification(data: Map<String, String> = HashMap()) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val PAT_NAME = data[getString(R.string.pat_name)]
+        val ack_sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                    CHANNEL_RENEW,
+                    getString(R.string.channel_renew),
+                    NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_renew_desc)
+            val attributes =
+                    AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
 
+        val onTapNS = Intent(this, OnTapNotification::class.java)
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_CLAIM_ID, data[Constants.PROP_CLAIM_ID])
+        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+
+        val onTapPendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                onTapNS,
+                PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_RENEW)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                                applicationContext.resources,
+                                R.mipmap.ic_launcher
+                        )
+                )
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentIntent(onTapPendingIntent)
+                .setContentText(data[getString(R.string.pro_ns_body)])
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setWhen(0)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setStyle(
+                        NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+                )
+                .setSound(ack_sound)
+                .setAutoCancel(true)
+                .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID, notification)
+    }
     private fun myPlanDetailsNotification(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()

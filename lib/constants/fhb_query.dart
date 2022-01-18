@@ -11,6 +11,8 @@ const String qr_mediameta = 'mediameta/';
 const String qr_updatebookmark = 'updatebookmark/';
 const String qr_users = 'users/';
 const String qr_search = 'search/';
+const String qr_Feedback = 'Feedback';
+
 const String qr_healthRecords = 'healthRecords?';
 const String qr_keyword = 'keyword=';
 const String qr_picture = 'myconnection?isOriginalPicRequired=false';
@@ -327,6 +329,7 @@ const String qr_billDate = 'bill_date';
 const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
+const String qr_claim_with_slash = 'claim/';
 
 //chat
 

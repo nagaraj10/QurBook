@@ -163,6 +163,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   bool isMembershipDiscount = false;
   String MembershipDiscountPercent;
   bool isResident = false;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -754,30 +755,32 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ),
               isFollowUp()
                   ? SizedBox.shrink()
-                  : getCSRCheckBox(
-                      widget.isFromHospital
-                          ? getFeesFromHospital(
-                              widget.resultFromHospitalList[
-                                  widget.doctorListIndex],
-                              true,
-                            )
-                          : getFees(
-                              widget.healthOrganizationResult[widget.i],
-                              true,
-                            ),
-                      commonWidgets.getMoneyWithForamt(
-                        widget.isFromHospital
-                            ? getFeesFromHospital(
-                                widget.resultFromHospitalList[
-                                    widget.doctorListIndex],
-                                false,
-                              )
-                            : getFees(
-                                widget.healthOrganizationResult[widget.i],
-                                false,
-                              ),
-                      ),
-                    ),
+                  : isMembershipDiscount
+                      ? SizedBox.shrink()
+                      : getCSRCheckBox(
+                          widget.isFromHospital
+                              ? getFeesFromHospital(
+                                  widget.resultFromHospitalList[
+                                      widget.doctorListIndex],
+                                  true,
+                                )
+                              : getFees(
+                                  widget.healthOrganizationResult[widget.i],
+                                  true,
+                                ),
+                          commonWidgets.getMoneyWithForamt(
+                            widget.isFromHospital
+                                ? getFeesFromHospital(
+                                    widget.resultFromHospitalList[
+                                        widget.doctorListIndex],
+                                    false,
+                                  )
+                                : getFees(
+                                    widget.healthOrganizationResult[widget.i],
+                                    false,
+                                  ),
+                          ),
+                        ),
               SizedBoxWidget(height: 15.0),
               isMembershipDiscount
                   ? Column(
@@ -800,7 +803,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   ),
                 ),
               ),
-              SizedBoxWidget(height: 20.0),
+              SizedBoxWidget(
+                height: 20.0,
+              ),
               Container(
                 padding: EdgeInsets.all(8.0),
                 child: Row(
@@ -1724,7 +1729,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Center(
               child: CheckboxListTile(
                 title: Text(
-                  "Qurhealth Discount (" + MembershipDiscountPercent + '%)',
+                  "Membership Discount (" + MembershipDiscountPercent + '%)',
                   style: TextStyle(color: Colors.grey),
                 ),
                 value: true,
@@ -1743,6 +1748,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     String originalFees;
     String discountPercent;
     String discount;
+    bool isActiveMember = await PreferenceUtil.getActiveMembershipStatus();
+    if (!(isActiveMember ?? false)) return;
     if (widget.isFromHospital) {
       ResultFromHospital result =
           widget.resultFromHospitalList[widget.doctorListIndex];
@@ -1776,7 +1783,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         }
       }
     }
-
+    if (widget.isFromFollowUpApp &&
+        widget.isFromFollowUpTake == false &&
+        isFollowUp()) {
+      originalFees = getFollowUpFee();
+    }
     if ((discountPercent ?? '').isNotEmpty && (originalFees ?? '').isNotEmpty) {
       if (discountPercent != '0.00' && discountPercent != '0') {
         try {
@@ -1800,7 +1811,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
       if ((discount ?? '').isNotEmpty) {
         MembershipDiscountPercent = discountPercent;
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         final val = await Get.dialog(
           AlertDialog(
             content: Column(
@@ -1834,7 +1845,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         );
         setState(
           () {
-            isMembershipDiscount = true;
+            isMembershipDiscount = isActiveMember ?? false;
             INR_Price = discount;
             if (INR_Price == '0' || INR_Price == '0.00') {
               btnLabelChange = bookNow;
@@ -1921,9 +1932,38 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0],
-                            context);
+                        if (myProfile.result.userAddressCollection3[0]
+                                    .addressLine1 !=
+                                null &&
+                            myProfile.result.userAddressCollection3[0]
+                                .addressLine1.isNotEmpty &&
+                            myProfile
+                                    .result.userAddressCollection3[0].pincode !=
+                                null &&
+                            myProfile.result.userAddressCollection3[0].pincode
+                                .isNotEmpty) {
+                          if (myProfile.result.userAddressCollection3[0]
+                                      .addressLine1 !=
+                                  null &&
+                              myProfile.result.userAddressCollection3[0]
+                                  .addressLine1.isNotEmpty) {
+                            if (myProfile.result.userAddressCollection3[0]
+                                        .pincode !=
+                                    null &&
+                                myProfile.result.userAddressCollection3[0]
+                                    .pincode.isNotEmpty) {
+                              patientAddressCheck(
+                                  myProfile.result.userAddressCollection3[0],
+                                  context);
+                            } else {
+                              showInSnackBar(noZipcode, 'Add');
+                            }
+                          } else {
+                            showInSnackBar(noAddress1, 'Add');
+                          }
+                        } else {
+                          showInSnackBar(no_addr1_zip, 'Add');
+                        }
                       } else {
                         //toast.getToast(noAddress, Colors.red);
                         showInSnackBar(noAddressFamily, 'Add');

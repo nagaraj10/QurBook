@@ -291,18 +291,86 @@ class GetTimeSlots extends StatelessWidget {
                       myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
-                        patientAddressCheck(
-                            myProfile.result.userAddressCollection3[0],
-                            context,
-                            rowPosition,
-                            itemPosition);
+                        if (myProfile.result.userAddressCollection3[0]
+                                    .addressLine1 !=
+                                null &&
+                            myProfile.result.userAddressCollection3[0]
+                                .addressLine1.isNotEmpty) {
+                          if (myProfile.result.userAddressCollection3[0]
+                                      .pincode !=
+                                  null &&
+                              myProfile.result.userAddressCollection3[0].pincode
+                                  .isNotEmpty) {
+                            if (myProfile.result.userAddressCollection3[0]
+                                        .addressLine1 !=
+                                    null &&
+                                myProfile.result.userAddressCollection3[0]
+                                    .addressLine1.isNotEmpty) {
+                              if (myProfile.result.userAddressCollection3[0]
+                                          .addressLine1 !=
+                                      null &&
+                                  myProfile.result.userAddressCollection3[0]
+                                      .addressLine1.isNotEmpty) {
+                                if (myProfile.result.userAddressCollection3[0]
+                                            .pincode !=
+                                        null &&
+                                    myProfile.result.userAddressCollection3[0]
+                                        .pincode.isNotEmpty) {
+                                  patientAddressCheck(
+                                      myProfile
+                                          .result.userAddressCollection3[0],
+                                      context,
+                                      rowPosition,
+                                      itemPosition);
+                                } else {
+                                  CommonUtil().mSnackbar(
+                                      context, noZipcode, 'Go To Profile');
+                                }
+                              } else {
+                                CommonUtil().mSnackbar(
+                                    context, noAddress1, 'Go To Profile');
+                              }
+                            } else {
+                              if (myProfile.result.userAddressCollection3[0]
+                                          .pincode ==
+                                      null ||
+                                  myProfile.result.userAddressCollection3[0]
+                                      .pincode.isEmpty) {
+                                CommonUtil().mSnackbar(
+                                    context, no_addr1_zip, 'Go To Profile');
+                              } else {
+                                CommonUtil().mSnackbar(
+                                    context, noAddress1, 'Go To Profile');
+                              }
+                            }
+                          } else {
+                            //toast.getToast(noAddress, Colors.red);
+                            CommonUtil().mSnackbar(
+                                context, noZipcode, 'Go To Profile');
+                            //CommonUtil().mSnackbar(context, noAddress, 'Add');
+                          }
+                        } else {
+                          if (myProfile.result.userAddressCollection3[0]
+                              .pincode ==
+                              null ||
+                              myProfile.result.userAddressCollection3[0]
+                                  .pincode.isEmpty) {
+                            CommonUtil().mSnackbar(
+                                context, no_addr1_zip, 'Go To Profile');
+                          } else {
+                            CommonUtil().mSnackbar(
+                                context, noAddress1, 'Go To Profile');
+                          }
+                        }
                       } else {
                         //toast.getToast(noAddress, Colors.red);
-                        CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
+                        CommonUtil()
+                            .mSnackbar(context, no_addr1_zip, 'Go To Profile');
                       }
                     } else {
                       //toast.getToast(noAddress, Colors.red);
-                      CommonUtil().mSnackbar(context, no_addr1_zip, 'Go To Profile');
+                      CommonUtil()
+                          .mSnackbar(context, no_addr1_zip, 'Go To Profile');
                     }
                   } else {
                     //toast.getToast(noWeight, Colors.red);

@@ -55,6 +55,7 @@ class ApiServices {
     Map<String, String> headers,
     Object body,
     Encoding encoding,
+    timeOutSeconds = 20,
   }) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
@@ -68,7 +69,11 @@ class ApiServices {
             headers: headers,
             encoding: encoding,
           )
-          .timeout(Duration(seconds: 20));
+          .timeout(
+            Duration(
+              seconds: timeOutSeconds,
+            ),
+          );
       CommonUtil.saveLog(
         message:
             'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',

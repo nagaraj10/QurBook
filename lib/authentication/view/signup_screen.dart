@@ -40,7 +40,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   AuthViewModel authViewModel;
   var checkedValue = true;
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+  CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
 
   bool _isHidden = true;
 
@@ -60,7 +60,10 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Signup Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      '${DateTime
+          .now()
+          .difference(mInitialTime)
+          .inSeconds} secs'
     });
   }
 
@@ -130,7 +133,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 validator: (value) {
                                   return AuthenticationValidator()
                                       .charValidation(value, patternChar,
-                                          strEnterFirstname);
+                                      strEnterFirstname);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -163,7 +166,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 validator: (value) {
                                   return AuthenticationValidator()
                                       .charValidation(value, patternChar,
-                                          strEnterLastNamee);
+                                      strEnterLastNamee);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -183,11 +186,13 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                     constraints: BoxConstraints(
                                         maxWidth: 100.0.w, minWidth: 50.0.w),
                                     child: CountryCodePickerPage(
-                                        onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry =
-                                                country),
+                                        onValuePicked: (country) =>
+                                            setState(
+                                                    () =>
+                                                _selectedDialogCountry =
+                                                    country),
                                         selectedDialogCountry:
-                                            _selectedDialogCountry),
+                                        _selectedDialogCountry),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -206,7 +211,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 validator: (value) {
                                   return AuthenticationValidator()
                                       .phoneValidation(value, patternPhoneNew,
-                                          strPhoneCantEmpty);
+                                      strPhoneCantEmpty);
                                 },
                                 controller: mobileNoController,
                                 maxLength: 10,
@@ -242,8 +247,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: emailController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .emailValidation(value, patternEmailAdress,
-                                          strEmailValidText);
+                                      .emailValidation(
+                                      value, patternEmailAdress,
+                                      strEmailValidText);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -287,7 +293,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 validator: (value) {
                                   return AuthenticationValidator()
                                       .passwordValidation(value,
-                                          patternPassword, strPassCantEmpty);
+                                      patternPassword, strPassCantEmpty);
                                 },
                               ),
                             ),
@@ -331,7 +337,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 checkedValue
                     ? null
                     : FlutterToast().getToast(
-                        'Please accept terms and conditions', Colors.black54);
+                    'Please accept terms and conditions', Colors.black54);
                 _savePatientDetails();
               } else {
                 toast.getToast(strNetworkIssue, Colors.red);
@@ -378,7 +384,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();
       user3.phoneNumber =
-          '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
+      '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController
+          .text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
@@ -410,11 +417,14 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => VerifyPatient(
+              builder: (context) =>
+                  VerifyPatient(
                     PhoneNumber:
-                        '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
+                    '$strPlusSymbol${_selectedDialogCountry
+                        .phoneCode}${mobileNoController.text.trim()}',
                     from: strFromSignUp,
                     userConfirm: false,
+                    fromSignUp: true,
                     emailId: emailController.text.trim(),
                   )));
     } else {

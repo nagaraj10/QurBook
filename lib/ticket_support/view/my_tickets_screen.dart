@@ -11,7 +11,12 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:get/get.dart';
 
-class MyTicketsListScreen extends StatelessWidget {
+class MyTicketsListScreen extends StatefulWidget {
+  @override
+  _MyTicketsListScreenState createState() => _MyTicketsListScreenState();
+}
+
+class _MyTicketsListScreenState extends State<MyTicketsListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,12 @@ class MyTicketsListScreen extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => TicketTypesScreen()),
-            );
+            ).then((value) {
+              print('intent working');
+              setState(() {
+                
+              });
+            });
           },
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           child: Image.asset('assets/icons/09.png', height: 40, width: 40),

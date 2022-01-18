@@ -88,7 +88,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   MediaResult mediaDataObj = MediaResult();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final HealthReportListForUserBlock _healthReportListForUserBlock =
-      HealthReportListForUserBlock();
+  HealthReportListForUserBlock();
   HealthReportListForUserRepository _healthReportListForUserRepository;
 
   FlutterToast toast = FlutterToast();
@@ -100,7 +100,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     // TODO: implement initState
     super.initState();
     _healthReportListForUserRepository =
-        new HealthReportListForUserRepository();
+    new HealthReportListForUserRepository();
     if (widget.imagePath.isNotEmpty) {
       length = widget.imagePath.length;
       index = 1;
@@ -148,7 +148,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               Navigator.of(context).pop();
             }),
       ),
-      body: ListView(
+      body: SingleChildScrollView(child:Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
               constraints: BoxConstraints(
@@ -267,20 +268,20 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           ),
 
           (familyData != null &&
-                  familyData.result?.sharedByUsers != null &&
-                  familyData.result?.sharedByUsers.length > 0)
+              familyData.result?.sharedByUsers != null &&
+              familyData.result?.sharedByUsers.length > 0)
               ? FittedBox(
-                  fit: BoxFit.cover,
-                  child: Row(
-                    children: [
-                      dropDownButton(familyData.result?.sharedByUsers)
-                    ],
-                  ))
+              fit: BoxFit.cover,
+              child: Row(
+                children: [
+                  dropDownButton(familyData.result?.sharedByUsers)
+                ],
+              ))
               : FittedBox(
-                  fit: BoxFit.cover,
-                  child: Row(
-                    children: [getDropdown()],
-                  )),
+              fit: BoxFit.cover,
+              child: Row(
+                children: [getDropdown()],
+              )),
           //Padding(child:_familyNames!=null && _familyNames.length>0?dropDownButton(_familyNames):getDropdown(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
 
           SizedBox(
@@ -296,7 +297,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             height: 20.0.h,
           ),
         ],
-      ),
+      )),
     );
   }
 
@@ -312,47 +313,47 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         children: <Widget>[
           (widget.imagePath != null && widget.imagePath.isNotEmpty)
               ? Expanded(
-                  child: CarouselSlider(
-                    carouselController: carouselSlider,
-                    items: widget.imagePath.map((imgUrl) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                              width: 1.sw,
-                              margin: EdgeInsets.symmetric(horizontal: 10.0),
-                              decoration: BoxDecoration(),
-                              child: Container(
-                                height: double.infinity,
-                                child: Image.file(
-                                  File(imgUrl),
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ));
-                        },
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      height: 400.0.h,
-                      //width: 1.sw,
-                      initialPage: 0,
-                      enlargeCenterPage: true,
-                      reverse: false,
-                      enableInfiniteScroll: false,
-                      // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                      scrollDirection: Axis.horizontal,
-                      onPageChanged: (index, carouselPageChangedReason) {
-                        setState(() {
-                          _current = index;
-                        });
-                      },
-                    ),
-                  ),
-                )
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              items: widget.imagePath.map((imgUrl) {
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Container(
+                        width: 1.sw,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        decoration: BoxDecoration(),
+                        child: Container(
+                          height: double.infinity,
+                          child: Image.file(
+                            File(imgUrl),
+                            fit: BoxFit.scaleDown,
+                          ),
+                        ));
+                  },
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 400.0.h,
+                //width: 1.sw,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
+            ),
+          )
               : Container(
-                  child: Text("Error",
-                      style: TextStyle(
-                        color: Colors.black,
-                      )))
+              child: Text("Error",
+                  style: TextStyle(
+                    color: Colors.black,
+                  )))
         ],
       ),
     );
@@ -485,10 +486,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CommonCircularIndicator(),
-                  width: 30,
-                  height: 30,
-                )),
+                      child: CommonCircularIndicator(),
+                      width: 30,
+                      height: 30,
+                    )),
               );
               break;
 
@@ -500,7 +501,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               break;
 
             case Status.COMPLETED:
-              //_healthReportListForUserBlock = null;
+            //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
               if (snapshot.data.data.result != null) {
                 familyData = snapshot.data.data;
@@ -525,8 +526,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
           ? myProfile.result.firstName?.capitalizeFirstofEach +
-              ' ' +
-              myProfile.result.lastName?.capitalizeFirstofEach
+          ' ' +
+          myProfile.result.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
@@ -556,58 +557,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       }
     }
 
-    /* return Container(
-      width: 1.sw - 40,
-      child: Container(
-        child: DropdownButton<SharedByUsers>(
-          value: selectedUser,
-          underline: SizedBox(),
-          isExpanded: true,
-          hint: Row(
-            children: <Widget>[
-              SizedBoxWidget(width: 20),
-              Text(parameters.self,
-                  style: TextStyle(
-                    fontSize: 14.0.sp,
-                  )),
-            ],
-          ),
-          items: _familyNames
-              .map((SharedByUsers user) => DropdownMenuItem(
-                    child: Row(
-                      children: <Widget>[
-                        SizedBoxWidget(width: 20),
-                        Text(
-                            user.child == null
-                                ? 'Self'
-                                : ((user?.child?.firstName ?? '') +
-                                            ' ' +
-                                            (user?.child?.lastName ?? ''))
-                                        ?.capitalizeFirstofEach ??
-                                    '',
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                            )),
-                      ],
-                    ),
-                    value: user,
-                  ))
-              .toList(),
-          onChanged: (SharedByUsers user) {
-            isFamilyChanged = true;
-            setState(() {
-              if (user.child != null) {
-                if (user.child.id != null) {
-                  selectedId = user.child.id;
-                }
-              } else {
-                selectedId = createdBy;
-              }
-            });
-          },
-        ),
-      ),
-    );*/
+
     return getFamilyDropDown();
   }
 
@@ -619,31 +569,31 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       },
       child: Container(
           child: TextField(
-        style: fhbBasicWidget.getTextStyleForValue(),
-        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-        controller: dateOfVisit,
-        readOnly: true,
-        keyboardType: TextInputType.text,
-        textInputAction: TextInputAction.done,
-        onSubmitted: (term) {
-          dateOfBirthFocus.unfocus();
-        },
-        decoration: InputDecoration(
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[300]),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[300]),
-          ),
-          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          suffixIcon: IconButton(
-            icon: Icon(Icons.calendar_today),
-            onPressed: () {
-              _selectDate(context, dateOfVisit);
+            style: fhbBasicWidget.getTextStyleForValue(),
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            controller: dateOfVisit,
+            readOnly: true,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (term) {
+              dateOfBirthFocus.unfocus();
             },
-          ),
-        ),
-      )),
+            decoration: InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[300]),
+              ),
+              contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.calendar_today),
+                onPressed: () {
+                  _selectDate(context, dateOfVisit);
+                },
+              ),
+            ),
+          )),
     );
   }
 
@@ -691,18 +641,18 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                  title: Text(variable.strAPP_NAME),
-                  content: Text(validationMsg),
-                  actions: <Widget>[
-                    Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            child: Center(
-                                child: TextButton(
+              title: Text(variable.strAPP_NAME),
+              content: Text(validationMsg),
+              actions: <Widget>[
+                Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        child: Center(
+                            child: TextButton(
                               child: const Text(
                                 'Ok',
                                 style: TextStyle(color: Colors.white),
@@ -711,10 +661,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                                 Navigator.of(context).pop();
                               },
                             )),
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ])
-                  ]));
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                      ),
+                    ])
+              ]));
     }
   }
 
@@ -725,7 +675,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         if (claimAmount.text != "" &&
             claimAmount.text != null &&
             int.parse(claimAmount.text) > 0) {
-          if (int.parse(claimAmount.text) < int.parse(claimAmountTotal)) {
+          if (int.parse(claimAmount.text) <= int.parse(claimAmountTotal)) {
             condition = true;
           } else {
             condition = false;
@@ -842,7 +792,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
   Widget getFamilyDropDown() {
     return Container(
-      width: 1.sw - 40,
+      width: 1.sw ,
       child: DropdownButton<SharedByUsers>(
         isExpanded: true,
         value: selectedUser,
@@ -856,24 +806,24 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         ),
         items: _familyNames
             .map((SharedByUsers user) => DropdownMenuItem(
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                          child: Text(
-                              user.child == null
-                                  ? 'Self'
-                                  : ((user?.child?.firstName ?? '') +
-                                              ' ' +
-                                              (user?.child?.lastName ?? ''))
-                                          ?.capitalizeFirstofEach ??
-                                      '',
-                              style: fhbBasicWidget.getTextStyleForValue()),
-                          padding:
-                              EdgeInsets.only(left: 20, top: 10, bottom: 20)),
-                    ],
-                  ),
-                  value: user,
-                ))
+          child: Row(
+            children: <Widget>[
+              Padding(
+                  child: Text(
+                      user.child == null
+                          ? 'Self'
+                          : ((user?.child?.firstName ?? '') +
+                          ' ' +
+                          (user?.child?.lastName ?? ''))
+                          ?.capitalizeFirstofEach ??
+                          '',
+                      style: fhbBasicWidget.getTextStyleForValue()),
+                  padding:
+                  EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+            ],
+          ),
+          value: user,
+        ))
             .toList(),
         onChanged: (SharedByUsers user) {
           isFamilyChanged = true;

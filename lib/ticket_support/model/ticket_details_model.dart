@@ -59,6 +59,7 @@ class Ticket {
   String issue;
   Subscribers assignee;
   String date;
+  String preferredDate;
   List<Comments> comments;
   List<Notes> notes;
   List<Attachments> attachments;
@@ -80,6 +81,7 @@ class Ticket {
       this.issue,
       this.assignee,
       this.date,
+      this.preferredDate,
       this.comments,
       this.notes,
       this.attachments,
@@ -116,6 +118,7 @@ class Ticket {
         ? new Subscribers.fromJson(json['assignee'])
         : null;
     date = json['date'];
+    preferredDate = json['preferredDate'];
     if (json['comments'] != null) {
       comments = <Comments>[];
       json['comments'].forEach((v) {
@@ -173,6 +176,7 @@ class Ticket {
       data['assignee'] = this.assignee.toJson();
     }
     data['date'] = this.date;
+    data['preferredDate'] = this.preferredDate;
     if (this.comments != null) {
       data['comments'] = this.comments.map((v) => v.toJson()).toList();
     }
