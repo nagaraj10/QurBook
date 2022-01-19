@@ -129,37 +129,42 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    /*Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .emitWithAck(getChatsList, {
       'userId': userId,
       'isCaregiverFilter': false,
-      'careGiverList': []
+      'careGiverList': [],
+      'limit':'all'
     }, ack: (userList) {
       if (userList != null) {
         UserChatListModel userChatList = UserChatListModel.fromJson(userList);
 
-        if (userChatList != null) {
+       *//* if (userChatList != null) {
           // update Total count
 
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatTotalCount(userChatList);
-        }
+        }*//*
       }
-    });
+    });*/
 
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
-        .on(notifyChatList, (data) {
+        .on(getChatTotalCount, (data) {
       if (data != null) {
-        UserChatListModel userChatList = UserChatListModel.fromJson(data);
 
-        if (userChatList != null) {
+        Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+            ?.updateChatTotalCountInt(data);
+
+       // UserChatListModel userChatList = UserChatListModel.fromJson(data);
+
+        /*if (userChatList != null) {
           print('notifyChatListCount123 : $userChatList');
 
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatTotalCount(userChatList);
-        }
+        }*/
       }
     });
   }

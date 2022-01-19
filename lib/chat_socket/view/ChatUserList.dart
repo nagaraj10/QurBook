@@ -91,7 +91,8 @@ class _ChatUserListState extends State<ChatUserList> {
         .emitWithAck(getChatsList, {
       'userId': userId,
       'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,
-      'careGiverList': careGiverIds ?? []
+      'careGiverList': careGiverIds ?? [],
+      'limit':'all'
     }, ack: (userList) {
       if (userList != null) {
         UserChatListModel userChatList = UserChatListModel.fromJson(userList);

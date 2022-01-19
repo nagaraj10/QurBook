@@ -39,7 +39,7 @@ class ChatSocketViewModel extends ChangeNotifier {
           _socketEndPoint,
           OptionBuilder()
               .setTransports(['websocket'])
-              .setPath('/api/socket.io')
+              .setPath('/fhb-chat/socket.io')
               .disableAutoConnect()
               .setQuery({"userId": userId})
               .setExtraHeaders({'Authorization': 'Bearer ' + token})
@@ -73,7 +73,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateChatTotalCount(UserChatListModel userChatListModelCount) {
+  /*void updateChatTotalCount(UserChatListModel userChatListModelCount) {
     chatTotalCount  = 0;
     chatHistoryCount = userChatListModelCount?.payload;
 
@@ -88,6 +88,16 @@ class ChatSocketViewModel extends ChangeNotifier {
       }
     }
 
+
+    notifyListeners();
+  }*/
+
+  void updateChatTotalCountInt(var count) {
+    chatTotalCount  = 0;
+
+    if(count!=null && count!=0){
+      chatTotalCount = count;
+    }
 
     notifyListeners();
   }
