@@ -2889,7 +2889,7 @@ class CommonUtil {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Row(
+                      FittedBox(child:Row(
                         children: <Widget>[
                           Text(
                             'Effective Renewal Date: ',
@@ -2909,11 +2909,11 @@ class CommonUtil {
                           ),
                           Text('${formatter.format(initDate)}'),
                         ],
-                      ),
+                      )),
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      Row(
+                      FittedBox(child:Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           OutlineButton(
@@ -2962,20 +2962,20 @@ class CommonUtil {
 
                               if (IsExtendable) {
                                 var response =
-                                    await Provider.of<PlanWizardViewModel>(
-                                            context,
-                                            listen: false)
-                                        ?.addToCartItem(
-                                            packageId: packageId,
-                                            price: price,
-                                            isRenew: true,
-                                            isFromAdd: strMyPlan);
+                                await Provider.of<PlanWizardViewModel>(
+                                    context,
+                                    listen: false)
+                                    ?.addToCartItem(
+                                    packageId: packageId,
+                                    price: price,
+                                    isRenew: true,
+                                    isFromAdd: strMyPlan);
 
                                 refresh();
                                 if (moveToCart) {
                                   if ((response.message?.toLowerCase() ==
-                                          'Product already exists in cart'
-                                              .toLowerCase()) ||
+                                      'Product already exists in cart'
+                                          .toLowerCase()) ||
                                       response.isSuccess) {
                                     Get.to(CheckoutPage());
                                   }
@@ -3001,7 +3001,7 @@ class CommonUtil {
                             ),
                           ),
                         ],
-                      ),
+                      )),
                     ]),
                   ),
                 );

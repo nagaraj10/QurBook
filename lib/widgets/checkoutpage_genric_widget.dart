@@ -674,8 +674,11 @@ class CheckoutPageWidgets {
                     //     .updateProfileVaildationStatus(true);
 
                     isAccpted = true;
-                    CommonUtil.showLoadingDialog(
-                        context, _keyLoader, variable.Please_Wait,isAutoDismiss: true);
+                    if(feeZero){
+                      CommonUtil.showLoadingDialog(
+                          context, _keyLoader, variable.Please_Wait,isAutoDismiss: true);
+                    }
+
                   },
                   borderSide: BorderSide(
                     color: Color(

@@ -7,7 +7,8 @@ class FeedbackController extends GetxController {
   final _apiProvider = FeedbackApiProvider();
   var loadingData = false.obs;
   FeedbackTypeModel feedbackType;
-  var selectedType = HealthRecordTypeCollection.fromJson({}).obs;
+  HealthRecordTypeCollection selectedType;
+  var catSelected = false.obs;
 
   getFeedbacktypes() async {
     try {
@@ -19,13 +20,23 @@ class FeedbackController extends GetxController {
         feedbackType = feedbackTypeModelFromJson(response.body);
         feedbackType.result.first.healthRecordTypeCollection
             .removeWhere((element) => element.name == 'Feedback');
-        selectedType.value =
-            feedbackType.result.first.healthRecordTypeCollection.first;
+        // selectedType.value =
+        //     feedbackType.result.first.healthRecordTypeCollection.first;
       }
       loadingData.value = false;
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
     }
+  }
+
+  setRecordType(HealthRecordTypeCollection selected) {
+    selectedType = selected;
+    catSelected.value = true;
+  }
+
+  removeSelectedType() {
+    selectedType = null;
+    catSelected.value = false;
   }
 }
