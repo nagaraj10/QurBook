@@ -149,7 +149,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null && data.healthRecordCollection.length > 0) {
+              if (data != null && (data?.healthRecordCollection?.length??0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);

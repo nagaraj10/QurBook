@@ -149,7 +149,7 @@ class _BillsListState extends State<BillsList> {
             }
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
             if (mediaMetaInfoObj != null &&
-                mediaMetaInfoObj.healthRecordCollection.length > 0) {
+                (mediaMetaInfoObj.healthRecordCollection?.length??0) > 0) {
               mediMasterId =
                   new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
               if (mediMasterId.length > 0) {
