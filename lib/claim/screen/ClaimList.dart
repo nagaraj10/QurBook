@@ -77,15 +77,15 @@ class _ClaimListState extends State<ClaimList> {
           heroTag: "btn2",
           onPressed: () {
             FocusManager.instance.primaryFocus.unfocus();
-            if (memberShipEndDate != "" &&
+           /* if (memberShipEndDate != "" &&
                 memberShipEndDate != null &&
                 memberShipType != "" &&
-                memberShipType != null) {
+                memberShipType != null) {*/
               Navigator.pushNamed(context, router.rt_TakePictureScreen)
                   .then((value) {});
-            } else {
+            /*} else {
               toast.getToast("No Membership Available", Colors.green);
-            }
+            }*/
           },
           child: Icon(
             Icons.add,

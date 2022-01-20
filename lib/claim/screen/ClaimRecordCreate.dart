@@ -7,6 +7,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -23,6 +24,10 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:open_file/open_file.dart';
 
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -94,6 +99,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   FlutterToast toast = FlutterToast();
 
   String claimAmountTotal;
+  bool ispdfPresent = false;
+  var pdfFile;
+var pdfFileName;
 
   @override
   void initState() {
@@ -113,6 +121,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         : claimAmountTotal;
     setAuthToken();
     initializeData();
+
+    if(length==1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath[0])){
+      ispdfPresent=true;
+      pdfFile = File(widget.imagePath[0]);
+      final fileNoun = pdfFile.path.split('/').last;
+      pdfFileName=fileNoun;
+    }
 
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
@@ -162,7 +177,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                       flex: 4,
                       child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: getCarousalImage(widget.imagePath))),
+                          child: ispdfPresent?getIconForPdf():getCarousalImage(widget.imagePath))),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -839,6 +854,33 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           });
         },
       ),
+    );
+  }
+
+  getIconForPdf() {
+    return Container(
+      child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'View PDF',
+                style: TextStyle(color: Colors.white),
+              ),
+              IconButton(
+                tooltip: 'View PDF',
+                icon: ImageIcon(
+                    AssetImage(variable.icon_attach),
+                    color: Colors.white),
+                onPressed: () async {
+
+                  await OpenFile.open(
+                    pdfFile.path,
+                  );
+                },
+              )
+            ],
+          )),
     );
   }
 }
