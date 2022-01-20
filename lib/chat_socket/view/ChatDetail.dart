@@ -273,7 +273,7 @@ class ChatState extends State<ChatDetail> {
         ?.socket
         .on(message, (data) {
       if (data != null) {
-        print('OnMessageack$data');
+        //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
         if (emitAckResponse != null) {
           if (peerId == emitAckResponse.messages.idFrom) {
@@ -291,7 +291,7 @@ class ChatState extends State<ChatDetail> {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .emitWithAck(unreadNotification, data, ack: (res) {
-      print('emitWithackCount$res');
+      //print('emitWithackCount$res');
     });
   }
 
@@ -438,7 +438,7 @@ class ChatState extends State<ChatDetail> {
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.socket
               .emitWithAck(message, data, ack: (res) {
-            print('emitWithack$res');
+            //print('emitWithack$res');
             if (res != null) {
               EmitAckResponse emitAckResponse = EmitAckResponse.fromJson(res);
               if (emitAckResponse != null) {
@@ -453,7 +453,7 @@ class ChatState extends State<ChatDetail> {
             }
           });
         } catch (e) {
-          print('execption$e');
+          //print('execption$e');
         }
 
         textValue = '';
@@ -1614,7 +1614,7 @@ class ChatState extends State<ChatDetail> {
                           }
                         }
                       } catch (e) {
-                        print(e);
+                        //print(e);
                       }
                     }
                   });

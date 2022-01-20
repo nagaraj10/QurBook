@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatModel.dart';
+import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -92,11 +93,19 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }*/
 
-  void updateChatTotalCountInt(var count) {
-    chatTotalCount  = 0;
+  void updateChatTotalCount(TotalCountModel totalCountModel) {
 
-    if(count!=null && count!=0){
-      chatTotalCount = count;
+    chatTotalCount = 0;
+
+    if (totalCountModel != null) {
+      if (totalCountModel?.isSuccess && totalCountModel?.payload != null) {
+        if (totalCountModel?.payload?.isNotEmpty) {
+          if (totalCountModel?.payload[0]?.count != null &&
+              totalCountModel?.payload[0]?.count != '') {
+            chatTotalCount = int.parse(totalCountModel?.payload[0]?.count??0);
+          }
+        }
+      }
     }
 
     notifyListeners();
@@ -118,7 +127,6 @@ class ChatSocketViewModel extends ChangeNotifier {
   }
 
   void onReceiveMessage(ChatHistoryResult list) {
-
     chatHistoryList.add(list);
 
     notifyListeners();
@@ -129,7 +137,7 @@ class ChatSocketViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
       ChatHistoryModel chatHistoryModel =
-      await chocketService.getChatHistory(userId, peerId);
+          await chocketService.getChatHistory(userId, peerId);
 
       return chatHistoryModel;
     } catch (e) {}
@@ -140,7 +148,7 @@ class ChatSocketViewModel extends ChangeNotifier {
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
       InitChatModel chatHistoryModel =
-      await chocketService.initNewChat(userId, peerId);
+          await chocketService.initNewChat(userId, peerId);
 
       return chatHistoryModel;
     } catch (e) {}

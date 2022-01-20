@@ -71,7 +71,6 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void initSocket(bool isLoad) {
-
     if (isLoad) {
       setState(() {
         isLoading = true;
@@ -86,24 +85,31 @@ class _ChatUserListState extends State<ChatUserList> {
       });
     }
 
+    emitGetUserList(careGiverIds, isLoad);
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .on(notifyChatList, (data) {
+      if (data != null) {
+        emitGetUserList(careGiverIds, isLoad);
+      }
+    });
+  }
+
+  void emitGetUserList(var careGiverIds, bool isLoad) {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .emitWithAck(getChatsList, {
       'userId': userId,
       'isCaregiverFilter': (careGiverIds?.length ?? 0) > 0 ? true : false,
       'careGiverList': careGiverIds ?? [],
-      'limit':'all'
+      'limit': 'all'
     }, ack: (userList) {
       if (userList != null) {
         UserChatListModel userChatList = UserChatListModel.fromJson(userList);
         if (userChatList != null) {
-          //update userList chats
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatUserList(userChatList);
-
-          /*// update Total count
-            Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-                ?.updateChatTotalCount(userChatList);*/
         }
       }
       if (mounted) {
@@ -111,21 +117,6 @@ class _ChatUserListState extends State<ChatUserList> {
           setState(() {
             isLoading = false;
           });
-        }
-      }
-    });
-
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-        ?.socket
-        .on(notifyChatList, (data) {
-      if (data != null) {
-        UserChatListModel userChatList = UserChatListModel.fromJson(data);
-        if (userChatList != null) {
-          print('notifyChatList$userChatList');
-
-          //update userChatList count
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-              ?.updateChatUserList(userChatList);
         }
       }
     });
@@ -200,9 +191,10 @@ class _ChatUserListState extends State<ChatUserList> {
       children: <Widget>[
         // List
         Container(
-            child: Provider.of<ChatSocketViewModel>(Get.context)
-                        ?.userChatList
-                        .length >
+            child: (Provider.of<ChatSocketViewModel>(Get.context)
+                            ?.userChatList
+                            ?.length ??
+                        0) >
                     0
                 ? ListView.builder(
                     padding: EdgeInsets.all(10.0),
@@ -263,18 +255,17 @@ class _ChatUserListState extends State<ChatUserList> {
                             : false,
                         groupId: userChatList?.id,
                         lastDate: userChatList?.deliveredTimeStamp != null &&
-                            userChatList?.deliveredTimeStamp != ''
-                            ? getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
-                            int.parse(
-                                userChatList?.deliveredTimeStamp))
-                            .toString())
+                                userChatList?.deliveredTimeStamp != ''
+                            ? getFormattedDateTime(
+                                DateTime.fromMillisecondsSinceEpoch(int.parse(
+                                        userChatList?.deliveredTimeStamp))
+                                    .toString())
                             : ''))).then((value) {
-                              if(value){
-                                initSocket(true);
-                              }else{
-                                initSocket(false);
-                              }
-
+              if (value) {
+                initSocket(true);
+              } else {
+                initSocket(false);
+              }
             });
           },
           child: Container(
@@ -410,12 +401,12 @@ class _ChatUserListState extends State<ChatUserList> {
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
                             userChatList?.deliveredTimeStamp != null &&
-                                userChatList?.deliveredTimeStamp != ''
+                                    userChatList?.deliveredTimeStamp != ''
                                 ? LAST_RECEIVED +
                                     getFormattedDateTime(
                                         DateTime.fromMillisecondsSinceEpoch(
-                                            int.parse(
-                                                userChatList?.deliveredTimeStamp))
+                                                int.parse(userChatList
+                                                    ?.deliveredTimeStamp))
                                             .toString())
                                 : '',
                             style: TextStyle(

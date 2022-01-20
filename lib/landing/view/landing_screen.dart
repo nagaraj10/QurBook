@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -129,42 +130,32 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
-    /*Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
-        .emitWithAck(getChatsList, {
+        .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
-      'isCaregiverFilter': false,
-      'careGiverList': [],
-      'limit':'all'
-    }, ack: (userList) {
-      if (userList != null) {
-        UserChatListModel userChatList = UserChatListModel.fromJson(userList);
-
-       *//* if (userChatList != null) {
-          // update Total count
-
+    }, ack: (countResponseEmit) {
+      if (countResponseEmit != null) {
+        TotalCountModel totalCountModel =
+            TotalCountModel.fromJson(countResponseEmit);
+        if (totalCountModel != null) {
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-              ?.updateChatTotalCount(userChatList);
-        }*//*
+              ?.updateChatTotalCount(totalCountModel);
+        }
       }
-    });*/
+    });
 
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
-        .on(getChatTotalCount, (data) {
-      if (data != null) {
-
-        Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-            ?.updateChatTotalCountInt(data);
-
-       // UserChatListModel userChatList = UserChatListModel.fromJson(data);
-
-        /*if (userChatList != null) {
-          print('notifyChatListCount123 : $userChatList');
-
+        .on(getChatTotalCountOn, (countResponseOn) {
+      if (countResponseOn != null) {
+        TotalCountModel totalCountModelOn =
+            TotalCountModel.fromJson(countResponseOn);
+        if(totalCountModelOn!=null){
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-              ?.updateChatTotalCount(userChatList);
-        }*/
+              ?.updateChatTotalCount(totalCountModelOn);
+        }
+
       }
     });
   }
