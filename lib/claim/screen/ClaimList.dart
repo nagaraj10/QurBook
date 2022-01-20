@@ -77,7 +77,7 @@ class _ClaimListState extends State<ClaimList> {
           heroTag: "btn2",
           onPressed: () {
             FocusManager.instance.primaryFocus.unfocus();
-            if (memberShipEndDate != "" &&
+           if (memberShipEndDate != "" &&
                 memberShipEndDate != null &&
                 memberShipType != "" &&
                 memberShipType != null) {
