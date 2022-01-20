@@ -130,6 +130,11 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .off(getChatTotalCountOn);
+
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .emitWithAck(getChatTotalCountEmit, {
@@ -179,7 +184,7 @@ class _LandingScreenState extends State<LandingScreen> {
         await PreferenceUtil.removeNotificationData();
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 

@@ -72,9 +72,9 @@ class _ChatUserListState extends State<ChatUserList> {
 
   void initSocket(bool isLoad) {
 
-    /*Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
-        .off(notifyChatList);*/
+        .off(notifyChatList);
 
     if (isLoad) {
       setState(() {
@@ -95,7 +95,6 @@ class _ChatUserListState extends State<ChatUserList> {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .on(notifyChatList, (data) {
-          print('on.Notify');
       if (data != null) {
         emitGetUserList(careGiverIds, isLoad);
       }
