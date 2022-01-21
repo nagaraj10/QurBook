@@ -1,10 +1,7 @@
 package com.ventechsolutions.myFHB.services
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -14,6 +11,7 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.firestore.FirebaseFirestore
@@ -75,6 +73,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
+
+
     @SuppressLint("RestrictedApi")
     private fun createNotification4Call(data: Map<String, String> = HashMap()) {
         Log.e("Notification","createNotification4Call")
@@ -89,17 +89,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 val importance = NotificationManager.IMPORTANCE_HIGH
                 val notificationChannel = NotificationChannel(
                     "call",
-                    "NOTIFICATION_CHANNEL_NAME",
+                    "NOTIFICATION_CALL",
                     NotificationManager.IMPORTANCE_HIGH
                 )
                 notificationChannel.enableLights(true)
                 notificationChannel.lightColor = Color.RED
+                notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 notificationChannel.enableVibration(true)
                 notificationChannel.vibrationPattern =longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
                 if (_sound != null) {
                     val audioAttributes = AudioAttributes.Builder()
                         .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+
                         .build()
                     notificationChannel.setSound(_sound, audioAttributes)
                 }else{
@@ -198,7 +200,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             )
             .setContentTitle(data[getString(R.string.pro_ns_title)])
             .setContentText(data[getString(R.string.pro_ns_body)])
-            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setContentIntent(fullScreenPendingIntent)
             .addAction(R.drawable.ic_call, getString(R.string.ns_act_accept), acceptPendingIntent)
@@ -211,7 +213,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setDefaults(Notification.DEFAULT_SOUND)
             .setFullScreenIntent(fullScreenPendingIntent, true)
             .setOngoing(true)
+            .setVisibility(Notification.VISIBILITY_PUBLIC)
             .setTimeoutAfter(NS_TIMEOUT)
+             .setSound(_sound)
             .setOnlyAlertOnce(false)
             .build()
 
