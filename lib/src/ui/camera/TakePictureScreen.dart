@@ -231,7 +231,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           ),
                           Expanded(
                             child: Center(
-                              child: IconButton(
+                              child: Visibility(child: IconButton(
                                 icon: new ImageIcon(
                                   AssetImage(variable.icon_attach),
                                   color: Colors.white,
@@ -248,8 +248,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     try {
                                       var image = await FilePicker.platform
                                           .pickFiles(
-                                              type: FileType.custom,
-                                              allowedExtensions: [
+                                          type: FileType.custom,
+                                          allowedExtensions: [
                                             variable.strpdf
                                           ]);
                                       if ((image?.files?.length ?? 0) > 0) {
@@ -261,7 +261,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     }
                                   }
                                 },
-                              ),
+                              ),visible:!isThumbnails?true:false,),
                             ),
                           ),
                           Expanded(
@@ -380,34 +380,34 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               child: FHBBasicWidget.customShowCase(
                                   _attachments,
                                   Constants.ATTACH_DESC,
-                                  Visibility(child: IconButton(
-                                    icon: new ImageIcon(
-                                      AssetImage(variable.icon_attach),
-                                      color: Colors.white,
-                                      size: 32.0.sp,
-                                    ),
-                                    onPressed: () async {
-                                      // Take the Picture in a try / catch block. If anything goes wrong,
-                                      // catch the error.
+                                   Visibility(child:IconButton(
+                                     icon: new ImageIcon(
+                                       AssetImage(variable.icon_attach),
+                                       color: Colors.white,
+                                       size: 32.0.sp,
+                                     ),
+                                     onPressed: () async {
+                                       // Take the Picture in a try / catch block. If anything goes wrong,
+                                       // catch the error.
 
-                                      if (isMultipleImages) {
-                                        await getFilePath();
-                                        callDisplayPictureScreen(context);
-                                      } else {
-                                        try {
-                                          var image = await FilePicker.platform
-                                              .pickFiles();
-                                          if ((image?.files?.length ?? 0) > 0)
-                                            imagePaths.add(image.files[0].path);
-                                          callDisplayPictureScreen(context);
-                                        } catch (e) {
-                                          // If an error occurs, log the error to the console.
-                                        }
-                                      }
-                                    },
-                                  ),visible:categoryName=="Claim Records"?false:true),
+                                       if (isMultipleImages) {
+                                         await getFilePath();
+                                         callDisplayPictureScreen(context);
+                                       } else {
+                                         try {
+                                           var image = await FilePicker.platform
+                                               .pickFiles();
+                                           if ((image?.files?.length ?? 0) > 0)
+                                             imagePaths.add(image.files[0].path);
+                                           callDisplayPictureScreen(context);
+                                         } catch (e) {
+                                           // If an error occurs, log the error to the console.
+                                         }
+                                       }
+                                     },
+                                   ),visible:!isThumbnails?true:false,),
                                   Constants.ATTACH_TITLE),
-                            ),
+                           ),
                           ),
                           Expanded(
                             child: Center(
