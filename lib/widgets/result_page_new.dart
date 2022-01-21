@@ -127,16 +127,16 @@ class _ResultPage extends State<PaymentResultPage> {
                       SizedBox(height: 15.0.h),
                       (widget?.isFreePlan ?? false)
                           ? Text(
-                              status ? 'Subscribe Success' : 'Subscribe Failed',
+                          status ? 'Plan Subscription/Renewal Successful' : 'Plan Subscription/Renewal Failed',
                               // TODO this need to confirm with bussinees
                               style: TextStyle(
-                                  fontSize: 22.0.sp,
+                                  fontSize: 18.0.sp,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold))
                           : paidPlanContent(),
                       //status
                       ((widget.refNo ?? '').isNotEmpty)
-                          ? Text('Ref.no: ' + widget.refNo,
+                          ? Text('Order ID : ' + widget.refNo,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
                                   color: Colors.white,
