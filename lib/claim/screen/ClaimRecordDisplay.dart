@@ -50,7 +50,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       plan = "",
       familyMember = "",
       status = "",
-      remark = "";
+      remark = "",
+      approvedAmount = "";
   ClaimListRepository claimListRepository;
   ClaimListBloc claimListBloc;
   GetRecordIdsFilter getRecordIdsFilter;
@@ -189,6 +190,23 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         style: getTextStyleForValue()))
               ],
             )),
+        if (approvedAmount != "" && approvedAmount != null) getDivider(),
+        if (approvedAmount != "" && approvedAmount != null)
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text("Approved Amount",
+                          style: getTextStyleForTags())),
+                  Text(":"),
+                  Expanded(
+                      flex: 2,
+                      child: Text("   " + approvedAmount ?? "",
+                          style: getTextStyleForValue()))
+                ],
+              )),
         getDivider(),
         Padding(
           padding: EdgeInsets.all(15),
@@ -337,6 +355,11 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       familyMember = claimRecordDetails?.result?.submittedForFirstName +
           " " +
           claimRecordDetails?.result?.submittedForLastName;
+
+      approvedAmount = (claimRecordDetails?.result?.approvedAmount != null &&
+              claimRecordDetails?.result?.approvedAmount != '')
+          ? variable.strRs + ". " + claimRecordDetails?.result?.approvedAmount
+          : '';
     }
   }
 
