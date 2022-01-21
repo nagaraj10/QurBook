@@ -4054,6 +4054,16 @@ class CommonUtil {
   num doubleWithoutDecimalToInt(double val) {
     return val % 1 == 0 ? val.toInt() : val;
   }
+
+  bool checkIfFileIsPdf(String filePath){
+    bool condition=false;;
+    final fileName = File(filePath);
+    final fileNoun = fileName.path.split('/').last;
+    if(fileNoun.contains(".pdf")){
+      condition=true;
+    }
+    return condition;
+  }
 }
 
 extension CapExtension on String {
