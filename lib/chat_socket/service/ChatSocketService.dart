@@ -2,6 +2,7 @@ import 'dart:convert' as convert;
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
+import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatModel.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -25,7 +26,8 @@ class ChatSocketService {
       "peerId": "${peerId}"
     };
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.getChatHistory(qr_chat_socket_history, jsonString);
+    final response = await _helper.getChatHistory(
+        qr_chat_socket_history, jsonString);
     return ChatHistoryModel.fromJson(response);
   }
 
@@ -35,7 +37,15 @@ class ChatSocketService {
       "userId": "${userId}"
     };
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.initNewChat(qr_chat_socket_init_chat_pat_doc, jsonString);
+    final response = await _helper.initNewChat(
+        qr_chat_socket_init_chat_pat_doc, jsonString);
     return InitChatModel.fromJson(response);
+  }
+
+  Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
+    final response = await _helper.getUserIdFromDocId(
+        qr_chat_socket_get_user_id_doc + docId +
+            qr_chat_socket_get_user_id_doc_include);
+    return GetUserIdModel.fromJson(response);
   }
 }

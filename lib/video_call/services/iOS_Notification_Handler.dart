@@ -198,6 +198,7 @@ class IosNotificationHandler {
     } else if (model.redirect == parameters.chat) {
       if (isAlreadyLoaded) {
         if (model.doctorId != null &&
+            model.userId != null &&
             model.doctorName != null &&
             model.doctorPicture != null &&
             model.patientId != null &&
@@ -213,6 +214,7 @@ class IosNotificationHandler {
               patientPicture: model.patientPicture,
               isFromVideoCall: false,
               isCareGiver: false,
+              isForGetUserId: true,
             ),
           );
         } else {

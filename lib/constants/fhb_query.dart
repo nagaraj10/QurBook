@@ -341,3 +341,7 @@ const String qr_chat_socket_init_chat_doc_pat = 'chat/initiate-doctor-patient-ch
 
 const String qr_chat_socket_init_chat_pat_doc = 'chat/initiate-patient-doctor-chat';
 
+const String qr_chat_socket_get_user_id_doc = 'doctor/';
+
+const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
+

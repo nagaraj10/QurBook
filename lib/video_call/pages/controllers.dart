@@ -286,7 +286,8 @@ class _MyControllersState extends State<MyControllers> {
                                 patientName: widget.patientName,
                                 patientPicture: widget.patientPicUrl,
                                 isFromVideoCall: true,
-                                isCareGiver: false)));
+                                isCareGiver: false,
+                                isForGetUserId: true)));
                   },
                   icon: Image.asset('assets/icons/ic_chat.png'),
                   //iconSize: 33,

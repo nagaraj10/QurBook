@@ -2401,6 +2401,21 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getUserIdFromDocId(String url) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
 /*
   Future<dynamic> getMemberShipDetails(String url) async {
     MemberShipDetails responseJson;

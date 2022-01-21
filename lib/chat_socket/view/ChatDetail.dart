@@ -57,24 +57,25 @@ class ChatDetail extends StatefulWidget {
   final bool isFromVideoCall;
   final String message;
   final bool isCareGiver;
+  final bool isForGetUserId;
 
   final String lastDate;
 
   final String groupId;
 
-  const ChatDetail(
-      {Key key,
-      @required this.peerId,
-      @required this.peerName,
-      @required this.peerAvatar,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
-      @required this.groupId,
-      this.message,
-      this.isCareGiver,
-      this.lastDate})
+  const ChatDetail({Key key,
+    @required this.peerId,
+    @required this.peerName,
+    @required this.peerAvatar,
+    @required this.patientId,
+    @required this.patientName,
+    @required this.patientPicture,
+    @required this.isFromVideoCall,
+    @required this.groupId,
+    this.message,
+    this.isCareGiver,
+    this.isForGetUserId = false,
+    this.lastDate})
       : super(key: key);
 
   @override
@@ -93,7 +94,7 @@ class ChatState extends State<ChatDetail> {
   AppointmentResult appointmentResult;
 
   final AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
-      AddFamilyUserInfoRepository();
+  AddFamilyUserInfoRepository();
 
   //final TextEditingController textEditingController = TextEditingController();
 
@@ -125,6 +126,7 @@ class ChatState extends State<ChatDetail> {
   bool isPlaying = false;
 
   String peerId = '';
+  String chatPeerId = '';
   String peerName = '';
   String peerAvatar = '';
 
@@ -153,6 +155,8 @@ class ChatState extends State<ChatDetail> {
 
   bool isCareGiver = false;
 
+  bool isForGetUserId = false;
+
   var isSearchVisible = false;
 
   bool isCareGiverApi = true;
@@ -168,16 +172,18 @@ class ChatState extends State<ChatDetail> {
     super.initState();
 
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => Provider.of<ChatSocketViewModel>(
-              Get.context,
-              listen: false,
-            )?.updateChatHistoryList([], shouldUpdate: false));
+        .addPostFrameCallback((_) =>
+        Provider.of<ChatSocketViewModel>(
+          Get.context,
+          listen: false,
+        )?.updateChatHistoryList([], shouldUpdate: false));
 
     peerId = widget.peerId;
     peerName = widget.peerName;
     peerAvatar = widget.peerAvatar;
 
     isCareGiver = widget.isCareGiver;
+    isForGetUserId = widget.isForGetUserId;
     isFromVideoCall = widget.isFromVideoCall;
 
     groupId = widget.groupId;
@@ -192,14 +198,46 @@ class ChatState extends State<ChatDetail> {
     getPatientDetails();
     set_up_audios();
 
-    chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
-        .getChatHistory(peerId);
+    if (isForGetUserId) {
+      Provider.of<ChatSocketViewModel>(context, listen: false)
+          .getUserIdFromDocId(peerId)
+          .then((value) {
+        if (value != null) {
+          if (value?.result != null) {
+            if (value?.result?.user != null) {
+              if (value?.result?.user?.id != null &&
+                  value?.result?.user?.id != '') {
+                chatPeerId = value?.result?.user?.id;
+                getGroupId();
+                getChatHistory();
+              }
+            }
+          }else{
+            chatPeerId = peerId;
+            getGroupId();
+            getChatHistory();
+          }
+        }
+      });
+    } else {
+      chatPeerId = peerId;
+      getGroupId();
+      getChatHistory();
+    }
+
 
     textEditingController.text = widget?.message;
+  }
 
+  void getChatHistory() {
+    chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
+        .getChatHistory(chatPeerId);
+  }
+
+  void getGroupId(){
     if (groupId == '' || groupId == null) {
       Provider.of<ChatSocketViewModel>(context, listen: false)
-          .initNewChat(peerId)
+          .initNewChat(chatPeerId)
           .then((value) {
         if (value != null) {
           if (value?.result != null) {
@@ -228,7 +266,7 @@ class ChatState extends State<ChatDetail> {
 
   set_up_audios() async {
     _mPlayer.openAudioSession().then(
-      (value) {
+          (value) {
         _mPlayer.setSubscriptionDuration(
           Duration(
             seconds: 1,
@@ -265,18 +303,20 @@ class ChatState extends State<ChatDetail> {
   }
 
   void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider
+        .of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .off(message);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider
+        .of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .on(message, (data) {
       if (data != null) {
         //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
         if (emitAckResponse != null) {
-          if (peerId == emitAckResponse.messages.idFrom) {
+          if (chatPeerId == emitAckResponse.messages.idFrom) {
             Provider.of<ChatSocketViewModel>(Get.context, listen: false)
                 ?.onReceiveMessage(emitAckResponse);
           }
@@ -288,7 +328,8 @@ class ChatState extends State<ChatDetail> {
   updateReadCount() {
     var data = {"chatListId": groupId, "userId": userId};
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider
+        .of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
@@ -324,27 +365,27 @@ class ChatState extends State<ChatDetail> {
               : '';
           doctorDeviceToken = appointmentResult?.deviceToken != null
               ? appointmentResult?.deviceToken?.doctor != null
-                  ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
-                      ? appointmentResult
-                          .deviceToken?.doctor?.payload[0]?.deviceTokenId
-                      : ''
-                  : ''
+              ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
+              ? appointmentResult
+              .deviceToken?.doctor?.payload[0]?.deviceTokenId
+              : ''
+              : ''
               : '';
           patientDeviceToken = '';
           if (appointmentResult?.deviceToken != null) {
             if (appointmentResult?.deviceToken?.patient?.isSuccess &&
                 appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
                 appointmentResult
-                        ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
+                    ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess &&
+                ?.deviceToken?.parentMember?.isSuccess &&
                 appointmentResult
                     ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload[0]
-                        ?.deviceTokenId !=
+                    ?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
@@ -386,7 +427,7 @@ class ChatState extends State<ChatDetail> {
               snapshot?.data?.result?.length > 0) {*/
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatHistoryList(snapshot?.data?.result,
-                  shouldUpdate: false);
+              shouldUpdate: false);
 
           return buildListMessage();
           /*} else {
@@ -416,8 +457,8 @@ class ChatState extends State<ChatDetail> {
     super.dispose();
   }
 
-  void onSendMessage(
-      String content, int type, String chatMessageId, bool isNotUpload) async {
+  void onSendMessage(String content, int type, String chatMessageId,
+      bool isNotUpload) async {
     if (content != null) {
       if (content.trim() != '') {
         textValue = textEditingController.text;
@@ -426,7 +467,7 @@ class ChatState extends State<ChatDetail> {
         var data = {
           "id": groupId,
           'idFrom': userId,
-          'idTo': peerId,
+          'idTo': chatPeerId,
           "type": type,
           "isread": false,
           'content': content,
@@ -435,7 +476,8 @@ class ChatState extends State<ChatDetail> {
         };
 
         try {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider
+              .of<ChatSocketViewModel>(Get.context, listen: false)
               ?.socket
               .emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
@@ -472,101 +514,101 @@ class ChatState extends State<ChatDetail> {
           child: _patientChatBar()),
       floatingActionButton: isSearchVisible
           ? Padding(
-              // padding: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.only(
-                top: 250.0,
+        // padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(
+          top: 250.0,
+        ),
+        child: Column(
+          children: <Widget>[
+            // SpeedDial
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
               ),
-              child: Column(
-                children: <Widget>[
-                  // SpeedDial
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
-                    ),
-                    child: Container(
-                      height: 1.sw * 0.1,
-                      width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
-                        heroTag: null,
-                        onPressed: () async {
-                          firstTime = false;
-                          if (commonIndex < indexList.length - 1) {
-                            commonIndex = commonIndex + 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
-                          } else {
-                            toast.getToast('No more data', Colors.red);
-                          }
-                        },
-                        child: Icon(Icons.arrow_upward),
-                      ),
-                    ),
-                  ),
-                  SizedBoxWidget(
-                    height: 5.0.h,
-                  ),
-                  new Theme(
-                    data: new ThemeData(
-                      accentColor: Colors.transparent,
-                    ),
-                    child: Container(
-                      height: 1.sw * 0.1,
-                      width: 1.sw * 0.1,
-                      child: new FloatingActionButton(
-                        heroTag: null,
-                        onPressed: () async {
-                          firstTime = false;
-                          if (commonIndex > 0) {
-                            commonIndex = commonIndex - 1;
-                            listScrollController.scrollTo(
-                                index: indexList[commonIndex],
-                                duration: Duration(milliseconds: 100));
-                          } else {
-                            toast.getToast('No more data', Colors.red);
-                          }
-                        },
-                        child: Icon(Icons.arrow_downward),
-                      ),
-                    ),
-                  ),
-                ],
+              child: Container(
+                height: 1.sw * 0.1,
+                width: 1.sw * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    firstTime = false;
+                    if (commonIndex < indexList.length - 1) {
+                      commonIndex = commonIndex + 1;
+                      listScrollController.scrollTo(
+                          index: indexList[commonIndex],
+                          duration: Duration(milliseconds: 100));
+                    } else {
+                      toast.getToast('No more data', Colors.red);
+                    }
+                  },
+                  child: Icon(Icons.arrow_upward),
+                ),
               ),
-            )
+            ),
+            SizedBoxWidget(
+              height: 5.0.h,
+            ),
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
+              ),
+              child: Container(
+                height: 1.sw * 0.1,
+                width: 1.sw * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    firstTime = false;
+                    if (commonIndex > 0) {
+                      commonIndex = commonIndex - 1;
+                      listScrollController.scrollTo(
+                          index: indexList[commonIndex],
+                          duration: Duration(milliseconds: 100));
+                    } else {
+                      toast.getToast('No more data', Colors.red);
+                    }
+                  },
+                  child: Icon(Icons.arrow_downward),
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
           : Container(),
       body: isLoading
           ? Center(
-              child: CircularProgressIndicator(
-              color: Color(CommonUtil().getMyPrimaryColor()),
-            ))
+          child: CircularProgressIndicator(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ))
           : WillPopScope(
-              onWillPop: onBackPress,
-              child: Stack(
+        onWillPop: onBackPress,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              color: Colors.grey[300],
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    color: Colors.grey[300],
-                    child: Column(
-                      children: <Widget>[
-                        // List of messages
-                        getChatHistoryList(),
+                  // List of messages
+                  getChatHistoryList(),
 
-                        // Sticker
-                        //(isShowSticker ? buildSticker() : Container()),
+                  // Sticker
+                  //(isShowSticker ? buildSticker() : Container()),
 
-                        // Input content
-                        !isChatDisable ? buildInput() : SizedBox.shrink(),
-                        SizedBox(
-                          height: 20.0.h,
-                        ),
-                      ],
-                    ),
+                  // Input content
+                  !isChatDisable ? buildInput() : SizedBox.shrink(),
+                  SizedBox(
+                    height: 20.0.h,
                   ),
-
-                  // Loading
-                  //buildLoading()
                 ],
               ),
             ),
+
+            // Loading
+            //buildLoading()
+          ],
+        ),
+      ),
     );
   }
 
@@ -583,13 +625,13 @@ class ChatState extends State<ChatDetail> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: <Color>[
-              Color(new CommonUtil().getMyPrimaryColor()),
-              Color(new CommonUtil().getMyGredientColor())
-            ],
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                ],
                 stops: [
-              0.3,
-              1.0
-            ])),
+                  0.3,
+                  1.0
+                ])),
         child: SafeArea(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -629,36 +671,36 @@ class ChatState extends State<ChatDetail> {
                       children: [
                         !isCallBackDisable && isCareGiver
                             ? IconButton(
-                                onPressed: () {
-                                  CommonUtil()
-                                      .CallbackAPIFromChat(
-                                          patientId,
-                                          peerId,
-                                          (widget.peerName ?? "").length > 0
-                                              ? widget.peerName
-                                                  ?.capitalizeFirstofEach
-                                              : '')
-                                      .then((value) {
-                                    chatHistoryModel =
-                                        Provider.of<ChatSocketViewModel>(
-                                                context,
-                                                listen: false)
-                                            .getChatHistory(peerId);
-                                    setState(() {});
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 24.0.h,
-                                ),
-                              )
+                          onPressed: () {
+                            CommonUtil()
+                                .CallbackAPIFromChat(
+                                patientId,
+                                peerId,
+                                (widget.peerName ?? "").length > 0
+                                    ? widget.peerName
+                                    ?.capitalizeFirstofEach
+                                    : '')
+                                .then((value) {
+                              chatHistoryModel =
+                                  Provider.of<ChatSocketViewModel>(
+                                      context,
+                                      listen: false)
+                                      .getChatHistory(chatPeerId);
+                              setState(() {});
+                            });
+                          },
+                          icon: Icon(
+                            Icons.call,
+                            color: Colors.white,
+                            size: 24.0.h,
+                          ),
+                        )
                             : SizedBoxWithChild(
-                                height: 24.0.h,
-                                width: 24.0.h,
-                                child:
-                                    CommonUtil().getNotificationIcon(context),
-                              ),
+                          height: 24.0.h,
+                          width: 24.0.h,
+                          child:
+                          CommonUtil().getNotificationIcon(context),
+                        ),
                         SizedBoxWithChild(
                           height: 24.0.h,
                           width: 24.0.h,
@@ -677,20 +719,22 @@ class ChatState extends State<ChatDetail> {
     );
   }
 
-  Widget moreOptionsPopup() => PopupMenuButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: Colors.white,
-      ),
-      color: Colors.white,
-      padding: EdgeInsets.only(left: 1, right: 2),
-      onSelected: (newValue) {
-        if (newValue == 0) {
-          isSearchVisible = true;
-          showSearch();
-        }
-      },
-      itemBuilder: (context) => [
+  Widget moreOptionsPopup() =>
+      PopupMenuButton(
+          icon: Icon(
+            Icons.more_vert,
+            color: Colors.white,
+          ),
+          color: Colors.white,
+          padding: EdgeInsets.only(left: 1, right: 2),
+          onSelected: (newValue) {
+            if (newValue == 0) {
+              isSearchVisible = true;
+              showSearch();
+            }
+          },
+          itemBuilder: (context) =>
+          [
             PopupMenuItem(
               value: 0,
               child: Text(
@@ -781,22 +825,22 @@ class ChatState extends State<ChatDetail> {
                     height: 40.0.h,
                     width: 40.0.h,
                     fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                        Object exception, StackTrace stackTrace) {
+                    Object exception, StackTrace stackTrace) {
                   return Container(
                     height: 50.0.h,
                     width: 50.0.h,
                     color: Colors.grey[200],
                     child: Center(
                         child: Text(
-                      widget.peerName != null && widget.peerName != ''
-                          ? widget.peerName[0].toString().toUpperCase()
-                          : '',
-                      style: TextStyle(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )),
+                          widget.peerName != null && widget.peerName != ''
+                              ? widget.peerName[0].toString().toUpperCase()
+                              : '',
+                          style: TextStyle(
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            fontSize: 16.0.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )),
                   );
                 }),
               ),
@@ -805,74 +849,74 @@ class ChatState extends State<ChatDetail> {
               ),
               Container(
                   child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                        widget.peerName != null && widget.peerName != ''
-                            ? widget.peerName?.capitalizeFirstofEach
-                            : '' /* toBeginningOfSentenceCase(widget.peerName) */,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: font_poppins,
-                            fontSize: 16.0.sp,
-                            color: Colors.white)),
-                    !isCareGiverApi
-                        ? Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Booking Id: ' + bookingId,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    'Next Appointment: ' +
-                                        getFormattedDateTimeAppbar(
-                                            nextAppointmentDate),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    toBeginningOfSentenceCase(
-                                        'Last Appointment: ' +
-                                            getFormattedDateTimeAppbar(
-                                                lastAppointmentDate)),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                    Text(
-                      widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
-                          : '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontFamily: font_poppins,
-                          fontSize: 12.0.sp,
-                          color: Colors.white),
-                    )
-                  ],
-                ),
-              ))
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            widget.peerName != null && widget.peerName != ''
+                                ? widget.peerName?.capitalizeFirstofEach
+                                : '' /* toBeginningOfSentenceCase(widget.peerName) */,
+                            textAlign: TextAlign.left,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: font_poppins,
+                                fontSize: 16.0.sp,
+                                color: Colors.white)),
+                        !isCareGiverApi
+                            ? Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Booking Id: ' + bookingId,
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                              Text(
+                                  'Next Appointment: ' +
+                                      getFormattedDateTimeAppbar(
+                                          nextAppointmentDate),
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                              Text(
+                                  toBeginningOfSentenceCase(
+                                      'Last Appointment: ' +
+                                          getFormattedDateTimeAppbar(
+                                              lastAppointmentDate)),
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: font_poppins,
+                                      fontSize: 12.0.sp,
+                                      color: Colors.white)),
+                            ],
+                          ),
+                        )
+                            : SizedBox.shrink(),
+                        Text(
+                          widget.lastDate != null
+                              ? LAST_RECEIVED + widget.lastDate
+                              : '',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: TextStyle(
+                              fontFamily: font_poppins,
+                              fontSize: 12.0.sp,
+                              color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ))
             ],
           ),
         );
@@ -884,34 +928,36 @@ class ChatState extends State<ChatDetail> {
   Widget buildListMessage() {
     return Flexible(
         child: ScrollablePositionedList.builder(
-      padding: EdgeInsets.all(10.0),
-      itemBuilder: (context, index) {
-        var chatList = Provider.of<ChatSocketViewModel>(Get.context)
-            ?.chatHistoryList
-            .reversed
-            .toList();
+          padding: EdgeInsets.all(10.0),
+          itemBuilder: (context, index) {
+            var chatList = Provider
+                .of<ChatSocketViewModel>(Get.context)
+                ?.chatHistoryList
+                .reversed
+                .toList();
 
-        bool isIconNeed = false;
+            bool isIconNeed = false;
 
-        if (chatList[index]?.messages?.idFrom == patientId) {
-          isIconNeed = isLastMessageRight(index, chatList);
-        } else if (chatList[index]?.messages?.idFrom != patientId) {
-          isIconNeed = isLastMessageLeft(index, chatList);
-        } else {
-          isIconNeed = false;
-        }
+            if (chatList[index]?.messages?.idFrom == patientId) {
+              isIconNeed = isLastMessageRight(index, chatList);
+            } else if (chatList[index]?.messages?.idFrom != patientId) {
+              isIconNeed = isLastMessageLeft(index, chatList);
+            } else {
+              isIconNeed = false;
+            }
 
-        return buildItem(chatList[index], index, isIconNeed);
-      },
-      itemCount: Provider.of<ChatSocketViewModel>(Get.context)
+            return buildItem(chatList[index], index, isIconNeed);
+          },
+          itemCount: Provider
+              .of<ChatSocketViewModel>(Get.context)
               ?.chatHistoryList
               ?.reversed
               ?.toList()
               ?.length ??
-          0,
-      reverse: true,
-      itemScrollController: listScrollController,
-    ));
+              0,
+          reverse: true,
+          itemScrollController: listScrollController,
+        ));
   }
 
   Widget buildInput() {
@@ -943,7 +989,7 @@ class ChatState extends State<ChatDetail> {
                       decoration: InputDecoration(
                         isDense: true,
                         contentPadding:
-                            const EdgeInsets.fromLTRB(13, 13, 46, 13),
+                        const EdgeInsets.fromLTRB(13, 13, 46, 13),
                         hintText: "$chatTextFieldHintText",
                         hintStyle: TextStyle(
                           color: Colors.grey,
@@ -954,7 +1000,7 @@ class ChatState extends State<ChatDetail> {
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(12.0)),
                           borderSide:
-                              BorderSide(color: Colors.transparent, width: 2),
+                          BorderSide(color: Colors.transparent, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -973,21 +1019,21 @@ class ChatState extends State<ChatDetail> {
                           width: 46.0.h,
                           height: 46.0.h,
                           child:
-                              /*!isDateIconShown
+                          /*!isDateIconShown
                             ?*/
-                              FlatButton(
-                                  onPressed: () {
-                                    recordIds.clear();
-                                    FetchRecords(
-                                        0, true, true, false, recordIds);
-                                  },
-                                  child: new Icon(
-                                    Icons.attach_file,
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    size: 22,
-                                  ))
-                          /*: FlatButton(
+                          FlatButton(
+                              onPressed: () {
+                                recordIds.clear();
+                                FetchRecords(
+                                    0, true, true, false, recordIds);
+                              },
+                              child: new Icon(
+                                Icons.attach_file,
+                                color:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                                size: 22,
+                              ))
+                        /*: FlatButton(
                                 onPressed: () {
                                   tapDatePicker();
                                 },
@@ -997,7 +1043,7 @@ class ChatState extends State<ChatDetail> {
                                       Color(CommonUtil().getMyPrimaryColor()),
                                   size: 22,
                                 )),*/
-                          ),
+                      ),
                     )
                   ],
                 ),
@@ -1022,42 +1068,43 @@ class ChatState extends State<ChatDetail> {
             ),
             !isFromVideoCall
                 ? Flexible(
-                    flex: 1,
-                    child: new Container(
-                      child: RawMaterialButton(
-                        onPressed: () {
-                          Navigator.of(context)
-                              .push(
-                            MaterialPageRoute(
-                              builder: (context) => AudioRecorder(
-                                arguments: AudioScreenArguments(
-                                  fromVoice: false,
-                                ),
+              flex: 1,
+              child: new Container(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AudioRecorder(
+                              arguments: AudioScreenArguments(
+                                fromVoice: false,
                               ),
                             ),
-                          )
-                              .then((results) {
-                            String audioPath = results[keyAudioFile];
-                            if (audioPath != null && audioPath != '') {
-                              setState(() {
-                                isLoading = true;
-                              });
-                              //uploadFile(audioPath);
-                              uploadDocument(
-                                  audioPath, userId, peerId, groupId);
-                            }
-                          });
-                        },
-                        elevation: 2.0,
-                        fillColor: Colors.white,
-                        child: Icon(Icons.mic,
-                            size: 25.0,
-                            color: Color(CommonUtil().getMyPrimaryColor())),
-                        padding: EdgeInsets.all(12.0),
-                        shape: CircleBorder(),
                       ),
-                    ),
-                  )
+                    )
+                        .then((results) {
+                      String audioPath = results[keyAudioFile];
+                      if (audioPath != null && audioPath != '') {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        //uploadFile(audioPath);
+                        uploadDocument(
+                            audioPath, userId, chatPeerId, groupId);
+                      }
+                    });
+                  },
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  child: Icon(Icons.mic,
+                      size: 25.0,
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                  padding: EdgeInsets.all(12.0),
+                  shape: CircleBorder(),
+                ),
+              ),
+            )
                 : Container()
           ],
         ),
@@ -1083,196 +1130,199 @@ class ChatState extends State<ChatDetail> {
       return Row(
         children: <Widget>[
           chatList?.messages?.type == 0
-              // Text
+          // Text
               ? Card(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          bottomLeft: Radius.circular(25),
-                          bottomRight: Radius.circular(25))),
-                  child: Container(
-                    constraints: BoxConstraints(
-                      maxWidth: 1.sw * .6,
-                    ),
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25),
-                      ),
-                    ),
-                    /*child: Text(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 1.sw * .6,
+              ),
+              padding: const EdgeInsets.all(15.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  bottomLeft: Radius.circular(25),
+                  bottomRight: Radius.circular(25),
+                ),
+              ),
+              /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
                     ),*/
-                    child: RichText(
-                      text: TextSpan(
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontSize: 16.0.sp,
+                    ),
+                    children: textSpanList),
+              ),
+            ),
+          )
+              : chatList?.messages?.type == 1
+          // Image
+              ? Container(
+            child: FlatButton(
+              child: Material(
+                child: CachedNetworkImage(
+                  placeholder: (context, url) =>
+                      Container(
+                        child: CommonCircularIndicator(),
+                        width: 200.0.h,
+                        height: 200.0.h,
+                        padding: EdgeInsets.all(70.0),
+                        decoration: BoxDecoration(
+                          color: greyColor2,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                  errorWidget: (context, url, error) =>
+                      Material(
+                        child: Image.asset(
+                          'images/img_not_available.jpeg',
+                          width: 200.0.h,
+                          height: 200.0.h,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                      ),
+                  imageUrl: chatList?.messages?.content ?? '',
+                  width: 200.0.h,
+                  height: 200.0.h,
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                clipBehavior: Clip.hardEdge,
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            FullPhoto(
+                                url: chatList?.messages?.content)));
+              },
+              onLongPress: () {
+                openDownloadAlert(chatList?.messages?.content,
+                    context, false, '.jpg');
+              },
+              padding: EdgeInsets.all(0),
+            ),
+            margin: EdgeInsets.only(
+                bottom: isIconNeed ? 20.0 : 10.0, right: 10.0),
+          )
+          // Pdf
+              : chatList?.messages?.type == 2
+              ? Card(
+            color: Colors.transparent,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25))),
+            child: InkWell(
+              onTap: () {
+                goToPDFViewBasedonURL(
+                    chatList?.messages?.content);
+              },
+              onLongPress: () {
+                openDownloadAlert(chatList?.messages?.content,
+                    context, false, '.pdf');
+              },
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 1.sw * .6,
+                ),
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.picture_as_pdf,
+                      size: 14,
+                      color: Colors.black54,
+                    ),
+                    SizedBoxWidget(
+                      width: 5.0.w,
+                    ),
+                    getPdfViewLabel(chatList),
+                  ],
+                ),
+              ),
+            ),
+          )
+          // voice card
+              : chatList?.messages?.type == 3
+              ? Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Material(
+              borderRadius: BorderRadius.circular(10.0),
+              elevation: 2.0,
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                width: 1.sw / 3,
+                child: Row(
+                  mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CircleAvatar(
+                        child: Text(
+                          patientName.substring(0, 1),
                           style: TextStyle(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
                             fontSize: 16.0.sp,
                           ),
-                          children: textSpanList),
+                        )),
+                    IconButton(
+                      icon: Icon(currentPlayedVoiceURL ==
+                          chatList?.messages?.content
+                          ? isPlaying
+                          ? Icons.pause_circle_filled
+                          : Icons.play_circle_filled
+                          : Icons.play_circle_filled),
+                      onPressed: () {
+                        isPlaying
+                            ? flutterStopPlayer(
+                            chatList?.messages?.content)
+                            : flutterPlaySound(
+                            chatList?.messages?.content);
+                      },
                     ),
-                  ),
-                )
-              : chatList?.messages?.type == 1
-                  // Image
-                  ? Container(
-                      child: FlatButton(
-                        child: Material(
-                          child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                              child: CommonCircularIndicator(),
-                              width: 200.0.h,
-                              height: 200.0.h,
-                              padding: EdgeInsets.all(70.0),
-                              decoration: BoxDecoration(
-                                color: greyColor2,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Material(
-                              child: Image.asset(
-                                'images/img_not_available.jpeg',
-                                width: 200.0.h,
-                                height: 200.0.h,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            imageUrl: chatList?.messages?.content ?? '',
-                            width: 200.0.h,
-                            height: 200.0.h,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          clipBehavior: Clip.hardEdge,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FullPhoto(
-                                      url: chatList?.messages?.content)));
-                        },
-                        onLongPress: () {
-                          openDownloadAlert(chatList?.messages?.content,
-                              context, false, '.jpg');
-                        },
-                        padding: EdgeInsets.all(0),
-                      ),
-                      margin: EdgeInsets.only(
-                          bottom: isIconNeed ? 20.0 : 10.0, right: 10.0),
-                    )
-                  // Pdf
-                  : chatList?.messages?.type == 2
-                      ? Card(
-                          color: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(25))),
-                          child: InkWell(
-                            onTap: () {
-                              goToPDFViewBasedonURL(
-                                  chatList?.messages?.content);
-                            },
-                            onLongPress: () {
-                              openDownloadAlert(chatList?.messages?.content,
-                                  context, false, '.pdf');
-                            },
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(25),
-                                  bottomLeft: Radius.circular(25),
-                                  bottomRight: Radius.circular(25),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.picture_as_pdf,
-                                    size: 14,
-                                    color: Colors.black54,
-                                  ),
-                                  SizedBoxWidget(
-                                    width: 5.0.w,
-                                  ),
-                                  getPdfViewLabel(chatList),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      // voice card
-                      : chatList?.messages?.type == 3
-                          ? Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Material(
-                                borderRadius: BorderRadius.circular(10.0),
-                                elevation: 2.0,
-                                child: Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  width: 1.sw / 3,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      CircleAvatar(
-                                          child: Text(
-                                        patientName.substring(0, 1),
-                                        style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                        ),
-                                      )),
-                                      IconButton(
-                                        icon: Icon(currentPlayedVoiceURL ==
-                                                chatList?.messages?.content
-                                            ? isPlaying
-                                                ? Icons.pause_circle_filled
-                                                : Icons.play_circle_filled
-                                            : Icons.play_circle_filled),
-                                        onPressed: () {
-                                          isPlaying
-                                              ? flutterStopPlayer(
-                                                  chatList?.messages?.content)
-                                              : flutterPlaySound(
-                                                  chatList?.messages?.content);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              child: Image.asset(
-                                'images/${chatList?.messages?.content}.gif',
-                                width: 100.0.h,
-                                height: 100.0.h,
-                                fit: BoxFit.cover,
-                              ),
-                              margin: EdgeInsets.only(
-                                  bottom: isIconNeed ? 20.0 : 10.0,
-                                  right: 10.0),
-                            ),
+                  ],
+                ),
+              ),
+            ),
+          )
+              : Container(
+            child: Image.asset(
+              'images/${chatList?.messages?.content}.gif',
+              width: 100.0.h,
+              height: 100.0.h,
+              fit: BoxFit.cover,
+            ),
+            margin: EdgeInsets.only(
+                bottom: isIconNeed ? 20.0 : 10.0,
+                right: 10.0),
+          ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -1285,248 +1335,252 @@ class ChatState extends State<ChatDetail> {
               children: <Widget>[
                 isIconNeed
                     ? Material(
-                        child: CachedNetworkImage(
-                            placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 35.0.h,
-                                  height: 35.0.h,
-                                  padding: EdgeInsets.all(10.0),
-                                ),
-                            imageUrl:
-                                peerAvatar != null ? peerAvatar ?? '' : '',
+                  child: CachedNetworkImage(
+                      placeholder: (context, url) =>
+                          Container(
+                            child: CommonCircularIndicator(),
                             width: 35.0.h,
                             height: 35.0.h,
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => Container(
-                                  height: 35.0.h,
-                                  width: 35.0.h,
-                                  color: Colors.grey[200],
-                                  child: Center(
-                                      child: Text(
-                                    peerName != null && peerName != ''
-                                        ? peerName[0].toString().toUpperCase()
-                                        : '',
-                                    style: TextStyle(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      fontSize: 16.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )),
+                            padding: EdgeInsets.all(10.0),
+                          ),
+                      imageUrl:
+                      peerAvatar != null ? peerAvatar ?? '' : '',
+                      width: 35.0.h,
+                      height: 35.0.h,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          Container(
+                            height: 35.0.h,
+                            width: 35.0.h,
+                            color: Colors.grey[200],
+                            child: Center(
+                                child: Text(
+                                  peerName != null && peerName != ''
+                                      ? peerName[0].toString().toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
                                 )),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(18.0),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                      )
+                          )),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(18.0),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                )
                     : Container(width: 35.0.w),
                 chatList?.messages?.type == 0
                     ? Card(
-                        color: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(25),
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25))),
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: 1.sw * .6,
-                          ),
-                          padding: const EdgeInsets.all(15.0),
-                          decoration: BoxDecoration(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(25),
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25),
-                            ),
-                          ),
-                          child: RichText(
-                            text: TextSpan(
-                                style: TextStyle(color: Colors.white),
-                                children: textSpanList),
-                          ),
-                        ),
-                      )
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25))),
+                  child: Container(
+                    constraints: BoxConstraints(
+                      maxWidth: 1.sw * .6,
+                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    decoration: BoxDecoration(
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(25),
+                        bottomLeft: Radius.circular(25),
+                        bottomRight: Radius.circular(25),
+                      ),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(color: Colors.white),
+                          children: textSpanList),
+                    ),
+                  ),
+                )
                     : chatList?.messages?.type == 1
-                        ? Container(
-                            child: FlatButton(
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CommonCircularIndicator(),
-                                    width: 200.0.h,
-                                    height: 200.0.h,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                      color: greyColor2,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      'images/img_not_available.jpeg',
-                                      width: 200.0.h,
-                                      height: 200.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: chatList?.messages?.content ?? '',
-                                  width: 200.0.h,
-                                  height: 200.0.h,
-                                  fit: BoxFit.cover,
+                    ? Container(
+                  child: FlatButton(
+                    child: Material(
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) =>
+                            Container(
+                              child: CommonCircularIndicator(),
+                              width: 200.0.h,
+                              height: 200.0.h,
+                              padding: EdgeInsets.all(70.0),
+                              decoration: BoxDecoration(
+                                color: greyColor2,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
                                 ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                                clipBehavior: Clip.hardEdge,
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => FullPhoto(
-                                            url: chatList?.messages?.content)));
-                              },
-                              onLongPress: () {
-                                openDownloadAlert(chatList?.messages?.content,
-                                    context, false, '.jpg');
-                              },
-                              padding: EdgeInsets.all(0),
                             ),
-                            margin: EdgeInsets.only(left: 10.0),
-                          )
-                        : chatList?.messages?.type == 2
-                            ? Card(
-                                color: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25))),
-                                child: InkWell(
-                                  onTap: () {
-                                    goToPDFViewBasedonURL(
-                                        chatList?.messages?.content);
-                                  },
-                                  onLongPress: () {
-                                    openDownloadAlert(
-                                        chatList?.messages?.content,
-                                        context,
-                                        false,
-                                        '.pdf');
-                                  },
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: 1.sw * .6,
-                                    ),
-                                    padding: const EdgeInsets.all(15.0),
-                                    decoration: BoxDecoration(
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(25),
-                                        bottomLeft: Radius.circular(25),
-                                        bottomRight: Radius.circular(25),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.picture_as_pdf,
-                                          size: 14,
-                                          color: Colors.black54,
-                                        ),
-                                        SizedBoxWidget(
-                                          width: 5.0.w,
-                                        ),
-                                        Text(
-                                          'Click to view PDF',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            : chatList?.messages?.type == 3
-                                ? Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Material(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      elevation: 2.0,
-                                      child: Container(
-                                        padding: EdgeInsets.all(10.0),
-                                        width: 1.sw / 3,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            CircleAvatar(
-                                                child: Text(peerName != null &&
-                                                        peerName != ''
-                                                    ? peerName.substring(0, 1)
-                                                    : '')),
-                                            IconButton(
-                                              icon: Icon(currentPlayedVoiceURL ==
-                                                      chatList
-                                                          ?.messages?.content
-                                                  ? isPlaying
-                                                      ? Icons
-                                                          .pause_circle_filled
-                                                      : Icons.play_circle_filled
-                                                  : Icons.play_circle_filled),
-                                              onPressed: () {
-                                                isPlaying
-                                                    ? flutterStopPlayer(chatList
-                                                        ?.messages?.content)
-                                                    : flutterPlaySound(chatList
-                                                        ?.messages?.content);
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    child: Image.asset(
-                                      'images/${chatList?.messages?.content}.gif',
-                                      width: 100.0.h,
-                                      height: 100.0.h,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    margin: EdgeInsets.only(
-                                        bottom: isIconNeed ? 20.0 : 10.0,
-                                        right: 10.0),
-                                  ),
+                        errorWidget: (context, url, error) =>
+                            Material(
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 200.0.h,
+                                height: 200.0.h,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                            ),
+                        imageUrl: chatList?.messages?.content ?? '',
+                        width: 200.0.h,
+                        height: 200.0.h,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8.0)),
+                      clipBehavior: Clip.hardEdge,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  FullPhoto(
+                                      url: chatList?.messages?.content)));
+                    },
+                    onLongPress: () {
+                      openDownloadAlert(chatList?.messages?.content,
+                          context, false, '.jpg');
+                    },
+                    padding: EdgeInsets.all(0),
+                  ),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
+                    : chatList?.messages?.type == 2
+                    ? Card(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25))),
+                  child: InkWell(
+                    onTap: () {
+                      goToPDFViewBasedonURL(
+                          chatList?.messages?.content);
+                    },
+                    onLongPress: () {
+                      openDownloadAlert(
+                          chatList?.messages?.content,
+                          context,
+                          false,
+                          '.pdf');
+                    },
+                    child: Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 1.sw * .6,
+                      ),
+                      padding: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Color(
+                            new CommonUtil().getMyPrimaryColor()),
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(25),
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.picture_as_pdf,
+                            size: 14,
+                            color: Colors.black54,
+                          ),
+                          SizedBoxWidget(
+                            width: 5.0.w,
+                          ),
+                          Text(
+                            'Click to view PDF',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    : chatList?.messages?.type == 3
+                    ? Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Color(
+                        new CommonUtil().getMyPrimaryColor()),
+                    elevation: 2.0,
+                    child: Container(
+                      padding: EdgeInsets.all(10.0),
+                      width: 1.sw / 3,
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          CircleAvatar(
+                              child: Text(peerName != null &&
+                                  peerName != ''
+                                  ? peerName.substring(0, 1)
+                                  : '')),
+                          IconButton(
+                            icon: Icon(currentPlayedVoiceURL ==
+                                chatList
+                                    ?.messages?.content
+                                ? isPlaying
+                                ? Icons
+                                .pause_circle_filled
+                                : Icons.play_circle_filled
+                                : Icons.play_circle_filled),
+                            onPressed: () {
+                              isPlaying
+                                  ? flutterStopPlayer(chatList
+                                  ?.messages?.content)
+                                  : flutterPlaySound(chatList
+                                  ?.messages?.content);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    : Container(
+                  child: Image.asset(
+                    'images/${chatList?.messages?.content}.gif',
+                    width: 100.0.h,
+                    height: 100.0.h,
+                    fit: BoxFit.cover,
+                  ),
+                  margin: EdgeInsets.only(
+                      bottom: isIconNeed ? 20.0 : 10.0,
+                      right: 10.0),
+                ),
               ],
             ),
             // Time
             isIconNeed
                 ? Container(
-                    child: Text(
-                      getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(
-                                  chatList?.messages?.timestamp?.sSeconds))
-                          .toString()),
-                      style: TextStyle(
-                          color: greyColor,
-                          fontSize: 14.0.sp,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                  )
+              child: Text(
+                getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
+                    int.parse(
+                        chatList?.messages?.timestamp?.sSeconds))
+                    .toString()),
+                style: TextStyle(
+                    color: greyColor,
+                    fontSize: 14.0.sp,
+                    fontStyle: FontStyle.italic),
+              ),
+              margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+            )
                 : Container()
           ],
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1545,8 +1599,8 @@ class ChatState extends State<ChatDetail> {
         ),
       );
 
-  WidgetSpan buildLinkComponent(
-          String text, String linkToOpen, int index, bool isPatient) =>
+  WidgetSpan buildLinkComponent(String text, String linkToOpen, int index,
+      bool isPatient) =>
       WidgetSpan(
         child: InkWell(
           child: RichText(
@@ -1568,58 +1622,60 @@ class ChatState extends State<ChatDetail> {
         ),
       );
 
-  WidgetSpan buildDateComponent(
-          String text, String linkToOpen, int index, bool isPatient) =>
+  WidgetSpan buildDateComponent(String text, String linkToOpen, int index,
+      bool isPatient) =>
       WidgetSpan(
         child: !isPatient
             ? InkWell(
-                child: Container(
-                  margin: EdgeInsets.only(top: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(6.0),
-                    child: RichText(
-                      text: TextSpan(
-                        children: getSplittedTextWidget(chooseYourDate, index),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14.0.sp,
-                        ),
-                      ),
-                    ),
+          child: Container(
+            margin: EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: RichText(
+                text: TextSpan(
+                  children: getSplittedTextWidget(chooseYourDate, index),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14.0.sp,
                   ),
                 ),
-                onTap: () async {
-                  FocusManager.instance.primaryFocus.unfocus();
-                  //tapDatePicker();
-                  //Get.to(ChooseDateSlot());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChooseDateSlot()),
-                  ).then((value) {
-                    if (value != null) {
-                      List<String> result = [];
-                      result.add(value);
-                      try {
-                        if (result?.length > 0) {
-                          final removedBrackets = result
-                              .toString()
-                              .substring(2, result.toString().length - 2);
-                          if (removedBrackets.length > 0) {
-                            onSendMessage(
-                                removedBrackets.toString(), 0, null, true);
-                          }
-                        }
-                      } catch (e) {
-                        //print(e);
-                      }
+              ),
+            ),
+          ),
+          onTap: () async {
+            FocusManager.instance.primaryFocus.unfocus();
+            //tapDatePicker();
+            //Get.to(ChooseDateSlot());
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ChooseDateSlot()),
+            ).then((value) {
+              if (value != null) {
+                List<String> result = [];
+                result.add(value);
+                try {
+                  if (result?.length > 0) {
+                    final removedBrackets = result
+                        .toString()
+                        .substring(2, result
+                        .toString()
+                        .length - 2);
+                    if (removedBrackets.length > 0) {
+                      onSendMessage(
+                          removedBrackets.toString(), 0, null, true);
                     }
-                  });
-                },
-              )
+                  }
+                } catch (e) {
+                  //print(e);
+                }
+              }
+            });
+          },
+        )
             : SizedBox.shrink(),
       );
 
@@ -1641,7 +1697,7 @@ class ChatState extends State<ChatDetail> {
     if ((match?.start ?? 0) > 0) {
       list.add(TextSpan(
           children:
-              getSplittedTextWidget(text.substring(0, match.start), index)));
+          getSplittedTextWidget(text.substring(0, match.start), index)));
     }
 
     if ((dateMatch?.start ?? 0) > 0) {
@@ -1684,9 +1740,9 @@ class ChatState extends State<ChatDetail> {
         word = word.replaceAll(REGEX_EMOJI, '');
       }*/
     List<String> tempList =
-        word.length > 1 && word.indexOf(textFieldValue) != -1
-            ? word.split(textFieldValue)
-            : [word, ''];
+    word.length > 1 && word.indexOf(textFieldValue) != -1
+        ? word.split(textFieldValue)
+        : [word, ''];
     int i = 0;
     tempList.forEach((item) {
       if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
@@ -1701,7 +1757,8 @@ class ChatState extends State<ChatDetail> {
             text: '${textFieldValue}',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
-                background: Paint()..color = Colors.yellow),
+                background: Paint()
+                  ..color = Colors.yellow),
           ),
         ];
       } else {
@@ -1719,9 +1776,10 @@ class ChatState extends State<ChatDetail> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MyYoutubePlayer(
-            videoId: videoId,
-          ),
+          builder: (context) =>
+              MyYoutubePlayer(
+                videoId: videoId,
+              ),
         ),
       );
     } else {
@@ -1766,7 +1824,7 @@ class ChatState extends State<ChatDetail> {
     });
     // final file = await CommonUtil.downloadFile(url, 'mp3');
     await _mPlayer.startPlayer(fromURI: url).whenComplete(
-      () {
+          () {
         setState(() {
           isPlaying = false;
         });
@@ -1780,8 +1838,8 @@ class ChatState extends State<ChatDetail> {
     if (document?.messages?.timestamp?.sSeconds != null &&
         document?.messages?.timestamp?.sSeconds != '') {
       DateTime dateTimeFromServerTimeStamp =
-          DateTime.fromMillisecondsSinceEpoch(
-              int.parse(document?.messages?.timestamp?.sSeconds));
+      DateTime.fromMillisecondsSinceEpoch(
+          int.parse(document?.messages?.timestamp?.sSeconds));
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
@@ -1800,8 +1858,8 @@ class ChatState extends State<ChatDetail> {
     }
   }
 
-  openDownloadAlert(
-      String fileUrl, BuildContext contxt, bool isPdf, String type) {
+  openDownloadAlert(String fileUrl, BuildContext contxt, bool isPdf,
+      String type) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1966,8 +2024,8 @@ class ChatState extends State<ChatDetail> {
     }
   }
 
-  Future<void> uploadDocument(
-      String image, String userId, String peerId, String groupId) async {
+  Future<void> uploadDocument(String image, String userId, String peerId,
+      String groupId) async {
     try {
       _addFamilyUserInfoRepository
           .uploadChatDocument(image, userId, peerId, groupId)
@@ -2001,17 +2059,18 @@ class ChatState extends State<ChatDetail> {
       bool isNotesSelect, List<String> mediaIds) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
-      builder: (context) => MyRecords(
-          argument: MyRecordsArgument(
-              categoryPosition: position,
-              allowSelect: allowSelect,
-              isAudioSelect: isAudioSelect,
-              isNotesSelect: isNotesSelect,
-              selectedMedias: mediaIds,
-              showDetails: false,
-              isFromChat: true,
-              isAssociateOrChat: true,
-              fromClass: 'chats')),
+      builder: (context) =>
+          MyRecords(
+              argument: MyRecordsArgument(
+                  categoryPosition: position,
+                  allowSelect: allowSelect,
+                  isAudioSelect: isAudioSelect,
+                  isNotesSelect: isNotesSelect,
+                  selectedMedias: mediaIds,
+                  showDetails: false,
+                  isFromChat: true,
+                  isAssociateOrChat: true,
+                  fromClass: 'chats')),
     ))
         .then((results) {
       if (results != null) {
@@ -2029,37 +2088,40 @@ class ChatState extends State<ChatDetail> {
   getAlertForFileSend(var healthRecordList) {
     return showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        content: Text(
-          'Send to Dr. ' + peerName != null && peerName != '' ? peerName : '',
-          style: TextStyle(
-            fontSize: 16.0.sp,
-          ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text(
-              'Cancel',
+      builder: (context) =>
+          AlertDialog(
+            content: Text(
+              'Send to Dr. ' + peerName != null && peerName != ''
+                  ? peerName
+                  : '',
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
             ),
-          ),
-          FlatButton(
-            onPressed: () {
-              closeDialog();
-              getMediaURL(healthRecordList);
-            },
-            child: Text(
-              'Send',
-              style: TextStyle(
-                fontSize: 16.0.sp,
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => closeDialog(),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
               ),
-            ),
+              FlatButton(
+                onPressed: () {
+                  closeDialog();
+                  getMediaURL(healthRecordList);
+                },
+                child: Text(
+                  'Send',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -2093,10 +2155,10 @@ class TextFieldColorizer extends TextEditingController {
 
   TextFieldColorizer(this.map)
       : pattern = RegExp(
-            map.keys.map((key) {
-              return key;
-            }).join('|'),
-            multiLine: true);
+      map.keys.map((key) {
+        return key;
+      }).join('|'),
+      multiLine: true);
 
   @override
   set text(String newText) {
@@ -2119,7 +2181,7 @@ class TextFieldColorizer extends TextEditingController {
       onMatch: (Match match) {
         myStyle = map[match[0]] ??
             map[map.keys.firstWhere(
-              (e) {
+                  (e) {
                 bool ret = false;
                 RegExp(e).allMatches(text)
                   ..forEach((element) {

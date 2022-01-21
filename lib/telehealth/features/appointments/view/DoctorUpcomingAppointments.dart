@@ -280,6 +280,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   void goToChatIntegration(Past doc) {
     //chat integration start
     String doctorId = doc.doctor.id;
+    String userId = doc.doctor.user.id;
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     String chatListId = doc?.chatListId;
@@ -289,7 +290,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         context,
         MaterialPageRoute(
             builder: (context) => ChatDetail(
-                peerId: doctorId,
+                peerId: userId,
                 peerAvatar: doctorPic,
                 peerName: doctorName,
                 groupId: chatListId,
