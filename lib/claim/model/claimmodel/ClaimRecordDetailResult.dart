@@ -22,6 +22,7 @@ class ClaimRecordDetailsResult {
   dynamic remark;
   dynamic planName;
   dynamic planDescription;
+  dynamic approvedAmount;
 
   ClaimRecordDetailsResult(
       {this.claimId,
@@ -42,7 +43,7 @@ class ClaimRecordDetailsResult {
         this.status,
         this.statusCode,
         this.healthOrganizationName,
-        this.remark,this.planName,this.planDescription});
+        this.remark,this.planName,this.planDescription,this.approvedAmount});
 
   ClaimRecordDetailsResult.fromJson(Map<dynamic, dynamic> json) {
     claimId = json['claimId'];
@@ -71,6 +72,10 @@ class ClaimRecordDetailsResult {
     remark = json['remark'];
     planName = json['planName'];
     planDescription = json['planDescription'];
+    if(json.containsKey('approvedAmount')){
+      approvedAmount = json['approvedAmount'];
+
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -99,6 +104,7 @@ class ClaimRecordDetailsResult {
     data['remark'] = this.remark;
     data['planName'] = this.planName;
     data['planDescription'] = this.planDescription;
+    data['approvedAmount'] = this.approvedAmount;
     return data;
   }
 }
