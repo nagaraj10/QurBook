@@ -4,18 +4,25 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/claim/bloc/ClaimListBloc.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimListResult.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:open_file/open_file.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/PreferenceUtil.dart';
@@ -23,6 +30,12 @@ import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/claim/service/ClaimListRepository.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:get/get.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class ClaimRecordDisplay extends StatefulWidget {
   Function(String) closePage;
@@ -50,11 +63,17 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       plan = "",
       familyMember = "",
       status = "",
-      remark = "";
+      remark = "",
+      approvedAmount = "";
   ClaimListRepository claimListRepository;
   ClaimListBloc claimListBloc;
   GetRecordIdsFilter getRecordIdsFilter;
   ClaimRecordDetails claimRecordDetails;
+
+  bool ispdfPresent = false;
+  HealthRecordCollection pdfId;
+  var pdfFile;
+  String fileName;
 
   @override
   void initState() {
@@ -189,6 +208,23 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         style: getTextStyleForValue()))
               ],
             )),
+        if (approvedAmount != "" && approvedAmount != null) getDivider(),
+        if (approvedAmount != "" && approvedAmount != null)
+          Padding(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text("Approved Amount",
+                          style: getTextStyleForTags())),
+                  Text(":"),
+                  Expanded(
+                      flex: 2,
+                      child: Text("   " + approvedAmount ?? "",
+                          style: getTextStyleForValue()))
+                ],
+              )),
         getDivider(),
         Padding(
           padding: EdgeInsets.all(15),
@@ -337,6 +373,11 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       familyMember = claimRecordDetails?.result?.submittedForFirstName +
           " " +
           claimRecordDetails?.result?.submittedForLastName;
+
+      approvedAmount = (claimRecordDetails?.result?.approvedAmount != null &&
+              claimRecordDetails?.result?.approvedAmount != '')
+          ? variable.strRs + ". " + claimRecordDetails?.result?.approvedAmount
+          : '';
     }
   }
 
@@ -349,6 +390,17 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               snapshot?.data?.result != null) {
             if (snapshot.data.isSuccess) {
               getRecordIdsFilter = snapshot.data;
+              final getMediaMasterIDForPdfTypeStr = CommonUtil()
+                  .getMediaMasterIDForPdfTypeStr(
+                      getRecordIdsFilter?.result[0]?.healthRecordCollection);
+              if (getMediaMasterIDForPdfTypeStr != null) {
+                ispdfPresent = true;
+                pdfId = getMediaMasterIDForPdfTypeStr;
+                fileName = "ClaimRecords_" +
+                    '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+              } else {
+                ispdfPresent = false;
+              }
               return getWidgetForImages(
                   getRecordIdsFilter?.result[0]?.healthRecordCollection);
             } else {
@@ -390,22 +442,30 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             flex: 4,
             child: Padding(
                 padding: EdgeInsets.all(10),
-                child: getCarousalImage(healthRecordCollection))),
+                child: ispdfPresent
+                    ? pdfFile == null
+                        ? getPDFFile(
+                            pdfId,
+                            getRecordIdsFilter?.result[0]
+                                ?.healthRecordCollection[0]?.fileType,
+                            fileName)
+                        : getViewPDF()
+                    : getCarousalImage(healthRecordCollection))),
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
+                Visibility(child: IconButton(
                   onPressed: () {
                     if (healthRecordCollection.isNotEmpty) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ImageSlider(
-                                    imageList: healthRecordCollection,
-                                  )));
+                                imageList: healthRecordCollection,
+                              )));
                     }
                   },
                   icon: Icon(
@@ -413,7 +473,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                     color: Colors.white,
                     size: 24.0.sp,
                   ),
-                ),
+                ),visible: !ispdfPresent?true:false,),
                 Text(
                   '$index /$length',
                   style: TextStyle(color: Colors.white),
@@ -471,6 +531,88 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
           return getErrorText('Error in Loading');
         }
       },
+    );
+  }
+
+  getPDFFile(
+      HealthRecordCollection audioMediaId, String fileType, String fileName) {
+    return FutureBuilder<String>(
+        future: downloadFile(audioMediaId, fileType, fileName),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return getViewPDF();
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return CommonCircularIndicator();
+          } else {
+            return getErrorText('Error in Loading');
+          }
+        });
+  }
+
+  Future<String> downloadFile(HealthRecordCollection audioMediaId,
+      String fileType, String fileName) async {
+    final storagePermission = Platform.isAndroid
+        ? await Permission.storage.status
+        : await Permission.photos.status;
+    if (storagePermission.isDenied || storagePermission.isRestricted) {
+      Platform.isAndroid
+          ? await Permission.storage.request()
+          : await Permission.photos.request();
+    }
+    await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath, fileName)
+        .then((filePath) async {
+      var file = File('$filePath');
+      final request = await ApiServices.get(
+        audioMediaId.healthRecordUrl,
+        headers: {
+          HttpHeaders.authorizationHeader: authToken,
+          Constants.KEY_OffSet: CommonUtil().setTimeZone()
+        },
+      );
+      final bytes = request.bodyBytes; //close();
+      await file.writeAsBytes(bytes);
+
+      pdfFile = file.path;
+
+      return pdfFile;
+    });
+  }
+
+  Widget getViewPDF() {
+    return Container(
+      child: Center(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'View PDF',
+            style: TextStyle(color: Colors.white),
+          ),
+          IconButton(
+            tooltip: 'View PDF',
+            icon: ImageIcon(AssetImage(variable.icon_attach),
+                color: Colors.white),
+            onPressed: () async {
+              /*final controller = Get.find<PDFViewController>();
+              final data = OpenPDF(
+                  type: PDFLocation.Path, path: pdfFile, title: fileName);
+              controller.data = data;
+              Get.to(() => PDFView());*/
+              if (Platform.isIOS) {
+                final path = await CommonUtil.downloadFile(
+                    pdfId.healthRecordUrl, pdfId.fileType);
+                await OpenFile.open(
+                  path.path,
+                );
+              }else {
+                await OpenFile.open(
+                  pdfFile,
+                );
+              }
+            },
+          )
+        ],
+      )),
     );
   }
 }

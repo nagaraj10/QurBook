@@ -77,7 +77,7 @@ class _ClaimListState extends State<ClaimList> {
           heroTag: "btn2",
           onPressed: () {
             FocusManager.instance.primaryFocus.unfocus();
-            if (memberShipEndDate != "" &&
+           if (memberShipEndDate != "" &&
                 memberShipEndDate != null &&
                 memberShipType != "" &&
                 memberShipType != null) {
@@ -491,14 +491,14 @@ class _ClaimListState extends State<ClaimList> {
                                               ?.documentMetadata[0]
                                               ?.billDate??''),
                                       style: getTextStyleForTags()),
-                                  Text(
+                                 /* Text(
                                       "Rs " +
                                           claimResultList[index]
                                               ?.documentMetadata[0]
                                               ?.claimAmount??'',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
-                                          fontSize: fhbStyles.fnt_doc_name)),
+                                          fontSize: fhbStyles.fnt_doc_name)),*/
                                   Text("status",
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
