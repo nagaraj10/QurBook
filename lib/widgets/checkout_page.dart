@@ -510,13 +510,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     .then((intenet) async {
                                                   if (intenet != null &&
                                                       intenet) {
-                                                    var result =
-                                                        await CheckoutPageWidgets()
-                                                            .profileValidationCheckOnCart(
-                                                                context,feeZero: (value?.totalProductCount ??
-                                                            0) >
-                                                            0
-                                                            ?false:true);
+                                                    var result = await CheckoutPageWidgets()
+                                                        .profileValidationCheckOnCart(
+                                                            context,
+                                                            feeZero:
+                                                                (value?.totalProductCount ??
+                                                                            0) >
+                                                                        0
+                                                                    ? false
+                                                                    : true);
                                                     if (result ?? false) {
                                                       planSubLogic(value);
                                                     }
@@ -645,7 +647,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget _cartItem(BuildContext context, ProductList item) {
     int productValue = 0;
     if (item?.paidAmount.contains(".")) {
-      if (item?.additionalInfo?.isMembershipAvail??false) {
+      if (item?.additionalInfo?.isMembershipAvail ?? false) {
         productValue = 0;
       } else {
         productValue = double.parse(item.paidAmount).toInt();
@@ -660,6 +662,27 @@ class _CheckoutPageState extends State<CheckoutPage> {
     return Container(
       child: Column(
         children: [
+          item?.additionalInfo?.isMembershipAvail?Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                child: Container(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  padding: EdgeInsets.all(5.0),
+                  child: Text("Membership Applied",
+                      style: TextStyle(
+                          color: Colors.white70,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 9)),
+                ),
+              ),
+            ],
+          ):SizedBox(),
           Row(
             children: [
               //plan details and all

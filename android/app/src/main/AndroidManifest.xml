@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.ventechsolutions.myFHB">
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -39,6 +38,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
+
 
         <activity
             android:name=".MainActivity"
@@ -93,6 +93,7 @@
             android:name=".NotificationActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=""
+            android:showOnLockScreen="true"
             android:theme="@style/FullScreenTheme"></activity>
 
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
