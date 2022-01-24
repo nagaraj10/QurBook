@@ -660,9 +660,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
       }
     }
     return Container(
+      padding: EdgeInsets.only(top:10),
       child: Column(
         children: [
-          item?.additionalInfo?.isMembershipAvail?Row(
+          item?.additionalInfo?.isMembershipAvail??false?Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(

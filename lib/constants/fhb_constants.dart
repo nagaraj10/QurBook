@@ -629,6 +629,8 @@ var tckComment = 'ticket_comment';
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
 const String keyHealthOrganizationId = 'healthOrganizationID';
+const String keyMembershipStartDate="membershipStartDate";
+const String keyMembershipEndDate="membershipEndDate";
 
 double height = 0.0;
 double width = 0.0;
