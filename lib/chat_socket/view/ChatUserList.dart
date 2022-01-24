@@ -259,11 +259,9 @@ class _ChatUserListState extends State<ChatUserList> {
                             ? true
                             : false,
                         groupId: userChatList?.id,
-                        lastDate: userChatList?.deliveredTimeStamp != null &&
-                                userChatList?.deliveredTimeStamp != ''
-                            ? getFormattedDateTime(
-                                DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        userChatList?.deliveredTimeStamp))
+                        lastDate: userChatList?.deliveredDateTime != null &&
+                                userChatList?.deliveredDateTime != ''
+                            ? getFormattedDateTime(userChatList?.deliveredDateTime
                                     .toString())
                             : ''))).then((value) {
               if (value) {
@@ -405,13 +403,12 @@ class _ChatUserListState extends State<ChatUserList> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
-                            userChatList?.deliveredTimeStamp != null &&
-                                    userChatList?.deliveredTimeStamp != ''
+                            userChatList?.deliveredDateTime != null &&
+                                    userChatList?.deliveredDateTime != ''
                                 ? LAST_RECEIVED +
                                     getFormattedDateTime(
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                                int.parse(userChatList
-                                                    ?.deliveredTimeStamp))
+                                        userChatList
+                                                    ?.deliveredDateTime
                                             .toString())
                                 : '',
                             style: TextStyle(
