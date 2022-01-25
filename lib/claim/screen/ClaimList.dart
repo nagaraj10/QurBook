@@ -224,7 +224,7 @@ class _ClaimListState extends State<ClaimList> {
               color: Colors.white),
         ),
         Text(
-          'Membership End Date : ' + memberShipEndDate,
+          'Membership End Date : ' + getFormattedBillDate(memberShipEndDate),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
