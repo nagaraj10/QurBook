@@ -73,9 +73,7 @@ class NotificationActivity : AppCompatActivity() {
         val handler = Handler()
         val r = object : Runnable {
             public override fun run() {
-                val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this@NotificationActivity)
-                val nsID: Int = intent.getIntExtra(NS_ID, 0)
-                nsManager.cancel(nsID)
+                disconnectNotifiationManager()
                 finish()
             }
         }
@@ -131,6 +129,7 @@ class NotificationActivity : AppCompatActivity() {
                 if (snapshot != null && snapshot.exists()) {
                     Log.d(TAG, "Current data: ${snapshot.data}")
                     if (snapshot.data?.get("call_status") == "call_ended_by_user") {
+                        disconnectNotifiationManager()
                         finish()
                     }
                 } else {
@@ -155,13 +154,21 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     fun decline(v: View?) {
+        disconnectNotifiationManager()
         MyApp.isMissedNSShown = false
         MyApp().updateStatus(false)
         MyApp.recordId = ""
         finish()
     }
 
+    fun disconnectNotifiationManager(){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this@NotificationActivity)
+        val nsID: Int = intent.getIntExtra(NS_ID, 0)
+        nsManager.cancel(nsID)
+    }
+
     fun accept(v: View?) {
+        disconnectNotifiationManager()
         MyApp.isMissedNSShown = false
         MyApp().updateStatus(true)
         MyApp.recordId = ""
