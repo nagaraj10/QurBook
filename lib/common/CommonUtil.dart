@@ -4051,6 +4051,14 @@ class CommonUtil {
   String getHealthOrganizationID() {
     return PreferenceUtil.getStringValue(Constants.keyHealthOrganizationId) ?? "";
   }
+
+  String getMemberSipStartDate() {
+    return PreferenceUtil.getStringValue(Constants.keyMembershipStartDate) ?? "";
+  }
+
+  String getMemberSipEndDate() {
+    return PreferenceUtil.getStringValue(Constants.keyMembershipEndDate) ?? "";
+  }
   num doubleWithoutDecimalToInt(double val) {
     return val % 1 == 0 ? val.toInt() : val;
   }

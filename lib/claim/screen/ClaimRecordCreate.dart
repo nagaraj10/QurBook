@@ -93,22 +93,23 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   MediaResult mediaDataObj = MediaResult();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final HealthReportListForUserBlock _healthReportListForUserBlock =
-  HealthReportListForUserBlock();
+      HealthReportListForUserBlock();
   HealthReportListForUserRepository _healthReportListForUserRepository;
 
   FlutterToast toast = FlutterToast();
 
   String claimAmountTotal;
+  String memberShipStartDate, memberShipEndDate;
   bool ispdfPresent = false;
   var pdfFile;
-var pdfFileName;
+  var pdfFileName;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _healthReportListForUserRepository =
-    new HealthReportListForUserRepository();
+        new HealthReportListForUserRepository();
     if (widget.imagePath.isNotEmpty) {
       length = widget.imagePath.length;
       index = 1;
@@ -119,14 +120,20 @@ var pdfFileName;
     claimAmountTotal = claimAmountTotal.contains(".")
         ? claimAmountTotal.split(".")[0]
         : claimAmountTotal;
+
+    memberShipStartDate = new CommonUtil().getMemberSipStartDate();
+    memberShipEndDate = new CommonUtil().getMemberSipEndDate();
+
+    memberShipStartDate=json.decode(memberShipStartDate);
+    memberShipEndDate=json.decode(memberShipEndDate);
     setAuthToken();
     initializeData();
 
-    if(length==1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath[0])){
-      ispdfPresent=true;
+    if (length == 1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath[0])) {
+      ispdfPresent = true;
       pdfFile = File(widget.imagePath[0]);
       final fileNoun = pdfFile.path.split('/').last;
-      pdfFileName=fileNoun;
+      pdfFileName = fileNoun;
     }
 
     _familyListBloc = new FamilyListBloc();
@@ -163,7 +170,8 @@ var pdfFileName;
               Navigator.of(context).pop();
             }),
       ),
-      body: SingleChildScrollView(child:Column(
+      body: SingleChildScrollView(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
@@ -177,7 +185,9 @@ var pdfFileName;
                       flex: 4,
                       child: Padding(
                           padding: EdgeInsets.all(10),
-                          child: ispdfPresent?getIconForPdf():getCarousalImage(widget.imagePath))),
+                          child: ispdfPresent
+                              ? getIconForPdf()
+                              : getCarousalImage(widget.imagePath))),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.only(left: 20, right: 20),
@@ -283,20 +293,20 @@ var pdfFileName;
           ),
 
           (familyData != null &&
-              familyData.result?.sharedByUsers != null &&
-              familyData.result?.sharedByUsers.length > 0)
+                  familyData.result?.sharedByUsers != null &&
+                  familyData.result?.sharedByUsers.length > 0)
               ? FittedBox(
-              fit: BoxFit.cover,
-              child: Row(
-                children: [
-                  dropDownButton(familyData.result?.sharedByUsers)
-                ],
-              ))
+                  fit: BoxFit.cover,
+                  child: Row(
+                    children: [
+                      dropDownButton(familyData.result?.sharedByUsers)
+                    ],
+                  ))
               : FittedBox(
-              fit: BoxFit.cover,
-              child: Row(
-                children: [getDropdown()],
-              )),
+                  fit: BoxFit.cover,
+                  child: Row(
+                    children: [getDropdown()],
+                  )),
           //Padding(child:_familyNames!=null && _familyNames.length>0?dropDownButton(_familyNames):getDropdown(),padding: EdgeInsets.symmetric(vertical: 10.0,horizontal:20.0),),
 
           SizedBox(
@@ -328,47 +338,47 @@ var pdfFileName;
         children: <Widget>[
           (widget.imagePath != null && widget.imagePath.isNotEmpty)
               ? Expanded(
-            child: CarouselSlider(
-              carouselController: carouselSlider,
-              items: widget.imagePath.map((imgUrl) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        width: 1.sw,
-                        margin: EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(),
-                        child: Container(
-                          height: double.infinity,
-                          child: Image.file(
-                            File(imgUrl),
-                            fit: BoxFit.scaleDown,
-                          ),
-                        ));
-                  },
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: 400.0.h,
-                //width: 1.sw,
-                initialPage: 0,
-                enlargeCenterPage: true,
-                reverse: false,
-                enableInfiniteScroll: false,
-                // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index, carouselPageChangedReason) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-              ),
-            ),
-          )
+                  child: CarouselSlider(
+                    carouselController: carouselSlider,
+                    items: widget.imagePath.map((imgUrl) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                              width: 1.sw,
+                              margin: EdgeInsets.symmetric(horizontal: 10.0),
+                              decoration: BoxDecoration(),
+                              child: Container(
+                                height: double.infinity,
+                                child: Image.file(
+                                  File(imgUrl),
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              ));
+                        },
+                      );
+                    }).toList(),
+                    options: CarouselOptions(
+                      height: 400.0.h,
+                      //width: 1.sw,
+                      initialPage: 0,
+                      enlargeCenterPage: true,
+                      reverse: false,
+                      enableInfiniteScroll: false,
+                      // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (index, carouselPageChangedReason) {
+                        setState(() {
+                          _current = index;
+                        });
+                      },
+                    ),
+                  ),
+                )
               : Container(
-              child: Text("Error",
-                  style: TextStyle(
-                    color: Colors.black,
-                  )))
+                  child: Text("Error",
+                      style: TextStyle(
+                        color: Colors.black,
+                      )))
         ],
       ),
     );
@@ -438,12 +448,13 @@ var pdfFileName;
   Future<void> _selectDate(
       BuildContext context, TextEditingController dateOfVisitSample) async {
     var dateTime = DateTime.now();
-
+    var startDate = DateFormat('yyyy-MM-dd').parse(memberShipStartDate);
+    var endDate = DateFormat('yyyy-MM-dd').parse(memberShipEndDate);
     final picked = await showDatePicker(
         context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime.now());
+        initialDate: endDate,
+        firstDate: startDate,
+        lastDate: endDate);
 
     if (picked != null) {
       dateTime = picked ?? dateTime;
@@ -501,10 +512,10 @@ var pdfFileName;
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                      child: CommonCircularIndicator(),
-                      width: 30,
-                      height: 30,
-                    )),
+                  child: CommonCircularIndicator(),
+                  width: 30,
+                  height: 30,
+                )),
               );
               break;
 
@@ -516,7 +527,7 @@ var pdfFileName;
               break;
 
             case Status.COMPLETED:
-            //_healthReportListForUserBlock = null;
+              //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
               if (snapshot.data.data.result != null) {
                 familyData = snapshot.data.data;
@@ -541,8 +552,8 @@ var pdfFileName;
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
           ? myProfile.result.firstName?.capitalizeFirstofEach +
-          ' ' +
-          myProfile.result.lastName?.capitalizeFirstofEach
+              ' ' +
+              myProfile.result.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
@@ -572,7 +583,6 @@ var pdfFileName;
       }
     }
 
-
     return getFamilyDropDown();
   }
 
@@ -584,31 +594,31 @@ var pdfFileName;
       },
       child: Container(
           child: TextField(
-            style: fhbBasicWidget.getTextStyleForValue(),
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-            controller: dateOfVisit,
-            readOnly: true,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (term) {
-              dateOfBirthFocus.unfocus();
+        style: fhbBasicWidget.getTextStyleForValue(),
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: dateOfVisit,
+        readOnly: true,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          dateOfBirthFocus.unfocus();
+        },
+        decoration: InputDecoration(
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[300]),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey[300]),
+          ),
+          contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+          suffixIcon: IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+              _selectDate(context, dateOfVisit);
             },
-            decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
-              ),
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
-              ),
-              contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-              suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  _selectDate(context, dateOfVisit);
-                },
-              ),
-            ),
-          )),
+          ),
+        ),
+      )),
     );
   }
 
@@ -656,18 +666,18 @@ var pdfFileName;
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-              title: Text(variable.strAPP_NAME),
-              content: Text(validationMsg),
-              actions: <Widget>[
-                Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    //crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        child: Center(
-                            child: TextButton(
+                  title: Text(variable.strAPP_NAME),
+                  content: Text(validationMsg),
+                  actions: <Widget>[
+                    Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            child: Center(
+                                child: TextButton(
                               child: const Text(
                                 'Ok',
                                 style: TextStyle(color: Colors.white),
@@ -676,10 +686,10 @@ var pdfFileName;
                                 Navigator.of(context).pop();
                               },
                             )),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ])
-              ]));
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                        ])
+                  ]));
     }
   }
 
@@ -807,7 +817,7 @@ var pdfFileName;
 
   Widget getFamilyDropDown() {
     return Container(
-      width: 1.sw ,
+      width: 1.sw,
       child: DropdownButton<SharedByUsers>(
         isExpanded: true,
         value: selectedUser,
@@ -821,24 +831,24 @@ var pdfFileName;
         ),
         items: _familyNames
             .map((SharedByUsers user) => DropdownMenuItem(
-          child: Row(
-            children: <Widget>[
-              Padding(
-                  child: Text(
-                      user.child == null
-                          ? 'Self'
-                          : ((user?.child?.firstName ?? '') +
-                          ' ' +
-                          (user?.child?.lastName ?? ''))
-                          ?.capitalizeFirstofEach ??
-                          '',
-                      style: fhbBasicWidget.getTextStyleForValue()),
-                  padding:
-                  EdgeInsets.only(left: 20, top: 10, bottom: 20)),
-            ],
-          ),
-          value: user,
-        ))
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                          child: Text(
+                              user.child == null
+                                  ? 'Self'
+                                  : ((user?.child?.firstName ?? '') +
+                                              ' ' +
+                                              (user?.child?.lastName ?? ''))
+                                          ?.capitalizeFirstofEach ??
+                                      '',
+                              style: fhbBasicWidget.getTextStyleForValue()),
+                          padding:
+                              EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+                    ],
+                  ),
+                  value: user,
+                ))
             .toList(),
         onChanged: (SharedByUsers user) {
           isFamilyChanged = true;
@@ -861,26 +871,24 @@ var pdfFileName;
     return Container(
       child: Center(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'View PDF',
-                style: TextStyle(color: Colors.white),
-              ),
-              IconButton(
-                tooltip: 'View PDF',
-                icon: ImageIcon(
-                    AssetImage(variable.icon_attach),
-                    color: Colors.white),
-                onPressed: () async {
-
-                  await OpenFile.open(
-                    pdfFile.path,
-                  );
-                },
-              )
-            ],
-          )),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'View PDF',
+            style: TextStyle(color: Colors.white),
+          ),
+          IconButton(
+            tooltip: 'View PDF',
+            icon: ImageIcon(AssetImage(variable.icon_attach),
+                color: Colors.white),
+            onPressed: () async {
+              await OpenFile.open(
+                pdfFile.path,
+              );
+            },
+          )
+        ],
+      )),
     );
   }
 }

@@ -596,19 +596,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         fontFamily: variable.font_poppins),
                                   ),
                                 ),
-                                if ((widget?.careGiversList?.length ?? 0) > 0 &&
-                                    document[STR_IS_DISABLE] != null &&
-                                    document[STR_IS_DISABLE] == true)
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: Text(
-                                      STR_NOT_AVAILABLE,
-                                      style: TextStyle(
-                                          color: Colors.redAccent,
-                                          fontSize: 14.0.sp,
-                                          fontFamily: variable.font_poppins),
-                                    ),
-                                  )
+                                getisDisabled(document),
                               ],
                             ),
                           ),
@@ -719,6 +707,27 @@ class HomeScreenState extends State<ChatHomeScreen> {
         }
       },
     );
+  }
+
+  Widget getisDisabled(DocumentSnapshot document) {
+    try {
+      bool isDisable = document[STR_IS_DISABLE] ?? false;
+      if ((widget?.careGiversList?.length ?? 0) > 0 && isDisable) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            STR_NOT_AVAILABLE,
+            style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 14.0.sp,
+                fontFamily: variable.font_poppins),
+          ),
+        );
+      }
+      return SizedBox.shrink();
+    } catch (err) {
+      return SizedBox.shrink();
+    }
   }
 
   String getFormattedDateTime(String datetime) {
