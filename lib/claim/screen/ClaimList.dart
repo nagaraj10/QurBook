@@ -97,7 +97,7 @@ class _ClaimListState extends State<ClaimList> {
               size: 24.0.sp,
             ),
           ),
-          visible: isCreditBalnceZero ? true : false,
+          visible: isCreditBalnceZero ? false : true,
         ));
   }
 
