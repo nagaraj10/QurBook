@@ -40,7 +40,7 @@ class _ClaimListState extends State<ClaimList> {
       memberShipId = "",
       memberShipName = "";
 
-  bool isCreditBalnceZero=true;
+  bool isCreditBalnceZero = true;
 
   List<CategoryResult> categoryDataList = new List();
   CategoryResponseListRepository _categoryResponseListRepository;
@@ -66,16 +66,16 @@ class _ClaimListState extends State<ClaimList> {
             preferredSize: Size.fromHeight(1.sh * 0.16), child: getAppBar()),
         body: Container(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                    child: (claimListResponse != null &&
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+                child: (claimListResponse != null &&
                         claimListResponse.result != null &&
                         claimListResponse.result.length > 0)
-                        ? getCliamList()
-                        : getClaimListFromFutureBuilder()),
-              ],
-            )),
+                    ? getCliamList()
+                    : getClaimListFromFutureBuilder()),
+          ],
+        )),
         floatingActionButton: Visibility(
           child: FloatingActionButton(
             heroTag: "btn2",
@@ -96,8 +96,8 @@ class _ClaimListState extends State<ClaimList> {
               color: Color(new CommonUtil().getMyPrimaryColor()),
               size: 24.0.sp,
             ),
-          ), visible: isCreditBalnceZero
-          ?true:false,
+          ),
+          visible: isCreditBalnceZero ? true : false,
         ));
   }
 
@@ -108,29 +108,26 @@ class _ClaimListState extends State<ClaimList> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Health Organization Screen',
       'screenSessionTime':
-      '${DateTime
-          .now()
-          .difference(mInitialTime)
-          .inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
   getCliamList() {
     return (claimListResponse != null &&
-        claimListResponse.result != null &&
-        claimListResponse.result.length > 0)
+            claimListResponse.result != null &&
+            claimListResponse.result.length > 0)
         ? ClaimWidget()
         : Expanded(
-        child: Container(
-          child: Center(
-            child: Text("No Claim List Available",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: variable.font_poppins,
-                    fontSize: 24.0.sp,
-                    color: Colors.black)),
-          ),
-        ));
+            child: Container(
+            child: Center(
+              child: Text("No Claim List Available",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: variable.font_poppins,
+                      fontSize: 24.0.sp,
+                      color: Colors.black)),
+            ),
+          ));
   }
 
   getAppBar() {
@@ -145,13 +142,13 @@ class _ClaimListState extends State<ClaimList> {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: <Color>[
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                        Color(new CommonUtil().getMyGredientColor())
-                      ],
+                    Color(new CommonUtil().getMyPrimaryColor()),
+                    Color(new CommonUtil().getMyGredientColor())
+                  ],
                       stops: [
-                        0.3,
-                        1.0
-                      ])),
+                    0.3,
+                    1.0
+                  ])),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -179,31 +176,31 @@ class _ClaimListState extends State<ClaimList> {
                       ),
                       Container(
                           child: Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 25,
-                                ),
-                                Text(
-                                  "My Claim",
-                                  style: TextStyle(
-                                      fontFamily: variable.font_poppins,
-                                      fontSize: 20.0.sp,
-                                      color: Colors.white),
-                                ),
-                                (memberShipEndDate != "" &&
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Text(
+                              "My Claim",
+                              style: TextStyle(
+                                  fontFamily: variable.font_poppins,
+                                  fontSize: 20.0.sp,
+                                  color: Colors.white),
+                            ),
+                            (memberShipEndDate != "" &&
                                     memberShipEndDate != null &&
                                     memberShipType != "" &&
                                     memberShipType != null)
-                                    ? getMemberTypeAndEndDate()
-                                    : getMemberTypeAndEndDateFromFutureBuilder(),
-                                (ClaimAmount != null && ClaimAmount != "")
-                                    ? getClaimAmount()
-                                    : getClaimAmountBalance(),
-                              ],
-                            ),
-                          ))
+                                ? getMemberTypeAndEndDate()
+                                : getMemberTypeAndEndDateFromFutureBuilder(),
+                            (ClaimAmount != null && ClaimAmount != "")
+                                ? getClaimAmount()
+                                : getClaimAmountBalance(),
+                          ],
+                        ),
+                      ))
                     ],
                   ),
                 ],
@@ -316,13 +313,22 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   getClaimAmount() {
-    String claimAmountTotal = ClaimAmount.contains(".")
-        ? ClaimAmount.split(".")[0]
-        : ClaimAmount;
+    try {
+      String claimAmountTotal;
+      if (ClaimAmount.contains(".")) {
+        claimAmountTotal =
+            ClaimAmount.contains(".") ? ClaimAmount.split(".")[0] : ClaimAmount;
+      } else {
+        claimAmountTotal = ClaimAmount;
+      }
 
-    if (int.parse(claimAmountTotal) > 0) {
-      isCreditBalnceZero = false;
-    } else {
+      if (int.parse(claimAmountTotal) > 0) {
+        isCreditBalnceZero = false;
+      } else {
+        isCreditBalnceZero = true;
+      }
+    } catch (e) {
+      ClaimAmount = "";
       isCreditBalnceZero = true;
     }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
@@ -370,7 +376,7 @@ class _ClaimListState extends State<ClaimList> {
         _categoryListBlock.getCategoryLists();
 
         CategoryDataList categoryDataListObj =
-        await _categoryResponseListRepository.getCategoryLists();
+            await _categoryResponseListRepository.getCategoryLists();
         setCategoryId(categoryDataListObj.result);
       } else {
         setCategoryId(categoryDataList);
@@ -380,7 +386,7 @@ class _ClaimListState extends State<ClaimList> {
       _categoryListBlock.getCategoryLists();
 
       CategoryDataList categoryDataListObj =
-      await _categoryResponseListRepository.getCategoryLists();
+          await _categoryResponseListRepository.getCategoryLists();
       setCategoryId(categoryDataListObj.result);
     }
   }
@@ -390,7 +396,7 @@ class _ClaimListState extends State<ClaimList> {
       if (dataObj.categoryName == Constants.STR_CLAIMSRECORD) {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(
-              Constants.KEY_CATEGORYNAME, dataObj.categoryName)
+                  Constants.KEY_CATEGORYNAME, dataObj.categoryName)
               .then((onValue) {
             PreferenceUtil.saveString(Constants.KEY_CATEGORYID, dataObj.id)
                 .then((value) {});
@@ -423,11 +429,10 @@ class _ClaimListState extends State<ClaimList> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ClaimRecordDisplay(
-                        claimID: claimResultList[index]?.id,
-                        closePage: (value) {},
-                      ),
+                  builder: (context) => ClaimRecordDisplay(
+                    claimID: claimResultList[index]?.id,
+                    closePage: (value) {},
+                  ),
                 ));
           },
           child: Container(
@@ -457,66 +462,67 @@ class _ClaimListState extends State<ClaimList> {
                           flex: 2,
                           child: Container(
                               child: Column(
-                                children: [
-                                  Row(children: [
-                                    Text(
-                                        toBeginningOfSentenceCase(
+                            children: [
+                              Row(children: [
+                                Text(
+                                    toBeginningOfSentenceCase(
                                             claimResultList[index]
                                                 ?.submittedFor
                                                 ?.firstName) +
-                                            " " +
-                                            toBeginningOfSentenceCase(
-                                                claimResultList[index]
-                                                    ?.submittedFor
-                                                    ?.lastName),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: fhbStyles.fnt_doc_name))
-                                  ]),
-                                  Row(
-                                    children: [
-                                      Text("Claim no :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " +
-                                          claimResultList[index]?.claimNumber,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Membership :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " + memberShipType,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Bill Name :",
-                                          style: getTextStyleForTags()),
-                                      Text(
-                                          " " +
+                                        " " +
+                                        toBeginningOfSentenceCase(
+                                            claimResultList[index]
+                                                ?.submittedFor
+                                                ?.lastName),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: fhbStyles.fnt_doc_name))
+                              ]),
+                              Row(
+                                children: [
+                                  Text("Claim no :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " + claimResultList[index]?.claimNumber,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Membership :",
+                                      style: getTextStyleForTags()),
+                                  Text(" " + memberShipType,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Bill Name :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " +
                                               claimResultList[index]
                                                   ?.documentMetadata[0]
-                                                  ?.billName ?? '',
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
+                                                  ?.billName ??
+                                          '',
+                                      style: getTextStyleForValue())
                                 ],
-                              ))),
+                              ),
+                            ],
+                          ))),
                       Expanded(
                           flex: 1,
                           child: Container(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      getFormattedBillDate(
-                                          claimResultList[index]
-                                              ?.documentMetadata[0]
-                                              ?.billDate ?? ''),
-                                      style: getTextStyleForTags()),
-                                  /* Text(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  getFormattedBillDate(claimResultList[index]
+                                          ?.documentMetadata[0]
+                                          ?.billDate ??
+                                      ''),
+                                  style: getTextStyleForTags()),
+                              /* Text(
                                       "Rs " +
                                           claimResultList[index]
                                               ?.documentMetadata[0]
@@ -524,20 +530,21 @@ class _ClaimListState extends State<ClaimList> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
                                           fontSize: fhbStyles.fnt_doc_name)),*/
-                                  Text("status",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: Colors.grey[600])),
-                                  Text(claimResultList[index]?.status.name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: getColorBasedOnSatus(
-                                              claimResultList[index]?.status
-                                                  .code))),
-                                ],
-                              ))),
+                              Text("status",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: Colors.grey[600])),
+                              Text(claimResultList[index]?.status.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: getColorBasedOnSatus(
+                                          claimResultList[index]
+                                              ?.status
+                                              .code))),
+                            ],
+                          ))),
                     ],
                   ),
                 ],
