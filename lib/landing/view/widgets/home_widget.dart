@@ -400,7 +400,7 @@ class HomeWidget extends StatelessWidget {
                         );
 
                       },
-                      onPressed: () {
+                      onPressed: () async {
                         // if (availableCareProvider > 0) {
                         //   Navigator.push(
                         //     context,
@@ -432,6 +432,7 @@ class HomeWidget extends StatelessWidget {
                             ),
                           );
                         }
+                        await landingViewModel.getQurPlanDashBoard();
                       },
                     ),
                   ],

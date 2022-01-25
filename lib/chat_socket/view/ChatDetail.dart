@@ -319,6 +319,7 @@ class ChatState extends State<ChatDetail> {
           if (chatPeerId == emitAckResponse.messages.idFrom) {
             Provider.of<ChatSocketViewModel>(Get.context, listen: false)
                 ?.onReceiveMessage(emitAckResponse);
+            updateReadCount();
           }
         }
       }

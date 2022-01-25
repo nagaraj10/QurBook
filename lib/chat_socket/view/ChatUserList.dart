@@ -72,6 +72,11 @@ class _ChatUserListState extends State<ChatUserList> {
 
   void initSocket(bool isLoad) {
 
+    Provider
+        .of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .off(message);
+
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .off(notifyChatList);
@@ -259,10 +264,11 @@ class _ChatUserListState extends State<ChatUserList> {
                             ? true
                             : false,
                         groupId: userChatList?.id,
-                        lastDate: userChatList?.deliveredDateTime != null &&
-                                userChatList?.deliveredDateTime != ''
-                            ? getFormattedDateTime(userChatList?.deliveredDateTime
-                                    .toString())
+                        lastDate: userChatList?.deliveredTimeStamp != null &&
+                                userChatList?.deliveredTimeStamp != ''
+                            ? getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
+                            int.parse(
+                                userChatList?.deliveredTimeStamp)).toString())
                             : ''))).then((value) {
               if (value) {
                 initSocket(true);
@@ -403,13 +409,13 @@ class _ChatUserListState extends State<ChatUserList> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
-                            userChatList?.deliveredDateTime != null &&
-                                    userChatList?.deliveredDateTime != ''
+                            userChatList?.deliveredTimeStamp != null &&
+                                    userChatList?.deliveredTimeStamp != ''
                                 ? LAST_RECEIVED +
                                     getFormattedDateTime(
-                                        userChatList
-                                                    ?.deliveredDateTime
-                                            .toString())
+                                      (DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(
+                                              userChatList?.deliveredTimeStamp)).toString()))
                                 : '',
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
