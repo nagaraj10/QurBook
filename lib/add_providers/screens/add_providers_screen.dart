@@ -558,7 +558,7 @@ class AddProvidersState extends State<AddProviders> {
 
             if (familyMembersList != null &&
                 familyMembersList.result != null &&
-                familyMembersList.result.sharedByUsers.length > 0) {
+                familyMembersList.result?.sharedByUsers?.length > 0) {
               getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
             } else {
               toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
@@ -594,7 +594,7 @@ class AddProvidersState extends State<AddProviders> {
                           : Center(
                               child: Text(
                                 selectedFamilyMemberName == null
-                                    ? myProfile.result.lastName.toUpperCase()
+                                    ? myProfile.result?.lastName.toUpperCase()
                                     : selectedFamilyMemberName[0].toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
@@ -603,14 +603,14 @@ class AddProvidersState extends State<AddProviders> {
                               ),
                             )
                       : myProfile != null
-                          ? myProfile.result != null
-                              ? myProfile.result.profilePicThumbnailUrl != null
+                          ? myProfile?.result != null
+                              ? myProfile?.result?.profilePicThumbnailUrl != null
                                   ? getProfilePicWidget(
                                       myProfile.result.profilePicThumbnailUrl)
                                   : Center(
                                       child: Text(
                                         selectedFamilyMemberName == null
-                                            ? myProfile.result.lastName
+                                            ? myProfile?.result?.lastName
                                                 .toUpperCase()
                                             : selectedFamilyMemberName[0]
                                                 .toUpperCase(),
@@ -623,8 +623,8 @@ class AddProvidersState extends State<AddProviders> {
                               : Center(
                                   child: Text(
                                     selectedFamilyMemberName == null
-                                        ? myProfile.result != null
-                                            ? myProfile.result.lastName ?? ''
+                                        ? myProfile?.result != null
+                                            ? myProfile?.result.lastName ?? ''
                                             : ''
                                         : selectedFamilyMemberName[0]
                                             .toUpperCase(),
@@ -649,9 +649,9 @@ class AddProvidersState extends State<AddProviders> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? myProfile.result.id == primaryUserProfile.result.id
+                        ? myProfile?.result?.id == primaryUserProfile?.result?.id
                             ? variable.Self
-                            : myProfile.result.firstName
+                            : myProfile?.result?.firstName
                         : selectedFamilyMemberName
                             .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,

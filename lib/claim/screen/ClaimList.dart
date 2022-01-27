@@ -35,9 +35,12 @@ class _ClaimListState extends State<ClaimList> {
   ClaimListResponse claimListResponse;
   String memberShipType = "",
       memberShipEndDate = "",
+      memberShipStartDate = "",
       ClaimAmount = "",
       memberShipId = "",
       memberShipName = "";
+
+  bool isCreditBalnceZero = true;
 
   List<CategoryResult> categoryDataList = new List();
   CategoryResponseListRepository _categoryResponseListRepository;
@@ -73,25 +76,28 @@ class _ClaimListState extends State<ClaimList> {
                     : getClaimListFromFutureBuilder()),
           ],
         )),
-        floatingActionButton: FloatingActionButton(
-          heroTag: "btn2",
-          onPressed: () {
-            FocusManager.instance.primaryFocus.unfocus();
-           if (memberShipEndDate != "" &&
-                memberShipEndDate != null &&
-                memberShipType != "" &&
-                memberShipType != null) {
-              Navigator.pushNamed(context, router.rt_TakePictureScreen)
-                  .then((value) {});
-            } else {
-              toast.getToast("No Membership Available", Colors.green);
-            }
-          },
-          child: Icon(
-            Icons.add,
-            color: Color(new CommonUtil().getMyPrimaryColor()),
-            size: 24.0.sp,
+        floatingActionButton: Visibility(
+          child: FloatingActionButton(
+            heroTag: "btn2",
+            onPressed: () {
+              FocusManager.instance.primaryFocus.unfocus();
+              if (memberShipEndDate != "" &&
+                  memberShipEndDate != null &&
+                  memberShipType != "" &&
+                  memberShipType != null) {
+                Navigator.pushNamed(context, router.rt_TakePictureScreen)
+                    .then((value) {});
+              } else {
+                toast.getToast("No Membership Available", Colors.green);
+              }
+            },
+            child: Icon(
+              Icons.add,
+              color: Color(new CommonUtil().getMyPrimaryColor()),
+              size: 24.0.sp,
+            ),
           ),
+          visible: isCreditBalnceZero ? false : true,
         ));
   }
 
@@ -218,7 +224,7 @@ class _ClaimListState extends State<ClaimList> {
               color: Colors.white),
         ),
         Text(
-          'Membership End Date : ' + memberShipEndDate,
+          'Membership End Date : ' + getFormattedBillDate(memberShipEndDate),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
@@ -253,10 +259,16 @@ class _ClaimListState extends State<ClaimList> {
               memberShipType = snapshot.data.result[0].planName;
               memberShipName = snapshot.data.result[0].healthOrganizationName;
               memberShipEndDate = snapshot.data.result[0].planEndDate;
+              memberShipStartDate = snapshot.data.result[0].planStartDate;
               memberShipId = snapshot.data.result[0].id;
               PreferenceUtil.save(Constants.keyMembeShipID, memberShipId);
               PreferenceUtil.save(Constants.keyHealthOrganizationId,
                   snapshot.data.result[0].healthOrganizationId);
+              PreferenceUtil.save(
+                  Constants.keyMembershipStartDate, memberShipStartDate);
+              PreferenceUtil.save(
+                  Constants.keyMembershipEndDate, memberShipEndDate);
+
               return getMemberTypeAndEndDate();
             } else {
               return getMemberTypeAndEndDate();
@@ -301,6 +313,24 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   getClaimAmount() {
+    try {
+      String claimAmountTotal;
+      if (ClaimAmount.contains(".")) {
+        claimAmountTotal =
+            ClaimAmount.contains(".") ? ClaimAmount.split(".")[0] : ClaimAmount;
+      } else {
+        claimAmountTotal = ClaimAmount;
+      }
+
+      if (int.parse(claimAmountTotal) > 0) {
+        isCreditBalnceZero = false;
+      } else {
+        isCreditBalnceZero = true;
+      }
+    } catch (e) {
+      ClaimAmount = "";
+      isCreditBalnceZero = true;
+    }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
         ? '\u{20B9} ' + ClaimAmount
         : "";
@@ -391,18 +421,18 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   cliamWidgetList(int index, List<ClaimListResult> claimResultList) {
-    if(claimResultList[index].documentMetadata!=null && claimResultList[index].documentMetadata.length>0) {
+    if (claimResultList[index].documentMetadata != null &&
+        claimResultList[index].documentMetadata.length > 0) {
       return InkWell(
           onTap: () {
             FocusManager.instance.primaryFocus.unfocus();
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ClaimRecordDisplay(
-                        claimID: claimResultList[index]?.id,
-                        closePage: (value) {},
-                      ),
+                  builder: (context) => ClaimRecordDisplay(
+                    claimID: claimResultList[index]?.id,
+                    closePage: (value) {},
+                  ),
                 ));
           },
           child: Container(
@@ -432,66 +462,67 @@ class _ClaimListState extends State<ClaimList> {
                           flex: 2,
                           child: Container(
                               child: Column(
-                                children: [
-                                  Row(children: [
-                                    Text(
-                                        toBeginningOfSentenceCase(
+                            children: [
+                              Row(children: [
+                                Text(
+                                    toBeginningOfSentenceCase(
                                             claimResultList[index]
                                                 ?.submittedFor
                                                 ?.firstName) +
-                                            " " +
-                                            toBeginningOfSentenceCase(
-                                                claimResultList[index]
-                                                    ?.submittedFor
-                                                    ?.lastName),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w800,
-                                            fontSize: fhbStyles.fnt_doc_name))
-                                  ]),
-                                  Row(
-                                    children: [
-                                      Text("Claim no :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " +
-                                          claimResultList[index]?.claimNumber,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Membership :",
-                                          style: getTextStyleForTags()),
-                                      Text(" " + memberShipType,
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text("Bill Name :",
-                                          style: getTextStyleForTags()),
-                                      Text(
-                                          " " +
+                                        " " +
+                                        toBeginningOfSentenceCase(
+                                            claimResultList[index]
+                                                ?.submittedFor
+                                                ?.lastName),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: fhbStyles.fnt_doc_name))
+                              ]),
+                              Row(
+                                children: [
+                                  Text("Claim no :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " + claimResultList[index]?.claimNumber,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Membership :",
+                                      style: getTextStyleForTags()),
+                                  Text(" " + memberShipType,
+                                      style: getTextStyleForValue())
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Bill Name :",
+                                      style: getTextStyleForTags()),
+                                  Text(
+                                      " " +
                                               claimResultList[index]
                                                   ?.documentMetadata[0]
-                                                  ?.billName??'',
-                                          style: getTextStyleForValue())
-                                    ],
-                                  ),
+                                                  ?.billName ??
+                                          '',
+                                      style: getTextStyleForValue())
                                 ],
-                              ))),
+                              ),
+                            ],
+                          ))),
                       Expanded(
                           flex: 1,
                           child: Container(
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      getFormattedBillDate(
-                                          claimResultList[index]
-                                              ?.documentMetadata[0]
-                                              ?.billDate??''),
-                                      style: getTextStyleForTags()),
-                                 /* Text(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                  getFormattedBillDate(claimResultList[index]
+                                          ?.documentMetadata[0]
+                                          ?.billDate ??
+                                      ''),
+                                  style: getTextStyleForTags()),
+                              /* Text(
                                       "Rs " +
                                           claimResultList[index]
                                               ?.documentMetadata[0]
@@ -499,20 +530,21 @@ class _ClaimListState extends State<ClaimList> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w800,
                                           fontSize: fhbStyles.fnt_doc_name)),*/
-                                  Text("status",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: Colors.grey[600])),
-                                  Text(claimResultList[index]?.status.name,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: fhbStyles.fnt_day,
-                                          color: getColorBasedOnSatus(
-                                              claimResultList[index]?.status
-                                                  .code))),
-                                ],
-                              ))),
+                              Text("status",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: Colors.grey[600])),
+                              Text(claimResultList[index]?.status.name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: fhbStyles.fnt_day,
+                                      color: getColorBasedOnSatus(
+                                          claimResultList[index]
+                                              ?.status
+                                              .code))),
+                            ],
+                          ))),
                     ],
                   ),
                 ],
