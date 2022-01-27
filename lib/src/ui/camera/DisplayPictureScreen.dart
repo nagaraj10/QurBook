@@ -144,45 +144,52 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   @override
   Widget build(BuildContext context) {
     initialData();
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          title: getWidgetForTitleAndSwithUser()),
-      // The image is stored as a file on the device. Use the `Image.file`
-      // constructor with the given path to display the image.
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Expanded(
-                child: getCarousalImage(),
-              ),
-              Container(
-                child: RaisedGradientButton(
-                  borderRadius: 0,
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ],
-                  ),
-                  onPressed: () {
-                    saveMediaDialog(context, categoryName,
-                        deviceName[0].toUpperCase() + deviceName.substring(1));
-                  },
+    return SafeArea(
+      top: false,
+      bottom: true,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
+            title: getWidgetForTitleAndSwithUser()),
+        // The image is stored as a file on the device. Use the `Image.file`
+        // constructor with the given path to display the image.
+        body: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Expanded(
+                  child: getCarousalImage(),
                 ),
-              )
-            ],
-          ),
-        ],
+                Container(
+                  child: RaisedGradientButton(
+                    borderRadius: 0,
+                    child: Text(
+                      'Done',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0.sp,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                        Color(new CommonUtil().getMyGredientColor())
+                      ],
+                    ),
+                    onPressed: () {
+                      saveMediaDialog(
+                          context,
+                          categoryName,
+                          deviceName[0].toUpperCase() +
+                              deviceName.substring(1));
+                    },
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -350,7 +357,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ClaimRecordCreate(imagePath: widget.imagePath,),
+              builder: (context) => ClaimRecordCreate(
+                imagePath: widget.imagePath,
+              ),
             ),
           );
           break;
