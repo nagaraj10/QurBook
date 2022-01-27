@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -72,7 +73,8 @@ class VerifyPatient extends StatefulWidget {
   _VerifyPatientState createState() => _VerifyPatientState();
 }
 
-class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
+class _VerifyPatientState extends State<VerifyPatient>
+    with CodeAutoFill, WidgetsBindingObserver {
   final OtpController = TextEditingController();
   ApiBaseHelper apiBaseHelper = ApiBaseHelper();
   var isLoading = false;
@@ -101,6 +103,7 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
   bool disableResendButton = false;
   OtpViewModel otpViewModel;
   ValueNotifier otpNotifier = ValueNotifier(false);
+  bool appIsInBackground = false;
 
   @override
   void initState() {
@@ -109,6 +112,7 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
     listenForCode();
     SmsAutoFill().listenForCode;
     from = widget.from;
+    WidgetsBinding.instance.addObserver(this);
     authViewModel = AuthViewModel();
     if (widget.userConfirm) {
       _resendOtpDetails();
@@ -123,6 +127,7 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
     cancel();
     unregisterListener();
     otpNotifier.value = false;
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     con.fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -130,6 +135,24 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
       'screenSessionTime':
           '${DateTime.now().difference(con.mInitialTime).inSeconds} secs'
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (appIsInBackground && otpViewModel.isDialogOpen) {
+          appIsInBackground = false;
+          otpViewModel.updateDialogStatus(false);
+          Get.back();
+        }
+        break;
+      case AppLifecycleState.paused:
+        appIsInBackground = true;
+        break;
+      default:
+    }
+    //print("the current state of the app is ${state.toString()}");
   }
 
   @override
@@ -643,9 +666,9 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
           .sendDeviceToken(
               userId, widget.emailId, widget.PhoneNumber, token, true)
           .then((value) {
-        if(widget.fromSignUp!=null&&widget.fromSignUp){
+        if (widget.fromSignUp != null && widget.fromSignUp) {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
-        }else{
+        } else {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
         }
         if (value != null) {
@@ -696,9 +719,9 @@ class _VerifyPatientState extends State<VerifyPatient> with CodeAutoFill {
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
-        if(widget.fromSignUp!=null&&widget.fromSignUp){
+        if (widget.fromSignUp != null && widget.fromSignUp) {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
-        }else{
+        } else {
           PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
         }
         if (value != null) {
