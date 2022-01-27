@@ -70,8 +70,8 @@ class _ClaimListState extends State<ClaimList> {
           children: [
             Expanded(
                 child: (claimListResponse != null &&
-                        claimListResponse.result != null &&
-                        claimListResponse.result.length > 0)
+                        claimListResponse?.result != null &&
+                        claimListResponse?.result.length > 0)
                     ? getCliamList()
                     : getClaimListFromFutureBuilder()),
           ],
@@ -114,8 +114,8 @@ class _ClaimListState extends State<ClaimList> {
 
   getCliamList() {
     return (claimListResponse != null &&
-            claimListResponse.result != null &&
-            claimListResponse.result.length > 0)
+            claimListResponse?.result != null &&
+            claimListResponse?.result.length > 0)
         ? ClaimWidget()
         : Expanded(
             child: Container(
@@ -224,7 +224,7 @@ class _ClaimListState extends State<ClaimList> {
               color: Colors.white),
         ),
         Text(
-          'Membership End Date : ' + getFormattedBillDate(memberShipEndDate),
+          'Membership End Date : ' + getFormattedBillDateForMember(memberShipEndDate),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
@@ -564,12 +564,36 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   String getFormattedBillDate(String billDate) {
-    DateFormat format = DateFormat("dd-MM-yyyy");
+    if(billDate!="" && billDate!=null) {
+      try {
+        DateFormat format = DateFormat("dd-MM-yyyy");
 
-    var now = format.parse(billDate);
-    final df = new DateFormat('dd-MMM-yyyy');
+        var now = format.parse(billDate);
+        final df = new DateFormat('dd-MMM-yyyy');
 
-    return df.format(now);
+        return df.format(now);
+      }catch(e){
+        return "";
+      }
+    }else{
+      return "";
+    }
+  }
+  String getFormattedBillDateForMember(String billDate) {
+    if(billDate!="" && billDate!=null) {
+      try {
+        DateFormat format = DateFormat("yyyy-MM-dd");
+
+        var now = format.parse(billDate);
+        final df = new DateFormat('dd-MMM-yyyy');
+
+        return df.format(now);
+      }catch(e){
+        return "";
+      }
+    }else{
+      return "";
+    }
   }
 
   getColorBasedOnSatus(String status) {
