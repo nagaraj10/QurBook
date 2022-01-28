@@ -4,6 +4,7 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class ClaimListResult {
   String id;
+  String planName;
   String claimNumber;
   String claimAmountTotal;
   List<DocumentMetadata> documentMetadata;
@@ -18,8 +19,9 @@ class ClaimListResult {
   MyProfileResult submittedFor;
 
 
+
   ClaimListResult(
-      {this.id,
+      {this.id,this.planName,
         this.claimNumber,
         this.claimAmountTotal,
         this.documentMetadata,
@@ -34,6 +36,8 @@ class ClaimListResult {
 
   ClaimListResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    if(json.containsKey('planName'))
+      planName = json['planName'];
     claimNumber = json['claimNumber'];
     claimAmountTotal = json['claimAmountTotal'];
     if (json['documentMetadata'] != null) {
@@ -61,6 +65,7 @@ class ClaimListResult {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['planName'] = this.planName;
     data['claimNumber'] = this.claimNumber;
     data['claimAmountTotal'] = this.claimAmountTotal;
     if (this.documentMetadata != null) {
