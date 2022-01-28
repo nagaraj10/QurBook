@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/claim/bloc/ClaimListBloc.dart';
-import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResponse.dart';
-import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResult.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimListResponse.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimListResult.dart';
 import 'package:myfhb/claim/model/credit/CreditBalance.dart';
@@ -18,7 +16,6 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -43,20 +40,13 @@ class _ClaimListState extends State<ClaimList> {
       memberShipId = "",
       memberShipName = "";
 
-  bool isCreditBalnceZero = false;
+  bool isCreditBalnceZero = true;
 
   List<CategoryResult> categoryDataList = new List();
   CategoryResponseListRepository _categoryResponseListRepository;
   CategoryListBlock _categoryListBlock;
 
   FlutterToast toast = FlutterToast();
-  List<ClaimExpiryResult> claimExpiryList = new List();
-  int _selected;
-  ClaimListBloc _claimListBloc;
-  Future<ClaimExpiryResponse> claimExpiryResponse;
-
-  List<String> exercises = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -65,9 +55,6 @@ class _ClaimListState extends State<ClaimList> {
     claimListRepository = new ClaimListRepository();
     _categoryResponseListRepository = new CategoryResponseListRepository();
     claimListResponse = new ClaimListResponse();
-
-    _claimListBloc = new ClaimListBloc();
-    claimExpiryResponse = _claimListBloc.getExpiryListResponse();
     callImportantMethods();
   }
 
@@ -75,7 +62,6 @@ class _ClaimListState extends State<ClaimList> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBodyBehindAppBar: true,
-        key: _scaffoldKey,
         appBar: PreferredSize(
             preferredSize: Size.fromHeight(1.sh * 0.16), child: getAppBar()),
         body: Container(
@@ -95,7 +81,15 @@ class _ClaimListState extends State<ClaimList> {
             heroTag: "btn2",
             onPressed: () {
               FocusManager.instance.primaryFocus.unfocus();
-              alertDialogWithMemberShip();
+              if (memberShipEndDate != "" &&
+                  memberShipEndDate != null &&
+                  memberShipType != "" &&
+                  memberShipType != null) {
+                Navigator.pushNamed(context, router.rt_TakePictureScreen)
+                    .then((value) {});
+              } else {
+                toast.getToast("No Membership Available", Colors.green);
+              }
             },
             child: Icon(
               Icons.add,
@@ -120,7 +114,6 @@ class _ClaimListState extends State<ClaimList> {
 
   getCliamList() {
     return (claimListResponse != null &&
-            (claimListResponse?.isSuccess ?? false) &&
             claimListResponse?.result != null &&
             claimListResponse?.result.length > 0)
         ? ClaimWidget()
@@ -231,8 +224,7 @@ class _ClaimListState extends State<ClaimList> {
               color: Colors.white),
         ),
         Text(
-          'Membership End Date : ' +
-              getFormattedBillDateForMember(memberShipEndDate),
+          'Membership End Date : ' + getFormattedBillDateForMember(memberShipEndDate),
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
           style: TextStyle(
@@ -244,15 +236,15 @@ class _ClaimListState extends State<ClaimList> {
     );
   }
 
-  Widget getLoadingText(String msg) {
+  Widget getLoadingText() {
     return Text(
-      msg,
+      'Loading Text',
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: TextStyle(
           fontFamily: variable.font_poppins,
           fontSize: 14.0.sp,
-          color: Color(CommonUtil().getMyPrimaryColor())),
+          color: Colors.white),
     );
   }
 
@@ -285,9 +277,9 @@ class _ClaimListState extends State<ClaimList> {
             return getMemberTypeAndEndDate();
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLoadingText('Loading');
+          return getLoadingText();
         } else {
-          return getLoadingText('Error in loading');
+          return getMemberTypeAndEndDate();
         }
       },
     );
@@ -312,9 +304,9 @@ class _ClaimListState extends State<ClaimList> {
             return getClaimAmount();
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLoadingText('Loading');
+          return getLoadingText();
         } else {
-          return getLoadingText('Error in loading');
+          return getClaimAmount();
         }
       },
     );
@@ -333,11 +325,11 @@ class _ClaimListState extends State<ClaimList> {
       if (int.parse(claimAmountTotal) > 0) {
         isCreditBalnceZero = false;
       } else {
-        isCreditBalnceZero = false;
+        isCreditBalnceZero = true;
       }
     } catch (e) {
       ClaimAmount = "";
-      isCreditBalnceZero = false;
+      isCreditBalnceZero = true;
     }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
         ? '\u{20B9} ' + ClaimAmount
@@ -368,34 +360,9 @@ class _ClaimListState extends State<ClaimList> {
             return getCliamList();
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLoadingText('Loading');
+          return getLoadingText();
         } else {
-          return getLoadingText('Error in loading');
-        }
-      },
-    );
-  }
-
-  getClaimMemberShipListFromFutureBuilder() {
-    return FutureBuilder<ClaimExpiryResponse>(
-      future: claimListRepository.getClaimExpiryResponseList(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot?.data?.isSuccess != null &&
-              snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
-              claimExpiryList = snapshot?.data?.result;
-              return getWidgetForMemberShipList();
-            } else {
-              return getWidgetForMemberShipList();
-            }
-          } else {
-            return getWidgetForMemberShipList();
-          }
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return getLoadingText('Loading ');
-        } else {
-          return getLoadingText('Error in loading');
+          return getCliamList();
         }
       },
     );
@@ -501,12 +468,12 @@ class _ClaimListState extends State<ClaimList> {
                                     toBeginningOfSentenceCase(
                                             claimResultList[index]
                                                 ?.submittedFor
-                                                ?.firstName??'') +
+                                                ?.firstName) +
                                         " " +
                                         toBeginningOfSentenceCase(
                                             claimResultList[index]
                                                 ?.submittedFor
-                                                ?.lastName??''),
+                                                ?.lastName),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w800,
                                         fontSize: fhbStyles.fnt_doc_name))
@@ -516,15 +483,15 @@ class _ClaimListState extends State<ClaimList> {
                                   Text("Claim no :",
                                       style: getTextStyleForTags()),
                                   Text(
-                                      " " + claimResultList[index]?.claimNumber??'',
+                                      " " + claimResultList[index]?.claimNumber,
                                       style: getTextStyleForValue())
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text("Membership : ",
+                                  Text("Membership :",
                                       style: getTextStyleForTags()),
-                                 Text((claimResultList[index]?.planName!=null && claimResultList[index]?.planName!='')?claimResultList[index]?.planName:memberShipType,
+                                  Text(" " + memberShipType,
                                       style: getTextStyleForValue())
                                 ],
                               ),
@@ -555,20 +522,27 @@ class _ClaimListState extends State<ClaimList> {
                                           ?.billDate ??
                                       ''),
                                   style: getTextStyleForTags()),
-
+                              /* Text(
+                                      "Rs " +
+                                          claimResultList[index]
+                                              ?.documentMetadata[0]
+                                              ?.claimAmount??'',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: fhbStyles.fnt_doc_name)),*/
                               Text("status",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: Colors.grey[600])),
-                              Text(claimResultList[index]?.status?.name??'',
+                              Text(claimResultList[index]?.status.name,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: fhbStyles.fnt_day,
                                       color: getColorBasedOnSatus(
                                           claimResultList[index]
                                               ?.status
-                                              ?.code??''))),
+                                              .code))),
                             ],
                           ))),
                     ],
@@ -590,7 +564,7 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   String getFormattedBillDate(String billDate) {
-    if (billDate != "" && billDate != null) {
+    if(billDate!="" && billDate!=null) {
       try {
         DateFormat format = DateFormat("dd-MM-yyyy");
 
@@ -598,16 +572,15 @@ class _ClaimListState extends State<ClaimList> {
         final df = new DateFormat('dd-MMM-yyyy');
 
         return df.format(now);
-      } catch (e) {
+      }catch(e){
         return "";
       }
-    } else {
+    }else{
       return "";
     }
   }
-
   String getFormattedBillDateForMember(String billDate) {
-    if (billDate != "" && billDate != null) {
+    if(billDate!="" && billDate!=null) {
       try {
         DateFormat format = DateFormat("yyyy-MM-dd");
 
@@ -615,151 +588,24 @@ class _ClaimListState extends State<ClaimList> {
         final df = new DateFormat('dd-MMM-yyyy');
 
         return df.format(now);
-      } catch (e) {
+      }catch(e){
         return "";
       }
-    } else {
+    }else{
       return "";
     }
   }
 
   getColorBasedOnSatus(String status) {
-    if(status!="") {
-      switch (status) {
-        case "CLAIM_INITIATED":
-          return Colors.amber;
-        case "CLAIM_REJECTED":
-          return Colors.red;
-        case "CLAIM_ACCEPTED":
-          return Colors.green;
-        default:
-          return Color(new CommonUtil().getMyPrimaryColor());
-      }
+    switch (status) {
+      case "CLAIM_INITIATED":
+        return Colors.amber;
+      case "CLAIM_REJECTED":
+        return Colors.red;
+      case "CLAIM_ACCEPTED":
+        return Colors.green;
+      default:
+        return Color(new CommonUtil().getMyPrimaryColor());
     }
-  }
-
-  Future<Widget> alertDialogWithMemberShip() {
-    final dialog = StatefulBuilder(builder: (context, setState) {
-      Widget cancelButton = TextButton(
-        child: Text("Cancel"),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      );
-      Widget continueButton = TextButton(
-        child: Text("Continue"),
-        onPressed: () {},
-      );
-
-      return AlertDialog(
-        title: Text("Select a Membership"),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20))),
-        actions: <Widget>[
-          cancelButton,
-        ],
-        content: SingleChildScrollView(
-          child: Container(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Divider(),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.4,
-                  ),
-                  child:
-                      (claimExpiryList != null && claimExpiryList?.length > 0)
-                          ? getWidgetForMemberShipList()
-                          : getClaimMemberShipListFromFutureBuilder(),
-                ),
-                Divider(),
-              ],
-            ),
-          ),
-        ),
-      );
-    });
-
-    return showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (context) => dialog);
-  }
-
-  getWidgetForMemberShipList() {
-    return claimExpiryList.length>0?ListView.builder(
-        shrinkWrap: true,
-        itemCount: claimExpiryList.length,
-        itemBuilder: (BuildContext context, int index) {
-          return InkWell(
-              onTap: () async {
-                conditionToCheckAmt(index);
-              },
-              child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Text(claimExpiryList[index].planName +
-                      " (" +
-                      claimExpiryList[index].healthOrganizationName +
-                      " )")));
-        }):Container(child:getLoadingText("No MemberShip Found"));
-  }
-
-  void convertStringToInt(String balanceAmt, int index) {
-    if (int.parse(balanceAmt) > 0) {
-      PreferenceUtil.save(
-          Constants.keyMembeShipID, claimExpiryList[index]?.membershipId);
-      PreferenceUtil.save(Constants.keyHealthOrganizationId,
-          claimExpiryList[index]?.healthOrganizationId);
-      PreferenceUtil.save(Constants.keyPlanSubscriptionInfoId,
-          claimExpiryList[index]?.planSubscriptionInfoId);
-      PreferenceUtil.save(Constants.keyMembershipStartDate,
-          claimExpiryList[index]?.planStartDate);
-      PreferenceUtil.save(
-          Constants.keyMembershipEndDate, claimExpiryList[index]?.planEndDate);
-      PreferenceUtil.save(
-          Constants.keyMembershipEndDate, claimExpiryList[index]?.planEndDate);
-      PreferenceUtil.save(
-          Constants.keyClaimAmount, claimExpiryList[index]?.balanceAmount);
-
-      Navigator.pop(context);
-
-      Navigator.pushNamed(context, router.rt_TakePictureScreen)
-          .then((value) {});
-    } else {
-      showSnackBar('No Balance Amount Available');
-    }
-  }
-
-  void conditionToCheckAmt(int index) {
-    String balanceAmt = claimExpiryList[index]?.balanceAmount;
-    if (balanceAmt.contains(".")) {
-      balanceAmt =
-          balanceAmt.contains(".") ? balanceAmt.split(".")[0] : balanceAmt;
-      convertStringToInt(balanceAmt, index);
-    } else {
-      convertStringToInt(balanceAmt, index);
-    }
-  }
-
-  void showSnackBar(String msg) {
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        duration: Duration(milliseconds: 5),
-        content: Text(
-          msg,
-        ),
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
-        action: SnackBarAction(
-          label: 'Dismiss',
-          onPressed: () {
-            _scaffoldKey.currentState.hideCurrentSnackBar();
-          },
-        ),
-      ),
-    );
   }
 }

@@ -115,17 +115,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       index = 1;
     }
 
-    try {
-        claimAmountTotal = new CommonUtil().getClaimAmount();
-        claimAmountTotal = json.decode(claimAmountTotal);
-        if(claimAmountTotal.contains('.')) {
-        claimAmountTotal = claimAmountTotal.contains(".")
-            ? claimAmountTotal.split(".")[0]
-            : claimAmountTotal;
-      }
-    }catch(e){
-
-    }
+    claimAmountTotal = new CommonUtil().getClaimAmount();
+    claimAmountTotal = json.decode(claimAmountTotal);
+    claimAmountTotal = claimAmountTotal.contains(".")
+        ? claimAmountTotal.split(".")[0]
+        : claimAmountTotal;
 
     memberShipStartDate = new CommonUtil().getMemberSipStartDate();
     memberShipEndDate = new CommonUtil().getMemberSipEndDate();
@@ -655,7 +649,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
       postMediaData[parameters.strisDraft] = false;
 
-
       final params = json.encode(postMediaData);
       print(params);
 
@@ -751,8 +744,6 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     postMediaData[qr_remark] = "";
     postMediaData[qr_ClaimAmountTotal] = claimAmt;
     postMediaData[qr_health_org_id] = json.decode(healthOrganizationID);
-    var planSubscriptionInfoId=PreferenceUtil.getStringValue(Constants.keyPlanSubscriptionInfoId);
-    postMediaData[parameters.strPlanSubscriptionInfoId] = json.decode(planSubscriptionInfoId);
 
     var documentType = [];
     var billType = Map<String, dynamic>();

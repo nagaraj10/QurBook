@@ -175,7 +175,6 @@ const String qr_non_qurpro_hospital = 'non-qurpro-hospital';
 const String qr_membership =
     'plan-subscription-info/membership-details?userId=';
 const String qr_organizationid = '&healthOrganizationId=';
-const String qr_expiry_claim_list='plan-subscription-info/claim-expired-plans-list/';
 
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';

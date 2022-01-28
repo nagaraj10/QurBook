@@ -159,7 +159,6 @@ const String strisManualTranscription = 'isManualTranscription';
 const String strLocal_Lab_Id = 'Local_Lab_Id';
 const String strLocal_Doctor_Id = 'Local_Doctor_Id';
 const String strLocal_Hospital_Id = 'Local_Hospital_Id';
-const String strPlanSubscriptionInfoId='planSubscriptionInfoId';
 
 //for profile
 const String strlastName = 'lastName';
