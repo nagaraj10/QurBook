@@ -182,6 +182,8 @@ const String qr_health_Search = 'search/';
 
 //queries for the asgard
 const String qr_category = 'category';
+const String qr_reference_value = 'reference-value/';
+const String qr_data_codes = 'data-codes';
 
 //for asgard mediType
 const String qr_health_record_type = 'health-record-type';
@@ -260,8 +262,8 @@ const String qr_save_regi_media = 'media-details/store-media';
 const String regimentImagePath = 'https://qurplan.com/assets/images/';
 const String getEventId = 'activity-master/save-personal-plan-symptom';
 
-const String getCreditBalnce='credit-balance/';
-const String getClaimWithQues='claim?userId=';
+const String getCreditBalnce = 'credit-balance/';
+const String getClaimWithQues = 'claim?userId=';
 
 const String qr_health_conditions = 'Action=GetMenu';
 
@@ -325,10 +327,9 @@ const String qr_membership_tag = 'membership';
 
 const String qr_billName = 'bill_name';
 const String qr_claimType = 'claim_type';
-const String qr_claimAmount= 'claim_amount';
+const String qr_claimAmount = 'claim_amount';
 const String qr_billDate = 'bill_date';
 const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
 const String qr_claim_with_slash = 'claim/';
-
