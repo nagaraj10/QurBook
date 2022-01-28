@@ -45,6 +45,14 @@ class HeaderRequest {
     return requestHeadersAuthStar;
   }
 
+  Future<Map<String, String>> getRequestHeadersWithoutOffset() async {
+    final Map<String, String> requestHeadersTimeSlot = {};
+    requestHeadersTimeSlot['Authorization'] =
+        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeadersTimeSlot['Content-Type'] = 'application/json';
+    return requestHeadersTimeSlot;
+  }
+
   Future<Map<String, String>> getRequestHeadersTimeSlot() async {
     final Map<String, String> requestHeadersTimeSlot = {};
     requestHeadersTimeSlot['Authorization'] =
