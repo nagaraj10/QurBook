@@ -4,6 +4,7 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/feedback/Controller/FeedbackController.dart';
+import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import '../common/AudioWidget.dart';
 import '../common/CommonConstants.dart';
@@ -323,35 +324,69 @@ class _FeedbacksState extends State<Feedbacks> {
           top: 8,
           right: 16,
         ),
-        child: DropdownButton<HealthRecordTypeCollection>(
-          isExpanded: true,
-          iconSize: 30,
-          hint: Text(
-            'Select Category',
-            style: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          items: controller.feedbackType.result.first.healthRecordTypeCollection
-              .map((healthRecordType) {
-            var value = healthRecordType;
-            return DropdownMenuItem<HealthRecordTypeCollection>(
-              value: value,
-              child: Text(
-                value.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.0.sp,
-                  color: ColorUtils.blackcolor,
+        child: controller.catSelected.isTrue
+            ? DropdownButton<FeedbackCategoryModel>(
+                isExpanded: true,
+                iconSize: 30,
+                hint: Text(
+                  'Select Category',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                    color: ColorUtils.myFamilyGreyColor,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
+                items: controller.categories.result.map((feedbackCategory) {
+                  var value = feedbackCategory;
+                  return DropdownMenuItem<FeedbackCategoryModel>(
+                    value: value,
+                    child: Text(
+                      value.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.0.sp,
+                        color: ColorUtils.blackcolor,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (changedValue) =>
+                    controller.setRecordType(changedValue),
+                value: controller.catSelected.value
+                    ? controller.selectedType
+                    : null,
+              )
+            : DropdownButton<FeedbackCategoryModel>(
+                isExpanded: true,
+                iconSize: 30,
+                hint: Text(
+                  'Select Category',
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                    color: ColorUtils.myFamilyGreyColor,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                items: controller.categories.result.map((feedbackCategory) {
+                  var value = feedbackCategory;
+                  return DropdownMenuItem<FeedbackCategoryModel>(
+                    value: value,
+                    child: Text(
+                      value.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.0.sp,
+                        color: ColorUtils.blackcolor,
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (changedValue) =>
+                    controller.setRecordType(changedValue),
+                value: controller.catSelected.value
+                    ? controller.selectedType
+                    : null,
               ),
-            );
-          }).toList(),
-          onChanged: (changedValue) => controller.setRecordType(changedValue),
-          value: controller.catSelected.value ? controller.selectedType : null,
-        ),
       ),
     );
   }
@@ -368,32 +403,16 @@ class _FeedbacksState extends State<Feedbacks> {
     final Map<String, dynamic> postMainData = {};
     final Map<String, dynamic> postMediaData = {};
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    // final catgoryDataList = PreferenceUtil.getCategoryType();
-    // final categoryID = CommonUtil()
-    //     .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
-    // categoryDataObj = CommonUtil()
-    //     .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
     postMediaData[parameters.strhealthRecordCategory] =
         controller.feedbackType.result.first.toJson();
-    // var _mediaTypeBlock = MediaTypeBlock();
-    //  final mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
-    // final metaDataFromSharedPrefernce = mediaTypesResponse.result;
-    // mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
-    //     categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
-    postMediaData[parameters.strhealthRecordType] =
-        controller.selectedType.toJson();
+    postMediaData[parameters.strhealthRecordType] = controller
+        .feedbackType.result.first.healthRecordTypeCollection.first
+        .toJson();
     postMediaData[variable.strfeedback] = feedbackController.text;
-    //postMediaData[variable.strmemoText] = '';
+    postMediaData[variable.strfeedBackCategoryId] = controller.selectedType.id;
     postMediaData[variable.strisDraft] = true;
     postMediaData[variable.strsourceName] = CommonConstants.app_name;
-    //postMediaData[variable.strmemoTextRaw] = variable.strmemoTextRaw;
-    //  final fileName = Constants.STR_FEEDBACKS + currentDate;
-    //  postMediaData[variable.strfileName] = fileName;
     postMainData[variable.strmetaInfo] = postMediaData;
-    var dateTime = DateTime.now();
-    // postMediaData[parameters.strStartDate] = dateTime.toUtc().toString();
-    //postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
-
     final params = json.encode(postMediaData);
 
     if (imagePaths != null && imagePaths.isNotEmpty) {
