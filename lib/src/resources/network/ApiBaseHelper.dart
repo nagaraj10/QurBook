@@ -501,6 +501,8 @@ class ApiBaseHelper {
   }
 
   dynamic _returnResponse(http.Response response, {bool forDoctorSearch}) {
+    print(response?.statusCode);
+    print(response?.request?.url);
     switch (response?.statusCode) {
       case 200:
         var responseJson;
@@ -2299,6 +2301,22 @@ class ApiBaseHelper {
       var response = await ApiServices.get(
         _baseUrl + url,
         headers: await headerRequest.getAuths(),
+      );
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      print(e);
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+  Future<dynamic> getClaimExpiryResponseList(String url) async {
+    print(await headerRequest.getAuths());
+    var headers = headerRequest.getAuths();
+    var responseJson;
+    try {
+      var response = await ApiServices.get(
+        _baseUrl + url,
+        headers: await headerRequest.getAuthsClaimList(),
       );
       responseJson = _returnResponse(response);
     } catch (e) {
