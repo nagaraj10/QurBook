@@ -28,7 +28,7 @@ class SenderLayout extends StatelessWidget {
             children: [
               Text(
                 c.name.toUpperCase(),
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.body1,
                 softWrap: true,
               ),
               Card(
@@ -53,7 +53,7 @@ class SenderLayout extends StatelessWidget {
                   ),
                   child: Text(
                     c.text,
-                    style: Theme.of(context).textTheme.bodyText1.apply(
+                    style: Theme.of(context).textTheme.body1.apply(
                           color: Colors.white,
                         ),
                   ),
@@ -62,7 +62,7 @@ class SenderLayout extends StatelessWidget {
               Text(
                 "${c.timeStamp}",
                 style:
-                    Theme.of(context).textTheme.bodyText1.apply(color: Colors.grey),
+                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
               ),
             ],
           ),
