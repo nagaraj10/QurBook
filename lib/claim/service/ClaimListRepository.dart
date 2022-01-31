@@ -1,3 +1,4 @@
+import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResponse.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimListResponse.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
 import 'package:myfhb/claim/model/credit/CreditBalance.dart';
@@ -58,5 +59,16 @@ class ClaimListRepository{
 
     return ClaimRecordDetails.fromJson(response);
   }
+
+  Future<ClaimExpiryResponse> getClaimExpiryResponseList() async {
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    final responseQuery =
+        '${variable.qr_expiry_claim_list}$userId';
+    final  response =
+    await _helper.getClaimExpiryResponseList(responseQuery);
+
+    return ClaimExpiryResponse.fromJson(response);
+  }
+
 
 }
