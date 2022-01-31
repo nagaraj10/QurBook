@@ -1,3 +1,4 @@
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 import '../common/CommonConstants.dart';
@@ -43,6 +44,14 @@ class HeaderRequest {
     requestHeadersAuthStar[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
     return requestHeadersAuthStar;
+  }
+
+  Future<Map<String, String>> getRequestHeadersWithoutOffset() async {
+    final Map<String, String> requestHeadersTimeSlot = {};
+    requestHeadersTimeSlot['Authorization'] =
+        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeadersTimeSlot['Content-Type'] = 'application/json';
+    return requestHeadersTimeSlot;
   }
 
   Future<Map<String, String>> getRequestHeadersTimeSlot() async {
@@ -139,6 +148,14 @@ class HeaderRequest {
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     auth[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
+    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
+    return auth;
+  }
+
+  getAuthsClaimList() {
+    final Map<String, String> auth = {};
+    auth['authorization'] =
+        '$strBearer ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}';
     print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     return auth;
   }
