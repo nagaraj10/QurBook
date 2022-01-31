@@ -244,6 +244,7 @@ const String strAddVoice = 'Add Voice';
 const String strcategoryInfo = 'categoryInfo';
 const String strmediaTypeInfo = 'mediaTypeInfo';
 const String strfeedback = 'feedback';
+const String strfeedBackCategoryId = 'feedBackCategoryId';
 const String strmemoText = 'memoText';
 const String strisDraft = 'isDraft';
 const String strsourceName = 'sourceName';
