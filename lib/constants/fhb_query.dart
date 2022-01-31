@@ -335,8 +335,6 @@ const String qr_claim_with_slash = 'claim/';
 
 //chat
 
-const String retry_payment = 'appointment/check-retry-appointment?id=';
-
 const String qr_chat_socket_history = 'chat/get-message-history';
 
 const String qr_chat_socket_init_chat_doc_pat = 'chat/initiate-doctor-patient-chat';
