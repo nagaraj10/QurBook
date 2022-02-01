@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
@@ -345,10 +346,25 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   void goToChatIntegration(Past doc) {
     //chat integration start
     String doctorId = doc.doctor.id;
+    String userId = doc.doctor.user.id;
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
-    chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic, '', '', '', context, false);
+    String chatListId = doc?.chatListId;
+    /*chatViewModel.storePatientDetailsToFCM(
+        doctorId, doctorName, doctorPic, '', '', '', context, false);*/
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChatDetail(
+                peerId: userId,
+                peerAvatar: doctorPic,
+                peerName: doctorName,
+                groupId: chatListId,
+                patientId: '',
+                patientName: '',
+                patientPicture: '',
+                isFromVideoCall: false,
+                isCareGiver: false)));
   }
 
   void moveToBilsPage(HealthRecord healthRecord) async {

@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
 import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -173,7 +175,7 @@ class IosNotificationHandler {
         'navigationPage': 'Tele Health Chat list',
       });
       isAlreadyLoaded
-          ? Get.to(ChatHomeScreen())
+          ? Get.to(ChatUserList())
           : Get.to(SplashScreen(
               nsRoute: parameters.chat,
             ));
@@ -196,13 +198,14 @@ class IosNotificationHandler {
     } else if (model.redirect == parameters.chat) {
       if (isAlreadyLoaded) {
         if (model.doctorId != null &&
+            model.userId != null &&
             model.doctorName != null &&
             model.doctorPicture != null &&
             model.patientId != null &&
             model.patientName != null &&
             model.patientPicture != null) {
           Get.to(
-            Chat(
+            ChatDetail(
               peerId: model.doctorId,
               peerName: model.doctorName,
               peerAvatar: model.doctorPicture,
@@ -211,10 +214,11 @@ class IosNotificationHandler {
               patientPicture: model.patientPicture,
               isFromVideoCall: false,
               isCareGiver: false,
+              isForGetUserId: true,
             ),
           );
         } else {
-          Get.to(ChatHomeScreen());
+          Get.to(ChatUserList());
         }
       } else {
         Get.to(SplashScreen(

@@ -37,6 +37,7 @@ import '../../src/model/user/MyProfileModel.dart';
 import '../../src/model/user/city_list_model.dart';
 import '../../src/model/user/state_list_model.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/chat_socket/model/UploadDocumentModel.dart';
 
 class AddFamilyUserInfoRepository {
   final ApiBaseHelper _helper = ApiBaseHelper();
@@ -341,6 +342,18 @@ class AddFamilyUserInfoRepository {
         CommonConstants.strSlash +
         CommonConstants.strDataCodes;
     PlanCode response = await _helper.getPlanCode(responseQuery);
+
+    return response;
+  }
+
+  Future<UploadDocumentModel> uploadChatDocument(
+      String image, String userId, String peerId, String groupId) async {
+    var responseQuery = 'chat/save-chat-documents';
+
+    final res = await _helper.uploadChatDocument(
+        responseQuery, image, userId, peerId, groupId);
+
+    final response = UploadDocumentModel.fromJson(res);
 
     return response;
   }
