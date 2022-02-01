@@ -100,6 +100,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
   String claimAmountTotal;
   String memberShipStartDate, memberShipEndDate;
+  bool isActiveMemberShipSelected;
   bool ispdfPresent = false;
   var pdfFile;
   var pdfFileName;
@@ -129,6 +130,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
     memberShipStartDate = new CommonUtil().getMemberSipStartDate();
     memberShipEndDate = new CommonUtil().getMemberSipEndDate();
+    isActiveMemberShipSelected =  PreferenceUtil.getIfMemberShipIsAcive();
 
     memberShipStartDate=json.decode(memberShipStartDate);
     memberShipEndDate=json.decode(memberShipEndDate);
@@ -458,9 +460,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     var endDate = DateFormat('yyyy-MM-dd').parse(memberShipEndDate);
     final picked = await showDatePicker(
         context: context,
-        initialDate: endDate,
+        initialDate: isActiveMemberShipSelected?dateTime:endDate,
         firstDate: startDate,
-        lastDate: endDate);
+        lastDate: isActiveMemberShipSelected?dateTime:endDate);
 
     if (picked != null) {
       dateTime = picked ?? dateTime;
