@@ -24,6 +24,7 @@ const String SOURCE_NAME = 'tridentApp';
 const String KEY_METADATA = 'metadata';
 const String KEY_CORP_USER_MESSAGE = 'corpusermessageshown';
 const String KEY_IS_Active_Membership = 'isactivemembership';
+const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
