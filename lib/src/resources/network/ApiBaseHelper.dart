@@ -1575,8 +1575,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<bool> uploadAttachment(
-      String url, String ticketId, File image) async {
+  Future<bool> uploadAttachment(String url, String ticketId, File image) async {
     var authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -1603,9 +1602,9 @@ class ApiBaseHelper {
     var response;
     try {
       response = await dio.post(_baseUrl + url, data: formData);
-      print('upload code: '+response.statusCode.toString());
+      print('upload code: ' + response.statusCode.toString());
       if (response.statusCode == 200) {
-        print('upload response: '+response.data.toString());
+        print('upload response: ' + response.data.toString());
         return response.data['isSuccess'];
       } else {
         return response.data['isSuccess'];
@@ -2309,6 +2308,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   Future<dynamic> getClaimExpiryResponseList(String url) async {
     print(await headerRequest.getAuths());
     var headers = headerRequest.getAuths();
@@ -2323,6 +2323,114 @@ class ApiBaseHelper {
       print(e);
       throw FetchDataException(variable.strNoInternet);
     }
+    return responseJson;
+  }
+
+  Future<dynamic> uploadChatDocument(String url, String image, String userId,
+      String peerId, String groupId) async {
+    var authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    final dio = Dio();
+
+    dio.options.headers['content-type'] = 'multipart/form-data';
+
+    dio.options.headers['authorization'] = authToken;
+
+    dio.options.headers['accept'] = 'application/json';
+
+    dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
+
+    FormData formData;
+
+    var mapSub = Map<String, dynamic>();
+
+    mapSub["id"] = groupId;
+
+    mapSub["idTo"] = peerId;
+
+    mapSub["idFrom"] = userId;
+
+    var params = json.encode(mapSub);
+
+    formData = FormData.fromMap({'data': params.toString()});
+
+    final fileName = File(image);
+
+    final fileNoun = fileName.path.split('/').last;
+
+    formData.files.addAll([
+      MapEntry('fileName',
+          await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+    ]);
+
+    var response;
+
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+
+        return response?.data;
+      } else {
+        return response?.data;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+
+      print(e);
+
+      return response?.data;
+    } catch (f) {
+      print(f.toString());
+    }
+  }
+
+  Future<dynamic> getChatHistory(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> initNewChat(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> getUserIdFromDocId(String url) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
     return responseJson;
   }
 

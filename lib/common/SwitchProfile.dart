@@ -2,11 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -23,6 +27,7 @@ import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import 'package:provider/provider.dart';
 import '../colors/fhb_colors.dart' as fhbColors;
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -136,6 +141,7 @@ class SwitchProfile {
     return FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName, _) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
+        updateSocketFamily();
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
@@ -295,4 +301,32 @@ class SwitchProfile {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));
   }
+
+  updateSocketFamily(){
+
+    String userId = PreferenceUtil.getStringValue(KEY_USERID);
+
+    Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.socket.disconnect();
+    Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.initSocket().then((value) {
+
+      //update common count
+      Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          ?.socket
+          .emitWithAck(getChatTotalCountEmit, {
+        'userId': userId,
+      }, ack: (countResponseEmit) {
+        if (countResponseEmit != null) {
+          TotalCountModel totalCountModel =
+          TotalCountModel.fromJson(countResponseEmit);
+          if (totalCountModel != null) {
+            Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+                ?.updateChatTotalCount(totalCountModel);
+          }
+        }
+      });
+
+    });
+
+  }
+
 }

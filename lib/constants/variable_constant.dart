@@ -693,6 +693,10 @@ const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
+//chat
+
+const String strNoMessage = 'No Messages';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');

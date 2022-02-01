@@ -150,7 +150,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null && data.healthRecordCollection.length > 0) {
+              if (data != null && (data.healthRecordCollection?.length??0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 print(mediMasterId.length);
                 if (mediMasterId.length > 0) {

@@ -333,3 +333,16 @@ const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
 const String qr_claim_with_slash = 'claim/';
+
+//chat
+
+const String qr_chat_socket_history = 'chat/get-message-history';
+
+const String qr_chat_socket_init_chat_doc_pat = 'chat/initiate-doctor-patient-chat';
+
+const String qr_chat_socket_init_chat_pat_doc = 'chat/initiate-patient-doctor-chat';
+
+const String qr_chat_socket_get_user_id_doc = 'doctor/';
+
+const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
+
