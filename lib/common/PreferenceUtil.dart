@@ -393,6 +393,18 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
+  static bool getIfMemberShipIsAcive() {
+    return _prefsInstance.getBool(Constants.KEY_IS_Active_Membership_SELECTED);
+  }
+
+  static Future<bool> saveIfMemberShipIsActive(bool membershipStatus) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_IS_Active_Membership_SELECTED,
+      membershipStatus ?? false,
+    );
+  }
+
   static save(String key, value) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, json.encode(value));
