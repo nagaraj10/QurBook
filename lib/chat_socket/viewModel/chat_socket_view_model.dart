@@ -24,7 +24,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   int chatTotalCount = 0;
 
-  void initSocket() {
+  Future<void> initSocket() async{
     String token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     String userId = PreferenceUtil.getStringValue(KEY_USERID);
 
@@ -43,9 +43,12 @@ class ChatSocketViewModel extends ChangeNotifier {
               .setTransports(['websocket'])
               .setPath('/fhb-chat/socket.io')
               .disableAutoConnect()
-              .setQuery({"userId": userId})
+              //.setQuery({"userId": userId})
               .setExtraHeaders({'Authorization': 'Bearer ' + token})
               .build());
+
+      //socket.io.options['extraHeaders'] = {'Authorization': 'Bearer ' + token,'userId': userId};
+      socket.io.options['query'] = 'userId='+userId.toString();
 
       socket.connect();
 
