@@ -302,7 +302,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-            ? variable.strRs + ' ' + doctorId.fees.consulting.fee
+            ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar:variable.strRs) + ' ' + doctorId.fees.consulting.fee
             : '')
         : Text('');
   }

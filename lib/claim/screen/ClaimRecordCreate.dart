@@ -260,7 +260,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 height: 15.0.h,
               ),
               fhbBasicWidget.getTextForAlertDialogClaim(
-                  context, CommonConstants.strClaimAmt + " (\u{20B9}) *"),
+                  context, CommonConstants.strClaimAmt + (CommonUtil.REGION_CODE != "IN"?" ("+variable.strDollar+")":" (\u{20B9}) *")),
 
               TextField(
                 enabled: true,

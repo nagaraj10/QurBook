@@ -625,6 +625,7 @@ const String strLauncher = '@mipmap/ic_launcher';
 
 const String video_splash = 'assets/video/splash_video.mp4';
 const String strRs = 'Rs';
+const String strDollar = '\$';
 
 //webcognito
 const source = 'myFHB';
