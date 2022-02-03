@@ -415,5 +415,6 @@ class HealthReportListForUserRepository {
 
   Future<ClaimSuccess> createClaimRecord(String jsonString) async {
     var response = await _helper.createClaimRecord(query.qr_claim, jsonString);
+    return ClaimSuccess.fromJson(response);
   }
 }
