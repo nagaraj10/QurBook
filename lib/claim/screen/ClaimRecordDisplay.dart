@@ -360,8 +360,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
     if (claimRecordDetails != null && claimRecordDetails.result != null) {
       billName = claimRecordDetails?.result?.documentMetadata[0].billName;
       claimNo = claimRecordDetails?.result?.claimNumber;
-      amount = variable.strRs +
-          ". " +
+      amount =(CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":variable.strRs +". ") +
           claimRecordDetails?.result?.documentMetadata[0].claimAmount;
       final df = new DateFormat('dd-MMM-yyyy');
 
