@@ -340,7 +340,7 @@ class _ClaimListState extends State<ClaimList> {
       isCreditBalnceZero = false;
     }
     String claimAmountValue = (ClaimAmount != null && ClaimAmount != "")
-        ? '\u{20B9} ' + ClaimAmount
+        ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":'\u{20B9} ') + ClaimAmount
         : "";
     return Text(
       "Claim Amount Balance : " + claimAmountValue,
