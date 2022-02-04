@@ -562,7 +562,7 @@ class _ClaimListState extends State<ClaimList> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                  getFormattedBillDate(claimResultList[index]
+                                   CommonUtil.getDateStringFromDateTime(claimResultList[index]
                                           ?.documentMetadata[0]
                                           ?.billDate ??
                                       ''),
@@ -624,7 +624,7 @@ class _ClaimListState extends State<ClaimList> {
         DateFormat format = DateFormat("yyyy-MM-dd");
 
         var now = format.parse(billDate);
-        final df = new DateFormat('dd-MMM-yyyy');
+        final df = new DateFormat(CommonUtil.REGION_CODE == 'IN'?'dd-MMM-yyyy':'MMM-dd-yyyy');
 
         return df.format(now);
       } catch (e) {
