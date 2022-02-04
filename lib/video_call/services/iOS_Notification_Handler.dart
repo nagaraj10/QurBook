@@ -167,7 +167,7 @@ class IosNotificationHandler {
           : Get.to(SplashScreen(
               nsRoute: parameters.doctorCancellation,
             ));
-    } else if ((model.templateName != null &&
+    } else if (((model.templateName ?? '').isNotEmpty &&
         model.templateName == parameters.chat)) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -197,13 +197,13 @@ class IosNotificationHandler {
       ;
     } else if (model.redirect == parameters.chat) {
       if (isAlreadyLoaded) {
-        if (model.doctorId != null &&
-            model.userId != null &&
-            model.doctorName != null &&
-            model.doctorPicture != null &&
-            model.patientId != null &&
-            model.patientName != null &&
-            model.patientPicture != null) {
+        if ((model.doctorId ?? '').isNotEmpty &&
+            (model.userId ?? '').isNotEmpty &&
+            (model.doctorName ?? '').isNotEmpty &&
+            (model.doctorPicture ?? '').isNotEmpty &&
+            (model.patientId ?? '').isNotEmpty &&
+            (model.patientName ?? '').isNotEmpty &&
+            (model.patientPicture ?? '').isNotEmpty) {
           Get.to(
             ChatDetail(
               peerId: model.doctorId,
