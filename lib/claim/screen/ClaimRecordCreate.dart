@@ -70,6 +70,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   TextEditingController billDate = TextEditingController();
   TextEditingController fileName = TextEditingController();
   TextEditingController claimAmount = TextEditingController();
+  String selectedDate;
 
   DateTime dateTime = DateTime.now();
   String dateofBirthStr;
@@ -467,10 +468,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     if (picked != null) {
       dateTime = picked ?? dateTime;
       dateOfVisitSample.text =
-          FHBUtils().getFormattedDateOnly(dateTime.toString());
+          dateTime.toString();
+      selectedDate=dateTime.toString();
     }
     setState(() {
-      billDate.text = dateOfVisitSample.text;
+      billDate.text = FHBUtils().getFormattedDateOnly(dateOfVisitSample.text);
     });
   }
 
@@ -775,6 +777,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     _healthReportListForUserRepository.createClaimRecord(params).then((value) {
       if (value != null && value.isSuccess) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pushReplacement(

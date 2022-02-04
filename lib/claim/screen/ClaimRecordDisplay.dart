@@ -365,7 +365,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       final df = new DateFormat('dd-MMM-yyyy');
 
       submittedDate =
-          df.format(DateTime.parse(claimRecordDetails?.result?.submitDate));
+          CommonUtil.getDateStringFromDateTime(claimRecordDetails?.result?.submitDate);
       status = claimRecordDetails?.result?.status;
       remark = claimRecordDetails?.result?.remark ?? '';
       plan = claimRecordDetails?.result?.planDescription;
