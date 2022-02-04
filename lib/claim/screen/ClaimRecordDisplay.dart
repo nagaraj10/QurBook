@@ -375,7 +375,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
 
       approvedAmount = (claimRecordDetails?.result?.approvedAmount != null &&
               claimRecordDetails?.result?.approvedAmount != '')
-          ? variable.strRs + ". " + claimRecordDetails?.result?.approvedAmount
+          ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":variable.strRs +". ") + claimRecordDetails?.result?.approvedAmount
           : '';
     }
   }
