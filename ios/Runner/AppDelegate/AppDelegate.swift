@@ -203,7 +203,7 @@ import IQKeyboardManagerSwift
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError(Constants.unableToRecognition) }
-        recognitionRequest.shouldReportPartialResults = true
+        recognitionRequest.shouldReportPartialResults = false
         
         if #available(iOS 13, *) {
             if speechRecognizer.supportsOnDeviceRecognition ?? false{
@@ -233,7 +233,7 @@ import IQKeyboardManagerSwift
                         self.message = "";
                     }
                 } else {
-                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: { (timer) in
+                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
                         print(self.message)
