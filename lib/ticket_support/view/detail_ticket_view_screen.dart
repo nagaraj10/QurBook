@@ -331,7 +331,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
               SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Container(
-                    height: 400,
+                    height: MediaQuery.of(context).size.height*0.55,
                     width: double.infinity, //height of TabBarView
                     child: TabBarView(children: <Widget>[
                       Center(

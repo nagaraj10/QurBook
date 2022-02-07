@@ -205,7 +205,7 @@ class _TicketsList extends State<TicketsList> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      'Ticket ID\t:',
+                                      'Ticket ID :',
                                       style: TextStyle(
                                         fontSize: 16.0.sp,
                                         fontWeight: FontWeight.w100,
@@ -215,7 +215,7 @@ class _TicketsList extends State<TicketsList> {
                                       maxLines: 2,
                                     ),
                                     Text(
-                                      '\t#${ticketList[i].uid.toString()}',
+                                      ' #${ticketList[i].uid.toString()}',
                                       style: TextStyle(
                                         fontSize: 16.0.sp,
                                         fontWeight: FontWeight.w100,
