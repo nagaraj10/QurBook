@@ -35,8 +35,6 @@ import 'package:country_pickers/country_pickers.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/countries.dart';
 
-
-
 class MyFamily extends StatefulWidget {
   @override
   _MyFamilyState createState() => _MyFamilyState();
@@ -47,7 +45,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   //var _selected = CommonUtil.REGION_CODE == 'IN' ? Country.IN : Country.US;
   Country _selectedDialogCountry =
-  CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   bool isPrimaryNoSelected = false;
 
   final mobileNoController = TextEditingController();
@@ -84,7 +82,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   String parentProfilePic;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
-  AddFamilyUserInfoRepository();
+      AddFamilyUserInfoRepository();
 
   MyProfileModel myProfile = MyProfileModel();
 
@@ -109,7 +107,7 @@ class _MyFamilyState extends State<MyFamily> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'MyFamily Screen',
       'screenSessionTime':
-      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -143,10 +141,10 @@ class _MyFamilyState extends State<MyFamily> {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ));
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
               break;
 
             case Status.ERROR:
@@ -157,7 +155,7 @@ class _MyFamilyState extends State<MyFamily> {
               break;
 
             case Status.COMPLETED:
-            //rebuildFamilyBlock();
+              //rebuildFamilyBlock();
               firstTym = false;
               /* PreferenceUtil.saveFamilyDataNew(
                             Constants.KEY_FAMILYMEMBERNEW,
@@ -232,41 +230,41 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getMyFamilyMembers(FamilyMemberResult data) {
     return data != null
         ? data.sharedByUsers.isNotEmpty
-        ? Container(
-      color: const Color(fhbColors.bgColorContainer),
-      child: ListView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.only(bottom: 20),
-        itemBuilder: (c, i) => getCardWidgetForUser(
-            data.sharedByUsers[i == 0 ? 0 : i - 1],
-            i,
-            data.sharedByUsers,
-            userCollection: data),
-        itemCount: data.sharedByUsers.length + 1,
-      ),
-    )
+            ? Container(
+                color: const Color(fhbColors.bgColorContainer),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(bottom: 20),
+                  itemBuilder: (c, i) => getCardWidgetForUser(
+                      data.sharedByUsers[i == 0 ? 0 : i - 1],
+                      i,
+                      data.sharedByUsers,
+                      userCollection: data),
+                  itemCount: data.sharedByUsers.length + 1,
+                ),
+              )
+            : Container(
+                color: Color(fhbColors.bgColorContainer),
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_FAMIY,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              )
         : Container(
-      color: Color(fhbColors.bgColorContainer),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 40, right: 40),
-          child: Text(
-            Constants.NO_DATA_FAMIY,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    )
-        : Container(
-      color: Color(fhbColors.bgColorContainer),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.only(left: 40, right: 40),
-          child:
-          Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
-        ),
-      ),
-    );
+            color: Color(fhbColors.bgColorContainer),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.only(left: 40, right: 40),
+                child:
+                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
+              ),
+            ),
+          );
   }
 
   String capitalize(String string) {
@@ -361,108 +359,108 @@ class _MyFamilyState extends State<MyFamily> {
               ClipOval(
                 child: position != 0
                     ? data?.child?.profilePicThumbnailUrl == null
-                    ? Container(
-                  width: 60.0.h,
-                  height: 60.0.h,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      data.child != null
-                          ? data.child.firstName[0].toUpperCase()
-                          : '',
-                      style: TextStyle(
-                          fontSize: 22.0.sp,
-                          color: Color(
-                              CommonUtil().getMyPrimaryColor())),
-                    ),
-                  ),
-                )
-                    : Image.network(
-                  data.child?.profilePicThumbnailUrl,
-                  fit: BoxFit.cover,
-                  width: 60.0.h,
-                  height: 60.0.h,
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(
-                        Constants.KEY_AUTHTOKEN),
-                  },
-                  errorBuilder: (context, exception, stackTrace) {
-                    return Container(
-                      height: 60.0.h,
-                      width: 60.0.h,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      child: Center(
-                          child: Text(
-                            data.child?.firstName != null &&
-                                data.child.lastName != null
-                                ? data.child.firstName[0].toUpperCase() +
-                                data.child.lastName[0].toUpperCase()
-                                : data.child.firstName != null
-                                ? data.child.firstName[0]
-                                .toUpperCase()
-                                : '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 22.0.sp,
-                              fontWeight: FontWeight.w400,
+                        ? Container(
+                            width: 60.0.h,
+                            height: 60.0.h,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                data.child != null
+                                    ? data.child.firstName[0].toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                    fontSize: 22.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
                             ),
-                          )),
-                    );
-                  },
-                )
-                //!add condition for login user data
+                          )
+                        : Image.network(
+                            data.child?.profilePicThumbnailUrl,
+                            fit: BoxFit.cover,
+                            width: 60.0.h,
+                            height: 60.0.h,
+                            headers: {
+                              HttpHeaders.authorizationHeader:
+                                  PreferenceUtil.getStringValue(
+                                      Constants.KEY_AUTHTOKEN),
+                            },
+                            errorBuilder: (context, exception, stackTrace) {
+                              return Container(
+                                height: 60.0.h,
+                                width: 60.0.h,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                child: Center(
+                                    child: Text(
+                                  data.child?.firstName != null &&
+                                          data.child.lastName != null
+                                      ? data.child.firstName[0].toUpperCase() +
+                                          data.child.lastName[0].toUpperCase()
+                                      : data.child.firstName != null
+                                          ? data.child.firstName[0]
+                                              .toUpperCase()
+                                          : '',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )),
+                              );
+                            },
+                          )
+                    //!add condition for login user data
                     : myProfile != null
-                    ? myProfile.result != null
-                    ? myProfile.result.profilePicThumbnailUrl != null
-                    ? FHBBasicWidget()
-                    .getProfilePicWidgeUsingUrl(myProfile)
-                    : Container(
-                  width: 60.0.h,
-                  height: 60.0.h,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      fulName != null
-                          ? fulName[0].toUpperCase()
-                          : '',
-                      style: TextStyle(
-                          fontSize: 22.0.sp,
-                          color: Color(CommonUtil()
-                              .getMyPrimaryColor())),
-                    ),
-                  ),
-                )
-                    : Container(
-                  width: 60.0.h,
-                  height: 60.0.h,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      fulName != null
-                          ? fulName[0].toUpperCase()
-                          : '',
-                      style: TextStyle(
-                          fontSize: 22.0.sp,
-                          color: Color(
-                              CommonUtil().getMyPrimaryColor())),
-                    ),
-                  ),
-                )
-                    : Container(
-                  width: 60.0.h,
-                  height: 60.0.h,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      fulName != null ? fulName[0].toUpperCase() : '',
-                      style: TextStyle(
-                          fontSize: 22.0.sp,
-                          color: Color(
-                              CommonUtil().getMyPrimaryColor())),
-                    ),
-                  ),
-                ),
+                        ? myProfile.result != null
+                            ? myProfile.result.profilePicThumbnailUrl != null
+                                ? FHBBasicWidget()
+                                    .getProfilePicWidgeUsingUrl(myProfile)
+                                : Container(
+                                    width: 60.0.h,
+                                    height: 60.0.h,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        fulName != null
+                                            ? fulName[0].toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 22.0.sp,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ),
+                                  )
+                            : Container(
+                                width: 60.0.h,
+                                height: 60.0.h,
+                                color: Color(fhbColors.bgColorContainer),
+                                child: Center(
+                                  child: Text(
+                                    fulName != null
+                                        ? fulName[0].toUpperCase()
+                                        : '',
+                                    style: TextStyle(
+                                        fontSize: 22.0.sp,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                ),
+                              )
+                        : Container(
+                            width: 60.0.h,
+                            height: 60.0.h,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                fulName != null ? fulName[0].toUpperCase() : '',
+                                style: TextStyle(
+                                    fontSize: 22.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                          ),
               ),
               SizedBox(
                 width: 20.0.w,
@@ -476,11 +474,11 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0
                           ? fulName != null
-                          ? CommonUtil().titleCase(fulName.toLowerCase())
-                          : ''
+                              ? CommonUtil().titleCase(fulName.toLowerCase())
+                              : ''
                           : data.child?.firstName != null
-                          ? CommonUtil().titleCase(fulName)
-                          : '',
+                              ? CommonUtil().titleCase(fulName)
+                              : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0.sp,
@@ -494,25 +492,25 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0 //this is checking self
                           ? (myProfile?.result?.userContactCollection3 !=
-                          null &&
-                          myProfile?.result?.userContactCollection3
-                              .isNotEmpty)
-                          ? myProfile?.result?.userContactCollection3[0]
-                          .phoneNumber
-                          : ''
+                                      null &&
+                                  myProfile?.result?.userContactCollection3
+                                      .isNotEmpty)
+                              ? myProfile?.result?.userContactCollection3[0]
+                                  .phoneNumber
+                              : ''
                           : (data?.child?.isVirtualUser != null &&
-                          data?.child?.isVirtualUser)
-                      /*? data?.child?.isVirtualUser
+                                  data?.child?.isVirtualUser)
+                              /*? data?.child?.isVirtualUser
                                 */
-                          ? userCollection
-                          ?.virtualUserParent?.phoneNumber ??
-                          ''
-                          : (data?.child?.userContactCollection3 != null &&
-                          data?.child?.userContactCollection3
-                              .isNotEmpty)
-                          ? data?.child?.userContactCollection3[0]
-                          .phoneNumber
-                          : '',
+                              ? userCollection
+                                      ?.virtualUserParent?.phoneNumber ??
+                                  ''
+                              : (data?.child?.userContactCollection3 != null &&
+                                      data?.child?.userContactCollection3
+                                          .isNotEmpty)
+                                  ? data?.child?.userContactCollection3[0]
+                                      .phoneNumber
+                                  : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         color: ColorUtils.greycolor1,
@@ -528,8 +526,8 @@ class _MyFamilyState extends State<MyFamily> {
                       position == 0
                           ? variable.Self
                           : data.relationship != null
-                          ? data.relationship.name ?? ''
-                          : '',
+                              ? data.relationship.name ?? ''
+                              : '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
                       style: TextStyle(
@@ -542,80 +540,80 @@ class _MyFamilyState extends State<MyFamily> {
               ),
               position != 0
                   ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      Alert.displayConfirmProceed(context,
-                          title: variable.Delink,
-                          content: CommonConstants.delink_alert,
-                          onPressedConfirm: () {
-                            FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                Navigator.pop(context);
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Alert.displayConfirmProceed(context,
+                                title: variable.Delink,
+                                content: CommonConstants.delink_alert,
+                                onPressedConfirm: () {
+                              FHBUtils().check().then((intenet) {
+                                if (intenet != null && intenet) {
+                                  Navigator.pop(context);
 
-                                CommonUtil.showLoadingDialog(dialogContext,
-                                    _keyLoader, variable.Please_Wait);
+                                  CommonUtil.showLoadingDialog(dialogContext,
+                                      _keyLoader, variable.Please_Wait);
 
-                                final deLinkingData = {};
-                                deLinkingData[variable.strrelatedTo] =
-                                    data.child?.id;
-                                deLinkingData[variable.strrelationshipType] =
-                                    variable.strparentToChild;
-                                final jsonString =
-                                convert.jsonEncode(deLinkingData);
+                                  final deLinkingData = {};
+                                  deLinkingData[variable.strrelatedTo] =
+                                      data.child?.id;
+                                  deLinkingData[variable.strrelationshipType] =
+                                      variable.strparentToChild;
+                                  final jsonString =
+                                      convert.jsonEncode(deLinkingData);
 
-                                _familyListBloc
-                                    .postUserDeLinking(jsonString.toString())
-                                    .then((userLinking) {
-                                  if (userLinking.isSuccess) {
-                                    Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                        .pop();
-                                    rebuildFamilyBlock();
-                                    setState(() {});
-                                  } else {
-                                    FHBBasicWidget().showInSnackBar(
-                                        userLinking.message, scaffold_state);
-                                    Navigator.of(_keyLoader.currentContext,
-                                        rootNavigator: true)
-                                        .pop();
-                                  }
-                                });
-                              } else {
-                                FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
+                                  _familyListBloc
+                                      .postUserDeLinking(jsonString.toString())
+                                      .then((userLinking) {
+                                    if (userLinking.isSuccess) {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      rebuildFamilyBlock();
+                                      setState(() {});
+                                    } else {
+                                      FHBBasicWidget().showInSnackBar(
+                                          userLinking.message, scaffold_state);
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                    }
+                                  });
+                                } else {
+                                  FHBBasicWidget().showInSnackBar(
+                                      Constants.STR_NO_CONNECTIVITY,
+                                      scaffold_state);
+                                }
+                              });
+                            }, onPressedCancel: () {
+                              Navigator.pop(context);
                             });
-                          }, onPressedCancel: () {
-                            Navigator.pop(context);
-                          });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      margin:
-                      EdgeInsets.only(left: 10, right: 10, top: 10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              color: Color(
-                                  CommonUtil().getMyPrimaryColor()))),
-                      child: Text(
-                        variable.DeLink,
-                        style: TextStyle(
-                            fontSize: 16.0.sp,
-                            fontWeight: FontWeight.w500,
-                            color:
-                            Color(CommonUtil().getMyPrimaryColor())),
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  )
-                ],
-              )
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            margin:
+                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor()))),
+                            child: Text(
+                              variable.DeLink,
+                              style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
                   : Container()
             ],
           )),
@@ -641,7 +639,7 @@ class _MyFamilyState extends State<MyFamily> {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
             content: Container(
                 width: 1.sw,
                 height: 1.sh / 1.5,
@@ -689,10 +687,9 @@ class _MyFamilyState extends State<MyFamily> {
                                 ),*/
                                 CountryCodePickerPage(
                                     onValuePicked: (country) => setState(
-                                            () => _selectedDialogCountry =
-                                            country),
+                                        () => _selectedDialogCountry = country),
                                     selectedDialogCountry:
-                                    _selectedDialogCountry),
+                                        _selectedDialogCountry),
                                 _ShowMobileNoTextField()
                               ],
                             ),
@@ -709,47 +706,29 @@ class _MyFamilyState extends State<MyFamily> {
                                         isPrimaryNoSelected = false;
                                         mobileNoController.text = '';
                                       } else {
-                                        String mobileNumber =
-                                        PreferenceUtil.getStringValue(
-                                            Constants.MOB_NUM);
-                                        print(
-                                            "mobileNumbermobileNumbermobileNumber" +
-                                                mobileNumber);
+                                        try {
+                                          String mobileNumber =
+                                          PreferenceUtil.getStringValue(
+                                              Constants.MOB_NUM);
 
-                                        /*if (_selectedDialogCountry?.phoneCode ==
-                                            "1" ||
-                                            _selectedDialogCountry?.phoneCode ==
-                                                "+1") {*/
                                           String subMobile =
                                           mobileNumber.substring(0, 2);
-                                          print(
-                                              "subMobilesubMobile" + subMobile);
-                                          print(
-                                              "mobileNumber" + mobileNumber);
+
                                           if (subMobile[1] == "9") {
                                             mobileNoController.text =
                                                 mobileNumber.substring(3, 13);
-                                          } else if (subMobile[1] == "1" || subMobile[1] == "+1") {
+                                          } else if (subMobile[1] == "1" ||
+                                              subMobile[1] == "+1") {
                                             mobileNoController.text =
                                                 mobileNumber.substring(2, 12);
                                           }
-                                       /*} else if (_selectedDialogCountry
-                                            ?.phoneCode ==
-                                            "91" ||
-                                            _selectedDialogCountry?.phoneCode ==
-                                                "+91") {
-                                          String subMobile =
-                                          mobileNumber.substring(0, 2);
-                                          if (subMobile[1] == "9") {
-                                            mobileNoController.text =
-                                                mobileNumber.substring(3, 13);
-                                          } else if (subMobile[1] == "1" || subMobile[1] == "+1") {
-                                            mobileNoController.text =
-                                                mobileNumber.substring(2, 12);
-                                          }
-                                        }*/
 
-                                        isPrimaryNoSelected = true; }
+                                          isPrimaryNoSelected = true;
+                                        }catch(e){
+                                          isPrimaryNoSelected = false;
+
+                                        }
+                                      }
                                     });
                                   },
                                   child: Icon(
@@ -758,7 +737,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         : Icons.radio_button_unchecked,
                                     color: isPrimaryNoSelected == true
                                         ? Color(
-                                        CommonUtil().getMyPrimaryColor())
+                                            CommonUtil().getMyPrimaryColor())
                                         : ColorUtils.myFamilyGreyColor,
                                     size: 24.0.sp,
                                   ),
@@ -843,10 +822,10 @@ class _MyFamilyState extends State<MyFamily> {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ));
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
               break;
 
             case Status.ERROR:
@@ -976,100 +955,100 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: firstNameController,
-          keyboardType: TextInputType.text,
-          focusNode: firstNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(middleNameFocus);
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.firstNameWithStar,
-            hintText: CommonConstants.firstName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: firstNameController,
+      keyboardType: TextInputType.text,
+      focusNode: firstNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(middleNameFocus);
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.firstNameWithStar,
+        hintText: CommonConstants.firstName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _showMiddleNameTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: middleNameController,
-          keyboardType: TextInputType.text,
-          focusNode: middleNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(lastNameFocus);
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.middleName,
-            hintText: CommonConstants.middleName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: middleNameController,
+      keyboardType: TextInputType.text,
+      focusNode: middleNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        FocusScope.of(context).requestFocus(lastNameFocus);
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.middleName,
+        hintText: CommonConstants.middleName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
-          cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-          controller: lastNameController,
-          keyboardType: TextInputType.text,
-          focusNode: lastNameFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            lastNameFocus.unfocus();
-          },
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0.sp,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.lastNameWithStar,
-            hintText: CommonConstants.lastName,
-            labelStyle: TextStyle(
-                fontSize: 15.0.sp,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 16.0.sp,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      controller: lastNameController,
+      keyboardType: TextInputType.text,
+      focusNode: lastNameFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        lastNameFocus.unfocus();
+      },
+      style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0.sp,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+        labelText: CommonConstants.lastNameWithStar,
+        hintText: CommonConstants.lastName,
+        labelStyle: TextStyle(
+            fontSize: 15.0.sp,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 16.0.sp,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    ));
   }
 
   Widget _showOTPButton() {
@@ -1140,7 +1119,7 @@ class _MyFamilyState extends State<MyFamily> {
                   _familyListBloc.getFamilyMembersInfo().then((value) {
                     if (value.isSuccess) {
                       Navigator.of(_keyLoader.currentContext,
-                          rootNavigator: true)
+                              rootNavigator: true)
                           .pop();
 
                       Navigator.pop(context);
@@ -1156,7 +1135,7 @@ class _MyFamilyState extends State<MyFamily> {
                             isPrimaryNoSelected: isPrimaryNoSelected,
                             id: addFamilyOTPResponse.result.childInfo.id,
                             addFamilyUserInfo:
-                            addFamilyOTPResponse.result ?? ''),
+                                addFamilyOTPResponse.result ?? ''),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';
@@ -1166,7 +1145,7 @@ class _MyFamilyState extends State<MyFamily> {
                       });
                     } else {
                       Navigator.of(_keyLoader.currentContext,
-                          rootNavigator: true)
+                              rootNavigator: true)
                           .pop();
 
                       Alert.displayAlertPlain(context,
@@ -1190,7 +1169,8 @@ class _MyFamilyState extends State<MyFamily> {
               }
             });
           } else {
-            final mobileNo = '+${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
+            final mobileNo =
+                '+${_selectedDialogCountry.phoneCode}${mobileNoController.text}';
             final addFamilyMemberRequest = {};
             addFamilyMemberRequest['isVirtualUser'] = false;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
