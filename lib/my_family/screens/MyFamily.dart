@@ -709,12 +709,47 @@ class _MyFamilyState extends State<MyFamily> {
                                         isPrimaryNoSelected = false;
                                         mobileNoController.text = '';
                                       } else {
-                                        isPrimaryNoSelected = true;
-                                        mobileNoController.text =
-                                            PreferenceUtil.getStringValue(
-                                                Constants.MOB_NUM)
-                                                ?.replaceAll('${_selectedDialogCountry?.phoneCode}', '')?.replaceAll('+91', '')?.replaceAll('+1', '')?.replaceAll('+', '');
-                                      }
+                                        String mobileNumber =
+                                        PreferenceUtil.getStringValue(
+                                            Constants.MOB_NUM);
+                                        print(
+                                            "mobileNumbermobileNumbermobileNumber" +
+                                                mobileNumber);
+
+                                        /*if (_selectedDialogCountry?.phoneCode ==
+                                            "1" ||
+                                            _selectedDialogCountry?.phoneCode ==
+                                                "+1") {*/
+                                          String subMobile =
+                                          mobileNumber.substring(0, 2);
+                                          print(
+                                              "subMobilesubMobile" + subMobile);
+                                          print(
+                                              "mobileNumber" + mobileNumber);
+                                          if (subMobile[1] == "9") {
+                                            mobileNoController.text =
+                                                mobileNumber.substring(3, 13);
+                                          } else if (subMobile[1] == "1" || subMobile[1] == "+1") {
+                                            mobileNoController.text =
+                                                mobileNumber.substring(2, 12);
+                                          }
+                                       /*} else if (_selectedDialogCountry
+                                            ?.phoneCode ==
+                                            "91" ||
+                                            _selectedDialogCountry?.phoneCode ==
+                                                "+91") {
+                                          String subMobile =
+                                          mobileNumber.substring(0, 2);
+                                          if (subMobile[1] == "9") {
+                                            mobileNoController.text =
+                                                mobileNumber.substring(3, 13);
+                                          } else if (subMobile[1] == "1" || subMobile[1] == "+1") {
+                                            mobileNoController.text =
+                                                mobileNumber.substring(2, 12);
+                                          }
+                                        }*/
+
+                                        isPrimaryNoSelected = true; }
                                     });
                                   },
                                   child: Icon(
