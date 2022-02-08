@@ -19,6 +19,7 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
     PreferenceUtil.init();
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
     });
   }
 
