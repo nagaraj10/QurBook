@@ -180,7 +180,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             child: Row(
                               children: [
                                 Text(
-                                  'Ticket ID\t:',
+                                  'Ticket ID :',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
@@ -190,7 +190,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   maxLines: 2,
                                 ),
                                 Text(
-                                  '\t#${widget.ticket.uid.toString()}',
+                                  ' #${widget.ticket.uid.toString()}',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
