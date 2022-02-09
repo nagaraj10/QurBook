@@ -445,9 +445,9 @@ class CheckoutPageWidgets {
       String providerId,
       bool feeZero,
       Function() refresh}) async {
-    String address1 = userAddressCollection.addressLine1 != null
+    /*String address1 = userAddressCollection.addressLine1 != null
         ? userAddressCollection.addressLine1
-        : '';
+        : '';*/
     if (userAddressCollection.city != null) {
       String city = userAddressCollection.city.name != null
           ? userAddressCollection.city.name
@@ -456,7 +456,7 @@ class CheckoutPageWidgets {
           ? userAddressCollection.state.name
           : '';
 
-      if (address1 != '' && city != '' && state != '') {
+      if (city != '' && state != '') {
         //check if its subcribed we need not to show disclimer alert
         return await mDisclaimerAlertDialog(
             packageId: packageId,
