@@ -255,7 +255,7 @@ const String strmediaMetaId = 'mediaMetaId';
 const String strFeedbackEmpty = 'Feedback should not be empty';
 
 //for feedback success
-const String strFeedThank = 'Thank  you for your feedback';
+const String strFeedThank = 'Thank you for your feedback';
 
 //for global search
 const String strSearching = 'Searching';
