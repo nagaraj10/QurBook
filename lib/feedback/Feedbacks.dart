@@ -515,17 +515,20 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   void callFeedBackSuccess(BuildContext context) {
+    Navigator.of(context).pop();
+
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => FeedbackSuccess()),
-    ).then((value) {
-      feedbackController.text = '';
-      imagePaths.clear();
-      images.clear();
-      audioPathMain = '';
-      containsAudioMain = false;
-      setState(() {});
-    });
+    );
+    //     .then((value) {
+    //   feedbackController.text = '';
+    //   imagePaths.clear();
+    //   images.clear();
+    //   audioPathMain = '';
+    //   containsAudioMain = false;
+    //   setState(() {});
+    // });
   }
 
   void saveAudioFile(

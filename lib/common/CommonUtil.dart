@@ -137,7 +137,7 @@ class CommonUtil {
   static List<String> voiceIds = [];
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
-  AddFamilyUserInfoRepository();
+      AddFamilyUserInfoRepository();
   UpdateProvidersBloc updateProvidersBloc = UpdateProvidersBloc();
   SubscribeViewModel subscribeViewModel = SubscribeViewModel();
   final String CONTENT_DISCALIMER =
@@ -170,9 +170,9 @@ class CommonUtil {
               CommonConstants.categoryDescriptionDevice) {
             if (mediaMetaInfo.metadata.deviceReadings != null &&
                 mediaMetaInfo.metadata.deviceReadings.isNotEmpty)
-              // &&
-              // mediaMetaInfo.metadata.fileName != null)
-                {
+            // &&
+            // mediaMetaInfo.metadata.fileName != null)
+            {
               mediaMetaInfoObj.add(mediaMetaInfo);
             }
           } else {
@@ -211,7 +211,7 @@ class CommonUtil {
     for (final mediaMetaInfo in completeData.result) {
       if (mediaMetaInfo.metadata.healthRecordCategory != null) {
         if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
-            categoryDescription &&
+                categoryDescription &&
             mediaMetaInfo.metadata.healthRecordType.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -233,7 +233,7 @@ class CommonUtil {
     for (var mediaMetaInfo in completeData.result) {
       if (mediaMetaInfo.metadata.healthRecordCategory != null) {
         if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
-            categoryDescription &&
+                categoryDescription &&
             mediaMetaInfo.metadata.healthRecordType.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -248,8 +248,8 @@ class CommonUtil {
     return mediaMetaInfoObj;
   }
 
-  MediaResult getMediaTypeInfoForParticularLabel(String mediaId,
-      List<MediaResult> mediaDataList, String categoryName) {
+  MediaResult getMediaTypeInfoForParticularLabel(
+      String mediaId, List<MediaResult> mediaDataList, String categoryName) {
     var mediaDataObj = MediaResult();
     MediaResult selectedMediaData;
     try {
@@ -275,8 +275,8 @@ class CommonUtil {
     return mediaDataObj;
   }
 
-  CategoryResult getCategoryObjForSelectedLabel(String categoryId,
-      List<CategoryResult> categoryList) {
+  CategoryResult getCategoryObjForSelectedLabel(
+      String categoryId, List<CategoryResult> categoryList) {
     var categoryObj = CategoryResult();
     for (final categoryData in categoryList) {
       if (categoryData.id == categoryId) {
@@ -301,8 +301,8 @@ class CommonUtil {
   String getCurrentDate() {
     final now = DateTime.now();
     return DateFormat(CommonUtil.REGION_CODE == 'IN'
-        ? variable.strDateFormatDay
-        : variable.strUSDateFormatDay)
+            ? variable.strDateFormatDay
+            : variable.strUSDateFormatDay)
         .format(now);
   }
 
@@ -355,8 +355,8 @@ class CommonUtil {
     return deviceList;
   }
 
-  MediaResult getMediaTypeInfoForParticularDevice(String deviceName,
-      List<MediaResult> mediaDataList) {
+  MediaResult getMediaTypeInfoForParticularDevice(
+      String deviceName, List<MediaResult> mediaDataList) {
     var mediaDataObj = MediaResult();
     for (final mediaData in mediaDataList) {
       if (mediaData.name == deviceName) {
@@ -368,8 +368,8 @@ class CommonUtil {
     return mediaDataObj;
   }
 
-  static Future<void> showLoadingDialog(BuildContext context, GlobalKey key,
-      String msgToDisplay,
+  static Future<void> showLoadingDialog(
+      BuildContext context, GlobalKey key, String msgToDisplay,
       {bool isAutoDismiss = false}) async {
     return showDialog<void>(
         context: context,
@@ -489,11 +489,11 @@ class CommonUtil {
 
       await CommonUtil()
           .sendDeviceToken(
-          PreferenceUtil.getStringValue(Constants.KEY_USERID),
-          profileResult.userContactCollection3[0].email,
-          profileResult.userContactCollection3[0].phoneNumber,
-          token,
-          false)
+              PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              profileResult.userContactCollection3[0].email,
+              profileResult.userContactCollection3[0].phoneNumber,
+              token,
+              false)
           .then((value) {
         // if (Platform.isIOS) {
         //   _firebaseMessaging.deleteInstanceID();
@@ -515,7 +515,7 @@ class CommonUtil {
     var myProfileResult = myProfile.result;
 
     var linkedData =
-    LinkedData(roleName: variable.Self, nickName: variable.Self);
+        LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     final fullName = myProfileResult.firstName + ' ' + myProfileResult.lastName;
     final profileData = ProfileData(
@@ -676,7 +676,7 @@ class CommonUtil {
           id: dataObj.metaInfo.categoryInfo.id,
           isActive: true,
           categoryDescription:
-          dataObj.metaInfo.categoryInfo.categoryDescription,
+              dataObj.metaInfo.categoryInfo.categoryDescription,
           categoryName: dataObj.metaInfo.categoryInfo.categoryName,
           isCreate: dataObj.metaInfo.categoryInfo.isCreate,
           isDelete: dataObj.metaInfo.categoryInfo.isDelete,
@@ -698,7 +698,7 @@ class CommonUtil {
           isDisplay: dataObj.metaInfo.mediaTypeInfo.isDisplay,
           isEdit: dataObj.metaInfo.mediaTypeInfo.isEdit,
           isManualTranscription:
-          dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
+              dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
           isRead: dataObj.metaInfo.mediaTypeInfo.isRead,
           lastModifiedOn: dataObj.metaInfo.mediaTypeInfo.lastModifiedOn,
           logo: dataObj.metaInfo.mediaTypeInfo.logo,
@@ -988,14 +988,15 @@ class CommonUtil {
       }
     } else {}
 
-    if (bloodGroupClone.contains(variable.strve)) {} else {
+    if (bloodGroupClone.contains(variable.strve)) {
+    } else {
       bloodGroupClone = bloodGroupClone + variable.strve;
     }
     return bloodGroupClone;
   }
 
-  String getIdForDescription(List<CategoryResult> categoryData,
-      String categoryName) {
+  String getIdForDescription(
+      List<CategoryResult> categoryData, String categoryName) {
     String categoryId;
     for (var categoryDataObj in categoryData) {
       if (categoryDataObj.categoryName == categoryName) {
@@ -1021,8 +1022,8 @@ class CommonUtil {
   Future<void> getAllCustomRoles() async {
     final _familyListBloc = FamilyListBloc();
     try {
-      if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) !=
-          null) {} else {
+      if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) != null) {
+      } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
           PreferenceUtil.saveRelationshipArray(
               Constants.keyFamily, relationShip?.relationShipAry);
@@ -1040,7 +1041,7 @@ class CommonUtil {
     final _deviceDataHelper = DeviceDataHelper();
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
-        variable.strtrue &&
+            variable.strtrue &&
         PreferenceUtil.getStringValue(Constants.isFirstTym) ==
             variable.strFalse) {
       await _deviceDataHelper.syncGoogleFit();
@@ -1056,7 +1057,7 @@ class CommonUtil {
       Navigator.pushAndRemoveUntil(
           Get.context,
           MaterialPageRoute(builder: (context) => PatientSignInScreen()),
-              (route) => false);
+          (route) => false);
     });
   }
 
@@ -1207,7 +1208,8 @@ class CommonUtil {
   Future<void> getMediaTypes() async {
     var _mediaTypeBlock = MediaTypeBlock();
     try {
-      if (PreferenceUtil.getMediaType() != null) {} else {
+      if (PreferenceUtil.getMediaType() != null) {
+      } else {
         await _mediaTypeBlock.getMediTypesList().then((value) {});
       }
     } catch (e) {
@@ -1230,15 +1232,8 @@ class CommonUtil {
   //   return updatedDate;
   // }
   String setTimeZone() {
-    var date = DateTime
-        .now()
-        .timeZoneOffset
-        .isNegative ? "-" : "+";
-    final timeZoneSplit = DateTime
-        .now()
-        .timeZoneOffset
-        .toString()
-        .split(":");
+    var date = DateTime.now().timeZoneOffset.isNegative ? "-" : "+";
+    final timeZoneSplit = DateTime.now().timeZoneOffset.toString().split(":");
     var hour = int.parse(timeZoneSplit[0]);
     hour = (hour).abs();
     date += hour < 10 ? "0${hour}" : "$hour";
@@ -1246,7 +1241,8 @@ class CommonUtil {
     return date;
   }
 
-  regimentDateFormat(DateTime newDateTime, {
+  regimentDateFormat(
+    DateTime newDateTime, {
     bool isAck = false,
     bool isLanding = false,
   }) {
@@ -1282,9 +1278,7 @@ class CommonUtil {
   }
 
   dateTimeString(DateTime dateTime) {
-    if (dateTime != null && (dateTime
-        ?.toString()
-        ?.isNotEmpty ?? false)) {
+    if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
       final newFormat = DateFormat('MMM d, yyyy hh:mm a');
       final updatedDate = newFormat.format(dateTime);
       return updatedDate;
@@ -1326,26 +1320,28 @@ class CommonUtil {
     try {
       var dateTime = DateTime.tryParse(string);
       if (dateTime != null) {
-        return dateConversionToApiFormat(dateTime,MMM:true);
-      }else {
-        DateFormat format = DateFormat(CommonUtil.REGION_CODE == 'IN'?"dd-MM-yyyy":"MM-dd-yyyy");
+        return dateConversionToApiFormat(dateTime, MMM: true);
+      } else {
+        DateFormat format = DateFormat(
+            CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
         var now = format.parse(string);
-        final df = new DateFormat(CommonUtil.REGION_CODE == 'IN'?'dd-MMM-yyyy':'MMM-dd-yyyy');
+        final df = new DateFormat(
+            CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
-        return df.format(now)??'';
+        return df.format(now) ?? '';
       }
     } catch (e) {
-      DateFormat format = DateFormat(CommonUtil.REGION_CODE == 'IN'?"dd-MM-yyyy":"MM-dd-yyyy");
+      DateFormat format = DateFormat(
+          CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
 
       var now = format.parse(string);
-      final df = new DateFormat(CommonUtil.REGION_CODE == 'IN'?'dd-MMM-yyyy':'MMM-dd-yyyy');
+      final df = new DateFormat(
+          CommonUtil.REGION_CODE == 'IN' ? 'dd-MMM-yyyy' : 'MMM-dd-yyyy');
 
-      return df.format(now)??'';
-
+      return df.format(now) ?? '';
     }
   }
-
 
   static String dateFormatterWithdatetimeseconds(DateTime dateTime,
       {bool isIndianTime = false}) {
@@ -1426,8 +1422,10 @@ class CommonUtil {
     }
   }
 
-  static void _handleInvalidPermissions(PermissionStatus cameraPermissionStatus,
-      PermissionStatus microphonePermissionStatus,) {
+  static void _handleInvalidPermissions(
+    PermissionStatus cameraPermissionStatus,
+    PermissionStatus microphonePermissionStatus,
+  ) {
     if (cameraPermissionStatus == PermissionStatus.denied &&
         microphonePermissionStatus == PermissionStatus.denied) {
       // throw PlatformException(
@@ -1469,7 +1467,7 @@ class CommonUtil {
         width: 50.0.h,
         height: 50.0.h,
         child:
-        Container(width: 50.0.h, height: 50.0.h, color: Colors.grey[200]),
+            Container(width: 50.0.h, height: 50.0.h, color: Colors.grey[200]),
       );
     }
 
@@ -1518,7 +1516,7 @@ class CommonUtil {
   ListenForTokenUpdate() {
     FirebaseMessaging.instance.onTokenRefresh.listen((currentToken) {
       final localToken =
-      PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
+          PreferenceUtil.getStringValue(Constants.STR_PUSH_TOKEN);
       if (localToken != currentToken) {
         saveTokenToDatabase(currentToken);
       }
@@ -1528,7 +1526,7 @@ class CommonUtil {
   Future<void> saveTokenToDatabase(String token) async {
     try {
       final myProfile =
-      PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       final profileResult = myProfile.result;
 
       await CommonUtil().sendDeviceToken(
@@ -1572,7 +1570,7 @@ class CommonUtil {
     final params = json.encode(jsonData);
 
     var response =
-    await apiBaseHelper.postDeviceId('device-info', params, isActive);
+        await apiBaseHelper.postDeviceId('device-info', params, isActive);
     if (isActive) {
       await PreferenceUtil.saveString(
           Constants.KEY_DEVICEINFO, variable.strtrue);
@@ -1595,9 +1593,7 @@ class CommonUtil {
 
       String imageName;
       if (url.contains('/')) {
-        imageName = url
-            .split('/')
-            .last;
+        imageName = url.split('/').last;
       }
       var file = File('$dir/${imageName}$extension');
       await file.writeAsBytes(bytes);
@@ -1611,8 +1607,7 @@ class CommonUtil {
     for (final currentImage in images) {
       try {
         final _currentImage =
-            '${currentImage.response.data.fileContent}${currentImage.response
-            .data.fileType}';
+            '${currentImage.response.data.fileContent}${currentImage.response.data.fileType}';
         final dir = await FHBUtils.createFolderInAppDocDir('images');
         final response = await Dio().get(currentImage.response.data.fileContent,
             options: Options(responseType: ResponseType.bytes));
@@ -1698,7 +1693,7 @@ class CommonUtil {
   Future<MyProfileModel> fetchUserProfileInfo() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var myProfile =
-    await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
+        await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
   }
 
@@ -1712,7 +1707,8 @@ class CommonUtil {
         Constants.KEY_LASTLOGGEDTIME, loginDetails.result.lastLoggedIn);
   }
 
-  Widget getNotificationIcon(BuildContext context, {
+  Widget getNotificationIcon(
+    BuildContext context, {
     Color color,
   }) {
     try {
@@ -1810,8 +1806,8 @@ class CommonUtil {
       remoteConfig.getBool(Platform.isIOS ? STR_IS_FORCE_IOS : STR_IS_FORCE);
       final newVersion = double.parse(remoteConfig
           .getString(Platform.isIOS
-          ? STR_FIREBASE_REMOTE_KEY_IOS
-          : STR_FIREBASE_REMOTE_KEY)
+              ? STR_FIREBASE_REMOTE_KEY_IOS
+              : STR_FIREBASE_REMOTE_KEY)
           .trim()
           .replaceAll('.', ''));
 
@@ -1899,73 +1895,73 @@ class CommonUtil {
         final btnLabelCancel = STR_LATER;
         return Platform.isIOS
             ? CupertinoAlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(fontSize: 14),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => launchURL(APP_STORE_URL),
-              child: Text(
-                btnLabel,
-                style: TextStyle(
-                  color: Color(getMyPrimaryColor()),
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
-            ),
-            if (!isForceUpdate)
-              FlatButton(
-                child: Text(
-                  btnLabelCancel,
-                  style: TextStyle(
-                    color: Color(
-                      getMyPrimaryColor(),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => launchURL(APP_STORE_URL),
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
                     ),
                   ),
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
-            /*else
+                  if (!isForceUpdate)
+                    FlatButton(
+                      child: Text(
+                        btnLabelCancel,
+                        style: TextStyle(
+                          color: Color(
+                            getMyPrimaryColor(),
+                          ),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  /*else
                     SizedBox.shrink(),*/
-          ],
-        )
+                ],
+              )
             : AlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          content: Text(
-            message,
-            style: TextStyle(fontSize: 14),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => launchURL(PLAY_STORE_URL),
-              child: Text(
-                btnLabel,
-                style: TextStyle(
-                  color: Color(getMyPrimaryColor()),
+                title: Text(
+                  title,
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
-            ),
-            if (!isForceUpdate)
-              FlatButton(
-                child: Text(
-                  btnLabelCancel,
-                  style: TextStyle(
-                    color: Color(getMyPrimaryColor()),
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () => launchURL(PLAY_STORE_URL),
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
                   ),
-                ),
-                onPressed: () => Navigator.pop(context),
-              )
-            /*else
+                  if (!isForceUpdate)
+                    FlatButton(
+                      child: Text(
+                        btnLabelCancel,
+                        style: TextStyle(
+                          color: Color(getMyPrimaryColor()),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  /*else
                     SizedBox.shrink(),*/
-          ],
-        );
+                ],
+              );
       },
     );
   }
@@ -1985,14 +1981,14 @@ class CommonUtil {
     if (filteredCategoryData == null || filteredCategoryData.isEmpty) {
       try {
         var categoryResponseList =
-        await _categoryResponseListRepository.getCategoryLists();
+            await _categoryResponseListRepository.getCategoryLists();
         filteredCategoryData = fliterCategories(categoryResponseList.result);
         for (var i = 0;
-        i <
-            (filteredCategoryData == null
-                ? 0
-                : filteredCategoryData.length);
-        i++) {
+            i <
+                (filteredCategoryData == null
+                    ? 0
+                    : filteredCategoryData.length);
+            i++) {
           if (categoryName == filteredCategoryData[i].categoryName) {
             print(
                 categoryName + ' ****' + filteredCategoryData[i].categoryName);
@@ -2017,8 +2013,8 @@ class CommonUtil {
     }
   }
 
-  void navigateToMyRecordsCategory(categoryType, List<String> hrmId,
-      bool isTerminate) async {
+  void navigateToMyRecordsCategory(
+      categoryType, List<String> hrmId, bool isTerminate) async {
     var value = await getCategoryListPos(categoryType);
     if (value != null) {
       goToMyRecordsScreen(value, hrmId, isTerminate);
@@ -2028,19 +2024,19 @@ class CommonUtil {
   void goToMyRecordsScreen(position, List<String> hrmId, bool isTerminate) {
     if (isTerminate) {
       Get.toNamed(router.rt_MyRecords,
-          arguments: MyRecordsArgument(
-              categoryPosition: position,
-              allowSelect: false,
-              isAudioSelect: false,
-              isNotesSelect: false,
-              selectedMedias: hrmId,
-              isFromChat: false,
-              showDetails: true,
-              isAssociateOrChat: false,
-              fromAppointments: false,
-              fromClass: 'notification'))
+              arguments: MyRecordsArgument(
+                  categoryPosition: position,
+                  allowSelect: false,
+                  isAudioSelect: false,
+                  isNotesSelect: false,
+                  selectedMedias: hrmId,
+                  isFromChat: false,
+                  showDetails: true,
+                  isAssociateOrChat: false,
+                  fromAppointments: false,
+                  fromClass: 'notification'))
           .then((value) =>
-          Get.offNamedUntil(router.rt_Landing, (route) => false));
+              Get.offNamedUntil(router.rt_Landing, (route) => false));
     } else {
       Get.to(
         MyRecords(
@@ -2062,22 +2058,22 @@ class CommonUtil {
 
   static Map<String, String> supportedLanguages = (REGION_CODE == 'IN')
       ? {
-    'english': 'en',
-    'french': 'fr',
-    'german': 'de',
-    'spanish': 'es',
-    'bengali': 'bn',
-    'gujarati': 'gu',
-    'hindi': 'hi',
-    'kannada': 'kn',
-    'malayalam': 'ml',
-    'tamil': 'ta',
-    'telugu': 'te',
-  }
+          'english': 'en',
+          'french': 'fr',
+          'german': 'de',
+          'spanish': 'es',
+          'bengali': 'bn',
+          'gujarati': 'gu',
+          'hindi': 'hi',
+          'kannada': 'kn',
+          'malayalam': 'ml',
+          'tamil': 'ta',
+          'telugu': 'te',
+        }
       : {
-    'english': 'en',
-    'spanish': 'es',
-  };
+          'english': 'en',
+          'spanish': 'es',
+        };
 
   static const Map<String, String> langaugeCodes = {
     'en': 'en-IN',
@@ -2116,11 +2112,11 @@ class CommonUtil {
 
   profileValidationCheck(BuildContext context,
       {String packageId,
-        String isSubscribed,
-        String providerId,
-        String isFrom,
-        bool feeZero,
-        Function() refresh}) async {
+      String isSubscribed,
+      String providerId,
+      String isFrom,
+      bool feeZero,
+      Function() refresh}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showLoadingDialog(context, _keyLoader, variable.Please_Wait);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
@@ -2143,11 +2139,11 @@ class CommonUtil {
 
   addressValidation(BuildContext context,
       {String packageId,
-        String isSubscribed,
-        String providerId,
-        String isFrom,
-        bool feeZero,
-        Function() refresh}) {
+      String isSubscribed,
+      String providerId,
+      String isFrom,
+      bool feeZero,
+      Function() refresh}) {
     if (myProfile != null) {
       if (myProfile.isSuccess) {
         if (myProfile.result != null) {
@@ -2295,13 +2291,13 @@ class CommonUtil {
     }
   }
 
-  patientAddressCheck(UserAddressCollection3 userAddressCollection,
-      BuildContext context,
+  patientAddressCheck(
+      UserAddressCollection3 userAddressCollection, BuildContext context,
       {String packageId,
-        String isSubscribed,
-        String providerId,
-        bool feeZero,
-        Function() refresh}) {
+      String isSubscribed,
+      String providerId,
+      bool feeZero,
+      Function() refresh}) {
     var address1 = userAddressCollection.addressLine1 ?? '';
     if (userAddressCollection.city != null) {
       var city = userAddressCollection.city.name ?? '';
@@ -2377,12 +2373,12 @@ class CommonUtil {
 
   Future<dynamic> mCustomAlertDialog(BuildContext context,
       {String title,
-        String content,
-        String packageId,
-        String isSubscribed,
-        bool feeZero,
-        Function() refresh,
-        String providerId}) async {
+      String content,
+      String packageId,
+      String isSubscribed,
+      bool feeZero,
+      Function() refresh,
+      String providerId}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await showDialog<void>(
         context: context,
@@ -2476,7 +2472,8 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> unSubcribeAlertDialog(BuildContext context, {
+  Future<dynamic> unSubcribeAlertDialog(
+    BuildContext context, {
     String title,
     String content,
     String packageId,
@@ -2550,7 +2547,7 @@ class CommonUtil {
                                       //setState(() {});
                                       QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       if (fromDetail) {
                                         Get.back();
@@ -2559,7 +2556,7 @@ class CommonUtil {
                                       refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       Get.back();
                                       FlutterToast().getToast(
@@ -2570,7 +2567,7 @@ class CommonUtil {
                                   }
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   Get.back();
                                   FlutterToast().getToast(
@@ -2603,14 +2600,15 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> mDisclaimerAlertDialog({BuildContext context,
-    String title,
-    String content,
-    String packageId,
-    String isSubscribed,
-    String providerId,
-    bool feeZero,
-    Function() refresh}) async {
+  Future<dynamic> mDisclaimerAlertDialog(
+      {BuildContext context,
+      String title,
+      String content,
+      String packageId,
+      String isSubscribed,
+      String providerId,
+      bool feeZero,
+      Function() refresh}) async {
     await Get.dialog(
       AlertDialog(
         title: Row(
@@ -2635,7 +2633,7 @@ class CommonUtil {
         ),
         content: SingleChildScrollView(
           child: Column(
-            //mainAxisSize: MainAxisSize.min,
+              //mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
                   //color: Colors.blue,
@@ -2653,10 +2651,7 @@ class CommonUtil {
         ),
         actions: [
           SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
+            width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -2669,7 +2664,7 @@ class CommonUtil {
                       CommonUtil.showLoadingDialog(
                           context, _keyLoader, variable.Please_Wait);
                       final userId =
-                      PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                          PreferenceUtil.getStringValue(Constants.KEY_USERID);
                       await updateProvidersBloc
                           .mappingHealthOrg(providerId, userId)
                           .then((value) {
@@ -2683,7 +2678,7 @@ class CommonUtil {
                                   if (value.result != null) {
                                     if (value.result.result == 'Done') {
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       refresh();
 
@@ -2698,7 +2693,7 @@ class CommonUtil {
                                           */
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       FlutterToast().getToast(
                                           value.result.message ??
@@ -2708,7 +2703,7 @@ class CommonUtil {
                                   }
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   FlutterToast()
                                       .getToast('Subscribe Failed', Colors.red);
@@ -2717,14 +2712,14 @@ class CommonUtil {
                             });
                           } else {
                             Navigator.of(_keyLoader.currentContext,
-                                rootNavigator: true)
+                                    rootNavigator: true)
                                 .pop();
                             FlutterToast()
                                 .getToast('Subscribe Map Failed', Colors.red);
                           }
                         } else {
                           Navigator.of(_keyLoader.currentContext,
-                              rootNavigator: true)
+                                  rootNavigator: true)
                               .pop();
                           FlutterToast()
                               .getToast('Subscribe Map Failed', Colors.red);
@@ -2745,13 +2740,13 @@ class CommonUtil {
                               if (value.result != null) {
                                 if (value.result.result == 'Done') {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   Get.back(result: 'refreshUI');
                                   refresh();
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   Get.back(result: 'refreshUI');
                                   FlutterToast().getToast(
@@ -2762,7 +2757,7 @@ class CommonUtil {
                               }
                             } else {
                               Navigator.of(_keyLoader.currentContext,
-                                  rootNavigator: true)
+                                      rootNavigator: true)
                                   .pop();
                               FlutterToast()
                                   .getToast('UnSubscribe Failed', Colors.red);
@@ -2826,13 +2821,7 @@ class CommonUtil {
     if (isExpired) {
       print('endDate: expired');
       firstDate = DateTime(
-          DateTime
-              .now()
-              .year, DateTime
-          .now()
-          .month, DateTime
-          .now()
-          .day);
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
     } else {
       print('endDate:' + endDate.toString());
       firstDate = endDate;
@@ -2853,50 +2842,32 @@ class CommonUtil {
 
   Future<dynamic> renewAlertDialog(BuildContext context,
       {String title,
-        String content,
-        String packageId,
-        String isSubscribed,
-        bool IsExtendable,
-        String price,
-        String startDate,
-        String endDate,
-        bool isExpired,
-        Function() refresh,
-        bool moveToCart = false,
-        dynamic nsBody}) async {
+      String content,
+      String packageId,
+      String isSubscribed,
+      bool IsExtendable,
+      String price,
+      String startDate,
+      String endDate,
+      bool isExpired,
+      Function() refresh,
+      bool moveToCart = false,
+      dynamic nsBody}) async {
     DateTime initDate;
     var formatter = new DateFormat('yyyy-MM-dd');
 
     DateTime startDateFinal = startDate != null
         ? new DateFormat("yyyy-MM-dd").parse(startDate)
         : DateTime(
-        DateTime
-            .now()
-            .year, DateTime
-        .now()
-        .month, DateTime
-        .now()
-        .day);
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
     DateTime endDateFinal = endDate != null
         ? new DateFormat("yyyy-MM-dd").parse(endDate)
         : DateTime(
-        DateTime
-            .now()
-            .year, DateTime
-        .now()
-        .month, DateTime
-        .now()
-        .day);
+            DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
     if (isExpired) {
       initDate = DateTime(
-          DateTime
-              .now()
-              .year, DateTime
-          .now()
-          .month, DateTime
-          .now()
-          .day);
+          DateTime.now().year, DateTime.now().month, DateTime.now().day);
     } else {
       initDate = endDateFinal;
     }
@@ -2930,119 +2901,119 @@ class CommonUtil {
                       ),
                       FittedBox(
                           child: Row(
-                            children: <Widget>[
-                              Text(
-                                'Effective Renewal Date: ',
-                              ),
-                              SizedBox(width: 5.w),
-                              IconButton(
-                                icon: Icon(Icons.calendar_today, size: 18.sp),
-                                onPressed: () async {
-                                  initDate = await selectDate(
-                                      context,
-                                      isExpired ? initDate : endDateFinal,
-                                      startDateFinal,
-                                      endDateFinal,
-                                      isExpired);
-                                  setState(() {});
-                                },
-                              ),
-                              Text('${formatter.format(initDate)}'),
-                            ],
-                          )),
+                        children: <Widget>[
+                          Text(
+                            'Effective Renewal Date: ',
+                          ),
+                          SizedBox(width: 5.w),
+                          IconButton(
+                            icon: Icon(Icons.calendar_today, size: 18.sp),
+                            onPressed: () async {
+                              initDate = await selectDate(
+                                  context,
+                                  isExpired ? initDate : endDateFinal,
+                                  startDateFinal,
+                                  endDateFinal,
+                                  isExpired);
+                              setState(() {});
+                            },
+                          ),
+                          Text('${formatter.format(initDate)}'),
+                        ],
+                      )),
                       SizedBox(
                         height: 10.0.h,
                       ),
                       FittedBox(
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              OutlineButton(
-                                onPressed: () async {
-                                  // open profile page
-                                  isRenewDialogOpened = false;
-                                  Navigator.of(context).pop();
-                                },
-                                borderSide: BorderSide(
-                                  color: Color(
-                                    getMyPrimaryColor(),
-                                  ),
-                                ),
-                                child: Text(
-                                  'no'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Color(
-                                      getMyPrimaryColor(),
-                                    ),
-                                    fontSize: 10,
-                                  ),
-                                ),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlineButton(
+                            onPressed: () async {
+                              // open profile page
+                              isRenewDialogOpened = false;
+                              Navigator.of(context).pop();
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
                               ),
-                              SizedBox(
-                                width: 10.0.h,
+                            ),
+                            child: Text(
+                              'no'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(
+                                  getMyPrimaryColor(),
+                                ),
+                                fontSize: 10,
                               ),
-                              OutlineButton(
-                                //hoverColor: Color(getMyPrimaryColor()),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                  /*_dialogForSubscribePayment(
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10.0.h,
+                          ),
+                          OutlineButton(
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            onPressed: () async {
+                              Navigator.pop(context);
+                              /*_dialogForSubscribePayment(
                                   context, '', packageId, true, () {
                                 refresh();
                               });*/
-                                  isRenewDialogOpened = false;
-                                  if (moveToCart && nsBody != null) {
-                                    try {
-                                      FetchNotificationService()
-                                          .updateNsActionStatus(nsBody)
-                                          .then((data) {
-                                        FetchNotificationService()
-                                            .updateNsOnTapAction(nsBody);
-                                      });
-                                    } catch (e) {}
-                                  }
+                              isRenewDialogOpened = false;
+                              if (moveToCart && nsBody != null) {
+                                try {
+                                  FetchNotificationService()
+                                      .updateNsActionStatus(nsBody)
+                                      .then((data) {
+                                    FetchNotificationService()
+                                        .updateNsOnTapAction(nsBody);
+                                  });
+                                } catch (e) {}
+                              }
 
-                                  if (IsExtendable) {
-                                    var response =
+                              if (IsExtendable) {
+                                var response =
                                     await Provider.of<PlanWizardViewModel>(
-                                        context,
-                                        listen: false)
+                                            context,
+                                            listen: false)
                                         ?.addToCartItem(
-                                        packageId: packageId,
-                                        price: price,
-                                        isRenew: true,
-                                        isFromAdd: strMyPlan);
+                                            packageId: packageId,
+                                            price: price,
+                                            isRenew: true,
+                                            isFromAdd: strMyPlan);
 
-                                    refresh();
-                                    if (moveToCart) {
-                                      if ((response.message?.toLowerCase() ==
+                                refresh();
+                                if (moveToCart) {
+                                  if ((response.message?.toLowerCase() ==
                                           'Product already exists in cart'
                                               .toLowerCase()) ||
-                                          response.isSuccess) {
-                                        Get.to(CheckoutPage());
-                                      }
-                                    }
-                                  } else {
-                                    FlutterToast().getToast(
-                                        'Renewal limit reached for this plan. Please try after few days',
-                                        Colors.black);
+                                      response.isSuccess) {
+                                    Get.to(CheckoutPage());
                                   }
-                                },
-                                borderSide: BorderSide(
-                                  color: Color(
-                                    getMyPrimaryColor(),
-                                  ),
-                                ),
-                                //hoverColor: Color(getMyPrimaryColor()),
-                                child: Text(
-                                  'yes'.toUpperCase(),
-                                  style: TextStyle(
-                                    color: Color(getMyPrimaryColor()),
-                                    fontSize: 10,
-                                  ),
-                                ),
+                                }
+                              } else {
+                                FlutterToast().getToast(
+                                    'Renewal limit reached for this plan. Please try after few days',
+                                    Colors.black);
+                              }
+                            },
+                            borderSide: BorderSide(
+                              color: Color(
+                                getMyPrimaryColor(),
                               ),
-                            ],
-                          )),
+                            ),
+                            //hoverColor: Color(getMyPrimaryColor()),
+                            child: Text(
+                              'yes'.toUpperCase(),
+                              style: TextStyle(
+                                color: Color(getMyPrimaryColor()),
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
                     ]),
                   ),
                 );
@@ -3052,7 +3023,8 @@ class CommonUtil {
         });
   }
 
-  Future<dynamic> alertDialogForNoReFund(BuildContext context, {
+  Future<dynamic> alertDialogForNoReFund(
+    BuildContext context, {
     String title,
     String content,
     String packageId,
@@ -3126,7 +3098,7 @@ class CommonUtil {
                                       //setState(() {});
                                       QurPlanReminders.getTheRemindersFromAPI();
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       if (fromDetail) {
                                         Get.back();
@@ -3135,7 +3107,7 @@ class CommonUtil {
                                       refresh();
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
+                                              rootNavigator: true)
                                           .pop();
                                       Get.back();
                                       FlutterToast().getToast(
@@ -3146,7 +3118,7 @@ class CommonUtil {
                                   }
                                 } else {
                                   Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
+                                          rootNavigator: true)
                                       .pop();
                                   Get.back();
                                   FlutterToast().getToast(
@@ -3179,7 +3151,8 @@ class CommonUtil {
         });
   }
 
-  Widget customImage(String iconApi, {
+  Widget customImage(
+    String iconApi, {
     Widget defaultWidget,
     String planInitial,
   }) {
@@ -3223,76 +3196,74 @@ class CommonUtil {
         ),
         child: iconApi != null && iconApi != ''
             ? iconApi.toString().toLowerCase()?.contains('.svg')
-            ? Center(
-          child: SizedBox(
-            height: 50,
-            width: 50,
-            child: SvgPicture.network(
-              iconApi,
-              placeholderBuilder: (context) =>
-                  CommonCircularIndicator(),
-            ),
-          ),
-        )
-            : CachedNetworkImage(
-          imageUrl: iconApi,
-          placeholder: (context, url) => CommonCircularIndicator(),
-          errorWidget: (context, url, error) =>
-          defaultWidget ??
-              ClipOval(
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(qurHealthLogo),
-                    radius: 32,
-                    backgroundColor: Colors.transparent,
-                  )),
-          imageBuilder: (context, imageProvider) =>
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: imageProvider, fit: BoxFit.fill),
-                ),
-              ),
-        )
+                ? Center(
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (context) =>
+                            CommonCircularIndicator(),
+                      ),
+                    ),
+                  )
+                : CachedNetworkImage(
+                    imageUrl: iconApi,
+                    placeholder: (context, url) => CommonCircularIndicator(),
+                    errorWidget: (context, url, error) =>
+                        defaultWidget ??
+                        ClipOval(
+                            child: CircleAvatar(
+                          backgroundImage: AssetImage(qurHealthLogo),
+                          radius: 32,
+                          backgroundColor: Colors.transparent,
+                        )),
+                    imageBuilder: (context, imageProvider) => Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            image: imageProvider, fit: BoxFit.fill),
+                      ),
+                    ),
+                  )
             : iconApi != null && iconApi != ''
-            ? iconApi.toString().toLowerCase()?.contains('.svg')
-            ? SvgPicture.network(
-          iconApi,
-          placeholderBuilder: (context) =>
-              CommonCircularIndicator(),
-        )
-            : CachedNetworkImage(
-          imageUrl: iconApi,
-          placeholder: (context, url) =>
-              CommonCircularIndicator(),
-          errorWidget: (context, url, error) =>
-          defaultWidget ??
-              ClipOval(
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage(qurHealthLogo),
-                    radius: 32,
-                    backgroundColor: Colors.transparent,
-                  )),
-          imageBuilder: (context, imageProvider) =>
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: imageProvider, fit: BoxFit.fill),
-                ),
-              ),
-        )
-            : defaultWidget ??
-            ClipOval(
-                child: CircleAvatar(
-                  backgroundImage: AssetImage(qurHealthLogo),
-                  radius: 32,
-                  backgroundColor: Colors.transparent,
-                )),
+                ? iconApi.toString().toLowerCase()?.contains('.svg')
+                    ? SvgPicture.network(
+                        iconApi,
+                        placeholderBuilder: (context) =>
+                            CommonCircularIndicator(),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: iconApi,
+                        placeholder: (context, url) =>
+                            CommonCircularIndicator(),
+                        errorWidget: (context, url, error) =>
+                            defaultWidget ??
+                            ClipOval(
+                                child: CircleAvatar(
+                              backgroundImage: AssetImage(qurHealthLogo),
+                              radius: 32,
+                              backgroundColor: Colors.transparent,
+                            )),
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image: imageProvider, fit: BoxFit.fill),
+                          ),
+                        ),
+                      )
+                : defaultWidget ??
+                    ClipOval(
+                        child: CircleAvatar(
+                      backgroundImage: AssetImage(qurHealthLogo),
+                      radius: 32,
+                      backgroundColor: Colors.transparent,
+                    )),
       ),
     );
   }
@@ -3318,9 +3289,11 @@ class CommonUtil {
     }
   }
 
-  Future<void> CallbackAPIFromChat(String patId,
-      String careProviderId,
-      String careProviderName,) async {
+  Future<void> CallbackAPIFromChat(
+    String patId,
+    String careProviderId,
+    String careProviderName,
+  ) async {
     var res = await ApiBaseHelper().callBackFromChat(
       careProviderId,
       patId,
@@ -3336,7 +3309,7 @@ class CommonUtil {
                       : careProviderName) +
                   " will reach you shortly.",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
           snackPosition: SnackPosition.BOTTOM,
@@ -3349,7 +3322,7 @@ class CommonUtil {
             child: Text(
               "Failed to notify the caregiver",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
           snackPosition: SnackPosition.BOTTOM,
@@ -3359,9 +3332,11 @@ class CommonUtil {
     }
   }
 
-  Future<void> CallbackAPI(String patientName,
-      String planId,
-      String userId,) async {
+  Future<void> CallbackAPI(
+    String patientName,
+    String planId,
+    String userId,
+  ) async {
     // LoaderClass.showLoadingDialog(
     //   Get.context,
     //   canDismiss: false,
@@ -3381,7 +3356,7 @@ class CommonUtil {
               (patientName.isNotEmpty ? "$patientName, " : patientName) +
                   "Thank you for reaching out.  Your caregiver will call you as soon as possible.",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
           snackPosition: SnackPosition.BOTTOM,
@@ -3394,7 +3369,7 @@ class CommonUtil {
             child: Text(
               "Failed to notify the caregiver",
               style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
           ),
           snackPosition: SnackPosition.BOTTOM,
@@ -3505,7 +3480,7 @@ class CommonUtil {
       showNotification: true,
       // show download progress in status bar (for Android)
       openFileFromNotification:
-      true, // click on notification to open downloaded file (for Android)
+          true, // click on notification to open downloaded file (for Android)
     );
   }
 
@@ -3542,7 +3517,7 @@ class CommonUtil {
         }
 
         var path =
-        Platform.isIOS ? directory.path : '/storage/emulated/0/Qurbook';
+            Platform.isIOS ? directory.path : '/storage/emulated/0/Qurbook';
         var file = File('$path/$fileName');
         await file.writeAsBytes(responseJson);
         path = file.path;
@@ -3556,8 +3531,8 @@ class CommonUtil {
     }
   }
 
-  showStatusToUser(ResultFromResponse response,
-      GlobalKey<ScaffoldState> scaffoldKey) {
+  showStatusToUser(
+      ResultFromResponse response, GlobalKey<ScaffoldState> scaffoldKey) {
     if (response.status) {
       scaffoldKey.currentState.showSnackBar(
         SnackBar(
@@ -3631,15 +3606,14 @@ class CommonUtil {
     Navigator.push(
       Get.context,
       MaterialPageRoute(
-        builder: (context) =>
-            MultiProvider(
-              providers: <SingleChildWidget>[
-                ChangeNotifierProvider<ReferAFriendViewModel>(
-                  create: (_) => ReferAFriendViewModel(),
-                ),
-              ],
-              child: InviteContactsScreen(),
+        builder: (context) => MultiProvider(
+          providers: <SingleChildWidget>[
+            ChangeNotifierProvider<ReferAFriendViewModel>(
+              create: (_) => ReferAFriendViewModel(),
             ),
+          ],
+          child: InviteContactsScreen(),
+        ),
       ),
     );
   }
@@ -3681,7 +3655,7 @@ class CommonUtil {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90,
@@ -3689,7 +3663,7 @@ class CommonUtil {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12),
+                                              BorderRadius.circular(12),
                                           side: BorderSide(
                                               color: Color(CommonUtil()
                                                   .getMyPrimaryColor()))),
@@ -3712,7 +3686,7 @@ class CommonUtil {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12),
+                                              BorderRadius.circular(12),
                                           side: BorderSide(
                                               color: Color(CommonUtil()
                                                   .getMyPrimaryColor()))),
@@ -3725,8 +3699,8 @@ class CommonUtil {
                                         CommonUtil.showLoadingDialog(context,
                                             _keyLoader, variable.Please_Wait);
                                         var userId =
-                                        PreferenceUtil.getStringValue(
-                                            Constants.KEY_USERID);
+                                            PreferenceUtil.getStringValue(
+                                                Constants.KEY_USERID);
                                         if (isFromRenew) {
                                           subscribeViewModel
                                               .createSubscribePayment(packageId)
@@ -3737,56 +3711,43 @@ class CommonUtil {
                                                   if (value?.result?.payment !=
                                                       null) {
                                                     if (value?.result?.payment
-                                                        ?.status ==
+                                                            ?.status ==
                                                         'PAYITA') {
                                                       if (value?.result
-                                                          ?.paymentGatewayDetail !=
+                                                              ?.paymentGatewayDetail !=
                                                           null) {
                                                         if (value
-                                                            ?.result
-                                                            ?.paymentGatewayDetail
-                                                            ?.metadata !=
-                                                            null) {
-                                                          if (value
-                                                              ?.result
-                                                              ?.paymentGatewayDetail
-                                                              ?.metadata
-                                                              .paymentGateWay ==
-                                                              STR_RAZOPAY) {
-                                                            if (value
                                                                 ?.result
                                                                 ?.paymentGatewayDetail
-                                                                ?.metadata
-                                                                .shorturl !=
+                                                                ?.metadata !=
+                                                            null) {
+                                                          if (value
+                                                                  ?.result
+                                                                  ?.paymentGatewayDetail
+                                                                  ?.metadata
+                                                                  .paymentGateWay ==
+                                                              STR_RAZOPAY) {
+                                                            if (value
+                                                                    ?.result
+                                                                    ?.paymentGatewayDetail
+                                                                    ?.metadata
+                                                                    .shorturl !=
                                                                 null) {
-                                                              Navigator
-                                                                  .pushReplacement(
+                                                              Navigator.pushReplacement(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                      builder: (
-                                                                          context) =>
-                                                                          PaymentPage(
+                                                                      builder: (context) => PaymentPage(
                                                                             redirectUrl:
-                                                                            value
-                                                                                ?.result
-                                                                                ?.paymentGatewayDetail
-                                                                                ?.metadata
-                                                                                ?.shorturl,
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.shorturl,
                                                                             paymentId:
-                                                                            value
-                                                                                ?.result
-                                                                                ?.payment
-                                                                                ?.id
-                                                                                .toString(),
+                                                                                value?.result?.payment?.id.toString(),
                                                                             isFromSubscribe:
-                                                                            true,
+                                                                                true,
                                                                             isFromRazor:
-                                                                            true,
+                                                                                true,
                                                                             closePage:
-                                                                                (
-                                                                                value) {
-                                                                              if (value ==
-                                                                                  STR_SUCCESS) {
+                                                                                (value) {
+                                                                              if (value == STR_SUCCESS) {
                                                                                 refresh();
                                                                                 /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                                                                                   Provider.of<RegimentViewModel>(
@@ -3796,66 +3757,51 @@ class CommonUtil {
                                                                                   Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
 
                                                                               } else {
-                                                                                Navigator
-                                                                                    .pop(
-                                                                                    context);
+                                                                                Navigator.pop(context);
                                                                               }
                                                                             },
                                                                           )));
                                                             } else {
                                                               Navigator.of(
-                                                                  _keyLoader
-                                                                      .currentContext,
-                                                                  rootNavigator:
-                                                                  true)
+                                                                      _keyLoader
+                                                                          .currentContext,
+                                                                      rootNavigator:
+                                                                          true)
                                                                   .pop();
                                                               FlutterToast()
                                                                   .getToast(
-                                                                  'Renew Failed',
-                                                                  Colors
-                                                                      .red);
+                                                                      'Renew Failed',
+                                                                      Colors
+                                                                          .red);
                                                             }
                                                           } else {
                                                             if (value
-                                                                ?.result
-                                                                ?.paymentGatewayDetail
-                                                                ?.metadata
-                                                                ?.longurl !=
-                                                                null &&
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
+                                                                    null &&
                                                                 value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.metadata
-                                                                    ?.longurl !=
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        ?.longurl !=
                                                                     '') {
-                                                              Navigator
-                                                                  .pushReplacement(
+                                                              Navigator.pushReplacement(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                      builder: (
-                                                                          context) =>
-                                                                          PaymentPage(
+                                                                      builder: (context) => PaymentPage(
                                                                             redirectUrl:
-                                                                            value
-                                                                                ?.result
-                                                                                ?.paymentGatewayDetail
-                                                                                ?.metadata
-                                                                                ?.longurl,
+                                                                                value?.result?.paymentGatewayDetail?.metadata?.longurl,
                                                                             paymentId:
-                                                                            value
-                                                                                ?.result
-                                                                                ?.payment
-                                                                                ?.id
-                                                                                .toString(),
+                                                                                value?.result?.payment?.id.toString(),
                                                                             isFromSubscribe:
-                                                                            true,
+                                                                                true,
                                                                             isFromRazor:
-                                                                            false,
+                                                                                false,
                                                                             closePage:
-                                                                                (
-                                                                                value) {
-                                                                              if (value ==
-                                                                                  STR_SUCCESS) {
+                                                                                (value) {
+                                                                              if (value == STR_SUCCESS) {
                                                                                 refresh();
                                                                                 /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                                                                                   Provider.of<RegimentViewModel>(
@@ -3865,9 +3811,7 @@ class CommonUtil {
                                                                                   Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
 
                                                                               } else {
-                                                                                Navigator
-                                                                                    .pop(
-                                                                                    context);
+                                                                                Navigator.pop(context);
                                                                               }
                                                                             },
                                                                           )));
@@ -3877,10 +3821,10 @@ class CommonUtil {
                                                       }
                                                     } else {
                                                       Navigator.of(
-                                                          _keyLoader
-                                                              .currentContext,
-                                                          rootNavigator:
-                                                          true)
+                                                              _keyLoader
+                                                                  .currentContext,
+                                                              rootNavigator:
+                                                                  true)
                                                           .pop();
                                                       FlutterToast().getToast(
                                                           'Renew Failed',
@@ -3888,9 +3832,9 @@ class CommonUtil {
                                                     }
                                                   } else {
                                                     Navigator.of(
-                                                        _keyLoader
-                                                            .currentContext,
-                                                        rootNavigator: true)
+                                                            _keyLoader
+                                                                .currentContext,
+                                                            rootNavigator: true)
                                                         .pop();
                                                     FlutterToast().getToast(
                                                         'Renew Failed',
@@ -3899,9 +3843,9 @@ class CommonUtil {
                                                 }
                                               } else {
                                                 Navigator.of(
-                                                    _keyLoader
-                                                        .currentContext,
-                                                    rootNavigator: true)
+                                                        _keyLoader
+                                                            .currentContext,
+                                                        rootNavigator: true)
                                                     .pop();
                                                 FlutterToast().getToast(
                                                     'Renew Failed', Colors.red);
@@ -3911,69 +3855,56 @@ class CommonUtil {
                                         } else {
                                           updateProvidersBloc
                                               .mappingHealthOrg(
-                                              providerId, userId)
+                                                  providerId, userId)
                                               .then((value) {
                                             if (value != null) {
                                               if (value.success) {
                                                 subscribeViewModel
                                                     .createSubscribePayment(
-                                                    packageId)
+                                                        packageId)
                                                     .then((value) {
                                                   if (value != null) {
                                                     if (value?.isSuccess) {
                                                       if (value?.result !=
                                                           null) {
                                                         if (value?.result
-                                                            ?.payment !=
+                                                                ?.payment !=
                                                             null) {
                                                           if (value
-                                                              ?.result
-                                                              ?.payment
-                                                              ?.status ==
+                                                                  ?.result
+                                                                  ?.payment
+                                                                  ?.status ==
                                                               'PAYITA') {
                                                             if (value?.result
-                                                                ?.paymentGatewayDetail !=
+                                                                    ?.paymentGatewayDetail !=
                                                                 null) {
                                                               if (value
-                                                                  ?.result
-                                                                  ?.paymentGatewayDetail
-                                                                  ?.metadata !=
-                                                                  null) {
-                                                                if (value
-                                                                    ?.result
-                                                                    ?.paymentGatewayDetail
-                                                                    ?.metadata
-                                                                    .paymentGateWay ==
-                                                                    STR_RAZOPAY) {
-                                                                  if (value
                                                                       ?.result
                                                                       ?.paymentGatewayDetail
-                                                                      ?.metadata
-                                                                      ?.shorturl !=
+                                                                      ?.metadata !=
+                                                                  null) {
+                                                                if (value
+                                                                        ?.result
+                                                                        ?.paymentGatewayDetail
+                                                                        ?.metadata
+                                                                        .paymentGateWay ==
+                                                                    STR_RAZOPAY) {
+                                                                  if (value
+                                                                          ?.result
+                                                                          ?.paymentGatewayDetail
+                                                                          ?.metadata
+                                                                          ?.shorturl !=
                                                                       null) {
-                                                                    Navigator
-                                                                        .pushReplacement(
+                                                                    Navigator.pushReplacement(
                                                                         context,
                                                                         MaterialPageRoute(
-                                                                            builder: (
-                                                                                context) =>
-                                                                                PaymentPage(
-                                                                                  redirectUrl: value
-                                                                                      ?.result
-                                                                                      ?.paymentGatewayDetail
-                                                                                      ?.metadata
-                                                                                      ?.shorturl,
-                                                                                  paymentId: value
-                                                                                      ?.result
-                                                                                      ?.payment
-                                                                                      ?.id
-                                                                                      .toString(),
+                                                                            builder: (context) => PaymentPage(
+                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                                  paymentId: value?.result?.payment?.id.toString(),
                                                                                   isFromSubscribe: true,
                                                                                   isFromRazor: true,
-                                                                                  closePage: (
-                                                                                      value) {
-                                                                                    if (value ==
-                                                                                        STR_SUCCESS) {
+                                                                                  closePage: (value) {
+                                                                                    if (value == STR_SUCCESS) {
                                                                                       refresh();
                                                                                       /*Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
                                                                                   Provider.of<RegimentViewModel>(
@@ -3983,68 +3914,48 @@ class CommonUtil {
                                                                                   Get.offNamedUntil(router.rt_MyPlans, (Route<dynamic> route) => false);*/
 
                                                                                     } else {
-                                                                                      Navigator
-                                                                                          .pop(
-                                                                                          context);
+                                                                                      Navigator.pop(context);
                                                                                     }
                                                                                   },
                                                                                 )));
                                                                   } else {
-                                                                    Navigator
-                                                                        .of(
-                                                                        _keyLoader
-                                                                            .currentContext,
-                                                                        rootNavigator:
-                                                                        true)
+                                                                    Navigator.of(
+                                                                            _keyLoader
+                                                                                .currentContext,
+                                                                            rootNavigator:
+                                                                                true)
                                                                         .pop();
-                                                                    FlutterToast()
-                                                                        .getToast(
+                                                                    FlutterToast().getToast(
                                                                         'Renew Failed',
                                                                         Colors
                                                                             .red);
                                                                   }
                                                                 } else {
                                                                   if (value
-                                                                      ?.result
-                                                                      ?.paymentGatewayDetail
-                                                                      ?.metadata
-                                                                      ?.longurl !=
-                                                                      null &&
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
+                                                                          null &&
                                                                       value
-                                                                          ?.result
-                                                                          ?.paymentGatewayDetail
-                                                                          ?.metadata
-                                                                          ?.longurl !=
+                                                                              ?.result
+                                                                              ?.paymentGatewayDetail
+                                                                              ?.metadata
+                                                                              ?.longurl !=
                                                                           '') {
-                                                                    Navigator
-                                                                        .pushReplacement(
-                                                                        Get
-                                                                            .context,
+                                                                    Navigator.pushReplacement(
+                                                                        Get.context,
                                                                         MaterialPageRoute(
-                                                                            builder: (
-                                                                                context) =>
-                                                                                PaymentPage(
-                                                                                  redirectUrl: value
-                                                                                      ?.result
-                                                                                      ?.paymentGatewayDetail
-                                                                                      ?.metadata
-                                                                                      ?.longurl,
-                                                                                  paymentId: value
-                                                                                      ?.result
-                                                                                      ?.payment
-                                                                                      ?.id
-                                                                                      ?.toString(),
+                                                                            builder: (context) => PaymentPage(
+                                                                                  redirectUrl: value?.result?.paymentGatewayDetail?.metadata?.longurl,
+                                                                                  paymentId: value?.result?.payment?.id?.toString(),
                                                                                   isFromSubscribe: true,
                                                                                   isFromRazor: false,
-                                                                                  closePage: (
-                                                                                      value) {
-                                                                                    if (value ==
-                                                                                        'success') {
+                                                                                  closePage: (value) {
+                                                                                    if (value == 'success') {
                                                                                       refresh();
                                                                                     } else {
-                                                                                      Navigator
-                                                                                          .pop(
-                                                                                          context);
+                                                                                      Navigator.pop(context);
                                                                                     }
                                                                                   },
                                                                                 )));
@@ -4052,49 +3963,47 @@ class CommonUtil {
                                                                 }
                                                               } else {
                                                                 Navigator.of(
-                                                                    _keyLoader
-                                                                        .currentContext,
-                                                                    rootNavigator:
-                                                                    true)
+                                                                        _keyLoader
+                                                                            .currentContext,
+                                                                        rootNavigator:
+                                                                            true)
                                                                     .pop();
                                                                 FlutterToast()
                                                                     .getToast(
-                                                                    'Subscribe Failed',
-                                                                    Colors
-                                                                        .red);
+                                                                        'Subscribe Failed',
+                                                                        Colors
+                                                                            .red);
                                                               }
                                                             }
                                                           } else {
                                                             Navigator.of(
-                                                                _keyLoader
-                                                                    .currentContext,
-                                                                rootNavigator:
-                                                                true)
+                                                                    _keyLoader
+                                                                        .currentContext,
+                                                                    rootNavigator:
+                                                                        true)
                                                                 .pop();
-                                                            FlutterToast()
-                                                                .getToast(
+                                                            FlutterToast().getToast(
                                                                 'Subscribe Failed',
                                                                 Colors.red);
                                                           }
                                                         } else {
                                                           Navigator.of(
-                                                              _keyLoader
-                                                                  .currentContext,
-                                                              rootNavigator:
-                                                              true)
+                                                                  _keyLoader
+                                                                      .currentContext,
+                                                                  rootNavigator:
+                                                                      true)
                                                               .pop();
-                                                          FlutterToast()
-                                                              .getToast(
+                                                          FlutterToast().getToast(
                                                               'Subscribe Failed',
                                                               Colors.red);
                                                         }
                                                       }
                                                     } else {
                                                       Navigator.of(
-                                                          _keyLoader
-                                                              .currentContext,
-                                                          rootNavigator:
-                                                          true)
+                                                              _keyLoader
+                                                                  .currentContext,
+                                                              rootNavigator:
+                                                                  true)
                                                           .pop();
                                                       FlutterToast().getToast(
                                                           'Subscribe Failed',
@@ -4104,9 +4013,9 @@ class CommonUtil {
                                                 });
                                               } else {
                                                 Navigator.of(
-                                                    _keyLoader
-                                                        .currentContext,
-                                                    rootNavigator: true)
+                                                        _keyLoader
+                                                            .currentContext,
+                                                        rootNavigator: true)
                                                     .pop();
                                                 FlutterToast().getToast(
                                                     'Subscribe Map Failed',
@@ -4114,8 +4023,8 @@ class CommonUtil {
                                               }
                                             } else {
                                               Navigator.of(
-                                                  _keyLoader.currentContext,
-                                                  rootNavigator: true)
+                                                      _keyLoader.currentContext,
+                                                      rootNavigator: true)
                                                   .pop();
                                               FlutterToast().getToast(
                                                   'Subscribe Map Failed',
@@ -4175,33 +4084,45 @@ class CommonUtil {
     bool condition = false;
     ;
     final fileName = File(filePath);
-    final fileNoun = fileName.path
-        .split('/')
-        .last;
+    final fileNoun = fileName.path.split('/').last;
     if (fileNoun.contains(".pdf")) {
       condition = true;
     }
     return condition;
   }
 
-  static String dateConversionToApiFormat(DateTime dateTime, {
+  static String convertMinuteToHour(int min) {
+    if (min >= 60) {
+      var value = min / 60;
+      if (value >= 1) {
+        final int hour = min ~/ 60;
+        final int minutes = min % 60;
+        return '${hour.toString().padLeft(2, hour < 10 ? "" : "0")} hour${minutes > 0 ? (minutes > 0 ? ' ' + minutes.toString().padLeft(2, "0") + " mins" : '') : ""}';
+      }
+    }
 
+    return min.toString() + ' mins';
+  }
+
+  String getTimeString(int value) {
+    final int hour = value ~/ 60;
+    final int minutes = value % 60;
+    return '${hour.toString().padLeft(2, "0")}:${minutes.toString().padLeft(2, "0")}';
+  }
+
+  static String dateConversionToApiFormat(
+    DateTime dateTime, {
     bool isIndianTime = false,
-
     bool MMM = false,
-
   }) {
     final newFormat = REGION_CODE == 'IN' || isIndianTime
-
         ? DateFormat(MMM ? 'yyyy-MMM-dd' : 'yyyy-MM-dd')
-
         : DateFormat(MMM ? 'MMM-dd-yyyy' : 'MM-dd-yyyy');
 
     var updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
   }
-
 }
 
 extension CapExtension on String {
@@ -4210,8 +4131,7 @@ extension CapExtension on String {
 
   String get allInCaps => toUpperCase();
 
-  String get capitalizeFirstofEach =>
-      this != null && isNotEmpty
-          ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
-          : '';
+  String get capitalizeFirstofEach => this != null && isNotEmpty
+      ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
+      : '';
 }

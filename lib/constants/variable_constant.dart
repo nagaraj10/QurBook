@@ -61,7 +61,6 @@ List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
 List<String> claimType = ['Pharmacy', 'Consultation', 'Lab fee'];
 
-
 const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
@@ -188,6 +187,7 @@ const String icon_more = 'assets/navicons/more.png';
 const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
+const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -255,7 +255,7 @@ const String strmediaMetaId = 'mediaMetaId';
 const String strFeedbackEmpty = 'Feedback should not be empty';
 
 //for feedback success
-const String strFeedThank = 'Thank you for your feedback';
+const String strFeedThank = 'Thanks for your feedback';
 
 //for global search
 const String strSearching = 'Searching';
@@ -693,6 +693,10 @@ const String strNoTicketsRaised = 'No Ticket Items Available !!';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');
+
+// regimen appointment
+const String strAppointmentRegimen = 'Appointment';
+const String strSelfRegimen = 'Self';
 
 //chat
 
