@@ -4,53 +4,55 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 
 class RegimentDataModel {
-  RegimentDataModel({
-    this.eid,
-    this.providerid,
-    this.uid,
-    this.title,
-    this.description,
-    this.tplanid,
-    this.teidUser,
-    this.aid,
-    this.activityname,
-    this.uformid,
-    this.uformname,
-    this.uformname1,
-    this.estart,
-    this.eend,
-    this.html,
-    this.otherinfo,
-    this.remindin,
-    this.remindinType,
-    this.ack,
-    this.ackIST,
-    this.alarm,
-    this.uformdata,
-    this.ts,
-    this.deleted,
-    this.evDuration,
-    this.hashtml,
-    this.hascustform,
-    this.htmltemplate,
-    this.dosesNeeded,
-    this.dosesAvailable,
-    this.dosesUsed,
-    this.providername,
-    this.hasform,
-    this.saytext,
-    this.doseMeal,
-    this.doseRepeat,
-    this.metadata,
-    this.isPlaying = false,
-    this.scheduled = false,
-    this.asNeeded = false,
-    this.isEventDisabled = false,
-    this.sayTextDynamic,
-    this.isSymptom = false,
-    this.isMandatory = false,
-    this.isModifiedToday = false,
-  });
+  RegimentDataModel(
+      {this.eid,
+      this.providerid,
+      this.uid,
+      this.title,
+      this.description,
+      this.tplanid,
+      this.teidUser,
+      this.aid,
+      this.activityname,
+      this.uformid,
+      this.uformname,
+      this.uformname1,
+      this.estart,
+      this.eend,
+      this.html,
+      this.otherinfo,
+      this.remindin,
+      this.remindinType,
+      this.ack,
+      this.ackIST,
+      this.alarm,
+      this.uformdata,
+      this.ts,
+      this.deleted,
+      this.evDuration,
+      this.hashtml,
+      this.hascustform,
+      this.htmltemplate,
+      this.dosesNeeded,
+      this.dosesAvailable,
+      this.dosesUsed,
+      this.providername,
+      this.hasform,
+      this.saytext,
+      this.doseMeal,
+      this.doseRepeat,
+      this.metadata,
+      this.isPlaying = false,
+      this.scheduled = false,
+      this.asNeeded = false,
+      this.isEventDisabled = false,
+      this.sayTextDynamic,
+      this.isSymptom = false,
+      this.isMandatory = false,
+      this.isModifiedToday = false,
+      this.healthOrgName,
+      this.activityOrgin,
+      this.duration});
 
   final dynamic eid;
   final dynamic providerid;
@@ -97,6 +99,9 @@ class RegimentDataModel {
   final bool isSymptom;
   final bool isMandatory;
   final bool isModifiedToday;
+  final dynamic healthOrgName;
+  final dynamic activityOrgin;
+  final int duration;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -114,9 +119,11 @@ class RegimentDataModel {
         uformname1: json['uformname'],
         estart: DateTime.tryParse(json['estart'] ?? ''),
         eend: DateTime.tryParse(json['eend'] ?? ''),
-        html: json['html'],
-        otherinfo: Otherinfo.fromJson(
-            json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}')),
+        html: json['html'] != null ? json['html'] : '',
+        otherinfo: json['otherinfo'] != null
+            ? Otherinfo.fromJson(
+                json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}'))
+            : null,
         remindin: json['remindin'],
         remindinType: json['remindin_type'],
         ack: DateTime.tryParse(json['ack_utc'] ?? '')?.toLocal(),
@@ -157,6 +164,9 @@ class RegimentDataModel {
         isModifiedToday: ((json['customized'] ?? '0') == '1') &&
             (CommonUtil.getDateStringFromDateTime(json['dtu_ts']) ==
                 CommonUtil.getDateStringFromDateTime(json['estart'])),
+        healthOrgName: json['healthorganizationname'],
+        activityOrgin: json['activityname_orig'],
+        duration: json['duration'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -199,6 +209,9 @@ class RegimentDataModel {
         'metadata': metadata.toJson(),
         'ev_disabled': isEventDisabled ? '1' : '0',
         'saytext_dyn': sayTextDynamic,
+        'healthorganizationname': healthOrgName,
+        'activityname_orig': activityOrgin,
+        'duration': duration
       };
 }
 
@@ -387,6 +400,7 @@ class Metadata {
 class OtherData {
   String name;
   String url;
+
   OtherData({
     this.name,
     this.url,
