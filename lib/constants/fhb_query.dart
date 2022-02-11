@@ -269,7 +269,7 @@ const String qr_health_conditions = 'Action=GetMenu';
 
 const String getMenuCarePlans = 'Action=GetMenuTaggedPackages&tags=';
 
-const String excludeDiet = '&extags=diet';
+const String excludeDiet = '&extags=diet,MEMB';
 
 const String onlyProvider = '&onlymyprovider=1';
 
