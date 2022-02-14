@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
+import 'package:myfhb/QurHub/View/add_network_view.dart';
 import 'package:myfhb/QurHub/hub_list_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import '../src/utils/screenutils/size_extensions.dart';
+
 import 'add_device_screen.dart';
 
 class HubListScreen extends StatefulWidget {
@@ -52,57 +54,75 @@ class _HubListScreenState extends State<HubListScreen> {
                   )
                 : Container(
                     child: controller.hubListResponse.isSuccess
-                        ? Stack(children: [
-                            SingleChildScrollView(
-                              child: listContent(
-                                  controller.hubListResponse.result),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: (){
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) =>  AddDeviceScreen(hubId: controller.hubListResponse.result.id)),
-                                    );
-                                  },
-                                  child: Card(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Text(
-                                        'Add New Device',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18),
+                        ? controller.hubListResponse.result != null
+                            ? Stack(children: [
+                                SingleChildScrollView(
+                                  child: listContent(
+                                      controller.hubListResponse.result),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddDeviceScreen()),
+                                        );
+                                      },
+                                      child: Card(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(6.0),
+                                          child: Text(
+                                            'Add New Device',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 18),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            )
-                          ])
-                        : Center(
-                            child: Card(
-                              color: Color(CommonUtil().getMyPrimaryColor()),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  'Pair New Hub',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 18),
-                                ),
-                              ),
-                            ),
-                          ),
+                                )
+                              ])
+                            : pairNewDeviveBtn()
+                        : pairNewDeviveBtn(),
                   )),
       );
+  Widget pairNewDeviveBtn() {
+    return Center(
+      child: InkWell(
+        onTap: () {
+          try {
+            Get.to(
+              AddNetWorkView(),
+            );
+          } catch (e) {
+            print(e);
+          }
+        },
+        child: Card(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Text(
+              'Pair New Hub',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget listContent(Result result) {
     return Column(

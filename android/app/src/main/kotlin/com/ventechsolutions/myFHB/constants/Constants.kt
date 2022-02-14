@@ -66,4 +66,5 @@ object Constants {
     val PROP_RAWBODY ="rawBody"
     val PROB_EXTERNAL_LINK ="externalLink"
     val PROB_USER_ID ="userId"
+    val WIFI_WORKS ="wifiworks"
 }
