@@ -20,7 +20,7 @@ class HubListController extends GetxController {
     try {
       loadingData.value = true;
       http.Response response = await _apiProvider.getHubList();
-      if (response == null ) {
+      if (response == null) {
         // failed to get the data, we are showing the error on UI
       } else {
         hubListResponse = HubListResponse.fromJson(json.decode(response.body));

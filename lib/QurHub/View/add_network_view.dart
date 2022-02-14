@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/Orders/Controller/OrderController.dart';
-import 'package:myfhb/Orders/Model/OrderModel.dart';
-import 'package:myfhb/Orders/View/AppointmentOrderTile.dart';
-import 'package:myfhb/Orders/View/OrderTile.dart';
-import 'package:myfhb/QurHub/Controller/QurHubController.dart';
+import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
+import 'package:myfhb/QurHub/View/wifi_list_view.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../constants/variable_constant.dart' as variable;
 
 class AddNetWorkView extends StatefulWidget {
   @override
@@ -20,9 +18,7 @@ class AddNetWorkView extends StatefulWidget {
 }
 
 class _AddNetWorkViewState extends State<AddNetWorkView> {
-  final controller = Get.put(
-    QurHubController(),
-  );
+  final controller = Get.put(AddNetworkController());
   final wifiNameController = TextEditingController();
   FocusNode wifiNameFocus = FocusNode();
 
@@ -34,10 +30,12 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
 
   final nickNameController = TextEditingController();
   FocusNode nickNameFocus = FocusNode();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     try {
+      controller.getWifiList();
       super.initState();
     } catch (e) {
       print(e);
@@ -73,61 +71,84 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
             Get.back();
           },
         ),
-        title: const Text(
+        title: Text(
           'Add Network',
         ),
       ),
-      body: Obx(
-        () {
-          return controller.isLoading.value
-              ? CommonCircularIndicator()
-              : Center(child: _showPairNewHubBtn());
-        },
-      ),
+      body: Obx(() => controller.isLoading.isTrue
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : controller.qurHubWifiRouter == null
+              ? const Center(
+                  child: Text(
+                    'Not available QurHub-Config router around',
+                  ),
+                )
+              : Form(
+                  key: formKey,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 20, left: 5, right: 5),
+                    child: Card(
+                      margin: EdgeInsets.only(top: 60, left: 25, right: 25),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        /*side: BorderSide(width: 5, color: Colors.green)*/
+                      ),
+                      child: Container(
+                          padding: EdgeInsets.only(
+                              top: 15, left: 15, right: 15, bottom: 15),
+                          //width: 1.sw,
+                          height: 1.sh / 2.85,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10.0.h,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          _showWifiNameTextField(),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10.0.h,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          _showPasswordTextField(),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 15.0.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Obx(() =>
+                                              controller.isBtnLoading.isTrue
+                                                  ? CircularProgressIndicator()
+                                                  : _showConnectButton()),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 25.0.h,
+                                      ),
+                                      // callAddFamilyStreamBuilder(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                  ))),
     );
-  }
-
-  Widget _showPairNewHubBtn() {
-    final addButtonWithGesture = GestureDetector(
-      onTap: () {
-        showSetNickNameDialog(context);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 20, bottom: 20),
-            width: 200.0.w,
-            height: 47.0.h,
-            decoration: BoxDecoration(
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                  color: Color.fromARGB(15, 0, 0, 0),
-                  offset: Offset(0, 2),
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                "Pair New Hub",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-    return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
   }
 
   showConnectWifiDialog(BuildContext context) {
@@ -193,14 +214,22 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   }
 
   Widget _showWifiNameTextField() {
+    wifiNameController.text = controller.strSSID.value;
     return Expanded(
-        child: TextField(
+        child: TextFormField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: wifiNameController,
       keyboardType: TextInputType.text,
+      enabled: true,
+      validator: (String value) {
+        if (value.trim().isEmpty) {
+          return "Please enter wifi name";
+        }
+        return null;
+      },
       focusNode: wifiNameFocus,
       textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
+      onFieldSubmitted: (term) {
         FocusScope.of(context).requestFocus(passwordFocus);
       },
       style: TextStyle(
@@ -208,8 +237,49 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
+        prefixIcon: IconButton(
+          icon: SvgPicture.asset(
+            variable.icon_qurhub_wifi,
+            //color: Colors.black54,
+            //color: Colors.black,
+            height: 22,
+            width: 22,
+            color: wifiNameFocus.hasFocus ? Colors.black : Colors.black54,
+            fit: BoxFit.fill,
+          ),
+          onPressed: () {},
+        ),
+        suffixIcon: IconButton(
+          icon: SvgPicture.asset(
+            variable.icon_qurhub_switch,
+            //color: Colors.black54,
+            //color: Colors.black,
+            height: 22,
+            width: 22,
+            color: wifiNameFocus.hasFocus ? Colors.black : Colors.black54,
+            fit: BoxFit.fill,
+          ),
+          onPressed: () {
+            try {
+              Get.to(
+                WifiListView(),
+              );
+            } catch (e) {
+              print(e);
+            }
+          },
+        ),
         labelText: CommonConstants.wifiName,
         hintText: CommonConstants.wifiName,
+        /*suffix: InkWell(
+          onTap: () {
+            //TODO
+          },
+          child: SvgPicture.asset(
+            variable.icon_qurhub_wifi,
+            color: Colors.black54,
+          ),
+        ),*/
         labelStyle: TextStyle(
             fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
@@ -227,13 +297,19 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
 
   Widget _showPasswordTextField() {
     return Expanded(
-        child: TextField(
+        child: TextFormField(
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: passwordController,
       keyboardType: TextInputType.text,
       focusNode: passwordFocus,
+      validator: (String value) {
+        if (value.trim().isEmpty) {
+          return "Please enter password";
+        }
+        return null;
+      },
       textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
+      onFieldSubmitted: (term) {
         //FocusScope.of(context).requestFocus(passwordFocus);
       },
       style: TextStyle(
@@ -241,6 +317,18 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
           fontSize: 16.0.sp,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
+        prefixIcon: IconButton(
+          icon: SvgPicture.asset(
+            variable.icon_qurhub_lock,
+            //color: Colors.black54,
+            //color: Colors.black,
+            height: 22,
+            width: 22,
+            color: passwordFocus.hasFocus ? Colors.black : Colors.black54,
+            fit: BoxFit.fill,
+          ),
+          onPressed: () {},
+        ),
         labelText: CommonConstants.password,
         hintText: CommonConstants.password,
         labelStyle: TextStyle(
@@ -260,7 +348,17 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
 
   Widget _showConnectButton() {
     final addButtonWithGesture = GestureDetector(
-      onTap: () {},
+      onTap: () {
+        try {
+          FocusScope.of(context).unfocus();
+          if (formKey.currentState.validate()) {
+            controller.getConnectWifi(wifiNameController.text.toString().trim(),
+                passwordController.text.toString().trim());
+          }
+        } catch (e) {
+          print(e);
+        }
+      },
       child: Container(
         width: 140.0.w,
         height: 45.0.h,

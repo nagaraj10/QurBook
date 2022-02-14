@@ -687,6 +687,11 @@ var reminderMethodChannelAndroid = const MethodChannel('android/notification');
 
 const String strNoMessage = 'No Messages';
 
+//QurHub
+const String icon_qurhub_lock = 'assets/icons/lock.svg';
+const String icon_qurhub_switch = 'assets/icons/switch.svg';
+const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/IntroScreens/IntroWidget.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/hub_list_screen.dart';
-import 'package:myfhb/QurHub/View/QurHubView.dart';
+
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
@@ -171,7 +171,7 @@ class NavigationDrawer extends StatelessWidget {
                         try {
                           Navigator.pop(context);
                           Get.to(
-                            QurHubView(),
+                            HubListScreen(),
                           );
                         } catch (e) {
                           print(e);
