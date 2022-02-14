@@ -18,7 +18,6 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    print("userId=== $userId");
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.get(
@@ -38,13 +37,23 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> getFeedbackCat() async {
+  Future<dynamic> saveDevice(String deviceId) async {
     Response responseJson;
+    final url = qr_hub + '/';
+    await PreferenceUtil.init();
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var data={
+      "deviceId" : "34f51378-4316-48a6-adea-fc519c619a5b",
+      "userHubId":deviceId,
+      "userId":userId,
+      "additionalDetails":{}
+    };
     try {
-      var header = await HeaderRequest().getAuth();
-      responseJson = await ApiServices.get(
-        _baseUrl,
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = await ApiServices.post(
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device',
         headers: header,
+        body: data,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
@@ -58,6 +67,64 @@ class HubApiProvider {
       return null;
     }
   }
+
+  Future<dynamic> unPairHub(String hubId) async {
+    Response responseJson;
+    final url = qr_hub + '/';
+    await PreferenceUtil.init();
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var data={
+      "userHubId" : hubId
+    };
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = await ApiServices.post(
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub/unpair-hub',
+        headers: header,
+        body: json.encode(data),
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+  Future<dynamic> unPairDevice(String deviceId) async {
+    Response responseJson;
+    final url = qr_hub + '/';
+    await PreferenceUtil.init();
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var data={
+      "userHubId" : deviceId
+    };
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      responseJson = await ApiServices.post(
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub/unpair-hub',
+        headers: header,
+        body: json.encode(data),
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
+  }
+
+
 
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {

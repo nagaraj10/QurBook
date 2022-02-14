@@ -12,6 +12,7 @@ import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
 class AddDeviceController extends GetxController {
   final _apiProvider = FamilyMemberListRepository();
+  final _hubApiProvider = HubApiProvider();
   var loadingData = false.obs;
   FamilyMembers familyMembers;
 
@@ -19,6 +20,22 @@ class AddDeviceController extends GetxController {
     try {
       loadingData.value = true;
       var familyMembers = await _apiProvider.getFamilyMembersListNew();
+      if (familyMembers == null ) {
+        // failed to get the data, we are showing the error on UI
+      } else {
+        this.familyMembers = familyMembers;
+      }
+      loadingData.value = false;
+    } catch (e) {
+      print(e.toString());
+      loadingData.value = false;
+    }
+  }
+
+  saveDevice(String hubId) async {
+    try {
+      loadingData.value = true;
+      var familyMembers = await _hubApiProvider.saveDevice(hubId);
       if (familyMembers == null ) {
         // failed to get the data, we are showing the error on UI
       } else {

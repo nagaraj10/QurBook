@@ -32,6 +32,22 @@ class HubListController extends GetxController {
     }
   }
 
+  unPairHub(String hubId) async {
+    try {
+      loadingData.value = true;
+      http.Response response = await _apiProvider.unPairHub(hubId);
+      if (response == null ) {
+        // failed to get the data, we are showing the error on UI
+      } else {
+        getHubList();
+      }
+      loadingData.value = false;
+    } catch (e) {
+      print(e.toString());
+      loadingData.value = false;
+    }
+  }
+
   setRecordType(FeedbackCategoryModel selected) {
     catSelected.value = false;
     selectedType = selected;
