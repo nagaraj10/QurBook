@@ -65,7 +65,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                   onTap: (){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) =>  AddDeviceScreen()),
+                                      MaterialPageRoute(builder: (context) =>  AddDeviceScreen(hubId: controller.hubListResponse.result.id)),
                                     );
                                   },
                                   child: Card(
@@ -175,19 +175,25 @@ class _HubListScreenState extends State<HubListScreen> {
                   SizedBox(
                     width: 10,
                   ),
-                  Card(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Text(
-                        'Unpair',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12),
+                  InkWell(
+                    onTap: (){
+                      showAlertDialog(context,'hub', result.hub.id);
+                    },
+                    child:  Card(
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          'Unpair',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12),
+                        ),
                       ),
                     ),
                   )
+
                 ],
               ),
             ),
@@ -281,4 +287,44 @@ class _HubListScreenState extends State<HubListScreen> {
       ],
     );
   }
+
+  showAlertDialog(BuildContext context,String type,String hubId) {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        if(type=='hub'){
+          controller.unPairHub(hubId);
+          Navigator.pop(context);
+        }else{
+
+        }
+      },
+    );
+
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () { },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Warning"),
+      content: Text(type=='hub'?'Do you want to unpair this Hub':'Do you want to unpair this device'),
+      actions: [
+        okButton,
+        cancelButton
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
 }
