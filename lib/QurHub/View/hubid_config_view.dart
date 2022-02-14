@@ -8,8 +8,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
-class HubIdConfigView extends StatefulWidget
-{
+class HubIdConfigView extends StatefulWidget {
   const HubIdConfigView({Key key}) : super(key: key);
 
   @override
@@ -214,8 +213,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
       onTap: () {
         try {
           FocusScope.of(context).unfocus();
-          if (formKey.currentState.validate())
-          {
+          if (formKey.currentState.validate()) {
             controller.callSaveHubIdConfig(
                 hubIdController.text.toString().trim(),
                 nickNameController.text.toString().trim());

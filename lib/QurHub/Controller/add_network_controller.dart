@@ -5,10 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
-import 'package:myfhb/QurHub/Model/add_network_model.dart';
+import 'package:myfhb/QurHub/Models/add_network_model.dart';
 import 'package:myfhb/QurHub/View/hubid_config_view.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
+
+import '../View/hub_list_screen.dart';
 
 class AddNetworkController extends GetxController {
   var ssidList = [].obs;
@@ -23,54 +25,65 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
-      callHubId();
-      WiFiForIoTPlugin.isConnected().then((val) {
-        WiFiForIoTPlugin.getSSID().then((val) {
-          print("getSSID $val");
-          strSSID.value = val;
-        });
-      });
-      isLoading.value = true;
-      ssidList.value = [];
-      try {
-        ssidList.value = await WiFiForIoTPlugin.loadWifiList();
-        print("ssidList length ${ssidList.value.length}");
-      } on PlatformException {
-        ssidList.value = [];
-      }
-      if (ssidList.value != null && ssidList.value.length > 0) {
-        try {
-          ssidList.value.forEach((ssids) {
-            if (ssids.ssid.toLowerCase().contains(strWifiName.toLowerCase())) {
-              qurHubWifiRouter = ssids;
-            }
+      WiFiForIoTPlugin.isEnabled().then((val) async {
+        if (val) {
+          callHubId();
+          WiFiForIoTPlugin.isConnected().then((val) {
+            WiFiForIoTPlugin.getSSID().then((val) {
+              print("getSSID $val");
+              strSSID.value = val;
+            });
           });
-          if (qurHubWifiRouter != null) {
-            try {
-              const platform = MethodChannel('wifiworks');
-              final int result = await platform.invokeMethod(
-                  'getTest', {"SSID": qurHubWifiRouter.ssid, "Password": ""});
-
-              if (result == 1) {
-                toast.getToastForLongTime(
-                    "wifi connection successfull", Colors.green);
-                strSSID.value = "";
-              } else {
-                toast.getToast("Failed try again!!!", Colors.red);
-              }
-            } on PlatformException catch (e) {}
-          } else {
-            toast.getToastForLongTime(
-                "Not available QurHub-Config router around", Colors.red);
+          isLoading.value = true;
+          ssidList.value = [];
+          try {
+            ssidList.value = await WiFiForIoTPlugin.loadWifiList();
+            print("ssidList length ${ssidList.value.length}");
+          } on PlatformException {
+            ssidList.value = [];
           }
-        } catch (e) {
-          print("Failed to get the list ${e.toString()}");
-          //FlutterToast().getToast('Failed to get the list', Colors.red);
+          if (ssidList.value != null && ssidList.value.length > 0) {
+            try {
+              ssidList.value.forEach((ssids) {
+                if (ssids.ssid
+                    .toLowerCase()
+                    .contains(strWifiName.toLowerCase())) {
+                  qurHubWifiRouter = ssids;
+                }
+              });
+              if (qurHubWifiRouter != null) {
+                try {
+                  const platform = MethodChannel('wifiworks');
+                  final int result = await platform.invokeMethod('getTest',
+                      {"SSID": qurHubWifiRouter.ssid, "Password": ""});
+
+                  if (result == 1) {
+                    toast.getToastForLongTime(
+                        "wifi connection successfull", Colors.green);
+                    //strSSID.value = "";
+                  } else {
+                    toast.getToast("Failed try again!!!", Colors.red);
+                  }
+                } on PlatformException catch (e) {}
+              } else {
+                toast.getToastForLongTime(
+                    "Not available QurHub-Config router around", Colors.red);
+              }
+            } catch (e) {
+              print("Failed to get the list ${e.toString()}");
+              //FlutterToast().getToast('Failed to get the list', Colors.red);
+            }
+          } else {
+            ssidList.value = [];
+            toast.getToastForLongTime(
+                "Not available wifi router around", Colors.red);
+          }
+          isLoading.value = false;
+        } else {
+          toast.getToastForLongTime(
+              "Please enable wifi!!! and re-try after some time", Colors.red);
         }
-      } else {
-        ssidList.value = [];
-      }
-      isLoading.value = false;
+      });
     } catch (e) {
       print(e.toString());
       isLoading.value = false;
@@ -152,14 +165,14 @@ class AddNetworkController extends GetxController {
       if (response.statusCode == 200) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
-        /*if (validString(addNetworkModel.result).toLowerCase().contains("ok"))
-        {
-          //TODO
+        if (addNetworkModel.isSuccess) {
+          toast.getToast(validString(addNetworkModel.message), Colors.green);
+          Get.off(HubListScreen());
         } else {
           print(
-              "callSaveHubIdConfig O/P ${validString(json.decode(response.body))}");
-          toast.getToast(validString(json.decode(response.body)), Colors.red);
-        }*/
+              "callSaveHubIdConfig O/P ${validString(addNetworkModel.message)}");
+          toast.getToast(validString(addNetworkModel.message), Colors.red);
+        }
       } else {
         print(
             "callSaveHubIdConfig O/P ${validString(json.decode(response.body))}");

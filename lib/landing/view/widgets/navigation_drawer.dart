@@ -5,7 +5,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/IntroScreens/IntroWidget.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
-import 'package:myfhb/QurHub/hub_list_screen.dart';
+import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
