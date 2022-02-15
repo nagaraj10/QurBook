@@ -62,7 +62,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       amount = "",
       plan = "",
       familyMember = "",
-      status = "",
+      status = "",statusCode="",
       remark = "",
       approvedAmount = "";
   ClaimListRepository claimListRepository;
@@ -208,8 +208,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         style: getTextStyleForValue()))
               ],
             )),
-        if (approvedAmount != "" && approvedAmount != null) getDivider(),
-        if (approvedAmount != "" && approvedAmount != null)
+        if ((approvedAmount != "" && approvedAmount != null) && (statusCode!="CLAIM_REJECTED")) getDivider(),
+        if ((approvedAmount != "" && approvedAmount != null) && (statusCode!="CLAIM_REJECTED"))
           Padding(
               padding: EdgeInsets.all(15),
               child: Row(
@@ -367,6 +367,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       submittedDate =
           CommonUtil.getDateStringFromDateTime(claimRecordDetails?.result?.submitDate);
       status = claimRecordDetails?.result?.status;
+      statusCode = claimRecordDetails?.result?.statusCode;
       remark = claimRecordDetails?.result?.remark ?? '';
       plan = claimRecordDetails?.result?.planDescription;
       familyMember = claimRecordDetails?.result?.submittedForFirstName +
@@ -377,6 +378,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               claimRecordDetails?.result?.approvedAmount != '')
           ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":variable.strRs +". ") + claimRecordDetails?.result?.approvedAmount
           : '';
+
     }
   }
 

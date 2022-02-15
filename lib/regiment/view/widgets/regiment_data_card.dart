@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -46,10 +49,10 @@ class RegimentDataCard extends StatelessWidget {
     @required this.startTime,
     @required this.mediaData,
     @required this.regimentData,
-    this.uid='',
-    this.aid='',
-    this.formId='',
-    this.formName='',
+    this.uid = '',
+    this.aid = '',
+    this.formId = '',
+    this.formName = '',
   });
 
   @override
@@ -61,16 +64,35 @@ class RegimentDataCard extends StatelessWidget {
             bottom: 10.0.h,
           ),
           child: Material(
-            color: Colors.white,
+            color: regimentData?.activityOrgin == strAppointmentRegimen
+                ? Color(CommonUtil().getMyPrimaryColor())
+                : Colors.white,
             child: InkWell(
-              onTap: () => onCardPressed(context,aid: aid,uid: uid,formId: formId,formName: formName),
+              onTap: () {
+                if (regimentData?.activityOrgin != strAppointmentRegimen) {
+                  onCardPressed(context,
+                      aid: aid, uid: uid, formId: formId, formName: formName);
+                }
+              },
               child: Row(
                 children: [
                   Expanded(
                     child: Material(
-                      color: color,
+                      color:
+                          regimentData?.activityOrgin == strAppointmentRegimen
+                              ? Colors.white
+                              : color,
                       child: InkWell(
-                        onTap: () => onCardPressed(context,aid: aid,uid: uid,formId: formId,formName: formName),
+                        onTap: () {
+                          if (regimentData?.activityOrgin !=
+                              strAppointmentRegimen) {
+                            onCardPressed(context,
+                                aid: aid,
+                                uid: uid,
+                                formId: formId,
+                                formName: formName);
+                          }
+                        },
                         child: Container(
                           padding: EdgeInsets.symmetric(
                             vertical: 10.0.h,
@@ -78,7 +100,10 @@ class RegimentDataCard extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              icon,
+                              regimentData?.activityOrgin ==
+                                      strAppointmentRegimen
+                                  ? getAppointmentIcon()
+                                  : icon,
                               Visibility(
                                 visible: Provider.of<RegimentViewModel>(context,
                                                 listen: false)
@@ -92,7 +117,11 @@ class RegimentDataCard extends StatelessWidget {
                                   child: Text(
                                     time,
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: regimentData?.activityOrgin ==
+                                              strAppointmentRegimen
+                                          ? Color(
+                                              CommonUtil().getMyPrimaryColor())
+                                          : Colors.white,
                                       fontSize: 16.0.sp,
                                     ),
                                     textAlign: TextAlign.center,
@@ -218,12 +247,13 @@ class RegimentDataCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    width: 3.0.w,
-                    child: Container(
-                      color: color,
+                  if (regimentData?.activityOrgin != strAppointmentRegimen)
+                    SizedBox(
+                      width: 3.0.w,
+                      child: Container(
+                        color: color,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -259,47 +289,84 @@ class RegimentDataCard extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Text(
-                      title?.trim(),
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          (regimentData?.activityOrgin ==
+                        strAppointmentRegimen)?'Dr. '+title?.trim():title?.trim(),
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                            fontWeight: FontWeight.w500,
+                            color: regimentData?.activityOrgin ==
+                                    strAppointmentRegimen
+                                ? Colors.white
+                                : Colors.black,
+                          ),
+                        ),
+                        if (regimentData?.healthOrgName != null &&
+                            regimentData?.healthOrgName != '' &&
+                            regimentData?.healthOrgName != strSelfRegimen &&
+                            regimentData?.activityOrgin ==
+                                strAppointmentRegimen)
+                          getHealthOrgName(regimentData),
+                        if (regimentData?.estart != null &&
+                            regimentData?.estart != '' &&
+                            regimentData?.eend != null &&
+                            regimentData?.eend != '' &&
+                            regimentData?.activityOrgin ==
+                                strAppointmentRegimen)
+                          getStartEndTime(regimentData),
+                        (regimentData?.healthOrgName != null &&
+                                regimentData?.healthOrgName != '' &&
+                                regimentData?.healthOrgName != strSelfRegimen &&
+                                regimentData?.activityOrgin ==
+                                    strAppointmentRegimen)
+                            ? SizedBox(height: 4.h)
+                            : SizedBox(height: 20.h),
+                        if (regimentData?.activityOrgin ==
+                            strAppointmentRegimen)
+                          Container(
+                            alignment: Alignment.bottomRight,
+                            child: getShowAppointmentBnt(),
+                          )
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 10.0.h,
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () {
-                  if (regimentData.isPlaying) {
-                    stopRegimenTTS();
-                  } else {
-                    Provider.of<RegimentViewModel>(context, listen: false)
-                        .startRegimenTTS(
-                      index,
-                      staticText: regimentData?.title ?? '',
-                      dynamicText: regimentData?.sayTextDynamic ?? '',
-                    );
-                  }
-                },
-                child: Icon(
-                  regimentData.isPlaying
-                      ? Icons.stop_circle_outlined
-                      : Icons.play_circle_fill_rounded,
-                  size: 30.0.sp,
-                  color: color,
+          if (regimentData?.activityOrgin != strAppointmentRegimen)
+            Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: 10.0.h,
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    if (regimentData.isPlaying) {
+                      stopRegimenTTS();
+                    } else {
+                      Provider.of<RegimentViewModel>(context, listen: false)
+                          .startRegimenTTS(
+                        index,
+                        staticText: regimentData?.title ?? '',
+                        dynamicText: regimentData?.sayTextDynamic ?? '',
+                      );
+                    }
+                  },
+                  child: Icon(
+                    regimentData.isPlaying
+                        ? Icons.stop_circle_outlined
+                        : Icons.play_circle_fill_rounded,
+                    size: 30.0.sp,
+                    color: color,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -535,12 +602,12 @@ class RegimentDataCard extends StatelessWidget {
       dynamic formName}) async {
     stopRegimenTTS();
     var eventId = eventIdReturn ?? eid;
-    if (eventId == null || eventId == '' || eventId==0) {
-      final response =
-          await Provider.of<RegimentViewModel>(context, listen: false)
-              .getEventId(uid: uid,aid: aid,formId: formId,formName: formName);
-      if (response!=null && response?.isSuccess && response?.result!=null) {
-        print('forEventId: '+response.toJson().toString());
+    if (eventId == null || eventId == '' || eventId == 0) {
+      final response = await Provider.of<RegimentViewModel>(context,
+              listen: false)
+          .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
+      if (response != null && response?.isSuccess && response?.result != null) {
+        print('forEventId: ' + response.toJson().toString());
         eventId = response?.result?.eid.toString();
       }
     }
@@ -602,6 +669,76 @@ class RegimentDataCard extends StatelessWidget {
         Colors.black,
       );
     }
+  }
+
+  getHealthOrgName(RegimentDataModel regimen) {
+    if (regimentData?.healthOrgName != null &&
+        regimentData?.healthOrgName != '') {
+      return Text(
+        regimentData?.healthOrgName?.trim(),
+        style: TextStyle(
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[500]),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  getStartEndTime(RegimentDataModel regimen) {
+    if (regimentData?.estart != null &&
+        regimentData?.estart != '' &&
+        regimentData?.eend != null &&
+        regimentData?.eend != '') {
+      return Row(
+        children: [
+          Text(
+            DateFormat('hh:mm a').format(regimentData?.estart),
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+          ),
+          Text(
+            ' - ' + DateFormat('hh:mm a').format(regimentData?.eend),
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+          ),
+          Text(
+            ' (' + (CommonUtil.convertMinuteToHour(regimentData?.duration??0)).toString() + ')',
+            style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
+          ),
+        ],
+      );
+    } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  dynamic getAppointmentIcon() {
+    final iconSize = 40.0.sp;
+
+    return Image.asset(
+      icon_appointment_regimen,
+      height: iconSize,
+      width: iconSize,
+      color: Color(CommonUtil().getMyPrimaryColor()),
+    );
+  }
+
+  getShowAppointmentBnt() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Text(
+            strAppointmentRegimen,
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          )),
+    );
   }
 
   stopRegimenTTS() {
