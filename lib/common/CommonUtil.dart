@@ -3272,20 +3272,22 @@ class CommonUtil {
     String message,
     bool isError = false,
   }) {
-    var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
-    if (isError) {
-      FlutterLogs.logError(
-        'MainUser- $userIdMain',
-        'CurrentUser- $userIdCurrent',
-        '$message',
-      );
-    } else {
-      FlutterLogs.logInfo(
-        'MainUser- $userIdMain',
-        'CurrentUser- $userIdCurrent',
-        '$message',
-      );
+    if (Platform.isAndroid) {
+      var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
+      if (isError) {
+        FlutterLogs.logError(
+          'MainUser- $userIdMain',
+          'CurrentUser- $userIdCurrent',
+          '$message',
+        );
+      } else {
+        FlutterLogs.logInfo(
+          'MainUser- $userIdMain',
+          'CurrentUser- $userIdCurrent',
+          '$message',
+        );
+      }
     }
   }
 
@@ -3380,9 +3382,12 @@ class CommonUtil {
   }
 
   static Future<void> sendLogToServer() async {
-    await FlutterLogs.exportLogs(
-      exportType: ExportType.ALL,
-    );
+    if (Platform.isAndroid) {
+      await FlutterLogs.exportLogs(
+        exportType: ExportType.ALL,
+      );
+    }
+
     //createComputeFunction();
     // FlutterLogs.exportAllFileLogs();
     //
