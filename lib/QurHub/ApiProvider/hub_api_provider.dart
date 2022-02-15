@@ -106,8 +106,8 @@ class HubApiProvider {
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub/unpair-hub',
+      responseJson = await ApiServices.delete(
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device',
         headers: header,
         body: json.encode(data),
       );

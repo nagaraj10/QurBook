@@ -45,7 +45,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   //var _selected = CommonUtil.REGION_CODE == 'IN' ? Country.IN : Country.US;
   Country _selectedDialogCountry =
-      CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+      CountryPickerUtils.getCountryByIsoCode('IN');
   bool isPrimaryNoSelected = false;
 
   final mobileNoController = TextEditingController();
@@ -622,7 +622,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   saveMediaDialog(BuildContext context) {
     _selectedDialogCountry =
-        CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
+        CountryPickerUtils.getCountryByIsoCode('IN');
     firstNameController.text = '';
     middleNameController.text = '';
     lastNameController.text = '';
