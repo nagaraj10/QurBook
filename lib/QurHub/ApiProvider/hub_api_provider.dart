@@ -42,11 +42,11 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data={
-      "deviceId" : "34f51378-4316-48a6-adea-fc519c619a5b",
-      "userHubId":deviceId,
-      "userId":userId,
-      "additionalDetails":{}
+    var data = {
+      "deviceId": "34f51378-4316-48a6-adea-fc519c619a5b",
+      "userHubId": deviceId,
+      "userId": userId,
+      "additionalDetails": {}
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -73,9 +73,7 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data={
-      "userHubId" : hubId
-    };
+    var data = {"userHubId": hubId};
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
@@ -105,7 +103,8 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/'+deviceId,
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/' +
+            deviceId,
         headers: header,
       );
       if (responseJson.statusCode == 200) {
@@ -120,8 +119,6 @@ class HubApiProvider {
       return null;
     }
   }
-
-
 
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {
@@ -143,13 +140,10 @@ class HubApiProvider {
         "http://192.168.99.79/save",
         headers: headers,
         body: jsonEncode(body),
+        timeOutSeconds: 50,
       );
 
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
+      return responseJson;
     } catch (e) {
       print(e);
     }
@@ -167,11 +161,13 @@ class HubApiProvider {
         headers: headers,
       );
 
-      if (responseJson.statusCode == 200) {
+      /*if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
         return responseJson;
-      }
+      }*/
+
+      return responseJson;
     } catch (e) {
       print(e);
     }
@@ -193,6 +189,7 @@ class HubApiProvider {
         'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub',
         headers: header,
         body: jsonEncode(body),
+        timeOutSeconds: 50,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
