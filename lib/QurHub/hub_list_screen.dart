@@ -99,14 +99,13 @@ class _HubListScreenState extends State<HubListScreen> {
     return Center(
       child: InkWell(
         onTap: () {
-          unPairDialog('hub', '','');
-          // try {
-          //   Get.to(
-          //     AddNetWorkView(),
-          //   );
-          // } catch (e) {
-          //   print(e);
-          // }
+          try {
+            Get.to(
+              AddNetWorkView(),
+            );
+          } catch (e) {
+            print(e);
+          }
         },
         child: Card(
           color: Color(CommonUtil().getMyPrimaryColor()),
