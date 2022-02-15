@@ -101,15 +101,12 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data={
-      "userHubId" : deviceId
-    };
+
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device',
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/'+deviceId,
         headers: header,
-        body: json.encode(data),
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
