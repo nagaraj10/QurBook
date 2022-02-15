@@ -287,7 +287,7 @@ class _HubListScreenState extends State<HubListScreen> {
                         )),
                         InkWell(
                           onTap: (){
-                            unPairDialog('device',result.userDeviceCollection[index].id,'')
+                            unPairDialog('device',result.userDeviceCollection[index].id,'');
                           },
                           child: Card(
                             color: Color(CommonUtil().getMyPrimaryColor()),
