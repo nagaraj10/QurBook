@@ -298,7 +298,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
         }
       },
       child: Container(
-        width: 140.0.w,
+        width: 150.0.w,
         height: 45.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
@@ -317,7 +317,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
-              fontWeight: FontWeight.w400,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
