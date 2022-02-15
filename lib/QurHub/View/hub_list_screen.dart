@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/View/add_network_view.dart';
-import 'package:myfhb/QurHub/hub_list_controller.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
-import '../src/utils/screenutils/size_extensions.dart';
+import '../../src/utils/screenutils/size_extensions.dart';
 
 import 'add_device_screen.dart';
 

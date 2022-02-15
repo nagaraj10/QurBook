@@ -151,68 +151,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
     );
   }
 
-  showConnectWifiDialog(BuildContext context) {
-    wifiNameController.text = '';
-    passwordController.text = '';
-
-    return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            content: Container(
-                width: 1.sw,
-                height: 1.sh / 3.2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                _showWifiNameTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                _showPasswordTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15.0.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                _showConnectButton(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.0.h,
-                            ),
-                            // callAddFamilyStreamBuilder(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-          );
-        });
-      },
-    );
-  }
-
   Widget _showWifiNameTextField() {
     wifiNameController.text = controller.strSSID.value;
     return Expanded(
