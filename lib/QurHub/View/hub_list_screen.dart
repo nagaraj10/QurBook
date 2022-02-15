@@ -197,7 +197,7 @@ class _HubListScreenState extends State<HubListScreen> {
                   ),
                   InkWell(
                     onTap: (){
-                      showAlertDialog(context,'hub', result.hub.id);
+                      unPairDialog('hub','', result.hub.id);
                     },
                     child:  Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
@@ -285,16 +285,21 @@ class _HubListScreenState extends State<HubListScreen> {
                             )
                           ],
                         )),
-                        Card(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              'Unpair',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12),
+                        InkWell(
+                          onTap: (){
+                            unPairDialog('device',result.userDeviceCollection[index].id,'')
+                          },
+                          child: Card(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            child: Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                'Unpair',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12),
+                              ),
                             ),
                           ),
                         )
@@ -307,6 +312,66 @@ class _HubListScreenState extends State<HubListScreen> {
       ],
     );
   }
+
+  Future<Widget> unPairDialog(String type,String deviceId, String hubId)=> showDialog(context: context, builder: (BuildContext context) {
+    return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        child : Container(
+          height: 178,
+            child : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Image.asset('assets/payment/failure.png',height : 50, width : 50),
+                    SizedBox(height: 15,),
+                    Text(type=='hub'?'Do you want to unpair this Hub':'Do you want to unpair this device'),
+                    SizedBox(height: 15,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children :[
+                        InkWell(
+                          onTap: (){
+                            if(type=='hub'){
+                              controller.unPairHub(hubId);
+                              Navigator.pop(context);
+                            }else{
+                              controller.unPairDevice(deviceId);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: Card(
+                            color: Colors.red,
+                            child : Padding(
+                              padding: const EdgeInsets.only(top :8.0,bottom: 8.0,left : 16.0,right : 16.0),
+                              child: Text('Yes',style: TextStyle(color: Colors.white),),
+                            )
+                          ),
+                        ),
+                        SizedBox(width: 20,),
+                        InkWell(
+                          onTap: (){
+
+                            Navigator.pop(context);
+
+                          },
+                          child: Card(
+                              color: Colors.green,
+                              child : Padding(
+                                padding: const EdgeInsets.only(top :8.0,bottom: 8.0,left : 16.0,right : 16.0),
+                                child: Text('No',style: TextStyle(color: Colors.white),),
+                              )
+                          ),
+                        )
+                      ]
+                    )
+                  ],
+                ),
+              ),
+            )
+        )
+    );
+  });
 
   showAlertDialog(BuildContext context,String type,String hubId) {
 
