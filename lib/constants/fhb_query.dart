@@ -346,5 +346,3 @@ const String qr_chat_socket_get_user_id_doc = 'doctor/';
 
 const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
 
-const String qr_hub = 'qur-hub/user-hub';
-

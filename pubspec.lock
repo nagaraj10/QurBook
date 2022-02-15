@@ -959,13 +959,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  logging:
-    dependency: transitive
-    description:
-      name: logging
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   lottie:
     dependency: "direct main"
     description:
@@ -1300,20 +1293,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
-  socket_io_client:
-    dependency: "direct main"
-    description:
-      name: socket_io_client
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0-beta.4-nullsafety.0"
-  socket_io_common:
-    dependency: transitive
-    description:
-      name: socket_io_common
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0-beta.1-nullsafety.1"
   source_span:
     dependency: transitive
     description:
@@ -1545,13 +1524,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.10"
-  wifi_iot:
-    dependency: "direct main"
-    description:
-      name: wifi_iot
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.15"
   win32:
     dependency: transitive
     description:

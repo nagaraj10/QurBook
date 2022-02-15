@@ -7,10 +7,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
-import android.net.*
-import android.net.wifi.WifiConfiguration
-import android.net.wifi.WifiManager
-import android.net.wifi.WifiNetworkSpecifier
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -62,7 +59,6 @@ class MainActivity : FlutterActivity() {
     private val ROUTE_CHANNEL = Constants.CN_ROUTE
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val STREAM = Constants.CN_EVE_STREAM
-    private val WIFICONNECT = Constants.WIFI_WORKS
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -386,85 +382,6 @@ class MainActivity : FlutterActivity() {
             } catch (e: Exception) {
                 print("exception" + e.message)
             }
-        }
-
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            WIFICONNECT
-        ).setMethodCallHandler {
-                call, result ->
-            if (call.method == "getTest") {
-
-                Log.e("QUR",call.arguments.toString())
-                val temp = getTest(call.argument<String>("SSID").toString(),call.argument<String>("Password").toString())
-
-                result.success(temp)
-                // Note: this method is invoked on the main thread.
-                // TODO
-            }
-            if(call.method == "dc") {
-                val temp = disconnect()
-
-                result.success(temp)
-            }
-        }
-
-
-    }
-
-
-    private fun disconnect(): Int {
-        if(android.os.Build.VERSION.SDK_INT >= 29)
-        {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            connectivityManager.unregisterNetworkCallback(mNetworkCallback)
-        }
-        return 3434;
-    }
-    private val mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
-        @RequiresApi(Build.VERSION_CODES.M)
-        override fun onAvailable(network: Network) {
-            //phone is connected to wifi network
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            connectivityManager.bindProcessToNetwork(network)
-        }
-    }
-    private fun getTest(ssid: String,password:String): Int {
-
-        if(android.os.Build.VERSION.SDK_INT >= 29)
-        {
-            val specifier = WifiNetworkSpecifier.Builder()
-                // .setSsidPattern(PatternMatcher("SSID", PatternMatcher.PATTERN_PREFIX))
-                .setSsid(ssid)
-                .setWpa2Passphrase(password)
-                .build()
-            val request = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .setNetworkSpecifier(specifier)
-                .build()
-
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-            connectivityManager.requestNetwork(request, mNetworkCallback)
-
-            // Release the request when done.
-            //
-
-            return 1
-        }
-        else {
-            var networkSSID = ssid;
-            var networkPass = password;
-            var conf = WifiConfiguration()
-            conf.SSID = "\"" + networkSSID + "\""
-            conf.preSharedKey = "\""+ networkPass +"\""
-            var wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            var netid = wifiManager.addNetwork(conf)
-            wifiManager.disconnect()
-            wifiManager.enableNetwork(netid, true)
-            wifiManager.reconnect()
-            return ssid.length
-
         }
 
 

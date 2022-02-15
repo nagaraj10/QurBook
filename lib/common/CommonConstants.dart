@@ -72,6 +72,7 @@ class CommonConstants {
 
   static String search = 'Search';
 
+
   static String fromClass = 'My Providers';
 
   static String doctors = 'Doctors';
@@ -154,6 +155,7 @@ class CommonConstants {
   static String strBillNameEmpty = 'Please Enter Bill Name';
   static String strBillDateEmpty = 'Please Enter Bill Date';
   static String strClaimAmtEmpty = 'Please Enter Claim Amount';
+
 
   //From senthil
 
@@ -254,6 +256,7 @@ class CommonConstants {
 
   static const String corpname = 'Membership offered by';
 
+
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
 
@@ -272,8 +275,7 @@ class CommonConstants {
   static const String strQueryString = '?';
   static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
-  static const String strMicAlertMsg =
-      'The Mic is currently in use by another app. Please try later';
+  static const String strMicAlertMsg = 'The Mic is currently in use by another app. Please try later';
 
   /// Color for devices
   static var bpDarkColor = 0xff059192;
@@ -299,12 +301,6 @@ class CommonConstants {
   static String strClaimAmtWithStar = 'Claim Amount *';
   static String strFamilyMember = 'Family Member *';
 
-  //QurHub
-  static String wifiName = 'WifiName';
-  static String password = 'Password';
-  static String connect = 'Connect';
-  static String hubId = 'Hub ID';
-  static String nickName = 'Nick Name';
 
   factory CommonConstants() => _instance;
 
@@ -329,9 +325,8 @@ class CommonConstants {
   Future<UnitsMesurements> getValuesForUnit(String units, String range) async {
     final db = DatabaseHelper();
 
-    unitsMeasurements =
-        await db.getMeasurementsBasedOnUnits(units, range ?? '');
-    //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
+    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units, range??'');
+   //print(unitsMeasurements.maxValue.toString()+"MAX"+unitsMeasurements.minValue.toString()+" MIN"+ "unitsMeasurements*************");
     return unitsMeasurements;
   }
 

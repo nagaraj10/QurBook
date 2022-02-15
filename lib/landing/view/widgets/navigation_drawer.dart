@@ -5,8 +5,6 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/IntroScreens/IntroWidget.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
-import 'package:myfhb/QurHub/View/hub_list_screen.dart';
-
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
@@ -25,11 +23,12 @@ import '../../../authentication/constants/constants.dart';
 import '../../../constants/router_variable.dart' as router;
 
 class NavigationDrawer extends StatelessWidget {
-  const NavigationDrawer(
-      {@required this.myProfile,
-      @required this.moveToLoginPage,
-      @required this.refresh,
-      @required this.userChangedbool});
+  const NavigationDrawer({
+    @required this.myProfile,
+    @required this.moveToLoginPage,
+    @required this.refresh,
+    @required this.userChangedbool
+  });
 
   final MyProfileModel myProfile;
   final Function moveToLoginPage;
@@ -81,7 +80,7 @@ class NavigationDrawer extends StatelessWidget {
                                 child: UserProfileImage(
                                   myProfile,
                                   textColor:
-                                      Color(CommonUtil().getMyPrimaryColor()),
+                                  Color(CommonUtil().getMyPrimaryColor()),
                                   circleColor: Color(bgColorContainer),
                                 ),
                               ),
@@ -160,24 +159,6 @@ class NavigationDrawer extends StatelessWidget {
                         }
                       },
                     ),
-                    //QurHub
-                    DrawerTile(
-                      title: variable.strQurHub,
-                      iconWidget: SvgPicture.asset(
-                        variable.icon_qurhub,
-                        color: Colors.black54,
-                      ),
-                      onPressed: () async {
-                        try {
-                          Navigator.pop(context);
-                          Get.to(
-                            HubListScreen(),
-                          );
-                        } catch (e) {
-                          print(e);
-                        }
-                      },
-                    ),
                     DrawerTile(
                       title: variable.strMyOrders,
                       iconWidget: Image.asset(
@@ -204,9 +185,10 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MoreMenuScreen(
-                              refresh: refresh,
-                            ),
+                            builder: (context) =>
+                                MoreMenuScreen(
+                                  refresh: refresh,
+                                ),
                           ),
                         );
                       },
@@ -266,34 +248,33 @@ class NavigationDrawer extends StatelessWidget {
                         );
                       },
                     ),
-                    Visibility(
-                        child: DrawerTile(
-                          title: variable.strMyClaims,
-                          /*iconWidget: SvgPicture.asset(
+                    Visibility(child: DrawerTile(
+                      title: variable.strMyClaims,
+                      /*iconWidget: SvgPicture.asset(
                           variable.icon_settings,
                           color: Colors.black54,
                         ),*/
-                          iconWidget: SvgPicture.asset(
-                            variable.icon_claim,
-                            color: Colors.black54,
+                      iconWidget: SvgPicture.asset(
+                        variable.icon_claim,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ClaimList(),
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ClaimList(),
-                              ),
-                            );
-                          },
-                        ),
-                        visible: userChangedbool),
+                        );
+                      },
+                    ), visible: userChangedbool),
                     DrawerTile(
                       title: variable.strLogout,
                       iconWidget: SvgPicture.asset(
                         variable.icon_logout,
                         color: Colors.black54,
                       ),
+
                       onPressed: () {
                         FHBBasicWidget().exitApp(context, () {
                           CommonUtil().logout(moveToLoginPage);
@@ -312,16 +293,16 @@ class NavigationDrawer extends StatelessWidget {
 
   Widget getNameWidget() {
     var name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-            myProfile?.result?.name != '')
+        myProfile?.result?.name != '')
         ? myProfile?.result?.name?.capitalizeFirstofEach
         : myProfile?.result?.firstName != null &&
-                myProfile?.result?.lastName != null
-            ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
-            : '');
+        myProfile?.result?.lastName != null
+        ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+        : '');
     final phoneNumber =
-        (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-            ? myProfile?.result?.userContactCollection3[0].phoneNumber
-            : '';
+    (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
+        ? myProfile?.result?.userContactCollection3[0].phoneNumber
+        : '';
 
     return Flexible(
       child: RichText(
@@ -332,16 +313,16 @@ class NavigationDrawer extends StatelessWidget {
             fontSize: 18.0.sp,
           ),
           children: ((phoneNumber != null && phoneNumber != ''))
-              ? [
-                  TextSpan(
-                    text: '\n$phoneNumber',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16.0.sp,
-                    ),
-                  ),
-                ]
-              : null,
+          ? [
+          TextSpan(
+            text: '\n$phoneNumber',
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 16.0.sp,
+            ),
+          ),
+          ]
+          : null,
         ),
       ),
     );
