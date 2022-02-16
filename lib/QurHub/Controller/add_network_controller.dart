@@ -111,10 +111,20 @@ class AddNetworkController extends GetxController {
         http.Response response =
             await _apiProvider.callConnectWifi(wifiName, password);
         if (response != null) {
-          isBtnLoading.value = false;
-          Get.to(
-            HubIdConfigView(),
-          );
+          const platform = MethodChannel('wifiworks');
+          final int result = await platform.invokeMethod(
+              'getTest', {"SSID": wifiName, "Password": password});
+          if (result == 1) {
+            await 1.delay();
+            isBtnLoading.value = false;
+            Get.to(
+              HubIdConfigView(),
+            );
+          } else {
+            await 1.delay();
+            isBtnLoading.value = false;
+            toast.getToast("wifiName and password missmatch!!!", Colors.red);
+          }
           /*AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));*/
         } else {
