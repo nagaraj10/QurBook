@@ -68,6 +68,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
 
     return showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
