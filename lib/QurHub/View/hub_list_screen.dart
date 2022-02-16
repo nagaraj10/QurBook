@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/View/add_network_view.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
@@ -8,6 +9,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import '../../colors/fhb_colors.dart' as fhbColors;
 
 import 'add_device_screen.dart';
 
@@ -249,11 +251,26 @@ class _HubListScreenState extends State<HubListScreen> {
                         SizedBox(
                           width: 10,
                         ),
-                        Image.asset(
-                          'assets/payment/failure.png',
-                          height: 50,
-                          width: 50,
-                        ),
+                        ClipOval(
+                            child:  result.userDeviceCollection[index] != null
+                                ?  result.userDeviceCollection[index].user.profilePicThumbnailUrl !=
+                                null
+                                ? getProfilePicWidget(
+                                result.userDeviceCollection[index].user.profilePicThumbnailUrl,
+                                result.userDeviceCollection[index].user.firstName,
+                                result.userDeviceCollection[index].user.lastName,
+                                Color(CommonUtil().getMyPrimaryColor()))
+                                : Container(
+                                width: 50.0.h,
+                                height: 50.0.h,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))
+                                : Container(
+                                width: 50.0.h,
+                                height: 50.0.h,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))),
+
                         SizedBox(
                           width: 10,
                         ),
