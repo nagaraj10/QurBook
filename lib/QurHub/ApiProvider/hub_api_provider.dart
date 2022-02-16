@@ -123,33 +123,16 @@ class HubApiProvider {
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {
       Response responseJson;
-      var headers = {"accept-content": "application/json"};
-
-      print("Header $headers");
-
-      var body = {
-        "": "",
-        /*"A": "${wifiName.toString().trim()}",
-        "K": "${password.toString().trim()}",
-        "Action": "Save",
-        "J": "1",*/
-      };
-
-      print("body $body");
 
       responseJson = await ApiServices.post(
         "http://192.168.99.79/save?J=1&A=$wifiName&K=$password&Action=Save",
-        /*headers: headers,
-        body: jsonEncode(body),*/
         timeOutSeconds: 50,
       );
-
-      /*return responseJson;*/
 
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
-        return null;
+        return responseJson;
       }
     } catch (e) {
       print(e);
@@ -173,8 +156,6 @@ class HubApiProvider {
       } else {
         return responseJson;
       }
-
-      /*return responseJson;*/
     } catch (e) {
       print(e);
     }
@@ -187,15 +168,15 @@ class HubApiProvider {
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      var body = {
+      var data = {
         "serialNumber": "${hubId.trim()}",
         "niceName": "${nickName.trim()}",
-        "additionalDetails": "",
+        "additionalDetails": {},
       };
       responseJson = await ApiServices.post(
         'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub',
         headers: header,
-        body: jsonEncode(body),
+        body: json.encode(data),
         timeOutSeconds: 50,
       );
       if (responseJson.statusCode == 200) {
