@@ -25,16 +25,15 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
+      isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
         if (val) {
-          callHubId();
           WiFiForIoTPlugin.isConnected().then((val) {
             WiFiForIoTPlugin.getSSID().then((val) {
               print("getSSID $val");
               strSSID.value = val;
             });
           });
-          isLoading.value = true;
           ssidList.value = [];
           try {
             ssidList.value = await WiFiForIoTPlugin.loadWifiList();
@@ -95,22 +94,22 @@ class AddNetworkController extends GetxController {
       isBtnLoading.value = true;
       http.Response response =
           await _apiProvider.callConnectWifi(wifiName, password);
-      if (response.statusCode == 200) {
-        AddNetworkModel addNetworkModel =
-            AddNetworkModel.fromJson(json.decode(response.body));
-        if (validString(addNetworkModel.result).toLowerCase().contains("ok")) {
-          Get.to(
-            HubIdConfigView(),
-          );
-        } else {
-          print("callHubId O/P ${validString(json.decode(response.body))}");
-          toast.getToast(validString(json.decode(response.body)), Colors.red);
-        }
+      if (validString(json.decode(response.body))
+          .toLowerCase()
+          .contains("ok")) {
+        /*print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");*/
+        /*AddNetworkModel addNetworkModel =
+            AddNetworkModel.fromJson(json.decode(response.body));*/
+        callHubId();
+        print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       } else {
-        print("callHubId O/P ${validString(json.decode(response.body))}");
+        isBtnLoading.value = false;
         toast.getToast(validString(json.decode(response.body)), Colors.red);
+        print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       }
-      isBtnLoading.value = false;
     } catch (e) {
       print(e.toString());
       isBtnLoading.value = false;
@@ -121,16 +120,27 @@ class AddNetworkController extends GetxController {
     try {
       strHubId.value = "";
       http.Response response = await _apiProvider.callHubId();
-      if (response.statusCode == 200) {
+
+      if (validString(json.decode(response.body))
+          .toLowerCase()
+          .contains("hubId")) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         strHubId.value = validString(addNetworkModel.hubId);
-        print("callHubId O/P strHubId ${validString(strHubId.value)}");
+        isBtnLoading.value = false;
+        Get.to(
+          HubIdConfigView(),
+        );
+        print(
+            "callHubId O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       } else {
-        print("callHubId O/P ${validString(json.decode(response.body))}");
-        //toast.getToast(validString(json.decode(response.body)), Colors.red);
+        isBtnLoading.value = false;
+        toast.getToast(validString(json.decode(response.body)), Colors.red);
+        print(
+            "callHubId O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       }
     } catch (e) {
+      isBtnLoading.value = false;
       print(e.toString());
     }
   }
@@ -163,22 +173,25 @@ class AddNetworkController extends GetxController {
       http.Response response =
           await _apiProvider.callHubIdConfig(hubId, nickName);
       if (response.statusCode == 200) {
+        isBtnLoading.value = false;
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         if (addNetworkModel.isSuccess) {
           toast.getToast(validString(addNetworkModel.message), Colors.green);
+          print(
+              "callSaveHubIdConfig O/P ${validString(response.statusCode.toString())} ${validString(addNetworkModel.message)}");
           Get.off(HubListScreen());
         } else {
           print(
-              "callSaveHubIdConfig O/P ${validString(addNetworkModel.message)}");
+              "callSaveHubIdConfig O/P ${validString(response.statusCode.toString())} ${validString(addNetworkModel.message)}");
           toast.getToast(validString(addNetworkModel.message), Colors.red);
         }
       } else {
+        isBtnLoading.value = false;
         print(
-            "callSaveHubIdConfig O/P ${validString(json.decode(response.body))}");
+            "callSaveHubIdConfig O/P ${validString(response.statusCode.toString())} ${validString(response.body.toString())}");
         toast.getToast(validString(json.decode(response.body)), Colors.red);
       }
-      isBtnLoading.value = false;
     } catch (e) {
       print(e.toString());
       isBtnLoading.value = false;

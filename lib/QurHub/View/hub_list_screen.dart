@@ -38,7 +38,9 @@ class _HubListScreenState extends State<HubListScreen> {
               Icons.arrow_back_ios,
               size: 24.0.sp,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Get.back();
+            },
           ),
           title: Text('Connected Hub'),
           centerTitle: false,
@@ -98,31 +100,44 @@ class _HubListScreenState extends State<HubListScreen> {
                   )),
       );
   Widget pairNewDeviveBtn() {
-    return Center(
-      child: InkWell(
-        onTap: () {
-          try {
-            Get.to(
-              AddNetWorkView(),
-            );
-          } catch (e) {
-            print(e);
-          }
-        },
-        child: Card(
+    final pairNewDeviveWithGesture = GestureDetector(
+      onTap: () {
+        try {
+          Get.to(
+            AddNetWorkView(),
+          );
+        } catch (e) {
+          print(e);
+        }
+      },
+      child: Container(
+        width: 200.0.w,
+        height: 45.0.h,
+        decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Text(
-              'Pair New Hub',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            "Pair New Hub",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ),
       ),
+    );
+    return Center(
+      child: pairNewDeviveWithGesture,
     );
   }
 
@@ -198,10 +213,10 @@ class _HubListScreenState extends State<HubListScreen> {
                     width: 10,
                   ),
                   InkWell(
-                    onTap: (){
-                      unPairDialog('hub','', result.hub.id);
+                    onTap: () {
+                      unPairDialog('hub', '', result.hub.id);
                     },
-                    child:  Card(
+                    child: Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
@@ -215,7 +230,6 @@ class _HubListScreenState extends State<HubListScreen> {
                       ),
                     ),
                   )
-
                 ],
               ),
             ),
@@ -303,8 +317,9 @@ class _HubListScreenState extends State<HubListScreen> {
                           ],
                         )),
                         InkWell(
-                          onTap: (){
-                            unPairDialog('device',result.userDeviceCollection[index].id,'');
+                          onTap: () {
+                            unPairDialog('device',
+                                result.userDeviceCollection[index].id, '');
                           },
                           child: Card(
                             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -330,94 +345,112 @@ class _HubListScreenState extends State<HubListScreen> {
     );
   }
 
-  Future<Widget> unPairDialog(String type,String deviceId, String hubId)=> showDialog(context: context, builder: (BuildContext context) {
-    return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child : Container(
-          height: 178,
-            child : Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Image.asset('assets/payment/failure.png',height : 50, width : 50),
-                    SizedBox(height: 15,),
-                    Text(type=='hub'?'Do you want to unpair this Hub':'Do you want to unpair this device'),
-                    SizedBox(height: 15,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children :[
-                        InkWell(
-                          onTap: (){
-                            if(type=='hub'){
-                              controller.unPairHub(hubId);
-                              Navigator.pop(context);
-                            }else{
-                              controller.unPairDevice(deviceId);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: Card(
-                            color: Colors.red,
-                            child : Padding(
-                              padding: const EdgeInsets.only(top :8.0,bottom: 8.0,left : 16.0,right : 16.0),
-                              child: Text('Yes',style: TextStyle(color: Colors.white),),
-                            )
-                          ),
+  Future<Widget> unPairDialog(String type, String deviceId, String hubId) =>
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0)),
+                child: Container(
+                    height: 178,
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Image.asset('assets/payment/failure.png',
+                                height: 50, width: 50),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(type == 'hub'
+                                ? 'Do you want to unpair this Hub'
+                                : 'Do you want to unpair this device'),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (type == 'hub') {
+                                        controller.unPairHub(hubId);
+                                        Navigator.pop(context);
+                                      } else {
+                                        controller.unPairDevice(deviceId);
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: Card(
+                                        color: Colors.red,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                              bottom: 8.0,
+                                              left: 16.0,
+                                              right: 16.0),
+                                          child: Text(
+                                            'Yes',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Card(
+                                        color: Colors.green,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                              bottom: 8.0,
+                                              left: 16.0,
+                                              right: 16.0),
+                                          child: Text(
+                                            'No',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  )
+                                ])
+                          ],
                         ),
-                        SizedBox(width: 20,),
-                        InkWell(
-                          onTap: (){
+                      ),
+                    )));
+          });
 
-                            Navigator.pop(context);
-
-                          },
-                          child: Card(
-                              color: Colors.green,
-                              child : Padding(
-                                padding: const EdgeInsets.only(top :8.0,bottom: 8.0,left : 16.0,right : 16.0),
-                                child: Text('No',style: TextStyle(color: Colors.white),),
-                              )
-                          ),
-                        )
-                      ]
-                    )
-                  ],
-                ),
-              ),
-            )
-        )
-    );
-  });
-
-  showAlertDialog(BuildContext context,String type,String hubId) {
-
+  showAlertDialog(BuildContext context, String type, String hubId) {
     // set up the button
     Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
-        if(type=='hub'){
+        if (type == 'hub') {
           controller.unPairHub(hubId);
           Navigator.pop(context);
-        }else{
-
-        }
+        } else {}
       },
     );
 
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed: () { },
+      onPressed: () {},
     );
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Warning"),
-      content: Text(type=='hub'?'Do you want to unpair this Hub':'Do you want to unpair this device'),
-      actions: [
-        okButton,
-        cancelButton
-      ],
+      content: Text(type == 'hub'
+          ? 'Do you want to unpair this Hub'
+          : 'Do you want to unpair this device'),
+      actions: [okButton, cancelButton],
     );
 
     // show the dialog
@@ -428,5 +461,4 @@ class _HubListScreenState extends State<HubListScreen> {
       },
     );
   }
-
 }

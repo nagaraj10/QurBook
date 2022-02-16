@@ -1227,17 +1227,17 @@ class _MyFHBState extends State<MyFHB> {
     switch (result) {
       case ConnectivityResult.wifi:
         if (!_internetconnection) {
-          Navigator.pop(Get.context);
+          //Navigator.pop(Get.context);
         }
 
         setState(() {
           _internetconnection = true;
-          // toast.getToast(wifi_connected, Colors.green);
+          toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:
         if (!_internetconnection) {
-          Navigator.pop(Get.context);
+          //Navigator.pop(Get.context);
         }
         setState(() {
           _internetconnection = true;
@@ -1245,10 +1245,10 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
       case ConnectivityResult.none:
-        await Get.to(NetworkScreen());
+        //await Get.to(NetworkScreen());
         setState(() {
           _internetconnection = false;
-          // toast.getToast(no_internet_conn, Colors.red);
+          toast.getToast(no_internet_conn, Colors.red);
         });
         break;
       default:

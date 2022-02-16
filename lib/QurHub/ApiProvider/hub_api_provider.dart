@@ -42,11 +42,11 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data={
-      "deviceId" : "34f51378-4316-48a6-adea-fc519c619a5b",
-      "userHubId":deviceId,
-      "userId":userId,
-      "additionalDetails":{}
+    var data = {
+      "deviceId": "34f51378-4316-48a6-adea-fc519c619a5b",
+      "userHubId": deviceId,
+      "userId": userId,
+      "additionalDetails": {}
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -73,9 +73,7 @@ class HubApiProvider {
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data={
-      "userHubId" : hubId
-    };
+    var data = {"userHubId": hubId};
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
@@ -105,7 +103,8 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/'+deviceId,
+        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/' +
+            deviceId,
         headers: header,
       );
       if (responseJson.statusCode == 200) {
@@ -121,8 +120,6 @@ class HubApiProvider {
     }
   }
 
-
-
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {
       Response responseJson;
@@ -131,25 +128,22 @@ class HubApiProvider {
       print("Header $headers");
 
       var body = {
-        "A": "${wifiName.toString().trim()}",
+        /*"A": "${wifiName.toString().trim()}",
         "K": "${password.toString().trim()}",
         "Action": "Save",
-        "J": "1",
+        "J": "1",*/
       };
 
       print("body $body");
 
       responseJson = await ApiServices.post(
-        "http://192.168.99.79/save",
+        "http://192.168.99.79/save?J=1&A=$wifiName&K=$password&Action=Save",
         headers: headers,
         body: jsonEncode(body),
+        timeOutSeconds: 50,
       );
 
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
+      return responseJson;
     } catch (e) {
       print(e);
     }
@@ -163,15 +157,17 @@ class HubApiProvider {
       print("Header $headers");
 
       responseJson = await ApiServices.get(
-        "http://192.168.99.79/?A=GetHubID",
+        "http://192.168.99.79/gethubid",
         headers: headers,
       );
 
-      if (responseJson.statusCode == 200) {
+      /*if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
         return responseJson;
-      }
+      }*/
+
+      return responseJson;
     } catch (e) {
       print(e);
     }
@@ -193,6 +189,7 @@ class HubApiProvider {
         'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub',
         headers: header,
         body: jsonEncode(body),
+        timeOutSeconds: 50,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
