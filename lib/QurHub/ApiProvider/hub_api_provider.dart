@@ -128,16 +128,16 @@ class HubApiProvider {
       print("Header $headers");
 
       var body = {
-        "A": "${wifiName.toString().trim()}",
+        /*"A": "${wifiName.toString().trim()}",
         "K": "${password.toString().trim()}",
         "Action": "Save",
-        "J": "1",
+        "J": "1",*/
       };
 
       print("body $body");
 
       responseJson = await ApiServices.post(
-        "http://192.168.99.79/save",
+        "http://192.168.99.79/save?J=1&A=$wifiName&K=$password&Action=Save",
         headers: headers,
         body: jsonEncode(body),
         timeOutSeconds: 50,
@@ -157,7 +157,7 @@ class HubApiProvider {
       print("Header $headers");
 
       responseJson = await ApiServices.get(
-        "http://192.168.99.79/?A=GetHubID",
+        "http://192.168.99.79/gethubid",
         headers: headers,
       );
 
