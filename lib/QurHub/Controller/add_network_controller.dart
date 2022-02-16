@@ -57,6 +57,7 @@ class AddNetworkController extends GetxController {
                       {"SSID": qurHubWifiRouter.ssid, "Password": ""});
 
                   if (result == 1) {
+                    callHubId();
                     toast.getToastForLongTime(
                         "wifi connection successfull", Colors.green);
                     //strSSID.value = "";
@@ -94,14 +95,13 @@ class AddNetworkController extends GetxController {
       isBtnLoading.value = true;
       http.Response response =
           await _apiProvider.callConnectWifi(wifiName, password);
-      if (validString(json.decode(response.body))
-          .toLowerCase()
-          .contains("ok")) {
-        /*print(
-            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");*/
+      if (response != null) {
+        isBtnLoading.value = false;
+        Get.to(
+          HubIdConfigView(),
+        );
         /*AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));*/
-        callHubId();
         print(
             "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       } else {
@@ -110,6 +110,26 @@ class AddNetworkController extends GetxController {
         print(
             "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       }
+      /*if (validString(json.decode(response.body))
+          .toLowerCase()
+          .contains("ok")) {
+        isBtnLoading.value = false;
+        Get.to(
+          HubIdConfigView(),
+        );
+        */ /*print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");*/ /*
+        */ /*AddNetworkModel addNetworkModel =
+            AddNetworkModel.fromJson(json.decode(response.body));*/ /*
+        //callHubId();
+        print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
+      } else {
+        isBtnLoading.value = false;
+        toast.getToast(validString(json.decode(response.body)), Colors.red);
+        print(
+            "getConnectWifi O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
+      }*/
     } catch (e) {
       print(e.toString());
       isBtnLoading.value = false;
@@ -121,26 +141,18 @@ class AddNetworkController extends GetxController {
       strHubId.value = "";
       http.Response response = await _apiProvider.callHubId();
 
-      if (validString(json.decode(response.body))
-          .toLowerCase()
-          .contains("hubId")) {
+      if (response != null) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         strHubId.value = validString(addNetworkModel.hubId);
-        isBtnLoading.value = false;
-        Get.to(
-          HubIdConfigView(),
-        );
         print(
             "callHubId O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       } else {
-        isBtnLoading.value = false;
         toast.getToast(validString(json.decode(response.body)), Colors.red);
         print(
             "callHubId O/P ${validString(response.statusCode.toString())} ${validString(json.decode(response.body))}");
       }
     } catch (e) {
-      isBtnLoading.value = false;
       print(e.toString());
     }
   }
