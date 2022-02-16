@@ -74,8 +74,10 @@ class _HubListScreenState extends State<HubListScreen> {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  AddDeviceScreen()),
-                                        );
+                                                  AddDeviceScreen(hubId : controller.hubListResponse.result.hubId)),
+                                        ).then((value) => {
+                                          controller.getHubList()
+                                        });
                                       },
                                       child: Card(
                                         color: Color(
@@ -167,44 +169,49 @@ class _HubListScreenState extends State<HubListScreen> {
                   Expanded(
                     child: Row(
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Hub Id',
-                                style: TextStyle(color: Colors.grey),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Hub Id',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                               ),
-                            ),
-                            Text(
-                              result.hub.serialNumber,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
-                            )
-                          ],
+                              Text(
+                                result.hub.serialNumber+'43243234',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
+                              )
+                            ],
+                          ),
                         ),
                         SizedBox(
                           width: 10,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                'Paired On',
-                                style: TextStyle(color: Colors.grey),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'Paired On',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                               ),
-                            ),
-                            Text(
-                              changeDateFormat(result.createdOn),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
-                            )
-                          ],
+                              Text(
+                                changeDateFormat(result.createdOn),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -214,7 +221,7 @@ class _HubListScreenState extends State<HubListScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      unPairDialog('hub', '', result.hub.id);
+                      unPairDialog('hub', '', result.hubId);
                     },
                     child: Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
