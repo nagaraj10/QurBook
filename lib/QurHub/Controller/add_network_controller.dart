@@ -25,6 +25,7 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
+      isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
         if (val) {
           WiFiForIoTPlugin.isConnected().then((val) {
@@ -33,7 +34,6 @@ class AddNetworkController extends GetxController {
               strSSID.value = val;
             });
           });
-          isLoading.value = true;
           ssidList.value = [];
           try {
             ssidList.value = await WiFiForIoTPlugin.loadWifiList();
