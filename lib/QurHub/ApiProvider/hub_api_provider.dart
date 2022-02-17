@@ -37,23 +37,24 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> saveDevice(String deviceId) async {
+  Future<dynamic> saveDevice(String hubId,String deviceId,String nickName) async {
     Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     var data = {
-      "deviceId": "34f51378-4316-48a6-adea-fc519c619a5b",
-      "userHubId": deviceId,
+      "deviceId": deviceId,
+      "userHubId": hubId,
       "userId": userId,
       "additionalDetails": {}
     };
+
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
         'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device',
         headers: header,
-        body: data,
+        body: json.encode(data),
       );
       if (responseJson.statusCode == 200) {
         return responseJson;

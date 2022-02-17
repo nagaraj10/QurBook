@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
@@ -37,7 +39,7 @@ class HubListController extends GetxController {
       loadingData.value = true;
       http.Response response = await _apiProvider.unPairHub(hubId);
       if (response == null ) {
-        // failed to get the data, we are showing the error on UI
+        FlutterToast().getToast('Oops Something went wrong', Colors.red);
       } else {
         getHubList();
       }
@@ -53,7 +55,7 @@ class HubListController extends GetxController {
       loadingData.value = true;
       http.Response response = await _apiProvider.unPairDevice(deviceId);
       if (response == null ) {
-        // failed to get the data, we are showing the error on UI
+        FlutterToast().getToast('Oops Something went wrong', Colors.red);
       } else {
         getHubList();
       }

@@ -86,7 +86,7 @@ class ApiServices {
       CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/Controller/add_device_controller.dart';
@@ -30,8 +31,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   bool isFamilyChanged = false;
   SharedByUsers selectedUser;
   final deviceIdController = TextEditingController();
+  final nickNameController = TextEditingController();
   bool isDeviceIdEmptied = false;
-  FocusNode deviceIdFocus = FocusNode();
   var selectedId = '';
   String createdBy = '';
 
@@ -39,6 +40,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   void initState() {
     selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     controller.getFamilyMembers();
+    initListeners();
     super.initState();
   }
 
@@ -52,14 +54,18 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
             Icons.arrow_back_ios,
             size: 24.0.sp,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: Text('Add Device'),
         centerTitle: false,
         elevation: 0,
       ),
       body: Obx(
-        () => controller.loadingData.isTrue
+        () {
+          initListeners();
+          return  controller.loadingData.isTrue
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -89,24 +95,10 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                       ),
                       getButton(),
                     ],
-                  ),
+                  );}
       ),
     );
   }
-
-
-  Future<Widget> unPairDialog()=> showDialog(context: context, builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        child : Container(
-          child : Column(
-            children: [
-
-            ],
-          )
-        )
-      );
-    });
 
   Widget getButton() {
     return Align(
@@ -115,7 +107,17 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () {
-           controller.saveDevice(widget.hubId);
+            if(deviceIdController.text.length!=0){
+              if(nickNameController.text.length!=0){
+
+                controller.saveDevice(hubId : widget.hubId,deviceId:deviceIdController.text,nickName:nickNameController.text);
+
+              }else{
+                FlutterToast().getToast('Please Enter Nick Name', Colors.red);
+              }
+            }else{
+              FlutterToast().getToast('Please Enter Device ID', Colors.red);
+            }
           },
           child: Card(
             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -148,11 +150,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: deviceIdController,
             keyboardType: TextInputType.text,
-            focusNode: deviceIdFocus,
             textInputAction: TextInputAction.done,
-            onFieldSubmitted: (term) {
-              deviceIdFocus.unfocus();
-            },
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0.sp,
@@ -178,13 +176,9 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
           padding: EdgeInsets.all(16),
           child: TextFormField(
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-            controller: deviceIdController,
+            controller: nickNameController,
             keyboardType: TextInputType.text,
-            focusNode: deviceIdFocus,
             textInputAction: TextInputAction.done,
-            onFieldSubmitted: (term) {
-              deviceIdFocus.unfocus();
-            },
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 16.0.sp,
@@ -314,5 +308,26 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
         ),
       ),
     );
+  }
+
+  void initListeners() {
+    if(controller.loadingData.isFalse&&
+        controller.commonResponse!=null&&
+        controller.commonResponse.isSuccess!=null&&
+        controller.commonResponse.message!=null&&
+        controller.commonResponse.isSuccess){
+      FlutterToast().getToast(controller.commonResponse.message, Colors.red);
+      if(controller.commonResponse.message.contains('Device paired')){
+        Navigator.pop(context);
+      }
+    }else{
+      if(controller.commonResponse!=null&&controller.commonResponse.message!=null){
+        FlutterToast().getToast(controller.commonResponse.message, Colors.red);
+      }
+    }
+  }
+
+  exitApp(){
+    print('working on this');
   }
 }
