@@ -221,7 +221,7 @@ class _HubListScreenState extends State<HubListScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      unPairDialog('hub', '', result.hubId);
+                      unPairDialog(type: 'hub', hubId: result.id);
                     },
                     child: Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
@@ -325,8 +325,7 @@ class _HubListScreenState extends State<HubListScreen> {
                         )),
                         InkWell(
                           onTap: () {
-                            unPairDialog('device',
-                                result.userDeviceCollection[index].id, '');
+                            unPairDialog(type: 'device', deviceId: result.userDeviceCollection[index].id);
                           },
                           child: Card(
                             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -352,7 +351,7 @@ class _HubListScreenState extends State<HubListScreen> {
     );
   }
 
-  Future<Widget> unPairDialog(String type, String deviceId, String hubId) =>
+  Future<Widget> unPairDialog({String type, String deviceId, String hubId}) =>
       showDialog(
           context: context,
           builder: (BuildContext context) {

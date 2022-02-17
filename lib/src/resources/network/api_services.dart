@@ -60,7 +60,7 @@ class ApiServices {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
-
+    print('jsonBody: '+body);
     try {
       final response = await http
           .post(
