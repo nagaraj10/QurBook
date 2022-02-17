@@ -25,11 +25,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   final passwordController = TextEditingController();
   FocusNode passwordFocus = FocusNode();
 
-  final hubIdController = TextEditingController();
-  FocusNode hubIdFocus = FocusNode();
-
-  final nickNameController = TextEditingController();
-  FocusNode nickNameFocus = FocusNode();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -37,9 +32,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
     try {
       controller.getWifiList();
       super.initState();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -53,9 +46,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
             '${DateTime.now().difference(mInitialTime).inSeconds} secs'
       });
       super.dispose();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -86,19 +77,17 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
                   children: [
                     Center(
                       child: Text(
-                        'Not available QurHub-Config router around',
+                        controller.errorMessage.value,
                       ),
                     ),
                     SizedBox(
                       height: 20.00,
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () async {
                         try {
                           controller.getWifiList();
-                        } catch (e) {
-                          print(e);
-                        }
+                        } catch (e) {}
                       },
                       child: Container(
                         width: 145.0.w,
@@ -245,9 +234,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
               Get.to(
                 WifiListView(),
               );
-            } catch (e) {
-              print(e);
-            }
+            } catch (e) {}
           },
         ),
         labelText: CommonConstants.wifiName,
@@ -328,7 +315,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   }
 
   Widget _showConnectButton() {
-    final addButtonWithGesture = GestureDetector(
+    final addButtonWithGesture = InkWell(
       onTap: () {
         try {
           FocusScope.of(context).unfocus();
@@ -336,9 +323,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
             controller.getConnectWifi(wifiNameController.text.toString().trim(),
                 passwordController.text.toString().trim());
           }
-        } catch (e) {
-          print(e);
-        }
+        } catch (e) {}
       },
       child: Container(
         width: 150.0.w,
@@ -361,169 +346,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
               color: Colors.white,
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-
-    return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
-  }
-
-  showSetNickNameDialog(BuildContext context) {
-    hubIdController.text = '';
-    nickNameController.text = '';
-
-    return showDialog<void>(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            content: Container(
-                width: 1.sw,
-                height: 1.sh / 3.2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                _showHubIdTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10.0.h,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                _showNickNameTextField(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 15.0.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                _showSaveButton(),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 25.0.h,
-                            ),
-                            // callAddFamilyStreamBuilder(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
-          );
-        });
-      },
-    );
-  }
-
-  Widget _showHubIdTextField() {
-    return Expanded(
-        child: TextField(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: hubIdController,
-      keyboardType: TextInputType.text,
-      focusNode: hubIdFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        FocusScope.of(context).requestFocus(nickNameFocus);
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: CommonConstants.hubId,
-        hintText: CommonConstants.hubId,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
-            fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
-        ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
-
-  Widget _showNickNameTextField() {
-    return Expanded(
-        child: TextField(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-      controller: nickNameController,
-      keyboardType: TextInputType.text,
-      focusNode: nickNameFocus,
-      textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
-        //FocusScope.of(context).requestFocus(passwordFocus);
-      },
-      style: TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 16.0.sp,
-          color: ColorUtils.blackcolor),
-      decoration: InputDecoration(
-        labelText: CommonConstants.nickName,
-        hintText: CommonConstants.nickName,
-        labelStyle: TextStyle(
-            fontSize: 15.0.sp,
-            fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 16.0.sp,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
-        ),
-        border: UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
-    ));
-  }
-
-  Widget _showSaveButton() {
-    final addButtonWithGesture = GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: 140.0.w,
-        height: 45.0.h,
-        decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color.fromARGB(15, 0, 0, 0),
-              offset: Offset(0, 2),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            CommonConstants.save,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w400,
             ),
           ),
         ),

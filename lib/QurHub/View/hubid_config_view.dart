@@ -8,8 +8,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
-class HubIdConfigView extends StatefulWidget
-{
+class HubIdConfigView extends StatefulWidget {
   const HubIdConfigView({Key key}) : super(key: key);
 
   @override
@@ -30,18 +29,14 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
     try {
       super.initState();
       init();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   init() async {
     try {
       await 0.5.delay();
       showSetNickNameDialog(context);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -194,9 +189,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
                                       Get.back();
                                     }
                                   });
-                                } catch (e) {
-                                  print(e);
-                                }
+                                } catch (e) {}
                               })
                         ],
                       ),
@@ -328,18 +321,17 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
   }
 
   Widget _showSaveButton() {
-    final addButtonWithGesture = GestureDetector(
+    final addButtonWithGesture = InkWell(
       onTap: () {
         try {
           FocusScope.of(context).unfocus();
           if (formKey.currentState.validate()) {
             controller.callSaveHubIdConfig(
                 hubIdController.text.toString().trim(),
-                nickNameController.text.toString().trim());
+                nickNameController.text.toString().trim(),
+                context);
           }
-        } catch (e) {
-          print(e);
-        }
+        } catch (e) {}
       },
       child: Container(
         width: 150.0.w,
