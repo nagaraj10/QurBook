@@ -21,6 +21,8 @@ class AddDeviceController extends GetxController {
   FamilyMembers familyMembers;
   CommonResponseModel commonResponse;
 
+
+
   getFamilyMembers() async {
     try {
       loadingData.value = true;
@@ -45,11 +47,29 @@ class AddDeviceController extends GetxController {
         FlutterToast().getToast('Oops Something went wrong', Colors.red);
       } else {
         this.commonResponse = CommonResponseModel.fromJson(json.decode(commonResponse.body));
+        successListener();
       }
       loadingData.value = false;
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
+    }
+  }
+
+  void successListener() {
+    if(loadingData.isFalse&&
+        commonResponse!=null&&
+        commonResponse.isSuccess!=null&&
+        commonResponse.message!=null&&
+        commonResponse.isSuccess){
+      FlutterToast().getToast(commonResponse.message, Colors.red);
+      if(commonResponse.message.contains('Device paired')){
+        Get.back();
+      }
+    }else{
+      if(commonResponse!=null&&commonResponse.message!=null){
+        FlutterToast().getToast(commonResponse.message, Colors.red);
+      }
     }
   }
 
