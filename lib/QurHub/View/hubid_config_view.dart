@@ -8,7 +8,8 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
-class HubIdConfigView extends StatefulWidget {
+class HubIdConfigView extends StatefulWidget
+{
   const HubIdConfigView({Key key}) : super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
 
   init() async {
     try {
-      await 1.delay();
+      await 0.5.delay();
       showSetNickNameDialog(context);
     } catch (e) {
       print(e);
@@ -76,12 +77,129 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Container(
                 width: 1.sw,
-                height: 1.sh / 3.2,
+                height: 1.sh / 2.7,
                 child: Form(
                   key: formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                size: 24.0.sp,
+                              ),
+                              onPressed: () {
+                                try {
+                                  showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return Dialog(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        12.0)),
+                                            child: Container(
+                                                height: 120,
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Text(
+                                                            "Do you want to close this?"),
+                                                        SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      true);
+                                                                },
+                                                                child: Card(
+                                                                    color: Colors
+                                                                        .red,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              8.0,
+                                                                          bottom:
+                                                                              8.0,
+                                                                          left:
+                                                                              16.0,
+                                                                          right:
+                                                                              16.0),
+                                                                      child:
+                                                                          Text(
+                                                                        'Yes',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white),
+                                                                      ),
+                                                                    )),
+                                                              ),
+                                                              SizedBox(
+                                                                width: 20,
+                                                              ),
+                                                              InkWell(
+                                                                onTap: () {
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      false);
+                                                                },
+                                                                child: Card(
+                                                                    color: Colors
+                                                                        .green,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              8.0,
+                                                                          bottom:
+                                                                              8.0,
+                                                                          left:
+                                                                              16.0,
+                                                                          right:
+                                                                              16.0),
+                                                                      child:
+                                                                          Text(
+                                                                        'No',
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.white),
+                                                                      ),
+                                                                    )),
+                                                              )
+                                                            ])
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )));
+                                      }).then((val) {
+                                    if (val != null && val) {
+                                      Navigator.of(context).pop();
+                                      Get.back();
+                                    }
+                                  });
+                                } catch (e) {
+                                  print(e);
+                                }
+                              })
+                        ],
+                      ),
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
