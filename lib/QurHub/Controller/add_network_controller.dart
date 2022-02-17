@@ -20,6 +20,7 @@ class AddNetworkController extends GetxController {
   String strWifiName = "QurHub-Config";
   var strSSID = "".obs;
   var strHubId = "".obs;
+  var errorMessage = "".obs;
   FlutterToast toast = FlutterToast();
   WifiNetwork qurHubWifiRouter;
   final _apiProvider = HubApiProvider();
@@ -27,19 +28,18 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
+      errorMessage.value = "";
       isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
         if (val) {
           WiFiForIoTPlugin.isConnected().then((val) {
             WiFiForIoTPlugin.getSSID().then((val) {
-              print("getSSID $val");
               strSSID.value = val;
             });
           });
           ssidList.value = [];
           try {
             ssidList.value = await WiFiForIoTPlugin.loadWifiList();
-            print("ssidList length ${ssidList.value.length}");
           } on PlatformException {
             ssidList.value = [];
           }
@@ -57,37 +57,41 @@ class AddNetworkController extends GetxController {
                   const platform = MethodChannel('wifiworks');
                   final int result = await platform.invokeMethod('getTest',
                       {"SSID": qurHubWifiRouter.ssid, "Password": ""});
-
                   if (result == 1) {
                     toast.getToastForLongTime(
                         "wifi connection successfull", Colors.green);
-                    //strSSID.value = "";
                   } else {
+                    errorMessage.value = "Failed try again!!!";
                     toast.getToast("Failed try again!!!", Colors.red);
                   }
                 } on PlatformException catch (e) {}
               } else {
+                errorMessage.value =
+                    "Not available QurHub-Config router around";
                 toast.getToastForLongTime(
                     "Not available QurHub-Config router around", Colors.red);
               }
             } catch (e) {
-              print("Failed to get the list ${e.toString()}");
-              //FlutterToast().getToast('Failed to get the list', Colors.red);
+              errorMessage.value = "Failed to get the list";
             }
           } else {
             ssidList.value = [];
+            errorMessage.value = "Not available wifi router around";
             toast.getToastForLongTime(
                 "Not available wifi router around", Colors.red);
           }
           isLoading.value = false;
         } else {
+          isLoading.value = false;
+          errorMessage.value =
+              "Please enable wifi!!! and re-try after some time";
           toast.getToastForLongTime(
               "Please enable wifi!!! and re-try after some time", Colors.red);
         }
       });
     } catch (e) {
-      print(e.toString());
       isLoading.value = false;
+      errorMessage.value = "${e.toString()}";
     }
   }
 
@@ -96,7 +100,6 @@ class AddNetworkController extends GetxController {
       isBtnLoading.value = true;
       callHubId(wifiName, password);
     } catch (e) {
-      print(e.toString());
       isBtnLoading.value = false;
     }
   }
@@ -127,8 +130,6 @@ class AddNetworkController extends GetxController {
             isBtnLoading.value = false;
             toast.getToast("wifiName and password missmatch!!!", Colors.red);
           }
-          /*AddNetworkModel addNetworkModel =
-            AddNetworkModel.fromJson(json.decode(response.body));*/
         } else {
           isBtnLoading.value = false;
           toast.getToast(validString(json.decode(response.body)), Colors.red);
@@ -140,16 +141,13 @@ class AddNetworkController extends GetxController {
       }
     } catch (e) {
       isBtnLoading.value = false;
-      print(e.toString());
     }
   }
 
   selectedWifiName(String strName) {
     try {
       strSSID.value = strName;
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   String validString(String strText) {
@@ -160,18 +158,18 @@ class AddNetworkController extends GetxController {
         return "";
       else
         return strText.trim();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
     return "";
   }
 
-  callSaveHubIdConfig(String hubId, String nickName) async {
+  callSaveHubIdConfig(
+      String hubId, String nickName, BuildContext context) async {
     try {
       isBtnLoading.value = true;
       http.Response response =
           await _apiProvider.callHubIdConfig(hubId, nickName);
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200)
+      {
         isBtnLoading.value = false;
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
@@ -179,6 +177,9 @@ class AddNetworkController extends GetxController {
         {
           toast.getToast(validString(addNetworkModel.message), Colors.green);
           hubListController.getHubList();
+          Navigator.pop(
+            context,
+          );
           Get.off(HubListScreen());
         } else {
           toast.getToast(validString(addNetworkModel.message), Colors.red);
@@ -188,7 +189,6 @@ class AddNetworkController extends GetxController {
         toast.getToast(validString(response.body), Colors.red);
       }
     } catch (e) {
-      print(e.toString());
       isBtnLoading.value = false;
     }
   }

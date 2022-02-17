@@ -32,12 +32,12 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
 
-  Future<dynamic> saveDevice(String hubId,String deviceId,String nickName) async {
+  Future<dynamic> saveDevice(
+      String hubId, String deviceId, String nickName) async {
     Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -64,7 +64,6 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -90,7 +89,6 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -116,7 +114,6 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
@@ -135,17 +132,13 @@ class HubApiProvider {
       } else {
         return responseJson;
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> callHubId() async {
     try {
       Response responseJson;
       var headers = {"accept-content": "application/json"};
-
-      print("Header $headers");
 
       responseJson = await ApiServices.get(
         GET_HUB_ID_URL,
@@ -157,9 +150,7 @@ class HubApiProvider {
       } else {
         return responseJson;
       }
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
@@ -178,7 +169,6 @@ class HubApiProvider {
         body: json.encode(data),
         timeOutSeconds: 50,
       );
-      print("responseJson ${responseJson.body}");
 
       if (responseJson.statusCode == 200) {
         return responseJson;
@@ -188,7 +178,6 @@ class HubApiProvider {
     } on SocketException {
       throw FetchDataException(strNoInternet);
     } catch (e) {
-      print("callHubIdConfig ${e.toString()}");
       return null;
     }
   }
