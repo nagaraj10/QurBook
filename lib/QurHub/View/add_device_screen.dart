@@ -40,7 +40,6 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   void initState() {
     selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     controller.getFamilyMembers();
-    initListeners();
     super.initState();
   }
 
@@ -64,7 +63,6 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
       ),
       body: Obx(
         () {
-          initListeners();
           return  controller.loadingData.isTrue
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -310,22 +308,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     );
   }
 
-  void initListeners() {
-    if(controller.loadingData.isFalse&&
-        controller.commonResponse!=null&&
-        controller.commonResponse.isSuccess!=null&&
-        controller.commonResponse.message!=null&&
-        controller.commonResponse.isSuccess){
-      FlutterToast().getToast(controller.commonResponse.message, Colors.red);
-      if(controller.commonResponse.message.contains('Device paired')){
-        Navigator.pop(context);
-      }
-    }else{
-      if(controller.commonResponse!=null&&controller.commonResponse.message!=null){
-        FlutterToast().getToast(controller.commonResponse.message, Colors.red);
-      }
-    }
-  }
+
 
   exitApp(){
     print('working on this');
