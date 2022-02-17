@@ -148,7 +148,7 @@ class HubApiProvider {
       print("Header $headers");
 
       responseJson = await ApiServices.get(
-        "http://192.168.99.79/gethubid",
+        GET_HUB_ID_URL,
         headers: headers,
       );
 
@@ -164,23 +164,22 @@ class HubApiProvider {
 
   Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
     Response responseJson;
-    final url = qr_hub + '/';
     await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       var data = {
-        "serialNumber": "${hubId.trim()}",
-        "niceName": "${nickName.trim()}",
-        "additionalDetails": {},
+        SERIAL_NUMBER: hubId,
+        NICK_NAME: nickName,
+        ADDITION_DETAILS: {},
       };
       responseJson = await ApiServices.post(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub',
+        HUB_ID_CONFIG_URL,
         headers: header,
         body: json.encode(data),
         timeOutSeconds: 50,
       );
       print("responseJson ${responseJson.body}");
+
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {

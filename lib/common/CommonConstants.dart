@@ -303,6 +303,7 @@ class CommonConstants {
   static String wifiName = 'WifiName';
   static String password = 'Password';
   static String connect = 'Connect';
+  static String retry = 'Retry';
   static String hubId = 'Hub ID';
   static String nickName = 'Nick Name';
 

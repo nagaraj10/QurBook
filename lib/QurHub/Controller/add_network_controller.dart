@@ -11,6 +11,7 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
 
 import '../View/hub_list_screen.dart';
+import 'hub_list_controller.dart';
 
 class AddNetworkController extends GetxController {
   var ssidList = [].obs;
@@ -22,6 +23,7 @@ class AddNetworkController extends GetxController {
   FlutterToast toast = FlutterToast();
   WifiNetwork qurHubWifiRouter;
   final _apiProvider = HubApiProvider();
+  final HubListController hubListController = Get.find();
 
   getWifiList() async {
     try {
@@ -173,8 +175,10 @@ class AddNetworkController extends GetxController {
         isBtnLoading.value = false;
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
-        if (addNetworkModel.isSuccess) {
+        if (addNetworkModel.isSuccess)
+        {
           toast.getToast(validString(addNetworkModel.message), Colors.green);
+          hubListController.getHubList();
           Get.off(HubListScreen());
         } else {
           toast.getToast(validString(addNetworkModel.message), Colors.red);

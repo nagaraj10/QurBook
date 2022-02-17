@@ -80,10 +80,53 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
               child: CircularProgressIndicator(),
             )
           : controller.qurHubWifiRouter == null
-              ? const Center(
-                  child: Text(
-                    'Not available QurHub-Config router around',
-                  ),
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Not available QurHub-Config router around',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.00,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        try {
+                          controller.getWifiList();
+                        } catch (e) {
+                          print(e);
+                        }
+                      },
+                      child: Container(
+                        width: 145.0.w,
+                        height: 45.0.h,
+                        decoration: BoxDecoration(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: <BoxShadow>[
+                            BoxShadow(
+                              color: Color.fromARGB(15, 0, 0, 0),
+                              offset: Offset(0, 2),
+                              blurRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            CommonConstants.retry,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 )
               : Form(
                   key: formKey,
