@@ -19,9 +19,7 @@ class _WifiListViewState extends State<WifiListView> {
   void initState() {
     try {
       super.initState();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -78,9 +76,7 @@ class _WifiListViewState extends State<WifiListView> {
             controller.selectedWifiName(
                 validString(controller.ssidList.value[index].ssid));
             Get.back();
-          } catch (e) {
-            print(e);
-          }
+          } catch (e) {}
         },
         leading: Container(
           width: 50,
@@ -124,9 +120,7 @@ class _WifiListViewState extends State<WifiListView> {
         return "";
       else
         return strText.trim();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
     return "";
   }
 }

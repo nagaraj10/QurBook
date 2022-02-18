@@ -639,7 +639,7 @@ const String GET_HUB_ID_URL = 'http://192.168.99.79/gethubid';
 const String HUB_ID_CONFIG_URL =
     'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub';
 const String SERIAL_NUMBER = 'serialNumber';
-const String NICK_NAME = 'niceName';
+const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
 
 double height = 0.0;
