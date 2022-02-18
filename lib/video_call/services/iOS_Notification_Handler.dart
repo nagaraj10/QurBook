@@ -2,34 +2,34 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/claim/model/claimmodel/ClaimRecordDetail.dart';
-import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
-import 'package:myfhb/chat_socket/view/ChatUserList.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/myPlan/view/myPlanDetail.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/video_call/model/NotificationModel.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
+import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
+import '../../claim/screen/ClaimRecordDisplay.dart';
+import '../../chat_socket/view/ChatDetail.dart';
+import '../../chat_socket/view/ChatUserList.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/router_variable.dart';
+import '../../constants/variable_constant.dart' as variable;
+import '../../myPlan/view/myPlanDetail.dart';
+import '../../regiment/models/regiment_arguments.dart';
+import '../../src/model/home_screen_arguments.dart';
+import '../../src/model/user/user_accounts_arguments.dart';
+import '../../src/ui/SplashScreen.dart';
+import '../../src/ui/bot/SuperMaya.dart';
+import '../../src/ui/bot/view/ChatScreen.dart' as bot;
+import '../../src/ui/bot/view/sheela_arguments.dart';
+import '../../telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import '../../telehealth/features/Notifications/services/notification_services.dart';
+import '../../telehealth/features/Notifications/view/notification_main.dart';
+import '../../telehealth/features/chat/view/chat.dart';
+import '../../telehealth/features/chat/view/home.dart';
+import '../model/NotificationModel.dart';
+import '../../constants/router_variable.dart' as router;
+import '../../src/utils/PageNavigator.dart';
+import '../utils/audiocall_provider.dart';
+import '../../widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 
 class IosNotificationHandler {
@@ -187,14 +187,24 @@ class IosNotificationHandler {
         'ns_type': 'myRecords',
         'navigationPage': '$dataOne',
       });
-      isAlreadyLoaded
-          ? navigateToMyRecordsCategory(dataOne, dataTwo, false)
-          : Get.to(SplashScreen(
-              nsRoute: 'myRecords',
-              templateName: dataOne,
-              bundle: dataTwo,
-            ));
-      ;
+
+      if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+        if ((model.userId ?? '') == userId) {
+          CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(
+            model.patientName,
+            redirect: model.redirect,
+          );
+        }
+      } else {
+        navigateToMyRecordsCategory(
+          dataOne,
+          dataTwo,
+          false,
+        );
+      }
     } else if (model.redirect == parameters.chat) {
       if (isAlreadyLoaded) {
         if ((model.doctorId ?? '').isNotEmpty &&
@@ -538,6 +548,11 @@ class IosNotificationHandler {
   void navigateToMyRecordsCategory(
       dynamic categoryType, List<String> hrmId, bool isTerminate) async {
     CommonUtil().getCategoryListPos(categoryType).then(
-        (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate));
+          (value) => CommonUtil().goToMyRecordsScreen(
+            value,
+            hrmId,
+            isTerminate,
+          ),
+        );
   }
 }

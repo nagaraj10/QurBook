@@ -1369,7 +1369,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                         color: Colors.white),
                                     onPressed: () {
                                       final controller =
-                                          Get.find<PDFViewController>();
+                                          Get.put(PDFViewController());
                                       final data = OpenPDF(
                                           type: PDFLocation.Path,
                                           path: pdfFile,
