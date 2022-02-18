@@ -118,15 +118,17 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
             }
           },
           child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             color: Color(CommonUtil().getMyPrimaryColor()),
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
+              padding: const EdgeInsets.all(10.0),
               child: Text(
                 'Add New Device',
                 style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18),
+                    fontWeight: FontWeight.w500,),
               ),
             ),
           ),

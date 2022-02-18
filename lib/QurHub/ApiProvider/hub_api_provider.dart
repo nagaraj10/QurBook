@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -10,10 +11,12 @@ import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart';
 
+
 class HubApiProvider {
   final String _baseUrl = BASE_URL;
 
   Future<dynamic> getHubList() async {
+
     Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -21,7 +24,7 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.get(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub/$userId',
+        '${CommonUtil.BASE_URL_QURHUB}user-hub/$userId',
         headers: header,
       );
       if (responseJson.statusCode == 200) {
@@ -52,7 +55,7 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device',
+        '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
         body: json.encode(data),
       );
@@ -78,7 +81,7 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub/unpair-hub',
+        '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
         headers: header,
         body: json.encode(data),
       );
@@ -104,7 +107,7 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-device/' +
+        '${CommonUtil.BASE_URL_QURHUB}user-device/' +
             deviceId,
         headers: header,
       );
