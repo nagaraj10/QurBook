@@ -1575,8 +1575,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<bool> uploadAttachment(
-      String url, String ticketId, File image) async {
+  Future<bool> uploadAttachment(String url, String ticketId, File image) async {
     var authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -1603,9 +1602,9 @@ class ApiBaseHelper {
     var response;
     try {
       response = await dio.post(_baseUrl + url, data: formData);
-      print('upload code: '+response.statusCode.toString());
+      print('upload code: ' + response.statusCode.toString());
       if (response.statusCode == 200) {
-        print('upload response: '+response.data.toString());
+        print('upload response: ' + response.data.toString());
         return response.data['isSuccess'];
       } else {
         return response.data['isSuccess'];
@@ -2309,6 +2308,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   Future<dynamic> getClaimExpiryResponseList(String url) async {
     print(await headerRequest.getAuths());
     var headers = headerRequest.getAuths();

@@ -406,13 +406,38 @@ class _NotificationScreen extends State<NotificationScreen> {
                               ? payload?.redirectTo.split('|')[0]
                               : '';
                           if (tempRedirectTo == 'myRecords') {
-                            notificationOnTapActions(
-                                notification, tempRedirectTo,
-                                bundles: {
-                                  'catName': payload?.redirectTo.split('|')[1],
-                                  'healthRecordMetaIds':
-                                      payload?.healthRecordMetaIds
-                                });
+                            if ((payload?.healthRecordMetaIds ?? '')
+                                .isNotEmpty) {
+                              notificationOnTapActions(
+                                  notification, tempRedirectTo,
+                                  bundles: {
+                                    'catName':
+                                        payload?.redirectTo.split('|')[1],
+                                    'healthRecordMetaIds':
+                                        payload?.healthRecordMetaIds
+                                  });
+                            } else {
+                              final split = payload?.redirectTo?.split('|');
+                              var redirectData = {
+                                for (int i = 0; i < split.length; i++)
+                                  i: split[i]
+                              };
+                              var id = redirectData[2];
+                              if (id.runtimeType == String &&
+                                  (id ?? '').isNotEmpty) {
+                                final userId =
+                                    PreferenceUtil.getStringValue(KEY_USERID);
+                                if ((payload?.userId ?? '') == userId) {
+                                  CommonUtil()
+                                      .navigateToRecordDetailsScreen(id);
+                                } else {
+                                  CommonUtil.showFamilyMemberPlanExpiryDialog(
+                                    (payload?.patientName ?? ''),
+                                    redirect: (payload?.redirectTo ?? ''),
+                                  );
+                                }
+                              }
+                            }
                           } else if (payload?.redirectTo ==
                               'sheela|pushMessage') {
                             notificationOnTapActions(

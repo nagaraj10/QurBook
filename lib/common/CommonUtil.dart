@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -1974,6 +1976,32 @@ class CommonUtil {
     }
   }
 
+  navigateToRecordDetailsScreen(String id) async {
+    final helper = ApiBaseHelper();
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var requestParam = {};
+    requestParam[qr_userid] = userID;
+    requestParam[qr_healthRecordMetaIds] = [id];
+    var jsonString = jsonEncode(requestParam);
+    String queryVal = qr_health_record + qr_filter;
+    try {
+      final response = await helper.getHealthRecordLists(
+        jsonString,
+        queryVal,
+      );
+      var record = HealthRecordList.fromJson(response);
+      if (record.isSuccess && (record.result ?? []).length > 0) {
+        Get.to(
+          () => RecordDetailScreen(
+            data: record.result.first,
+          ),
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   Future<int> getCategoryListPos(String categoryName) async {
     var position = 0;
     _categoryResponseListRepository = CategoryResponseListRepository();
@@ -2007,7 +2035,9 @@ class CommonUtil {
         } else {
           return position;
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e.toString());
+      }
     } else {
       return position;
     }
