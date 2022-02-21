@@ -104,6 +104,7 @@ class UserDeviceCollection {
   String deviceId;
   String userId;
   User user;
+  Device device;
 
   UserDeviceCollection(
       {this.id,
@@ -116,7 +117,8 @@ class UserDeviceCollection {
         this.hubId,
         this.deviceId,
         this.userId,
-        this.user});
+        this.user,
+      this.device});
 
   UserDeviceCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -130,6 +132,7 @@ class UserDeviceCollection {
     deviceId = json['deviceId'];
     userId = json['userId'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    device = json['device'] != null ? new Device.fromJson(json['device']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -149,6 +152,33 @@ class UserDeviceCollection {
     }
     return data;
   }
+}
+
+class Device{
+  String id;
+  String serialNumber;
+  DeviceType deviceType;
+  Device({this.id,this.serialNumber,this.deviceType});
+
+  Device.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    serialNumber = json['serialNumber'];
+    deviceType = json['deviceType'] != null ? new DeviceType.fromJson(json['deviceType']) : null;
+
+  }
+}
+
+class DeviceType{
+  String id;
+  String code;
+
+  DeviceType({this.id,this.code});
+
+  DeviceType.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    code = json['code'];
+  }
+
 }
 
 class User {

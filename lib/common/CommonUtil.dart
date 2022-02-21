@@ -119,6 +119,7 @@ class CommonUtil {
   static String REGION_CODE = 'IN';
   static String CURRENCY = INR;
   static String POWER_BI_URL = 'IN';
+  static String BASE_URL_QURHUB = '';
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;

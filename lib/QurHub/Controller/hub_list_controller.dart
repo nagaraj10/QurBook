@@ -28,6 +28,7 @@ class HubListController extends GetxController {
         hubListResponse = HubListResponse.fromJson(json.decode(response.body));
       }
       loadingData.value = false;
+      update(["newUpdate"]);
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
