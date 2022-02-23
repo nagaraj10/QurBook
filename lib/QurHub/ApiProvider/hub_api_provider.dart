@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -9,15 +10,14 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:http/http.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 class HubApiProvider {
   final String _baseUrl = BASE_URL;
 
   Future<dynamic> getHubList() async {
-
-    Response responseJson;
+    http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -41,7 +41,7 @@ class HubApiProvider {
 
   Future<dynamic> saveDevice(
       String hubId, String deviceId, String nickName) async {
-    Response responseJson;
+    http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -72,7 +72,7 @@ class HubApiProvider {
   }
 
   Future<dynamic> unPairHub(String hubId) async {
-    Response responseJson;
+    http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -97,7 +97,7 @@ class HubApiProvider {
   }
 
   Future<dynamic> unPairDevice(String deviceId) async {
-    Response responseJson;
+    http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -105,8 +105,7 @@ class HubApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
-        '${CommonUtil.BASE_URL_QURHUB}user-device/' +
-            deviceId,
+        '${CommonUtil.BASE_URL_QURHUB}user-device/' + deviceId,
         headers: header,
       );
       if (responseJson.statusCode == 200) {
@@ -123,7 +122,7 @@ class HubApiProvider {
 
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {
-      Response responseJson;
+      http.Response responseJson;
 
       responseJson = await ApiServices.post(
         "http://192.168.99.79/save?J=1&A=$wifiName&K=$password&Action=Save",
@@ -140,11 +139,12 @@ class HubApiProvider {
 
   Future<dynamic> callHubId() async {
     try {
-      Response responseJson;
+      final AddNetworkController addNetworkController = Get.find();
+      http.Response responseJson;
       var headers = {"accept-content": "application/json"};
 
       responseJson = await ApiServices.get(
-        GET_HUB_ID_URL,
+        "http://${addNetworkController.strIpAddress.value}/gethubid",
         headers: headers,
       );
 
@@ -157,7 +157,7 @@ class HubApiProvider {
   }
 
   Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
-    Response responseJson;
+    http.Response responseJson;
     await PreferenceUtil.init();
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
