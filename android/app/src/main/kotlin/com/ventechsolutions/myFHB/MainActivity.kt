@@ -402,7 +402,8 @@ class MainActivity : FlutterActivity() {
                 // Note: this method is invoked on the main thread.
                 // TODO
             }
-            if(call.method == "dc") {
+            if(call.method == "dc")
+            {
                 val temp = disconnect()
 
                 result.success(temp)
@@ -419,7 +420,7 @@ class MainActivity : FlutterActivity() {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.unregisterNetworkCallback(mNetworkCallback)
         }
-        return 3434;
+        return 1;
     }
     private val mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         @RequiresApi(Build.VERSION_CODES.M)

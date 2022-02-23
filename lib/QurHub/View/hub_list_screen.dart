@@ -114,7 +114,7 @@ class _HubListScreenState extends State<HubListScreen> {
       );
 
   Widget pairNewDeviveBtn() {
-    final pairNewDeviveWithGesture = GestureDetector(
+    final pairNewDeviveWithGesture = InkWell(
       onTap: () {
         try {
           Get.to(

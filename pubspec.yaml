@@ -123,6 +123,7 @@ dependencies:
   wifi_iot: ^0.3.15
   esptouch_flutter: ^1.0.0
 
+  flutter_mdns_plugin: ^0.0.2
 
 dev_dependencies:
   flutter_test:
