@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:esptouch_flutter/esptouch_flutter.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,6 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
-      initMDNS();
       errorMessage.value = "";
       isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
@@ -88,45 +88,26 @@ class AddNetworkController extends GetxController {
               ssidList.value.forEach((ssids) {
                 if (ssids.ssid
                     .toLowerCase()
-                    .contains(strWifiName.toLowerCase())) {
+                    .contains(strSSID.value.toLowerCase())) {
                   qurHubWifiRouter = ssids;
                 }
               });
-              if (qurHubWifiRouter != null) {
-                try {
-                  const platform = MethodChannel('wifiworks');
-                  final int result = await platform.invokeMethod('getTest',
-                      {"SSID": qurHubWifiRouter.ssid, "Password": ""});
-                  if (result == 1) {
-                    toast.getToastForLongTime(
-                        "wifi connection successfull", Colors.green);
-                  } else {
-                    errorMessage.value = "Failed try again!!!";
-                    toast.getToast("Failed try again!!!", Colors.red);
-                  }
-                } on PlatformException catch (e) {}
-              } else {
-                errorMessage.value =
-                    "Not available QurHub-Config router around";
-                toast.getToastForLongTime(
-                    "Not available QurHub-Config router around", Colors.red);
-              }
             } catch (e) {
+              isLoading.value = false;
               errorMessage.value = "Failed to get the list";
             }
           } else {
             ssidList.value = [];
-            errorMessage.value = "Not available wifi router around";
+            errorMessage.value = "Please reconnect your phone to Wi-Fi";
             toast.getToastForLongTime(
-                "Not available wifi router around", Colors.red);
+                "Please reconnect your phone to Wi-Fi", Colors.red);
           }
           isLoading.value = false;
         } else {
           isLoading.value = false;
-          errorMessage.value =
-              "Please enable wifi!!! and re-try after some time";
+          errorMessage.value = "Please reconnect your phone to Wi-Fi";
           toast.getToastForLongTime(
-              "Please enable wifi!!! and re-try after some time", Colors.red);
+              "Please reconnect your phone to Wi-Fi", Colors.red);
         }
       });
     } catch (e) {
@@ -175,6 +156,11 @@ class AddNetworkController extends GetxController {
   selectedWifiName(String strName) {
     try {
       strSSID.value = strName;
+      ssidList.value.forEach((ssids) {
+        if (ssids.ssid.toLowerCase().contains(strSSID.value.toLowerCase())) {
+          qurHubWifiRouter = ssids;
+        }
+      });
     } catch (e) {}
   }
 
@@ -256,9 +242,9 @@ class AddNetworkController extends GetxController {
               .toLowerCase()
               .contains(strName.toLowerCase())) {
             strIpAddress.value = validString(info.address);
-            /*if (strIpAddress.value.trim().isNotEmpty) {
+            if (strIpAddress.value.trim().isNotEmpty) {
               getHubId();
-            }*/
+            }
           }
           /*setState(() {
             messageLog.insert(0, "DISCOVERY: Resolved ${info.toString()}");
@@ -282,22 +268,22 @@ class AddNetworkController extends GetxController {
         toast.getToast(
             "Your HubId is " + validString(strHubId.value), Colors.green);
         await 1.delay();
-        //isBtnLoading.value = false;
+        isBtnLoading.value = false;
         Get.to(
           HubIdConfigView(),
         );
       } else {
-        //isBtnLoading.value = false;
+        isBtnLoading.value = false;
         toast.getToast(
             validString(json.decode(responseCallHubId.body)), Colors.red);
       }
     } catch (e) {
-      //isBtnLoading.value = false;
+      isBtnLoading.value = false;
       toast.getToast(validString(e.toString()), Colors.red);
     }
   }
 
-  void executeEsptouch() {
+  Future<void> executeEsptouch() async {
     isBtnLoading.value = true;
     final task = ESPTouchTask(
       ssid: qurHubWifiRouter.ssid,
@@ -306,7 +292,12 @@ class AddNetworkController extends GetxController {
     );
     final Stream<ESPTouchResult> stream = task.execute();
     apiReqNum = 0;
-    pingQurHub();
+    if (Platform.isIOS) {
+      pingQurHub();
+    } else {
+      await 30.delay();
+      initMDNS();
+    }
   }
 
   void pingQurHub() async {
