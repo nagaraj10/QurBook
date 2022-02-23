@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
@@ -13,10 +15,13 @@ import 'package:http/http.dart' as http;
 import '../View/hub_list_screen.dart';
 import 'hub_list_controller.dart';
 
+const String discovery_service = "_http._tcp";
+
 class AddNetworkController extends GetxController {
   var ssidList = [].obs;
   var isLoading = false.obs;
   var isBtnLoading = false.obs;
+  var isSaveBtnLoading = false.obs;
   String strWifiName = "QurHub-Config";
   var strSSID = "".obs;
   var strHubId = "".obs;
@@ -25,9 +30,14 @@ class AddNetworkController extends GetxController {
   WifiNetwork qurHubWifiRouter;
   final _apiProvider = HubApiProvider();
   final HubListController hubListController = Get.find();
+  FlutterMdnsPlugin mdnsPlugin;
+  DiscoveryCallbacks discoveryCallbacks;
+  String strName = "qurhub";
+  var strIpAddress = "".obs;
 
   getWifiList() async {
     try {
+      //initMDNS();
       errorMessage.value = "";
       isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
@@ -117,8 +127,9 @@ class AddNetworkController extends GetxController {
             await _apiProvider.callConnectWifi(wifiName, password);
         if (response != null) {
           const platform = MethodChannel('wifiworks');
-          final int result = await platform.invokeMethod(
-              'getTest', {"SSID": wifiName, "Password": password});
+          /*final int result = await platform.invokeMethod(
+              'getTest', {"SSID": wifiName, "Password": password});*/
+          final int result = await platform.invokeMethod('dc');
           if (result == 1) {
             await 1.delay();
             isBtnLoading.value = false;
@@ -128,7 +139,7 @@ class AddNetworkController extends GetxController {
           } else {
             await 1.delay();
             isBtnLoading.value = false;
-            toast.getToast("wifiName and password missmatch!!!", Colors.red);
+            toast.getToast("QurHub router not disconnecting", Colors.red);
           }
         } else {
           isBtnLoading.value = false;
@@ -165,16 +176,14 @@ class AddNetworkController extends GetxController {
   callSaveHubIdConfig(
       String hubId, String nickName, BuildContext context) async {
     try {
-      isBtnLoading.value = true;
+      isSaveBtnLoading.value = true;
       http.Response response =
           await _apiProvider.callHubIdConfig(hubId, nickName);
-      if (response.statusCode == 200)
-      {
-        isBtnLoading.value = false;
+      if (response.statusCode == 200) {
+        isSaveBtnLoading.value = false;
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
-        if (addNetworkModel.isSuccess)
-        {
+        if (addNetworkModel.isSuccess) {
           toast.getToast(validString(addNetworkModel.message), Colors.green);
           hubListController.getHubList();
           Navigator.pop(
@@ -185,11 +194,89 @@ class AddNetworkController extends GetxController {
           toast.getToast(validString(addNetworkModel.message), Colors.red);
         }
       } else {
-        isBtnLoading.value = false;
+        isSaveBtnLoading.value = false;
         toast.getToast(validString(response.body), Colors.red);
       }
     } catch (e) {
-      isBtnLoading.value = false;
+      isSaveBtnLoading.value = false;
+    }
+  }
+
+  startMdnsDiscovery(String serviceType) {
+    try {
+      mdnsPlugin = FlutterMdnsPlugin(discoveryCallbacks: discoveryCallbacks);
+      Timer(Duration(seconds: 3), () => mdnsPlugin.startDiscovery(serviceType));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  initMDNS() {
+    try {
+      strIpAddress.value = "";
+      discoveryCallbacks = new DiscoveryCallbacks(
+        onDiscovered: (ServiceInfo info) {
+          /*print("Discovered ${info.toString()}");
+          setState(() {
+            messageLog.insert(0, "DISCOVERY: Discovered ${info.toString()}");
+          });*/
+        },
+        onDiscoveryStarted: () {
+          /*print("Discovery started");
+          setState(() {
+            messageLog.insert(0, "DISCOVERY: Discovery Running");
+          });*/
+        },
+        onDiscoveryStopped: () {
+          /*print("Discovery stopped");
+          setState(() {
+            messageLog.insert(0, "DISCOVERY: Discovery Not Running");
+          });*/
+        },
+        onResolved: (ServiceInfo info) {
+          //TODO
+          if (validString(info.name)
+              .toLowerCase()
+              .contains(strName.toLowerCase())) {
+            strIpAddress.value = validString(info.address);
+            if (strIpAddress.value.trim().isNotEmpty) {
+              getHubId();
+            }
+          }
+          /*setState(() {
+            messageLog.insert(0, "DISCOVERY: Resolved ${info.toString()}");
+          });*/
+        },
+      );
+      startMdnsDiscovery(discovery_service);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getHubId() async {
+    try {
+      strHubId.value = "";
+      http.Response responseCallHubId = await _apiProvider.callHubId();
+      if (responseCallHubId != null) {
+        AddNetworkModel addNetworkModel =
+            AddNetworkModel.fromJson(json.decode(responseCallHubId.body));
+        strHubId.value = validString(addNetworkModel.hubId);
+        toast.getToast(
+            "Your HubId is " + validString(strHubId.value), Colors.green);
+        await 1.delay();
+        //isBtnLoading.value = false;
+        Get.to(
+          HubIdConfigView(),
+        );
+      } else {
+        //isBtnLoading.value = false;
+        toast.getToast(
+            validString(json.decode(responseCallHubId.body)), Colors.red);
+      }
+    } catch (e) {
+      //isBtnLoading.value = false;
+      toast.getToast(validString(e.toString()), Colors.red);
     }
   }
 }

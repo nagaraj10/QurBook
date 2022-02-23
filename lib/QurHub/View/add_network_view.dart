@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -47,6 +48,19 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
       });
       super.dispose();
     } catch (e) {}
+  }
+
+  void reassemble() {
+    try {
+      super.reassemble();
+
+      if (null != controller.mdnsPlugin) {
+        controller.discoveryCallbacks = <ServiceInfo>[] as DiscoveryCallbacks;
+        controller.mdnsPlugin.restartDiscovery();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -210,8 +224,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
         prefixIcon: IconButton(
           icon: SvgPicture.asset(
             variable.icon_qurhub_wifi,
-            //color: Colors.black54,
-            //color: Colors.black,
             height: 22,
             width: 22,
             color: wifiNameFocus.hasFocus ? Colors.black : Colors.black54,
@@ -222,8 +234,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
         suffixIcon: IconButton(
           icon: SvgPicture.asset(
             variable.icon_qurhub_switch,
-            //color: Colors.black54,
-            //color: Colors.black,
             height: 22,
             width: 22,
             color: wifiNameFocus.hasFocus ? Colors.black : Colors.black54,
@@ -239,15 +249,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
         ),
         labelText: CommonConstants.wifiName,
         hintText: CommonConstants.wifiName,
-        /*suffix: InkWell(
-          onTap: () {
-            //TODO
-          },
-          child: SvgPicture.asset(
-            variable.icon_qurhub_wifi,
-            color: Colors.black54,
-          ),
-        ),*/
         labelStyle: TextStyle(
             fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
@@ -315,45 +316,44 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   }
 
   Widget _showConnectButton() {
-    final addButtonWithGesture = InkWell(
-      onTap: () {
-        try {
-          FocusScope.of(context).unfocus();
-          if (formKey.currentState.validate()) {
-            controller.getConnectWifi(wifiNameController.text.toString().trim(),
-                passwordController.text.toString().trim());
-          }
-        } catch (e) {}
-      },
-      child: Container(
-        width: 150.0.w,
-        height: 45.0.h,
-        decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color.fromARGB(15, 0, 0, 0),
-              offset: Offset(0, 2),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            CommonConstants.connect,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
+        child: InkWell(
+          onTap: () {
+            try {
+              FocusScope.of(context).unfocus();
+              if (formKey.currentState.validate()) {
+                controller.getConnectWifi(
+                    wifiNameController.text.toString().trim(),
+                    passwordController.text.toString().trim());
+              }
+            } catch (e) {}
+          },
+          child: Container(
+            width: 150.0.w,
+            height: 45.0.h,
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Color.fromARGB(15, 0, 0, 0),
+                  offset: Offset(0, 2),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                CommonConstants.connect,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 }

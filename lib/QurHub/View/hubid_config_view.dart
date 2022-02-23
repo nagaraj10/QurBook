@@ -219,7 +219,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Obx(() => controller.isBtnLoading.isTrue
+                                  Obx(() => controller.isSaveBtnLoading.isTrue
                                       ? CircularProgressIndicator()
                                       : _showSaveButton()),
                                 ],
@@ -321,47 +321,46 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
   }
 
   Widget _showSaveButton() {
-    final addButtonWithGesture = InkWell(
-      onTap: () {
-        try {
-          FocusScope.of(context).unfocus();
-          if (formKey.currentState.validate()) {
-            controller.callSaveHubIdConfig(
-                hubIdController.text.toString().trim(),
-                nickNameController.text.toString().trim(),
-                context);
-          }
-        } catch (e) {}
-      },
-      child: Container(
-        width: 150.0.w,
-        height: 45.0.h,
-        decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color.fromARGB(15, 0, 0, 0),
-              offset: Offset(0, 2),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            CommonConstants.save,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-        child: addButtonWithGesture);
+        child: InkWell(
+          onTap: () {
+            try {
+              FocusScope.of(context).unfocus();
+              if (formKey.currentState.validate())
+              {
+                controller.callSaveHubIdConfig(
+                    hubIdController.text.toString().trim(),
+                    nickNameController.text.toString().trim(),
+                    context);
+              }
+            } catch (e) {}
+          },
+          child: Container(
+            width: 150.0.w,
+            height: 45.0.h,
+            decoration: BoxDecoration(
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Color.fromARGB(15, 0, 0, 0),
+                  offset: Offset(0, 2),
+                  blurRadius: 5,
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                CommonConstants.save,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 }
