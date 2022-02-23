@@ -37,6 +37,7 @@ class AddNetworkController extends GetxController {
   String strName = "qurhub";
   var strIpAddress = "".obs;
   var apiReqNum = 0;
+
   getCurrentWifiDetailsInIOS() async {
     try {
       errorMessage.value = "";
@@ -147,33 +148,19 @@ class AddNetworkController extends GetxController {
     try {
       strHubId.value = "";
       http.Response responseCallHubId = await _apiProvider.callHubId();
-
       if (responseCallHubId != null) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(responseCallHubId.body));
         strHubId.value = validString(addNetworkModel.hubId);
-        http.Response response =
+        final http.Response response =
             await _apiProvider.callConnectWifi(wifiName, password);
-        if (response != null) {
-          const platform = MethodChannel('wifiworks');
-          /*final int result = await platform.invokeMethod(
-              'getTest', {"SSID": wifiName, "Password": password});*/
-          final int result = await platform.invokeMethod('dc');
-          if (result == 1) {
-            await 1.delay();
-            isBtnLoading.value = false;
-            Get.to(
-              HubIdConfigView(),
-            );
-          } else {
-            await 1.delay();
-            isBtnLoading.value = false;
-            toast.getToast("QurHub router not disconnecting", Colors.red);
-          }
-        } else {
-          isBtnLoading.value = false;
-          toast.getToast(validString(json.decode(response.body)), Colors.red);
-        }
+        isBtnLoading.value = false;
+        response != null
+            ? Get.to(
+                () => HubIdConfigView(),
+              )
+            : toast.getToast(
+                validString(json.decode(response.body)), Colors.red);
       } else {
         isBtnLoading.value = false;
         toast.getToast(
@@ -181,6 +168,7 @@ class AddNetworkController extends GetxController {
       }
     } catch (e) {
       isBtnLoading.value = false;
+      printError(info: e.toString());
     }
   }
 
