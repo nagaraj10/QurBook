@@ -675,7 +675,8 @@ const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
 const notificationResponseMethod = 'notificationResponse';
-
+const iOSMethodChannel = MethodChannel('flutter.native/iOS');
+const getWifiDetailsMethod = 'getWifiDetails';
 // True Desk
 
 const String strNoTicketsRaised = 'No Ticket Items Available !!';

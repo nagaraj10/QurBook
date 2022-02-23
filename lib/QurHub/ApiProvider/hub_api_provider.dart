@@ -140,20 +140,15 @@ class HubApiProvider {
 
   Future<dynamic> callHubId() async {
     try {
-      Response responseJson;
-      var headers = {"accept-content": "application/json"};
-
-      responseJson = await ApiServices.get(
-        GET_HUB_ID_URL,
-        headers: headers,
+      Response responseJson = await ApiServices.get(
+        Platform.isIOS ? GET_HUB_ID : GET_HUB_ID_URL,
+        // headers: {"accept-content": "application/json"},
       );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
-    } catch (e) {}
+      return responseJson;
+    } catch (e) {
+      print(e.toString());
+      return "";
+    }
   }
 
   Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
