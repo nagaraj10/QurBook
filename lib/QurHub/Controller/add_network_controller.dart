@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:esptouch_flutter/esptouch_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
@@ -9,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
 import 'package:myfhb/QurHub/Models/add_network_model.dart';
 import 'package:myfhb/QurHub/View/hubid_config_view.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
 
@@ -34,6 +36,34 @@ class AddNetworkController extends GetxController {
   DiscoveryCallbacks discoveryCallbacks;
   String strName = "qurhub";
   var strIpAddress = "".obs;
+  var apiReqNum = 0;
+
+  getCurrentWifiDetailsInIOS() async {
+    try {
+      errorMessage.value = "";
+      isLoading.value = true;
+      var response = await iOSMethodChannel.invokeMethod(getWifiDetailsMethod);
+      print(response);
+      if (response is Map) {
+        qurHubWifiRouter = WifiNetwork.fromJson({});
+        qurHubWifiRouter.ssid = response['SSID'] ?? "";
+        qurHubWifiRouter.bssid = response['BSSID'] ?? "";
+        strSSID.value = qurHubWifiRouter.ssid;
+        ssidList.value.add(qurHubWifiRouter);
+      } else if (response is String) {
+        if ((response ?? "").isNotEmpty) {
+          errorMessage.value =
+              "Please turn on your location services and re-try again";
+        }
+      } else {
+        errorMessage.value = "Please reconnect your phone to Wi-Fi";
+      }
+      isLoading.value = false;
+    } catch (e) {
+      isLoading.value = false;
+      errorMessage.value = "${e.toString()}";
+    }
+  }
 
   getWifiList() async {
     try {
@@ -118,33 +148,19 @@ class AddNetworkController extends GetxController {
     try {
       strHubId.value = "";
       http.Response responseCallHubId = await _apiProvider.callHubId();
-
       if (responseCallHubId != null) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(responseCallHubId.body));
         strHubId.value = validString(addNetworkModel.hubId);
-        http.Response response =
+        final http.Response response =
             await _apiProvider.callConnectWifi(wifiName, password);
-        if (response != null) {
-          const platform = MethodChannel('wifiworks');
-          /*final int result = await platform.invokeMethod(
-              'getTest', {"SSID": wifiName, "Password": password});*/
-          final int result = await platform.invokeMethod('dc');
-          if (result == 1) {
-            await 1.delay();
-            isBtnLoading.value = false;
-            Get.to(
-              HubIdConfigView(),
-            );
-          } else {
-            await 1.delay();
-            isBtnLoading.value = false;
-            toast.getToast("QurHub router not disconnecting", Colors.red);
-          }
-        } else {
-          isBtnLoading.value = false;
-          toast.getToast(validString(json.decode(response.body)), Colors.red);
-        }
+        isBtnLoading.value = false;
+        response != null
+            ? Get.to(
+                () => HubIdConfigView(),
+              )
+            : toast.getToast(
+                validString(json.decode(response.body)), Colors.red);
       } else {
         isBtnLoading.value = false;
         toast.getToast(
@@ -152,6 +168,7 @@ class AddNetworkController extends GetxController {
       }
     } catch (e) {
       isBtnLoading.value = false;
+      printError(info: e.toString());
     }
   }
 
@@ -277,6 +294,63 @@ class AddNetworkController extends GetxController {
     } catch (e) {
       //isBtnLoading.value = false;
       toast.getToast(validString(e.toString()), Colors.red);
+    }
+  }
+
+  void executeEsptouch() {
+    isBtnLoading.value = true;
+    final task = ESPTouchTask(
+      ssid: qurHubWifiRouter.ssid,
+      bssid: qurHubWifiRouter.bssid,
+      password: qurHubWifiRouter.password,
+    );
+    final Stream<ESPTouchResult> stream = task.execute();
+    apiReqNum = 0;
+    pingQurHub();
+  }
+
+  void pingQurHub() async {
+    print("requesting api");
+    var response = await _apiProvider.callHubId();
+    if (response != null) {
+      if (response is String) {
+        errorMessage.value =
+            "Failed to get the hub id please reset your Hub to config mode and re-try";
+        printError(
+          info:
+              "Failed to get the hub id please reset your Hub to config mode and re-try",
+        );
+        isBtnLoading.value = false;
+      } else if (response.statusCode == 200 &&
+          (response.body ?? '').isNotEmpty) {
+        printInfo(info: 'Response status: ${response.statusCode}');
+        printInfo(info: 'Response body: ${response.body}');
+        //save id
+        isBtnLoading.value = false;
+        Get.to(
+          HubIdConfigView(),
+        );
+      } else {
+        retryForHubId();
+      }
+    } else {
+      retryForHubId();
+    }
+  }
+
+  void retryForHubId() async {
+    if (apiReqNum < 3) {
+      apiReqNum++;
+      await 5.seconds;
+      pingQurHub();
+    } else {
+      isBtnLoading.value = false;
+      errorMessage.value =
+          "Failed to get the hub id please reset your Hub to config mode and re-try";
+      printError(
+        info:
+            "Failed to get the hub id please reset your Hub to config mode and re-try",
+      );
     }
   }
 }

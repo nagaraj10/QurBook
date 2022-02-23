@@ -330,6 +330,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  esptouch_flutter:
+    dependency: "direct main"
+    description:
+      name: esptouch_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   expandable:
     dependency: "direct main"
     description:
@@ -766,7 +773,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../myfhb-flutter-common"
+      path: "../../Qurhealth/fhbCommon"
       relative: true
     source: path
     version: "0.0.1"

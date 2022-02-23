@@ -68,7 +68,8 @@ class _HubListScreenState extends State<HubListScreen> {
                                     Align(
                                       alignment: Alignment.bottomCenter,
                                       child: Padding(
-                                        padding: const EdgeInsets.only(bottom: 20.0),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20.0),
                                         child: InkWell(
                                           onTap: () {
                                             Navigator.push(
@@ -85,7 +86,8 @@ class _HubListScreenState extends State<HubListScreen> {
                                           },
                                           child: Card(
                                             shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0),
                                             ),
                                             color: Color(CommonUtil()
                                                 .getMyPrimaryColor()),
@@ -95,8 +97,9 @@ class _HubListScreenState extends State<HubListScreen> {
                                               child: Text(
                                                 'Add New Device',
                                                 style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,),
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -115,7 +118,7 @@ class _HubListScreenState extends State<HubListScreen> {
       onTap: () {
         try {
           Get.to(
-            AddNetWorkView(),
+            () => AddNetWorkView(),
           );
         } catch (e) {
           print(e);
@@ -172,8 +175,11 @@ class _HubListScreenState extends State<HubListScreen> {
                         height: 40,
                         width: 40,
                       ),
-                      SizedBox(height : 5),
-                      Text(result.hub.name,style: TextStyle(fontSize: 12),),
+                      SizedBox(height: 5),
+                      Text(
+                        result.hub.name,
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -190,13 +196,15 @@ class _HubListScreenState extends State<HubListScreen> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   'Hub Id',
-                                  style: TextStyle(color: Colors.grey,fontSize: 13),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 13),
                                 ),
                               ),
                               Text(
-                                result.hub.serialNumber ,
+                                result.hub.serialNumber,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.black,fontSize: 13),
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
                               )
                             ],
                           ),
@@ -212,12 +220,14 @@ class _HubListScreenState extends State<HubListScreen> {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   'Paired On',
-                                  style: TextStyle(color: Colors.grey,fontSize: 13),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 13),
                                 ),
                               ),
                               Text(
                                 changeDateFormat(result.createdOn),
-                                style: TextStyle(color: Colors.black,fontSize: 13),
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 13),
                               )
                             ],
                           ),
@@ -230,7 +240,10 @@ class _HubListScreenState extends State<HubListScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      unPairDialog(type: 'hub', hubId: result.id, idName : result.hub.name);
+                      unPairDialog(
+                          type: 'hub',
+                          hubId: result.id,
+                          idName: result.hub.name);
                     },
                     child: Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
@@ -254,148 +267,155 @@ class _HubListScreenState extends State<HubListScreen> {
             ),
           ),
         ),
-
-        result.userDeviceCollection.length!=0?
-
-
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Text(
-                'Connected Devices',
-                style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 16),
-              ),
-            ),
-            ListView.builder(
-                itemCount: result.userDeviceCollection.length,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            ClipOval(
-                                child: result.userDeviceCollection[index] != null
-                                    ?  getProfilePicWidget(
-                                    result.userDeviceCollection[index].user
-                                        .profilePicThumbnailUrl,
-                                    result.userDeviceCollection[index].user
-                                        .firstName,
-                                    result.userDeviceCollection[index].user
-                                        .lastName,
-                                    Color(CommonUtil().getMyPrimaryColor()))
-
-                                    : Container(
-                                    width: 50.0.h,
-                                    height: 50.0.h,
-                                    padding: EdgeInsets.all(12),
-                                    color: Color(fhbColors.bgColorContainer))),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            getDeviceImage(result.userDeviceCollection[index].device.deviceType.code),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  result.userDeviceCollection[index].user
-                                          .firstName ??
-                                      '',
-                                  style: TextStyle(
-                                      color: Colors.black),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      'Device Id ',
-                                      style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 12),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        result.userDeviceCollection[index].device.serialNumber,
-                                        overflow: TextOverflow.ellipsis,
+        result.userDeviceCollection.length != 0
+            ? Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Connected Devices',
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          fontSize: 16),
+                    ),
+                  ),
+                  ListView.builder(
+                      itemCount: result.userDeviceCollection.length,
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  ClipOval(
+                                      child: result.userDeviceCollection[
+                                                  index] !=
+                                              null
+                                          ? getProfilePicWidget(
+                                              result.userDeviceCollection[index]
+                                                  .user.profilePicThumbnailUrl,
+                                              result.userDeviceCollection[index]
+                                                  .user.firstName,
+                                              result.userDeviceCollection[index]
+                                                  .user.lastName,
+                                              Color(CommonUtil()
+                                                  .getMyPrimaryColor()))
+                                          : Container(
+                                              width: 50.0.h,
+                                              height: 50.0.h,
+                                              padding: EdgeInsets.all(12),
+                                              color: Color(
+                                                  fhbColors.bgColorContainer))),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  getDeviceImage(result
+                                      .userDeviceCollection[index]
+                                      .device
+                                      .deviceType
+                                      .code),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                      child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        result.userDeviceCollection[index].user
+                                                .firstName ??
+                                            '',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Device Id ',
+                                            style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 12),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              result.userDeviceCollection[index]
+                                                  .device.serialNumber,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.grey[700],
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        'Connected ${changeDateFormat(result.userDeviceCollection[index].createdOn)}',
                                         style: TextStyle(
-                                            color: Colors.grey[700],
+                                            color: Colors.grey[600],
                                             fontSize: 12),
+                                      )
+                                    ],
+                                  )),
+                                  InkWell(
+                                    onTap: () {
+                                      unPairDialog(
+                                          type: 'device',
+                                          deviceId: result
+                                              .userDeviceCollection[index].id,
+                                          idName: "Device");
+                                    },
+                                    child: Card(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                          'Unpair',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 12),
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Text(
-                                  'Connected ${changeDateFormat(result.userDeviceCollection[index].createdOn)}',
-                                  style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 12),
-                                )
-                              ],
-                            )),
-                            InkWell(
-                              onTap: () {
-                                unPairDialog(
-                                    type: 'device',
-                                    deviceId:
-                                        result.userDeviceCollection[index].id,
-                                idName: "Device");
-                              },
-                              child: Card(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    'Unpair',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12),
-                                  ),
-                                ),
+                                  )
+                                ],
                               ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ],
-        ):Container()
+                            ),
+                          ),
+                        );
+                      }),
+                ],
+              )
+            : Container()
       ],
     );
   }
 
-  Widget getDeviceImage(String deviceCode){
-    String path='';
+  Widget getDeviceImage(String deviceCode) {
+    String path = '';
     switch (deviceCode) {
       case 'BPMONT':
-        path='assets/devices/bp_dashboard.png';
+        path = 'assets/devices/bp_dashboard.png';
         break;
       case 'GLUCMT':
-        path='assets/devices/gulcose_dashboard.png';
+        path = 'assets/devices/gulcose_dashboard.png';
         break;
       case 'PULOXY':
-        path='assets/devices/pulse_oxim.png';
+        path = 'assets/devices/pulse_oxim.png';
         break;
       case 'THERMO':
-        path='assets/devices/temp_dashboard.png';
+        path = 'assets/devices/temp_dashboard.png';
         break;
       case 'WEIGHS':
-        path='assets/devices/weight_dashboard.png';
+        path = 'assets/devices/weight_dashboard.png';
         break;
       default:
-        path='assets/devices/bp_dashboard.png';
+        path = 'assets/devices/bp_dashboard.png';
     }
     return Container(
       decoration: BoxDecoration(
@@ -406,17 +426,18 @@ class _HubListScreenState extends State<HubListScreen> {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Center(
-            child:Image.asset(
-              path,
-              height: 50,
-              width: 50,
-            ),
+          child: Image.asset(
+            path,
+            height: 50,
+            width: 50,
+          ),
         ),
       ),
     );
   }
 
-  Future<Widget> unPairDialog({String type, String deviceId, String hubId,String idName}) =>
+  Future<Widget> unPairDialog(
+          {String type, String deviceId, String hubId, String idName}) =>
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -431,11 +452,12 @@ class _HubListScreenState extends State<HubListScreen> {
                         child: Column(
                           children: [
                             Image.asset('assets/warning_icon.png',
-                                height:30, width: 30),
+                                height: 30, width: 30),
                             SizedBox(
                               height: 15,
                             ),
-                            Text('Are you sure to unpair ${type=='hub'?'hub':'device'} ${idName}'),
+                            Text(
+                                'Are you sure to unpair ${type == 'hub' ? 'hub' : 'device'} ${idName}'),
                             SizedBox(
                               height: 15,
                             ),

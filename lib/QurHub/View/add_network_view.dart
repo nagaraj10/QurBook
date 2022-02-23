@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mdns_plugin/flutter_mdns_plugin.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,7 +33,9 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   @override
   void initState() {
     try {
-      controller.getWifiList();
+      Platform.isAndroid
+          ? controller.getWifiList()
+          : controller.getCurrentWifiDetailsInIOS();
       super.initState();
     } catch (e) {}
   }
@@ -100,7 +104,9 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
                     InkWell(
                       onTap: () async {
                         try {
-                          controller.getWifiList();
+                          Platform.isAndroid
+                              ? controller.getWifiList()
+                              : controller.getCurrentWifiDetailsInIOS();
                         } catch (e) {}
                       },
                       child: Container(
@@ -142,10 +148,9 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
                         /*side: BorderSide(width: 5, color: Colors.green)*/
                       ),
                       child: Container(
-                          padding: EdgeInsets.only(
-                              top: 15, left: 15, right: 15, bottom: 15),
+                          padding: EdgeInsets.all(15),
                           //width: 1.sw,
-                          height: 1.sh / 2.85,
+                          height: 1.sh / 2.65,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -172,15 +177,31 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
                                       SizedBox(
                                         height: 15.0.h,
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Obx(() =>
-                                              controller.isBtnLoading.isTrue
-                                                  ? CircularProgressIndicator()
-                                                  : _showConnectButton()),
-                                        ],
+                                      Obx(
+                                        () => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            controller.isBtnLoading.isTrue
+                                                ? Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      CircularProgressIndicator(),
+                                                      SizedBox(
+                                                        width: 8,
+                                                      ),
+                                                      FittedBox(
+                                                        child: Text(
+                                                          "Setting up the Hub",
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                : _showConnectButton(),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 25.0.h,
@@ -270,6 +291,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: passwordController,
       keyboardType: TextInputType.text,
+      obscureText: true,
       focusNode: passwordFocus,
       validator: (String value) {
         if (value.trim().isEmpty) {

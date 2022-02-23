@@ -139,21 +139,24 @@ class HubApiProvider {
 
   Future<dynamic> callHubId() async {
     try {
-      final AddNetworkController addNetworkController = Get.find();
       http.Response responseJson;
-      var headers = {"accept-content": "application/json"};
-
-      responseJson = await ApiServices.get(
-        "http://${addNetworkController.strIpAddress.value}/gethubid",
-        headers: headers,
-      );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
+      if (Platform.isIOS) {
+        responseJson = await ApiServices.get(
+          GET_HUB_ID,
+        );
       } else {
-        return responseJson;
+        final AddNetworkController addNetworkController = Get.find();
+        var headers = {"accept-content": "application/json"};
+        responseJson = await ApiServices.get(
+          "http://${addNetworkController.strIpAddress.value}/gethubid",
+          headers: headers,
+        );
       }
-    } catch (e) {}
+      return responseJson;
+    } catch (e) {
+      print(e.toString());
+      return "";
+    }
   }
 
   Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
