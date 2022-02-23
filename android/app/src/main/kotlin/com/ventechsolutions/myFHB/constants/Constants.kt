@@ -31,6 +31,7 @@ object Constants {
     val PROP_MSG = "message"
     val PROP_IS_CLOSE = "isClose"
     val PROP_CLAIM_ID = "claimId"
+    val PROP_PRESCRIPTION_ID = "prescriptionId"
 
     val PROP_START = "start"
     val PROP_STOP = "stop"
