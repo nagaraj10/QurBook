@@ -417,6 +417,7 @@ class MainActivity : FlutterActivity() {
         val prescriptionId = intent.getStringExtra(Constants.PROP_PRESCRIPTION_ID)
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
         val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
+        val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
         val doctorID = intent.getStringExtra(getString(R.string.docId))
         val docName = intent.getStringExtra(getString(R.string.docName))
         val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
@@ -437,7 +438,7 @@ class MainActivity : FlutterActivity() {
             sharedValue = "${redirect_to}&${claimId}&${userId}"
         }else if(redirect_to?.contains("myRecords") == true){
 
-            sharedValue = "ack&${redirect_to}&${prescriptionId}&${userId}"
+            sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
