@@ -270,18 +270,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
         ),
         labelText: CommonConstants.wifiName,
         hintText: CommonConstants.wifiName,
-<<<<<<< HEAD
-        /*suffix: InkWell(
-          onTap: () {
-              //TODO
-          },
-          child: SvgPicture.asset(
-            variable.icon_qurhub_wifi,
-            color: Colors.black54,
-          ),
-        ),*/
-=======
->>>>>>> b915a70cac765e11ed6c0a90a9acbd653babda85
         labelStyle: TextStyle(
             fontSize: 15.0.sp,
             fontWeight: FontWeight.w400,
@@ -350,35 +338,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
   }
 
   Widget _showConnectButton() {
-<<<<<<< HEAD
-    final addButtonWithGesture = InkWell(
-      onTap: () {
-        try {
-          FocusScope.of(context).unfocus();
-          if (formKey.currentState.validate()) {
-            controller.qurHubWifiRouter.password =
-                passwordController.text.toString().trim();
-            Platform.isIOS
-                ? controller.executeEsptouch()
-                : controller.getConnectWifi(
-                    wifiNameController.text.toString().trim(),
-                    passwordController.text.toString().trim(),
-                  );
-          }
-        } catch (e) {}
-      },
-      child: Container(
-        width: 150.0.w,
-        height: 45.0.h,
-        decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color.fromARGB(15, 0, 0, 0),
-              offset: Offset(0, 2),
-              blurRadius: 5,
-=======
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: InkWell(
@@ -405,7 +364,6 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
                   blurRadius: 5,
                 ),
               ],
->>>>>>> b915a70cac765e11ed6c0a90a9acbd653babda85
             ),
             child: Center(
               child: Text(

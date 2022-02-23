@@ -32,7 +32,10 @@ class AddNetworkController extends GetxController {
   WifiNetwork qurHubWifiRouter;
   final _apiProvider = HubApiProvider();
   final HubListController hubListController = Get.find();
-<<<<<<< HEAD
+  FlutterMdnsPlugin mdnsPlugin;
+  DiscoveryCallbacks discoveryCallbacks;
+  String strName = "qurhub";
+  var strIpAddress = "".obs;
   var apiReqNum = 0;
   getCurrentWifiDetailsInIOS() async {
     try {
@@ -60,12 +63,6 @@ class AddNetworkController extends GetxController {
       errorMessage.value = "${e.toString()}";
     }
   }
-=======
-  FlutterMdnsPlugin mdnsPlugin;
-  DiscoveryCallbacks discoveryCallbacks;
-  String strName = "qurhub";
-  var strIpAddress = "".obs;
->>>>>>> b915a70cac765e11ed6c0a90a9acbd653babda85
 
   getWifiList() async {
     try {
@@ -212,11 +209,7 @@ class AddNetworkController extends GetxController {
       http.Response response =
           await _apiProvider.callHubIdConfig(hubId, nickName);
       if (response.statusCode == 200) {
-<<<<<<< HEAD
-        isBtnLoading.value = false;
-=======
         isSaveBtnLoading.value = false;
->>>>>>> b915a70cac765e11ed6c0a90a9acbd653babda85
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         if (addNetworkModel.isSuccess) {
