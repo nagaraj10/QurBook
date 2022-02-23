@@ -122,10 +122,11 @@ class HubApiProvider {
 
   Future<dynamic> callConnectWifi(String wifiName, String password) async {
     try {
+      final AddNetworkController addNetworkController = Get.find();
       http.Response responseJson;
 
       responseJson = await ApiServices.post(
-        "http://192.168.99.79/save?J=1&A=$wifiName&K=$password&Action=Save",
+        "http://${addNetworkController.strIpAddress.value}/save?J=1&A=$wifiName&K=$password&Action=Save",
         timeOutSeconds: 50,
       );
 

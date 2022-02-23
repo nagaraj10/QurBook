@@ -67,7 +67,7 @@ class AddNetworkController extends GetxController {
 
   getWifiList() async {
     try {
-      //initMDNS();
+      initMDNS();
       errorMessage.value = "";
       isLoading.value = true;
       WiFiForIoTPlugin.isEnabled().then((val) async {
@@ -256,9 +256,9 @@ class AddNetworkController extends GetxController {
               .toLowerCase()
               .contains(strName.toLowerCase())) {
             strIpAddress.value = validString(info.address);
-            if (strIpAddress.value.trim().isNotEmpty) {
+            /*if (strIpAddress.value.trim().isNotEmpty) {
               getHubId();
-            }
+            }*/
           }
           /*setState(() {
             messageLog.insert(0, "DISCOVERY: Resolved ${info.toString()}");
