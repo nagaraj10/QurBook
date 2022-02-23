@@ -341,7 +341,7 @@ class AddNetworkController extends GetxController {
   void retryForHubId() async {
     if (apiReqNum < 3) {
       apiReqNum++;
-      await 5.seconds;
+      await 5.delay();
       pingQurHub();
     } else {
       isBtnLoading.value = false;

@@ -344,10 +344,15 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
           onTap: () {
             try {
               FocusScope.of(context).unfocus();
+              controller.qurHubWifiRouter.password =
+                  passwordController.text.toString().trim();
               if (formKey.currentState.validate()) {
-                controller.getConnectWifi(
-                    wifiNameController.text.toString().trim(),
-                    passwordController.text.toString().trim());
+                Platform.isIOS
+                    ? controller.executeEsptouch()
+                    : controller.getConnectWifi(
+                        wifiNameController.text.toString().trim(),
+                        passwordController.text.toString().trim(),
+                      );
               }
             } catch (e) {}
           },
