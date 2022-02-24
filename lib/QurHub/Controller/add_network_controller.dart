@@ -296,6 +296,8 @@ class AddNetworkController extends GetxController {
       password: qurHubWifiRouter.password,
     );
     final Stream<ESPTouchResult> stream = task.execute();
+    final sub = stream.listen((r) => print('IP: ${r.ip} MAC: ${r.bssid}'));
+    Future.delayed(Duration(minutes: 1), () => sub.cancel());
     apiReqNum = 0;
     if (Platform.isIOS) {
       pingQurHub();
