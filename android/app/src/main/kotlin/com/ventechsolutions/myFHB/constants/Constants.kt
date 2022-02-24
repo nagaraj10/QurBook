@@ -31,6 +31,7 @@ object Constants {
     val PROP_MSG = "message"
     val PROP_IS_CLOSE = "isClose"
     val PROP_CLAIM_ID = "claimId"
+    val PROP_PRESCRIPTION_ID = "prescriptionId"
 
     val PROP_START = "start"
     val PROP_STOP = "stop"
@@ -66,4 +67,5 @@ object Constants {
     val PROP_RAWBODY ="rawBody"
     val PROB_EXTERNAL_LINK ="externalLink"
     val PROB_USER_ID ="userId"
+    val PROB_PATIENT_NAME ="patientName"
 }
