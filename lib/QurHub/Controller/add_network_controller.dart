@@ -73,8 +73,13 @@ class AddNetworkController extends GetxController {
       WiFiForIoTPlugin.isEnabled().then((val) async {
         if (val) {
           WiFiForIoTPlugin.isConnected().then((val) {
+            qurHubWifiRouter = WifiNetwork.fromJson({});
             WiFiForIoTPlugin.getSSID().then((val) {
-              strSSID.value = val;
+              qurHubWifiRouter.ssid = val;
+              strSSID.value = qurHubWifiRouter.ssid;
+            });
+            WiFiForIoTPlugin.getBSSID().then((val) {
+              qurHubWifiRouter.bssid = val;
             });
           });
           ssidList.value = [];
@@ -86,10 +91,10 @@ class AddNetworkController extends GetxController {
           if (ssidList.value != null && ssidList.value.length > 0) {
             try {
               ssidList.value.forEach((ssids) {
-                if (ssids.ssid
-                    .toLowerCase()
-                    .contains(strSSID.value.toLowerCase())) {
+                if (ssids.ssid.toLowerCase() == strSSID.value.toLowerCase()) {
                   qurHubWifiRouter = ssids;
+                  ssidList.value = [];
+                  ssidList.value.add(qurHubWifiRouter);
                 }
               });
             } catch (e) {
@@ -157,7 +162,7 @@ class AddNetworkController extends GetxController {
     try {
       strSSID.value = strName;
       ssidList.value.forEach((ssids) {
-        if (ssids.ssid.toLowerCase().contains(strSSID.value.toLowerCase())) {
+        if (ssids.ssid.toLowerCase() == strSSID.value.toLowerCase()) {
           qurHubWifiRouter = ssids;
         }
       });

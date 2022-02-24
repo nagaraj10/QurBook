@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/View/add_network_view.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
@@ -115,11 +119,27 @@ class _HubListScreenState extends State<HubListScreen> {
 
   Widget pairNewDeviveBtn() {
     final pairNewDeviveWithGesture = InkWell(
-      onTap: () {
+      onTap: () async {
         try {
-          Get.to(
-            () => AddNetWorkView(),
-          );
+          if (Platform.isIOS) {
+            Get.to(
+              () => AddNetWorkView(),
+            );
+          } else {
+            bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+            /*var permissionStatus =
+                await CommonUtil.askPermissionForLocation(isLocation: false);*/
+            if (!serviceEnabled) {
+              FlutterToast().getToast(
+                  'Please turn on your location services and re-try again',
+                  Colors.black);
+              return;
+            } else {
+              Get.to(
+                () => AddNetWorkView(),
+              );
+            }
+          }
         } catch (e) {
           print(e);
         }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -1439,6 +1440,41 @@ class CommonUtil {
       //     code: 'PERMISSION_DISABLED',
       //     message: 'Location data is not available on device');
       print("Access to camera and microphone denied permanently");
+    }
+  }
+
+  static Future<bool> askPermissionForLocation(
+      {bool isLocation = false}) async {
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
+
+    if (isLocation) {
+      LocationPermission locationStatus = await Geolocator.requestPermission();
+      if (locationStatus != LocationPermission.denied &&
+          locationStatus != LocationPermission.deniedForever) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      final status = await Geolocator.requestPermission();
+      if (status != LocationPermission.denied &&
+          status != LocationPermission.deniedForever) {
+        return true;
+      } else {
+        _handleInvalidPermissionsLocations(status);
+        return false;
+      }
+    }
+  }
+
+  static void _handleInvalidPermissionsLocations(
+      LocationPermission locationPermissionStatus) {
+    if (locationPermissionStatus == LocationPermission.denied) {
+      print("Access to location denied");
+    } else if (locationPermissionStatus == LocationPermission.deniedForever) {
+      print("Access to location denied permanently");
     }
   }
 
