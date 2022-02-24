@@ -17,6 +17,7 @@ class HubIdConfigView extends StatefulWidget {
 
 class _HubIdConfigViewState extends State<HubIdConfigView> {
   final AddNetworkController controller = Get.find();
+
   final hubIdController = TextEditingController();
   FocusNode hubIdFocus = FocusNode();
 
@@ -28,14 +29,8 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
   void initState() {
     try {
       super.initState();
-      init();
-    } catch (e) {}
-  }
-
-  init() async {
-    try {
-      await 0.5.delay();
-      showSetNickNameDialog(context);
+      hubIdController.text = controller.strHubId.value;
+      nickNameController.text = '';
     } catch (e) {}
   }
 
@@ -48,17 +43,193 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
             colors: Colors.white,
             size: 24.0.sp,
             onTap: () {
-              Get.back();
+              try {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
+                          child: Container(
+                              height: 120,
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    children: [
+                                      Text("Do you want to close this?"),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context, true);
+                                              },
+                                              child: Card(
+                                                  color: Colors.red,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0,
+                                                            bottom: 8.0,
+                                                            left: 16.0,
+                                                            right: 16.0),
+                                                    child: Text(
+                                                      'Yes',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  )),
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pop(context, false);
+                                              },
+                                              child: Card(
+                                                  color: Colors.green,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8.0,
+                                                            bottom: 8.0,
+                                                            left: 16.0,
+                                                            right: 16.0),
+                                                    child: Text(
+                                                      'No',
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  )),
+                                            )
+                                          ])
+                                    ],
+                                  ),
+                                ),
+                              )));
+                    }).then((val) {
+                  if (val != null && val) {
+                    Get.back();
+                  }
+                });
+              } catch (e) {}
             },
           ),
           title: Text(
             'Add Network',
           ),
         ),
-        body: Container(),
+        body: Form(
+            key: formKey,
+            child: Container(
+              padding: EdgeInsets.only(top: 20, left: 5, right: 5),
+              child: Card(
+                margin: EdgeInsets.only(top: 60, left: 25, right: 25),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  /*side: BorderSide(width: 5, color: Colors.green)*/
+                ),
+                child: Container(
+                    //width: 1.sw,
+                    padding: EdgeInsets.all(15),
+                    height: 1.sh / 2.65,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    _showHubIdTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0.h,
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    _showNickNameTextField(),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15.0.h,
+                                ),
+                                Obx(
+                                  () => Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      controller.isSaveBtnLoading.isTrue
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(
+                                                  width: 8,
+                                                ),
+                                                FittedBox(
+                                                  child: Text(
+                                                    "Saving the Hub",
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          : _showSaveButton(),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 25.0.h,
+                                ),
+                                /*Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Obx(() => controller
+                                            .isSaveBtnLoading.isTrue
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              CircularProgressIndicator(),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                              FittedBox(
+                                                child: Text(
+                                                  "Saving the Hub",
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : _showSaveButton()),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 25.0.h,
+                                ),*/
+                                // callAddFamilyStreamBuilder(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ),
+            )),
       );
 
-  showSetNickNameDialog(BuildContext context) {
+  /*showSetNickNameDialog(BuildContext context) {
     hubIdController.text = controller.strHubId.value;
     nickNameController.text = '';
 
@@ -78,7 +249,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
+                      */ /*Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           IconButton(
@@ -192,7 +363,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
                                 } catch (e) {}
                               })
                         ],
-                      ),
+                      ),*/ /*
                       Expanded(
                         child: SingleChildScrollView(
                           child: Column(
@@ -239,7 +410,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
         });
       },
     );
-  }
+  }*/
 
   Widget _showHubIdTextField() {
     return Expanded(
@@ -327,8 +498,7 @@ class _HubIdConfigViewState extends State<HubIdConfigView> {
           onTap: () {
             try {
               FocusScope.of(context).unfocus();
-              if (formKey.currentState.validate())
-              {
+              if (formKey.currentState.validate()) {
                 controller.callSaveHubIdConfig(
                     hubIdController.text.toString().trim(),
                     nickNameController.text.toString().trim(),
