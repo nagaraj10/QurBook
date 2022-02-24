@@ -194,10 +194,8 @@ class AddNetworkController extends GetxController {
         if (addNetworkModel.isSuccess) {
           toast.getToast(validString(addNetworkModel.message), Colors.green);
           hubListController.getHubList();
-          Navigator.pop(
-            context,
-          );
-          Get.off(HubListScreen());
+          int times = 2;
+          Get.close(times);
         } else {
           toast.getToast(validString(addNetworkModel.message), Colors.red);
         }
@@ -207,6 +205,7 @@ class AddNetworkController extends GetxController {
       }
     } catch (e) {
       isSaveBtnLoading.value = false;
+      toast.getToast(validString(e.toString()), Colors.red);
     }
   }
 
