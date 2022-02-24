@@ -175,7 +175,8 @@ const String qr_non_qurpro_hospital = 'non-qurpro-hospital';
 const String qr_membership =
     'plan-subscription-info/membership-details?userId=';
 const String qr_organizationid = '&healthOrganizationId=';
-const String qr_expiry_claim_list='plan-subscription-info/claim-expired-plans-list/';
+const String qr_expiry_claim_list =
+    'plan-subscription-info/claim-expired-plans-list/';
 
 const String qr_health_organization = 'health-organization/';
 const String qr_health_Search = 'search/';
@@ -333,18 +334,20 @@ const String qr_healthRecordId = 'health_record_id';
 const String qr_memoText = 'memo_text';
 const String qr_claim = 'claim';
 const String qr_claim_with_slash = 'claim/';
+const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 
 //chat
 
 const String qr_chat_socket_history = 'chat/get-message-history';
 
-const String qr_chat_socket_init_chat_doc_pat = 'chat/initiate-doctor-patient-chat';
+const String qr_chat_socket_init_chat_doc_pat =
+    'chat/initiate-doctor-patient-chat';
 
-const String qr_chat_socket_init_chat_pat_doc = 'chat/initiate-patient-doctor-chat';
+const String qr_chat_socket_init_chat_pat_doc =
+    'chat/initiate-patient-doctor-chat';
 
 const String qr_chat_socket_get_user_id_doc = 'doctor/';
 
 const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
 
 const String qr_hub = 'qur-hub/user-hub';
-

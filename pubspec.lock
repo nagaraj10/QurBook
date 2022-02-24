@@ -1327,7 +1327,7 @@ packages:
       name: socket_io_common
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0-beta.1-nullsafety.1"
+    version: "2.0.0"
   source_span:
     dependency: transitive
     description:

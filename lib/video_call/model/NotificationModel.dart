@@ -219,7 +219,9 @@ class NotificationModel {
         redirect = split.first;
       } else {
         redirectData = {for (int i = 0; i < split.length; i++) i: split[i]};
-        redirectData[split.length] = healthRecordMetaIds;
+        if ((healthRecordMetaIds ?? '').isNotEmpty) {
+          redirectData[split.length] = healthRecordMetaIds;
+        }
       }
     }
     if (title == null) {

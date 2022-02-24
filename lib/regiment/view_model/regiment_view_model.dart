@@ -371,6 +371,8 @@ class RegimentViewModel extends ChangeNotifier {
     String events,
     bool isFollowEvent,
     String followEventContext,
+    DateTime selectedDate,
+    TimeOfDay selectedTime
   }) async {
     updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
@@ -378,6 +380,8 @@ class RegimentViewModel extends ChangeNotifier {
       events: events,
       isFollowEvent: isFollowEvent,
       followEventContext: followEventContext,
+      selectedDate: selectedDate??DateTime.now(),
+      selectedTime: selectedTime??TimeOfDay.now(),
     );
   }
 
