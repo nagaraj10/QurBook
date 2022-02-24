@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../common/PreferenceUtil.dart';
 import '../../constants/HeaderRequest.dart';
@@ -16,10 +20,11 @@ import '../../common/CommonUtil.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 class RegimentService {
-  static Future<RegimentResponseModel> getRegimentData({String dateSelected,
-    int isSymptoms = 0,
-    bool isForMasterData = false,
-    String searchText = ''}) async {
+  static Future<RegimentResponseModel> getRegimentData(
+      {String dateSelected,
+      int isSymptoms = 0,
+      bool isForMasterData = false,
+      String searchText = ''}) async {
     var response;
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
@@ -28,9 +33,7 @@ class RegimentService {
       var currentLanguage = '';
       var lan = CommonUtil.getCurrentLanCode();
       if (lan != 'undef') {
-        var langCode = lan
-            .split('-')
-            .first;
+        var langCode = lan.split('-').first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
@@ -43,8 +46,7 @@ class RegimentService {
             {
               "method": "get",
               "data":
-              "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms&all=1&page=0&pagesize=50&search=$searchText${variable
-                  .qr_patientEqaul}$userId",
+                  "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=$isSymptoms&all=1&page=0&pagesize=50&search=$searchText${variable.qr_patientEqaul}$userId",
             },
           ),
         );
@@ -80,24 +82,37 @@ class RegimentService {
     }
   }
 
-  static Future<SaveResponseModel> saveFormData({
-    String eid,
-    String events,
-    bool isFollowEvent,
-    String followEventContext,
-  }) async {
+  static Future<SaveResponseModel> saveFormData(
+      {String eid,
+      String events,
+      bool isFollowEvent,
+      String followEventContext,
+      DateTime selectedDate,
+      TimeOfDay selectedTime}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    var localTime;
     try {
-      var localTime = CommonUtil.dateFormatterWithdatetimeseconds(
-        DateTime.now(),
-        isIndianTime: true,
-      );
+      if (Provider.of<RegimentViewModel>(Get.context, listen: false)
+              .regimentFilter ==
+          RegimentFilter.AsNeeded) {
+        localTime = CommonUtil.dateFormatterWithdatetimeseconds(
+          DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
+              selectedTime.hour, selectedTime.minute),
+          isIndianTime: true,
+        );
+      } else {
+        localTime = CommonUtil.dateFormatterWithdatetimeseconds(
+          DateTime.now(),
+          isIndianTime: true,
+        );
+      }
+
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
       var followEventParams = '';
       if (isFollowEvent ?? false) {
         followEventParams =
-        '&followevent=1&context=${followEventContext ?? ''}';
+            '&followevent=1&context=${followEventContext ?? ''}';
       }
       var response = await ApiServices.post(
         urlForRegiment,
@@ -106,8 +121,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ??
-                ''}${variable.qr_patientEqaul}$userId$followEventParams",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams",
           },
         ),
       );
@@ -138,8 +152,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable
-                .qr_patientEqaul}$userId",
+                "Action=ResetOtherData&eid=$eid&dataname=PHOTO${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -170,7 +183,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=SetOtherData&eid=$eid&dataname=PHOTO&name=&url=$url",
+                "Action=SetOtherData&eid=$eid&dataname=PHOTO&name=&url=$url",
           },
         ),
       );
@@ -201,7 +214,7 @@ class RegimentService {
           {
             'method': 'get',
             'data':
-            "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
+                "Action=GetFormForEvent&eid=$eid${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -262,8 +275,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=SetProfile$schedules&IsDefault=0${variable
-                .qr_patientEqaul}$userId",
+                "Action=SetProfile$schedules&IsDefault=0${variable.qr_patientEqaul}$userId",
           },
         ),
       );
@@ -297,8 +309,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=UnDO&eid=$eid${variable
-                .qr_patientEqaul}$userId&date=$activityDate",
+                "Action=UnDO&eid=$eid${variable.qr_patientEqaul}$userId&date=$activityDate",
           },
         ),
       );
@@ -336,8 +347,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-            "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable
-                .qr_patientEqaul}$userId",
+                "Action=ShowHideEvent&teid_user=$eidUser&hh=$hh&mm=$mm&hide=$hide${variable.qr_patientEqaul}$userId",
             // 'data':
             //     'Action=${isDisable ? 'DisableUserActivity' : 'EnableUserActivity'}&teid=$eidUser${variable.qr_patientEqaul}$userId',
           },
@@ -358,8 +368,8 @@ class RegimentService {
     }
   }
 
-  static Future<GetEventIdModel> getEventId({dynamic uid, dynamic aid,
-    dynamic formId, dynamic formName}) async {
+  static Future<GetEventIdModel> getEventId(
+      {dynamic uid, dynamic aid, dynamic formId, dynamic formName}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForGetEventId = Constants.BASE_URL + variable.getEventId;
     try {
