@@ -222,7 +222,6 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           width: 60,
           height: 60,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
             image: DecorationImage(image: imageProvider, fit: BoxFit.fill),
           ),
         ),
