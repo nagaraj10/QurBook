@@ -490,13 +490,31 @@ class _MyFHBState extends State<MyFHB> {
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
+          final dataOne=temp[1]??'';
+          final dataTwo=temp[2];
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myRecords',
             'navigationPage': temp[1],
           });
-          CommonUtil()
-              .navigateToMyRecordsCategory(temp[1], [passedValArr[2]], false);
+          if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+            final userId = PreferenceUtil.getStringValue(KEY_USERID);
+            if ((passedValArr[2] ?? '') == userId) {
+              CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+            } else {
+              CommonUtil.showFamilyMemberPlanExpiryDialog(
+                passedValArr[3]??'',
+                redirect: temp[0],
+              );
+            }
+          } else {
+            CommonUtil()
+                .navigateToMyRecordsCategory(temp[1], [passedValArr[2]], false);
+            // navigateToMyRecordsCategory(
+            //     temp[1], [passedValArr[2]], false
+            // );
+          }
+
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1057,7 +1075,7 @@ class _MyFHBState extends State<MyFHB> {
           if (temp[0] == 'myRecords') {
             return SplashScreen(
               nsRoute: 'myRecords',
-              templateName: temp[1],
+              templateName: parsedData[1],
               bundle: parsedData[2],
             );
           } else if (parsedData[1] == 'sheela') {

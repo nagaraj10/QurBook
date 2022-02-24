@@ -348,14 +348,29 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'myRecords',
                         'navigationPage': '${widget.templateName}',
                       });
-
-                      if (widget.bundle != null && widget.bundle != '') {
-                        CommonUtil().navigateToMyRecordsCategory(
-                            widget.templateName, [widget.bundle], true);
-                      } else {
-                        CommonUtil().navigateToMyRecordsCategory(
-                            widget.templateName, null, true);
+                      final temp = widget.templateName.split('|');
+                      final dataOne=temp[1]??'';
+                      final dataTwo=temp[2];
+                      if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+                        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+                        if ((widget.bundle ?? '') == userId) {
+                          CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+                        } else {
+                          CommonUtil.showFamilyMemberPlanExpiryDialog(
+                            widget.bundle??'',
+                            redirect: temp[0],
+                          );
+                        }
+                      }else{
+                        if (widget.bundle != null && widget.bundle != '') {
+                          CommonUtil().navigateToMyRecordsCategory(
+                              temp[1], [widget.bundle], true);
+                        } else {
+                          CommonUtil().navigateToMyRecordsCategory(
+                              temp[1], null, true);
+                        }
                       }
+
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

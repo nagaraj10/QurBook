@@ -157,7 +157,7 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                           Visibility(
                             visible: (regimentData?.isModifiedToday ?? false) ||
-                                regimentData.ack != null,
+                                regimentData.ack_local != null,
                             child: Padding(
                               padding: EdgeInsets.only(
                                 top: 5.0.h,
@@ -177,19 +177,23 @@ class RegimentDataCard extends StatelessWidget {
                                     ),
                                   ),
                                   Visibility(
-                                    visible: regimentData.ack != null,
+                                    visible: regimentData.ack_local != null,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          '${CommonUtil().regimentDateFormat(
-                                            regimentData?.ack ?? DateTime.now(),
-                                            isAck: true,
-                                          )}',
-                                          style: TextStyle(
-                                            fontSize: 12.0.sp,
+                                          Text(
+                                            '${CommonUtil().regimentDateFormat(
+                                              regimentData?.asNeeded
+                                                  ? regimentData?.ack_local ??
+                                                      DateTime.now()
+                                                  : regimentData?.ack_local ??
+                                                      DateTime.now(),
+                                              isAck: true,
+                                            )}',
+                                            style: TextStyle(
+                                              fontSize: 12.0.sp,
+                                            ),
                                           ),
-                                        ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 5.0.w),
                                           child: InkWell(
@@ -293,8 +297,9 @@ class RegimentDataCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          (regimentData?.activityOrgin ==
-                        strAppointmentRegimen)?'Dr. '+title?.trim():title?.trim(),
+                          (regimentData?.activityOrgin == strAppointmentRegimen)
+                              ? 'Dr. ' + title?.trim()
+                              : title?.trim(),
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w500,
@@ -702,7 +707,10 @@ class RegimentDataCard extends StatelessWidget {
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           Text(
-            ' (' + (CommonUtil.convertMinuteToHour(regimentData?.duration??0)).toString() + ')',
+            ' (' +
+                (CommonUtil.convertMinuteToHour(regimentData?.duration ?? 0))
+                    .toString() +
+                ')',
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
         ],
