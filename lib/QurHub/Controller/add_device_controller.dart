@@ -57,15 +57,13 @@ class AddDeviceController extends GetxController {
   }
 
   void successListener() {
-    if(loadingData.isFalse&&
-        commonResponse!=null&&
+    if(commonResponse!=null&&
         commonResponse.isSuccess!=null&&
-        commonResponse.message!=null&&
         commonResponse.isSuccess){
-      FlutterToast().getToast(commonResponse.message, Colors.red);
-      if(commonResponse.message.contains('Device paired')){
+      FlutterToast().getToast(commonResponse.message, Colors.grey);
+      // if(commonResponse.message.contains('Device paired')){
         Get.back();
-      }
+      // }
     }else{
       if(commonResponse!=null&&commonResponse.message!=null){
         FlutterToast().getToast(commonResponse.message, Colors.red);
