@@ -673,6 +673,7 @@ const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
 const notificationResponseMethod = 'notificationResponse';
+    const listenToCallStatusMethod = 'listenToCallStatus';
 
 // True Desk
 
