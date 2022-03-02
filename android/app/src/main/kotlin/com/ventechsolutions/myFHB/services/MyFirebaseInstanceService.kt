@@ -293,7 +293,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             claimDetailsNotification(data)
         }else if(data[Constants.PROP_REDIRECT_TO]?.contains("myRecords") == true){
             myRecordsNotification(data)
-        }else {
+        }else if (data[Constants.PROP_REDIRECT_TO] == "chat"){
+            createNotification4Chat(data)
+        }
+        else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
@@ -566,6 +569,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val NS_ID = System.currentTimeMillis().toInt()
         val MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
+        val SENDER_ID = data[getString(R.string.senderId)]
+        val SENDER_NAME = data[getString(R.string.senderName)]
+        val SENDER_PROFILE = data[getString(R.string.senderProfilePic)]
         val ack_sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
@@ -588,6 +594,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(getString(R.string.nsid), NS_ID)
         onTapNS.putExtra(getString(R.string.meetid), "chat")
         onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+        onTapNS.putExtra(getString(R.string.senderId), "$SENDER_ID")
+        onTapNS.putExtra(getString(R.string.senderName), "$SENDER_NAME")
+        onTapNS.putExtra(getString(R.string.senderProfilePic), "$SENDER_PROFILE")
         val onTapPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,

@@ -627,7 +627,9 @@ const String body = 'body';
 const String sound = 'sound';
 const String PROP_EVEID = 'eventId';
 const String gcmEventId = 'gcm.notification.eventId';
-
+const String senderId = 'senderId';
+const String senderName = 'senderName';
+const String senderProfilePic = 'senderProfilePic';
 const String PROP_RAWTITLE = 'rawTitle';
 const String PROP_RAWBODY = 'rawBody';
 const String custom_sound = 'Custom_Sound';

@@ -202,6 +202,16 @@ class NotificationModel {
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
         }
+        if (message[parameters.senderName] != null) {
+          doctorName = message[parameters.senderName];
+        }
+        if (message[parameters.senderProfilePic] != null) {
+          doctorPicture = message[parameters.senderProfilePic];
+        }
+        if (message[parameters.senderId] != null) {
+          doctorId = message[parameters.senderId];
+        }
+
         if (message[parameters.isWeb] != null) {
           if (message[parameters.isWeb].runtimeType == String) {
             isWeb = message[parameters.isWeb].toLowerCase() == 'true'
@@ -339,6 +349,16 @@ class NotificationModel {
     if (message[parameters.gcmpatientName] != null) {
       patientName = message[parameters.gcmpatientName];
     }
+    if (message[parameters.senderName] != null) {
+      doctorName = message[parameters.senderName];
+    }
+    if (message[parameters.senderProfilePic] != null) {
+      doctorPicture = message[parameters.senderProfilePic];
+    }
+    if (message[parameters.senderId] != null) {
+      doctorId = message[parameters.senderId];
+    }
+
     if (message[parameters.isWeb] != null) {
       if (message[parameters.isWeb].runtimeType == String) {
         isWeb =
