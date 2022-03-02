@@ -310,8 +310,12 @@ import CoreLocation
                 if let notifiationToShow = notificationArray[0] as? NSDictionary{
                     self.scheduleNotification(message: notifiationToShow)
                 }
-            }else if call.method == self.removeReminderMethod,let dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
-                self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+            }else if call.method == self.removeReminderMethod{
+                if let  dataArray = call.arguments as? NSArray,let id = dataArray[0] as? String{
+                    self.notificationCenter.removePendingNotificationRequests(withIdentifiers: [id])
+                }else if let data = call.arguments as? NSDictionary,let id = data["deliveredNotificationId"] as? String{
+                    self.notificationCenter.removeDeliveredNotifications(withIdentifiers: [id])
+                }
             }
             else if call.method == Constants.removeAllReminderMethod{
                 self.notificationCenter.removeAllDeliveredNotifications()
@@ -513,6 +517,7 @@ import CoreLocation
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        checkForCallListener(notification: notification)
         completionHandler([.alert, .sound])
     }
     
@@ -520,7 +525,15 @@ import CoreLocation
         print(userInfo)
     }
     
-    
+    func checkForCallListener(notification:UNNotification){
+        if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["type"],type as! String == "call",let controller = navigationController?.children.first as? FlutterViewController{
+            let data =
+            [ "id" : notification.request.identifier,"meeting_id" : userInfo["meeting_id"]]
+            let notificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+            notificationChannel.invokeMethod(Constants.listenToCallStatusMethod, arguments: data)
+        }
+        
+    }
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {

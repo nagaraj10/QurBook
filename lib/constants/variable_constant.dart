@@ -677,6 +677,7 @@ const reponseToRemoteNotificationMethodChannel =
 const notificationResponseMethod = 'notificationResponse';
 const iOSMethodChannel = MethodChannel('flutter.native/iOS');
 const getWifiDetailsMethod = 'getWifiDetails';
+const listenToCallStatusMethod = 'listenToCallStatus';
 // True Desk
 
 const String strNoTicketsRaised = 'No Ticket Items Available !!';
