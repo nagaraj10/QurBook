@@ -171,7 +171,7 @@ class HubApiProvider {
         ADDITION_DETAILS: {},
       };
       responseJson = await ApiServices.post(
-        HUB_ID_CONFIG_URL,
+        '${CommonUtil.BASE_URL_QURHUB}user-hub',
         headers: header,
         body: json.encode(data),
         timeOutSeconds: 50,
