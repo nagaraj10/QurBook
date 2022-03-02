@@ -4155,8 +4155,30 @@ class CommonUtil {
         : DateFormat(MMM ? 'MMM-dd-yyyy' : 'MM-dd-yyyy');
 
     var updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
+  }
+
+  listenToCallStatus(Map message) {
+    if ((message['meeting_id'] ?? '').isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection("call_log")
+          .doc("${message['meeting_id']}")
+          .snapshots()
+          .listen(
+        (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+          Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
+          var status = (firestoreInfo['call_status'] ?? '');
+          if ((status == 'accept') ||
+              (status == 'missed') ||
+              (status == 'decline')) {
+            variable.reminderMethodChannel.invokeMethod(
+              variable.removeReminderMethod,
+              {'deliveredNotificationId': message['id']},
+            );
+          }
+        },
+      );
+    }
   }
 }
 

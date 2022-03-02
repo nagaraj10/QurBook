@@ -100,6 +100,9 @@ class IosNotificationHandler {
               actionForTheNotification();
             }
           }
+        } else if (call.method == variable.listenToCallStatusMethod) {
+          final data = Map<String, dynamic>.from(call.arguments);
+          CommonUtil().listenToCallStatus(data);
         }
       },
     );
