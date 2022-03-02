@@ -52,7 +52,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
       socket.connect();
 
-      /*socket.on('connect_error', (data) => print(data));
+      socket.on('connect_error', (data) => print(data));
       socket.on('connect_timeout', (data) => print(data));
       socket.on('connecting', (data) => print(data));
       socket.on('disconnect', (data) => print(data));
@@ -68,7 +68,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
       socket.on('connect', (_) {
         print('socket_chat_connected');
-      });*/
+      });
     }
   }
 
