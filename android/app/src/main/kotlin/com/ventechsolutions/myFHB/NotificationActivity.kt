@@ -131,6 +131,12 @@ class NotificationActivity : AppCompatActivity() {
                     if (snapshot.data?.get("call_status") == "call_ended_by_user") {
                         disconnectNotifiationManager()
                         finish()
+                    }else if (snapshot.data?.get("call_status") == "accept") {
+                        disconnectNotifiationManager()
+                        finish()
+                    }else  if (snapshot.data?.get("call_status") == "decline") {
+                        disconnectNotifiationManager()
+                        finish()
                     }
                 } else {
                     Log.d(TAG, "Current data: null")
@@ -187,6 +193,7 @@ class NotificationActivity : AppCompatActivity() {
         launchIntent?.putExtra(getString(R.string.callType), callType)
         launchIntent?.putExtra(getString(R.string.web), isWeb)
         startActivity(launchIntent)
+        disconnectNotifiationManager()
         finish()
     }
 
