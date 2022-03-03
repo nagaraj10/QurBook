@@ -55,68 +55,68 @@ class _HubListScreenState extends State<HubListScreen> {
                 child: CircularProgressIndicator(),
               )
             : GetBuilder<HubListController>(
-            id: "newUpdate",
-            builder: (val) {
-                return val.hubListResponse == null
-                    ? const Center(
-                        child: Text(
-                          'Please re-try after some time',
-                        ),
-                      )
-                    : Container(
-                        child: val.hubListResponse.isSuccess
-                            ? val.hubListResponse.result != null
-                                ? Stack(children: [
-                                    SingleChildScrollView(
-                                      child: listContent(
-                                          val.hubListResponse.result),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 20.0),
-                                        child: InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AddDeviceScreen(
-                                                          hubId: val
-                                                              .hubListResponse
-                                                              .result
-                                                              .id)),
-                                            ).then((value) =>
-                                                {controller.getHubList()});
-                                          },
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0),
-                                            ),
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Text(
-                                                'Add New Device',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
+                id: "newUpdate",
+                builder: (val) {
+                  return val.hubListResponse == null
+                      ? const Center(
+                          child: Text(
+                            'Please re-try after some time',
+                          ),
+                        )
+                      : Container(
+                          child: val.hubListResponse.isSuccess
+                              ? val.hubListResponse.result != null
+                                  ? Stack(children: [
+                                      SingleChildScrollView(
+                                        child: listContent(
+                                            val.hubListResponse.result),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 20.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddDeviceScreen(
+                                                            hubId: val
+                                                                .hubListResponse
+                                                                .result
+                                                                .id)),
+                                              ).then((value) =>
+                                                  {controller.getHubList()});
+                                            },
+                                            child: Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0),
+                                              ),
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor()),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Text(
+                                                  'Add New Device',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  ])
-                                : pairNewDeviveBtn()
-                            : pairNewDeviveBtn(),
-                      );
-              })),
+                                      )
+                                    ])
+                                  : pairNewDeviveBtn()
+                              : pairNewDeviveBtn(),
+                        );
+                })),
       );
 
   Widget pairNewDeviveBtn() {
@@ -134,7 +134,7 @@ class _HubListScreenState extends State<HubListScreen> {
             if (!serviceEnabled) {
               FlutterToast().getToast(
                   'Please turn on your location services and re-try again',
-                  Colors.black);
+                  Colors.red);
               return;
             } else {
               Get.to(
@@ -467,78 +467,79 @@ class _HubListScreenState extends State<HubListScreen> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0)),
                 child: Wrap(
-                  children:[ Container(
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Image.asset('assets/warning_icon.png',
-                                  height: 30, width: 30),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                  '${type == 'hub' ? 'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?' : 'Are you sure you want to unpair this device from the hub?'}'),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        if (type == 'hub') {
-                                          controller.unPairHub(hubId);
-                                          Navigator.pop(context);
-                                        } else {
-                                          controller.unPairDevice(deviceId);
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                      child: Card(
-                                          color: Colors.red,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5.0,
-                                                bottom: 5.0,
-                                                left: 20.0,
-                                                right: 20.0),
-                                            child: Text(
-                                              'Yes',
-                                              style:
-                                                  TextStyle(color: Colors.white),
-                                            ),
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      width: 20,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
+                  children: [
+                    Container(
+                        child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Image.asset('assets/warning_icon.png',
+                                height: 30, width: 30),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                                '${type == 'hub' ? 'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?' : 'Are you sure you want to unpair this device from the hub?'}'),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (type == 'hub') {
+                                        controller.unPairHub(hubId);
                                         Navigator.pop(context);
-                                      },
-                                      child: Card(
-                                          color: Colors.green,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5.0,
-                                                bottom: 5.0,
-                                                left: 20.0,
-                                                right: 20.0),
-                                            child: Text(
-                                              'No',
-                                              style:
-                                                  TextStyle(color: Colors.white),
-                                            ),
-                                          )),
-                                    )
-                                  ])
-                            ],
-                          ),
+                                      } else {
+                                        controller.unPairDevice(deviceId);
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                    child: Card(
+                                        color: Colors.red,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 5.0,
+                                              bottom: 5.0,
+                                              left: 20.0,
+                                              right: 20.0),
+                                          child: Text(
+                                            'Yes',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Card(
+                                        color: Colors.green,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 5.0,
+                                              bottom: 5.0,
+                                              left: 20.0,
+                                              right: 20.0),
+                                          child: Text(
+                                            'No',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        )),
+                                  )
+                                ])
+                          ],
                         ),
-                      ))],
+                      ),
+                    ))
+                  ],
                 ));
           });
-
 }

@@ -15,7 +15,6 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
 
-import '../View/hub_list_screen.dart';
 import 'hub_list_controller.dart';
 
 const String discovery_service = "_http._tcp";
@@ -57,7 +56,7 @@ class AddNetworkController extends GetxController {
               "Please turn on your location services and re-try again";
         }
       } else {
-        errorMessage.value = "Please reconnect your phone to Wi-Fi";
+        errorMessage.value = "Please connect your phone to Wi-Fi";
       }
       isLoading.value = false;
     } catch (e) {
@@ -75,8 +74,12 @@ class AddNetworkController extends GetxController {
           WiFiForIoTPlugin.isConnected().then((val) {
             qurHubWifiRouter = WifiNetwork.fromJson({});
             WiFiForIoTPlugin.getSSID().then((val) {
-              qurHubWifiRouter.ssid = val;
-              strSSID.value = qurHubWifiRouter.ssid;
+              if (validString(val).toLowerCase().contains("unknown ssid")) {
+                getWifiList();
+              } else {
+                qurHubWifiRouter.ssid = val;
+                strSSID.value = qurHubWifiRouter.ssid;
+              }
             });
             WiFiForIoTPlugin.getBSSID().then((val) {
               qurHubWifiRouter.bssid = val;
@@ -103,16 +106,16 @@ class AddNetworkController extends GetxController {
             }
           } else {
             ssidList.value = [];
-            errorMessage.value = "Please reconnect your phone to Wi-Fi";
-            toast.getToastForLongTime(
-                "Please reconnect your phone to Wi-Fi", Colors.red);
+            errorMessage.value = "Please connect your phone to Wi-Fi";
+            /*toast.getToastForLongTime(
+                "Please connect your phone to Wi-Fi", Colors.red);*/
           }
           isLoading.value = false;
         } else {
           isLoading.value = false;
-          errorMessage.value = "Please reconnect your phone to Wi-Fi";
-          toast.getToastForLongTime(
-              "Please reconnect your phone to Wi-Fi", Colors.red);
+          errorMessage.value = "Please connect your phone to Wi-Fi";
+          /*toast.getToastForLongTime(
+              "Please connect your phone to Wi-Fi", Colors.red);*/
         }
       });
     } catch (e) {

@@ -225,7 +225,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: wifiNameController,
       keyboardType: TextInputType.text,
-      enabled: true,
+      enabled: false,
       validator: (String value) {
         if (value.trim().isEmpty) {
           return "Please enter wifi name";
@@ -252,7 +252,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
           ),
           onPressed: () {},
         ),
-        suffixIcon: IconButton(
+        /*suffixIcon: IconButton(
           icon: SvgPicture.asset(
             variable.icon_qurhub_switch,
             height: 22,
@@ -267,7 +267,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
               );
             } catch (e) {}
           },
-        ),
+        ),*/
         labelText: CommonConstants.wifiName,
         hintText: CommonConstants.wifiName,
         labelStyle: TextStyle(
@@ -346,8 +346,7 @@ class _AddNetWorkViewState extends State<AddNetWorkView> {
               FocusScope.of(context).unfocus();
               controller.qurHubWifiRouter.password =
                   passwordController.text.toString().trim();
-              if (formKey.currentState.validate())
-              {
+              if (formKey.currentState.validate()) {
                 controller.executeEsptouch();
               }
             } catch (e) {}

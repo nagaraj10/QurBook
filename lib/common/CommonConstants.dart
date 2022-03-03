@@ -300,7 +300,7 @@ class CommonConstants {
   static String strFamilyMember = 'Family Member *';
 
   //QurHub
-  static String wifiName = 'WifiName';
+  static String wifiName = 'Wi-Fi Name';
   static String password = 'Password';
   static String connect = 'Connect';
   static String retry = 'Retry';
