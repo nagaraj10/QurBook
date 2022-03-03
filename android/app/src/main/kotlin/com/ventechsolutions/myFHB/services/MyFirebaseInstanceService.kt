@@ -256,6 +256,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                         val nsManager: NotificationManagerCompat =
                             NotificationManagerCompat.from(this)
                         nsManager.cancel(nsId)
+                    }else if (snapshot.data?.get("call_status") == "accept") {
+                        val nsManager: NotificationManagerCompat =
+                                NotificationManagerCompat.from(this)
+                        nsManager.cancel(nsId)
+                    }else  if (snapshot.data?.get("call_status") == "decline") {
+                        val nsManager: NotificationManagerCompat =
+                                NotificationManagerCompat.from(this)
+                        nsManager.cancel(nsId)
                     }
                 } else {
                     Log.d(TAG, "Current data: null")
