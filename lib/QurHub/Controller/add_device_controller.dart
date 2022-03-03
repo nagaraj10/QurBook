@@ -39,10 +39,10 @@ class AddDeviceController extends GetxController {
     }
   }
 
-  saveDevice({String hubId,String deviceId,String nickName}) async {
+  saveDevice({String hubId,String deviceId,String nickName,String userId}) async {
     try {
       loadingData.value = true;
-      var commonResponse = await _hubApiProvider.saveDevice(hubId, deviceId, nickName);
+      var commonResponse = await _hubApiProvider.saveDevice(hubId, deviceId, nickName,userId);
       if (commonResponse == null ) {
         FlutterToast().getToast('Oops Something went wrong', Colors.red);
       } else {

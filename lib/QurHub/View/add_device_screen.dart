@@ -74,8 +74,11 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                         child: Column(
                           children: [
                             getView(),
-                            dropDownButton(
-                                controller.familyMembers.result.sharedByUsers),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: dropDownButton(
+                                  controller.familyMembers.result.sharedByUsers),
+                            ),
                           ],
                         ),
                       ),
@@ -108,7 +111,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
             if(deviceIdController.text.length!=0){
               if(nickNameController.text.length!=0){
 
-                controller.saveDevice(hubId : widget.hubId,deviceId:deviceIdController.text,nickName:nickNameController.text);
+                controller.saveDevice(hubId : widget.hubId,deviceId:deviceIdController.text,nickName:nickNameController.text,userId : selectedId);
 
               }else{
                 FlutterToast().getToast('Please Enter Nick Name', Colors.red);
@@ -247,7 +250,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     }
 
     return SizedBoxWithChild(
-      height: 30,
+      height: 50,
       width: double.infinity,
       child: Container(
         decoration: BoxDecoration(
