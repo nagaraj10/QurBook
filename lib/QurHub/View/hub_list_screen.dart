@@ -199,7 +199,7 @@ class _HubListScreenState extends State<HubListScreen> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        result.hub.name,
+                        result.nickName,
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -479,7 +479,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                 height: 15,
                               ),
                               Text(
-                                  'Are you sure to unpair ${type == 'hub' ? 'hub' : 'device'} ${idName}'),
+                                  '${type == 'hub' ? 'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?' : 'Are you sure you want to unpair this device from the hub?'}'),
                               SizedBox(
                                 height: 15,
                               ),

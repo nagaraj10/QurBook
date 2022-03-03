@@ -40,11 +40,11 @@ class HubApiProvider {
   }
 
   Future<dynamic> saveDevice(
-      String hubId, String deviceId, String nickName) async {
+      String hubId, String deviceId, String nickName,String userId) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    // var userId = PreferenceUtil.getStringValue(KEY_USERID);
     var data = {
       "deviceId": deviceId,
       "userHubId": hubId,
