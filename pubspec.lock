@@ -330,6 +330,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
+  esptouch_flutter:
+    dependency: "direct main"
+    description:
+      name: esptouch_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   expandable:
     dependency: "direct main"
     description:
@@ -634,6 +641,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3+1"
+  flutter_mdns_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_mdns_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -759,7 +773,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../myfhb-flutter-common"
+      path: "../../Qurhealth/fhbCommon"
       relative: true
     source: path
     version: "0.0.1"
@@ -1545,6 +1559,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.10"
+  wifi_iot:
+    dependency: "direct main"
+    description:
+      name: wifi_iot
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.15"
   win32:
     dependency: transitive
     description:
