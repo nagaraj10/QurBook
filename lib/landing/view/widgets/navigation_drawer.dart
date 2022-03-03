@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/IntroScreens/IntroWidget.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
@@ -169,10 +171,19 @@ class NavigationDrawer extends StatelessWidget {
                       ),
                       onPressed: () async {
                         try {
-                          Navigator.pop(context);
-                          Get.to(
-                            HubListScreen(),
-                          );
+                          bool serviceEnabled =
+                              await Geolocator.isLocationServiceEnabled();
+                          if (!serviceEnabled) {
+                            FlutterToast().getToast(
+                                'Please turn on your location services and re-try again',
+                                Colors.red);
+                            return;
+                          } else {
+                            Navigator.pop(context);
+                            Get.to(
+                              HubListScreen(),
+                            );
+                          }
                         } catch (e) {
                           print(e);
                         }
