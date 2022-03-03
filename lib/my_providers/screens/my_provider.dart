@@ -24,6 +24,7 @@ class MyProviderState extends State<MyProvider>
 
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
+  MyProvidersResponse myProvidersResponseHospitalClinicList;
 
   @override
   void initState() {
@@ -34,11 +35,18 @@ class MyProviderState extends State<MyProvider>
     _tabController.addListener(_setActiveTabIndex);
 
     _providersBloc = ProvidersBloc();
-    _providersBloc.getMedicalPreferencesAll().then((value) {
+    _providersBloc.getMedicalPreferencesForDoctors().then((value) {
       setState(() {
         myProvidersResponseList = value;
       });
     });
+    _providersBloc.getMedicalPreferencesForHospital().then((value) {
+      setState(() {
+        myProvidersResponseHospitalClinicList = value;
+      });
+    });
+
+
   }
 
   @override
@@ -60,11 +68,18 @@ class MyProviderState extends State<MyProvider>
   void refreshPage() {
     setState(() {
       myProvidersResponseList = null;
+      myProvidersResponseHospitalClinicList=null;
     });
     _providersBloc = ProvidersBloc();
-    _providersBloc.getMedicalPreferencesAll().then((value) {
+    _providersBloc.getMedicalPreferencesForDoctors().then((value) {
       setState(() {
         myProvidersResponseList = value;
+      });
+    });
+
+    _providersBloc.getMedicalPreferencesForHospital().then((value) {
+      setState(() {
+        myProvidersResponseHospitalClinicList = value;
       });
     });
   }
@@ -118,9 +133,10 @@ class MyProviderState extends State<MyProvider>
       ),
       body: Container(
         color: Color(fhbColors.bgColorContainer),
-        child: myProvidersResponseList != null
+        child: myProvidersResponseList != null && myProvidersResponseHospitalClinicList!=null
             ? MyProvidersTabBar(
                 data: myProvidersResponseList.result,
+                dataHospitalLab: myProvidersResponseHospitalClinicList.result,
                 tabController: _tabController,
                 myProviderState: this,
                 refresh: () {

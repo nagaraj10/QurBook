@@ -12,13 +12,14 @@ import '../screens/my_providers_labs_list.dart';
 
 class MyProvidersTabBar extends StatefulWidget {
   MyProvidersResponseData data;
+  MyProvidersResponseData dataHospitalLab;
   TabController tabController;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
   Function refresh;
 
   MyProvidersTabBar(
-      {this.data,
+      {this.data,this.dataHospitalLab,
       this.tabController,
       this.providersBloc,
       this.myProviderState,
@@ -41,11 +42,11 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     // TODO: implement initState
     super.initState();
     if (widget.data != null) {
-      hospitalsModel = widget.data.hospitals;
+      hospitalsModel = widget.dataHospitalLab.hospitals;
       doctorsModel = widget.data.doctors;
-      labsModel = widget.data.labs;
+      labsModel = widget.dataHospitalLab.labs;
       if(widget.data.clinics!=null){
-        hospitalsModel.addAll(widget.data.clinics);
+        hospitalsModel.addAll(widget.dataHospitalLab.clinics);
       }
     }
 
