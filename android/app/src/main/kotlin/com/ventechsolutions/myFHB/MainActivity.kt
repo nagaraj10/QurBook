@@ -504,6 +504,9 @@ class MainActivity : FlutterActivity() {
         val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
         val doctorID = intent.getStringExtra(getString(R.string.docId))
         val docName = intent.getStringExtra(getString(R.string.docName))
+        val senderId = intent.getStringExtra(getString(R.string.senderId))
+        val senderName = intent.getStringExtra(getString(R.string.senderName))
+        val senderProfile = intent.getStringExtra(getString(R.string.senderProfilePic))
         val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
         val rawBody = intent.getStringExtra(Constants.PROP_RAWBODY)
         patId = intent.getStringExtra(getString(R.string.pat_id))
@@ -517,7 +520,8 @@ class MainActivity : FlutterActivity() {
         var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
-            sharedValue = "$sharedValue"
+            sharedValue =
+                    "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}"
         } else if(redirect_to=="claimList"){
             sharedValue = "${redirect_to}&${claimId}&${userId}"
         }else if(redirect_to?.contains("myRecords") == true){
