@@ -10,6 +10,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
@@ -362,6 +363,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.REGION_CODE = values.length > 10 ? (values[10] ?? 'IN') : 'IN';
   CommonUtil.CURRENCY = (CommonUtil.REGION_CODE == 'IN') ? INR : USD;
   CommonUtil.POWER_BI_URL = values[11];
+  CommonUtil.BASE_URL_QURHUB = values[12];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {
@@ -410,7 +412,6 @@ class _MyFHBState extends State<MyFHB> {
   @override
   void initState() {
     // TODO: implement initState
-
     /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
     NotificationController.instance.initLocalNotification();*/
     PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
@@ -1218,8 +1219,7 @@ class _MyFHBState extends State<MyFHB> {
               'patName': '${navRoute.split('&')[4]}'
             },
           );
-        }else if (navRoute.split('&')[0] == 'claimList') {
-
+        } else if (navRoute.split('&')[0] == 'claimList') {
           return SplashScreen(
             nsRoute: navRoute.split('&')[0],
             bundle: {
@@ -1278,17 +1278,17 @@ class _MyFHBState extends State<MyFHB> {
     switch (result) {
       case ConnectivityResult.wifi:
         if (!_internetconnection) {
-          Navigator.pop(Get.context);
+          //Navigator.pop(Get.context);
         }
 
         setState(() {
           _internetconnection = true;
-          // toast.getToast(wifi_connected, Colors.green);
+          toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:
         if (!_internetconnection) {
-          Navigator.pop(Get.context);
+          //Navigator.pop(Get.context);
         }
         setState(() {
           _internetconnection = true;
@@ -1296,10 +1296,10 @@ class _MyFHBState extends State<MyFHB> {
         });
         break;
       case ConnectivityResult.none:
-        await Get.to(NetworkScreen());
+        //await Get.to(NetworkScreen());
         setState(() {
           _internetconnection = false;
-          // toast.getToast(no_internet_conn, Colors.red);
+          toast.getToast(no_internet_conn, Colors.red);
         });
         break;
       default:

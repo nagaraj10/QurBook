@@ -60,7 +60,7 @@ class ApiServices {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
-
+    print('jsonBody: '+body);
     try {
       final response = await http
           .post(
@@ -86,7 +86,7 @@ class ApiServices {
       CommonUtil.saveLog(
         isError: true,
         message:
-            'Path - ${path ?? ''} || Header - ${headers ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
+            'Path - ${path ?? ''} || Body - ${body ?? ''}\n Exception - ${exception ?? ''}',
       );
       if (exception is SocketException) {
         //TODO: handle connection error

@@ -619,7 +619,6 @@ const String STR_NOTES_HINT =
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
-
 const String UnitPreference = 'Unit Preferences';
 const String STR_DATE_FORMAT = 'yyyy-MM-dd';
 const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
@@ -646,8 +645,17 @@ const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
 const String keyHealthOrganizationId = 'healthOrganizationID';
 const String keyPlanSubscriptionInfoId = 'planSubscriptionInfoId';
-const String keyMembershipStartDate="membershipStartDate";
-const String keyMembershipEndDate="membershipEndDate";
+const String keyMembershipStartDate = "membershipStartDate";
+const String keyMembershipEndDate = "membershipEndDate";
+
+//QurHub
+const String GET_HUB_ID_URL = 'http://192.168.99.79/gethubid';
+const String HUB_ID_CONFIG_URL =
+    'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/user-hub';
+const String GET_HUB_ID = 'http://qurhub.local/gethubid';
+const String SERIAL_NUMBER = 'serialNumber';
+const String NICK_NAME = 'nickName';
+const String ADDITION_DETAILS = 'additionalDetails';
 
 double height = 0.0;
 double width = 0.0;

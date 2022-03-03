@@ -5,14 +5,14 @@ import Speech
 import AVFoundation
 import Firebase
 import IQKeyboardManagerSwift
+import SystemConfiguration.CaptiveNetwork
+import CoreLocation
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
     
     var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: Language.instance.setlanguage()))!
-    
     var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    
     var recognitionTask: SFSpeechRecognitionTask?
     
     var audioEngine = AVAudioEngine()
@@ -27,16 +27,13 @@ import IQKeyboardManagerSwift
     var TTS_METHOD = Constants.TTS_METHOD
     var STT_MicavailablityMethod = "validateMicAvailability"
     
-    
     var detectionTimer : Timer?
     var message = ""
     
     let speechSynthesizer = AVSpeechSynthesizer()
-    
     let reminderChannel = Constants.reminderMethodChannel
     let addReminderMethod = Constants.addReminderMethod
     let removeReminderMethod = Constants.removeReminderMethod
-    
     
     let notificationCenter = UNUserNotificationCenter.current()
     var listOfScheduledNotificaitons:[UNNotificationRequest] = []
@@ -46,6 +43,7 @@ import IQKeyboardManagerSwift
     
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
+    var locationManager: CLLocationManager?
     
     override func application(
         _ application: UIApplication,
@@ -80,7 +78,9 @@ import IQKeyboardManagerSwift
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        
+        locationManager = CLLocationManager()
+        locationManager?.delegate = self
+        locationManager?.requestWhenInUseAuthorization()
         
         // 2
         // Speech Recognization
@@ -91,9 +91,11 @@ import IQKeyboardManagerSwift
             guard let self = self else { return }
             self.listOfScheduledNotificaitons = data
             print("total notifications scheduled \(data.count)")
-           
+            
         }
-        setUpReminders(messanger: controller.binaryMessenger)
+        setupWifiListener(messanger: controller.binaryMessenger)
+        getCurrentWifiDetails()
+//        setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
         IQKeyboardManager.shared.enable = true
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
@@ -338,7 +340,7 @@ import IQKeyboardManagerSwift
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
         var before :Int = 0
         var after : Int = 0
-       if let _id =  message["eid"] as? String {
+        if let _id =  message["eid"] as? String {
             id = _id
         }else{
             return
@@ -539,7 +541,7 @@ import IQKeyboardManagerSwift
         //
         //            }
         print(response.actionIdentifier)
-         
+        
         if let data = response.notification.request.content.userInfo as? NSDictionary,let controller = navigationController?.children.first as? FlutterViewController{
             if let eId = data["eid"] as? String{
                 if response.actionIdentifier == "Snooze" {
@@ -588,6 +590,44 @@ extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
         print("Firebase registration token: \(String(describing: fcmToken))")
     }
     
+}
+extension AppDelegate:CLLocationManagerDelegate{
+    func setupWifiListener(messanger:FlutterBinaryMessenger){
+        let iOSChannel = FlutterMethodChannel(name: Constants.iOSMethodChannel, binaryMessenger: messanger)
+        iOSChannel.setMethodCallHandler {[weak self] (call, result) in
+            guard self != nil else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == Constants.getWifiDetailsMethod{
+                result(getCurrentWifiDetails())
+                return
+            }else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+        }
+    }
+}
+func getCurrentWifiDetails() -> Any{
+    
+    let status = CLLocationManager.authorizationStatus()
+    if (status == .notDetermined){
+        return "location"
+    }
+    if let interfaces = CNCopySupportedInterfaces() as NSArray? {
+        for interface in interfaces {
+            if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
+                let ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String ?? ""
+                let bssid = interfaceInfo[kCNNetworkInfoKeyBSSID as String] as? String ?? ""
+                print(ssid)
+                print(bssid)
+                let data = [ "SSID": ssid,"BSSID" : bssid]
+                return data
+            }
+        }
+    }
+    return ""
 }
 extension Date {
     // Convert local time to UTC (or GMT)

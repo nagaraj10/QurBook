@@ -195,6 +195,7 @@ const String icon_chat_dash = 'assets/dashboard/chat.svg';
 const String icon_check_symptoms = 'assets/dashboard/check-symptoms.svg';
 const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
+const String icon_qurhub = 'assets/dashboard/qurhub.svg';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
@@ -571,6 +572,7 @@ const String strAddDevice = 'Tap to add device widgets to your home screen';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
+const String strQurHub = 'QurHub';
 const String strMyProvider = 'My Provider';
 const String strMyPlans = 'My Plan';
 const String strExtImg = '.png';
@@ -686,8 +688,9 @@ const navigateToRegimentMethod = 'navigateToRegiment';
 const reponseToRemoteNotificationMethodChannel =
     MethodChannel('flutter.native.QurBook/notificationResponse');
 const notificationResponseMethod = 'notificationResponse';
-    const listenToCallStatusMethod = 'listenToCallStatus';
-
+const iOSMethodChannel = MethodChannel('flutter.native/iOS');
+const getWifiDetailsMethod = 'getWifiDetails';
+const listenToCallStatusMethod = 'listenToCallStatus';
 // True Desk
 
 const String strNoTicketsRaised = 'No Ticket Items Available !!';
@@ -702,6 +705,11 @@ const String strSelfRegimen = 'Self';
 //chat
 
 const String strNoMessage = 'No Messages';
+
+//QurHub
+const String icon_qurhub_lock = 'assets/icons/lock.svg';
+const String icon_qurhub_switch = 'assets/icons/switch.svg';
+const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
