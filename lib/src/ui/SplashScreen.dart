@@ -198,20 +198,17 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Tele Health Chat list',
                       });
                       if (widget.bundle != null && widget.bundle != '') {
-                        var chatParsedData = widget.bundle?.split('|');
-                        Get.to(ChatDetail(
-                          peerId: chatParsedData[0],
-                          peerName: chatParsedData[1],
-                          peerAvatar: chatParsedData[2],
-                          patientId: chatParsedData[3],
-                          patientName: chatParsedData[4],
-                          patientPicture: chatParsedData[5],
+                        var chatParsedData = widget.bundle?.split('&');
+                        Get.to(() => ChatDetail(
+                          peerId: chatParsedData[2],
+                          peerName: chatParsedData[3],
+                          peerAvatar: chatParsedData[4],
+                          patientId: '',
+                          patientName: '',
+                          patientPicture: '',
                           isFromVideoCall: false,
-                          message: chatParsedData[6],
                           isCareGiver: false,
-                          isForGetUserId: true,
-                        )).then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        ));
                       } else {
                         Get.to(ChatUserList()).then((value) =>
                             PageNavigator.goToPermanent(

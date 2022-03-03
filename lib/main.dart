@@ -688,20 +688,27 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'initiate screen',
             'navigationPage': 'Chat Screen',
           });
-          final chatParsedData = passedValArr[2]?.split('|');
-          Get.to(ChatDetail(
-            peerId: chatParsedData[0],
-            peerName: chatParsedData[1],
-            peerAvatar: chatParsedData[2],
-            patientId: chatParsedData[3],
-            patientName: chatParsedData[4],
-            patientPicture: chatParsedData[5],
+          /*Get.to(ChatDetail(
+            peerId: passedValArr[2],
+            peerName: passedValArr[3],
+            peerAvatar: passedValArr[4],
+            patientId: '',
+            patientName: '',
+            patientPicture: '',
             isFromVideoCall: false,
-            message: chatParsedData[6],
             isCareGiver: false,
-            isForGetUserId: true,
           )).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+              PageNavigator.goToPermanent(context, router.rt_Landing));*/
+          Get.to(() => ChatDetail(
+            peerId: passedValArr[2],
+            peerName: passedValArr[3],
+            peerAvatar: passedValArr[4],
+            patientId: '',
+            patientName: '',
+            patientPicture: '',
+            isFromVideoCall: false,
+            isCareGiver: false,
+          ));
         } else if (passedValArr[1] == 'mycart') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1058,9 +1065,7 @@ class _MyFHBState extends State<MyFHB> {
     } else {
       try {
         final parsedData = navRoute.split('&');
-        if (navRoute == 'chat') {
-          return SplashScreen(nsRoute: 'chat');
-        } else if (navRoute == 'FETCH_LOG') {
+         if (navRoute == 'FETCH_LOG') {
           CommonUtil.sendLogToServer();
           return SplashScreen(
             nsRoute: '',
@@ -1141,10 +1146,10 @@ class _MyFHBState extends State<MyFHB> {
               nsRoute: 'bills',
             );
           } else if (parsedData[1] == 'chat') {
-            //this need to be navigte to My Plans screen
+            //this need to be navigte to chat detail screen
             return SplashScreen(
               nsRoute: 'chat',
-              bundle: parsedData[2],
+              bundle: navRoute,
             );
           } else if (parsedData[1] == 'mycart') {
             //this need to be navigte to My Plans screen
