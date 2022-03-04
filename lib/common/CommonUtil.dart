@@ -1573,7 +1573,7 @@ class CommonUtil {
         profileResult.userContactCollection3[0].email,
         profileResult.userContactCollection3[0].phoneNumber,
         token,
-        false,
+        true,
       );
     } catch (e) {}
   }
