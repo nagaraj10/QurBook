@@ -86,8 +86,13 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
         }
       }
     });
+    Map<String, Contact> mp = {};
+    for (var item in newContacts) {
+      mp[item.displayName] = item;
+    }
+    var filteredList = mp.values.toList();
     setState(() {
-      _contacts = newContacts;
+      _contacts = filteredList;
     });
   }
 
