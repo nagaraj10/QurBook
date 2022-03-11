@@ -507,6 +507,7 @@ const strAudio = 'audio';
 const strYourQurplans = 'Care Plans';
 const strNoQurplans = 'Care Plans';
 const strPlansActive = ' Plans active';
+const strPlanActive = ' Plan active';
 const strYourRegimen = 'Regimen';
 const strNoPlansAdded = 'No plans added';
 const strActivitiesDue = ' missed activities today';
