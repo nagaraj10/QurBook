@@ -87,9 +87,7 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strYourQurplans,
                           lastStatus: '',
-                          alerts: activePlanCount > 0
-                              ? '$activePlanCount${constants.strPlansActive} '
-                              : constants.strNoPlansAdded,
+                          alerts: getPlanAlertMessage(activePlanCount),
                           icon: variable.icon_my_plan,
                           color: Color(CommonConstants.bplightColor),
                           onPressed: () async {
@@ -444,4 +442,21 @@ class HomeWidget extends StatelessWidget {
           ],
         ),
       );
+
+  String getPlanAlertMessage(int activePlanCount){
+    try {
+      if(activePlanCount > 0){
+            if(activePlanCount==1){
+              return '$activePlanCount${constants.strPlanActive}';
+            }else{
+              return '$activePlanCount${constants.strPlansActive}';
+            }
+          }else{
+            return constants.strNoPlansAdded;
+          }
+    } catch (e) {
+      return constants.strNoPlansAdded;
+    }
+
+  }
 }
