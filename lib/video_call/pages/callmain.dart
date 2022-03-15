@@ -45,18 +45,19 @@ class CallMain extends StatefulWidget {
 
   bool isWeb;
 
-  CallMain(
-      {this.channelName,
-      this.role,
-      this.arguments,
-      this.isAppExists,
-      this.doctorName,
-      this.doctorId,
-      this.doctorPic,
-      this.patientId,
-      this.patientName,
-      this.patientPicUrl,
-      this.isWeb});
+  CallMain({
+    this.channelName,
+    this.role,
+    this.arguments,
+    this.isAppExists,
+    this.doctorName,
+    this.doctorId,
+    this.doctorPic,
+    this.patientId,
+    this.patientName,
+    this.patientPicUrl,
+    this.isWeb,
+  });
 
   @override
   _CallMainState createState() => _CallMainState();
