@@ -112,7 +112,7 @@ class PreferenceUtil {
   }
 
   static String getStringValue(String key) {
-    return _prefsInstance.getString(key);
+    return _prefsInstance?.getString(key);
   }
 
   static Future<bool> saveTheme(String key, int value) async {
