@@ -805,16 +805,10 @@ class _CallPageState extends State<CallPage> {
         ..collection('call_log').doc(widget.channelName).snapshots().listen(
           (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
             Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
-            var recStatus = VideoCallStatus();
-            recStatus.setDefaultValues();
-            try {
-              recStatus = VideoCallStatus.fromMap(firestoreInfo);
-            } catch (e) {
-              printError(info: e.toString());
-            }
-
-            if (recStatus.videoRequestFromMobile == 1 ||
-                recStatus.videoRequestFromWeb == 1) {
+            var recStatus = VideoCallStatus.fromMap(firestoreInfo);
+            if ((recStatus.videoRequestFromMobile == 1 ||
+                    recStatus.videoRequestFromWeb == 1) &&
+                !CommonUtil.isVideoRequestSent) {
               // need to show video request
               await Get.dialog(
                 AlertDialog(
@@ -845,7 +839,7 @@ class _CallPageState extends State<CallPage> {
                               FirebaseFirestore.instance
                                 ..collection("call_log")
                                     .doc("${widget.channelName}")
-                                    .set(newStatus.toMap());
+                                    .update(newStatus.toMap());
                             },
                           ),
                           FlatButton(

@@ -367,7 +367,7 @@ class _MyControllersState extends State<MyControllers> {
         FirebaseFirestore.instance
           ..collection("call_log")
               .doc("${widget.channelName}")
-              .set(newStatus.toMap());
+              .update(newStatus.toMap());
       }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {

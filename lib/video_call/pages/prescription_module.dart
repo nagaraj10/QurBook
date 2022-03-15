@@ -39,7 +39,7 @@ class PrescriptionModule extends StatelessWidget {
 
                             }),*/
                         Container(
-                            margin: EdgeInsets.all(10),
+                            // margin: EdgeInsets.all(10),
                             height: 50.0.h,
                             width: 50.0.h,
                             decoration: BoxDecoration(
@@ -51,6 +51,7 @@ class PrescriptionModule extends StatelessWidget {
                                 IconButton(
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/rx.png'),
+                                      size: 30,
                                       color: Color(
                                           new CommonUtil().getMyPrimaryColor()),
                                     ),

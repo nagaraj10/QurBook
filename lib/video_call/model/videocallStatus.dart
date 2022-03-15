@@ -12,10 +12,10 @@ class VideoCallStatus {
   int videoRequestFromWeb = -1;
 
   factory VideoCallStatus.fromMap(Map<String, dynamic> json) => VideoCallStatus(
-        acceptedByWeb: json["acceptedByWeb"] ?? -1,
-        videoRequestFromMobile: json["videoRequestFromMobile"],
-        acceptedByMobile: json["acceptedByMobile"],
-        videoRequestFromWeb: json["videoRequestFromWeb"],
+        acceptedByWeb: (json["acceptedByWeb"] ?? -1),
+        videoRequestFromMobile: (json["videoRequestFromMobile"] ?? -1),
+        acceptedByMobile: (json["acceptedByMobile"] ?? -1),
+        videoRequestFromWeb: (json["videoRequestFromWeb"] ?? -1),
       );
   setDefaultValues() {
     acceptedByWeb = -1;
@@ -24,7 +24,7 @@ class VideoCallStatus {
     videoRequestFromWeb = -1;
   }
 
-  Map<String, dynamic> toMap({withCallStatus = false}) => {
+  Map<String, dynamic> toMap() => {
         "acceptedByWeb": acceptedByWeb,
         "videoRequestFromMobile": videoRequestFromMobile,
         "acceptedByMobile": acceptedByMobile,

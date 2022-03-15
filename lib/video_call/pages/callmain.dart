@@ -164,26 +164,29 @@ class _CallMainState extends State<CallMain> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   MyControllers(
-                                      rtcEngine,
-                                      callStatus,
-                                      widget.role,
-                                      widget.isAppExists,
-                                      Platform.isIOS
-                                          ? widget.arguments.doctorId
-                                          : widget.doctorId,
-                                      (isMute, isVideoHide) {
-                                    _isMute = isMute;
-                                    _isVideoHide = isVideoHide;
-                                  },
-                                      _isMute,
-                                      _isVideoHide,
-                                      widget.doctorName,
-                                      widget.doctorPic,
-                                      widget.patientId,
-                                      widget.patientName,
-                                      widget.patientPicUrl,
-                                      widget.channelName,
-                                      widget.isWeb),
+                                    rtcEngine,
+                                    callStatus,
+                                    widget.role,
+                                    widget.isAppExists,
+                                    Platform.isIOS
+                                        ? widget.arguments.doctorId
+                                        : widget.doctorId,
+                                    (isMute, isVideoHide) {
+                                      _isMute = isMute;
+                                      _isVideoHide = isVideoHide;
+                                    },
+                                    _isMute,
+                                    _isVideoHide,
+                                    widget.doctorName,
+                                    widget.doctorPic,
+                                    widget.patientId,
+                                    widget.patientName,
+                                    widget.patientPicUrl,
+                                    Platform.isIOS
+                                        ? widget.arguments.channelName
+                                        : widget.channelName,
+                                    widget.isWeb,
+                                  ),
                                   SizedBox(
                                     height: 20.0.h,
                                   ),
