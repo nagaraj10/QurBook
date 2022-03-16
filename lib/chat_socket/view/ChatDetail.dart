@@ -117,7 +117,7 @@ class ChatState extends State<ChatDetail> {
   //List<String> wordsList = [];
   //List<String> filteredWordsList = [];
 
-  List<String> newList = [];
+  List<String> searchIndexListAll = [];
   List<int> listIndex = [];
 
   String textFieldValue = '';
@@ -817,7 +817,7 @@ class ChatState extends State<ChatDetail> {
         if (textFieldValue != null &&
             textFieldValue != '' &&
             textFieldValue.length > 1) {
-          if (newList != null) {
+          if (searchIndexListAll != null) {
             getListIndexMapFilter();
           }
         }
@@ -1000,14 +1000,14 @@ class ChatState extends State<ChatDetail> {
             .reversed
             .toList();
 
-        newList = [];
-        newList.clear();
+        searchIndexListAll = [];
+        searchIndexListAll.clear();
         /*listIndex = [];
         listIndex.clear();*/
         for (int i = 0; i < chatList.length; i++) {
           String content = chatList[i]?.messages?.content;
 
-          newList.add(content);
+          searchIndexListAll.add(content);
         }
 
         bool isIconNeed = false;
@@ -2213,9 +2213,11 @@ class ChatState extends State<ChatDetail> {
   }
 
   void getListIndexMapFilter() {
-    newList.asMap().forEach((index, value) {
+    searchIndexListAll.asMap().forEach((index, value) {
       if (value != null) {
-        if (value?.contains('$textFieldValue')) listIndex.add(index);
+        if (value?.toLowerCase().contains('$textFieldValue'.toLowerCase())){
+          listIndex.add(index);
+        }
       }
     });
   }
