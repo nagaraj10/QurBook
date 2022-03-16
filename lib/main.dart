@@ -17,6 +17,7 @@ import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
+import 'common/DatabseUtil.dart';
 import 'constants/router_variable.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
@@ -152,7 +153,7 @@ Future<void> main() async {
         DatabaseUtil.insertCountryMetricsData();
       }
     });
-    
+
     await DatabaseUtil.getDBLengthUnit().then((length) {
       if (length == 0) {
         DatabaseUtil.insertUnitsForDevices();
