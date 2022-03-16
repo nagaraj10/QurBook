@@ -1,38 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:appsflyer_sdk/appsflyer_sdk.dart';
-import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfhb/QurHub/View/hub_list_screen.dart';
-import 'package:myfhb/myPlan/view/myPlanDetail.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/src/utils/dynamic_links.dart';
-import 'package:myfhb/src/utils/language/app_localizations.dart';
-import 'package:myfhb/src/utils/language/languages.dart';
-import 'package:myfhb/src/utils/language/view_model/language_view_model.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
-import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
-import 'package:myfhb/video_call/utils/rtc_engine.dart';
-import 'package:myfhb/video_call/utils/videoicon_provider.dart';
-import 'package:myfhb/video_call/utils/videorequest_provider.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
 import 'IntroScreens/IntroductionScreen.dart';
+import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
-import 'claim/screen/ClaimRecordDisplay.dart';
 import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
+import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
+import 'myPlan/view/myPlanDetail.dart';
+import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/models/regiment_arguments.dart';
-
-//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
+import 'src/utils/dynamic_links.dart';
+import 'src/utils/language/app_localizations.dart';
+import 'src/utils/language/language_utils.dart';
+import 'src/utils/language/languages.dart';
+import 'src/utils/language/view_model/language_view_model.dart';
+import 'user_plans/view_model/user_plans_view_model.dart';
+import 'video_call/utils/audiocall_provider.dart';
+import 'video_call/utils/rtc_engine.dart';
+import 'video_call/utils/videoicon_provider.dart';
+import 'video_call/utils/videorequest_provider.dart';
+import 'widgets/checkout_page.dart';
+//import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
 import 'regiment/view_model/regiment_view_model.dart';
@@ -47,57 +47,20 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/IntroScreens/IntroductionScreen.dart';
-import 'package:myfhb/authentication/service/authservice.dart';
-import 'package:myfhb/authentication/view_model/otp_view_model.dart';
-import 'package:myfhb/common/DatabseUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_router.dart' as router;
-import 'package:myfhb/constants/router_variable.dart' as routervariable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/landing/view_model/landing_view_model.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-
-//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
-// import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/schedules/add_reminders.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/NetworkScreen.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/src/utils/screenutils/screenutil.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
-    as doc;
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/video_call/pages/callmain.dart';
-import 'package:myfhb/video_call/services/iOS_Notification_Handler.dart';
-import 'package:myfhb/video_call/utils/callstatus.dart';
-import 'package:myfhb/video_call/utils/hideprovider.dart';
-import 'package:myfhb/widgets/shopping_card_provider.dart';
-import 'package:myfhb/widgets/checkout_page_provider.dart';
+import 'telehealth/features/chat/view/chat.dart';
+import 'telehealth/features/chat/view/home.dart';
+import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'video_call/pages/callmain.dart';
+import 'video_call/services/iOS_Notification_Handler.dart';
+import 'video_call/utils/callstatus.dart';
+import 'video_call/utils/hideprovider.dart';
+import 'widgets/shopping_card_provider.dart';
+import 'widgets/checkout_page_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
 
 import 'authentication/service/authservice.dart';
-import 'common/DatabseUtil.dart';
 import 'common/PreferenceUtil.dart';
 import 'constants/fhb_constants.dart' as Constants;
 import 'constants/fhb_constants.dart';
@@ -491,8 +454,8 @@ class _MyFHBState extends State<MyFHB> {
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
-          final dataOne=temp[1]??'';
-          final dataTwo=temp[2];
+          final dataOne = temp[1] ?? '';
+          final dataTwo = temp[2];
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'myRecords',
@@ -504,7 +467,7 @@ class _MyFHBState extends State<MyFHB> {
               CommonUtil().navigateToRecordDetailsScreen(dataTwo);
             } else {
               CommonUtil.showFamilyMemberPlanExpiryDialog(
-                passedValArr[3]??'',
+                passedValArr[3] ?? '',
                 redirect: temp[0],
               );
             }
@@ -515,7 +478,6 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
-
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -701,15 +663,15 @@ class _MyFHBState extends State<MyFHB> {
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));*/
           Get.to(() => ChatDetail(
-            peerId: passedValArr[2],
-            peerName: passedValArr[3],
-            peerAvatar: passedValArr[4],
-            patientId: '',
-            patientName: '',
-            patientPicture: '',
-            isFromVideoCall: false,
-            isCareGiver: false,
-          ));
+                peerId: passedValArr[2],
+                peerName: passedValArr[3],
+                peerAvatar: passedValArr[4],
+                patientId: '',
+                patientName: '',
+                patientPicture: '',
+                isFromVideoCall: false,
+                isCareGiver: false,
+              ));
         } else if (passedValArr[1] == 'mycart') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1066,7 +1028,7 @@ class _MyFHBState extends State<MyFHB> {
     } else {
       try {
         final parsedData = navRoute.split('&');
-         if (navRoute == 'FETCH_LOG') {
+        if (navRoute == 'FETCH_LOG') {
           CommonUtil.sendLogToServer();
           return SplashScreen(
             nsRoute: '',

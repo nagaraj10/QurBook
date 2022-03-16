@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -360,17 +361,13 @@ class _MyControllersState extends State<MyControllers> {
         await widget?.rtcEngine?.enableLocalVideo(true);
         await widget?.rtcEngine?.muteLocalVideoStream(false);
         requestingDialog();
-        if (widget.isWeb != null && widget.isWeb) {
-          FirebaseFirestore.instance
-            ..collection("call_log")
-                .doc("${widget.channelName}")
-                .update({"videoRequestFromMobile": 1});
-        } else {
-          FirebaseFirestore.instance
-            ..collection("call_log")
-                .doc("${widget.channelName}")
-                .set({"video_request_sent": "sent"});
-        }
+        var newStatus = VideoCallStatus();
+        newStatus.setDefaultValues();
+        newStatus.videoRequestFromMobile = 1;
+        FirebaseFirestore.instance
+          ..collection("call_log")
+              .doc("${widget.channelName}")
+              .update(newStatus.toMap());
       }
     } else {
       if (CommonUtil.isRemoteUserOnPause) {
@@ -432,12 +429,15 @@ class _MyControllersState extends State<MyControllers> {
                   FlatButton(
                       child: Text('Cancel'),
                       onPressed: () async {
-                        if (widget.isWeb != null && widget.isWeb) {
-                          FirebaseFirestore.instance
-                            ..collection("call_log")
-                                .doc("${widget.channelName}")
-                                .update({"videoRequestFromMobile": 0});
-                        }
+                        // if (widget.isWeb != null && widget.isWeb) {
+                        var newStatus = VideoCallStatus();
+                        newStatus.setDefaultValues();
+                        newStatus.videoRequestFromMobile = 0;
+                        FirebaseFirestore.instance
+                          ..collection("call_log")
+                              .doc("${widget.channelName}")
+                              .update(newStatus.toMap());
+                        // }
                         CommonUtil.isVideoRequestSent = false;
                         await widget?.rtcEngine?.disableVideo();
                         await widget?.rtcEngine?.enableLocalVideo(false);
