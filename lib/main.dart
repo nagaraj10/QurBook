@@ -152,7 +152,7 @@ Future<void> main() async {
         DatabaseUtil.insertCountryMetricsData();
       }
     });
-
+    
     await DatabaseUtil.getDBLengthUnit().then((length) {
       if (length == 0) {
         DatabaseUtil.insertUnitsForDevices();
