@@ -358,21 +358,25 @@ class HomeWidget extends StatelessWidget {
                           // },
                         ),
                         LandingCard(
-                          title: constants.strHowVideos,
+                          title: constants.strHelpDesk,
                           lastStatus: '',
-                          alerts: availableVideos > 0
-                              ? '$availableVideos ${constants.strVideosAvailable}'
-                              : constants.strNoVideos,
-                          icon: variable.icon_how_to_use,
+                          alerts:  constants.strTrueDeskTickets,
+                          icon: variable.icon_true_desk,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () {
-                            if (availableVideos > 0) {
-                              Get.to(
-                                VideoScreen(
-                                  videoList: dashboardData?.helperVideos,
-                                ),
-                              );
-                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyTicketsListScreen(),
+                              ),
+                            );
+                            // if (availableVideos > 0) {
+                            //   Get.to(
+                            //     VideoScreen(
+                            //       videoList: dashboardData?.helperVideos,
+                            //     ),
+                            //   );
+                            // }
                           },
                         ),
                         LandingCard(
@@ -389,15 +393,15 @@ class HomeWidget extends StatelessWidget {
                               : constants.strChatNotAvailable,
                           icon: variable.icon_chat_dash,
                           color: Color(CommonConstants.bplightColor),
-                          onTicketPressed: () async {
-                            print('Ticket Pressed');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MyTicketsListScreen(),
-                              ),
-                            );
-                          },
+                          // onTicketPressed: () async {
+                          //   print('Ticket Pressed');
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => MyTicketsListScreen(),
+                          //     ),
+                          //   );
+                          // },
                           onPressed: () async {
                             // if (availableCareProvider > 0) {
                             //   Navigator.push(
