@@ -194,6 +194,7 @@ const String icon_call = 'assets/dashboard/call.svg';
 const String icon_chat_dash = 'assets/dashboard/chat.svg';
 const String icon_check_symptoms = 'assets/dashboard/check-symptoms.svg';
 const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
+const String icon_true_desk = 'assets/dashboard/truedesk_icon.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_qurhub = 'assets/dashboard/qurhub.svg';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
