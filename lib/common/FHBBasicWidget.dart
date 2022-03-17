@@ -500,6 +500,15 @@ class FHBBasicWidget {
           );
   }
 
+  Widget getAudioWidgetForChat(
+      String audioPathMain) {
+    return Column(
+      children: <Widget>[
+        AudioWidget(audioPathMain,null,isFromChat: true)
+      ],
+    );
+  }
+
   Widget getPopmenuItem(Doctors element, Function onAddClick) {
     return PopupMenuItem<Doctors>(
         value: element,

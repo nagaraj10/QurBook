@@ -20,9 +20,11 @@ enum t_MEDIA {
 
 class AudioWidget extends StatefulWidget {
   String audioFile;
+  String audioUrl;
+  bool isFromChat;
   Function(bool, String) deleteAudioFile;
 
-  AudioWidget(this.audioFile, this.deleteAudioFile);
+  AudioWidget(this.audioFile, this.deleteAudioFile,{this.isFromChat=false});
 
   @override
   AudioWidgetState createState() => AudioWidgetState();
@@ -47,12 +49,15 @@ class AudioWidgetState extends State<AudioWidget> {
 
   bool isPlaying = false;
 
+  String audioUrl = '';
+
   @override
   void initState() {
     super.initState();
     set_up_audios();
     initializeDateFormatting();
     _pathOfFile = widget.audioFile;
+    audioUrl = widget.audioUrl;
   }
 
   set_up_audios() async {
@@ -83,7 +88,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   Widget getAudioWidgetWithPlayer() {
     return Container(
-      width: 1.sw,
+      width: widget.isFromChat?1.sw/1.7:1.sw,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
@@ -135,7 +140,7 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          Expanded(
+          if (!widget.isFromChat) Expanded(
             child: IconButton(
               icon: Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
               padding: EdgeInsets.only(right: 2),
