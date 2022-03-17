@@ -707,41 +707,46 @@ class ChatState extends State<ChatDetail> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         !isCallBackDisable && isCareGiver
-                            ? IconButton(
-                                onPressed: () {
-                                  CommonUtil()
-                                      .CallbackAPIFromChat(
-                                          patientId,
-                                          peerId,
-                                          (widget.peerName ?? "").length > 0
-                                              ? widget.peerName
-                                                  ?.capitalizeFirstofEach
-                                              : '')
-                                      .then((value) {
-                                    chatHistoryModel =
-                                        Provider.of<ChatSocketViewModel>(
-                                                context,
-                                                listen: false)
-                                            .getChatHistory(chatPeerId);
-                                    setState(() {});
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.call,
-                                  color: Colors.white,
-                                  size: 24.0.h,
+                            ? SizedBoxWithChild(
+                                height: 24.0.h,
+                                width: 24.0.w,
+                                child: IconButton(
+                                  padding: new EdgeInsets.all(0.0),
+                                  onPressed: () {
+                                    CommonUtil()
+                                        .CallbackAPIFromChat(
+                                            patientId,
+                                            peerId,
+                                            (widget.peerName ?? "").length > 0
+                                                ? widget.peerName
+                                                    ?.capitalizeFirstofEach
+                                                : '')
+                                        .then((value) {
+                                      chatHistoryModel =
+                                          Provider.of<ChatSocketViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .getChatHistory(chatPeerId);
+                                      setState(() {});
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.call,
+                                    color: Colors.white,
+                                    size: 24.0.sp,
+                                  ),
                                 ),
                               )
                             : SizedBoxWithChild(
                                 height: 24.0.h,
-                                width: 24.0.h,
+                                width: 24.0.w,
                                 child:
                                     CommonUtil().getNotificationIcon(context),
                               ),
-                        SizedBox(width: 1.sw * 0.03),
+                        SizedBox(width: 1.sw * 0.04),
                         SizedBoxWithChild(
                           height: 24.0.h,
-                          width: 24.0.h,
+                          width: 24.0.w,
                           child: moreOptionsPopup(),
                         )
                       ],
