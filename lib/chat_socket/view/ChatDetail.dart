@@ -16,6 +16,7 @@ import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/EmitAckResponse.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -124,6 +125,7 @@ class ChatState extends State<ChatDetail> {
   String textFieldValueClone = '';
 
   int commonIndex = 0;
+
   //List<int> indexList = [];
   FlutterSoundPlayer _mPlayer = FlutterSoundPlayer();
 
@@ -172,6 +174,10 @@ class ChatState extends State<ChatDetail> {
   bool isCallBackDisable = false;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
+
+  String audioPath;
 
   @override
   void initState() {
@@ -1156,7 +1162,7 @@ class ChatState extends State<ChatDetail> {
                             ),
                           )
                               .then((results) {
-                            String audioPath = results[keyAudioFile];
+                            audioPath = results[keyAudioFile];
                             if (audioPath != null && audioPath != '') {
                               setState(() {
                                 isLoading = true;
@@ -1349,33 +1355,13 @@ class ChatState extends State<ChatDetail> {
                                 elevation: 2.0,
                                 child: Container(
                                   padding: EdgeInsets.all(10.0),
-                                  width: 1.sw / 3,
+                                  width: 1.sw / 1.5,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      CircleAvatar(
-                                          child: Text(
-                                        patientName.substring(0, 1),
-                                        style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                        ),
-                                      )),
-                                      IconButton(
-                                        icon: Icon(currentPlayedVoiceURL ==
-                                                chatList?.messages?.content
-                                            ? isPlaying
-                                                ? Icons.pause_circle_filled
-                                                : Icons.play_circle_filled
-                                            : Icons.play_circle_filled),
-                                        onPressed: () {
-                                          isPlaying
-                                              ? flutterStopPlayer(
-                                                  chatList?.messages?.content)
-                                              : flutterPlaySound(
-                                                  chatList?.messages?.content);
-                                        },
-                                      ),
+                                      fhbBasicWidget.getAudioWidgetForChat(
+                                          chatList?.messages?.content)
                                     ],
                                   ),
                                 ),
@@ -1438,7 +1424,7 @@ class ChatState extends State<ChatDetail> {
                         ),
                         clipBehavior: Clip.hardEdge,
                       )
-                    : Container(width: 35.0.w),
+                    : Container(width: 38.0.w),
                 chatList?.messages?.type == 0
                     ? Card(
                         color: Colors.transparent,
@@ -1581,38 +1567,17 @@ class ChatState extends State<ChatDetail> {
                                     padding: const EdgeInsets.all(4.0),
                                     child: Material(
                                       borderRadius: BorderRadius.circular(10.0),
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
                                       elevation: 2.0,
                                       child: Container(
                                         padding: EdgeInsets.all(10.0),
-                                        width: 1.sw / 3,
+                                        width: 1.sw / 1.5,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            CircleAvatar(
-                                                child: Text(peerName != null &&
-                                                        peerName != ''
-                                                    ? peerName.substring(0, 1)
-                                                    : '')),
-                                            IconButton(
-                                              icon: Icon(currentPlayedVoiceURL ==
-                                                      chatList
-                                                          ?.messages?.content
-                                                  ? isPlaying
-                                                      ? Icons
-                                                          .pause_circle_filled
-                                                      : Icons.play_circle_filled
-                                                  : Icons.play_circle_filled),
-                                              onPressed: () {
-                                                isPlaying
-                                                    ? flutterStopPlayer(chatList
-                                                        ?.messages?.content)
-                                                    : flutterPlaySound(chatList
-                                                        ?.messages?.content);
-                                              },
-                                            ),
+                                            fhbBasicWidget
+                                                .getAudioWidgetForChat(
+                                                    chatList?.messages?.content)
                                           ],
                                         ),
                                       ),
@@ -2215,7 +2180,7 @@ class ChatState extends State<ChatDetail> {
   void getListIndexMapFilter() {
     searchIndexListAll.asMap().forEach((index, value) {
       if (value != null) {
-        if (value?.toLowerCase().contains('$textFieldValue'.toLowerCase())){
+        if (value?.toLowerCase().contains('$textFieldValue'.toLowerCase())) {
           listIndex.add(index);
         }
       }
