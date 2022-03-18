@@ -1165,7 +1165,7 @@ class _MyFamilyState extends State<MyFamily> {
 
                 Alert.displayAlertPlain(context,
                     title: variable.Error,
-                    content: 'Error Adding Family member');
+                    content: addFamilyOTPResponse.message??'Error Adding Family member');
               }
             });
           } else {
