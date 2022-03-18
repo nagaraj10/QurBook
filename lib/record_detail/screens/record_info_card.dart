@@ -699,7 +699,7 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
               ),
               Expanded(
                 flex: 2,
-                child: Row(
+                child: FittedBox(child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
@@ -711,16 +711,13 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                     ),
                     Text(
                         deviceReadings[i].unit.toLowerCase() ==
-                                CommonConstants.strOxygenUnits.toLowerCase()
+                            CommonConstants.strOxygenUnits.toLowerCase()
                             ? CommonConstants.strOxygenUnitsName
-                            : (deviceReadings[i].unit.toLowerCase() ==
-                                    strParamUnitFarenheit.toLowerCase()
-                                ? CommonConstants.strTemperatureValue
-                                : deviceReadings[i].unit.toString()),
+                            : getUnitForTemperature(deviceReadings[i].unit),
                         style: TextStyle(
                             color: Colors.black54, fontSize: 14.0.sp)),
                   ],
-                ),
+                )),
               )
             ],
           )),
@@ -843,3 +840,19 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
         ],
       ));
 }
+
+getUnitForTemperature(String unit) {
+  if(unit.toLowerCase() ==
+      strParamUnitFarenheit
+          .toLowerCase()){
+    return strParamUnitFarenheit;
+  }else if(unit.toLowerCase()==CommonConstants.strTemperatureValue.toLowerCase()){
+    return strParamUnitFarenheit;
+  }else if(unit.toLowerCase()=="c".toLowerCase()){
+    return strParamUnitCelsius;
+  }else{
+    return strParamUnitCelsius;
+  }
+
+}
+
