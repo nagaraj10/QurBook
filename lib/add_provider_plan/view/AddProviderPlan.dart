@@ -245,6 +245,49 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           );
   }
 
+  getLogo(Result planList) {
+    if ((planList.domainUrl ?? '').isNotEmpty) {
+      return CircleAvatar(
+        radius: 25,
+        backgroundColor: const Color(fhbColors.bgColorContainer),
+        child: Image.network(
+          planList.domainUrl,
+          height: 25.0.h,
+          width: 25.0.h,
+          fit: BoxFit.cover,
+          errorBuilder: (context, exception, stackTrace) {
+            return Container(
+              height: 25.h,
+              width: 25.h,
+              child: Center(
+                child: Text(
+                  ((planList.name ?? '').isNotEmpty
+                      ? planList.name[0].toUpperCase()
+                      : ''),
+                  style: TextStyle(
+                    color: Color(
+                      CommonUtil().getMyPrimaryColor(),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return CircleAvatar(
+        radius: 25,
+        backgroundColor: const Color(fhbColors.bgColorContainer),
+        child: Container(
+          color: Color(fhbColors.bgColorContainer),
+          height: 25.0.h,
+          width: 25.0.h,
+        ),
+      );
+    }
+  }
+
   CreateDoctorProviderCard({Result planList, Function() onClick}) {
     String specialityName = "";
     try {
@@ -271,29 +314,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         ),
         child: Row(
           children: <Widget>[
-            CircleAvatar(
-                radius: 25,
-                backgroundColor: const Color(fhbColors.bgColorContainer),
-                child: (planList.domainUrl != null && planList.domainUrl != "")
-                    ? Image.network(
-                        planList.domainUrl ?? "",
-                        height: 25.0.h,
-                        width: 25.0.h,
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                      )
-                    : Container(
-                        height: 50.0.h,
-                        width: 50.0.h,
-                        color: Color(fhbColors.bgColorContainer),
-                        child: Center(
-                          child: Text(
-                            planList.name != null
-                                ? planList.name[0].toUpperCase()
-                                : '',
-                            style: TextStyle(
-                                color: Color(CommonUtil().getMyPrimaryColor())),
-                          ),
-                        ))),
+            getLogo(planList),
             SizedBox(
               width: 20,
             ),
