@@ -1953,7 +1953,7 @@ class CommonDialogBox {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = tempUnit;
+          postDeviceValues[parameters.strunit] = tempUnit=="c"?"Celsius":"Farenheit";
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =

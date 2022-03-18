@@ -384,10 +384,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     deviceReadings[i].unit.toLowerCase() ==
                             CommonConstants.strOxygenUnits.toLowerCase()
                         ? CommonConstants.strOxygenUnitsName
-                        : (deviceReadings[i].unit.toLowerCase() ==
-                                strParamUnitFarenheit.toLowerCase()
-                            ? CommonConstants.strTemperatureValue
-                            : deviceReadings[i].unit.toString()),
+                        : getUnitForTemperature(deviceReadings[i].unit),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
@@ -406,5 +403,20 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
       ),
     );
     //return new Row(children: list);
+  }
+
+  getUnitForTemperature(String unit) {
+    if(unit.toLowerCase() ==
+        strParamUnitFarenheit
+            .toLowerCase()){
+      return strParamUnitFarenheit;
+    }else if(unit.toLowerCase()==CommonConstants.strTemperatureValue.toLowerCase()){
+      return strParamUnitFarenheit;
+    }else if(unit.toLowerCase()=="c".toLowerCase()){
+      return strParamUnitCelsius;
+    }else{
+      return strParamUnitCelsius;
+    }
+
   }
 }
