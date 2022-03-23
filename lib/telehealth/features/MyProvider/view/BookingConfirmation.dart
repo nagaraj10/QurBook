@@ -2091,6 +2091,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ? price.toStringAsFixed(2)
             : new CommonUtil()
                 .doubleWithoutDecimalToInt(double.parse(price.toString()))
+                .toStringAsFixed(2)
                 .toString();
       } catch (e) {
         return price.toString();
