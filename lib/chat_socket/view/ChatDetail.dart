@@ -2107,7 +2107,7 @@ class ChatState extends State<ChatDetail> {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
           healthRecordList = results[STR_META_ID] as List;
-          if (healthRecordList != null) {
+          if (healthRecordList != null && healthRecordList?.length>0??0) {
             getAlertForFileSend(healthRecordList);
           }
           setState(() {});
