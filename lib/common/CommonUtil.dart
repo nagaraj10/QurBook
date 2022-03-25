@@ -2966,7 +2966,8 @@ class CommonUtil {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                      FittedBox(
+                     // reverted effective renew date
+                     /* FittedBox(
                           child: Row(
                         children: <Widget>[
                           Text(
@@ -2987,10 +2988,10 @@ class CommonUtil {
                           ),
                           Text('${formatter.format(initDate)}'),
                         ],
-                      )),
-                      SizedBox(
+                      )),*/
+                     /* SizedBox(
                         height: 10.0.h,
-                      ),
+                      ),*/
                       FittedBox(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
