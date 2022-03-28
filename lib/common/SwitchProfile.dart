@@ -141,7 +141,7 @@ class SwitchProfile {
     return FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName, _) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
-        updateSocketFamily();
+        CommonUtil().updateSocketFamily();
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
@@ -301,32 +301,4 @@ class SwitchProfile {
       return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
     }));
   }
-
-  updateSocketFamily(){
-
-    String userId = PreferenceUtil.getStringValue(KEY_USERID);
-
-    Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.socket.disconnect();
-    Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.initSocket().then((value) {
-
-      //update common count
-      Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-          ?.socket
-          .emitWithAck(getChatTotalCountEmit, {
-        'userId': userId,
-      }, ack: (countResponseEmit) {
-        if (countResponseEmit != null) {
-          TotalCountModel totalCountModel =
-          TotalCountModel.fromJson(countResponseEmit);
-          if (totalCountModel != null) {
-            Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-                ?.updateChatTotalCount(totalCountModel);
-          }
-        }
-      });
-
-    });
-
-  }
-
 }
