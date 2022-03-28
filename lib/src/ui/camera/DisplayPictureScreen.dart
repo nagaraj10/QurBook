@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
+import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -30,9 +31,14 @@ import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
+import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:get/get.dart';
+
 
 class DisplayPictureScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -800,7 +806,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
-                  builder: (BuildContext context) {
+                  builder: (BuildContext context)  {
                     return Container(
                         width: 1.sw,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -808,7 +814,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         child: Container(
                           height: double.infinity,
                           child: imgUrl.contains(variable.strpdf)
-                              ? Image.asset(variable.icon_attach)
+                              ? new CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
@@ -967,4 +973,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       setState(() {});
     }
   }
+
+
 }
