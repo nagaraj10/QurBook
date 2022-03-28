@@ -145,6 +145,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         ispdfPresent = true;
         pdfId = getMediaMasterIDForPdfTypeStr;
         getPdfFileData(getMediaMasterIDForPdfTypeStr);
+        length=1;
+        index=1;
+
+
       } else {
         ispdfPresent = false;
       }
@@ -163,7 +167,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Record Details Screen',
       'screenSessionTime':
-          '${DateTime.now().difference(Constants.mInitialTime).inSeconds} secs'
+      '${DateTime
+          .now()
+          .difference(Constants.mInitialTime)
+          .inSeconds} secs'
     });
   }
 
@@ -177,11 +184,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           title: AutoSizeText(
             widget.data.metadata.fileName == null
                 ? toBeginningOfSentenceCase(
-                    widget.data.metadata.healthRecordType.name)
+                widget.data.metadata.healthRecordType.name)
                 : widget.data.metadata.fileName.contains('.pdf')
-                    ? getFileNameForPdf(toBeginningOfSentenceCase(
-                        widget.data.metadata.fileName))
-                    : toBeginningOfSentenceCase(widget.data.metadata.fileName),
+                ? getFileNameForPdf(toBeginningOfSentenceCase(
+                widget.data.metadata.fileName))
+                : toBeginningOfSentenceCase(widget.data.metadata.fileName),
             maxLines: 1,
             maxFontSize: 16,
           ),
@@ -211,17 +218,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             child: Padding(
                                 padding: EdgeInsets.all(10),
                                 child: (mediMasterId.isNotEmpty &&
-                                        mediMasterId != null)
+                                    mediMasterId != null)
                                     ? getCarousalImage(mediMasterId)
                                     : (widget.data.metadata.healthRecordType
-                                                    .name ==
-                                                AppConstants.voiceNotes ||
-                                            ispdfPresent == true)
-                                        ? getCarousalImage(null)
-                                        : widget?.data?.metadata?.sourceName ==
-                                                'SHEELA'
-                                            ? getCarousalImage(null)
-                                            : getDocumentImageWidgetClone())),
+                                    .name ==
+                                    AppConstants.voiceNotes ||
+                                    ispdfPresent == true)
+                                    ? getCarousalImage(null)
+                                    : widget?.data?.metadata?.sourceName ==
+                                    'SHEELA'
+                                    ? getCarousalImage(null)
+                                    : getDocumentImageWidgetClone())),
                         Expanded(
                           child: Padding(
                             padding: EdgeInsets.only(left: 20, right: 20),
@@ -231,24 +238,28 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 widget?.data?.metadata?.sourceName == 'SHEELA'
                                     ? SizedBox()
                                     : IconButton(
-                                        onPressed: () {
-                                          if (mediMasterId.isNotEmpty) {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ImageSlider(
-                                                          imageList:
-                                                              mediMasterId,
-                                                        )));
-                                          }
-                                        },
-                                        icon: Icon(
-                                          Icons.fullscreen,
-                                          color: Colors.white,
-                                          size: 24.0.sp,
-                                        ),
-                                      ),
+                                  onPressed: () {
+                                    if (pdfFile != null) {
+                                      moveToPDFViewer();
+                                    } else {
+                                      if (mediMasterId.isNotEmpty) {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ImageSlider(
+                                                      imageList:
+                                                      mediMasterId,
+                                                    )));
+                                      }
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.fullscreen,
+                                    color: Colors.white,
+                                    size: 24.0.sp,
+                                  ),
+                                ),
                                 if (widget?.data?.metadata?.sourceName ==
                                     'SHEELA')
                                   SizedBox()
@@ -273,16 +284,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           IconButton(
                               icon: _isRecordBookmarked
                                   ? ImageIcon(
-                                      AssetImage(
-                                          variable.icon_record_fav_active),
-                                      //TODO chnage theme
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                    )
+                                AssetImage(
+                                    variable.icon_record_fav_active),
+                                //TODO chnage theme
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                              )
                                   : ImageIcon(
-                                      AssetImage(variable.icon_record_fav),
-                                      color: Colors.black,
-                                    ),
+                                AssetImage(variable.icon_record_fav),
+                                color: Colors.black,
+                              ),
                               onPressed: () {
                                 bookMarkRecord(widget.data);
                               }),
@@ -290,9 +301,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               strsourceCARGIVER)
                             IconButton(
                                 icon: ImageIcon(
-                              AssetImage(variable.icon_record_switch),
-                              color: Colors.grey,
-                            ))
+                                  AssetImage(variable.icon_record_switch),
+                                  color: Colors.grey,
+                                ))
                           else
                             IconButton(
                                 icon: ImageIcon(
@@ -313,12 +324,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                       .getFamilyMembersListNew()
                                       .then((familyMembersList) {
                                     Navigator.of(_keyLoader.currentContext,
-                                            rootNavigator: true)
+                                        rootNavigator: true)
                                         .pop();
                                     if (familyMembersList != null &&
                                         familyMembersList.result != null &&
                                         familyMembersList
-                                                .result.sharedByUsers.length >
+                                            .result.sharedByUsers.length >
                                             0) {
                                       getDialogBoxWithFamilyMember(
                                           familyMembersList.result);
@@ -333,9 +344,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               strsourceCARGIVER)
                             IconButton(
                                 icon: ImageIcon(
-                              AssetImage(variable.icon_edit),
-                              color: Colors.grey,
-                            ))
+                                  AssetImage(variable.icon_edit),
+                                  color: Colors.grey,
+                                ))
                           else
                             IconButton(
                                 icon: ImageIcon(
@@ -361,28 +372,28 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               }),
                           widget.data.metadata.sourceName == strsourceCARGIVER
                               ? IconButton(
-                                  icon: ImageIcon(
-                                  AssetImage(variable.icon_delete),
-                                  color: Colors.grey,
-                                ))
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_delete),
+                                color: Colors.grey,
+                              ))
                               : IconButton(
-                                  icon: ImageIcon(
-                                    AssetImage(variable.icon_delete),
-                                    color: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    FHBBasicWidget()
-                                        .showDialogWithTwoButtons(context, () {
-                                      deleteRecord(widget.data.id,
-                                          isDeviceReadings: widget
-                                                  .data
-                                                  .metadata
-                                                  .healthRecordCategory
-                                                  .categoryName ==
-                                              'Devices');
-                                    }, 'Confirmation',
-                                            'Are you sure you want to delete');
-                                  })
+                              icon: ImageIcon(
+                                AssetImage(variable.icon_delete),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                FHBBasicWidget()
+                                    .showDialogWithTwoButtons(context, () {
+                                  deleteRecord(widget.data.id,
+                                      isDeviceReadings: widget
+                                          .data
+                                          .metadata
+                                          .healthRecordCategory
+                                          .categoryName ==
+                                          'Devices');
+                                }, 'Confirmation',
+                                    'Are you sure you want to delete');
+                              })
                         ],
                       );
                     },
@@ -400,11 +411,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: widget.data.metadata.hasVoiceNotes != null &&
-                        widget.data.metadata.hasVoiceNotes
+                    widget.data.metadata.hasVoiceNotes
                     ? isAudioDownload
-                        ? getAudioIconWithFile()
-                        : showAudioWidgetIfVoiceNotesAvailable(widget.data)
-                    /*Shimmer.fromColors(
+                    ? getAudioIconWithFile()
+                    : showAudioWidgetIfVoiceNotesAvailable(widget.data)
+                /*Shimmer.fromColors(
                                 baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[200],
                                 child: showProgressIndicator(widget.data))*/
@@ -420,11 +431,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         Navigator.of(context)
             .push(
           MaterialPageRoute(
-            builder: (context) => AudioRecorder(
-              arguments: AudioScreenArguments(
-                fromVoice: false,
-              ),
-            ),
+            builder: (context) =>
+                AudioRecorder(
+                  arguments: AudioScreenArguments(
+                    fromVoice: false,
+                  ),
+                ),
           ),
         )
             .then((results) {
@@ -487,8 +499,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     //setState(() => permissionStatus = status);
   }
 
-  void saveImageToGallery(
-      List<HealthRecordCollection> imagesPathMain, BuildContext contxt) async {
+  void saveImageToGallery(List<HealthRecordCollection> imagesPathMain,
+      BuildContext contxt) async {
     //check the storage permission for both android and ios!
     //request gallery permission
     final albumName = 'myfhb';
@@ -541,7 +553,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         );
       } else {
         await ImageGallerySaver.saveFile(pdfFile).then(
-          (res) {
+              (res) {
             setState(() {
               downloadStatus = true;
             });
@@ -592,9 +604,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     await Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ShowImage(
-                          filePathList: imageList,
-                        ),
+                        builder: (context) =>
+                            ShowImage(
+                              filePathList: imageList,
+                            ),
                       ),
                     );
                   },
@@ -744,20 +757,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     final path = (fpath != null || fpath != '') ? fpath : audioPath;
 
     return Container(
-        //height: 60.0.h,
+      //height: 60.0.h,
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
-          containsAudio = containsAudioClone;
-          audioPath = audioPathClone;
-          FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            deleteMediRecord(audioMediaId);
-          }, 'Confirmation', 'Are you sure you want to delete');
-        }),
-      ],
-    ));
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
+              containsAudio = containsAudioClone;
+              audioPath = audioPathClone;
+              FHBBasicWidget().showDialogWithTwoButtons(context, () {
+                deleteMediRecord(audioMediaId);
+              }, 'Confirmation', 'Are you sure you want to delete');
+            }),
+          ],
+        ));
   }
 
   void deleteAudioFile() {
@@ -830,11 +843,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
-                              doctorsData[variable.strName] != null
-                          ? doctorsData[variable.strName]
-                          : doctorsData[variable.strFirstName] +
-                              ' ' +
-                              doctorsData[variable.strLastName]
+                      doctorsData[variable.strName] != null
+                      ? doctorsData[variable.strName]
+                      : doctorsData[variable.strFirstName] +
+                      ' ' +
+                      doctorsData[variable.strLastName]
                       : ''),
               TextEditingController(text: date),
               containsAudio,
@@ -850,7 +863,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, [], widget.data, true, TextEditingController(text: fileName));
+          },
+              [],
+              widget.data,
+              true,
+              TextEditingController(text: fileName));
 
           break;
 
@@ -861,14 +878,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               List(),
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -892,11 +909,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
-                              doctorsData[variable.strName] != null
-                          ? doctorsData[variable.strName]
-                          : doctorsData[variable.strFirstName] +
-                              ' ' +
-                              doctorsData[variable.strLastName]
+                      doctorsData[variable.strName] != null
+                      ? doctorsData[variable.strName]
+                      : doctorsData[variable.strFirstName] +
+                      ' ' +
+                      doctorsData[variable.strLastName]
                       : ''),
               TextEditingController(text: date),
               containsAudio,
@@ -912,7 +929,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, [], widget.data, true, TextEditingController(text: fileName));
+          },
+              [],
+              widget.data,
+              true,
+              TextEditingController(text: fileName));
           break;
         case Constants.STR_MEDICALREPORT:
           final fileName = widget.data.metadata.fileName;
@@ -926,11 +947,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               TextEditingController(
                   text: doctorsData != null
                       ? doctorsData[variable.strName] != '' &&
-                              doctorsData[variable.strName] != null
-                          ? doctorsData[variable.strName]
-                          : doctorsData[variable.strFirstName] +
-                              ' ' +
-                              doctorsData[variable.strLastName]
+                      doctorsData[variable.strName] != null
+                      ? doctorsData[variable.strName]
+                      : doctorsData[variable.strFirstName] +
+                      ' ' +
+                      doctorsData[variable.strLastName]
                       : ''),
               TextEditingController(
                   text: widget.data.metadata.dateOfVisit ?? ''),
@@ -947,7 +968,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, List(), widget.data, true, TextEditingController(text: fileName));
+          },
+              List(),
+              widget.data,
+              true,
+              TextEditingController(text: fileName));
 
           break;
         case Constants.STR_CLAIMSRECORD:
@@ -957,14 +982,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               [],
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -982,14 +1007,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               [],
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -1010,14 +1035,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               [],
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -1035,14 +1060,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               List(),
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -1061,14 +1086,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
                 });
               },
               List(),
-              (containsAudio, audioPath) {
+                  (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -1077,7 +1102,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               widget.data,
               true,
               TextEditingController(text: fileName),
-              (value) {
+                  (value) {
                 if (value) {
                   setState(() {});
                 }
@@ -1092,30 +1117,30 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           .then((value) {
         switch (deviceName) {
           case Constants.STR_GLUCOMETER:
-            //String glucoMeterValue = '';
+          //String glucoMeterValue = '';
             final fileName = widget.data.metadata.fileName;
             //List<bool> isSelected;
             final String glucoMeterValue =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             var isSelected =
-                widget.data.metadata.deviceReadings[1].unit == variable.strAfter
-                    ? [false, true]
-                    : [true, false];
+            widget.data.metadata.deviceReadings[1].unit == variable.strAfter
+                ? [false, true]
+                : [true, false];
             CommonDialogBox().getDialogBoxForGlucometer(
                 context,
                 deviceName,
                 containsAudio,
                 audioPath,
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   setState(() {
                     audioPath = audioPath;
                     containsAudio = containsAudio;
                   });
                 },
                 [],
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
 
@@ -1129,11 +1154,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             break;
 
           case Constants.STR_THERMOMETER:
-            //String thermometerValue = '';
+          //String thermometerValue = '';
             final String thermometerValue =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             final fileName = widget.data.metadata.fileName;
 
             CommonDialogBox().getDialogBoxForTemperature(
@@ -1141,14 +1166,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 deviceName,
                 containsAudio,
                 audioPath,
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   setState(() {
                     audioPath = audioPath;
                     containsAudio = containsAudio;
                   });
                 },
                 [],
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
 
@@ -1167,9 +1192,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             break;
           case Constants.STR_WEIGHING_SCALE:
             final String weightInKgs =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             var fileName = widget.data.metadata.fileName;
 
             CommonDialogBox().getDialogBoxForWeightingScale(
@@ -1177,14 +1202,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 deviceName,
                 containsAudio,
                 audioPath,
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   setState(() {
                     audioPath = audioPath;
                     containsAudio = containsAudio;
                   });
                 },
                 List(),
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
 
@@ -1203,11 +1228,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             break;
 
           case Constants.STR_PULSE_OXIMETER:
-            //String oxygenSaturation = '';
+          //String oxygenSaturation = '';
             final String oxygenSaturation =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             //String pulse = '';
             final String pulse = widget.data.metadata.deviceReadings != null
                 ? widget.data.metadata.deviceReadings[1].value
@@ -1219,14 +1244,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 deviceName,
                 containsAudio,
                 audioPath,
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   setState(() {
                     audioPath = audioPath;
                     containsAudio = containsAudio;
                   });
                 },
                 List(),
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
 
@@ -1239,17 +1264,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 TextEditingController(text: fileName));
             break;
           case Constants.STR_BP_MONITOR:
-            /*String systolicPressure = '';
+          /*String systolicPressure = '';
             String diastolicPressure = '';
             String pulse = '';*/
             final String systolicPressure =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             final String diastolicPressure =
-                widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[1].value
-                    : '';
+            widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[1].value
+                : '';
             final String pulse = widget.data.metadata.deviceReadings != null
                 ? widget.data.metadata.deviceReadings[2].value
                 : '';
@@ -1260,14 +1285,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 deviceName,
                 containsAudio,
                 audioPath,
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   setState(() {
                     audioPath = audioPath;
                     containsAudio = containsAudio;
                   });
                 },
                 [],
-                (containsAudio, audioPath) {
+                    (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
 
@@ -1305,7 +1330,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   void createdDateMethod() {
     final parsedDate =
-        DateTime.parse(widget.data.metadata.healthRecordType.createdOn);
+    DateTime.parse(widget.data.metadata.healthRecordType.createdOn);
     var dateFormatter = DateFormat(CommonUtil.REGION_CODE == 'IN'
         ? variable.strDateFormatDay
         : variable.strUSDateFormatDay);
@@ -1328,108 +1353,85 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         children: <Widget>[
           widget.data.metadata.healthRecordType.name != AppConstants.voiceNotes
               ? (imagesPath != null && imagesPath.isNotEmpty)
-                  ? Expanded(
-                      child: CarouselSlider(
-                        carouselController: carouselSlider,
-                        items: imagesPath.map((imgUrl) {
-                          return Builder(
-                            builder: (context) {
-                              return Container(
-                                  height: double.infinity,
-                                  child: Image.network(
-                                    imgUrl.healthRecordUrl,
-                                    height: 200.0.h,
-                                    width: 200.0.h,
-                                    headers: {
-                                      HttpHeaders.authorizationHeader: authToken
-                                    },
-                                  ));
-                              /*Container(
+              ? Expanded(
+            child: CarouselSlider(
+              carouselController: carouselSlider,
+              items: imagesPath.map((imgUrl) {
+                return Builder(
+                  builder: (context) {
+                    return Container(
+                        height: double.infinity,
+                        child: Image.network(
+                          imgUrl.healthRecordUrl,
+                          height: 200.0.h,
+                          width: 200.0.h,
+                          headers: {
+                            HttpHeaders.authorizationHeader: authToken
+                          },
+                        ));
+                    /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
                                   Uint8List.fromList(imgUrl),
                                   fit: BoxFit.fill,
                                 ),
                               );*/
-                            },
-                          );
-                        }).toList(),
-                        options: CarouselOptions(
-                          height: 400.0.h,
-                          //width: 1.sw,
-                          initialPage: 0,
-                          enlargeCenterPage: true,
-                          reverse: false,
-                          enableInfiniteScroll: false,
-                          // pauseAutoPlayOnTouch: Duration(seconds: 10),
-                          scrollDirection: Axis.horizontal,
-                          onPageChanged: (index, carouselPageChangedReason) {
-                            setState(() {
-                              _current = index;
-                            });
-                          },
-                        ),
-                      ),
-                    )
-                  : ispdfPresent
-                      ? pdfFile == null
-                          ? Container(child: CommonCircularIndicator())
-                          : Container(
-                              child: Center(
-                                  child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'View PDF',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                  IconButton(
-                                    tooltip: 'View PDF',
-                                    icon: ImageIcon(
-                                        AssetImage(variable.icon_attach),
-                                        color: Colors.white),
-                                    onPressed: () {
-                                      final controller =
-                                          Get.put(PDFViewController());
-                                      final data = OpenPDF(
-                                          type: PDFLocation.Path,
-                                          path: pdfFile,
-                                          title: widget.data.metadata.fileName);
-                                      controller.data = data;
-                                      Get.to(() => PDFView());
-                                    },
-                                  )
-                                ],
-                              )),
-                            )
-                      : widget?.data?.metadata?.sourceName == 'SHEELA'
-                          ? Container(
-                              child: Image.asset(
-                                'assets/maya/maya_us_main.png',
-                                height: 100.0.h,
-                                width: 100.0.h,
-                              ),
-                            )
-                          : Container(
-                              child: Icon(
-                                Icons.mic,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                size: 24.0.sp,
-                              ),
-                            )
+                  },
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 400.0.h,
+                //width: 1.sw,
+                initialPage: 0,
+                enlargeCenterPage: true,
+                reverse: false,
+                enableInfiniteScroll: false,
+                // pauseAutoPlayOnTouch: Duration(seconds: 10),
+                scrollDirection: Axis.horizontal,
+                onPageChanged: (index, carouselPageChangedReason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
+            ),
+          )
+              : ispdfPresent
+              ? pdfFile == null
+              ? Container(child: CommonCircularIndicator())
+              : Expanded(child:Container(
+            child: new CommonUtil().showPDFInWidget(
+                pdfFile)
+            ,
+          ),)
               : widget?.data?.metadata?.sourceName == 'SHEELA'
-                  ? Container(
-                      child: Image.asset(
-                      'assets/maya/maya_us_main.png',
-                      height: 100.0.h,
-                      width: 100.0.h,
-                    ))
-                  : Container(
-                      child: Icon(
-                      Icons.mic,
-                      size: 60.0.sp,
-                      color: Colors.white,
-                    )),
+              ? Container(
+            child: Image.asset(
+              'assets/maya/maya_us_main.png',
+              height: 100.0.h,
+              width: 100.0.h,
+            ),
+          )
+              : Container(
+            child: Icon(
+              Icons.mic,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              size: 24.0.sp,
+            ),
+          )
+              : widget?.data?.metadata?.sourceName == 'SHEELA'
+              ? Container(
+              child: Image.asset(
+                'assets/maya/maya_us_main.png',
+                height: 100.0.h,
+                width: 100.0.h,
+              ))
+              : Container(
+              child: Icon(
+                Icons.mic,
+                size: 60.0.sp,
+                color: Colors.white,
+              )),
         ],
       ),
     );
@@ -1463,10 +1465,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                width: 30.0.h,
-                height: 30.0.h,
-                child: CommonCircularIndicator(),
-              ));
+                    width: 30.0.h,
+                    height: 30.0.h,
+                    child: CommonCircularIndicator(),
+                  ));
               break;
 
             case Status.ERROR:
@@ -1476,7 +1478,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               break;
 
             case Status.COMPLETED:
-              /* if (ispdfPresent) {
+            /* if (ispdfPresent) {
                 pdfFile = snapshot.data.data;
               } else {*/
               imagesPathMain.addAll(snapshot.data.data);
@@ -1550,10 +1552,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
     await FHBUtils.createFolderInAppDocDirClone(
-            variable.stAudioPath,
-            fileType == '.mp3'
-                ? '${widget.data.metadata.fileName}' + fileType
-                : widget.data.metadata.fileName)
+        variable.stAudioPath,
+        fileType == '.mp3'
+            ? '${widget.data.metadata.fileName}' + fileType
+            : widget.data.metadata.fileName)
         .then((filePath) async {
       var bytes = await _loadFileBytes(url,
           onError: (exception) =>
@@ -1577,10 +1579,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
-  Future<bool> downloadFile(
-      HealthRecordCollection audioMediaId, String fileType) async {
+  Future<bool> downloadFile(HealthRecordCollection audioMediaId,
+      String fileType) async {
     await FHBUtils.createFolderInAppDocDirClone(
-            variable.stAudioPath, widget.data.metadata.fileName)
+        variable.stAudioPath, widget.data.metadata.fileName)
         .then((filePath) async {
       var file = File('$filePath' /*+ fileType*/);
       final request = await ApiServices.get(
@@ -1610,7 +1612,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadImageFile(String fileType, String fileUrl) async {
     var filePath = await FHBUtils.createFolderInAppDocDirClone(
-        variable.stAudioPath, fileUrl.split('/').last);
+        variable.stAudioPath, fileUrl
+        .split('/')
+        .last);
     var file;
     if (fileType == '.pdf') {
       file = File('$filePath');
@@ -1628,7 +1632,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     await file.writeAsBytes(bytes);
 
     setState(
-      () {
+          () {
         if (fileType == '.pdf') {
           pdfFile = file.path;
         } else {
@@ -1680,8 +1684,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
-  void checkTheSpecifiedMetaID(
-      HealthRecordList value, PostImageResponse postImageResponse) {
+  void checkTheSpecifiedMetaID(HealthRecordList value,
+      PostImageResponse postImageResponse) {
     // showAudioWidgetIfVoiceNotesAvailable(value);
     for (final healthResult in value.result) {
       if (widget.data.id == healthResult.id) {
@@ -1695,4 +1699,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       }
     }
   }
+
+  moveToPDFViewer() {
+    final controller =
+    Get.put(PDFViewController());
+    final data = OpenPDF(
+        type: PDFLocation.Path,
+        path: pdfFile,
+        title: widget.data.metadata.fileName);
+    controller.data = data;
+    Get.to(() => PDFView());
+  }
+
 }

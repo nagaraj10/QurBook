@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
@@ -2966,8 +2968,7 @@ class CommonUtil {
                       SizedBox(
                         height: 10.0.h,
                       ),
-                     // reverted effective renew date
-                     /* FittedBox(
+                      FittedBox(
                           child: Row(
                         children: <Widget>[
                           Text(
@@ -2988,10 +2989,10 @@ class CommonUtil {
                           ),
                           Text('${formatter.format(initDate)}'),
                         ],
-                      )),*/
-                     /* SizedBox(
+                      )),
+                      SizedBox(
                         height: 10.0.h,
-                      ),*/
+                      ),
                       FittedBox(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -4218,6 +4219,25 @@ class CommonUtil {
       );
     }
   }
+
+  Widget showPDFInWidget(String filePath)  {
+    return FutureBuilder<PDFDocument>(
+      future: PDFDocument.fromFile(File(filePath)), // async work
+      builder: (BuildContext context, AsyncSnapshot<PDFDocument> snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.waiting:
+            return Text('Loading....');
+          default:
+            if (snapshot.hasError)
+              return Text('Error: ${snapshot.error}');
+            else
+              return ShowPDFFromFile(
+                  document: snapshot.data);
+        }
+      },
+    );
+  }
+
 }
 
 extension CapExtension on String {
