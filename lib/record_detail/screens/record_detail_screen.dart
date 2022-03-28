@@ -142,6 +142,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         ispdfPresent = true;
         pdfId = getMediaMasterIDForPdfTypeStr;
         getPdfFileData(getMediaMasterIDForPdfTypeStr);
+        length=1;
+        index=1;
+
+
       } else {
         ispdfPresent = false;
       }
