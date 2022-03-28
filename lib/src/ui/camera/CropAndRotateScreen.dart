@@ -134,7 +134,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                         child: Container(
                           height: double.infinity,
                           child: imgUrl.contains(variable.strpdf)
-                              ? Image.asset(variable.icon_attach)
+                              ? new CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
