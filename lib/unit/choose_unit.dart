@@ -46,12 +46,20 @@ class _ChooseUnitState extends State<ChooseUnit> {
   FlutterToast toast=new FlutterToast();
   String userMappingId='';
 
+  bool isSettingChanged=false;
+
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         if (isTouched) {
-          _onWillPop();
+          if(isSettingChanged) {
+            _onWillPop();
+          }else{
+            Navigator.pop(context, false);
+
+          }
         } else {
           Navigator.pop(context, false);
         }
@@ -67,7 +75,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
               size: 24.0.sp,
             ),
             onPressed: () {
-              isTouched ? _onWillPop() : Navigator.of(context).pop();
+              isTouched ? isSettingChanged?_onWillPop() :Navigator.of(context).pop(): Navigator.of(context).pop();
             },
           ),
           flexibleSpace: GradientAppBar(),
@@ -157,11 +165,14 @@ class _ChooseUnitState extends State<ChooseUnit> {
                 Container(
                     child: InkWell(
                       onTap: () {
+                        isSettingChanged=true;
+
                         if (!isPounds) {
                           setState(() {
                             isPounds = true;
                             isKg = false;
                             weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_US,unitName:'pounds');
+
 
                           });
                         }
@@ -210,6 +221,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ],
                       )),
                       onTap: () {
+                        isSettingChanged=true;
+
                         if (!isKg) {
                           setState(() {
                             isPounds = false;
@@ -236,6 +249,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                 Container(
                     child: InkWell(
                       onTap: () {
+                        isSettingChanged=true;
+
                         if (!isInchFeet) {
                           setState(() {
                             isCenti = false;
@@ -289,6 +304,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ),
                       ),
                       onTap: () {
+                        isSettingChanged=true;
+
                         if (!isCenti) {
                           setState(() {
                             isInchFeet = false;
@@ -316,6 +333,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                     child: InkWell(
                       onTap: () {
                         if (!isCele) {
+                          isSettingChanged=true;
+
                           setState(() {
                             isFaren = false;
                             isCele = true;
@@ -367,11 +386,14 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ],
                       )),
                       onTap: () {
+                        isSettingChanged=true;
+
                         if (!isFaren) {
                           setState(() {
                             isCele = false;
                             isFaren = true;
                             tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_IND,unitName:'farenheit');
+
 
                           });
                         }
