@@ -567,6 +567,7 @@ class _MyFamilyState extends State<MyFamily> {
                                       .postUserDeLinking(jsonString.toString())
                                       .then((userLinking) {
                                     if (userLinking.isSuccess) {
+                                      checkIfUserIdSame(data?.child?.id);
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
@@ -618,6 +619,25 @@ class _MyFamilyState extends State<MyFamily> {
             ],
           )),
     );
+  }
+
+  void checkIfUserIdSame(String userId) async {
+    try {
+      print("checkIfUserIdSame Calling in MyFamily Class");
+      final currUserId =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      final userIdMain =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      if (userId == currUserId) {
+        await PreferenceUtil.saveString(Constants.KEY_USERID, userIdMain)
+            .then((onValue) {
+          CommonUtil().updateSocketFamily();
+          CommonUtil().getUserProfileData();
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   saveMediaDialog(BuildContext context) {
@@ -708,11 +728,11 @@ class _MyFamilyState extends State<MyFamily> {
                                       } else {
                                         try {
                                           String mobileNumber =
-                                          PreferenceUtil.getStringValue(
-                                              Constants.MOB_NUM);
+                                              PreferenceUtil.getStringValue(
+                                                  Constants.MOB_NUM);
 
                                           String subMobile =
-                                          mobileNumber.substring(0, 2);
+                                              mobileNumber.substring(0, 2);
 
                                           if (subMobile[1] == "9") {
                                             mobileNoController.text =
@@ -724,9 +744,8 @@ class _MyFamilyState extends State<MyFamily> {
                                           }
 
                                           isPrimaryNoSelected = true;
-                                        }catch(e){
+                                        } catch (e) {
                                           isPrimaryNoSelected = false;
-
                                         }
                                       }
                                     });
@@ -1165,7 +1184,8 @@ class _MyFamilyState extends State<MyFamily> {
 
                 Alert.displayAlertPlain(context,
                     title: variable.Error,
-                    content: addFamilyOTPResponse.message??'Error Adding Family member');
+                    content: addFamilyOTPResponse.message ??
+                        'Error Adding Family member');
               }
             });
           } else {
