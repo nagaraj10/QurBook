@@ -121,7 +121,7 @@ class RegimentService {
           {
             'method': 'post',
             'data':
-                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
           },
         ),
       );

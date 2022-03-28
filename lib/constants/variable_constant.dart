@@ -512,7 +512,7 @@ const String requestSheelaForpo = 'record my po';
 const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
-const String strdevice = 'device';
+const String strdevice = 'QURBOOK_SHEELA';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';

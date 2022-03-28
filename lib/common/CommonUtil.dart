@@ -5,6 +5,7 @@ import 'dart:isolate';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
@@ -109,6 +110,8 @@ import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -4220,7 +4223,7 @@ class CommonUtil {
     }
   }
 
-  Widget showPDFInWidget(String filePath)  {
+  Widget showPDFInWidget(String filePath) {
     return FutureBuilder<PDFDocument>(
       future: PDFDocument.fromFile(File(filePath)), // async work
       builder: (BuildContext context, AsyncSnapshot<PDFDocument> snapshot) {
@@ -4231,13 +4234,38 @@ class CommonUtil {
             if (snapshot.hasError)
               return Text('Error: ${snapshot.error}');
             else
-              return ShowPDFFromFile(
-                  document: snapshot.data);
+              return ShowPDFFromFile(document: snapshot.data);
         }
       },
     );
   }
 
+  updateSocketFamily() {
+    String userId = PreferenceUtil.getStringValue(KEY_USERID);
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .disconnect();
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.initSocket()
+        .then((value) {
+      //update common count
+      Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          ?.socket
+          .emitWithAck(getChatTotalCountEmit, {
+        'userId': userId,
+      }, ack: (countResponseEmit) {
+        if (countResponseEmit != null) {
+          TotalCountModel totalCountModel =
+              TotalCountModel.fromJson(countResponseEmit);
+          if (totalCountModel != null) {
+            Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+                ?.updateChatTotalCount(totalCountModel);
+          }
+        }
+      });
+    });
+  }
 }
 
 extension CapExtension on String {
