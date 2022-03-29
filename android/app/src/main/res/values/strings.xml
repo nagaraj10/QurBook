@@ -31,6 +31,7 @@
     <string name="meetid">meeting_id</string>
     <string name="senderId">senderId</string>
     <string name="senderProfilePic">senderProfilePic</string>
+    <string name="chatListId">chatListId</string>
     <string name="senderName">senderName</string>
     <string name="docId">doctorId</string>
     <string name="docPic">doctorPicture</string>

@@ -507,6 +507,7 @@ class MainActivity : FlutterActivity() {
         val senderId = intent.getStringExtra(getString(R.string.senderId))
         val senderName = intent.getStringExtra(getString(R.string.senderName))
         val senderProfile = intent.getStringExtra(getString(R.string.senderProfilePic))
+        val groupId = intent.getStringExtra(getString(R.string.chatListId))
         val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
         val rawBody = intent.getStringExtra(Constants.PROP_RAWBODY)
         patId = intent.getStringExtra(getString(R.string.pat_id))
@@ -521,7 +522,7 @@ class MainActivity : FlutterActivity() {
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue =
-                    "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}"
+                    "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if(redirect_to=="claimList"){
             sharedValue = "${redirect_to}&${claimId}&${userId}"
         }else if(redirect_to?.contains("myRecords") == true){
