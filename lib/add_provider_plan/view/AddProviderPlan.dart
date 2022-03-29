@@ -10,6 +10,8 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -25,7 +27,7 @@ class AddProviderPlan extends StatefulWidget {
 
 class AddProviderPlanState extends State<AddProviderPlan> {
   Future<ProviderOrganisationResponse> providerOrganizationResult;
-  List<Result> providerMainList = List();
+  List<Result> providerMainList = [];
 
   bool isSearch = false;
 
@@ -38,23 +40,32 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    mInitialTime = DateTime.now();
-    providerOrganizationResult =
-        Provider.of<PlanProviderViewModel>(context, listen: false)
-            .getCarePlanList(widget.selectedTag);
-    //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
+    try {
+// TODO: implement initState
+      mInitialTime = DateTime.now();
+      providerOrganizationResult =
+          Provider.of<PlanProviderViewModel>(context, listen: false)
+              .getCarePlanList(widget.selectedTag);
+      //Provider.of<PlanProviderViewModel>(context, listen: false).hasSelectAllData=false;
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'AddProviderPlan Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    try {
+      FocusManager.instance.primaryFocus.unfocus();
+      super.dispose();
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'AddProviderPlan Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -98,9 +109,15 @@ class AddProviderPlanState extends State<AddProviderPlan> {
         ));
   }
 
-  Widget _showAddButton() {
+  Widget _showAddButton(List<Result> providerList) {
     final addButtonWithGesture = GestureDetector(
-      onTap: _addBtnTapped,
+      onTap: () {
+        try {
+          _addBtnTapped(providerList);
+        } catch (e) {
+          print(e);
+        }
+      },
       child: Container(
         width: 100.0.w,
         height: 40.0.h,
@@ -156,12 +173,13 @@ class AddProviderPlanState extends State<AddProviderPlan> {
 
           return ErrorsWidget();
         } else {
-          if (providerMainList != null && providerMainList.length > 0) {
+          /*if (providerMainList != null && providerMainList.length > 0) {
             return hospitalList(providerMainList);
-          } else if (snapshot?.hasData &&
+          } else*/
+          if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result.isNotEmpty) {
-            providerMainList = snapshot.data.result;
+            //providerMainList = snapshot.data.result;
             hasData = true;
             planListProvider.updateBool(true);
             return hospitalList(snapshot.data.result);
@@ -184,23 +202,62 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     );
   }
 
+  onSearchedNew(String providerName) async {
+    try {
+      providerMainList.clear();
+      if (providerName != null) {
+        providerMainList = planListProvider.getProviderSearch(providerName);
+      }
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Widget hospitalList(List<Result> providerList) {
     return (providerList != null && providerList.length > 0)
         ? Column(
             children: [
+              SearchWidget(
+                onChanged: (providerName) {
+                  if (providerName != '' && providerName.length > 2) {
+                    isSearch = true;
+                    onSearchedNew(providerName);
+                  } else {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                },
+                onClosePress: () {
+                  FocusManager.instance.primaryFocus.unfocus();
+                },
+              ),
+              SizedBox(
+                height: 5.0.h,
+              ),
               Container(
                 padding: EdgeInsets.all(10.0),
                 margin: EdgeInsets.only(left: 10, right: 15, top: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: SizedBox(),),
-                    Text("Select All",style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),),
-                    SizedBox(width: 25,),
+                    Expanded(
+                      child: SizedBox(),
+                    ),
+                    Text(
+                      "Select All",
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor())),
+                    ),
+                    SizedBox(
+                      width: 25,
+                    ),
                     RoundedCheckBox(
                       isSelected: isSelectedALL,
                       onTap: () {
-                        checkIfAllIsSelectedOrNot();
+                        checkIfAllIsSelectedOrNot(
+                            isSearch ? providerMainList : providerList);
 
                         setState(() {
                           isSelectedALL = !isSelectedALL;
@@ -215,20 +272,28 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                 height: 5.0.h,
               ),
               Expanded(
-                  child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(
-                  bottom: 50.0.h,
-                ),
-                itemBuilder: (BuildContext ctx, int i) =>
-                    CreateDoctorProviderCard(
-                  planList: isSearch ? providerMainList[i] : providerList[i],
-                  onClick: () {},
-                ),
-                itemCount:
-                    isSearch ? providerMainList.length : providerList.length,
-              )),
-              _showAddButton(),
+                  child: isSearch && providerMainList.length == 0
+                      ? Container(
+                          child: Center(
+                          child: Text(variable.strNoHospitaldata),
+                        ))
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(
+                            bottom: 50.0.h,
+                          ),
+                          itemBuilder: (BuildContext ctx, int i) =>
+                              CreateDoctorProviderCard(
+                            planList: isSearch
+                                ? providerMainList[i]
+                                : providerList[i],
+                            onClick: () {},
+                          ),
+                          itemCount: isSearch
+                              ? providerMainList.length
+                              : providerList.length,
+                        )),
+              _showAddButton(providerList),
               SizedBox(
                 height: 5.0.h,
               ),
@@ -360,31 +425,49 @@ class AddProviderPlanState extends State<AddProviderPlan> {
     );
   }
 
-  void _addBtnTapped() async {
-    addSelectedcategoriesToList(providerMainList);
+  void _addBtnTapped(List<Result> providerList) async {
+    try {
+      addSelectedcategoriesToList(isSearch ? providerMainList : providerList);
 
-    AddProviderPlanResponse response =
-        await planListProvider?.addproviderPlan(selectedCategories);
-    if (response.isSuccess) {
-      toast.getToast("Added Successfully", Colors.green);
-      Get.back();
+      if (selectedCategories != null && selectedCategories.length > 0) {
+        LoaderClass.showLoadingDialog(context);
+        AddProviderPlanResponse response =
+            await planListProvider?.addproviderPlan(selectedCategories);
+        LoaderClass.hideLoadingDialog(context);
+        if (response.isSuccess) {
+          toast.getToast("Added Successfully", Colors.green);
+          Get.back();
+        }
+      } else {
+        toast.getToast("Please select a provider", Colors.red);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
   void addSelectedcategoriesToList(List<Result> result) {
-    selectedCategories = [];
-    for (final mediaResultObj in result) {
-      if (!selectedCategories
-              .contains(mediaResultObj.healthOrganizationType.id) &&
-          mediaResultObj.isBookmarked) {
-        selectedCategories.add(mediaResultObj.id);
+    try {
+      selectedCategories = [];
+      for (final mediaResultObj in result) {
+        if (!selectedCategories
+                .contains(mediaResultObj.healthOrganizationType.id) &&
+            mediaResultObj.isBookmarked) {
+          selectedCategories.add(mediaResultObj.id);
+        }
       }
+    } catch (e) {
+      print(e);
     }
   }
 
-  void checkIfAllIsSelectedOrNot() {
-    for (final mediaResultObj in providerMainList) {
-      mediaResultObj.isBookmarked = !isSelectedALL;
+  void checkIfAllIsSelectedOrNot(List<Result> providerList) {
+    try {
+      for (final mediaResultObj in providerList) {
+        mediaResultObj.isBookmarked = !isSelectedALL;
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }
