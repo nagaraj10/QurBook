@@ -723,6 +723,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           // fontWeight: FontWeight.bold,
                           fontSize: 9),
                     ),
+                    Text(
+                      'Offered By: ${item?.productDetail?.healthOrganizationName}',
+                      style: TextStyle(
+                          color: Colors.black54,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 11),
+                    ),
                   ],
                 ),
               ),
