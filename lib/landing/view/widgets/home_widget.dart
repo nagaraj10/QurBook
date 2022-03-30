@@ -360,7 +360,7 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strHelpDesk,
                           lastStatus: '',
-                          alerts:  constants.strTrueDeskTickets,
+                          alerts:  ''/*constants.strTrueDeskTickets*/,
                           icon: variable.icon_true_desk,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () {
