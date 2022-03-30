@@ -138,15 +138,17 @@ class ProductDetail {
   String planName;
   String planSubscriptionFee;
   int packageDuration;
+  String healthOrganizationName;
 
   ProductDetail(
-      {this.id, this.planName, this.planSubscriptionFee, this.packageDuration});
+      {this.id, this.planName, this.planSubscriptionFee, this.packageDuration,this.healthOrganizationName});
 
   ProductDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     planName = json['planName'];
     planSubscriptionFee = json['planSubscriptionFee'];
     packageDuration = json['packageDuration'];
+    healthOrganizationName = json['healthOrganizationName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -155,6 +157,7 @@ class ProductDetail {
     data['planName'] = this.planName;
     data['planSubscriptionFee'] = this.planSubscriptionFee;
     data['packageDuration'] = this.packageDuration;
+    data['healthOrganizationName'] = this.healthOrganizationName;
     return data;
   }
 }

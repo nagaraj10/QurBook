@@ -2019,6 +2019,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
                 PreferenceUtil.saveProfileData(
                     Constants.KEY_PROFILE, profileValue);
+                PreferenceUtil.saveProfileData(
+                    Constants.KEY_PROFILE_MAIN, profileValue);
               }
               imageURI = null;
               Navigator.pop(dialogContext);
