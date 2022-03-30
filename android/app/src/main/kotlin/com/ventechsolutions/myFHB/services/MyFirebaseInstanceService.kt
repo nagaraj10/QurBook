@@ -580,6 +580,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val SENDER_ID = data[getString(R.string.senderId)]
         val SENDER_NAME = data[getString(R.string.senderName)]
         val SENDER_PROFILE = data[getString(R.string.senderProfilePic)]
+        val GROUP_ID = data[getString(R.string.chatListId)]
         val ack_sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
@@ -605,6 +606,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(getString(R.string.senderId), "$SENDER_ID")
         onTapNS.putExtra(getString(R.string.senderName), "$SENDER_NAME")
         onTapNS.putExtra(getString(R.string.senderProfilePic), "$SENDER_PROFILE")
+        onTapNS.putExtra(getString(R.string.chatListId), "$GROUP_ID")
         val onTapPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,

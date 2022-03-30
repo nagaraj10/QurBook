@@ -667,6 +667,7 @@ class _MyFHBState extends State<MyFHB> {
                 peerId: passedValArr[2],
                 peerName: passedValArr[3],
                 peerAvatar: passedValArr[4],
+                groupId: passedValArr[5],
                 patientId: '',
                 patientName: '',
                 patientPicture: '',

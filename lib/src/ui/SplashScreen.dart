@@ -203,6 +203,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           peerId: chatParsedData[2],
                           peerName: chatParsedData[3],
                           peerAvatar: chatParsedData[4],
+                          groupId: chatParsedData[5],
                           patientId: '',
                           patientName: '',
                           patientPicture: '',

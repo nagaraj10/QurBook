@@ -9,25 +9,25 @@ import 'dart:convert' as convert;
 
 import 'package:scroll_to_index/util.dart';
 
-
 class PlanProviderViewModel extends ChangeNotifier {
   AddProviderService _addProviderService = new AddProviderService();
   List<Result> providerPlanResult;
-  bool hasSelectAllData=false;
+  bool hasSelectAllData = false;
 
-  void updateBool(bool condition){
-    hasSelectAllData=condition;
+  void updateBool(bool condition) {
+    hasSelectAllData = condition;
     print(hasSelectAllData);
-    Future.delayed(Duration(milliseconds: 100),(){
+    Future.delayed(Duration(milliseconds: 100), () {
       notifyListeners();
-
     });
   }
-  Future<ProviderOrganisationResponse> getCarePlanList(String selectedTag) async {
+
+  Future<ProviderOrganisationResponse> getCarePlanList(
+      String selectedTag) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      ProviderOrganisationResponse myPlanListModel =
-          await _addProviderService.getUnassociatedProvider(userId,selectedTag);
+      ProviderOrganisationResponse myPlanListModel = await _addProviderService
+          .getUnassociatedProvider(userId, selectedTag);
       if (myPlanListModel.isSuccess) {
         providerPlanResult = myPlanListModel.result;
       } else {
@@ -37,16 +37,32 @@ class PlanProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<AddProviderPlanResponse> addproviderPlan(List<String> healthOrganization)async{
+  Future<AddProviderPlanResponse> addproviderPlan(
+      List<String> healthOrganization) async {
     final addProvider = {};
 
-    var userId =await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     addProvider['userId'] = userId;
     addProvider['healthOrganizations'] = healthOrganization;
     final jsonString = convert.jsonEncode(addProvider);
 
-    AddProviderPlanResponse addProviderPlanResponse=await _addProviderService.addProviderPlan(jsonString);
+    AddProviderPlanResponse addProviderPlanResponse =
+        await _addProviderService.addProviderPlan(jsonString);
     return addProviderPlanResponse;
+  }
 
+  List<Result> getProviderSearch(String providerName) {
+    var filterDoctorData = List<Result>();
+    for (final doctorData in providerPlanResult) {
+      if (doctorData.name != null && doctorData.name != '') {
+        if (doctorData.name
+            .toLowerCase()
+            .trim()
+            .contains(providerName.toLowerCase().trim())) {
+          filterDoctorData.add(doctorData);
+        }
+      }
+    }
+    return filterDoctorData;
   }
 }

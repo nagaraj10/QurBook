@@ -737,3 +737,6 @@ const String strMetaData = 'metadata';
 const String strMultipart = 'multipart/form-data';
 
 const String qurHealthLogo = 'assets/launcher/myfhb.png';
+
+const String errNoRecordsSelected =
+    'No Records Selected';
