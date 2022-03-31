@@ -15,6 +15,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/service/landing_service.dart';
 import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
@@ -716,8 +717,15 @@ class _LandingScreenState extends State<LandingScreen> {
     } catch (e) {}
 
     try {
-      CommonDialogBox().getCategoryList();
+      try {
+        CategoryListBlock _categoryListBlock = new CategoryListBlock();
+
+        _categoryListBlock.getCategoryLists().then((value) {});
+      } catch(e){
+      }
+
       getFamilyRelationAndMediaType();
+
     } catch (e) {}
 
     try {
