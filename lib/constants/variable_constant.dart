@@ -681,7 +681,7 @@ const getWifiDetailsMethod = 'getWifiDetails';
 const listenToCallStatusMethod = 'listenToCallStatus';
 // True Desk
 
-const String strNoTicketsRaised = 'No Ticket Items Available !!';
+const String strNoTicketsRaised = 'Tap on + icon to create new tickets';
 const String strNoTicketTypesAvaliable = 'No Ticket Types Found !!';
 
 var reminderMethodChannelAndroid = const MethodChannel('android/notification');
