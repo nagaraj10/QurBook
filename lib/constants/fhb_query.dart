@@ -296,6 +296,8 @@ const String qr_qur_plan_dashboard = 'qur-plan-dashboard?';
 const String qr_userid_dashboard = '&userId=';
 const String qr_date = '&date=';
 
+const String app_screen_config = 'user/app-screen-config';
+
 const String qr_module_equal = '&module=';
 const String qr_healthOrg = 'healthOrganization';
 const String qr_all = 'all';

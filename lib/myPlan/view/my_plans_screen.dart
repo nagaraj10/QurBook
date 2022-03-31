@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/CartIconWithBadge.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import '../../common/CommonUtil.dart';
@@ -11,7 +13,24 @@ import 'myPlanList.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 
-class MyPlansScreen extends StatelessWidget {
+class MyPlansScreen extends StatefulWidget {
+
+
+  @override
+  _MyPlansScreenState createState() => _MyPlansScreenState();
+}
+
+class _MyPlansScreenState extends State<MyPlansScreen> {
+
+  bool cartEnable=false;
+  bool addPlanButton=false;
+
+  @override
+  void initState() {
+    getConfiguration();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +45,7 @@ class MyPlansScreen extends StatelessWidget {
           size: 24.0.sp,
           onTap: () => onBackPressed(context),
         ),
-        actions: [
+        actions: cartEnable?[
           Center(
             child: Container(
                 margin: EdgeInsets.only(right: 15.0.sp),
@@ -37,7 +56,7 @@ class MyPlansScreen extends StatelessWidget {
                     child:
                         CartIconWithBadge(color: Colors.white, size: 32.0.sp))),
           ),
-        ],
+        ]:[],
       ),
       body: WillPopScope(
         onWillPop: () {
@@ -60,5 +79,13 @@ class MyPlansScreen extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Future<void> getConfiguration() async {
+    bool addplanbutton=await PreferenceUtil.getAddPlanBtn();
+    bool cartEnable=await PreferenceUtil.getCartEnable();
+   setState(() {
+     this.cartEnable=cartEnable;
+   });
   }
 }
