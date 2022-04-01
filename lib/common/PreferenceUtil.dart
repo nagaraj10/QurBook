@@ -216,6 +216,45 @@ class PreferenceUtil {
     );
   }
 
+  static Future<bool> setAddPlanButton(bool planButtonValue) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_ADD_PLAN_BUTTON,
+      planButtonValue,
+    );
+  }
+
+  static Future<bool> setCartEnable(bool cartEnable) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_CART_PLAN,
+      cartEnable,
+    );
+  }
+
+  static Future<bool> setUnSubscribeValue(bool subscribeValue) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_UN_SUBCRIBE_BTN,
+      subscribeValue,
+    );
+  }
+
+  static Future<bool> getAddPlanBtn() async {
+    final instance = await _prefs;
+    return instance.getBool(Constants.KEY_ADD_PLAN_BUTTON);
+  }
+
+  static Future<bool> getCartEnable() async {
+    final instance = await _prefs;
+    return instance.getBool(Constants.KEY_CART_PLAN);
+  }
+
+  static Future<bool> getUnSubscribeValue() async {
+    final instance = await _prefs;
+    return instance.getBool(Constants.KEY_UN_SUBCRIBE_BTN);
+  }
+
   static Future<bool> getActiveMembershipStatus() async {
     final instance = await _prefs;
     return instance.getBool(
