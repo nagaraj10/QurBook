@@ -34,6 +34,7 @@ class NotificationModel {
   String claimId;
   Map<int, dynamic> redirectData;
   String planId;
+  String notificationListId;
 
   NotificationModel({
     this.title,
@@ -58,6 +59,7 @@ class NotificationModel {
     this.callType,
     this.isWeb,
     this.claimId,
+    this.notificationListId,
   });
 
   Map<String, dynamic> toMap() {
@@ -81,6 +83,7 @@ class NotificationModel {
       'callType': callType,
       'isWeb': isWeb,
       'claimId': claimId,
+      'notificationListId': notificationListId,
     };
   }
 
@@ -103,6 +106,7 @@ class NotificationModel {
     callType = message['callType'];
     isWeb = message['isWeb'];
     claimId = message['claimId'];
+    notificationListId = message['notificationListId'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -198,6 +202,9 @@ class NotificationModel {
         }
         if ((message[parameters.gcmClaimId] ?? '').isNotEmpty) {
           claimId = message[parameters.gcmClaimId];
+        }
+        if ((message[parameters.notificationListId] ?? '').isNotEmpty) {
+          notificationListId = message[parameters.notificationListId];
         }
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
@@ -346,6 +353,9 @@ class NotificationModel {
     if (message[parameters.callType] != null) {
       callType = message[parameters.callType];
     }
+    if ((message[parameters.notificationListId] ?? '').isNotEmpty) {
+          notificationListId = message[parameters.notificationListId];
+        }
     if (message[parameters.gcmpatientName] != null) {
       patientName = message[parameters.gcmpatientName];
     }

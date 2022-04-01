@@ -606,6 +606,7 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmClaimId = 'gcm.notification.claimId';
+const String notificationListId = 'notificationListId';
 
 const String gcmplanId = 'gcm.notification.planId';
 const String gcmpatientName = 'gcm.notification.patientName';
