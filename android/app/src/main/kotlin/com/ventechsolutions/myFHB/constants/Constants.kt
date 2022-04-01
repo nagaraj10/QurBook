@@ -60,6 +60,7 @@ object Constants {
     val PROP_DOC_RESCHDULE ="DoctorRescheduling"
     val PROP_TEMP_NAME ="templateName"
     val PROP_REDIRECT_TO ="redirectTo"
+    val PROP_CAREGIVER_REQUESTOR ="caregiverRequestor"
     val PROP_DATA ="data"
     val PROP_HRMID ="healthRecordMetaIds"
     val PROP_EVEID ="eventId"

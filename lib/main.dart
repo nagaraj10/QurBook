@@ -500,6 +500,10 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        }else if (passedValArr[1] == 'careGiverMemberProfile') {
+          print('care giver member');
+        }else if (passedValArr[1] == 'communicationSetting') {
+          print('communication setting');
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

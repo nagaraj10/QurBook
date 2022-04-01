@@ -502,6 +502,7 @@ class MainActivity : FlutterActivity() {
         val HRMId = intent.getStringExtra(Constants.PROP_HRMID)
         val EVEId = intent.getStringExtra(Constants.PROP_EVEID)
         val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
+        val careGiverMemberId = intent.getStringExtra(Constants.PROP_CAREGIVER_REQUESTOR)
         val doctorID = intent.getStringExtra(getString(R.string.docId))
         val docName = intent.getStringExtra(getString(R.string.docName))
         val senderId = intent.getStringExtra(getString(R.string.senderId))
@@ -528,6 +529,12 @@ class MainActivity : FlutterActivity() {
         }else if(redirect_to?.contains("myRecords") == true){
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
+        }else if(redirect_to?.contains("communicationSetting") == true){
+
+            sharedValue = "ack&${redirect_to}"
+        }else if(redirect_to?.contains("careGiverMemberProfile") == true){
+
+            sharedValue = "ack&${redirect_to}&${careGiverMemberId}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
