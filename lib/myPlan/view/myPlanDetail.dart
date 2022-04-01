@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/myPlan/model/myPlanListModel.dart';
@@ -81,14 +82,22 @@ class PlanDetail extends State<MyPlanDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
-
+  bool showRenewOrSubscribeButton=false;
   Future<MyPlanListModel> planListFetch;
   @override
   void initState() {
     super.initState();
     mInitialTime = DateTime.now();
     //setValues();
+    getConfiguration();
     planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
+  }
+
+  Future<void> getConfiguration() async {
+    bool showRenewOrSubscribeButton=await PreferenceUtil.getUnSubscribeValue();
+    setState(() {
+      this.showRenewOrSubscribeButton=showRenewOrSubscribeButton;
+    });
   }
 
   @override
@@ -339,7 +348,8 @@ class PlanDetail extends State<MyPlanDetail> {
                       ],
                     ),
             ),
-            if(tags!=strMemb)Row(
+            if(tags!=strMemb&&
+                showRenewOrSubscribeButton)Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OutlineButton(
