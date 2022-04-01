@@ -159,7 +159,7 @@ const String strisManualTranscription = 'isManualTranscription';
 const String strLocal_Lab_Id = 'Local_Lab_Id';
 const String strLocal_Doctor_Id = 'Local_Doctor_Id';
 const String strLocal_Hospital_Id = 'Local_Hospital_Id';
-const String strPlanSubscriptionInfoId='planSubscriptionInfoId';
+const String strPlanSubscriptionInfoId = 'planSubscriptionInfoId';
 
 //for profile
 const String strlastName = 'lastName';
@@ -336,7 +336,7 @@ const String noAddress =
 const String no_addr1_zip =
     'Address line 1 and Zipcode is required to proceed booking the appointment';
 const String noAddress1 =
-   'Address line 1 is required to proceed booking the appointment';
+    'Address line 1 is required to proceed booking the appointment';
 
 const String noZipcode =
     'Zipcode is required to proceed booking the appointment';
@@ -649,6 +649,11 @@ const String accept = 'Accept';
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
 const String notification = 'notification';
+const String familyMemberCaregiverRequest = 'familyMemberCaregiverRequest';
+const String patientPhoneNumber = 'patientPhoneNumber';
+const String verificationCode = 'verificationCode';
+const String caregiverReceiver = 'caregiverReceiver';
+const String caregiverRequestor = 'caregiverRequestor';
 const String token = 'Token';
 const String healthRecordMetaIds = 'healthRecordMetaIds';
 const String ongoing_channel = 'ongoing_ns.channel';
@@ -738,5 +743,4 @@ const String strMultipart = 'multipart/form-data';
 
 const String qurHealthLogo = 'assets/launcher/myfhb.png';
 
-const String errNoRecordsSelected =
-    'No Records Selected';
+const String errNoRecordsSelected = 'No Records Selected';

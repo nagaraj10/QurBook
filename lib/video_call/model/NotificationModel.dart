@@ -1,7 +1,6 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/video_call/model/CallArguments.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'CallArguments.dart';
 
 class NotificationModel {
   String title;
@@ -28,6 +27,10 @@ class NotificationModel {
   String patientName;
   String patientPicture;
   String externalLink;
+  String patientPhoneNumber;
+  String verificationCode;
+  String caregiverRequestor;
+  String caregiverReceiver;
   CallArguments callArguments;
   bool isWeb;
   String callType;
@@ -58,6 +61,10 @@ class NotificationModel {
     this.callType,
     this.isWeb,
     this.claimId,
+    this.caregiverReceiver,
+    this.caregiverRequestor,
+    this.verificationCode,
+    this.patientPhoneNumber,
   });
 
   Map<String, dynamic> toMap() {
@@ -156,6 +163,18 @@ class NotificationModel {
         }
         if (message[parameters.strgcmtype] != null) {
           type = message[parameters.strgcmtype];
+        }
+        if (message[parameters.patientPhoneNumber] != null) {
+          patientPhoneNumber = message[parameters.patientPhoneNumber];
+        }
+        if (message[parameters.verificationCode] != null) {
+          verificationCode = message[parameters.verificationCode];
+        }
+        if (message[parameters.caregiverRequestor] != null) {
+          caregiverRequestor = message[parameters.caregiverRequestor];
+        }
+        if (message[parameters.caregiverRequestor] != null) {
+          caregiverRequestor = message[parameters.caregiverRequestor];
         }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
@@ -285,6 +304,18 @@ class NotificationModel {
     }
     if (message[parameters.meeting_id] != null) {
       meeting_id = message[parameters.meeting_id];
+    }
+    if (message[parameters.patientPhoneNumber] != null) {
+      patientPhoneNumber = message[parameters.patientPhoneNumber];
+    }
+    if (message[parameters.verificationCode] != null) {
+      verificationCode = message[parameters.verificationCode];
+    }
+    if (message[parameters.caregiverRequestor] != null) {
+      caregiverRequestor = message[parameters.caregiverRequestor];
+    }
+    if (message[parameters.caregiverRequestor] != null) {
+      caregiverRequestor = message[parameters.caregiverRequestor];
     }
     if (message[parameters.doctorId] != null) {
       doctorId = message[parameters.doctorId];
