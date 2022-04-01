@@ -606,6 +606,11 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmClaimId = 'gcm.notification.claimId';
+const String gcmtemplateName = 'gcm.notification.templateName';
+const String gcmpatientPhoneNumber = 'gcm.notification.patientPhoneNumber';
+const String gcmverificationCode = 'gcm.notification.verificationCode';
+const String gcmcaregiverReceiver = 'gcm.notification.caregiverReceiver';
+const String gcmcaregiverRequestor = 'gcm.notification.caregiverRequestor';
 
 const String gcmplanId = 'gcm.notification.planId';
 const String gcmpatientName = 'gcm.notification.patientName';

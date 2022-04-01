@@ -173,8 +173,8 @@ class NotificationModel {
         if (message[parameters.caregiverRequestor] != null) {
           caregiverRequestor = message[parameters.caregiverRequestor];
         }
-        if (message[parameters.caregiverRequestor] != null) {
-          caregiverRequestor = message[parameters.caregiverRequestor];
+        if (message[parameters.caregiverReceiver] != null) {
+          caregiverReceiver = message[parameters.caregiverReceiver];
         }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
@@ -220,6 +220,18 @@ class NotificationModel {
         }
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
+        }
+        if (message[parameters.gcmpatientPhoneNumber] != null) {
+          patientPhoneNumber = message[parameters.gcmpatientPhoneNumber];
+        }
+        if (message[parameters.gcmverificationCode] != null) {
+          verificationCode = message[parameters.gcmverificationCode];
+        }
+        if (message[parameters.gcmcaregiverRequestor] != null) {
+          caregiverRequestor = message[parameters.gcmcaregiverRequestor];
+        }
+        if (message[parameters.gcmcaregiverReceiver] != null) {
+          caregiverReceiver = message[parameters.gcmcaregiverReceiver];
         }
         if (message[parameters.senderName] != null) {
           doctorName = message[parameters.senderName];
@@ -314,8 +326,20 @@ class NotificationModel {
     if (message[parameters.caregiverRequestor] != null) {
       caregiverRequestor = message[parameters.caregiverRequestor];
     }
-    if (message[parameters.caregiverRequestor] != null) {
-      caregiverRequestor = message[parameters.caregiverRequestor];
+    if (message[parameters.caregiverReceiver] != null) {
+      caregiverReceiver = message[parameters.caregiverReceiver];
+    }
+    if (message[parameters.gcmpatientPhoneNumber] != null) {
+      patientPhoneNumber = message[parameters.gcmpatientPhoneNumber];
+    }
+    if (message[parameters.gcmverificationCode] != null) {
+      verificationCode = message[parameters.gcmverificationCode];
+    }
+    if (message[parameters.gcmcaregiverRequestor] != null) {
+      caregiverRequestor = message[parameters.gcmcaregiverRequestor];
+    }
+    if (message[parameters.gcmcaregiverReceiver] != null) {
+      caregiverReceiver = message[parameters.gcmcaregiverReceiver];
     }
     if (message[parameters.doctorId] != null) {
       doctorId = message[parameters.doctorId];
