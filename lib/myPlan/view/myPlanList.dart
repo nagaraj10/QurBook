@@ -51,6 +51,7 @@ class _MyPlanState extends State<MyPlanList> {
     super.initState();
     mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus.unfocus();
+    getConfiguration();
     if (widget.fromDashBoard) {
       Provider.of<RegimentViewModel>(
         context,
@@ -79,6 +80,7 @@ class _MyPlanState extends State<MyPlanList> {
   Future<void> getConfiguration() async {
     bool addplanbutton=await PreferenceUtil.getAddPlanBtn();
     bool showRenewOrSubscribeButton=await PreferenceUtil.getUnSubscribeValue();
+    print('addplanbtn: '+addplanbutton.toString());
     setState(() {
       this.addplanbutton=addplanbutton;
       this.showRenewOrSubscribeButton=showRenewOrSubscribeButton;
