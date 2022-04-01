@@ -309,6 +309,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
             val USER_NAME = data[getString(R.string.username)]
+            val notificationListId = data[getString(R.string.notificationListId)]
             //val PAT_NAME = data[getString(R.string.pat_name)]
             val ack_sound: Uri =
                 Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
@@ -332,11 +333,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             onTapNS.putExtra(getString(R.string.nsid), NS_ID)
             onTapNS.putExtra(getString(R.string.meetid), "$MEETING_ID")
             onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+            onTapNS.putExtra(getString(R.string.notificationListId), "$notificationListId")
             //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
             onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
             onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
             onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
+            onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
             onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)

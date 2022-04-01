@@ -448,6 +448,7 @@ class _MyFHBState extends State<MyFHB> {
     var doctorPic = '';
     var patientPic = '';
     var callType = '';
+    var notificationListId ='';
     _msgListener.value = _msg;
     print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
@@ -499,6 +500,11 @@ class _MyFHBState extends State<MyFHB> {
           if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
             final rawTitle = passedValArr[2]?.split('|')[0];
             final rawBody = passedValArr[2]?.split('|')[1];
+            if(passedValArr[3]!=null && passedValArr[3].isNotEmpty){
+               notificationListId = passedValArr[3];
+               FetchNotificationService().inAppUnreadAction(notificationListId);
+            }
+
             var sheelaLang =
                 PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
             if ((Provider.of<ChatScreenViewModel>(context, listen: false)
@@ -1060,9 +1066,10 @@ class _MyFHBState extends State<MyFHB> {
               bundle: parsedData[2],
             );
           } else if (parsedData[1] == 'sheela') {
+            print('ok***'+parsedData[2]+'|'+parsedData[3].toString());
             return SplashScreen(
               nsRoute: 'sheela',
-              bundle: parsedData[2],
+              bundle: parsedData[2]+'|'+parsedData[3],
             );
           } else if (parsedData[1] == 'profile_page' ||
               parsedData[1] == 'profile') {
