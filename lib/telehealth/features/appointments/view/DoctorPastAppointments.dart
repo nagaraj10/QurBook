@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
@@ -26,6 +27,7 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsLis
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 
 class DoctorPastAppointments extends StatefulWidget {
   Past doc;
@@ -54,6 +56,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     // TODO: implement initState
     appointmentsViewModel =
         Provider.of<AppointmentsListViewModel>(context, listen: false);
+    getCategoryList();
+    commonWidget.getCategoryList();
     super.initState();
   }
 
@@ -270,7 +274,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     FocusManager.instance.primaryFocus.unfocus();
                     if (healthRecord > 0) {
                       int position =
-                          getCategoryPosition(AppConstants.prescription);
+                          await getCategoryPosition(AppConstants.prescription);
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
@@ -288,10 +292,35 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     }
                   }, healthRecord.toString()),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, TranslationConstants.receipt.t(), () {
+                  commonWidget.iconWithText(
+                      Constants.Appointments_receiptImage,
+                      Colors.black38,
+                      TranslationConstants.receipt.t(), () async {
                     FocusManager.instance.primaryFocus.unfocus();
-                    moveToBilsPage(doc.healthRecord);
+                    List<String> paymentID = new List();
+                    if (doc.healthRecord != null &&
+                        doc.healthRecord.bills != null &&
+                        doc.healthRecord.bills.length > 0) {
+                      for (int i = 0; i < doc.healthRecord.bills.length; i++) {
+                        paymentID.add(doc.healthRecord.bills[i]);
+                      }
+                    }
+                    int position =
+                        await getCategoryPosition(AppConstants.bills);
+                    print("position" + position.toString());
+                    await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => MyRecords(
+                          argument: MyRecordsArgument(
+                              categoryPosition: position,
+                              allowSelect: true,
+                              isAudioSelect: false,
+                              isNotesSelect: false,
+                              selectedMedias: paymentID,
+                              isFromChat: false,
+                              showDetails: true,
+                              isAssociateOrChat: false,
+                              fromClass: 'appointments')),
+                    ));
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   GestureDetector(
@@ -376,7 +405,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         paymentID.add(healthRecord.bills[i]);
       }
     }
-    int position = getCategoryPosition(AppConstants.bills);
+    int position = await getCategoryPosition(AppConstants.bills);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
           argument: MyRecordsArgument(
@@ -441,6 +470,10 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   }
 
   List<CategoryResult> getCategoryList() {
+    try {
+      filteredCategoryData =
+          PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST);
+    } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
@@ -449,6 +482,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         return filteredCategoryData;
       });
     } else {
+      filteredCategoryData =
+          new CommonUtil().fliterCategories(filteredCategoryData);
       return filteredCategoryData;
     }
   }

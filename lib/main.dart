@@ -11,6 +11,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -33,6 +34,7 @@ import 'video_call/utils/rtc_engine.dart';
 import 'video_call/utils/videoicon_provider.dart';
 import 'video_call/utils/videorequest_provider.dart';
 import 'widgets/checkout_page.dart';
+
 //import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
@@ -62,6 +64,7 @@ import 'constants/variable_constant.dart' as variable;
 import 'landing/view_model/landing_view_model.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'regiment/models/regiment_arguments.dart';
+
 //import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view_model/regiment_view_model.dart';
@@ -200,6 +203,12 @@ Future<void> main() async {
     await FHBUtils.instance.getDb();
 
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    try {
+      CategoryListBlock _categoryListBlock = new CategoryListBlock();
+
+      _categoryListBlock.getCategoryLists().then((value) {});
+    } catch (e) {}
 
     Map appsFlyerOptions;
     if (Platform.isIOS) {
@@ -384,6 +393,7 @@ class _MyFHBState extends State<MyFHB> {
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
+
   @override
   void initState() {
     // TODO: implement initState

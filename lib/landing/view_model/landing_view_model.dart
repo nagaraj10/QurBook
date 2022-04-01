@@ -87,6 +87,22 @@ class LandingViewModel extends ChangeNotifier {
         updateStatus(LandingScreenStatus.Loading, needNotify: needNotify);
       }
       isLoadDone = false;
+      final healthPlanSetting = await LandingService.getHidePlan();
+      if(healthPlanSetting!=null){
+        if(healthPlanSetting.isSuccess){
+          PreferenceUtil.setAddPlanButton(healthPlanSetting.result.qurBook.addPlanBtn);
+          PreferenceUtil.setCartEnable(healthPlanSetting.result.qurBook.cart);
+          PreferenceUtil.setUnSubscribeValue(healthPlanSetting.result.qurBook.unSubscribeBtn);
+        }else{
+          PreferenceUtil.setAddPlanButton(false);
+          PreferenceUtil.setCartEnable(false);
+          PreferenceUtil.setUnSubscribeValue(false);
+        }
+      }else{
+        PreferenceUtil.setAddPlanButton(false);
+        PreferenceUtil.setCartEnable(false);
+        PreferenceUtil.setUnSubscribeValue(false);
+      }
       final dashboardResponse = await LandingService.getQurPlanDashBoard();
       isLoadDone = true;
       if (dashboardResponse?.isSuccess ?? false) {

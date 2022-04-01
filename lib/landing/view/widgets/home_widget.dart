@@ -22,12 +22,31 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 import 'landing_card.dart';
 
-class HomeWidget extends StatelessWidget {
+class HomeWidget extends StatefulWidget {
   const HomeWidget({
     @required this.refresh,
   });
 
   final Function(bool userChanged) refresh;
+
+  @override
+  _HomeWidgetState createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
+  bool addPlanButton=false;
+  @override
+  void initState() {
+    getConfiguration();
+    super.initState();
+  }
+
+  getConfiguration()async{
+    addPlanButton=await PreferenceUtil.getAddPlanBtn();
+    setState(() {
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) => Container(
@@ -96,10 +115,10 @@ class HomeWidget extends StatelessWidget {
                           },
                           onAddPressed: activePlanCount > 0
                               ? null
-                              : () async {
+                              : addPlanButton? ()async {
                                   await Get.toNamed(rt_PlanWizard);
                                   await landingViewModel.getQurPlanDashBoard();
-                                },
+                                }:null,
                         ),
                         LandingCard(
                           title: constants.strYourRegimen,
@@ -128,7 +147,7 @@ class HomeWidget extends StatelessWidget {
                             await Get.toNamed(rt_Regimen);
                             final newUserId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
-                            refresh(userId != newUserId);
+                            widget.refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                           // lastStatus:
@@ -167,7 +186,7 @@ class HomeWidget extends StatelessWidget {
                             await Get.toNamed(rt_Regimen);
                             final newUserId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
-                            refresh(userId != newUserId);
+                            widget.refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                           /*  : null,*/
@@ -203,7 +222,7 @@ class HomeWidget extends StatelessWidget {
                                   final newUserId =
                                       PreferenceUtil.getStringValue(
                                           constants.KEY_USERID);
-                                  refresh(userId != newUserId);
+                                  widget.refresh(userId != newUserId);
                                   await landingViewModel.getQurPlanDashBoard();
                                 }
                               : null,
@@ -247,7 +266,7 @@ class HomeWidget extends StatelessWidget {
                             await Get.toNamed(rt_Regimen);
                             final newUserId = PreferenceUtil.getStringValue(
                                 constants.KEY_USERID);
-                            refresh(userId != newUserId);
+                            widget.refresh(userId != newUserId);
                             await landingViewModel.getQurPlanDashBoard();
                           },
                           lastStatus:
@@ -278,7 +297,7 @@ class HomeWidget extends StatelessWidget {
                                   final newUserId =
                                       PreferenceUtil.getStringValue(
                                           constants.KEY_USERID);
-                                  refresh(userId != newUserId);
+                                  widget.refresh(userId != newUserId);
                                   await landingViewModel.getQurPlanDashBoard();
                                 }
                               : null,
@@ -360,7 +379,7 @@ class HomeWidget extends StatelessWidget {
                         LandingCard(
                           title: constants.strHelpDesk,
                           lastStatus: '',
-                          alerts:  constants.strTrueDeskTickets,
+                          alerts:  ''/*constants.strTrueDeskTickets*/,
                           icon: variable.icon_true_desk,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () {
