@@ -1066,7 +1066,6 @@ class _MyFHBState extends State<MyFHB> {
               bundle: parsedData[2],
             );
           } else if (parsedData[1] == 'sheela') {
-            print('ok***'+parsedData[2]+'|'+parsedData[3].toString());
             return SplashScreen(
               nsRoute: 'sheela',
               bundle: parsedData[2]+'|'+parsedData[3],

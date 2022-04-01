@@ -241,7 +241,6 @@ class _SplashScreenState extends State<SplashScreen> {
                         var rawTitle = widget.bundle?.split('|')[0];
                         var rawBody = widget.bundle?.split('|')[1];
                         var notificationListId = widget.bundle?.split('|')[2];
-                        print('data:   '+notificationListId.toString());
                         if(notificationListId!=null && notificationListId!=''){
                             FetchNotificationService().inAppUnreadAction(notificationListId);
                         }
