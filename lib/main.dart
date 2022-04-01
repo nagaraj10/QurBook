@@ -10,6 +10,8 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
+
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
@@ -33,6 +35,7 @@ import 'video_call/utils/rtc_engine.dart';
 import 'video_call/utils/videoicon_provider.dart';
 import 'video_call/utils/videorequest_provider.dart';
 import 'widgets/checkout_page.dart';
+
 //import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
@@ -48,6 +51,42 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'IntroScreens/IntroductionScreen.dart';
+import 'authentication/service/authservice.dart';
+import 'authentication/view_model/otp_view_model.dart';
+import 'common/DatabseUtil.dart';
+import 'common/PreferenceUtil.dart';
+import 'constants/fhb_constants.dart' as Constants;
+import 'constants/fhb_constants.dart';
+import 'constants/fhb_router.dart' as router;
+import 'constants/router_variable.dart' as routervariable;
+import 'constants/router_variable.dart' as router;
+import 'constants/variable_constant.dart' as variable;
+import 'landing/view_model/landing_view_model.dart';
+import 'plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'regiment/models/regiment_arguments.dart';
+
+//import 'package:myfhb/QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
+// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'regiment/view_model/regiment_view_model.dart';
+import 'schedules/add_reminders.dart';
+import 'src/model/home_screen_arguments.dart';
+import 'src/model/user/user_accounts_arguments.dart';
+import 'src/resources/network/ApiBaseHelper.dart';
+import 'src/ui/MyRecord.dart';
+import 'src/ui/NetworkScreen.dart';
+import 'src/ui/SplashScreen.dart';
+import 'src/ui/bot/SuperMaya.dart';
+import 'src/ui/bot/view/sheela_arguments.dart';
+import 'src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'src/utils/FHBUtils.dart';
+import 'src/utils/PageNavigator.dart';
+import 'src/utils/screenutils/screenutil.dart';
+import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'telehealth/features/Notifications/services/notification_services.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
+import 'telehealth/features/appointments/view/resheduleMain.dart';
 import 'telehealth/features/chat/view/chat.dart';
 import 'telehealth/features/chat/view/home.dart';
 import 'telehealth/features/chat/viewModel/ChatViewModel.dart';
@@ -165,6 +204,12 @@ Future<void> main() async {
 
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     await saveUnitSystemToPreference();
+
+    try {
+      CategoryListBlock _categoryListBlock = new CategoryListBlock();
+
+      _categoryListBlock.getCategoryLists().then((value) {});
+    } catch (e) {}
 
     Map appsFlyerOptions;
     if (Platform.isIOS) {

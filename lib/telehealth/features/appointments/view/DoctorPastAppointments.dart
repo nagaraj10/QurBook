@@ -273,8 +273,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                       AppConstants.prescription, () async {
                     FocusManager.instance.primaryFocus.unfocus();
                     if (healthRecord > 0) {
-                      int position = await
-                          getCategoryPosition(AppConstants.prescription);
+                      int position =
+                          await getCategoryPosition(AppConstants.prescription);
 
                       await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => MyRecords(
@@ -292,8 +292,10 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     }
                   }, healthRecord.toString()),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, TranslationConstants.receipt.t(), () async{
+                  commonWidget.iconWithText(
+                      Constants.Appointments_receiptImage,
+                      Colors.black38,
+                      TranslationConstants.receipt.t(), () async {
                     FocusManager.instance.primaryFocus.unfocus();
                     List<String> paymentID = new List();
                     if (doc.healthRecord != null &&
@@ -303,8 +305,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                         paymentID.add(doc.healthRecord.bills[i]);
                       }
                     }
-                    int position = await getCategoryPosition(AppConstants.bills);
-                    print("position"+position.toString());
+                    int position =
+                        await getCategoryPosition(AppConstants.bills);
+                    print("position" + position.toString());
                     await Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => MyRecords(
                           argument: MyRecordsArgument(
@@ -468,8 +471,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   List<CategoryResult> getCategoryList() {
     try {
-      filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
-          ConstantKey.KEY_CATEGORYLIST_VISIBLE);
+      filteredCategoryData =
+          PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST);
     } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
@@ -479,6 +482,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         return filteredCategoryData;
       });
     } else {
+      filteredCategoryData =
+          new CommonUtil().fliterCategories(filteredCategoryData);
       return filteredCategoryData;
     }
   }

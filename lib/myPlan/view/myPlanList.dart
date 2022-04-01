@@ -43,12 +43,15 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _GotoRegimentKey = GlobalKey();
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
+  bool addplanbutton=false;
+  bool showRenewOrSubscribeButton=false;
   BuildContext _myContext;
   @override
   void initState() {
     super.initState();
     mInitialTime = DateTime.now();
     FocusManager.instance.primaryFocus.unfocus();
+    getConfiguration();
     if (widget.fromDashBoard) {
       Provider.of<RegimentViewModel>(
         context,
@@ -74,6 +77,16 @@ class _MyPlanState extends State<MyPlanList> {
     } catch (e) {}
   }
 
+  Future<void> getConfiguration() async {
+    bool addplanbutton=await PreferenceUtil.getAddPlanBtn();
+    bool showRenewOrSubscribeButton=await PreferenceUtil.getUnSubscribeValue();
+    print('addplanbtn: '+addplanbutton.toString());
+    setState(() {
+      this.addplanbutton=addplanbutton;
+      this.showRenewOrSubscribeButton=showRenewOrSubscribeButton;
+    });
+  }
+
   @override
   void dispose() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -94,7 +107,7 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: FloatingActionButton.extended(
+          floatingActionButton: addplanbutton?FloatingActionButton.extended(
             onPressed: () async {
               //TODO: Uncomment for actual plans screen
               // await Get.toNamed(rt_Diseases);
@@ -108,7 +121,7 @@ class _MyPlanState extends State<MyPlanList> {
             ),
             label: Text(strAddPlan,
                 style: TextStyle(fontSize: 18.sp, color: Colors.white)),
-          ),
+          ):Container(),
           body: Stack(
             fit: StackFit.expand,
             alignment: Alignment.bottomCenter,
@@ -407,7 +420,7 @@ class _MyPlanState extends State<MyPlanList> {
                   ),
                   if(planList[i]?.tags!=strMemb)Row(
                     children: [
-                      Column(
+                      showRenewOrSubscribeButton?Column(
                         children: [
                           Align(
                             child: SizedBoxWithChild(
@@ -469,7 +482,7 @@ class _MyPlanState extends State<MyPlanList> {
                             ),
                           ),
                         ],
-                      ),
+                      ):Container(),
                       SizedBox(width: 4.w),
                     ],
                   )

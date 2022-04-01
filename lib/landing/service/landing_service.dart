@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:myfhb/landing/model/hide_plan_response_model.dart';
 import 'package:myfhb/landing/model/membership_detail_response.dart';
 
 import '../../common/PreferenceUtil.dart';
@@ -25,6 +26,18 @@ class LandingService {
       url,
     );
     return QurPlanDashboardModel.fromJson(response ?? '');
+  }
+
+  static Future<HidePlanResponseModel> getHidePlan({
+    String includeText = variable.qr_all,
+  }) async {
+    var _helper = ApiBaseHelper();
+    final userId = PreferenceUtil.getStringValue(KEY_USERID);
+    final url = variable.app_screen_config ;
+    var response = await _helper.getAppScreenConfig(
+      url,
+    );
+    return HidePlanResponseModel.fromJson(response ?? '');
   }
 
   static Future<MemberShipDetailResponse> getMemberShipDetails() async {
