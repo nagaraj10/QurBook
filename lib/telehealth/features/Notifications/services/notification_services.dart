@@ -92,4 +92,16 @@ class FetchNotificationService {
       return false;
     }
   }
+
+  Future<dynamic> inAppUnreadAction(String notificationListId) async {
+    final response = await ApiServices.put(
+        _baseUrl + in_app_unread + notificationListId,
+        headers: await headerRequest.getRequestHeadersAuthContent());
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
 }

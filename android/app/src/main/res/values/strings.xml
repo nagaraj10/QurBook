@@ -41,6 +41,7 @@
     <string name="ns_icall_type">Incoming_call</string>
     <string name="ns_ack_type">Ackowledgement</string>
     <string name="username">username</string>
+    <string name="notificationListId">notificationListId</string>
     <string name="from">body</string>
     <string name="intaction_accept_call">ACCEPT_CALL</string>
     <string name="func_startchime">startChime</string>
