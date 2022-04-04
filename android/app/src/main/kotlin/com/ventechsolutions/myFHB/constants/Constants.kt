@@ -69,4 +69,6 @@ object Constants {
     val PROB_USER_ID ="userId"
     val WIFI_WORKS ="wifiworks"
     val PROB_PATIENT_NAME ="patientName"
+    val PATIENT_PHONE_NUMBER ="patientPhoneNumber"
+    val VERIFICATION_CODE ="verificationCode"
 }

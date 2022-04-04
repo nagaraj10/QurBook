@@ -601,6 +601,18 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Device List Screen',
           });
           PageNavigator.goToPermanent(context, router.rt_Landing);
+        }else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
+          if(passedValArr[2]=='accept'){
+
+          }else{
+
+          }
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'dashboard',
+            'navigationPage': 'Device List Screen',
+          });
+          PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'th_provider_hospital') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
