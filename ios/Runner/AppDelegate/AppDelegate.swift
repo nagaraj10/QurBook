@@ -40,6 +40,7 @@ import CoreLocation
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
+    let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
@@ -66,21 +67,19 @@ import CoreLocation
                     options: authOptions,
                     completionHandler: {_, _ in })
             })
-            
         } else {
             let settings: UIUserNotificationSettings =
             UIUserNotificationSettings(types: [.alert,  .sound], categories: nil)
             application.registerUserNotificationSettings(settings)
         }
-        
         application.registerForRemoteNotifications()
         
         // Use Firebase library to configure APIs
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-        locationManager = CLLocationManager()
-        locationManager?.delegate = self
-        locationManager?.requestWhenInUseAuthorization()
+        // locationManager = CLLocationManager()
+        // locationManager?.delegate = self
+        // locationManager?.requestWhenInUseAuthorization()
         
         // 2
         // Speech Recognization
@@ -90,18 +89,20 @@ import CoreLocation
         notificationCenter.getPendingNotificationRequests { [weak self](data) in
             guard let self = self else { return }
             self.listOfScheduledNotificaitons = data
-            print("total notifications scheduled \(data.count)")
+            //            print("total notifications scheduled \(data.count)")
             
         }
-        setupWifiListener(messanger: controller.binaryMessenger)
-        getCurrentWifiDetails()
-//        setUpReminders(messanger: controller.binaryMessenger)
+        // setupWifiListener(messanger: controller.binaryMessenger)
+        // getCurrentWifiDetails()
+        //        setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
         IQKeyboardManager.shared.enable = true
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
         let renewNowAction = UNNotificationAction(identifier: "Renew", title: "Renew", options: [.foreground])
         let callBackNowAction = UNNotificationAction(identifier: "Callback", title: "Call back", options: [.foreground])
+        let rejectAction = UNNotificationAction(identifier: "Reject", title: "Reject", options: [.destructive])
+        let acceptAction = UNNotificationAction(identifier: "Accept", title: "Accept", options: [.foreground])
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
@@ -115,7 +116,11 @@ import CoreLocation
                                                              actions:  [renewNowAction,callBackNowAction],
                                                              intentIdentifiers: [],
                                                              options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory])
+        let acceptRejectCargiverButtonCategory = UNNotificationCategory(identifier: acceptDeclineButtonsCaregiver,
+                                                                        actions:  [acceptAction,rejectAction],
+                                                                        intentIdentifiers: [],
+                                                                        options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -166,7 +171,7 @@ import CoreLocation
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
-        print("fcm token \(String(describing: Messaging.messaging().fcmToken))")
+        //        print("fcm token \(String(describing: Messaging.messaging().fcmToken))")
         GeneratedPluginRegistrant.register(with: self)
         let flutterViewController: FlutterViewController = window?.rootViewController as! FlutterViewController
         navigationController = UINavigationController(rootViewController: flutterViewController)
@@ -179,12 +184,10 @@ import CoreLocation
     // 2 a)
     // Speech to Text
     func startRecording() throws {
-        
         // Reset
         audioEngine.reset()
         recognitionTask?.cancel()
         self.recognitionTask = nil
-        
         // Initialization
         audioEngine = AVAudioEngine()
         recognitionTask = SFSpeechRecognitionTask()
@@ -192,17 +195,14 @@ import CoreLocation
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        
         let inputNode = audioEngine.inputNode
         inputNode.removeTap(onBus: 0)
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
             self.recognitionRequest?.append(buffer)
         }
-        
         audioEngine.prepare()
         try audioEngine.start()
-        
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError(Constants.unableToRecognition) }
         recognitionRequest.shouldReportPartialResults = false
@@ -349,8 +349,6 @@ import CoreLocation
         if let _des = message[Constants.description] as? String {des = _des}
         if let _before = message[Constants.before] as? String ,let beforeInt = Int(_before){before = beforeInt}
         if let _after = message[Constants.after] as? String,let afterInt = Int(_after) {after = afterInt}
-        
-        
         if !snooze{
             if let dateNotifiation = message["estart"] as? String{
                 let dateFormatter = DateFormatter()
@@ -358,21 +356,13 @@ import CoreLocation
                 var dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
                 var dateFromStringAfter:Date?
                 var dateFromStringBefore:Date?
-                
-                print(dateNotifiation)
-                print(dateFromString as Any)
                 if let dateToBeTriggered = dateFromString{
-                    //                    if let remindInStr = message["remindin"] as? String, let remindIn = Int(remindInStr){
-                    //                        dateFromString = Calendar.current.date(byAdding: .minute, value: -remindIn, to: dateToBeTriggered) ?? dateToBeTriggered
-                    //                    }
-                    
                     if before > 0{
                         dateFromStringBefore = Calendar.current.date(byAdding: .minute, value: -before, to: dateToBeTriggered) ?? dateToBeTriggered
                     }
                     if after > 0{
                         dateFromStringAfter = Calendar.current.date(byAdding: .minute, value: after, to: dateToBeTriggered) ?? dateToBeTriggered
                     }
-                    
                 }
                 if let dateForSchedule = dateFromString{
                     let strOfDateAndTime = "\(dateForSchedule)"
@@ -401,7 +391,6 @@ import CoreLocation
                         dateComponentAfter.minute = min
                         dateComponentAfter.second = sec
                     }
-                    print(dateComponentBefore.description)
                 }
                 if let dateForSchedule = dateFromStringBefore{
                     let strOfDateAndTime = "\(dateForSchedule)"
@@ -416,12 +405,7 @@ import CoreLocation
                         dateComponentBefore.minute = min
                         dateComponentBefore.second = sec
                     }
-                    print(dateComponentAfter.description)
                 }
-                print(dateComponent.description)
-                
-                
-                
             }
             if let alreadyScheduled = message["alreadyScheduled"] as? Bool,alreadyScheduled{
                 let ids = listOfScheduledNotificaitons.filter({$0.identifier == id})
@@ -445,11 +429,8 @@ import CoreLocation
         }else{
             content.categoryIdentifier = showBothButtonsCat
         }
-        
         content.userInfo = message as! [AnyHashable : Any]
         var request:UNNotificationRequest;
-        
-        
         if snooze{
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 300, repeats: false)
             request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
@@ -485,12 +466,9 @@ import CoreLocation
             content.title = title
             content.body = des
             let identifier = id + "00000"
-            
             content.userInfo = message as! [AnyHashable : Any]
-            
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
             let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
-            
             //adding the notification
             notificationCenter.add(request) { (error) in
                 if let error = error {
@@ -502,9 +480,7 @@ import CoreLocation
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
-        print("Device Token: \(token)")
         Messaging.messaging().apnsToken = deviceToken
-        print("fcm token \(Messaging.messaging().fcmToken)")
     }
     
     override func application(
@@ -513,6 +489,7 @@ import CoreLocation
     ) {
         print("Failed to register: \(error)")
     }
+    
     //Handle Notification Center Delegate methods
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          willPresent notification: UNNotification,
@@ -526,7 +503,7 @@ import CoreLocation
     }
     
     func checkForCallListener(notification:UNNotification){
-        if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["type"],type as! String == "call",let controller = navigationController?.children.first as? FlutterViewController{
+        if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["type"] as? String,type.lowercased() == "call",let controller = navigationController?.children.first as? FlutterViewController{
             let data =
             [ "id" : notification.request.identifier,"meeting_id" : userInfo["meeting_id"]]
             let notificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
@@ -534,18 +511,10 @@ import CoreLocation
         }
         
     }
-    override func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                         didReceive response: UNNotificationResponse,
-                                         withCompletionHandler completionHandler: @escaping () -> Void) {
-        //            if (response.actionIdentifier == "Accept") || (response.actionIdentifier == "Decline"){
-        //
-        //            }
-        print(response.actionIdentifier)
-        
+    func responsdToNotificationTap(response : UNNotificationResponse){
         if let data = response.notification.request.content.userInfo as? NSDictionary,let controller = navigationController?.children.first as? FlutterViewController{
-            if let eId = data["eid"] as? String{
+            if (data["eid"] as? String) != nil{
                 if response.actionIdentifier == "Snooze" {
-                    
                     if let count = data["snoozeCount"] as? Int{
                         if count < 2{
                             var newData = response.notification.request.content.userInfo
@@ -558,7 +527,6 @@ import CoreLocation
                         self.scheduleNotification(message:newData as NSDictionary, snooze: true)
                     }
                 }else if response.actionIdentifier == "Dismiss"{
-                    
                 }else{
                     let reminderChannel = FlutterMethodChannel.init(name: self.reminderChannel, binaryMessenger: controller.binaryMessenger)
                     reminderChannel.invokeMethod(Constants.navigateToRegimentMethod, arguments: nil)
@@ -571,6 +539,11 @@ import CoreLocation
                         "action" : response.actionIdentifier,
                         "data" : data
                     ]
+                }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
                 }else{
                     newData = data
                 }
@@ -578,7 +551,25 @@ import CoreLocation
                 notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
             }
         }
-        completionHandler()
+    }
+    
+    override func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                         didReceive response: UNNotificationResponse,
+                                         withCompletionHandler completionHandler: @escaping () -> Void) {
+        //        let appState =  UIApplication.shared.applicationState
+        //        if(appState == .inactive || appState == .active){
+        //            responsdToNotificationTap(response: response)
+        //            completionHandler()
+        //        }else{
+        let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+        navigationController?.children.first?.present(alert, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+            alert.dismiss(animated: true)
+            self.responsdToNotificationTap(response: response)
+            completionHandler()
+        }
+        
+        //        }
     }
 }
 

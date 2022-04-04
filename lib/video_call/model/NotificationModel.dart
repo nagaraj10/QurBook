@@ -1,7 +1,6 @@
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/video_call/model/CallArguments.dart';
-import 'package:myfhb/video_call/utils/audiocall_provider.dart';
+import '../../constants/fhb_parameters.dart' as parameters;
+import 'CallArguments.dart';
 
 class NotificationModel {
   String title;
@@ -28,6 +27,10 @@ class NotificationModel {
   String patientName;
   String patientPicture;
   String externalLink;
+  String patientPhoneNumber;
+  String verificationCode;
+  String caregiverRequestor;
+  String caregiverReceiver;
   CallArguments callArguments;
   bool isWeb;
   String callType;
@@ -59,6 +62,10 @@ class NotificationModel {
     this.callType,
     this.isWeb,
     this.claimId,
+    this.caregiverReceiver,
+    this.caregiverRequestor,
+    this.verificationCode,
+    this.patientPhoneNumber,
     this.notificationListId,
   });
 
@@ -161,6 +168,18 @@ class NotificationModel {
         if (message[parameters.strgcmtype] != null) {
           type = message[parameters.strgcmtype];
         }
+        if (message[parameters.patientPhoneNumber] != null) {
+          patientPhoneNumber = message[parameters.patientPhoneNumber];
+        }
+        if (message[parameters.verificationCode] != null) {
+          verificationCode = message[parameters.verificationCode];
+        }
+        if (message[parameters.caregiverRequestor] != null) {
+          caregiverRequestor = message[parameters.caregiverRequestor];
+        }
+        if (message[parameters.caregiverReceiver] != null) {
+          caregiverReceiver = message[parameters.caregiverReceiver];
+        }
         if (message[parameters.PROP_EVEID] != null) {
           eventId = message[parameters.PROP_EVEID];
         }
@@ -208,6 +227,18 @@ class NotificationModel {
         }
         if (message[parameters.gcmplanId] != null) {
           planId = message[parameters.gcmplanId];
+        }
+        if (message[parameters.gcmpatientPhoneNumber] != null) {
+          patientPhoneNumber = message[parameters.gcmpatientPhoneNumber];
+        }
+        if (message[parameters.gcmverificationCode] != null) {
+          verificationCode = message[parameters.gcmverificationCode];
+        }
+        if (message[parameters.gcmcaregiverRequestor] != null) {
+          caregiverRequestor = message[parameters.gcmcaregiverRequestor];
+        }
+        if (message[parameters.gcmcaregiverReceiver] != null) {
+          caregiverReceiver = message[parameters.gcmcaregiverReceiver];
         }
         if (message[parameters.senderName] != null) {
           doctorName = message[parameters.senderName];
@@ -293,6 +324,30 @@ class NotificationModel {
     if (message[parameters.meeting_id] != null) {
       meeting_id = message[parameters.meeting_id];
     }
+    if (message[parameters.patientPhoneNumber] != null) {
+      patientPhoneNumber = message[parameters.patientPhoneNumber];
+    }
+    if (message[parameters.verificationCode] != null) {
+      verificationCode = message[parameters.verificationCode];
+    }
+    if (message[parameters.caregiverRequestor] != null) {
+      caregiverRequestor = message[parameters.caregiverRequestor];
+    }
+    if (message[parameters.caregiverReceiver] != null) {
+      caregiverReceiver = message[parameters.caregiverReceiver];
+    }
+    if (message[parameters.gcmpatientPhoneNumber] != null) {
+      patientPhoneNumber = message[parameters.gcmpatientPhoneNumber];
+    }
+    if (message[parameters.gcmverificationCode] != null) {
+      verificationCode = message[parameters.gcmverificationCode];
+    }
+    if (message[parameters.gcmcaregiverRequestor] != null) {
+      caregiverRequestor = message[parameters.gcmcaregiverRequestor];
+    }
+    if (message[parameters.gcmcaregiverReceiver] != null) {
+      caregiverReceiver = message[parameters.gcmcaregiverReceiver];
+    }
     if (message[parameters.doctorId] != null) {
       doctorId = message[parameters.doctorId];
     }
@@ -354,8 +409,8 @@ class NotificationModel {
       callType = message[parameters.callType];
     }
     if ((message[parameters.notificationListId] ?? '').isNotEmpty) {
-          notificationListId = message[parameters.notificationListId];
-        }
+      notificationListId = message[parameters.notificationListId];
+    }
     if (message[parameters.gcmpatientName] != null) {
       patientName = message[parameters.gcmpatientName];
     }

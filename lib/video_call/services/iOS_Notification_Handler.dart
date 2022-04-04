@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
 import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -38,16 +39,22 @@ class IosNotificationHandler {
   NotificationModel model;
   bool renewAction = false;
   bool callbackAction = false;
+  bool acceptAction = false;
+  bool rejectAction = false;
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
-      (call) {
+      (call) async {
         if (call.method == variable.notificationResponseMethod) {
+          if (!isAlreadyLoaded) {
+            await 4.seconds;
+            isAlreadyLoaded = true;
+          }
           final data = Map<String, dynamic>.from(call.arguments);
           model = NotificationModel.fromMap(data.containsKey("action")
               ? Map<String, dynamic>.from(data["data"])
               : data);
-          if (model.externalLink != null) {
+          if ((model.externalLink ?? '').isNotEmpty) {
             if (model.externalLink == variable.iOSAppStoreLink) {
               LaunchReview.launch(
                   iOSAppId: variable.iOSAppId, writeReview: false);
@@ -55,52 +62,19 @@ class IosNotificationHandler {
               CommonUtil().launchURL(model.externalLink);
             }
           }
-          if (data.containsKey("action")) {
-            if (data["action"] != null) {
-              if (data["action"] == "Renew") {
-                renewAction = true;
-              } else if (data["action"] == "Callback") {
-                callbackAction = true;
-              }
-            }
-
-            if (!isAlreadyLoaded) {
-              Future.delayed(
-                const Duration(seconds: 4),
-                actionForTheNotification,
-              );
-            } else {
-              if (callbackAction) {
-                callbackAction = false;
-                model.redirect = "";
-                CommonUtil().CallbackAPI(
-                  model.patientName,
-                  model.planId,
-                  model.userId,
-                );
-                var body = {};
-                body['templateName'] = model.templateName;
-                body['contextId'] = model.planId;
-                FetchNotificationService()
-                    .updateNsActionStatus(body)
-                    .then((data) {
-                  FetchNotificationService().updateNsOnTapAction(body);
-                });
-                return;
-              }
-              actionForTheNotification();
-            }
-          } else {
-            if (!isAlreadyLoaded) {
-              Future.delayed(
-                const Duration(seconds: 4),
-                actionForTheNotification,
-              );
-            } else {
-              actionForTheNotification();
-            }
+          var actionKey = (data["action"] ?? '');
+          if (actionKey.isNotEmpty) {
+            renewAction = (actionKey == "Renew");
+            callbackAction = (actionKey == "Callback");
+            rejectAction = (actionKey == "Reject");
+            acceptAction = (actionKey == "Accept");
           }
+          actionForTheNotification();
         } else if (call.method == variable.listenToCallStatusMethod) {
+          if (!isAlreadyLoaded) {
+            await 4.seconds;
+            isAlreadyLoaded = true;
+          }
           final data = Map<String, dynamic>.from(call.arguments);
           CommonUtil().listenToCallStatus(data);
         }
@@ -138,7 +112,9 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
-    if (callbackAction) {
+    if (model.isCall) {
+      updateStatus(parameters.accept.toLowerCase());
+    } else if (callbackAction) {
       callbackAction = false;
       model.redirect = "";
       CommonUtil().CallbackAPI(
@@ -149,16 +125,27 @@ class IosNotificationHandler {
       var body = {};
       body['templateName'] = model.templateName;
       body['contextId'] = model.planId;
-      FetchNotificationService().updateNsActionStatus(body).then(
-        (data) {
-          FetchNotificationService().updateNsOnTapAction(body);
-        },
+      FetchNotificationService().updateNsActionStatus(body).then((data) {
+        FetchNotificationService().updateNsOnTapAction(body);
+      });
+    } else if (rejectAction &&
+        (model.caregiverReceiver ?? '').isNotEmpty &&
+        (model.caregiverRequestor ?? '').isNotEmpty) {
+      CaregiverAPIProvider().rejectCareGiver(
+        receiver: model.caregiverReceiver,
+        requestor: model.caregiverRequestor,
       );
-    }
-    if (model.isCall) {
-      updateStatus(parameters.accept.toLowerCase());
+    } else if (acceptAction &&
+        (model.patientPhoneNumber ?? '').isNotEmpty &&
+        (model.verificationCode ?? '').isNotEmpty) {
+      CaregiverAPIProvider().approveCareGiver(
+        phoneNumber: model.patientPhoneNumber,
+        code: model.verificationCode,
+      );
     } else if (model.type == parameters.FETCH_LOG) {
       await CommonUtil.sendLogToServer();
+    } else if (model.templateName == parameters.familyMemberCaregiverRequest) {
+      //No Navigation required
     } else if (model.isCancellation) {
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -190,7 +177,6 @@ class IosNotificationHandler {
         'ns_type': 'myRecords',
         'navigationPage': '$dataOne',
       });
-
       if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
         final userId = PreferenceUtil.getStringValue(KEY_USERID);
         if ((model.userId ?? '') == userId) {
@@ -328,9 +314,7 @@ class IosNotificationHandler {
         CommonUtil.showFamilyMemberPlanExpiryDialog(model.patientName);
       }
     } else if (model.redirect == parameters.claimList &&
-        model.claimId != null) {
-      // final userId = PreferenceUtil.getStringValue(KEY_USERID);
-      // if (model.userId == userId) {
+        (model.claimId ?? '').isNotEmpty) {
       Get.to(
         () => ClaimRecordDisplay(
           claimID: model.claimId,
