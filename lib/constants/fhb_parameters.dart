@@ -611,6 +611,7 @@ const String gcmpatientPhoneNumber = 'gcm.notification.patientPhoneNumber';
 const String gcmverificationCode = 'gcm.notification.verificationCode';
 const String gcmcaregiverReceiver = 'gcm.notification.caregiverReceiver';
 const String gcmcaregiverRequestor = 'gcm.notification.caregiverRequestor';
+const String notificationListId = 'notificationListId';
 
 const String gcmplanId = 'gcm.notification.planId';
 const String gcmpatientName = 'gcm.notification.patientName';

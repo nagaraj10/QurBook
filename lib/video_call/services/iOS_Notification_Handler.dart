@@ -227,6 +227,10 @@ class IosNotificationHandler {
         'navigationPage': 'Sheela Start Page',
       });
       if (isAlreadyLoaded) {
+        if ((model.notificationListId ?? '').isNotEmpty) {
+          FetchNotificationService()
+              .inAppUnreadAction(model.notificationListId);
+        }
         if (model.rawBody != null) {
           String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
           if (sheela_lang != null && sheela_lang != '') {
