@@ -22,6 +22,7 @@ import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
 import 'myPlan/view/myPlanDetail.dart';
+import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'regiment/models/regiment_arguments.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
@@ -501,7 +502,12 @@ class _MyFHBState extends State<MyFHB> {
             // );
           }
         }else if (passedValArr[1] == 'careGiverMemberProfile') {
-          print('care giver member');
+          Navigator.pushNamed(
+            context,
+            router.rt_FamilyDetailScreen,
+            arguments: MyFamilyDetailArguments(
+                caregiverRequestor: passedValArr[2]),
+          );
         }else if (passedValArr[1] == 'communicationSetting') {
           print('communication setting');
         } else if (passedValArr[1] == 'sheela') {

@@ -287,7 +287,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4MissedCall(data)
         } else if (data["templateName"] == "chat") {
             createNotification4Chat(data)
-        } else if ((data["templateName"] == "DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")) {
+        }else if (data["templateName"]?.contains("familyMemberCaregiverRequest")==true){
+            showViewMemberAndCommunicationButtonNotification(data)
+        }else if ((data["templateName"] == "DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")) {
             createNotification4DocAndPatAssociation(data)
         } else if (data["templateName"] == "MissingActivitiesReminder") {
             createNotification4MissedEvents(data)
@@ -303,8 +305,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             myRecordsNotification(data)
         }else if (data[Constants.PROP_REDIRECT_TO] == "chat"){
             createNotification4Chat(data)
-        }else if (data[Constants.PROP_REDIRECT_TO]?.contains("communicationSetting")==true){
-            showViewMemberAndCommunicationButtonNotification(data)
         }
         else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
