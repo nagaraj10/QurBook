@@ -31,3 +31,4 @@ const String qr_notification_fetch =
 const String qr_notification_action = 'notification-log/actions';
 const String qr_notification_action_ontap = 'notification-log/on-tap';
 const String qr_notification_clear = 'notification-log/clear-notifications';
+const String in_app_unread = 'notification-log/update-unread/';
