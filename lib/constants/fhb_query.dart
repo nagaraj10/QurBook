@@ -161,6 +161,8 @@ const String qr_id = '?id=';
 const String qr_user = 'user/';
 const String qr_section = '?section=';
 const String qr_myOrders = 'my-orders';
+const String qr_approve_caregiver = '/approve-caregiver';
+const String qr_reject_caregiver = '/reject-caregiver';
 
 const String qr_doctor = 'doctor/';
 const String qr_SearchText = 'searchText=';
