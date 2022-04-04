@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
@@ -19,7 +18,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -30,7 +28,6 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -59,7 +56,6 @@ import '../myfhb_weview/myfhb_webview.dart';
 import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
-import '../regiment/view_model/regiment_view_model.dart';
 import '../reminders/QurPlanReminders.dart';
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
@@ -67,7 +63,6 @@ import '../src/blocs/User/MyProfileBloc.dart';
 import '../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../src/model/Authentication/DeviceInfoSucess.dart';
 import '../src/model/Category/CategoryData.dart';
-import '../src/model/Category/catergory_data_list.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Health/CategoryInfo.dart';
 import '../src/model/Health/MediaMasterIds.dart';
@@ -78,9 +73,7 @@ import '../src/model/Health/asgard/health_record_list.dart';
 import '../src/model/Media/DeviceModel.dart';
 import '../src/model/Media/media_result.dart';
 import '../src/model/sceretLoader.dart';
-import '../src/model/secretmodel.dart';
 import '../src/model/user/MyProfileModel.dart';
-import '../src/model/user/MyProfileResult.dart';
 import '../src/model/user/UserAddressCollection.dart';
 import '../src/resources/network/ApiBaseHelper.dart';
 import '../src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
@@ -102,14 +95,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
-import '../../colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 
@@ -3584,6 +3572,7 @@ class CommonUtil {
 
   Future<ResultFromResponse> loadPdf({String url, String fileName}) async {
     try {
+      FlutterToast().getToast('Download Started', Colors.green);
       var response = await ApiServices.get(url);
       if (response?.statusCode == 200) {
         var responseJson = response.bodyBytes;
@@ -3593,12 +3582,17 @@ class CommonUtil {
           await Permission.manageExternalStorage.request();
         }
 
-        var path =
-            Platform.isIOS ? directory.path : '/storage/emulated/0/Qurbook';
-        var file = File('$path/$fileName');
+        var path = Platform.isIOS
+            ? directory.path
+            : await FHBUtils.createFolderInAppDocDirClone(
+                variable.stAudioPath, fileName);
+        var file = File('$path');
         await file.writeAsBytes(responseJson);
         path = file.path;
-        return ResultFromResponse(true, path);
+        await ImageGallerySaver.saveFile(file.path).then(
+          (res) {},
+        );
+        return ResultFromResponse(true, file.path);
       } else {
         return ResultFromResponse(false, 'Requested file not found');
       }
