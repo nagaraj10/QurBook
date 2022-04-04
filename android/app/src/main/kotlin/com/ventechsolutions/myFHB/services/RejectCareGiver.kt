@@ -17,6 +17,8 @@ class RejectCareGiver:BroadcastReceiver() {
         val redirectTo = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
         val patientPhoneNumber = p1?.getStringExtra(Constants.PATIENT_PHONE_NUMBER)
         val verificationCode = p1?.getStringExtra(Constants.VERIFICATION_CODE)
+        val caregiverRequestor = p1?.getStringExtra(Constants.CAREGIVER_REQUESTER)
+        val caregiverReceiver = p1?.getStringExtra(Constants.CAREGIVER_RECEIVER)
         val type = p1?.getStringExtra("type")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
@@ -32,6 +34,8 @@ class RejectCareGiver:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_REDIRECT_TO,redirectTo)
         launchIntent?.putExtra(Constants.PATIENT_PHONE_NUMBER,patientPhoneNumber)
         launchIntent?.putExtra(Constants.VERIFICATION_CODE,verificationCode)
+        launchIntent?.putExtra(Constants.CAREGIVER_RECEIVER,caregiverReceiver)
+        launchIntent?.putExtra(Constants.CAREGIVER_REQUESTER,caregiverRequestor)
         launchIntent?.putExtra("type", type)
         p0.startActivity(launchIntent)
     }

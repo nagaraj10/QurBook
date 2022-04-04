@@ -16,6 +16,7 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'caregiverAssosication/caregiverAPIProvider.dart';
 import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
@@ -609,9 +610,16 @@ class _MyFHBState extends State<MyFHB> {
           PageNavigator.goToPermanent(context, router.rt_Landing);
         }else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
           if(passedValArr[2]=='accept'){
-
+            CaregiverAPIProvider().approveCareGiver(
+              phoneNumber: passedValArr[3],
+              code: passedValArr[4],
+            );
           }else{
+            CaregiverAPIProvider().rejectCareGiver(
+              receiver:passedValArr[5],
+              requestor: passedValArr[6],
 
+            );
           }
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

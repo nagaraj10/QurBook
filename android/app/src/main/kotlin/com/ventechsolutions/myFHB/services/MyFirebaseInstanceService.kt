@@ -38,7 +38,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        Log.d(TAG, "From: " + remoteMessage.data)
+        Log.d(TAG, "Data: " + remoteMessage.data)
+        Log.d(TAG, "Notification: " + remoteMessage.notification)
+        Log.d(TAG, "Notification: " + remoteMessage.rawData)
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
@@ -65,7 +67,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //todo segregate the NS according their type
         val NS_TYPE = data[getString(R.string.type).toLowerCase()]
         var MEETING_ID = data[getString(R.string.meetid)]
-        MyApp.recordId = MEETING_ID!!
+        if (MEETING_ID != null) {
+            MyApp.recordId = MEETING_ID
+        }
         when (NS_TYPE) {
             getString(R.string.ns_type_call) -> createNotification4Call(data)
             getString(R.string.ns_type_ack) -> createNotification4Ack(data)
@@ -424,8 +428,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotificationAcceptAndReject(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
-        val MEETING_ID = data[getString(R.string.meetid)]
-        val DOC_ID = data[getString(R.string.docId)]
         val TEMP_NAME = data[Constants.PROP_TEMP_NAME]
         val ack_sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
@@ -448,19 +450,15 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT,"ack")
         acceptCareGiverIntent.putExtra("type","accept")
-        acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data["templateName"].toString())
+        acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data["templateName"])
         acceptCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
         acceptCareGiverIntent.putExtra(Constants.VERIFICATION_CODE, data[Constants.VERIFICATION_CODE])
-        acceptCareGiverIntent.putExtra(
-            Constants.PROP_PlannedStartTime,
-            data[Constants.PROP_PlannedStartTime]
-        )
-        acceptCareGiverIntent.putExtra(Constants.PROP_TEMP_NAME, TEMP_NAME)
-        val cancelAppointmentPendingIntent = PendingIntent.getBroadcast(
+
+        val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,
             acceptCareGiverIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
 
@@ -468,14 +466,16 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         rejectCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
         rejectCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         rejectCareGiverIntent.putExtra("type","reject")
-        rejectCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data["templateName"].toString())
+        rejectCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data["templateName"])
         rejectCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
         rejectCareGiverIntent.putExtra(Constants.VERIFICATION_CODE, data[Constants.VERIFICATION_CODE])
-        val reschedulePendingIntent = PendingIntent.getBroadcast(
+        rejectCareGiverIntent.putExtra(Constants.CAREGIVER_RECEIVER, data[Constants.CAREGIVER_RECEIVER])
+        rejectCareGiverIntent.putExtra(Constants.CAREGIVER_REQUESTER, data[Constants.CAREGIVER_REQUESTER])
+        val rejectCareGiverPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,
             rejectCareGiverIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
 
@@ -495,12 +495,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .addAction(
                 R.drawable.ic_reschedule,
                 getString(R.string.ns_act_accept),
-                reschedulePendingIntent
+                acceptCareGiverPendingIntent
             )
             .addAction(
                 R.drawable.ic_cancel_app,
                 getString(R.string.ns_act_reject),
-                cancelAppointmentPendingIntent
+                rejectCareGiverPendingIntent
             )
 
             .setStyle(

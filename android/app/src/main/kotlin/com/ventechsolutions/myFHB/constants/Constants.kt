@@ -71,4 +71,6 @@ object Constants {
     val PROB_PATIENT_NAME ="patientName"
     val PATIENT_PHONE_NUMBER ="patientPhoneNumber"
     val VERIFICATION_CODE ="verificationCode"
+    val CAREGIVER_RECEIVER ="caregiverReceiver"
+    val CAREGIVER_REQUESTER ="caregiverRequestor"
 }
