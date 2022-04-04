@@ -574,6 +574,7 @@ const strSubscribe = 'Subscribe';
 const strAddToCart = 'ADD TO CART';
 const strRemoveFromCart = 'REMOVE FROM CART';
 const strUnSubscribe = 'UnSubscribe';
+const strActive = 'Active';
 const strSubscribed = 'SUBSCRIBED';
 const strSelectedPlan = 'Selected Plan - ';
 const strSelectedPlans = 'Selected Plan(s) - ';
@@ -581,6 +582,7 @@ const strSelectPlan = 'Select a Plan';
 const strSelectPlans = 'Select your Plan(s)';
 const strIsFromSubscibe = 'fromSubscribe';
 const strIsRenew = 'Renew';
+const strExpired = 'Expired';
 const strRenewal = ' - Renewal';
 
 const strMemb = 'MEMB';

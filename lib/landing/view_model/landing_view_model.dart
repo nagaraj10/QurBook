@@ -94,14 +94,27 @@ class LandingViewModel extends ChangeNotifier {
           PreferenceUtil.setCartEnable(healthPlanSetting.result.qurBook.cart);
           PreferenceUtil.setUnSubscribeValue(healthPlanSetting.result.qurBook.unSubscribeBtn);
         }else{
+          if(CommonUtil.REGION_CODE == 'IN'){
+            PreferenceUtil.setAddPlanButton(true);
+            PreferenceUtil.setCartEnable(true);
+            PreferenceUtil.setUnSubscribeValue(true);
+          }else{
+            PreferenceUtil.setAddPlanButton(false);
+            PreferenceUtil.setCartEnable(false);
+            PreferenceUtil.setUnSubscribeValue(false);
+          }
+
+        }
+      }else{
+        if(CommonUtil.REGION_CODE == 'IN'){
+          PreferenceUtil.setAddPlanButton(true);
+          PreferenceUtil.setCartEnable(true);
+          PreferenceUtil.setUnSubscribeValue(true);
+        }else{
           PreferenceUtil.setAddPlanButton(false);
           PreferenceUtil.setCartEnable(false);
           PreferenceUtil.setUnSubscribeValue(false);
         }
-      }else{
-        PreferenceUtil.setAddPlanButton(false);
-        PreferenceUtil.setCartEnable(false);
-        PreferenceUtil.setUnSubscribeValue(false);
       }
       final dashboardResponse = await LandingService.getQurPlanDashBoard();
       isLoadDone = true;
