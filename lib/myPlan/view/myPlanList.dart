@@ -482,7 +482,37 @@ class _MyPlanState extends State<MyPlanList> {
                             ),
                           ),
                         ],
-                      ):Container(),
+                      ):Column(
+                        children: [
+                          Align(
+                            child: SizedBoxWithChild(
+                              height: 32.0.h,
+                              child: FlatButton(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                    side: BorderSide(
+                                        color: planList[i].isexpired == '1'
+                                            ? Colors.red
+                                            : Color(CommonUtil().getMyPrimaryColor()))),
+                                color: Colors.transparent,
+                                textColor: planList[i].isexpired == '1'
+                                    ? Colors.red
+                                    : Color(CommonUtil().getMyPrimaryColor()),
+                                padding: EdgeInsets.all(
+                                  8.0.sp,
+                                ),
+                                onPressed: (){},
+                                child: TextWidget(
+                                  text: planList[i].isexpired == '1'
+                                      ? strExpired
+                                      : strActive,
+                                  fontsize: 12.0.sp,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       SizedBox(width: 4.w),
                     ],
                   )
