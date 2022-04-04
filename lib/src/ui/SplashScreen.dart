@@ -240,6 +240,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle = widget.bundle?.split('|')[0];
                         var rawBody = widget.bundle?.split('|')[1];
+                        var notificationListId = widget.bundle?.split('|')[2];
+                        if(notificationListId!=null && notificationListId!=''){
+                            FetchNotificationService().inAppUnreadAction(notificationListId);
+                        }
+
                         String sheela_lang = PreferenceUtil.getStringValue(
                             Constants.SHEELA_LANG);
                         if ((Provider.of<ChatScreenViewModel>(context,

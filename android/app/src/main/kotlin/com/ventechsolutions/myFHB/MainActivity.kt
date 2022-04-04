@@ -507,6 +507,7 @@ class MainActivity : FlutterActivity() {
         val senderId = intent.getStringExtra(getString(R.string.senderId))
         val senderName = intent.getStringExtra(getString(R.string.senderName))
         val senderProfile = intent.getStringExtra(getString(R.string.senderProfilePic))
+        val notificationListId = intent.getStringExtra(getString(R.string.notificationListId))
         val groupId = intent.getStringExtra(getString(R.string.chatListId))
         val rawTitle = intent.getStringExtra(Constants.PROP_RAWTITLE)
         val rawBody = intent.getStringExtra(Constants.PROP_RAWBODY)
@@ -573,7 +574,7 @@ class MainActivity : FlutterActivity() {
                         var redirectArray = redirect_to.split("|")
                         if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
                             sharedValue =
-                                    "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}"
+                                    "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
                         } else {
                             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
                         }

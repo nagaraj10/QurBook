@@ -1079,7 +1079,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                   langCode: sheela_lang,
                   rawMessage: rawBody,
                 ),
-              );
+              ).then((value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+              readUnreadAction(result);
             } else {
               Get.toNamed(
                 routervariable.rt_Sheela,
@@ -1087,7 +1088,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                   isSheelaAskForLang: true,
                   rawMessage: rawBody,
                 ),
-              );
+              ).then((value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+              readUnreadAction(result);
             }
           } else {
             Get.to(SuperMaya());
