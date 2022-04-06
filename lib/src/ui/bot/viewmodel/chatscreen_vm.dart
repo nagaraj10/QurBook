@@ -83,6 +83,10 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   List<Tags> tagsList = new List<Tags>();
+
+  bool allowAppointmentNotification=true;
+  bool allowVitalNotification=true;
+  bool allowSymptomsNotification=true;
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
     if (!canSheelaSpeak) {
@@ -958,6 +962,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
+          allowAppointmentNotification=true;
+          allowSymptomsNotification=true;
+          allowVitalNotification=true;
         }
       } else {
         userMappingId = '';
@@ -971,6 +978,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
+        allowAppointmentNotification=true;
+        allowSymptomsNotification=true;
+        allowVitalNotification=true;
 
         var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
         healthReportListForUserRepository
@@ -989,7 +999,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 qa_subscription,
                 preColor,
                 greColor,
-                tagsList)
+                tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
@@ -1012,7 +1022,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                     qa_subscription,
                     preColor,
                     greColor,
-                    tagsList)
+                    tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -1095,6 +1105,30 @@ class ChatScreenViewModel extends ChangeNotifier {
             getDeviceSelectionModel.result[0].tags.length > 0
         ? getDeviceSelectionModel.result[0].tags
         : new List();
+
+    allowAppointmentNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+        : true;
+
+
+    allowVitalNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+        : true;
+
+
+    allowSymptomsNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+        : true;
+
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1117,7 +1151,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             qa_subscription,
             preColor,
             greColor,
-            tagsList)
+            tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -1141,7 +1175,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   qa_subscription,
                   preColor,
                   greColor,
-                  tagsList)
+                  tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

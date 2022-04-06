@@ -2,12 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
 import '../../common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import '../../common/errors_widget.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/fhb_constants.dart';
@@ -26,8 +30,6 @@ import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
-import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
@@ -82,6 +84,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   String version = '';
   List<Tags> tagsList =
   new List<Tags>();
+
+  bool allowAppointmentNotification=true;
+  bool allowVitalNotification=true;
+  bool allowSymptomsNotification=true;
+  bool isCareGiver=false;
+
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -246,6 +255,29 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
+        isCareGiver?Divider():Container(),
+        isCareGiver? ListTile(
+          title: Text(variable.strCareGiverSettings,
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16.0.sp,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    CareGiverSettings(),
+              ),
+            ).then((value) {
+              if (value) {
+                setState(() {});
+              }
+            });
+            //PageNavigator.goTo(context, router.rt_AppSettings);
+          },
+        ):Container(),
         /*Divider(),
         Theme(
           data: theme,
@@ -480,7 +512,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Future<GetDeviceSelectionModel> getAppColorValues() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    await healthReportListForUserRepository.getDeviceSelection(userIdFromBloc: userId).then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
@@ -501,6 +535,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           _isHealthFirstTime = false;
 
           selectedPrimaryColor = 0xff5f0cf9;
+          allowAppointmentNotification=true;
+          allowSymptomsNotification=true;
+          allowVitalNotification=true;
+
         }
       } else {
         userMappingId = '';
@@ -508,6 +546,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         greColor = 0xff753aec;
 
         selectedPrimaryColor = 0xff5f0cf9;
+        allowAppointmentNotification=true;
+        allowSymptomsNotification=true;
+        allowVitalNotification=true;
       }
     });
     return selectionResult;
@@ -591,6 +632,30 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         .result[0].tags!=null && getDeviceSelectionModel
         .result[0].tags.length>0?getDeviceSelectionModel
         .result[0].tags:new List();
+
+    allowAppointmentNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+        : true;
+
+
+    allowVitalNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+        : true;
+
+
+    allowSymptomsNotification =
+    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
+        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
+            ''
+        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+        : true;
+
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -611,7 +676,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor,tagsList)
+            greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
@@ -642,7 +707,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor,tagsList)
+            greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -653,14 +718,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Widget getValuesFromSharedPrefernce() {
+    final _myProfileBloc = MyProfileBloc();
+
     return FutureBuilder<MyProfileModel>(
-      future: getMyProfile(),
+      future: _myProfileBloc
+          .getMyProfileData(Constants.KEY_USERID_MAIN),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CommonCircularIndicator();
         } else if (snapshot.hasError) {
+          if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
+            myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+            myProfile = snapshot.data;
+            isCareGiver=myProfile?.result?.isCaregiver??false;
+            return getAppColorsAndDeviceValues();
+          }
           return ErrorsWidget();
         } else {
+          myProfile = snapshot.data;
+          isCareGiver=myProfile?.result?.isCaregiver??false;
           return getAppColorsAndDeviceValues();
         }
       },
@@ -705,3 +781,5 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     }
   }
 }
+
+

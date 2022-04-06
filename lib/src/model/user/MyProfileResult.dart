@@ -31,6 +31,7 @@ class MyProfileResult {
   String medicalPreferences;
   bool isSignedIn;
   bool isActive;
+  bool isCaregiver;
   // String createdBy;
   // String createdOn;
   String lastModifiedBy;
@@ -75,7 +76,7 @@ class MyProfileResult {
       this.userRoleCollection3,
       this.userRelationshipCollection,
       this.additionalInfo,
-      this.userProfileSettingCollection3,this.membershipOfferedBy});
+      this.userProfileSettingCollection3,this.membershipOfferedBy,this.isCaregiver});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -141,6 +142,11 @@ class MyProfileResult {
     additionalInfo = json['additionalInfo'] != null
         ? AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
+
+    if(json.containsKey("isCaregiver")){
+      isCaregiver = json['isCaregiver'];
+
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -172,6 +178,7 @@ class MyProfileResult {
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
     data['membershipOfferedBy'] = membershipOfferedBy;
+    data['isCaregiver'] = isCaregiver;
     if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
           userAddressCollection3.map((v) => v.toJson()).toList();
