@@ -1,3 +1,4 @@
+import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class GetDeviceSelectionModel {
@@ -92,6 +93,9 @@ class ProfileSetting {
   int greColor;
   String preferred_language;
   String qa_subscription;
+  CaregiverCommunicationSetting caregiverCommunicationSetting;
+
+
 
   ProfileSetting(
       {this.bpMonitor,
@@ -106,7 +110,7 @@ class ProfileSetting {
         this.preColor,
         this.greColor,
         this.preferred_language,
-        this.qa_subscription
+        this.qa_subscription,this.caregiverCommunicationSetting
       });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
@@ -123,6 +127,14 @@ class ProfileSetting {
     greColor = json['greColor'];
     preferred_language = json['preferred_language'];
     qa_subscription = json['qa-subscription'];
+    if(json.containsKey('caregiverCommunicationSetting')){
+      caregiverCommunicationSetting =
+      json['caregiverCommunicationSetting'] != null
+          ? new CaregiverCommunicationSetting.fromJson(
+          json['caregiverCommunicationSetting'])
+          : null;
+
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -140,6 +152,10 @@ class ProfileSetting {
     data['greColor'] = greColor;
     data['preferred_language'] = preferred_language;
     data['qa-subscription'] = qa_subscription;
+    if (this.caregiverCommunicationSetting != null) {
+      data['caregiverCommunicationSetting'] =
+          this.caregiverCommunicationSetting.toJson();
+    }
     return data;
   }
 }
