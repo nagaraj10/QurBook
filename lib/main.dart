@@ -615,6 +615,7 @@ class _MyFHBState extends State<MyFHB> {
               code: passedValArr[4],
             );
           }else{
+
             CaregiverAPIProvider().rejectCareGiver(
               receiver:passedValArr[5],
               requestor: passedValArr[6],
@@ -1108,6 +1109,11 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'googlefit') {
             return SplashScreen(
               nsRoute: 'googlefit',
+            );
+          }else if (parsedData[1] == 'familyMemberCaregiverRequest') {
+            return SplashScreen(
+              nsRoute: 'familyMemberCaregiverRequest',
+              bundle: parsedData[2]+'|'+parsedData[3]+'|'+parsedData[4]+'|'+parsedData[5]+'|'+parsedData[6],
             );
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {

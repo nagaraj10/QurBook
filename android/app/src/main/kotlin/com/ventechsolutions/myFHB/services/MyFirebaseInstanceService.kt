@@ -428,7 +428,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotificationAcceptAndReject(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
-        val TEMP_NAME = data[Constants.PROP_TEMP_NAME]
         val ack_sound: Uri =
             Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
@@ -298,6 +299,21 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
+                    }else if(widget.nsRoute == 'familyMemberCaregiverRequest'){
+                      final temp = widget.bundle.split('|');
+                      if(temp[0]=='accept'){
+                        CaregiverAPIProvider().approveCareGiver(
+                          phoneNumber: temp[1],
+                          code: temp[2],
+                        );
+                      }else{
+                        CaregiverAPIProvider().rejectCareGiver(
+                          receiver:temp[3],
+                          requestor: temp[4],
+                        );
+                      }
+                      PageNavigator.goToPermanent(context, router.rt_Landing);
+
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
