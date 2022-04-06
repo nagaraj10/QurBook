@@ -18,12 +18,14 @@ class CommunicationSettingReceiver:BroadcastReceiver() {
         val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
         val redirectTo = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
+        val type = p1?.getStringExtra("type")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
         val pm: PackageManager = p0.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(p0.packageName)
         launchIntent?.action = Intent.ACTION_SEND
         launchIntent?.type=Constants.TXT_PLAIN
+        launchIntent?.putExtra("type",type)
         launchIntent?.putExtra(Constants.PROP_REDIRECT_TO,redirectTo)
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
         p0.startActivity(launchIntent)

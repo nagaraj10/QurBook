@@ -19,6 +19,7 @@ class ViewMemberReceiver:BroadcastReceiver() {
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
         val redirectTo = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
         val careGiverRequestor = p1?.getStringExtra(Constants.PROP_CAREGIVER_REQUESTOR)
+        val type = p1?.getStringExtra("type")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
         val pm: PackageManager = p0.packageManager
@@ -27,6 +28,7 @@ class ViewMemberReceiver:BroadcastReceiver() {
         launchIntent?.type=Constants.TXT_PLAIN
         launchIntent?.putExtra(Constants.PROP_REDIRECT_TO,redirectTo)
         launchIntent?.putExtra(Constants.PROP_CAREGIVER_REQUESTOR,careGiverRequestor)
+        launchIntent?.putExtra("type",type)
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
         p0.startActivity(launchIntent)
     }

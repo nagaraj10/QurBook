@@ -287,7 +287,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4MissedCall(data)
         } else if (data["templateName"] == "chat") {
             createNotification4Chat(data)
-        }else if (data["templateName"]?.contains("familyMemberCaregiverRequest")==true){
+        }else if (data["templateName"]?.contains("associationNotificationToCaregiver")==true){
             showViewMemberAndCommunicationButtonNotification(data)
         }else if ((data["templateName"] == "DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")) {
             createNotification4DocAndPatAssociation(data)
@@ -402,6 +402,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         viewMemberIntent.putExtra(Intent.EXTRA_TEXT,"ack")
         viewMemberIntent.putExtra(Constants.PROP_REDIRECT_TO, "careGiverMemberProfile")
         viewMemberIntent.putExtra(Constants.PROP_CAREGIVER_REQUESTOR, data[Constants.PROP_CAREGIVER_REQUESTOR])
+        viewMemberIntent.putExtra("type", "careGiverMemberProfile")
 
         val viewMemberPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
@@ -414,6 +415,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         communicationSettingIntent.putExtra(getString(R.string.nsid), NS_ID)
         communicationSettingIntent.putExtra(Intent.EXTRA_TEXT,"ack")
         communicationSettingIntent.putExtra(Constants.PROP_REDIRECT_TO, "communicationSetting")
+        communicationSettingIntent.putExtra("type", "communicationSetting")
 
         val communicationSettingPendingIntent = PendingIntent.getBroadcast(
             applicationContext,

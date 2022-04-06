@@ -18,6 +18,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myPlan/view/myPlanDetail.dart';
+import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/regiment/models/regiment_arguments.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
@@ -29,6 +30,7 @@ import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRep
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
@@ -525,6 +527,23 @@ class _SplashScreenState extends State<SplashScreen> {
                           .updateNsActionStatus(body)
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
+                      });
+                    }else if(widget.nsRoute=='careGiverMemberProfile'){
+                      Navigator.pushNamed(
+                        context,
+                        router.rt_FamilyDetailScreen,
+                        arguments: MyFamilyDetailArguments(
+                            caregiverRequestor: widget.bundle),
+                      );
+                    }else if(widget.nsRoute=='communicationSetting'){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CareGiverSettings(),
+                        ),
+                      ).then((value) {
+
                       });
                     } else if (widget.nsRoute == 'claimList') {
                       final userId = widget?.bundle['userId'];

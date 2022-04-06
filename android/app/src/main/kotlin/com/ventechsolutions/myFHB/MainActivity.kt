@@ -536,6 +536,9 @@ class MainActivity : FlutterActivity() {
         }else if(redirect_to?.contains("careGiverMemberProfile") == true){
 
             sharedValue = "ack&${redirect_to}&${careGiverMemberId}"
+        }else if(redirect_to?.contains("communicationSetting") == true){
+
+            sharedValue = "ack&${redirect_to}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
