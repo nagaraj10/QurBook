@@ -62,6 +62,7 @@
     <string name="channel_cancel_apps">Cancel Appointments</string>
     <string name="channel_miss_ns">Missed Alert</string>
     <string name="ns_act_accept">Accept</string>
+    <string name="ns_act_reject">Reject</string>
     <string name="ns_act_cancel">Cancel</string>
     <string name="ns_act_reschedule">Reschedule</string>
     <string name="ns_act_decline">Decline</string>
