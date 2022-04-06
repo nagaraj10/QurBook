@@ -16,6 +16,7 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
+import 'caregiverAssosication/caregiverAPIProvider.dart';
 import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
@@ -607,6 +608,26 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Device List Screen',
           });
           PageNavigator.goToPermanent(context, router.rt_Landing);
+        }else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
+          if(passedValArr[2]=='accept'){
+            CaregiverAPIProvider().approveCareGiver(
+              phoneNumber: passedValArr[3],
+              code: passedValArr[4],
+            );
+          }else{
+
+            CaregiverAPIProvider().rejectCareGiver(
+              receiver:passedValArr[5],
+              requestor: passedValArr[6],
+
+            );
+          }
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'dashboard',
+            'navigationPage': 'Device List Screen',
+          });
+          PageNavigator.goToPermanent(context, router.rt_Landing);
         } else if (passedValArr[1] == 'th_provider_hospital') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1088,6 +1109,11 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'googlefit') {
             return SplashScreen(
               nsRoute: 'googlefit',
+            );
+          }else if (parsedData[1] == 'familyMemberCaregiverRequest') {
+            return SplashScreen(
+              nsRoute: 'familyMemberCaregiverRequest',
+              bundle: parsedData[2]+'|'+parsedData[3]+'|'+parsedData[4]+'|'+parsedData[5]+'|'+parsedData[6],
             );
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {

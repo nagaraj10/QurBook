@@ -125,6 +125,8 @@
         <receiver android:name=".services.Renew" />
         <receiver android:name=".services.Callback" />
         <receiver android:name=".services.Decline" />
+        <receiver android:name=".services.AcceptCareGiver" />
+        <receiver android:name=".services.RejectCareGiver" />
 
         <service android:name=".services.AVServices" />
 
