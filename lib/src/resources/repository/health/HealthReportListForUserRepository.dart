@@ -292,9 +292,10 @@ class HealthReportListForUserRepository {
       String qa_subscription,
       int priColor,
       int greColor,
-      List<Tags> tags) async {
+      List<Tags> tags,bool allowAppointmentALert,bool allowVitalALerts,bool allowsymptomsAlert) async {
+    var userIDMain=await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var body = jsonEncode({
-      "userId": userId,
+      "userId": userIDMain,
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
@@ -308,7 +309,12 @@ class HealthReportListForUserRepository {
         "greColor": greColor,
         "priColor": priColor,
         'preferred_language': preferred_language,
-        'qa-subscription': qa_subscription
+        'qa-subscription': qa_subscription,
+        'caregiverCommunicationSetting':{
+          "vitals": allowVitalALerts ?? true,
+          "symptoms":  allowsymptomsAlert ?? true,
+          "appointments": allowAppointmentALert ?? true
+        }
       },
       'tags': tags
     });
@@ -333,7 +339,7 @@ class HealthReportListForUserRepository {
       String qa_subscription,
       int priColor,
       int greColor,
-      List<Tags> tagsList) async {
+      List<Tags> tagsList,bool allowAppointmentALert,bool allowVitalALerts,bool allowsymptomsAlert) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -349,7 +355,12 @@ class HealthReportListForUserRepository {
         "greColor": greColor,
         "priColor": priColor,
         'preferred_language': preferred_language,
-        'qa-subscription': qa_subscription
+        'qa-subscription': qa_subscription,
+        'caregiverCommunicationSetting':{
+          "vitals": allowVitalALerts ?? true,
+          "symptoms":  allowsymptomsAlert ?? true,
+          "appointments": allowAppointmentALert ?? true
+        }
       },
       'tags': tagsList
     });

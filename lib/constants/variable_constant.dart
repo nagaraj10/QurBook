@@ -313,7 +313,7 @@ const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
-
+String strCareGiverSettings = 'Caregiver Communication Settings';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
@@ -698,6 +698,12 @@ const String strNoMessage = 'No Messages';
 const String icon_qurhub_lock = 'assets/icons/lock.svg';
 const String icon_qurhub_switch = 'assets/icons/switch.svg';
 const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
+
+//Caregiver Setting
+const String strAllowVitals="Allow Vitals";
+const String strAllowSymptoms="Allow Symptoms";
+const String strAllowAppointments="Allow Appointments";
+
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
