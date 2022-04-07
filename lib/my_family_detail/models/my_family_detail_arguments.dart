@@ -5,7 +5,7 @@ class MyFamilyDetailArguments {
   List<SharedByUsers> profilesSharedByMe;
   MyProfileModel myProfile;
   int currentPage;
-
+  String caregiverRequestor;
   MyFamilyDetailArguments(
-      {this.profilesSharedByMe, this.currentPage, this.myProfile});
+      {this.profilesSharedByMe, this.currentPage, this.myProfile,this.caregiverRequestor});
 }

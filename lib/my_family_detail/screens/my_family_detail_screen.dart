@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
+
 import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +113,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   var weightController = TextEditingController();
   FocusNode weightFocus = FocusNode();
   MyProfileModel myProfile = MyProfileModel();
+  FamilyMemberListRepository _familyResponseListRepository=FamilyMemberListRepository();
+  List<SharedByUsers> profilesSharedByMeAry=[];
 
   @override
   void initState() {
@@ -119,10 +123,34 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     getAllCustomRoles();
     fetchUserProfileInfo();
+    if(widget.arguments.caregiverRequestor!=null){
+      getFamilyMembers();
+    }else{
+      setState(() {
+        _currentPage = widget.arguments.currentPage;
+      });
+    }
+
+  }
+
+  void getFamilyMembers() async{
+    FamilyMembers familyResponseList= await _familyResponseListRepository.getFamilyMembersListNew();
+    profilesSharedByMeAry=familyResponseList.result.sharedByUsers;
+    print("================>"+widget.arguments.caregiverRequestor);
+    int position=0;
+    for(int i=0;i<profilesSharedByMeAry.length;i++){
+      print(profilesSharedByMeAry[i].nickName);
+      print(profilesSharedByMeAry[i].id);
+      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].id){
+        position=i;
+      }
+    }
+    print("----------->"+position.toString());
     setState(() {
-      _currentPage = widget.arguments.currentPage;
+      _currentPage = position;
     });
   }
+
 
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
@@ -214,10 +242,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   List<Widget> buildMyFamilDetailPages() {
     var children = <Widget>[];
-
-    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-      children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
+    if(widget.arguments.caregiverRequestor!=null){
+      for (var i = 0; i < profilesSharedByMeAry.length; i++) {
+        children.add(_showPageData(profilesSharedByMeAry[i]));
+      }
+    }else{
+      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+        children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
+      }
     }
+
     return children;
   }
 
@@ -1441,4 +1475,5 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       );
     }
   }
+
 }

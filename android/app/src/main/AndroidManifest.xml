@@ -133,6 +133,8 @@
         <receiver android:name=".services.DismissReceiver" />
         <receiver android:name=".services.NoReceiver" />
         <receiver android:name=".services.SnoozeReceiver" />
+        <receiver android:name=".services.ViewMemberReceiver" />
+        <receiver android:name=".services.CommunicationSettingReceiver" />
         <receiver
             android:name=".services.ReminderBroadcaster"
             android:process=":remote" />

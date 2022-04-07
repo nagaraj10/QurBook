@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -23,6 +24,7 @@ import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
 import 'myPlan/view/myPlanDetail.dart';
+import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'regiment/models/regiment_arguments.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
@@ -502,6 +504,23 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        }else if (passedValArr[1] == 'careGiverMemberProfile') {
+          Navigator.pushNamed(
+            context,
+            router.rt_FamilyDetailScreen,
+            arguments: MyFamilyDetailArguments(
+                caregiverRequestor: passedValArr[2]),
+          );
+        }else if (passedValArr[1] == 'communicationSetting') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  CareGiverSettings(),
+            ),
+          ).then((value) {
+
+          });
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1168,6 +1187,17 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'chat',
               bundle: navRoute,
+            );
+          }else if (parsedData[1] == 'careGiverMemberProfile') {
+            //this need to be navigte to chat detail screen
+            return SplashScreen(
+              nsRoute: 'careGiverMemberProfile',
+              bundle: parsedData[2],
+            );
+          }else if (parsedData[1] == 'communicationSetting') {
+            //this need to be navigte to chat detail screen
+            return SplashScreen(
+              nsRoute: 'communicationSetting',
             );
           } else if (parsedData[1] == 'mycart') {
             //this need to be navigte to My Plans screen
