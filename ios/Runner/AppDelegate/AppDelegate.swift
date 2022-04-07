@@ -41,7 +41,8 @@ import CoreLocation
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
-    
+    let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
+
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
@@ -103,11 +104,17 @@ import CoreLocation
         let callBackNowAction = UNNotificationAction(identifier: "Callback", title: "Call back", options: [.foreground])
         let rejectAction = UNNotificationAction(identifier: "Reject", title: "Reject", options: [.destructive])
         let acceptAction = UNNotificationAction(identifier: "Accept", title: "Accept", options: [.foreground])
+        let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
+        let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
+
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
                                                              options: [])
-        
+        let showViewMemberAndCommunicationButtonscategory = UNNotificationCategory(identifier: showViewMemberAndCommunicationButtons,
+                                                             actions:  [viewMemberAction, communicationsettingsAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
         let showSingleButtonCategory = UNNotificationCategory(identifier: showSingleButtonCat,
                                                               actions:  [declineAction],
                                                               intentIdentifiers: [],
@@ -120,7 +127,7 @@ import CoreLocation
                                                                         actions:  [acceptAction,rejectAction],
                                                                         intentIdentifiers: [],
                                                                         options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -540,6 +547,11 @@ import CoreLocation
                         "data" : data
                     ]
                 }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else if (response.actionIdentifier.lowercased() == "communicationsettings" || response.actionIdentifier.lowercased() == "viewmember"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data
