@@ -583,10 +583,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   List<Widget> _buildPageIndicator() {
-    var list = <Widget>[];
-    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    var list=<Widget>[];
+    if(widget.arguments.profilesSharedByMe!=null){
+      list = <Widget>[];
+      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+        list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+      }
     }
+
     return list;
   }
 

@@ -448,12 +448,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .addAction(
                 R.drawable.ic_yes,
-                getString(R.string.ns_act_cancel),
+                getString(R.string.ns_act_viewmember),
                 viewMemberPendingIntent
             )
             .addAction(
                 R.drawable.ic_yes,
-                getString(R.string.ns_act_reschedule),
+                getString(R.string.ns_act_communication_settings),
                 communicationSettingPendingIntent
             )
             .setStyle(
