@@ -136,16 +136,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   void getFamilyMembers() async{
     FamilyMembers familyResponseList= await _familyResponseListRepository.getFamilyMembersListNew();
     profilesSharedByMeAry=familyResponseList.result.sharedByUsers;
-    print("================>"+widget.arguments.caregiverRequestor);
     int position=0;
     for(int i=0;i<profilesSharedByMeAry.length;i++){
-      print(profilesSharedByMeAry[i].nickName);
-      print(profilesSharedByMeAry[i].id);
-      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].id){
+      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].child.id){
         position=i;
       }
     }
-    print("----------->"+position.toString());
     setState(() {
       _currentPage = position;
     });

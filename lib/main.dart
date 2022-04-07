@@ -506,6 +506,7 @@ class _MyFHBState extends State<MyFHB> {
             // );
           }
         }else if (passedValArr[1] == 'careGiverMemberProfile') {
+          print('caregiverid: '+passedValArr[2]);
           Get.to(MyFamilyDetailScreen(arguments: MyFamilyDetailArguments(
               caregiverRequestor: passedValArr[2]),
           ),);
