@@ -25,7 +25,7 @@ class CaregiverAPIProvider {
     });
     try {
       FlutterToast().getToast(
-       param.toString(),
+        param.toString(),
         Colors.green,
       );
       final response = await ApiServices.post(
@@ -33,10 +33,10 @@ class CaregiverAPIProvider {
         headers: headers,
         body: param,
       );
-      FlutterToast().getToast(
-        response.body.toString(),
-        Colors.green,
-      );
+      // FlutterToast().getToast(
+      //   response.body.toString(),
+      //   Colors.green,
+      // );
       final model = CaregiverAssosicationModel.fromMap(
         json.decode(
           response.body,
