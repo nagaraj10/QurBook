@@ -7,6 +7,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
@@ -1495,6 +1497,72 @@ class _NotificationScreen extends State<NotificationScreen> {
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 15.0.sp,
+                ),
+              ),
+            ],
+          ),
+        );
+        break;
+      case parameters.associationNotificationToCaregiver:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  if ((notification?.messageDetails?.payload
+                      ?.caregiverRequestor ??
+                      '')
+                      .isNotEmpty ) {
+                    Navigator.pushNamed(
+                      context,
+                      router.rt_FamilyDetailScreen,
+                      arguments: MyFamilyDetailArguments(
+                          caregiverRequestor: notification?.messageDetails?.payload
+                              ?.caregiverRequestor ??
+                              ''),
+                    );
+                  }
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.viewMember,
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CareGiverSettings(),
+                    ),
+                  );
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.communicationSetting,
+                  colors: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
                 ),
               ),
             ],
