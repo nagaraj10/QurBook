@@ -64,6 +64,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   var userMappingId = '';
   bool isTouched = false;
+  PreferredMeasurement preferredMeasurement;
   List<Tags> tagsList = new List<Tags>();
 
   bool allowAppointmentNotification=true;
@@ -216,7 +217,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         preferred_language,
         qa_subscription,
         priColor,
-        greColor,
+        greColor,preferredMeasurement,
         tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
         .then((value) {
       updateDeviceModel = value;
@@ -329,6 +330,15 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
               ''
           ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
           : 'Y';
+
+      preferredMeasurement = getDeviceSelectionModel
+          .result[0].profileSetting.preferredMeasurement !=
+          null &&
+          getDeviceSelectionModel
+              .result[0].profileSetting.preferredMeasurement !=
+              ''
+          ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+          : null;
 
       tagsList = getDeviceSelectionModel.result[0].tags != null &&
           getDeviceSelectionModel.result[0].tags.length > 0
