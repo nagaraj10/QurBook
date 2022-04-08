@@ -300,6 +300,8 @@ class CommonConstants {
   static String strBillName = 'Bill Name *';
   static String strClaimType = 'Claim Type *';
   static String strBillDate = 'Bill Date *';
+  static String strCaregiverApproved = 'Caregiver Associated Successfully';
+  static String strCaregiverFailed = 'Caregiver Association Failed';
   static String strClaimAmt = 'Claim Amount';
   static String strClaimAmtWithStar = 'Claim Amount *';
   static String strFamilyMember = 'Family Member *';

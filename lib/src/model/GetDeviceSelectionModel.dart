@@ -1,3 +1,4 @@
+import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
 class GetDeviceSelectionModel {
@@ -35,14 +36,14 @@ class SelectionResult {
   String lastModifiedOn;
   List<Tags> tags;
 
-
   SelectionResult(
       {this.id,
-        this.userId,
-        this.profileSetting,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,this.tags});
+      this.userId,
+      this.profileSetting,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.tags});
 
   SelectionResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -93,21 +94,24 @@ class ProfileSetting {
   String preferred_language;
   String qa_subscription;
   PreferredMeasurement preferredMeasurement;
+  CaregiverCommunicationSetting caregiverCommunicationSetting;
 
-  ProfileSetting({this.bpMonitor,
-    this.googleFit,
-    this.healthFit,
-    this.allowDigit,
-    this.glucoMeter,
-    this.weighScale,
-    this.allowDevice,
-    this.thermoMeter,
-    this.pulseOximeter,
-    this.preColor,
-    this.greColor,
-    this.preferred_language,
-    this.qa_subscription, this.preferredMeasurement
-  });
+  ProfileSetting(
+      {this.bpMonitor,
+      this.googleFit,
+      this.healthFit,
+      this.allowDigit,
+      this.glucoMeter,
+      this.weighScale,
+      this.allowDevice,
+      this.thermoMeter,
+      this.pulseOximeter,
+      this.preColor,
+      this.greColor,
+      this.preferred_language,
+      this.qa_subscription,
+      this.preferredMeasurement,
+      this.caregiverCommunicationSetting});
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -126,30 +130,39 @@ class ProfileSetting {
     preferredMeasurement = json['preferred_measurement'] != null
         ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
         : null;
+    if (json.containsKey('caregiverCommunicationSetting')) {
+      caregiverCommunicationSetting =
+          json['caregiverCommunicationSetting'] != null
+              ? new CaregiverCommunicationSetting.fromJson(
+                  json['caregiverCommunicationSetting'])
+              : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
-    final data = Map<String, dynamic>();
-    data['bpMonitor'] = bpMonitor;
+    final data = <String, dynamic>{};
+
     data['googleFit'] = googleFit;
     data['healthFit'] = healthFit;
-    data['allowDigit'] = allowDigit;
     data['glucoMeter'] = glucoMeter;
-    data['weighScale'] = weighScale;
     data['allowDevice'] = allowDevice;
     data['thermoMeter'] = thermoMeter;
     data['pulseOximeter'] = pulseOximeter;
     data['priColor'] = preColor;
     data['greColor'] = greColor;
     data['preferred_language'] = preferred_language;
-    data['qa-subscription'] = qa_subscription;
+
     if (this.preferredMeasurement != null) {
       data['preferred_measurement'] = this.preferredMeasurement.toJson();
     }
+    if (this.caregiverCommunicationSetting != null) {
+      data['caregiverCommunicationSetting'] =
+          this.caregiverCommunicationSetting.toJson();
+    }
     return data;
   }
-
 }
+
 class PreferredMeasurement {
   Height height;
   Height weight;
@@ -159,9 +172,9 @@ class PreferredMeasurement {
 
   PreferredMeasurement.fromJson(Map<String, dynamic> json) {
     height =
-    json['height'] != null ? new Height.fromJson(json['height']) : null;
+        json['height'] != null ? new Height.fromJson(json['height']) : null;
     weight =
-    json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+        json['weight'] != null ? new Height.fromJson(json['weight']) : null;
     temperature = json['temperature'] != null
         ? new Height.fromJson(json['temperature'])
         : null;
@@ -197,6 +210,5 @@ class Height {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
-    return data;
   }
 }

@@ -496,6 +496,11 @@ class MainActivity : FlutterActivity() {
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         var redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
         val claimId = intent.getStringExtra(Constants.PROP_CLAIM_ID)
+        val patientPhoneNumber = intent.getStringExtra(Constants.PATIENT_PHONE_NUMBER)
+        val verificationCode = intent.getStringExtra(Constants.VERIFICATION_CODE)
+        val caregiverRequestor = intent.getStringExtra(Constants.CAREGIVER_REQUESTER)
+        val caregiverReceiver = intent.getStringExtra(Constants.CAREGIVER_RECEIVER)
+        val type  = intent.getStringExtra("type")
 
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val prescriptionId = intent.getStringExtra(Constants.PROP_PRESCRIPTION_ID)
@@ -529,6 +534,9 @@ class MainActivity : FlutterActivity() {
         }else if(redirect_to?.contains("myRecords") == true){
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
+        }else if(redirect_to?.contains("familyMemberCaregiverRequest") == true){
+
+            sharedValue = "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
         }else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink

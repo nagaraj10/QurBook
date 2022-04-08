@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 
 import '../constants/HeaderRequest.dart';
 import '../constants/fhb_constants.dart';
@@ -23,10 +24,18 @@ class CaregiverAPIProvider {
       verificationCode: code,
     });
     try {
+      FlutterToast().getToast(
+       param.toString(),
+        Colors.green,
+      );
       final response = await ApiServices.post(
         url,
         headers: headers,
         body: param,
+      );
+      FlutterToast().getToast(
+        response.body.toString(),
+        Colors.green,
       );
       final model = CaregiverAssosicationModel.fromMap(
         json.decode(
@@ -55,6 +64,7 @@ class CaregiverAPIProvider {
       caregiverReceiver: receiver,
       caregiverRequestor: requestor,
     });
+    print(param);
     try {
       final response = await ApiServices.put(
         url,

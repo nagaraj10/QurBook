@@ -85,6 +85,10 @@ class ChatScreenViewModel extends ChangeNotifier {
   PreferredMeasurement preferredMeasurement;
 
   List<Tags> tagsList = new List<Tags>();
+
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     canSpeak = canSheelaSpeak;
     if (!canSheelaSpeak) {
@@ -352,24 +356,25 @@ class ChatScreenViewModel extends ChangeNotifier {
   }) async {
     stopTTSEngine();
 
-    if(!isRedirectionNeed){
-       Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(payload, screen: _screen);
-    });
+    if (!isRedirectionNeed) {
+      Future.delayed(Duration(seconds: 1), () {
+        sendToMaya(payload, screen: _screen);
+      });
 
-    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
-    Conversation model = new Conversation(
-        isMayaSaid: false,
-        text: buttonText,
-        name: prof.result != null
-            ? prof.result.firstName + ' ' + prof.result.lastName
-            : '',
-        timeStamp: date,
-        redirect: isRedirect,
-        screen: _screen);
+      var date =
+          new FHBUtils().getFormattedDateString(DateTime.now().toString());
+      Conversation model = new Conversation(
+          isMayaSaid: false,
+          text: buttonText,
+          name: prof.result != null
+              ? prof.result.firstName + ' ' + prof.result.lastName
+              : '',
+          timeStamp: date,
+          redirect: isRedirect,
+          screen: _screen);
 
-    conversations.add(model);
-    notifyListeners();
+      conversations.add(model);
+      notifyListeners();
     }
     Future.delayed(Duration(seconds: 3), () {
       conversations.forEach((conversation) {
@@ -960,6 +965,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -973,6 +981,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
 
         var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
         healthReportListForUserRepository
@@ -991,7 +1002,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                 qa_subscription,
                 preColor,
                 greColor,
-                tagsList)
+                tagsList,
+                allowAppointmentNotification,
+                allowVitalNotification,
+                allowSymptomsNotification)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
@@ -1014,7 +1028,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                     qa_subscription,
                     preColor,
                     greColor,
-                    tagsList)
+                    tagsList,
+                    allowAppointmentNotification,
+                    allowVitalNotification,
+                    allowSymptomsNotification)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -1093,17 +1110,48 @@ class ChatScreenViewModel extends ChangeNotifier {
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
 
-    preferredMeasurement=getDeviceSelectionModel
-        .result[0].profileSetting.preferredMeasurement !=
-        null &&
-        getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement !=
-            ''
+    preferredMeasurement = getDeviceSelectionModel
+                    .result[0].profileSetting.preferredMeasurement !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.preferredMeasurement !=
+                ''
         ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
         : null;
     tagsList = getDeviceSelectionModel.result[0].tags != null &&
             getDeviceSelectionModel.result[0].tags.length > 0
         ? getDeviceSelectionModel.result[0].tags
         : new List();
+
+    allowAppointmentNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting
+            .caregiverCommunicationSetting?.appointments
+        : true;
+
+    allowVitalNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.vitals
+        : true;
+
+    allowSymptomsNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+        : true;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1125,7 +1173,12 @@ class ChatScreenViewModel extends ChangeNotifier {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor,preferredMeasurement,tagsList)
+            greColor,
+            preferredMeasurement,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -1149,7 +1202,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                   qa_subscription,
                   preColor,
                   greColor,
-                  tagsList)
+                  tagsList,
+                  allowAppointmentNotification,
+                  allowVitalNotification,
+                  allowSymptomsNotification)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

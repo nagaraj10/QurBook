@@ -28,7 +28,7 @@ const String KEY_ADD_PLAN_BUTTON = 'addPlanBtn';
 const String KEY_CART_PLAN = 'cartPlan';
 const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
-
+const String careGiver = 'Caregiver Communication Settings';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';

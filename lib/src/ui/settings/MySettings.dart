@@ -65,8 +65,11 @@ class _MySettingsState extends State<MySettings> {
   bool isTouched = false;
 
   PreferredMeasurement preferredMeasurement;
+  List<Tags> tagsList = [];
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
 
-  List<Tags> tagsList = new List<Tags>();
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -136,6 +139,9 @@ class _MySettingsState extends State<MySettings> {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -149,6 +155,9 @@ class _MySettingsState extends State<MySettings> {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
       }
     });
     return selectionResult;
@@ -172,7 +181,10 @@ class _MySettingsState extends State<MySettings> {
             qa_subscription,
             priColor,
             greColor,
-            tagsList)
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -207,7 +219,10 @@ class _MySettingsState extends State<MySettings> {
             priColor,
             greColor,
             preferredMeasurement,
-            tagsList)
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -333,6 +348,36 @@ class _MySettingsState extends State<MySettings> {
               getDeviceSelectionModel.result[0].tags.length > 0
           ? getDeviceSelectionModel.result[0].tags
           : new List();
+
+      allowAppointmentNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel.result[0].profileSetting
+              .caregiverCommunicationSetting?.appointments
+          : true;
+
+      allowVitalNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.vitals
+          : true;
+
+      allowSymptomsNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+          : true;
     });
   }
 
