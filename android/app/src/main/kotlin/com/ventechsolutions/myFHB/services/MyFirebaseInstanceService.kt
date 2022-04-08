@@ -295,7 +295,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotificationAcceptAndReject(data)
         }else if (data["templateName"] == "chat") {
             createNotification4Chat(data)
-        } else if ((data["templateName"] == "DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")) {
+        }else if (data["templateName"]?.contains("associationNotificationToCaregiver")==true){
+            showViewMemberAndCommunicationButtonNotification(data)
+        }else if ((data["templateName"] == "DoctorPatientAssociation") || (data["templateName"] == "QurplanCargiverPatientAssociation")) {
             createNotification4DocAndPatAssociation(data)
         } else if (data["templateName"] == "MissingActivitiesReminder") {
             createNotification4MissedEvents(data)
@@ -380,6 +382,89 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .build()
             nsManager.notify(NS_ID, notification)
         }
+    }
+
+    private fun showViewMemberAndCommunicationButtonNotification(data: Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(
+                CHANNEL_ACK,
+                getString(R.string.channel_ack),
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
+            channelAck.description = getString(R.string.channel_ack_desc)
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelAck.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelAck)
+        }
+
+        val viewMemberIntent = Intent(applicationContext, ViewMemberReceiver::class.java)
+        viewMemberIntent.putExtra(getString(R.string.nsid), NS_ID)
+        viewMemberIntent.putExtra(Intent.EXTRA_TEXT,"ack")
+        viewMemberIntent.putExtra(Constants.PROP_REDIRECT_TO, "careGiverMemberProfile")
+        viewMemberIntent.putExtra(Constants.PROP_CAREGIVER_REQUESTOR, data[Constants.PROP_CAREGIVER_REQUESTOR])
+        viewMemberIntent.putExtra("type", "careGiverMemberProfile")
+
+        val viewMemberPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            viewMemberIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+        val communicationSettingIntent = Intent(applicationContext, CommunicationSettingReceiver::class.java)
+        communicationSettingIntent.putExtra(getString(R.string.nsid), NS_ID)
+        communicationSettingIntent.putExtra(Intent.EXTRA_TEXT,"ack")
+        communicationSettingIntent.putExtra(Constants.PROP_REDIRECT_TO, "communicationSetting")
+        communicationSettingIntent.putExtra("type", "communicationSetting")
+
+        val communicationSettingPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            communicationSettingIntent,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setWhen(0)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(
+                R.drawable.ic_yes,
+                getString(R.string.ns_act_viewmember),
+                viewMemberPendingIntent
+            )
+            .addAction(
+                R.drawable.ic_yes,
+                getString(R.string.ns_act_communication_settings),
+                communicationSettingPendingIntent
+            )
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID, notification)
+
     }
 
     private fun createNotification4MissedCall(data: Map<String, String> = HashMap()) {

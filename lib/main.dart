@@ -11,6 +11,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -24,6 +26,7 @@ import 'common/DatabseUtil.dart';
 import 'constants/router_variable.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'regiment/models/regiment_arguments.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
@@ -483,7 +486,7 @@ class _MyFHBState extends State<MyFHB> {
     var doctorPic = '';
     var patientPic = '';
     var callType = '';
-    var notificationListId ='';
+    var notificationListId = '';
     _msgListener.value = _msg;
     print('datanotificaton: ' + msg.toString());
     final cMsg = msg as String;
@@ -526,6 +529,31 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        } else if (passedValArr[1] == 'careGiverMemberProfile') {
+          print('caregiverid: ' + passedValArr[2]);
+          Get.to(
+            MyFamilyDetailScreen(
+              arguments:
+                  MyFamilyDetailArguments(caregiverRequestor: passedValArr[2]),
+            ),
+          );
+          // Navigator.pushNamed(
+          //   context,
+          //   router.rt_FamilyDetailScreen,
+          //   arguments: MyFamilyDetailArguments(
+          //       caregiverRequestor: passedValArr[2]),
+          // );
+        } else if (passedValArr[1] == 'communicationSetting') {
+          print("working communication");
+          Get.to(CareGiverSettings());
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) =>
+          //         CareGiverSettings(),
+          //   ),
+          // );
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -535,9 +563,9 @@ class _MyFHBState extends State<MyFHB> {
           if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
             final rawTitle = passedValArr[2]?.split('|')[0];
             final rawBody = passedValArr[2]?.split('|')[1];
-            if(passedValArr[3]!=null && passedValArr[3].isNotEmpty){
-               notificationListId = passedValArr[3];
-               FetchNotificationService().inAppUnreadAction(notificationListId);
+            if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+              notificationListId = passedValArr[3];
+              FetchNotificationService().inAppUnreadAction(notificationListId);
             }
 
             var sheelaLang =
@@ -632,18 +660,16 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Device List Screen',
           });
           PageNavigator.goToPermanent(context, router.rt_Landing);
-        }else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
-          if(passedValArr[2]=='accept'){
+        } else if (passedValArr[1] == 'familyMemberCaregiverRequest') {
+          if (passedValArr[2] == 'accept') {
             CaregiverAPIProvider().approveCareGiver(
               phoneNumber: passedValArr[3],
               code: passedValArr[4],
             );
-          }else{
-
+          } else {
             CaregiverAPIProvider().rejectCareGiver(
-              receiver:passedValArr[5],
+              receiver: passedValArr[5],
               requestor: passedValArr[6],
-
             );
           }
           fbaLog(eveParams: {
@@ -1123,7 +1149,7 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'sheela') {
             return SplashScreen(
               nsRoute: 'sheela',
-              bundle: parsedData[2]+'|'+parsedData[3],
+              bundle: parsedData[2] + '|' + parsedData[3],
             );
           } else if (parsedData[1] == 'profile_page' ||
               parsedData[1] == 'profile') {
@@ -1134,10 +1160,18 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'googlefit',
             );
-          }else if (parsedData[1] == 'familyMemberCaregiverRequest') {
+          } else if (parsedData[1] == 'familyMemberCaregiverRequest') {
             return SplashScreen(
               nsRoute: 'familyMemberCaregiverRequest',
-              bundle: parsedData[2]+'|'+parsedData[3]+'|'+parsedData[4]+'|'+parsedData[5]+'|'+parsedData[6],
+              bundle: parsedData[2] +
+                  '|' +
+                  parsedData[3] +
+                  '|' +
+                  parsedData[4] +
+                  '|' +
+                  parsedData[5] +
+                  '|' +
+                  parsedData[6],
             );
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
@@ -1192,6 +1226,17 @@ class _MyFHBState extends State<MyFHB> {
             return SplashScreen(
               nsRoute: 'chat',
               bundle: navRoute,
+            );
+          } else if (parsedData[1] == 'careGiverMemberProfile') {
+            //this need to be navigte to chat detail screen
+            return SplashScreen(
+              nsRoute: 'careGiverMemberProfile',
+              bundle: parsedData[2],
+            );
+          } else if (parsedData[1] == 'communicationSetting') {
+            //this need to be navigte to chat detail screen
+            return SplashScreen(
+              nsRoute: 'communicationSetting',
             );
           } else if (parsedData[1] == 'mycart') {
             //this need to be navigte to My Plans screen

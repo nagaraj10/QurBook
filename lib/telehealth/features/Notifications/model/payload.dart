@@ -1,3 +1,5 @@
+import '../../../../constants/fhb_parameters.dart' as parameters;
+
 class Payload {
   Payload({
     this.type,
@@ -19,6 +21,10 @@ class Payload {
     this.userId,
     this.patientName,
     this.claimId,
+    this.patientPhoneNumber,
+    this.verificationCode,
+    this.caregiverRequestor,
+    this.caregiverReceiver,
   });
 
   String type;
@@ -40,6 +46,10 @@ class Payload {
   String userId;
   String patientName;
   String claimId;
+  String patientPhoneNumber;
+  String verificationCode;
+  String caregiverRequestor;
+  String caregiverReceiver;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
@@ -71,6 +81,18 @@ class Payload {
     patientName = json["patientName"] == null ? null : json["patientName"];
     userId = json["userId"] == null ? null : json["userId"];
     claimId = json["claimId"] == null ? null : json["claimId"];
+    patientPhoneNumber = json[parameters.patientPhoneNumber] == null
+        ? null
+        : json[parameters.patientPhoneNumber];
+    caregiverRequestor = json[parameters.caregiverRequestor] == null
+        ? null
+        : json[parameters.caregiverRequestor];
+    caregiverReceiver = json[parameters.caregiverReceiver] == null
+        ? null
+        : json[parameters.caregiverReceiver];
+    verificationCode = json[parameters.verificationCode] == null
+        ? null
+        : json[parameters.verificationCode];
     if (json["planId"] != null) {
       var plan = json["planId"];
       if (plan.runtimeType == String) {

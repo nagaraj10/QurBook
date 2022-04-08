@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
+
 import '../../constants/fhb_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -111,23 +113,48 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   var weightController = TextEditingController();
   FocusNode weightFocus = FocusNode();
   MyProfileModel myProfile = MyProfileModel();
+  FamilyMemberListRepository _familyResponseListRepository=FamilyMemberListRepository();
+  List<SharedByUsers> profilesSharedByMeAry=[];
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
-    getAllCustomRoles();
-    fetchUserProfileInfo();
+
+    if(widget.arguments.caregiverRequestor!=null){
+      getAllCustomRoles();
+
+    }else{
+      getAllCustomRoles();
+      fetchUserProfileInfo();
+      setState(() {
+        _currentPage = widget.arguments.currentPage;
+      });
+    }
+
+  }
+
+  void getFamilyMembers() async{
+    FamilyMembers familyResponseList= await _familyResponseListRepository.getFamilyMembersListNew();
+    profilesSharedByMeAry=familyResponseList.result.sharedByUsers;
+    var position=0;
+    for(var i=0;i<profilesSharedByMeAry.length;i++){
+      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].child.id){
+        position=i;
+      }
+    }
+    _currentPage = position;
     setState(() {
-      _currentPage = widget.arguments.currentPage;
     });
   }
+
 
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     myProfile = widget.arguments.myProfile;
+    getFamilyMembers();
 
     return myProfile;
   }
@@ -195,7 +222,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         body: PageView(
             physics: ClampingScrollPhysics(),
             controller: PageController(
-                initialPage: _currentPage,
+                initialPage: widget.arguments.caregiverRequestor!=null?0:_currentPage,
                 keepPage: false,
                 viewportFraction: 1),
             onPageChanged: (page) {
@@ -214,10 +241,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   List<Widget> buildMyFamilDetailPages() {
     var children = <Widget>[];
-
-    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-      children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
+    if(widget.arguments.caregiverRequestor!=null){
+      if(profilesSharedByMeAry.length>0){
+        children.add(_showPageData(profilesSharedByMeAry[_currentPage]));
+      }
+    }else{
+      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+        children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
+      }
     }
+
     return children;
   }
 
@@ -549,10 +582,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   List<Widget> _buildPageIndicator() {
-    var list = <Widget>[];
-    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    var list=<Widget>[];
+    if(widget.arguments.profilesSharedByMe!=null){
+      list = <Widget>[];
+      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+        list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+      }
     }
+
     return list;
   }
 
@@ -1180,6 +1217,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     relationShipResponseList =
         await addFamilyUserInfoRepository.getCustomRoles();
+    fetchUserProfileInfo();
   }
 
   Widget getRelationshipDetails(RelationShipResponseList data) {
@@ -1441,4 +1479,5 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       );
     }
   }
+
 }
