@@ -1,5 +1,5 @@
-import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/model/CaregiverCommunicationSettings.dart';
 
 class GetDeviceSelectionModel {
   bool isSuccess;
