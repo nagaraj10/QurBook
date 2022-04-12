@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/chat_socket/view/ChatUserList.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/ticket_support/view/my_tickets_screen.dart';
+import 'package:provider/provider.dart';
+
+import '../../../chat_socket/view/ChatUserList.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
+import '../../../common/common_circular_indicator.dart';
 import '../../../constants/fhb_constants.dart' as constants;
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart' as variable;
-import 'video_screen.dart';
-import '../../view_model/landing_view_model.dart';
+import '../../../plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/user/user_accounts_arguments.dart';
+import '../../../src/utils/language/language_utils.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../telehealth/features/chat/view/chat.dart';
-import 'package:provider/provider.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-
+import '../../../telehealth/features/chat/view/home.dart';
+import '../../../ticket_support/view/my_tickets_screen.dart';
+import '../../view_model/landing_view_model.dart';
 import 'landing_card.dart';
+import 'video_screen.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({
