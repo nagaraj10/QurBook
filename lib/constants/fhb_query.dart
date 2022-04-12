@@ -355,3 +355,8 @@ const String qr_chat_socket_get_user_id_doc = 'doctor/';
 const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
 
 const String qr_hub = 'qur-hub/user-hub';
+
+// qurHome Symptom
+
+const String qr_list_symptom = 'qurplan-node-mysql/get-userFormData/';
+const String qr_is_symptom = '&isSymptom=true&asNeeded=false&providerId=null&page=1&size=1000&searchText=&sorts=activity|ASC';
