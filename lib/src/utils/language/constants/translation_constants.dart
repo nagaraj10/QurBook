@@ -31,6 +31,8 @@ class TranslationConstants {
   static const String reschedule = 'reschedule';
   static const String renew = 'renew';
   static const String cancel = 'cancel';
+  static const String accept = 'Accept';
+  static const String reject = 'Reject';
   static const String newAppointment = 'newAppointment';
   static const String nextFollowUpOn = 'nextFollowUpOn';
   static const String callback = 'callback';

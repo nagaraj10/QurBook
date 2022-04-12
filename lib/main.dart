@@ -12,6 +12,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -505,22 +506,27 @@ class _MyFHBState extends State<MyFHB> {
             // );
           }
         }else if (passedValArr[1] == 'careGiverMemberProfile') {
-          Navigator.pushNamed(
-            context,
-            router.rt_FamilyDetailScreen,
-            arguments: MyFamilyDetailArguments(
-                caregiverRequestor: passedValArr[2]),
-          );
+          print('caregiverid: '+passedValArr[2]);
+          Get.to(MyFamilyDetailScreen(arguments: MyFamilyDetailArguments(
+              caregiverRequestor: passedValArr[2]),
+          ),);
+          // Navigator.pushNamed(
+          //   context,
+          //   router.rt_FamilyDetailScreen,
+          //   arguments: MyFamilyDetailArguments(
+          //       caregiverRequestor: passedValArr[2]),
+          // );
         }else if (passedValArr[1] == 'communicationSetting') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) =>
-                  CareGiverSettings(),
-            ),
-          ).then((value) {
+          print("working communication");
+          Get.to(CareGiverSettings());
 
-          });
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) =>
+          //         CareGiverSettings(),
+          //   ),
+          // );
         } else if (passedValArr[1] == 'sheela') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
