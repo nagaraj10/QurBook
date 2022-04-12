@@ -6,57 +6,60 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:myfhb/claim/screen/ClaimRecordDisplay.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/landing/view/landing_arguments.dart';
-import 'package:myfhb/myPlan/view/myPlanDetail.dart';
-import 'package:myfhb/regiment/models/regiment_arguments.dart';
-import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/src/utils/language/language_utils.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
-    as constants;
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/notification_ontap_req.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
-import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+
+import '../../../../claim/screen/ClaimRecordDisplay.dart';
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/fhb_parameters.dart';
+import '../../../../landing/view/landing_arguments.dart';
+import '../../../../myPlan/view/myPlanDetail.dart';
+import '../../../../regiment/models/regiment_arguments.dart';
+import '../../../../regiment/view_model/regiment_view_model.dart';
+import '../../../../src/ui/bot/view/sheela_arguments.dart';
+import '../../../../src/ui/bot/viewmodel/chatscreen_vm.dart';
+import '../../../../src/utils/language/language_utils.dart';
+import '../../MyProvider/view/MyProvidersMain.dart';
+import '../constants/notification_constants.dart' as constants;
+import '../../../../common/common_circular_indicator.dart';
+import '../../../../src/utils/screenutils/size_extensions.dart';
+import '../../../../constants/fhb_parameters.dart' as parameters;
+import '../model/notificationResult.dart';
+import '../model/notification_ontap_req.dart';
+import '../model/payload.dart';
+import '../services/notification_services.dart';
+import '../../appointments/constants/appointments_constants.dart'
     as AppConstants;
-import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
-import 'package:myfhb/telehealth/features/Notifications/viewModel/fetchNotificationViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/checkout_page.dart';
+import '../model/messageContent.dart';
+import '../model/notification_model.dart';
+import '../viewModel/fetchNotificationViewModel.dart';
+import '../../appointments/model/cancelAppointments/cancelModel.dart';
+import '../../appointments/model/fetchAppointments/city.dart';
+import '../../appointments/model/fetchAppointments/doctor.dart';
+import '../../appointments/model/fetchAppointments/past.dart';
+import '../../appointments/view/appointmentsMain.dart';
+import '../../appointments/view/resheduleMain.dart';
+import '../../appointments/viewModel/cancelAppointmentViewModel.dart';
+import '../../chat/view/home.dart';
+import '../../../../widgets/GradientAppBar.dart';
+import '../../../../widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as routervariable;
+import '../../MyProvider/view/TelehealthProviders.dart';
+import '../../../../src/model/home_screen_arguments.dart';
+import '../../../../constants/router_variable.dart' as router;
+import '../../../../src/utils/PageNavigator.dart';
+import '../../../../src/ui/bot/SuperMaya.dart';
+import '../../../../src/model/user/user_accounts_arguments.dart';
+import '../../../../src/blocs/Category/CategoryListBlock.dart';
+import '../../../../src/ui/MyRecord.dart';
+import '../../../../src/ui/MyRecordsArguments.dart';
+import '../../../../src/model/Category/catergory_result.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/router_variable.dart' as routervariable;
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -1079,7 +1082,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                   langCode: sheela_lang,
                   rawMessage: rawBody,
                 ),
-              ).then((value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+              ).then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
               readUnreadAction(result);
             } else {
               Get.toNamed(
@@ -1088,7 +1092,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                   isSheelaAskForLang: true,
                   rawMessage: rawBody,
                 ),
-              ).then((value) => PageNavigator.goToPermanent(context, router.rt_Landing));
+              ).then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
               readUnreadAction(result);
             }
           } else {
@@ -1173,7 +1178,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   Widget createNSActionButton(
       String templateName, NotificationResult notification) {
     Payload payload = notification.messageDetails?.payload;
-    MessageContent message = notification.messageDetails?.messageContent;
+    var message = notification.messageDetails?.messageContent;
     switch (templateName) {
       case constants.strCancelByDoctor:
       case constants.strRescheduleByDoctor:
@@ -1291,7 +1296,6 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
         break;
-
       case constants.strRemiderPreFrequency7:
       case constants.strRemiderPreFrequency3:
       case constants.strRemiderPreFrequency1:
@@ -1417,7 +1421,154 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
         break;
-
+      case parameters.familyMemberCaregiverRequest:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  if ((notification?.messageDetails?.payload
+                                  ?.patientPhoneNumber ??
+                              '')
+                          .isNotEmpty &&
+                      (notification
+                                  ?.messageDetails?.payload?.verificationCode ??
+                              '')
+                          .isNotEmpty) {
+                    CaregiverAPIProvider().approveCareGiver(
+                      phoneNumber: notification
+                          ?.messageDetails?.payload?.patientPhoneNumber,
+                      code: notification
+                          ?.messageDetails?.payload?.verificationCode,
+                    );
+                  }
+                  Provider.of<FetchNotificationViewModel>(context,
+                          listen: false)
+                      .fetchNotifications();
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.accept,
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () async {
+                  if ((notification?.messageDetails?.payload
+                                  ?.caregiverReceiver ??
+                              '')
+                          .isNotEmpty &&
+                      (notification?.messageDetails?.payload
+                                  ?.caregiverRequestor ??
+                              '')
+                          .isNotEmpty) {
+                    CaregiverAPIProvider().rejectCareGiver(
+                      receiver: notification
+                          ?.messageDetails?.payload?.caregiverReceiver,
+                      requestor: notification
+                          ?.messageDetails?.payload?.caregiverRequestor,
+                    );
+                  }
+                  Provider.of<FetchNotificationViewModel>(context,
+                          listen: false)
+                      .fetchNotifications();
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.reject,
+                  colors: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
+            ],
+          ),
+        );
+        break;
+      case parameters.associationNotificationToCaregiver:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  if ((notification?.messageDetails?.payload
+                      ?.caregiverRequestor ??
+                      '')
+                      .isNotEmpty ) {
+                    Navigator.pushNamed(
+                      context,
+                      router.rt_FamilyDetailScreen,
+                      arguments: MyFamilyDetailArguments(
+                          caregiverRequestor: notification?.messageDetails?.payload
+                              ?.caregiverRequestor ??
+                              ''),
+                    );
+                  }
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.viewMember,
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CareGiverSettings(),
+                    ),
+                  );
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: parameters.communicationSetting,
+                  colors: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+            ],
+          ),
+        );
+        break;
       default:
         return Container();
         break;

@@ -652,10 +652,17 @@ const String cancel = 'Cancel';
 const String templateName = 'templateName';
 const String redirectTo = 'redirectTo';
 const String accept = 'Accept';
+const String reject = 'Reject';
+const String viewMember = 'View Member';
+const String communicationSetting = 'Communication Setting';
+
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
 const String notification = 'notification';
 const String familyMemberCaregiverRequest = 'familyMemberCaregiverRequest';
+const String associationNotificationToCaregiver =
+    'associationNotificationToCaregiver';
+
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String verificationCode = 'verificationCode';
 const String caregiverReceiver = 'caregiverReceiver';

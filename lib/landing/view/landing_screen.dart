@@ -5,7 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
@@ -131,7 +135,6 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
-
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .off(getChatTotalCountOn);
@@ -157,11 +160,10 @@ class _LandingScreenState extends State<LandingScreen> {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =
             TotalCountModel.fromJson(countResponseOn);
-        if(totalCountModelOn!=null){
+        if (totalCountModelOn != null) {
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatTotalCount(totalCountModelOn);
         }
-
       }
     });
   }
@@ -458,7 +460,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     ),
                   ),
                   BottomNavigationBarItem(
-                    icon: ImageIcon(
+                    icon: const ImageIcon(
                       AssetImage(variable.icon_th),
                     ),
                     title: Text(
@@ -488,6 +490,39 @@ class _LandingScreenState extends State<LandingScreen> {
                 onTap: (index) {
                   landingViewModel.updateTabIndex(index);
                 },
+              ),
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () {
+                Get.to(
+                  () => QurhomeDashboard(),
+                  binding: BindingsBuilder(
+                    () {
+                      Get.lazyPut(
+                        () => QurhomeDashboardController(),
+                      );
+                    },
+                  ),
+                );
+              },
+              label: const Text(
+                'Qurhome',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              icon: Container(
+                padding: const EdgeInsets.all(
+                  4,
+                ),
+                height: 50.0.h,
+                width: 50.0.h,
+                child: AssetImageWidget(
+                  icon: variable.icon_qurhome,
+                ),
+              ),
+              backgroundColor: Color(
+                CommonUtil().getQurhomeGredientColor(),
               ),
             ),
           );
@@ -721,11 +756,9 @@ class _LandingScreenState extends State<LandingScreen> {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch(e){
-      }
+      } catch (e) {}
 
       getFamilyRelationAndMediaType();
-
     } catch (e) {}
 
     try {

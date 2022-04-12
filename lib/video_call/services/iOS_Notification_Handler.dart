@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
+import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
 import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -41,6 +44,8 @@ class IosNotificationHandler {
   bool callbackAction = false;
   bool acceptAction = false;
   bool rejectAction = false;
+  bool viewMemberAction = false;
+  bool communicationSettingAction = false;
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
@@ -62,12 +67,17 @@ class IosNotificationHandler {
               CommonUtil().launchURL(model.externalLink);
             }
           }
+
           var actionKey = (data["action"] ?? '');
           if (actionKey.isNotEmpty) {
             renewAction = (actionKey == "Renew");
             callbackAction = (actionKey == "Callback");
             rejectAction = (actionKey == "Reject");
             acceptAction = (actionKey == "Accept");
+            viewMemberAction =
+                (actionKey.toLowerCase() == "ViewMember".toLowerCase());
+            communicationSettingAction = (actionKey.toLowerCase() ==
+                "Communicationsettings".toLowerCase());
           }
           actionForTheNotification();
         } else if (call.method == variable.listenToCallStatusMethod) {
@@ -142,9 +152,23 @@ class IosNotificationHandler {
         phoneNumber: model.patientPhoneNumber,
         code: model.verificationCode,
       );
+    } else if (viewMemberAction &&
+        (model.caregiverRequestor ?? '').isNotEmpty) {
+      Get.to(
+        MyFamilyDetailScreen(
+          arguments: MyFamilyDetailArguments(
+            caregiverRequestor: model.caregiverRequestor,
+          ),
+        ),
+      );
+    } else if (communicationSettingAction) {
+      Get.to(CareGiverSettings());
     } else if (model.type == parameters.FETCH_LOG) {
       await CommonUtil.sendLogToServer();
     } else if (model.templateName == parameters.familyMemberCaregiverRequest) {
+      //No Navigation required
+    } else if (model.templateName ==
+        parameters.associationNotificationToCaregiver) {
       //No Navigation required
     } else if (model.isCancellation) {
       fbaLog(eveParams: {

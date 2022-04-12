@@ -121,11 +121,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     mInitialTime = DateTime.now();
     super.initState();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
-    getAllCustomRoles();
-    fetchUserProfileInfo();
+
     if(widget.arguments.caregiverRequestor!=null){
-      getFamilyMembers();
+      getAllCustomRoles();
+
     }else{
+      getAllCustomRoles();
+      fetchUserProfileInfo();
       setState(() {
         _currentPage = widget.arguments.currentPage;
       });
@@ -136,18 +138,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   void getFamilyMembers() async{
     FamilyMembers familyResponseList= await _familyResponseListRepository.getFamilyMembersListNew();
     profilesSharedByMeAry=familyResponseList.result.sharedByUsers;
-    print("================>"+widget.arguments.caregiverRequestor);
-    int position=0;
-    for(int i=0;i<profilesSharedByMeAry.length;i++){
-      print(profilesSharedByMeAry[i].nickName);
-      print(profilesSharedByMeAry[i].id);
-      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].id){
+    var position=0;
+    for(var i=0;i<profilesSharedByMeAry.length;i++){
+      if(widget.arguments.caregiverRequestor==profilesSharedByMeAry[i].child.id){
         position=i;
       }
     }
-    print("----------->"+position.toString());
+    _currentPage = position;
     setState(() {
-      _currentPage = position;
     });
   }
 
@@ -156,6 +154,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     myProfile = widget.arguments.myProfile;
+    getFamilyMembers();
 
     return myProfile;
   }
@@ -223,7 +222,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         body: PageView(
             physics: ClampingScrollPhysics(),
             controller: PageController(
-                initialPage: _currentPage,
+                initialPage: widget.arguments.caregiverRequestor!=null?0:_currentPage,
                 keepPage: false,
                 viewportFraction: 1),
             onPageChanged: (page) {
@@ -243,8 +242,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   List<Widget> buildMyFamilDetailPages() {
     var children = <Widget>[];
     if(widget.arguments.caregiverRequestor!=null){
-      for (var i = 0; i < profilesSharedByMeAry.length; i++) {
-        children.add(_showPageData(profilesSharedByMeAry[i]));
+      if(profilesSharedByMeAry.length>0){
+        children.add(_showPageData(profilesSharedByMeAry[_currentPage]));
       }
     }else{
       for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
@@ -583,10 +582,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   List<Widget> _buildPageIndicator() {
-    var list = <Widget>[];
-    for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-      list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+    var list=<Widget>[];
+    if(widget.arguments.profilesSharedByMe!=null){
+      list = <Widget>[];
+      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+        list.add(i == _currentPage ? _indicator(true) : _indicator(false));
+      }
     }
+
     return list;
   }
 
@@ -1214,6 +1217,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     relationShipResponseList =
         await addFamilyUserInfoRepository.getCustomRoles();
+    fetchUserProfileInfo();
   }
 
   Widget getRelationshipDetails(RelationShipResponseList data) {

@@ -632,6 +632,33 @@ class CommonUtil {
     return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff9929ea;
   }
 
+  int getQurhomePrimaryColor() {
+    return 0xFFF6000F;
+  }
+
+  int getQurhomeGredientColor() {
+    return 0xFFFd7a2b;
+  }
+
+  LinearGradient getQurhomeLinearGradient() {
+    return LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Color(
+          CommonUtil().getQurhomePrimaryColor(),
+        ),
+        Color(
+          CommonUtil().getQurhomeGredientColor(),
+        )
+      ],
+      stops: [
+        0.3,
+        1.0,
+      ],
+    );
+  }
+
   List<CategoryData> getAllCategoryList(List<Data> data) {
     final List<CategoryData> categoryDataList = [];
 
