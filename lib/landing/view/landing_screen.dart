@@ -95,11 +95,10 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+
     mInitialTime = DateTime.now();
     dbInitialize();
-
     userId = PreferenceUtil.getStringValue(KEY_USERID);
-
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
@@ -122,8 +121,12 @@ class _LandingScreenState extends State<LandingScreen> {
           .getQurPlanDashBoard();
     }
     Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(const Duration(seconds: 0)).then((_) {
+      if (PreferenceUtil.getIfQurhomeisAcive()) {
+        moveToQurhome();
+      }
+    });
+    Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
           changeTabToAppointments();
@@ -494,16 +497,7 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
-                Get.to(
-                  () => QurhomeDashboard(),
-                  binding: BindingsBuilder(
-                    () {
-                      Get.lazyPut(
-                        () => QurhomeDashboardController(),
-                      );
-                    },
-                  ),
-                );
+                moveToQurhome();
               },
               label: const Text(
                 'Qurhome',
@@ -725,6 +719,20 @@ class _LandingScreenState extends State<LandingScreen> {
       profileData = getMyProfile();
     }
     setState(() {});
+  }
+
+  void moveToQurhome() {
+    PreferenceUtil.saveIfQurhomeisAcive(qurhomeStatus: true);
+    Get.to(
+      () => QurhomeDashboard(),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
   }
 
   void dbInitialize() {
