@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
@@ -77,7 +78,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 60.0.w,
+                  horizontal: 8.0.w,
                   vertical: 8.0.h,
                 ),
                 child: Material(
@@ -91,41 +92,24 @@ class _HomeWidgetState extends State<HomeWidget> {
                       ),
                     ),
                   ),
-                  child: Container(
-                      padding: EdgeInsets.all(8.0.sp),
+                  child: Expanded(
+                    child: Container(
+                      height: 80.0.h,
+                      width: double.infinity,
                       decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color(
-                              CommonUtil().getQurhomeGredientColor(),
-                            ),
-                            width: 2.h),
+                        gradient: CommonUtil().getQurhomeLinearGradient(),
                         borderRadius: BorderRadius.all(
                           Radius.circular(
                             20.0.sp,
                           ),
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          AssetImageWidget(
-                            icon: variable.icon_qurhome,
-                            height: 40.h,
-                            width: 40.h,
-                          ),
-                          SizedBox(
-                            width: 8.0.w,
-                          ),
-                          Text(
-                            "Qurhome",
-                            style: TextStyle(
-                              color: Color(
-                                CommonUtil().getQurhomeGredientColor(),
-                              ),
-                            ),
-                          )
-                        ],
-                      )),
+                      child: SvgPicture.asset(
+                        variable.icon_dashboardCard,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
