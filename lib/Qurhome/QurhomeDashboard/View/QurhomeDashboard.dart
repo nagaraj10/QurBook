@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
@@ -33,7 +34,12 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
           icon: Icons.arrow_back_ios,
           colors: Colors.black,
           size: 24.0,
-          onTap: () => Get.back(),
+          onTap: () {
+            PreferenceUtil.saveIfQurhomeisAcive(
+              qurhomeStatus: false,
+            );
+            Get.back();
+          },
         ),
         bottom: PreferredSize(
           child: Container(
@@ -140,6 +146,7 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
                 ),
                 Expanded(
                   child: InkWell(
+                    onTap: () {},
                     child: Container(
                       color: controller.currentSelectedIndex == 1
                           ? Color(

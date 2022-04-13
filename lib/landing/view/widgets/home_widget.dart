@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+
 import 'package:provider/provider.dart';
 
 import '../../../chat_socket/view/ChatUserList.dart';
@@ -34,25 +39,80 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  bool addPlanButton=false;
+  bool addPlanButton = false;
   @override
   void initState() {
     getConfiguration();
     super.initState();
   }
 
-  getConfiguration()async{
-    addPlanButton=await PreferenceUtil.getAddPlanBtn();
-    setState(() {
+  getConfiguration() async {
+    addPlanButton = await PreferenceUtil.getAddPlanBtn();
+    setState(() {});
+  }
 
-    });
+  void moveToQurhome() {
+    PreferenceUtil.saveIfQurhomeisAcive(
+      qurhomeStatus: true,
+    );
+    Get.to(
+      () => QurhomeDashboard(),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+        },
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) => Container(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            InkWell(
+              onTap: () {
+                moveToQurhome();
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 8.0.w,
+                  vertical: 8.0.h,
+                ),
+                child: Material(
+                  elevation: 5,
+                  color: Colors.white,
+                  shadowColor: Colors.black54,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        20.0.sp,
+                      ),
+                    ),
+                  ),
+                  child: Expanded(
+                    child: Container(
+                      height: 80.0.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: CommonUtil().getQurhomeLinearGradient(),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(
+                            20.0.sp,
+                          ),
+                        ),
+                      ),
+                      child: SvgPicture.asset(
+                        variable.icon_dashboardCard,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: Consumer<LandingViewModel>(
                 builder: (context, landingViewModel, child) {
@@ -115,10 +175,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                           },
                           onAddPressed: activePlanCount > 0
                               ? null
-                              : addPlanButton? ()async {
-                                  await Get.toNamed(rt_PlanWizard);
-                                  await landingViewModel.getQurPlanDashBoard();
-                                }:null,
+                              : addPlanButton
+                                  ? () async {
+                                      await Get.toNamed(rt_PlanWizard);
+                                      await landingViewModel
+                                          .getQurPlanDashBoard();
+                                    }
+                                  : null,
                         ),
                         LandingCard(
                           title: constants.strYourRegimen,
@@ -379,7 +442,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         LandingCard(
                           title: constants.strHelpDesk,
                           lastStatus: '',
-                          alerts:  ''/*constants.strTrueDeskTickets*/,
+                          alerts: '' /*constants.strTrueDeskTickets*/,
                           icon: variable.icon_true_desk,
                           color: Color(CommonConstants.pulselightColor),
                           onPressed: () {
@@ -466,20 +529,19 @@ class _HomeWidgetState extends State<HomeWidget> {
         ),
       );
 
-  String getPlanAlertMessage(int activePlanCount){
+  String getPlanAlertMessage(int activePlanCount) {
     try {
-      if(activePlanCount > 0){
-            if(activePlanCount==1){
-              return '$activePlanCount${constants.strPlanActive}';
-            }else{
-              return '$activePlanCount${constants.strPlansActive}';
-            }
-          }else{
-            return constants.strNoPlansAdded;
-          }
+      if (activePlanCount > 0) {
+        if (activePlanCount == 1) {
+          return '$activePlanCount${constants.strPlanActive}';
+        } else {
+          return '$activePlanCount${constants.strPlansActive}';
+        }
+      } else {
+        return constants.strNoPlansAdded;
+      }
     } catch (e) {
       return constants.strNoPlansAdded;
     }
-
   }
 }

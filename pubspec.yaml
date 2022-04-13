@@ -151,6 +151,7 @@ flutter:
     - assets/user/gold-member.png
     - assets/icons/
     - assets/Qurhome/Qurhome.png
+    - assets/Qurhome/
     - assets/launcher/myfhb.png
     - assets/navicons/
     - assets/norecordfound.png
