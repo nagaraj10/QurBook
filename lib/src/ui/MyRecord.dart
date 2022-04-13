@@ -70,12 +70,15 @@ class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
   final bool isHome;
   final Function onBackPressed;
+  final bool isPatientSwitched;
+  final String patientName;
 
-  MyRecords({
-    this.argument,
-    this.isHome = false,
-    this.onBackPressed,
-  });
+  MyRecords(
+      {this.argument,
+      this.isHome = false,
+      this.onBackPressed,
+      this.isPatientSwitched = false,
+      this.patientName = ""});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -113,6 +116,7 @@ class _MyRecordsState extends State<MyRecords> {
   List<String> selectedMedia = new List();
   static bool audioPage = false;
   LandingViewModel landingViewModel;
+  BuildContext context;
 
   @override
   void initState() {
@@ -157,7 +161,9 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   Widget build(BuildContext context) {
+    this.context=context;
     landingViewModel = Provider.of<LandingViewModel>(context);
+
     return WillPopScope(
       onWillPop: () {
         if (widget.isHome) {
@@ -183,6 +189,12 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getCompleteWidgets() {
+    if (widget.isPatientSwitched) {
+      Future.delayed(
+          Duration.zero,
+          () => CommonUtil().showCommonDialogBox(
+              "Switch to ${widget.patientName} profile to view the Prescription",context));
+    }
     return Scaffold(
       key: scaffold_state,
       appBar: widget.isHome && !(landingViewModel?.isSearchVisible ?? false)
@@ -626,6 +638,7 @@ class CustomTabView extends StatefulWidget {
   String fromClass;
   MyRecordsArgument argument;
   bool isFromVideoCall = false;
+
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -1468,7 +1481,8 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-                /*Constants.BASE_URL + */ dataObj.logo,
+                /*Constants.BASE_URL + */
+                dataObj.logo,
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,
