@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class SymptomsListModel {
   bool isSuccess;
   Result result;
@@ -68,7 +70,7 @@ class SymptomListData {
   String estart;
   String eend;
   String html;
-  String otherinfo;
+  OtherinfoSymptom otherinfo;
   int remindin;
   int remindinType;
   String ack;
@@ -180,7 +182,9 @@ class SymptomListData {
     estart = json['estart'];
     eend = json['eend'];
     html = json['html'];
-    otherinfo = json['otherinfo'];
+    otherinfo = json['otherinfo'] != null
+        ? new OtherinfoSymptom.fromJson(jsonDecode(json['otherinfo']))
+        : null;
     remindin = json['remindin'];
     remindinType = json['remindinType'];
     ack = json['ack'];
@@ -257,7 +261,9 @@ class SymptomListData {
     data['estart'] = this.estart;
     data['eend'] = this.eend;
     data['html'] = this.html;
-    data['otherinfo'] = this.otherinfo;
+    if (this.otherinfo != null) {
+      data['otherinfo'] = this.otherinfo.toJson();
+    }
     data['remindin'] = this.remindin;
     data['remindinType'] = this.remindinType;
     data['ack'] = this.ack;
@@ -734,3 +740,32 @@ class Forms {
     return data;
   }
 }
+
+class OtherinfoSymptom {
+  OtherinfoSymptom({
+    this.needPhoto,
+    this.needAudio,
+    this.needVideo,
+    this.needFile,
+  });
+
+  final String needPhoto;
+  final String needAudio;
+  final String needVideo;
+  final String needFile;
+
+  factory OtherinfoSymptom.fromJson(Map<String, dynamic> json) => OtherinfoSymptom(
+    needPhoto: (json['NeedPhoto'] ?? 0).toString(),
+    needAudio: (json['NeedAudio'] ?? 0).toString(),
+    needVideo: (json['NeedVideo'] ?? 0).toString(),
+    needFile: (json['NeedFile'] ?? 0).toString(),
+  );
+
+  Map<String, dynamic> toJson() => {
+    'NeedPhoto': needPhoto,
+    'NeedAudio': needAudio,
+    'NeedVideo': needVideo,
+    'NeedFile': needFile,
+  };
+}
+

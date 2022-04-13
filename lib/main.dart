@@ -26,6 +26,7 @@ import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
+import 'qurhome_symptoms/viewModel/SymptomViewModel.dart';
 import 'regiment/models/regiment_arguments.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
@@ -1054,6 +1055,9 @@ class _MyFHBState extends State<MyFHB> {
         ),
         provider.ChangeNotifierProvider<ChatSocketViewModel>(
           create: (_) => ChatSocketViewModel(),
+        ),
+        provider.ChangeNotifierProvider<SymptomViewModel>(
+          create: (_) => SymptomViewModel(),
         ),
       ],
       child: LayoutBuilder(builder: (context, constraints) {

@@ -13,6 +13,7 @@ import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
+import 'package:myfhb/qurhome_symptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
@@ -235,7 +236,7 @@ class NavigationDrawer extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HelpSupport(),
+                            builder: (context) => SymptomListScreen(),
                           ),
                         );
                       },

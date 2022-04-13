@@ -11,9 +11,11 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/qurhome_symptoms/model/SymptomsListModel.dart';
 import 'package:myfhb/qurhome_symptoms/viewModel/SymptomViewModel.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_data_card.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/fhb_constants.dart';
 import 'package:provider/provider.dart';
@@ -23,19 +25,20 @@ import '../../../src/ui/loader_class.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
-class SymptomListScreen extends StatefulWidget {
-  const SymptomListScreen({
-    Key key,
-  }) : super(key: key);
+import 'SymptomItemCard.dart';
 
+class SymptomListScreen extends StatefulWidget {
   @override
   _SymptomListScreen createState() => _SymptomListScreen();
 }
 
 class _SymptomListScreen extends State<SymptomListScreen> {
+  final scrollController =
+      AutoScrollController(axis: Axis.vertical, suggestedRowHeight: 150);
+
   String userId;
 
-  Future<RegimentDataModel> symptomsList;
+  Future<RegimentResponseModel> symptomsList;
 
   bool isLoading = false;
 
@@ -63,7 +66,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   }
 
   Widget getSymptomList() {
-    return new FutureBuilder<RegimentDataModel>(
+    return new FutureBuilder<RegimentResponseModel>(
       future: symptomsList,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -82,8 +85,69 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData && snapshot?.data != null) {
-            return symptomListView(snapshot?.data);
+          if (snapshot.hasData) {
+            if (snapshot?.data != null) {
+              if (snapshot?.data?.regimentsList.length > 0) {
+                final regimentsList = snapshot?.data?.regimentsList;
+                return Expanded(
+                  child: ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    // physics: NeverScrollableScrollPhysics(),
+                    itemCount: regimentsList?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final regimentData = (index < regimentsList.length)
+                          ? regimentsList[index]
+                          : RegimentDataModel();
+                      return SymptomItemCard(
+                        index: index,
+                        title: regimentData.title,
+                        time: regimentData?.estart != null
+                            ? DateFormat('hh:mm\na')
+                                .format(regimentData?.estart)
+                            : '',
+                        color: getColor(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        icon: getIcon(regimentData.activityname,
+                            regimentData.uformname, regimentData.metadata),
+                        vitalsData: regimentData.uformdata?.vitalsData,
+                        eid: regimentData.eid,
+                        mediaData: regimentData.otherinfo,
+                        startTime: regimentData.estart,
+                        regimentData: regimentData,
+                        aid: regimentData.aid,
+                        uid: regimentData.uid,
+                        formId: regimentData.uformid,
+                        formName: regimentData.uformname1,
+                      );
+                    },
+                  ),
+                );
+              } else {
+                return SafeArea(
+                  child: SizedBox(
+                    height: 1.sh / 1.3,
+                    child: Container(
+                        child: Center(
+                      child: Text(noRegimentSymptomsData),
+                    )),
+                  ),
+                );
+              }
+            } else {
+              return SafeArea(
+                child: SizedBox(
+                  height: 1.sh / 1.3,
+                  child: Container(
+                      child: Center(
+                    child: Text(noRegimentSymptomsData),
+                  )),
+                ),
+              );
+            }
           } else {
             return SafeArea(
               child: SizedBox(
@@ -100,92 +164,40 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     );
   }
 
-  Widget symptomListView(RegimentDataModel regimentData) {
-    if (regimentData != null) {
-      List<RegimentDataModel> regimenList =
-          regimentData as List<RegimentDataModel>;
-      regimenList.length > 0
-          ? ListView.builder(
-              shrinkWrap: true,
-              padding: EdgeInsets.only(
-                bottom: 50.0.h,
-              ),
-              itemBuilder: (BuildContext ctx, int i) {
-                RegimentDataCard(
-                  index: i,
-                  title: regimentData.title,
-                  time: regimentData?.estart != null
-                      ? DateFormat('hh:mm\na').format(regimentData?.estart)
-                      : '',
-                  color: getColor(regimentData.activityname,
-                      regimentData.uformname, regimentData.metadata),
-                  icon: getIcon(regimentData.activityname,
-                      regimentData.uformname, regimentData.metadata),
-                  vitalsData: regimentData.uformdata?.vitalsData,
-                  eid: regimentData.eid,
-                  mediaData: regimentData.otherinfo,
-                  startTime: regimentData.estart,
-                  regimentData: regimentData,
-                );
-              },
-              itemCount: regimenList.length,
-            )
-          : SafeArea(
-              child: SizedBox(
-                height: 1.sh / 1.3,
-                child: Container(
-                    child: Center(
-                  child: Text(noRegimentSymptomsData),
-                )),
-              ),
-            );
-    } else {
-      return SafeArea(
-        child: SizedBox(
-          height: 1.sh / 1.3,
-          child: Container(
-              child: Center(
-            child: Text(noRegimentSymptomsData),
-          )),
-        ),
-      );
-    }
-  }
-
   Color getColor(
       Activityname activityname, Uformname uformName, Metadata metadata) {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color.replaceFirst('#', '0xFF')));
+        cardColor = Color(CommonUtil().getQurhomeGredientColor());
       } else {
         switch (activityname) {
           case Activityname.DIET:
-            cardColor = Colors.green;
+            cardColor = Color(CommonUtil().getQurhomeGredientColor());
             break;
           case Activityname.VITALS:
             if (uformName == Uformname.BLOODPRESSURE) {
-              cardColor = Color(0xFF059192);
+              cardColor = Color(CommonUtil().getQurhomeGredientColor());
             } else if (uformName == Uformname.BLOODSUGAR) {
-              cardColor = Color(0xFFb70a80);
+              cardColor = Color(CommonUtil().getQurhomeGredientColor());
             } else if (uformName == Uformname.PULSE) {
-              cardColor = Color(0xFF8600bd);
+              cardColor = Color(CommonUtil().getQurhomeGredientColor());
             } else {
-              cardColor = Colors.lightBlueAccent;
+              cardColor = Color(CommonUtil().getQurhomeGredientColor());
             }
             break;
           case Activityname.MEDICATION:
-            cardColor = Colors.blue;
+            cardColor = Color(CommonUtil().getQurhomeGredientColor());
             break;
           case Activityname.SCREENING:
-            cardColor = Colors.teal;
+            cardColor = Color(CommonUtil().getQurhomeGredientColor());
             break;
           default:
-            cardColor = Color(CommonUtil().getMyPrimaryColor());
+            cardColor = Color(CommonUtil().getQurhomeGredientColor());
         }
       }
     } catch (e) {
-      cardColor = Color(CommonUtil().getMyPrimaryColor());
+      cardColor = Color(CommonUtil().getQurhomeGredientColor());
     }
     return cardColor;
   }
