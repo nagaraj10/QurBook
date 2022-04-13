@@ -9,7 +9,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 
 class SymptomService {
 
-  Future<RegimentResponseModel> getSymptomList() async {
+  Future<dynamic> getSymptomList() async {
     var response;
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     String dateSelected = CommonUtil.dateConversionToApiFormat(
@@ -34,26 +34,28 @@ class SymptomService {
           {
             "method": "get",
             "data":
-                "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=1${qr_patientEqaul}$userId",
+            "Action=GetUserActivities&lang=$currentLanguage&date=$dateSelected&issymptom=1${qr_patientEqaul}$userId",
           },
         ),
         timeOutSeconds: 60,
       );
 
-      if (response != null && response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        return null;
+      }
+
+      /* if (response != null && response.statusCode == 200) {
         print(response.body);
         return RegimentResponseModel.fromJson(json.decode(response.body));
       } else {
         return RegimentResponseModel(
           regimentsList: [],
         );
-      }
+      }*/
     } catch (e) {
-      print(e.toString());
-
-      return RegimentResponseModel(
-        regimentsList: [],
-      );
+      return null;
     }
   }
 }

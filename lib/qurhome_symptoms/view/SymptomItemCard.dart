@@ -1,8 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
@@ -14,7 +12,6 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/fhb_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import '../../../common/CommonUtil.dart';
 import '../../../src/ui/loader_class.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -55,76 +52,176 @@ class SymptomItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => IntrinsicHeight(
-    child: Padding(
-      padding: EdgeInsets.only(
-        left: 10.0.w,
-        right: 10.0.w,
-        bottom: 10.0.h,
-      ),
-      child: Material(
-        color: regimentData?.activityOrgin == strAppointmentRegimen
-            ? Color(CommonUtil().getMyPrimaryColor())
-            : Colors.white,
-        child: InkWell(
-          onTap: () {
-            if (regimentData?.activityOrgin != strAppointmentRegimen) {
-              onCardPressed(context,
-                  aid: aid, uid: uid, formId: formId, formName: formName);
-            }
-          },
-          child: Row(
-            children: [
-              Expanded(
-                child: Material(
-                  color:
-                  regimentData?.activityOrgin == strAppointmentRegimen
-                      ? Colors.white
-                      : color,
-                  child: InkWell(
-                    onTap: () {
-                      if (regimentData?.activityOrgin !=
-                          strAppointmentRegimen) {
-                        onCardPressed(context,
-                            aid: aid,
-                            uid: uid,
-                            formId: formId,
-                            formName: formName);
-                      }
-                    },
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 10.0.w,
+            right: 10.0.w,
+            bottom: 10.0.h,
+          ),
+          child: Material(
+            color: Colors.white,
+            child: InkWell(
+              onTap: () {
+                onCardPressed(context,
+                    aid: aid, uid: uid, formId: formId, formName: formName);
+              },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Material(
+                      color: color,
+                      child: InkWell(
+                        onTap: () {
+                          onCardPressed(context,
+                              aid: aid,
+                              uid: uid,
+                              formId: formId,
+                              formName: formName);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.0.h,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              icon,
+                              Visibility(
+                                visible: Provider.of<RegimentViewModel>(context,
+                                                listen: false)
+                                            .regimentMode ==
+                                        RegimentMode.Schedule &&
+                                    !(regimentData?.asNeeded ?? false),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 2.0.h,
+                                  ),
+                                  child: Text(
+                                    time,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0.sp,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
                     child: Container(
                       padding: EdgeInsets.symmetric(
-                        vertical: 10.0.h,
+                        vertical: 5.0.h,
+                        horizontal: 20.0.w,
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          /*regimentData?.activityOrgin ==
-                              strAppointmentRegimen
-                              ? getAppointmentIcon()
-                              : icon,*/
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: getFieldWidgets(context),
+                                ),
+                              ),
+                            ],
+                          ),
                           Visibility(
-                            visible: Provider.of<RegimentViewModel>(context,
-                                listen: false)
-                                .regimentMode ==
-                                RegimentMode.Schedule &&
-                                !(regimentData?.asNeeded ?? false),
+                            visible: (regimentData?.isModifiedToday ?? false) ||
+                                regimentData.ack_local != null,
                             child: Padding(
                               padding: EdgeInsets.only(
-                                top: 2.0.h,
+                                top: 5.0.h,
+                                bottom: 5.0.h,
                               ),
-                              child: Text(
-                                time,
-                                style: TextStyle(
-                                  color: regimentData?.activityOrgin ==
-                                      strAppointmentRegimen
-                                      ? Color(
-                                      CommonUtil().getMyPrimaryColor())
-                                      : Colors.white,
-                                  fontSize: 16.0.sp,
-                                ),
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Visibility(
+                                    visible:
+                                        regimentData?.isModifiedToday ?? false,
+                                    child: SvgPicture.asset(
+                                      icon_modified,
+                                      width: 20.0.sp,
+                                      height: 20.0.sp,
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible: regimentData.ack_local != null,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '${CommonUtil().regimentDateFormat(
+                                            regimentData?.asNeeded
+                                                ? regimentData?.ack_local ??
+                                                    DateTime.now()
+                                                : regimentData?.ack_local ??
+                                                    DateTime.now(),
+                                            isAck: true,
+                                          )}',
+                                          style: TextStyle(
+                                            fontSize: 12.0.sp,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(left: 5.0.w),
+                                          child: InkWell(
+                                            onTap: () async {
+                                              LoaderClass.showLoadingDialog(
+                                                Get.context,
+                                                canDismiss: false,
+                                              );
+                                              var saveResponse = await Provider
+                                                      .of<RegimentViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                  .undoSaveFormData(
+                                                eid: eid,
+                                              );
+                                              if (saveResponse?.isSuccess ??
+                                                  false) {
+                                                Future.delayed(
+                                                    Duration(milliseconds: 300),
+                                                    () async {
+                                                  await Provider.of<
+                                                              RegimentViewModel>(
+                                                          context,
+                                                          listen: false)
+                                                      .fetchRegimentData();
+                                                  LoaderClass.hideLoadingDialog(
+                                                      Get.context);
+                                                });
+                                              } else {
+                                                LoaderClass.hideLoadingDialog(
+                                                    Get.context);
+                                              }
+                                            },
+                                            child: Text(
+                                              undo,
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -132,136 +229,18 @@ class SymptomItemCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                ),
+                  SizedBox(
+                    width: 3.0.w,
+                    child: Container(
+                      color: color,
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                flex: 5,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 5.0.h,
-                    horizontal: 20.0.w,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: getFieldWidgets(context),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Visibility(
-                        visible: (regimentData?.isModifiedToday ?? false) ||
-                            regimentData.ack_local != null,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            top: 5.0.h,
-                            bottom: 5.0.h,
-                          ),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Visibility(
-                                visible:
-                                regimentData?.isModifiedToday ?? false,
-                                child: SvgPicture.asset(
-                                  icon_modified,
-                                  width: 20.0.sp,
-                                  height: 20.0.sp,
-                                ),
-                              ),
-                              Visibility(
-                                visible: regimentData.ack_local != null,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '${CommonUtil().regimentDateFormat(
-                                        regimentData?.asNeeded
-                                            ? regimentData?.ack_local ??
-                                            DateTime.now()
-                                            : regimentData?.ack_local ??
-                                            DateTime.now(),
-                                        isAck: true,
-                                      )}',
-                                      style: TextStyle(
-                                        fontSize: 12.0.sp,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 5.0.w),
-                                      child: InkWell(
-                                        onTap: () async {
-                                          LoaderClass.showLoadingDialog(
-                                            Get.context,
-                                            canDismiss: false,
-                                          );
-                                          var saveResponse = await Provider
-                                              .of<RegimentViewModel>(
-                                              context,
-                                              listen: false)
-                                              .undoSaveFormData(
-                                            eid: eid,
-                                          );
-                                          if (saveResponse?.isSuccess ??
-                                              false) {
-                                            Future.delayed(
-                                                Duration(milliseconds: 300),
-                                                    () async {
-                                                  await Provider.of<
-                                                      RegimentViewModel>(
-                                                      context,
-                                                      listen: false)
-                                                      .fetchRegimentData();
-                                                  LoaderClass.hideLoadingDialog(
-                                                      Get.context);
-                                                });
-                                          } else {
-                                            LoaderClass.hideLoadingDialog(
-                                                Get.context);
-                                          }
-                                        },
-                                        child: Text(
-                                          undo,
-                                          style: TextStyle(
-                                            fontSize: 14.0.sp,
-                                            fontWeight: FontWeight.w500,
-                                            decoration:
-                                            TextDecoration.underline,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              if (regimentData?.activityOrgin != strAppointmentRegimen)
-                SizedBox(
-                  width: 3.0.w,
-                  child: Container(
-                    color: color,
-                  ),
-                ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 
   List<Widget> getFieldWidgets(BuildContext context) {
     final fieldWidgets = <Widget>[];
@@ -295,44 +274,13 @@ class SymptomItemCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          (regimentData?.activityOrgin == strAppointmentRegimen)
-                              ? 'Dr. ' + title?.trim()
-                              : title?.trim(),
+                          title?.trim(),
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w500,
-                            color: regimentData?.activityOrgin ==
-                                strAppointmentRegimen
-                                ? Colors.white
-                                : Colors.black,
+                            color: Colors.black,
                           ),
                         ),
-                        if (regimentData?.healthOrgName != null &&
-                            regimentData?.healthOrgName != '' &&
-                            regimentData?.healthOrgName != strSelfRegimen &&
-                            regimentData?.activityOrgin ==
-                                strAppointmentRegimen)
-                          getHealthOrgName(regimentData),
-                        if (regimentData?.estart != null &&
-                            regimentData?.estart != '' &&
-                            regimentData?.eend != null &&
-                            regimentData?.eend != '' &&
-                            regimentData?.activityOrgin ==
-                                strAppointmentRegimen)
-                          getStartEndTime(regimentData),
-                        (regimentData?.healthOrgName != null &&
-                            regimentData?.healthOrgName != '' &&
-                            regimentData?.healthOrgName != strSelfRegimen &&
-                            regimentData?.activityOrgin ==
-                                strAppointmentRegimen)
-                            ? SizedBox(height: 4.h)
-                            : SizedBox(height: 20.h),
-                        if (regimentData?.activityOrgin ==
-                            strAppointmentRegimen)
-                          Container(
-                            alignment: Alignment.bottomRight,
-                            child: getShowAppointmentBnt(),
-                          )
                       ],
                     ),
                   ),
@@ -340,36 +288,35 @@ class SymptomItemCard extends StatelessWidget {
               ),
             ),
           ),
-          if (regimentData?.activityOrgin != strAppointmentRegimen)
-            Padding(
-              padding: EdgeInsets.symmetric(
-                vertical: 10.0.h,
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    if (regimentData.isPlaying) {
-                      stopRegimenTTS();
-                    } else {
-                      Provider.of<RegimentViewModel>(context, listen: false)
-                          .startRegimenTTS(
-                        index,
-                        staticText: regimentData?.title ?? '',
-                        dynamicText: regimentData?.sayTextDynamic ?? '',
-                      );
-                    }
-                  },
-                  child: Icon(
-                    regimentData.isPlaying
-                        ? Icons.stop_circle_outlined
-                        : Icons.play_circle_fill_rounded,
-                    size: 30.0.sp,
-                    color: color,
-                  ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 10.0.h,
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  if (regimentData.isPlaying) {
+                    stopRegimenTTS();
+                  } else {
+                    Provider.of<RegimentViewModel>(context, listen: false)
+                        .startRegimenTTS(
+                      index,
+                      staticText: regimentData?.title ?? '',
+                      dynamicText: regimentData?.sayTextDynamic ?? '',
+                    );
+                  }
+                },
+                child: Icon(
+                  regimentData.isPlaying
+                      ? Icons.stop_circle_outlined
+                      : Icons.play_circle_fill_rounded,
+                  size: 30.0.sp,
+                  color: color,
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
@@ -378,14 +325,14 @@ class SymptomItemCard extends StatelessWidget {
       var isNormal = true;
 
       isNormal = (vitalData.fieldType == FieldType.NUMBER &&
-          int.tryParse(vitalData.value) != null &&
-          int.tryParse(vitalData.amin) != null &&
-          int.tryParse(vitalData.amax) != null &&
-          int.tryParse(vitalData.value).toString().isNotEmpty &&
-          int.tryParse(vitalData.amin).toString().isNotEmpty &&
-          int.tryParse(vitalData.amax).toString().isNotEmpty)
+              int.tryParse(vitalData.value) != null &&
+              int.tryParse(vitalData.amin) != null &&
+              int.tryParse(vitalData.amax) != null &&
+              int.tryParse(vitalData.value).toString().isNotEmpty &&
+              int.tryParse(vitalData.amin).toString().isNotEmpty &&
+              int.tryParse(vitalData.amax).toString().isNotEmpty)
           ? (int.tryParse(vitalData.value) <= int.tryParse(vitalData.amax) &&
-          int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
+              int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
           : true;
       if ((vitalData.display ?? '').isNotEmpty) {
         fieldWidgets.add(
@@ -445,13 +392,13 @@ class SymptomItemCard extends StatelessWidget {
                       : Icons.camera_alt_outlined,
                   onPressed: imageUrl != null
                       ? () {
-                    Get.to(
-                          () => ImageViewer(
-                        imageUrl,
-                        eid,
-                      ),
-                    );
-                  }
+                          Get.to(
+                            () => ImageViewer(
+                              imageUrl,
+                              eid,
+                            ),
+                          );
+                        }
                       : null,
                 ),
               ),
@@ -510,10 +457,10 @@ class SymptomItemCard extends StatelessWidget {
 
                         final canEdit =
                             startTime.difference(DateTime.now()).inMinutes <=
-                                15 &&
+                                    15 &&
                                 Provider.of<RegimentViewModel>(context,
-                                    listen: false)
-                                    .regimentMode ==
+                                            listen: false)
+                                        .regimentMode ==
                                     RegimentMode.Schedule;
                         if (canEdit || isValidSymptom(context)) {
                           LoaderClass.showLoadingDialog(
@@ -521,28 +468,28 @@ class SymptomItemCard extends StatelessWidget {
                             canDismiss: false,
                           );
                           var saveResponse =
-                          await Provider.of<RegimentViewModel>(context,
-                              listen: false)
-                              .saveFormData(
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .saveFormData(
                             eid: eid,
                           );
                           if (saveResponse?.isSuccess ?? false) {
                             Future.delayed(Duration(milliseconds: 300),
-                                    () async {
-                                  await Provider.of<RegimentViewModel>(context,
+                                () async {
+                              await Provider.of<RegimentViewModel>(context,
                                       listen: false)
-                                      .fetchRegimentData();
-                                  LoaderClass.hideLoadingDialog(Get.context);
-                                });
+                                  .fetchRegimentData();
+                              LoaderClass.hideLoadingDialog(Get.context);
+                            });
                           } else {
                             LoaderClass.hideLoadingDialog(Get.context);
                           }
                         } else {
                           FlutterToast().getToast(
                             (Provider.of<RegimentViewModel>(context,
-                                listen: false)
-                                .regimentMode ==
-                                RegimentMode.Symptoms)
+                                            listen: false)
+                                        .regimentMode ==
+                                    RegimentMode.Symptoms)
                                 ? symptomsError
                                 : activitiesError,
                             Colors.red,
@@ -574,12 +521,12 @@ class SymptomItemCard extends StatelessWidget {
     final selectedDate = Provider.of<RegimentViewModel>(context, listen: false)
         .selectedRegimenDate;
     return (Provider.of<RegimentViewModel>(context, listen: false)
-        .regimentMode ==
-        RegimentMode.Symptoms) &&
+                .regimentMode ==
+            RegimentMode.Symptoms) &&
         ((selectedDate?.year <= currentTime.year)
             ? (selectedDate?.month <= currentTime.month
-            ? selectedDate?.day <= currentTime.day
-            : false)
+                ? selectedDate?.day <= currentTime.day
+                : false)
             : false);
   }
 
@@ -589,7 +536,7 @@ class SymptomItemCard extends StatelessWidget {
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
       title =
-      '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+          '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
     } else {
       title = regimentData.title;
     }
@@ -598,16 +545,16 @@ class SymptomItemCard extends StatelessWidget {
 
   Future<void> onCardPressed(BuildContext context,
       {String eventIdReturn,
-        String followEventContext,
-        dynamic uid,
-        dynamic aid,
-        dynamic formId,
-        dynamic formName}) async {
+      String followEventContext,
+      dynamic uid,
+      dynamic aid,
+      dynamic formId,
+      dynamic formName}) async {
     stopRegimenTTS();
     var eventId = eventIdReturn ?? eid;
     if (eventId == null || eventId == '' || eventId == 0) {
       final response = await Provider.of<RegimentViewModel>(context,
-          listen: false)
+              listen: false)
           .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
       if (response != null && response?.isSuccess && response?.result != null) {
         print('forEventId: ' + response.toJson().toString());
@@ -619,8 +566,8 @@ class SymptomItemCard extends StatelessWidget {
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
-    await Provider.of<RegimentViewModel>(context, listen: false)
-        .getFormData(eid: eventId);
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .getFormData(eid: eventId);
     print(fieldsResponseModel);
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
