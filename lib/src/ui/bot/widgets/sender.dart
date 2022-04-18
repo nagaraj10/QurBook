@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
+import '../../../../constants/fhb_constants.dart' as constants;
 import '../../../model/bot/ConversationModel.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
+import '../../../model/user/MyProfileModel.dart';
+import '../../../utils/screenutils/size_extensions.dart';
 
 class SenderLayout extends StatelessWidget {
   final Conversation c;
@@ -19,51 +19,79 @@ class SenderLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: PreferenceUtil.getIfQurhomeisAcive()
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         SizedBox(width: 20.0.w),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                c.name.toUpperCase(),
-                style: Theme.of(context).textTheme.body1,
-                softWrap: true,
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      c.name.toUpperCase(),
+                      style: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Theme.of(context).textTheme.body1.apply(
+                                color: Colors.black,
+                              )
+                          : Theme.of(context).textTheme.body1,
+                      softWrap: true,
+                    ),
               Card(
                 color: Colors.transparent,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25))),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.zero
+                        : Radius.circular(25),
+                    topRight: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.circular(25)
+                        : Radius.zero,
+                  ),
+                ),
                 child: Container(
                   // constraints: BoxConstraints(
                   //   maxWidth: 1.sw * .6,
                   // ),
                   padding: const EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Colors.white
+                        : Color(CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(25),
                       bottomLeft: Radius.circular(25),
-                      bottomRight: Radius.circular(25),
+                      topRight: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.circular(25)
+                          : Radius.zero,
+                      bottomRight: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.zero
+                          : Radius.circular(25),
                     ),
                   ),
                   child: Text(
                     c.text,
                     style: Theme.of(context).textTheme.body1.apply(
-                          color: Colors.white,
+                          color: PreferenceUtil.getIfQurhomeisAcive()
+                              ? Colors.black
+                              : Colors.white,
                         ),
                   ),
                 ),
               ),
-              Text(
-                "${c.timeStamp}",
-                style:
-                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      "${c.timeStamp}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .apply(color: Colors.grey),
+                    ),
             ],
           ),
         ),

@@ -48,7 +48,9 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: PreferenceUtil.getIfQurhomeisAcive()
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         CircleAvatar(
           child: Image.asset(
@@ -65,29 +67,49 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                variable.strMAYA,
-                style: Theme.of(context).textTheme.body1,
-                softWrap: true,
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      variable.strMAYA,
+                      style: Theme.of(context).textTheme.body1,
+                      softWrap: true,
+                    ),
               Card(
                 color: Colors.transparent,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25))),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(
+                      25,
+                    ),
+                    topLeft: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.circular(25)
+                        : Radius.zero,
+                    bottomLeft: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.zero
+                        : Radius.circular(25),
+                    bottomRight: Radius.circular(
+                      25,
+                    ),
+                  ),
+                ),
                 child: Container(
                   // constraints: BoxConstraints(
                   //   maxWidth: 1.sw * .6,
                   // ),
                   padding: const EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Colors.white
+                        : Color(CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25),
+                      bottomLeft: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.zero
+                          : Radius.circular(25),
                       bottomRight: Radius.circular(25),
+                      topLeft: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.circular(25)
+                          : Radius.zero,
                     ),
                   ),
                   child: FutureBuilder(
@@ -122,11 +144,15 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                           fontSize: 12),
                     )
                   : SizedBox.shrink(),
-              Text(
-                "${widget.c.timeStamp}",
-                style:
-                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      "${widget.c.timeStamp}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .apply(color: Colors.grey),
+                    ),
             ],
           ),
         ),
