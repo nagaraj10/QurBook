@@ -706,6 +706,9 @@ const String strAllowAppointments="Allow Appointments";
 
 const String strAlert = 'Alert';
 
+const String patientId="patientId";
+const String familyMemberId="familyMemberId";
+
 
 
 //decode code
