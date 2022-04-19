@@ -39,10 +39,10 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
             colors: Colors.black,
             size: 24.0,
             onTap: () {
+              Get.back();
               PreferenceUtil.saveIfQurhomeisAcive(
                 qurhomeStatus: false,
               );
-              Get.back();
             },
           ),
           bottom: PreferredSize(
@@ -67,7 +67,16 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
             child: FloatingActionButton(
               backgroundColor: Colors.transparent,
               elevation: 0,
-              onPressed: () {},
+              onPressed: () {
+                String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
+                    langCode: (sheela_lang ?? ''),
+                  ),
+                );
+              },
               child: Container(
                 height: buttonSize,
                 width: buttonSize,
@@ -195,10 +204,10 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
         body: QurHomeRegimenScreen(),
       ),
       onWillPop: () async {
+        Get.back();
         PreferenceUtil.saveIfQurhomeisAcive(
           qurhomeStatus: false,
         );
-        Get.back();
         return true;
       },
     );
