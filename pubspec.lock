@@ -773,7 +773,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../../Qurhealth/fhbCommon"
+      path: "../myfhb-flutter-common"
       relative: true
     source: path
     version: "0.0.1"
