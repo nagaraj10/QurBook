@@ -1369,7 +1369,7 @@ class _MyFHBState extends State<MyFHB> {
 
         setState(() {
           _internetconnection = true;
-          toast.getToast(wifi_connected, Colors.green);
+          //toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:
