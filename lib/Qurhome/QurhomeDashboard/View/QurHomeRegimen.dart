@@ -50,7 +50,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                           'Please re-try after some time',
                         ),
                       )
-                    : Container(
+                    : val.qurHomeRegimenResponseModel.result.upcomingActivities.length!=0?Container(
                         child: PageView.builder(
                           itemCount: val.qurHomeRegimenResponseModel.result
                               .upcomingActivities.length,
@@ -70,7 +70,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                     .upcomingActivities[itemIndex]);
                           },
                         ),
-                      );
+                      ):const Center(
+                  child: Text(
+                    'No activities scheduled today',
+                  ),
+                );
               })),
     );
   }
