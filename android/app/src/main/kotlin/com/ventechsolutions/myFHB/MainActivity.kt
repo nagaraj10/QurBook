@@ -753,19 +753,21 @@ class MainActivity : FlutterActivity() {
 
                 override fun onResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    finalWords = data!![0].toString()
-                    isPartialResultInvoked = false
-                    //_result.success(finalWords)
-                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
-                        handler.postDelayed(runnable, 1000)
-                        //dialog.dismiss()
-                        spin_kit.visibility = View.GONE
-                        displayText.setText(finalWords)
-                        finalWords = null
-                    } else if (finalWords == "") {
-                        //do nothing
-                    } else {
-                        this@MainActivity.runOnUiThread(
+                    if(data!=null&&data.size> 0)
+                    {
+                        finalWords = data[0].toString()
+                        isPartialResultInvoked = false
+                        //_result.success(finalWords)
+                        if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
+                            handler.postDelayed(runnable, 1000)
+                            //dialog.dismiss()
+                            spin_kit.visibility = View.GONE
+                            displayText.setText(finalWords)
+                            finalWords = null
+                        } else if (finalWords == "") {
+                            //do nothing
+                        } else {
+                            this@MainActivity.runOnUiThread(
                                 object : Runnable {
                                     override fun run() {
                                         if (listeningLayout.visibility == View.VISIBLE) {
@@ -774,21 +776,50 @@ class MainActivity : FlutterActivity() {
                                             errorTxt.text = "Please Retry"
                                             customLayout.setOnClickListener {
                                                 this@MainActivity.runOnUiThread(
-                                                        object : Runnable {
-                                                            override fun run() {
-                                                                //displayText.text = "Speak now"
-                                                                micOn.visibility = View.VISIBLE
-                                                                edit_view.visibility = View.GONE
-                                                                listeningLayout.visibility = View.VISIBLE
-                                                                tryMe.visibility = View.GONE
-                                                                speechRecognizer!!.startListening(intent)
-                                                            }
+                                                    object : Runnable {
+                                                        override fun run() {
+                                                            //displayText.text = "Speak now"
+                                                            micOn.visibility = View.VISIBLE
+                                                            edit_view.visibility = View.GONE
+                                                            listeningLayout.visibility =
+                                                                View.VISIBLE
+                                                            tryMe.visibility = View.GONE
+                                                            speechRecognizer!!.startListening(intent)
                                                         }
+                                                    }
                                                 )
                                             }
                                         }
                                     }
                                 }
+                            )
+                        }
+                    }else{
+                        this@MainActivity.runOnUiThread(
+                            object : Runnable {
+                                override fun run() {
+                                    if (listeningLayout.visibility == View.VISIBLE) {
+                                        listeningLayout.visibility = View.GONE
+                                        tryMe.visibility = View.VISIBLE
+                                        errorTxt.text = "Please Retry"
+                                        customLayout.setOnClickListener {
+                                            this@MainActivity.runOnUiThread(
+                                                object : Runnable {
+                                                    override fun run() {
+                                                        //displayText.text = "Speak now"
+                                                        micOn.visibility = View.VISIBLE
+                                                        edit_view.visibility = View.GONE
+                                                        listeningLayout.visibility =
+                                                            View.VISIBLE
+                                                        tryMe.visibility = View.GONE
+                                                        speechRecognizer!!.startListening(intent)
+                                                    }
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         )
                     }
                 }
