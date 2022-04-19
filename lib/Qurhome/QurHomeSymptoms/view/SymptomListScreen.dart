@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurHomeSymptoms/viewModel/SymptomListController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/qurhome_symptoms/viewModel/SymptomListController.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -41,63 +41,66 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     return Scaffold(
         body: Obx(() => controller.loadingData.isTrue
             ? CommonCircularQurHome()
-            : Container(
-                child: Column(
-                children: [
-                  Expanded(
-                      child: controller.symptomList?.value?.length != 0
-                          ? ListView.builder(
-                              controller: scrollController,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.only(
-                                bottom: 10.0.h,
-                              ),
-                              // physics: NeverScrollableScrollPhysics(),
-                              itemCount:
-                                  controller.symptomList?.value?.length ?? 0,
-                              itemBuilder: (context, index) {
-                                final symptomData = (index <
-                                        controller.symptomList?.value?.length)
-                                    ? controller.symptomList?.value[index]
-                                    : RegimentDataModel();
-                                return SymptomItemCard(
-                                  index: index,
-                                  title: symptomData.title,
-                                  time: symptomData?.estart != null
-                                      ? DateFormat('hh:mm\na')
-                                          .format(symptomData?.estart)
-                                      : '',
-                                  color: getColor(
-                                      symptomData.activityname,
-                                      symptomData.uformname,
-                                      symptomData.metadata),
-                                  icon: getIcon(
-                                      symptomData.activityname,
-                                      symptomData.uformname,
-                                      symptomData.metadata),
-                                  vitalsData: symptomData.uformdata?.vitalsData,
-                                  eid: symptomData.eid,
-                                  mediaData: symptomData.otherinfo,
-                                  startTime: symptomData.estart,
-                                  regimentData: symptomData,
-                                  aid: symptomData.aid,
-                                  uid: symptomData.uid,
-                                  formId: symptomData.uformid,
-                                  formName: symptomData.uformname1,
-                                );
-                              },
-                            )
-                          : SafeArea(
-                              child: SizedBox(
-                                height: 1.sh / 1.3,
-                                child: Container(
-                                    child: Center(
-                                  child: Text(noRegimentSymptomsData),
-                                )),
-                              ),
-                            ))
-                ],
-              ))));
+            : Padding(
+              padding: const EdgeInsets.fromLTRB(14,24,14,0),
+              child: Container(
+                  child: Column(
+                  children: [
+                    Expanded(
+                        child: controller.symptomList?.value?.length != 0
+                            ? ListView.builder(
+                                controller: scrollController,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.only(
+                                  bottom: 10.0.h,
+                                ),
+                                // physics: NeverScrollableScrollPhysics(),
+                                itemCount:
+                                    controller.symptomList?.value?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  final symptomData = (index <
+                                          controller.symptomList?.value?.length)
+                                      ? controller.symptomList?.value[index]
+                                      : RegimentDataModel();
+                                  return SymptomItemCard(
+                                    index: index,
+                                    title: symptomData.title,
+                                    time: symptomData?.estart != null
+                                        ? DateFormat('hh:mm\na')
+                                            .format(symptomData?.estart)
+                                        : '',
+                                    color: getColor(
+                                        symptomData.activityname,
+                                        symptomData.uformname,
+                                        symptomData.metadata),
+                                    icon: getIcon(
+                                        symptomData.activityname,
+                                        symptomData.uformname,
+                                        symptomData.metadata),
+                                    vitalsData: symptomData.uformdata?.vitalsData,
+                                    eid: symptomData.eid,
+                                    mediaData: symptomData.otherinfo,
+                                    startTime: symptomData.estart,
+                                    regimentData: symptomData,
+                                    aid: symptomData.aid,
+                                    uid: symptomData.uid,
+                                    formId: symptomData.uformid,
+                                    formName: symptomData.uformname1,
+                                  );
+                                },
+                              )
+                            : SafeArea(
+                                child: SizedBox(
+                                  height: 1.sh / 1.3,
+                                  child: Container(
+                                      child: Center(
+                                    child: Text(noRegimentSymptomsData),
+                                  )),
+                                ),
+                              ))
+                  ],
+                )),
+            )));
   }
 
   /*Widget getSymptomList() {

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 
 class QurhomeDashboard extends GetView<QurhomeDashboardController> {
   double sheelaIconsSize = 70;
@@ -19,6 +22,12 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
       width: 2.0,
     );
   }
+
+  PageController pageController = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +65,7 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
             ),
           ),
         ),
+        body: buildPageView(),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(
             top: 20,
@@ -94,7 +104,7 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: SizedBox(
-          height: 40,
+          height: 45.h,
           child: Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -109,6 +119,9 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
                 children: [
                   Expanded(
                     child: InkWell(
+                      onTap: (){
+                        //bottomTapped(2);
+                      },
                       child: Container(
                         color: controller.currentSelectedIndex == 0
                             ? Color(
@@ -149,7 +162,9 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
                   ),
                   Expanded(
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        bottomTapped(1);
+                      },
                       child: Container(
                         color: controller.currentSelectedIndex == 1
                             ? Color(
@@ -201,7 +216,25 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
         Get.back();
         return true;
       },
-      body: QurHomeRegimenScreen(),
     );
+  }
+
+  Widget buildPageView() {
+    return PageView(
+      physics: NeverScrollableScrollPhysics(),
+      controller: pageController,
+      onPageChanged: (index) {
+        controller.pageChanged(index);
+      },
+      children: <Widget>[
+        QurHomeRegimenScreen(),
+        SymptomListScreen(),
+      ],
+    );
+  }
+
+  void bottomTapped(int index) {
+      controller.currentSelectedIndex = index;
+      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 }
