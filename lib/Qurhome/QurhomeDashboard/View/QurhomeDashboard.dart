@@ -115,7 +115,7 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: SizedBox(
-          height: 40,
+          height: 45.h,
           child: Container(
             decoration: BoxDecoration(
               border: Border(
@@ -169,7 +169,9 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
                 ),
                 Flexible(
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      bottomTapped(1);
+                    },
                     child: Container(
                       color: controller.currentSelectedIndex == 1
                           ? Color(
@@ -212,7 +214,6 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
             ),
           ),
         ),
-        body: QurHomeRegimenScreen(),
       ),
       onWillPop: () async {
         Get.back();
