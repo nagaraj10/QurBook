@@ -6,10 +6,12 @@ import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
 import '../Controller/QurhomeDashboardController.dart';
+import 'QurHomeRegimen.dart';
 
 class QurhomeDashboard extends GetView<QurhomeDashboardController> {
   double sheelaIconsSize = 70;
   double buttonSize = 70;
+  int index=0;
   BorderSide getBorder() {
     return BorderSide(
       color: Color(CommonUtil().getQurhomeGredientColor()),
@@ -183,6 +185,8 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
           ),
         ),
       ),
+      body: QurHomeRegimenScreen(),
     );
   }
+
 }
