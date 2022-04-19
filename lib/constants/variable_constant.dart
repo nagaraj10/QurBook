@@ -333,7 +333,7 @@ const String strrelationshipType = 'relationshipType';
 const String strparentToChild = 'parentToChild';
 
 //for myFamilyDetails
-const String strDateYear = '"yyyy-MM-dd"';
+const String strDateYear = "yyyy-MM-dd";
 const String strFetchingHealth = 'Getting Health Report';
 const String strFetchCategory = 'Fetching Category';
 const String strNodata = 'No Data Available';
