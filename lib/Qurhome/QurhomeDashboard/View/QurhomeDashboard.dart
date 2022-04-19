@@ -9,10 +9,11 @@ import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
 import '../Controller/QurhomeDashboardController.dart';
+import 'QurHomeRegimen.dart';
 
 class QurhomeDashboard extends GetView<QurhomeDashboardController> {
-  double sheelaIconsSize = 70;
   double buttonSize = 70;
+  int index = 0;
   BorderSide getBorder() {
     return BorderSide(
       color: Color(CommonUtil().getQurhomeGredientColor()),
@@ -22,181 +23,184 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          "Hello User",
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.black,
-          size: 24.0,
-          onTap: () {
-            Get.back();
-            PreferenceUtil.saveIfQurhomeisAcive(
-              qurhomeStatus: false,
-            );
-          },
-        ),
-        bottom: PreferredSize(
-          child: Container(
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
+    return WillPopScope(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(
+            "Hello User",
+            style: TextStyle(
+              color: Colors.black,
             ),
-            height: 1.0,
           ),
-          preferredSize: Size.fromHeight(
-            1.0,
-          ),
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(
-          top: 20,
-        ),
-        child: SizedBox(
-          height: buttonSize,
-          width: buttonSize,
-          child: FloatingActionButton(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            onPressed: () {
-              String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
-                  langCode: (sheela_lang ?? ''),
-                ),
+          leading: IconWidget(
+            icon: Icons.arrow_back_ios,
+            colors: Colors.black,
+            size: 24.0,
+            onTap: () {
+              PreferenceUtil.saveIfQurhomeisAcive(
+                qurhomeStatus: false,
               );
+              Get.back();
             },
+          ),
+          bottom: PreferredSize(
             child: Container(
-              height: sheelaIconsSize,
-              width: sheelaIconsSize,
-              padding: const EdgeInsets.all(
-                8,
+              color: Color(
+                CommonUtil().getQurhomeGredientColor(),
               ),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Color(
-                    CommonUtil().getQurhomeGredientColor(),
-                  ),
-                  width: 1,
+              height: 1.0,
+            ),
+            preferredSize: Size.fromHeight(
+              1.0,
+            ),
+          ),
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(
+            top: 20,
+          ),
+          child: SizedBox(
+            height: buttonSize,
+            width: buttonSize,
+            child: FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              onPressed: () {},
+              child: Container(
+                height: buttonSize,
+                width: buttonSize,
+                padding: const EdgeInsets.all(
+                  8,
                 ),
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: Image.asset(
-                icon_mayaMain,
-                height: sheelaIconsSize,
-                width: sheelaIconsSize,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
+                    ),
+                    width: 1,
+                  ),
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: Image.asset(
+                  icon_mayaMain,
+                  height: buttonSize,
+                  width: buttonSize,
+                ),
               ),
             ),
           ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: SizedBox(
-        height: 40,
-        child: Container(
-          decoration: BoxDecoration(
-            border: Border(
-              left: getBorder(),
-              top: getBorder(),
-              right: getBorder(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: SizedBox(
+          height: 40,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                left: getBorder(),
+                top: getBorder(),
+                right: getBorder(),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Flexible(
+                  child: InkWell(
+                    child: Container(
+                      color: controller.currentSelectedIndex == 0
+                          ? Color(
+                              CommonUtil().getQurhomeGredientColor(),
+                            )
+                          : Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Spacer(
+                                flex: 1,
+                              ),
+                              Text(
+                                "Vitals",
+                                style: TextStyle(
+                                  color: controller.currentSelectedIndex != 0
+                                      ? Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        )
+                                      : Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Spacer(
+                                flex: 2,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                  child: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      color: controller.currentSelectedIndex == 1
+                          ? Color(
+                              CommonUtil().getQurhomeGredientColor(),
+                            )
+                          : Colors.white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Spacer(
+                                flex: 2,
+                              ),
+                              Text(
+                                "Symptoms",
+                                style: TextStyle(
+                                  color: controller.currentSelectedIndex != 1
+                                      ? Color(
+                                          CommonUtil()
+                                              .getQurhomeGredientColor(),
+                                        )
+                                      : Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              Spacer(
+                                flex: 1,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Flexible(
-                child: InkWell(
-                  child: Container(
-                    color: controller.currentSelectedIndex == 0
-                        ? Color(
-                            CommonUtil().getQurhomeGredientColor(),
-                          )
-                        : Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Spacer(
-                              flex: 1,
-                            ),
-                            Text(
-                              "Vitals",
-                              style: TextStyle(
-                                color: controller.currentSelectedIndex != 0
-                                    ? Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      )
-                                    : Colors.white,
-                                fontSize: 20,
-                              ),
-                            ),
-                            Spacer(
-                              flex: 2,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    color: controller.currentSelectedIndex == 1
-                        ? Color(
-                            CommonUtil().getQurhomeGredientColor(),
-                          )
-                        : Colors.white,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Spacer(
-                              flex: 2,
-                            ),
-                            Text(
-                              "Symptoms",
-                              style: TextStyle(
-                                color: controller.currentSelectedIndex != 1
-                                    ? Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      )
-                                    : Colors.white,
-                                fontSize: 20,
-                              ),
-                            ),
-                            Spacer(
-                              flex: 1,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
+        body: QurHomeRegimenScreen(),
       ),
+      onWillPop: () async {
+        PreferenceUtil.saveIfQurhomeisAcive(
+          qurhomeStatus: false,
+        );
+        Get.back();
+        return true;
+      },
     );
   }
 }
