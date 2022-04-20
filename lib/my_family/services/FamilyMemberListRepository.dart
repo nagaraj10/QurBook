@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/my_family/models/DelinkCheckResponse.dart';
+
 import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
@@ -60,5 +62,11 @@ class FamilyMemberListRepository {
     var response = await _helper.addUserDeLinking(
         webserviceCall.getQueryForPostUserDelinkingNew(), jsonString);
     return UserDeLinkingResponseList.fromJson(response);
+  }
+
+  Future<DelinkCheckResponse> checkDelink(String jsonString) async {
+    var response = await _helper.checkUserDelink(
+        query.qr_delink_check, jsonString);
+    return DelinkCheckResponse.fromJson(response);
   }
 }

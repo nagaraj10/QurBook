@@ -2459,6 +2459,18 @@ class ApiBaseHelper {
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
+    return responseJson;
+  }
+
+  Future<dynamic> checkUserDelink(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          body: jsonData, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
 
     return responseJson;
   }

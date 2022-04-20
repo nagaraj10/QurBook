@@ -707,6 +707,10 @@ const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
 const String strAllowVitals = "Allow Vitals";
 const String strAllowSymptoms = "Allow Symptoms";
 const String strAllowAppointments = "Allow Appointments";
+const String strAlert = 'Alert';
+
+const String patientId = "patientId";
+const String familyMemberId = "familyMemberId";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
