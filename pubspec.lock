@@ -768,7 +768,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../../fhb/fhbCommon"
+      path: "../myfhb-flutter-common"
       relative: true
     source: path
     version: "0.0.1"
