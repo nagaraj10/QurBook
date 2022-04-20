@@ -82,7 +82,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   Widget _buildCarouselItem(BuildContext context, int carouselIndex,
       int itemIndex, UpcomingActivities regimen) {
     return Transform.scale(
-      scale: selectedIndex == itemIndex ? 1 : 0.9,
+      scale: 1 == itemIndex ? 1 : 0.9,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(

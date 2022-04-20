@@ -193,6 +193,7 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
             ),
           ),
         ),
+        body: QurHomeRegimenScreen(),
       ),
       onWillPop: () async {
         PreferenceUtil.saveIfQurhomeisAcive(
@@ -201,7 +202,6 @@ class QurhomeDashboard extends GetView<QurhomeDashboardController> {
         Get.back();
         return true;
       },
-      body: QurHomeRegimenScreen(),
     );
   }
 }
