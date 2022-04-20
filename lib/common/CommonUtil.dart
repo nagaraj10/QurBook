@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
@@ -633,6 +635,10 @@ class CommonUtil {
   }
 
   int getQurhomePrimaryColor() {
+    return 0xFFFB5422;
+  }
+
+  int getQurHomeCardColor() {
     return 0xFFF6000F;
   }
 
@@ -646,7 +652,7 @@ class CommonUtil {
       end: Alignment.centerRight,
       colors: [
         Color(
-          CommonUtil().getQurhomePrimaryColor(),
+          CommonUtil().getQurHomeCardColor(),
         ),
         Color(
           CommonUtil().getQurhomeGredientColor(),
@@ -4286,6 +4292,20 @@ class CommonUtil {
         }
       });
     });
+  }
+
+  Widget qurHomeMainIcon(){
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 4.h,
+      ),
+      child: AssetImageWidget(
+        icon: icon_qurhome,
+        height: 32.h,
+        width: 32.h,
+      ),
+    );
   }
 }
 

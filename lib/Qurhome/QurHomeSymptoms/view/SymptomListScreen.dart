@@ -301,7 +301,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        cardIcon = 'assets/launcher/myfhb.png';
+        cardIcon = 'assets/Qurhome/Qurhome.png';
     }
     var cardIconWidget = (cardIcon is String)
         ? Image.asset(
