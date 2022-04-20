@@ -4287,6 +4287,84 @@ class CommonUtil {
       });
     });
   }
+
+  static commonDialogBox(String msg) async{
+    await Get.defaultDialog(
+      content: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Text(
+          msg,
+           textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+      confirm: OutlineButton(
+        onPressed: () {
+          Get.back();
+        },
+        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+      // AlertDialog(
+      //   title: Text(
+      //     "Switch Profile",
+      //     style: TextStyle(fontSize: 16),
+      //   ),
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       onPressed: () {
+      //         Get.back();
+      //       },
+      //       child: Text(
+      //         "ok",
+      //         // style: TextStyle(
+      //         //   color: Color(getMyPrimaryColor()),
+      //         // ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+
+  }
+
+  void showCommonDialogBox(String msg,BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(variable.strAlert),
+            content: Text(msg),
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(
+                    Icons.check,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
+  }
+
 }
 
 extension CapExtension on String {
