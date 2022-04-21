@@ -4,7 +4,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import '../common/CommonConstants.dart';
 import '../common/PreferenceUtil.dart';
 import 'fhb_constants.dart' as Constants;
-import 'fhb_constants.dart';
 
 class HeaderRequest {
   Future<Map<String, String>> getAuth() async {
@@ -159,17 +158,5 @@ class HeaderRequest {
         '$strBearer ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}';
     print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     return auth;
-  }
-
-  Future<Map<String, String>> getRequestHeadersTimeSlotWithUserId() async {
-    final Map<String, String> requestHeadersTimeSlot = {};
-    requestHeadersTimeSlot['Authorization'] =
-        '$strBearer ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}';
-    requestHeadersTimeSlot['userid'] =
-        '${PreferenceUtil.getStringValue(KEY_USERID)}';
-    requestHeadersTimeSlot['Content-Type'] = 'application/json';
-    requestHeadersTimeSlot[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
-
-    return requestHeadersTimeSlot;
   }
 }
