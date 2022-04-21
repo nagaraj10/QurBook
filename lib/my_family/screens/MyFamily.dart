@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
+import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_otp/models/add_family_otp_arguments.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -85,6 +86,9 @@ class _MyFamilyState extends State<MyFamily> {
       AddFamilyUserInfoRepository();
 
   MyProfileModel myProfile = MyProfileModel();
+  var userid;
+  FamilyMemberListRepository _familyListRespository =
+      FamilyMemberListRepository();
 
   @override
   void initState() {
@@ -280,7 +284,7 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   fetchUserProfileInfo() async {
-    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     if (userid != null) {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
     }
@@ -334,7 +338,6 @@ class _MyFamilyState extends State<MyFamily> {
               // toast.getToast('list updated', Colors.green);
             }
           });
-
         }
       },
       child: Container(
@@ -545,51 +548,41 @@ class _MyFamilyState extends State<MyFamily> {
                       children: <Widget>[
                         InkWell(
                           onTap: () {
-                            Alert.displayConfirmProceed(context,
-                                title: variable.Delink,
-                                content: CommonConstants.delink_alert,
-                                onPressedConfirm: () {
-                              FHBUtils().check().then((intenet) {
-                                if (intenet != null && intenet) {
-                                  Navigator.pop(context);
+                            FHBUtils().check().then((intenet) {
+                              if (intenet != null && intenet) {
+                                CommonUtil.showLoadingDialog(dialogContext,
+                                    _keyLoader, variable.Please_Wait);
+                                final checkDelinkData = {};
+                                checkDelinkData[variable.patientId] = userid;
+                                checkDelinkData[variable.familyMemberId] =
+                                    data.child?.id;
 
-                                  CommonUtil.showLoadingDialog(dialogContext,
-                                      _keyLoader, variable.Please_Wait);
-
-                                  final deLinkingData = {};
-                                  deLinkingData[variable.strrelatedTo] =
-                                      data.child?.id;
-                                  deLinkingData[variable.strrelationshipType] =
-                                      variable.strparentToChild;
-                                  final jsonString =
-                                      convert.jsonEncode(deLinkingData);
-
-                                  _familyListBloc
-                                      .postUserDeLinking(jsonString.toString())
-                                      .then((userLinking) {
-                                    if (userLinking.isSuccess) {
-                                      checkIfUserIdSame(data?.child?.id);
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                      rebuildFamilyBlock();
-                                      setState(() {});
-                                    } else {
-                                      FHBBasicWidget().showInSnackBar(
-                                          userLinking.message, scaffold_state);
-                                      Navigator.of(_keyLoader.currentContext,
-                                              rootNavigator: true)
-                                          .pop();
-                                    }
-                                  });
-                                } else {
-                                  FHBBasicWidget().showInSnackBar(
-                                      Constants.STR_NO_CONNECTIVITY,
-                                      scaffold_state);
-                                }
-                              });
-                            }, onPressedCancel: () {
-                              Navigator.pop(context);
+                                final jsonString =
+                                    convert.jsonEncode(checkDelinkData);
+                                _familyListRespository
+                                    .checkDelink(jsonString)
+                                    .then((value) {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                  if (value.isSuccess) {
+                                    Alert.displayConfirmProceed(context,
+                                        title: "ALERT", content: value.message,
+                                        onPressedConfirm: () {
+                                      Navigator.pop(context);
+                                      commonMethodToDelink(data.child?.id);
+                                    }, onPressedCancel: () {
+                                      Navigator.pop(context);
+                                    });
+                                  } else {
+                                    commonMethodToDelink(data.child?.id);
+                                  }
+                                });
+                              } else {
+                                FHBBasicWidget().showInSnackBar(
+                                    Constants.STR_NO_CONNECTIVITY,
+                                    scaffold_state);
+                              }
                             });
                           },
                           child: Container(
@@ -1348,5 +1341,48 @@ class _MyFamilyState extends State<MyFamily> {
     _familyListBloc = FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
+  }
+
+  void commonMethodToDelink(String id) {
+    Alert.displayConfirmProceed(context,
+        title: variable.Delink,
+        content: CommonConstants.delink_alert, onPressedConfirm: () {
+      FHBUtils().check().then((intenet) {
+        if (intenet != null && intenet) {
+          Navigator.pop(context);
+
+          CommonUtil.showLoadingDialog(
+              dialogContext, _keyLoader, variable.Please_Wait);
+
+          final deLinkingData = {};
+          deLinkingData[variable.strrelatedTo] = id;
+          deLinkingData[variable.strrelationshipType] =
+              variable.strparentToChild;
+          final jsonString = convert.jsonEncode(deLinkingData);
+
+          _familyListBloc
+              .postUserDeLinking(jsonString.toString())
+              .then((userLinking) {
+            if (userLinking.isSuccess) {
+              checkIfUserIdSame(id);
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+              rebuildFamilyBlock();
+              setState(() {});
+            } else {
+              FHBBasicWidget()
+                  .showInSnackBar(userLinking.message, scaffold_state);
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+            }
+          });
+        } else {
+          FHBBasicWidget()
+              .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
+        }
+      });
+    }, onPressedCancel: () {
+      Navigator.pop(context);
+    });
   }
 }

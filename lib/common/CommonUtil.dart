@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
@@ -147,6 +149,8 @@ class CommonUtil {
 
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
+
+  static bool dialogboxOpen=false;
 
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
@@ -633,6 +637,10 @@ class CommonUtil {
   }
 
   int getQurhomePrimaryColor() {
+    return 0xFFFB5422;
+  }
+
+  int getQurHomeCardColor() {
     return 0xFFF6000F;
   }
 
@@ -646,7 +654,7 @@ class CommonUtil {
       end: Alignment.centerRight,
       colors: [
         Color(
-          CommonUtil().getQurhomePrimaryColor(),
+          CommonUtil().getQurHomeCardColor(),
         ),
         Color(
           CommonUtil().getQurhomeGredientColor(),
@@ -4286,6 +4294,100 @@ class CommonUtil {
         }
       });
     });
+  }
+
+  static commonDialogBox(String msg) async{
+    await Get.defaultDialog(
+      content: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: Text(
+          msg,
+           textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+          ),
+        ),
+      ),
+      confirm: OutlineButton(
+        onPressed: () {
+          Get.back();
+        },
+        borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+        child: Text(
+          variable.strOK,
+          style: TextStyle(
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+      onConfirm: () {
+        Get.back();
+      },
+      // AlertDialog(
+      //   title: Text(
+      //     "Switch Profile",
+      //     style: TextStyle(fontSize: 16),
+      //   ),
+      //   content: Text(
+      //     "Switch to $pateintName profile in Home screen and Tap on the Renew button again from the Notifications list",
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   actions: <Widget>[
+      //     FlatButton(
+      //       onPressed: () {
+      //         Get.back();
+      //       },
+      //       child: Text(
+      //         "ok",
+      //         // style: TextStyle(
+      //         //   color: Color(getMyPrimaryColor()),
+      //         // ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+    );
+
+  }
+
+  void showCommonDialogBox(String msg,BuildContext context) {
+    dialogboxOpen=true;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(variable.strAlert),
+            content: Text(msg),
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(
+                    Icons.check,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    dialogboxOpen=false;
+                    Navigator.of(context).pop();
+                  })
+            ],
+          );
+        });
+  }
+
+
+  Widget qurHomeMainIcon(){
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: 8.h,
+        vertical: 4.h,
+      ),
+      child: AssetImageWidget(
+        icon: icon_qurhome,
+        height: 32.h,
+        width: 32.h,
+      ),
+    );
   }
 }
 

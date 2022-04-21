@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
+import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/viewModel/SymptomListController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -13,7 +15,6 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/fhb_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import '../../../src/ui/loader_class.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
@@ -179,7 +180,7 @@ class SymptomItemCard extends StatelessWidget {
                                         padding: EdgeInsets.only(left: 5.0.w),
                                         child: InkWell(
                                           onTap: () async {
-                                            LoaderClass.showLoadingDialog(
+                                            LoaderQurHome.showLoadingDialog(
                                               Get.context,
                                               canDismiss: false,
                                             );
@@ -202,11 +203,11 @@ class SymptomItemCard extends StatelessWidget {
                                                     .fetchRegimentData();*/
                                                 await controller.getSymptomList(
                                                     isLoading: false);
-                                                LoaderClass.hideLoadingDialog(
+                                                LoaderQurHome.hideLoadingDialog(
                                                     Get.context);
                                               });
                                             } else {
-                                              LoaderClass.hideLoadingDialog(
+                                              LoaderQurHome.hideLoadingDialog(
                                                   Get.context);
                                             }
                                           },
@@ -218,7 +219,7 @@ class SymptomItemCard extends StatelessWidget {
                                               decoration:
                                                   TextDecoration.underline,
                                               color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()),
+                                                  .getQurhomePrimaryColor()),
                                             ),
                                           ),
                                         ),
@@ -468,7 +469,7 @@ class SymptomItemCard extends StatelessWidget {
                                         .regimentMode ==
                                     RegimentMode.Schedule;
                         if (canEdit || isValidSymptom(context)) {
-                          LoaderClass.showLoadingDialog(
+                          LoaderQurHome.showLoadingDialog(
                             Get.context,
                             canDismiss: false,
                           );
@@ -485,10 +486,10 @@ class SymptomItemCard extends StatelessWidget {
                                       listen: false)
                                   .fetchRegimentData();*/
                               await controller.getSymptomList(isLoading: false);
-                              LoaderClass.hideLoadingDialog(Get.context);
+                              LoaderQurHome.hideLoadingDialog(Get.context);
                             });
                           } else {
-                            LoaderClass.hideLoadingDialog(Get.context);
+                            LoaderQurHome.hideLoadingDialog(Get.context);
                           }
                         } else {
                           FlutterToast().getToast(
@@ -557,12 +558,12 @@ class SymptomItemCard extends StatelessWidget {
       dynamic formId,
       dynamic formName}) async {
     //final controller = Get.put(SymptomListController());
+    final _apiProvider = SymptomService();
     stopRegimenTTS();
     var eventId = eventIdReturn ?? eid;
     if (eventId == null || eventId == '' || eventId == 0) {
-      final response = await Provider.of<RegimentViewModel>(context,
-              listen: false)
-          .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
+      final response = await _apiProvider
+          .getEventIdQurHome(uid: uid, aid: aid, formId: formId, formName: formName);
       if (response != null && response?.isSuccess && response?.result != null) {
         print('forEventId: ' + response.toJson().toString());
         eventId = response?.result?.eid.toString();
@@ -573,8 +574,8 @@ class SymptomItemCard extends StatelessWidget {
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
     final fieldsResponseModel =
-        await Provider.of<RegimentViewModel>(context, listen: false)
-            .getFormData(eid: eventId);
+        await _apiProvider
+            .getFormDataQurHome(eid: eventId);
     print(fieldsResponseModel);
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
@@ -604,10 +605,12 @@ class SymptomItemCard extends StatelessWidget {
           },
           followEventContext: followEventContext,
           isFollowEvent: eventIdReturn != null,
+          isFromQurHome: true,
+
         ),
       );
       if (value != null && (value ?? false)) {
-        LoaderClass.showLoadingDialog(
+        LoaderQurHome.showLoadingDialog(
           Get.context,
           canDismiss: false,
         );
@@ -615,7 +618,7 @@ class SymptomItemCard extends StatelessWidget {
           /*await Provider.of<RegimentViewModel>(context, listen: false)
               .fetchRegimentData();*/
           await controller.getSymptomList(isLoading: false);
-          LoaderClass.hideLoadingDialog(Get.context);
+          LoaderQurHome.hideLoadingDialog(Get.context);
         });
       }
 

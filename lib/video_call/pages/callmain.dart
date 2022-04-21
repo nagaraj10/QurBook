@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/utils/settings.dart';
 import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:provider/provider.dart';
+import '../../constants/fhb_constants.dart' as Constants;
 
 class CallMain extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -73,11 +75,13 @@ class _CallMainState extends State<CallMain> {
   bool _isMute = false;
 
   bool _isVideoHide = false;
+  bool isPatientSwitched=false;
 
   @override
   void initState() {
     Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
         false;
+    checkUserId();
     createRtcEngine();
     super.initState();
   }
@@ -197,7 +201,7 @@ class _CallMainState extends State<CallMain> {
                       SizedBoxWidget(
                         height: 20.0.h,
                       ),
-                      PrescriptionModule(),
+                      PrescriptionModule(isPatientSwitched,widget.patientName,widget.patientId),
                     ],
                   )
                 : CommonCircularIndicator(),
@@ -270,5 +274,13 @@ class _CallMainState extends State<CallMain> {
             ),
           );
         });
+  }
+
+  void checkUserId()async {
+    var userId;
+    userId=await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    if(widget.patientId!=userId){
+      isPatientSwitched=true;
+    }
   }
 }

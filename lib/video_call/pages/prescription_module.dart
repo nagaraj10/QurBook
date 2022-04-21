@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 
 class PrescriptionModule extends StatelessWidget {
-  const PrescriptionModule();
+  bool isPatientSwitched;
+  String patientName;
+  String patientID;
+  PrescriptionModule(this.isPatientSwitched,this.patientName,this.patientID);
 
   @override
   Widget build(BuildContext context) {
+
     return DecoratedBox(
         decoration: BoxDecoration(),
         child: Wrap(children: [
@@ -86,8 +91,9 @@ class PrescriptionModule extends StatelessWidget {
         isFromChat: false,
         isAssociateOrChat: false,
         fromClass: 'appointments',
+        userID: patientID,
         isFromVideoCall: true,
-      )),
+      ),isPatientSwitched:isPatientSwitched,patientName: patientName,patientId: patientID,),
     ))
         .then((results) {
       if (results != null) {

@@ -70,12 +70,16 @@ class MyRecords extends StatefulWidget {
   MyRecordsArgument argument;
   final bool isHome;
   final Function onBackPressed;
+  final bool isPatientSwitched;
+  final String patientName;
+  final String patientId;
 
-  MyRecords({
-    this.argument,
-    this.isHome = false,
-    this.onBackPressed,
-  });
+  MyRecords(
+      {this.argument,
+      this.isHome = false,
+      this.onBackPressed,
+      this.isPatientSwitched = false,
+      this.patientName = "",this.patientId=""});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -113,6 +117,7 @@ class _MyRecordsState extends State<MyRecords> {
   List<String> selectedMedia = new List();
   static bool audioPage = false;
   LandingViewModel landingViewModel;
+  BuildContext context;
 
   @override
   void initState() {
@@ -157,7 +162,9 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   Widget build(BuildContext context) {
+    this.context=context;
     landingViewModel = Provider.of<LandingViewModel>(context);
+
     return WillPopScope(
       onWillPop: () {
         if (widget.isHome) {
@@ -183,6 +190,7 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getCompleteWidgets() {
+
     return Scaffold(
       key: scaffold_state,
       appBar: widget.isHome && !(landingViewModel?.isSearchVisible ?? false)
@@ -423,6 +431,10 @@ class _MyRecordsState extends State<MyRecords> {
       fromAppointments: widget.argument.fromAppointments ?? false,
       fromClass: widget.argument.fromClass,
       isFromVideoCall: widget.argument?.isFromVideoCall ?? false,
+      isPatientSwitched: widget.isPatientSwitched,
+      patientId: widget.patientId,
+      patientName: widget.patientName,
+
     );
   }
 
@@ -626,6 +638,10 @@ class CustomTabView extends StatefulWidget {
   String fromClass;
   MyRecordsArgument argument;
   bool isFromVideoCall = false;
+   bool isPatientSwitched;
+   String patientName;
+   String patientId;
+
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -655,7 +671,7 @@ class CustomTabView extends StatefulWidget {
       this.fromAppointments,
       this.fromClass,
       this.argument,
-      this.isFromVideoCall});
+      this.isFromVideoCall,this.isPatientSwitched,this.patientName,this.patientId});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -690,9 +706,11 @@ class _CustomTabsState extends State<CustomTabView>
   bool containsAudio = false;
   String audioPath = '';
   HealthResult selectedResult;
+  CommonUtil commonUtil;
 
   @override
   void initState() {
+    commonUtil=new CommonUtil();
     if (widget.fromSearch) {
       _currentPosition = 0;
     } else {
@@ -760,6 +778,26 @@ class _CustomTabsState extends State<CustomTabView>
 
   @override
   Widget build(BuildContext context) {
+    if(widget.patientId!=""){
+      var userId=PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      if(userId==widget.patientId){
+        widget.isPatientSwitched=false;
+      }else{
+        widget.isPatientSwitched=true;
+
+      }
+    }
+      if (widget.isPatientSwitched) {
+        if (CommonUtil.dialogboxOpen != true)
+          Future.delayed(
+              Duration.zero,
+                  () =>
+                  commonUtil.showCommonDialogBox(
+                      "Switch to ${widget
+                          .patientName} profile to view the Prescription",
+                      context));
+      }
+
     if (widget.itemCount < 1) return widget.stub ?? Container();
 
     return Column(
@@ -1468,7 +1506,8 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-                /*Constants.BASE_URL + */ dataObj.logo,
+                /*Constants.BASE_URL + */
+                dataObj.logo,
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,

@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/regiment/models/GetEventIdModel.dart';
+import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 class SymptomService {
@@ -57,5 +62,34 @@ class SymptomService {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<GetEventIdModel> getEventIdQurHome({
+    dynamic uid, dynamic aid,
+    dynamic formId, dynamic formName,
+  }) async {
+    LoaderQurHome.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var response = await RegimentService.getEventId(
+        uid: uid,aid: aid,formId: formId,formName: formName
+    );
+    LoaderQurHome.hideLoadingDialog(Get.context);
+    return response;
+  }
+
+  Future<FieldsResponseModel> getFormDataQurHome({
+    String eid,
+  }) async {
+    LoaderQurHome.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var response = await RegimentService.getFormData(
+      eid: eid,
+    );
+    LoaderQurHome.hideLoadingDialog(Get.context);
+    return response;
   }
 }
