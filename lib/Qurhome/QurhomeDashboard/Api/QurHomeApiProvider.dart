@@ -19,7 +19,7 @@ import 'package:get/get.dart';
 
 class QurHomeApiProvider {
 
-  Future<dynamic> getRegimenList() async {
+  Future<dynamic> getRegimenList(String date) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
@@ -27,7 +27,7 @@ class QurHomeApiProvider {
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.get(
-        '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=2022-04-18',
+        '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',
         headers: header,
       );
       if (responseJson.statusCode == 200) {

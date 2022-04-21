@@ -150,6 +150,8 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
+  static bool dialogboxOpen=false;
+
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
     final valueFromRes = await secret;
@@ -4351,6 +4353,7 @@ class CommonUtil {
   }
 
   void showCommonDialogBox(String msg,BuildContext context) {
+    dialogboxOpen=true;
     showDialog(
         context: context,
         builder: (context) {
@@ -4364,6 +4367,7 @@ class CommonUtil {
                     size: 24.0.sp,
                   ),
                   onPressed: () {
+                    dialogboxOpen=false;
                     Navigator.of(context).pop();
                   })
             ],

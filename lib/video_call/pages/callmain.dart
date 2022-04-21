@@ -201,7 +201,7 @@ class _CallMainState extends State<CallMain> {
                       SizedBoxWidget(
                         height: 20.0.h,
                       ),
-                      PrescriptionModule(isPatientSwitched,widget.patientName),
+                      PrescriptionModule(isPatientSwitched,widget.patientName,widget.patientId),
                     ],
                   )
                 : CommonCircularIndicator(),
