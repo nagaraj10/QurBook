@@ -84,8 +84,8 @@ class UpcomingActivities {
     estart = DateTime.tryParse(json['estart'] ?? '');
     eend = json['eend'];
     otherinfo = json['otherinfo'];
-    uformname= uformnameValues.map[json['uformname']];
-    activityname= activitynameValues.map[json['activityname']];
+    uformname= uformnameValues.map[json['uformname'].toString().toLowerCase()];
+    activityname= activitynameValues.map[json['activityname'].toString().toLowerCase()];
     metadata=Metadata.fromJson(json['metadata'] !=null?jsonDecode(json['metadata']) :{});
   }
 

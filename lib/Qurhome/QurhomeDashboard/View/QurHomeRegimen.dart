@@ -176,6 +176,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     Uformname uformName,
     double iconSize,
   ) {
+    print(activityname);
+    print(uformName);
+    print(iconSize);
     var isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb.png';
     switch (activityname) {
@@ -192,6 +195,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         } else if (uformName == Uformname.PULSE) {
           isDefault = false;
           cardIcon = 'assets/devices/os_dashboard.png';
+        }else{
+          cardIcon = 'assets/launcher/myfhb.png';
         }
         break;
       case Activityname.MEDICATION:
@@ -218,10 +223,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   }
 
   String getFormatedTitle(String title) {
-    int start = title.indexOf("{") + 1;
-    int length = title.indexOf("}");
-    String first = title.substring(start, length);
+
+    String first = "";
     String second = "";
+    try {
+      int start = title.indexOf("{") + 1;
+      int length = title.indexOf("}");
+      if (start != null) {
+        first = title.substring(start, length);
+      }
+    } catch (e) {
+      try{
+        first=title.split("|").first;
+      }catch(e){
+        first=title;
+      }
+    }
     try {
       int startSecond = title.indexOf("[") + 1;
       int lengthSecond = title.indexOf("]");
