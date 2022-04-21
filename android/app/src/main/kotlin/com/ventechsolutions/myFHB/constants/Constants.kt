@@ -74,4 +74,5 @@ object Constants {
     val VERIFICATION_CODE ="verificationCode"
     val CAREGIVER_RECEIVER ="caregiverReceiver"
     val CAREGIVER_REQUESTER ="caregiverRequestor"
+    val BLE_CONNECT ="bleConnect"
 }
