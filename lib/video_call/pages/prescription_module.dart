@@ -7,7 +7,8 @@ import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 class PrescriptionModule extends StatelessWidget {
   bool isPatientSwitched;
   String patientName;
-  PrescriptionModule(this.isPatientSwitched,this.patientName);
+  String patientID;
+  PrescriptionModule(this.isPatientSwitched,this.patientName,this.patientID);
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +91,9 @@ class PrescriptionModule extends StatelessWidget {
         isFromChat: false,
         isAssociateOrChat: false,
         fromClass: 'appointments',
+        userID: patientID,
         isFromVideoCall: true,
-      ),isPatientSwitched:isPatientSwitched,patientName: patientName,),
+      ),isPatientSwitched:isPatientSwitched,patientName: patientName,patientId: patientID,),
     ))
         .then((results) {
       if (results != null) {
