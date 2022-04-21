@@ -116,21 +116,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
               actions: [
                 InkWell(
                   onTap: () {
-                    //Device Connected
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: SheelaArgument(
-                        takeActiveDeviceReadings: true,
-                      ),
-                    );
-
-                    //Device Not Connected
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: SheelaArgument(
-                        sheelaInputs: requestSheelaForpo,
-                      ),
-                    );
+                    controller.checkForConnectedDevices();
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8),
