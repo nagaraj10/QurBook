@@ -161,6 +161,7 @@ class MainActivity : FlutterActivity() {
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         close.setOnClickListener {
+            speechRecognizer!!.cancel()
             if (dialog.isShowing) {
                 try {
                     _result?.let {
@@ -176,7 +177,7 @@ class MainActivity : FlutterActivity() {
         //builder.show()
 
         sendBtn.setOnClickListener {
-
+            speechRecognizer!!.cancel()
             if (displayText.text.toString().trim() == "") {
                 displayText.clearFocus()
                 val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
@@ -826,25 +827,27 @@ class MainActivity : FlutterActivity() {
 
                 override fun onPartialResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    finalWords = data!![0].toString()
-                    isPartialResultInvoked = true
-                    this@MainActivity.runOnUiThread(
+                    if(data!=null&&data.size>0) {
+                        finalWords = data!![0].toString()
+                        isPartialResultInvoked = true
+                        this@MainActivity.runOnUiThread(
                             object : Runnable {
                                 override fun run() {
                                     if (micOn.isShown) {
                                         this@MainActivity.runOnUiThread(
-                                                object : Runnable {
-                                                    override fun run() {
-                                                        edit_view.visibility = View.VISIBLE
-                                                        micOn.visibility = View.GONE
-                                                    }
+                                            object : Runnable {
+                                                override fun run() {
+                                                    edit_view.visibility = View.VISIBLE
+                                                    micOn.visibility = View.GONE
                                                 }
+                                            }
                                         )
                                     }
                                     displayText.setText(finalWords)
                                 }
                             }
-                    )
+                        )
+                    }
                 }
 
                 override fun onEvent(i: Int, bundle: Bundle) {}
