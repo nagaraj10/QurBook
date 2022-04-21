@@ -36,6 +36,7 @@ class BleConnectController extends GetxController {
       const platform = MethodChannel('bleConnect');
       try {
         var result = await platform.invokeMethod('bleconnect');
+        printInfo(info: "Result from $result");
         isBleScanning.value = false;
         if (result != null &&
             validString(result.toString().toLowerCase())
@@ -77,6 +78,7 @@ class BleConnectController extends GetxController {
     } catch (e) {}
     return "";
   }
+
 
   uploadBleData(BuildContext context) async {
     try {

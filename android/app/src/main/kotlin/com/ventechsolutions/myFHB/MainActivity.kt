@@ -721,7 +721,7 @@ class MainActivity : FlutterActivity() {
                                                             0
                                                         )
                                                         if (::BLEEventChannel.isInitialized) {
-                                                            BLEEventChannel.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
+                                                            BLEEventChannel.success("measurement|"+postBleData)
                                                         }
                                                        // bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
 

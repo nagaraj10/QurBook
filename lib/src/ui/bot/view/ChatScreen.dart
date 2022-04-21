@@ -78,7 +78,10 @@ class _ChatScreenState extends State<ChatScreen>
     if (widget?.arguments?.takeActiveDeviceReadings &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       ChatScreenViewModel();
-      getMyViewModel().addToSheelaConversation(text:"taking the readings",);
+      getMyViewModel().setupListenerForReadings();
+      getMyViewModel().addToSheelaConversation(
+        text: "Device Connected",
+      );
     } else {
       if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
         getMyViewModel(
@@ -127,6 +130,7 @@ class _ChatScreenState extends State<ChatScreen>
     });
     WidgetsBinding.instance.removeObserver(this);
     animationController?.dispose();
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.disposeTimer();
     super.dispose();
   }
 

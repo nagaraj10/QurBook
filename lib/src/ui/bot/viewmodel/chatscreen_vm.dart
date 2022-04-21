@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -83,6 +84,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   List<Tags> tagsList = new List<Tags>();
+  static const stream = EventChannel('QurbookBLE/stream');
+  StreamSubscription _timerSubscription;
 
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
@@ -104,6 +107,64 @@ class ChatScreenViewModel extends ChangeNotifier {
   void reEnableMicButton() {
     isButtonResponse = false;
     notifyListeners();
+  }
+
+  void _disableTimer() {
+    if (_timerSubscription != null) {
+      _timerSubscription.cancel();
+      _timerSubscription = null;
+    }
+  }
+
+  disposeTimer() {
+    _disableTimer();
+  }
+
+  void _enableTimer() {
+    _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
+      print(val);
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "enablebluetooth":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "permissiondenied":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "scanstarted":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "connectionfailed":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "connected":
+            addToSheelaConversation(
+                text: receivedValues.last ?? 'Request Timeout');
+            break;
+          case "measurement":
+            addToSheelaConversation(
+                text: receivedValues.last ?? 'Request Timeout');
+            break;
+          case "disconnected":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+
+          default:
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+        }
+      }
+    });
+  }
+
+  setupListenerForReadings() {
+    _enableTimer();
   }
 
   ChatScreenViewModel() {
