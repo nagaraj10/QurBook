@@ -22,8 +22,7 @@ class QurHomeRegimenScreen extends StatefulWidget {
 
 class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   final controller = Get.put(QurhomeRegimenController());
-
-  int selectedIndex = 0;
+  PageController pageController = PageController(viewportFraction: 1, keepPage: true);
 
   List<RegimentDataModel> regimenList = [];
 
@@ -44,6 +43,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           : GetBuilder<QurhomeRegimenController>(
               id: "newUpdate",
               builder: (val) {
+                print("working builder");
                 return val.qurHomeRegimenResponseModel == null
                     ? const Center(
                         child: Text(
@@ -57,17 +57,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                           scrollDirection: Axis.vertical,
                           onPageChanged: (int index) {
                             setState(() {
-                              selectedIndex = index;
+                              controller.currentIndex = index;
                             });
                           },
-                          controller: PageController(viewportFraction: 0.15),
+                          controller: PageController(initialPage:val.nextRegimenPosition,viewportFraction: 0.15),
                           itemBuilder: (BuildContext context, int itemIndex) {
                             return _buildCarouselItem(
                                 context,
                                 10,
                                 itemIndex,
                                 val.qurHomeRegimenResponseModel.result
-                                    .upcomingActivities[itemIndex]);
+                                    .upcomingActivities[itemIndex],
+                            val.nextRegimenPosition);
                           },
                         ),
                       ):const Center(
@@ -79,19 +80,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     );
   }
 
+
   Widget _buildCarouselItem(BuildContext context, int carouselIndex,
-      int itemIndex, UpcomingActivities regimen) {
+      int itemIndex, UpcomingActivities regimen,int nextRegimenPosition) {
     return Transform.scale(
-      scale: 1 == itemIndex ? 1 : 0.9,
+      scale: controller.currentIndex == itemIndex ? 1 : 0.9,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withOpacity(0.1),
                 spreadRadius: 5,
                 blurRadius: 7,
                 offset: Offset(0, 3), // changes position of shadow
@@ -106,7 +108,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   regimen.estart != null
                       ? DateFormat('hh:mm a').format(regimen.estart)
                       : '',
-                  style: TextStyle(color: selectedIndex == itemIndex ?Color(
+                  style: TextStyle(color: nextRegimenPosition == itemIndex ?Color(
                     CommonUtil()
                         .getQurhomeGredientColor(),
                   ):Colors.grey, fontSize: 16),
@@ -124,10 +126,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                 Expanded(
                   child: Text(
                     getFormatedTitle(regimen.title),
-                    style: TextStyle(color: selectedIndex == itemIndex ?Color(
+                    style: TextStyle(color: nextRegimenPosition == itemIndex ?Color(
                       CommonUtil()
                           .getQurhomeGredientColor(),
-                    ):Colors.grey, fontSize: 15,fontWeight: FontWeight.w500),
+                    ):Colors.grey, fontSize: 16,fontWeight: FontWeight.w400),
                   ),
                 ),
               ],
