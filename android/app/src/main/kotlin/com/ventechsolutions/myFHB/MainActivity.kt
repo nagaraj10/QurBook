@@ -68,6 +68,7 @@ import kotlin.system.exitProcess
 
 class MainActivity : FlutterActivity() {
 
+    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
@@ -327,6 +328,7 @@ class MainActivity : FlutterActivity() {
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             if (!bluetoothAdapter.isEnabled)
             {
+                bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
                 Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
                 return
             }
@@ -338,6 +340,7 @@ class MainActivity : FlutterActivity() {
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                     onPermissionGranted(permission)
                 } else {
+                    bluetoothFlutterResult.success("permissiondenied|no permission granted")
                     permissionDeniedList.add(permission)
                 }
             }
@@ -590,6 +593,8 @@ class MainActivity : FlutterActivity() {
 
                         override fun onStartConnect() {
                             Log.d("startScan", "onStartConnect ")
+                            bluetoothFlutterResult.success("scanstarted|connection started")
+
                             //dev_status!!.text = "Connecting ..."
                         }
 
@@ -600,6 +605,7 @@ class MainActivity : FlutterActivity() {
                             //dev_status!!.text = "ConnectFail SPO2..."
                             autoRepeatScan = 1
                             startScanTimer()
+                            bluetoothFlutterResult.success("connectionfailed| connection failed")
 
                             //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
                         }
@@ -701,6 +707,8 @@ class MainActivity : FlutterActivity() {
                                                             pulseRate,
                                                             0
                                                         )
+                                                        bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
+
                                                     }
                                                 } else {
                                                     //dev_data!!.text = "Reading SPO2."
@@ -711,6 +719,7 @@ class MainActivity : FlutterActivity() {
                                         }
                                     }
                                 })
+                            bluetoothFlutterResult.success("connected|"+bleName+" connected successfully!!!")
                         }
 
                         override fun onDisConnected(
@@ -733,6 +742,8 @@ class MainActivity : FlutterActivity() {
                             }
                             autoRepeatScan = 1
                             startScanTimer()
+                            bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
+
                         }
                     })
                 }
@@ -1076,8 +1087,8 @@ class MainActivity : FlutterActivity() {
                     .setConnectOverTime(20000).operateTimeout = 5000
 
                 val temp = checkPermissionStartScan()
-
-                try {
+                bluetoothFlutterResult=result
+/*                try {
                     statusBleTimer = Timer()
                     statusBleTimer.schedule(object : TimerTask()
                     {
@@ -1102,7 +1113,7 @@ class MainActivity : FlutterActivity() {
                     }, 1000)
                     //scanningBleTimer.cancel()
                     //scanningBleTimer.purge()
-                }, 12000)
+                }, 12000)*/
 
             }
         }
