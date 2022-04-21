@@ -773,8 +773,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../../Qurhealth/fhbCommon"
-      relative: true
+      path: "C:\\\\FlutterProjects\\\\myfhb-flutter-common"
+      relative: false
     source: path
     version: "0.0.1"
   google_maps_flutter:
