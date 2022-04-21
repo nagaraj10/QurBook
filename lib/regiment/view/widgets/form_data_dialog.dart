@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_query.dart';
@@ -36,6 +37,7 @@ class FormDataDialog extends StatefulWidget {
     @required this.triggerAction,
     this.isFollowEvent,
     this.followEventContext,
+    this.isFromQurHome = false,
   });
 
   final List<FieldModel> fieldsData;
@@ -46,6 +48,7 @@ class FormDataDialog extends StatefulWidget {
   final bool canEdit;
   final Function(String eventId, String followContext) triggerAction;
   final bool isFollowEvent;
+  final bool isFromQurHome;
   final String followEventContext;
 
   @override
@@ -595,6 +598,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           child: FormFieldWidget(
                             canEdit: widget.canEdit ?? false,
                             fieldData: fieldsData[index],
+                            isFromQurHome: widget.isFromQurHome,
                             updateValue: (
                               updatedFieldData, {
                               isAdd,
@@ -666,8 +670,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                                           height: 18.0.h,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
+                                            color: widget.isFromQurHome
+                                                ? Color(CommonUtil()
+                                                    .getQurhomePrimaryColor())
+                                                : Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
                                           ),
                                         )
                                       : SizedBox.shrink(),
@@ -857,8 +864,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                                   'Select Date:',
                                   style: TextStyle(
                                     fontSize: 14.sp,
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    color: widget.isFromQurHome
+                                        ? Color(CommonUtil()
+                                            .getQurhomePrimaryColor())
+                                        : Color(
+                                            CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                                 IconButton(
@@ -889,10 +899,12 @@ class FormDataDialogState extends State<FormDataDialog> {
                                 Text(
                                   'Select Time:',
                                   style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                  ),
+                                      fontSize: 14.sp,
+                                      color: widget.isFromQurHome
+                                          ? Color(CommonUtil()
+                                              .getQurhomePrimaryColor())
+                                          : Color(CommonUtil()
+                                              .getMyPrimaryColor())),
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.access_time, size: 16.sp),
@@ -930,10 +942,18 @@ class FormDataDialogState extends State<FormDataDialog> {
                                             saveMap.forEach((key, value) {
                                               events += '&$key=$value';
                                             });
-                                            LoaderClass.showLoadingDialog(
-                                              Get.context,
-                                              canDismiss: false,
-                                            );
+                                            if (widget.isFromQurHome) {
+                                              LoaderQurHome.showLoadingDialog(
+                                                Get.context,
+                                                canDismiss: false,
+                                              );
+                                            } else {
+                                              LoaderClass.showLoadingDialog(
+                                                Get.context,
+                                                canDismiss: false,
+                                              );
+                                            }
+
                                             final saveResponse = await Provider
                                                     .of<RegimentViewModel>(
                                                         context,
@@ -950,8 +970,13 @@ class FormDataDialogState extends State<FormDataDialog> {
                                             );
                                             if (saveResponse?.isSuccess ??
                                                 false) {
-                                              LoaderClass.hideLoadingDialog(
-                                                  Get.context);
+                                              if (widget.isFromQurHome) {
+                                                LoaderClass.hideLoadingDialog(
+                                                    Get.context);
+                                              } else {
+                                                LoaderClass.hideLoadingDialog(
+                                                    Get.context);
+                                              }
                                               if (Provider.of<RegimentViewModel>(
                                                           context,
                                                           listen: false)
@@ -981,7 +1006,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                                         }
                                       }
                                     : null,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
+                                color: widget.isFromQurHome
+                                    ? Color(
+                                        CommonUtil().getQurhomePrimaryColor())
+                                    : Color(CommonUtil().getMyPrimaryColor()),
                                 shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(
@@ -1070,7 +1098,9 @@ class FormDataDialogState extends State<FormDataDialog> {
                           Get.back();
                         }
                       },
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      color: widget.isFromQurHome
+                          ? Color(CommonUtil().getQurhomePrimaryColor())
+                          : Color(CommonUtil().getMyPrimaryColor()),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(
@@ -1095,7 +1125,9 @@ class FormDataDialogState extends State<FormDataDialog> {
                           onPressed: () {
                             Get.back();
                           },
-                          color: Color(CommonUtil().getMyPrimaryColor()),
+                          color: widget.isFromQurHome
+                              ? Color(CommonUtil().getQurhomePrimaryColor())
+                              : Color(CommonUtil().getMyPrimaryColor()),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(

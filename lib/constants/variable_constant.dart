@@ -146,6 +146,8 @@ const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
+const String icon_vitals_qurhome = 'assets/dashboard/vitals_qurhome.png';
+const String icon_symptom_qurhome = 'assets/dashboard/symptom_qurhome.png';
 const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
 const String icon_qurplanIntro = 'assets/IntroScreensImages/Intro03.png';
 const String icon_ReminderIntro = 'assets/IntroScreensImages/Intro05.png';
@@ -333,7 +335,7 @@ const String strrelationshipType = 'relationshipType';
 const String strparentToChild = 'parentToChild';
 
 //for myFamilyDetails
-const String strDateYear = '"yyyy-MM-dd"';
+const String strDateYear = "yyyy-MM-dd";
 const String strFetchingHealth = 'Getting Health Report';
 const String strFetchCategory = 'Fetching Category';
 const String strNodata = 'No Data Available';
@@ -705,6 +707,10 @@ const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
 const String strAllowVitals = "Allow Vitals";
 const String strAllowSymptoms = "Allow Symptoms";
 const String strAllowAppointments = "Allow Appointments";
+const String strAlert = 'Alert';
+
+const String patientId = "patientId";
+const String familyMemberId = "familyMemberId";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

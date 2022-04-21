@@ -2448,6 +2448,33 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getSymptomList(String url) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> checkUserDelink(String url, String jsonData) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          body: jsonData, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
 /*
   Future<dynamic> getMemberShipDetails(String url) async {
     MemberShipDetails responseJson;

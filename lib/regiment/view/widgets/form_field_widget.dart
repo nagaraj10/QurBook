@@ -12,6 +12,7 @@ class FormFieldWidget extends StatelessWidget {
     @required this.fieldData,
     @required this.updateValue,
     @required this.canEdit,
+    this.isFromQurHome = false,
   });
 
   final FieldModel fieldData;
@@ -21,6 +22,7 @@ class FormFieldWidget extends StatelessWidget {
     String title,
   }) updateValue;
   final bool canEdit;
+  final bool isFromQurHome;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class FormFieldWidget extends StatelessWidget {
           isNumberOnly: true,
           updateValue: updateValue,
           canEdit: canEdit,
+          isFromQurHome: isFromQurHome,
         );
         break;
       case FieldType.CHECKBOX:
@@ -45,6 +48,7 @@ class FormFieldWidget extends StatelessWidget {
           fieldData: fieldData,
           updateValue: updateValue,
           canEdit: canEdit,
+          isFromQurHome: isFromQurHome,
         );
         break;
       case FieldType.LOOKUP:
@@ -52,6 +56,7 @@ class FormFieldWidget extends StatelessWidget {
           fieldData: fieldData,
           updateValue: updateValue,
           canEdit: canEdit,
+          isFromQurHome: isFromQurHome,
         );
         break;
       case FieldType.RADIO:
