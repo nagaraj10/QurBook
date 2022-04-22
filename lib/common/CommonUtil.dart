@@ -4389,6 +4389,15 @@ class CommonUtil {
       ),
     );
   }
+
+  String capitalizeFirstofEach(String data) {
+    return data
+        .trim()
+        .toLowerCase()
+        .split(' ')
+        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+        .join(' ');
+  }
 }
 
 extension CapExtension on String {

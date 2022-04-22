@@ -24,6 +24,7 @@ import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'constants/router_variable.dart';
+import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'regiment/models/regiment_arguments.dart';
@@ -301,6 +302,9 @@ Future<void> main() async {
           ),
           provider.ChangeNotifierProvider<LanguageProvider>(
             create: (_) => LanguageProvider(),
+          ),
+          provider.ChangeNotifierProvider<DevicesViewModel>(
+            create: (_) => DevicesViewModel(),
           ),
         ],
         child: MyFHB(),
