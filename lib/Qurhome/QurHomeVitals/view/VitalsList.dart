@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
@@ -33,7 +33,7 @@ class VitalsList extends StatefulWidget {
   _VitalsListState createState() => _VitalsListState();
 }
 
-class _VitalsListState extends State<VitalsList> {
+class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   DevicesViewModel devicesViewModel;
 
   LastMeasureSyncValues deviceValues;
@@ -111,16 +111,29 @@ class _VitalsListState extends State<VitalsList> {
   final double circleRadius = 38;
   final double circleBorderWidth = 0;
 
+  AnimationController controller;
+
+  double progress = 1.0;
+
+  String get strCount {
+    Duration count = controller.duration * controller.value;
+    return controller.isDismissed
+        ? '${(controller.duration.inSeconds % 60).toString().padLeft(2, '0')}'
+        : '${(count.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
     mInitialTime = DateTime.now();
+    initController();
     super.initState();
   }
 
   @override
   void dispose() {
     FocusManager.instance.primaryFocus.unfocus();
+    controller.dispose();
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {
       'eventTime': '${DateTime.now()}',
@@ -128,6 +141,37 @@ class _VitalsListState extends State<VitalsList> {
       'screenSessionTime':
           '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
+  }
+
+  void initController() {
+    try {
+      controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 30),
+      );
+
+      controller.addListener(() {
+        notify();
+        if (controller.isAnimating) {
+          setState(() {
+            progress = controller.value;
+          });
+        } else {
+          setState(() {
+            progress = 1.0;
+          });
+        }
+      });
+
+      controller.reverse(from: controller.value == 0 ? 1.0 : controller.value);
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void notify() {
+    if (strCount == '00') {}
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -305,16 +349,113 @@ class _VitalsListState extends State<VitalsList> {
           length: 4,
           initialIndex:
               Provider.of<RegimentViewModel>(context, listen: false).tabIndex,
-          child: Column(
+          child: Stack(
+            fit: StackFit.expand,
             children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: 1.sw,
-                    alignment: Alignment.center,
-                    child: getValues(context, _devicesmodel),
+              Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        width: 1.sw,
+                        alignment: Alignment.center,
+                        child: getValues(context, _devicesmodel),
+                      ),
+                    ),
                   ),
-                ),
+                  Container(
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
+                    ),
+                    /*margin: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),*/
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.0.sp,
+                      vertical: 5.0.sp,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            ScanningForDevices,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0.sp,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.grey.shade300,
+                                  color: Colors.black,
+                                  value: 1.0,
+                                  strokeWidth: 3,
+                                ),
+                              ),
+                              AnimatedBuilder(
+                                animation: controller,
+                                builder: (context, child) => Text(
+                                  strCount,
+                                  style: TextStyle(
+                                    fontSize: 12.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        /*OutlineButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              10.0.sp,
+                            ),
+                          ),
+                          onPressed: () {
+                            if (planWizardViewModel.currentPage == 1 ||
+                                planWizardViewModel.currentPage == 2) {
+                              Get.to(AddProviderPlan(
+                                  planWizardViewModel.selectedTag));
+                            } else {
+                              new AddNewPlan().addNewPlan(
+                                  context, feedbackCode, titleName, hintText,
+                                  (bool) {
+                                FlutterToast toast = new FlutterToast();
+                                if (bool) {
+                                  toast.getToast(
+                                      "We've received your request and get back to you soon",
+                                      Colors.green);
+                                } else {
+                                  toast.getToast(
+                                      "Please try again ", Colors.red);
+                                }
+                              });
+                            }
+                          },
+                          borderSide: BorderSide(color: Colors.white),
+                          color: Colors.white,
+                          textColor: Colors.white,
+                          child: Text(
+                            _getBottomButtonText(
+                                planWizardViewModel.currentPage,
+                                planWizardViewModel.currentTab,
+                                planWizardViewModel.currentTabDiet),
+                          ),
+                        ),*/
+                      ],
+                    ),
+                  )
+                ],
               ),
             ],
           ),
