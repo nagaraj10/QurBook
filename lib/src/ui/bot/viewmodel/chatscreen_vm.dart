@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
+import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -73,7 +76,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   int delayTime = 0;
   int playingIndex = 0;
   bool isMicListening = false;
-
+  bool disableMic = false;
   List<Conversation> get getMyConversations => conversations;
 
   int get getisMayaSpeaks => isMayaSpeaks;
@@ -83,27 +86,129 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   List<Tags> tagsList = new List<Tags>();
+  static const stream = EventChannel('QurbookBLE/stream');
+  StreamSubscription _timerSubscription;
 
-  bool allowAppointmentNotification=true;
-  bool allowVitalNotification=true;
-  bool allowSymptomsNotification=true;
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
-    canSpeak = canSheelaSpeak;
-    if (!canSheelaSpeak) {
-      isLoading = false;
-      stopTTSEngine();
+    if (disableMic) {
+      isLoading = true;
+    } else {
+      canSpeak = canSheelaSpeak;
+      if (!canSheelaSpeak) {
+        isLoading = false;
+        stopTTSEngine();
+      }
+      if (!isInitial) notifyListeners();
     }
-    if (!isInitial) notifyListeners();
   }
 
   void clearMyConversation() {
-    conversations = List();
+    conversations = [];
     // notifyListeners();
   }
 
   void reEnableMicButton() {
     isButtonResponse = false;
     notifyListeners();
+  }
+
+  void _disableTimer() {
+    if (_timerSubscription != null) {
+      _timerSubscription.cancel();
+      _timerSubscription = null;
+    }
+  }
+
+  disposeTimer() {
+    _disableTimer();
+  }
+
+  void _enableTimer() {
+    disableMic = true;
+    _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
+      print(val);
+
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "enablebluetooth":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "permissiondenied":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "scanstarted":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "connectionfailed":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "connected":
+            addToSheelaConversation(
+                text: receivedValues.last ?? 'Request Timeout');
+            break;
+          case "measurement":
+            updateUserData(data: receivedValues.last);
+            break;
+          case "disconnected":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+
+          default:
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+        }
+      }
+    });
+  }
+
+  setupListenerForReadings() async {
+    await Future.delayed(Duration(seconds: 2));
+    addToSheelaConversation(text: "Measuring SPO2...");
+    _enableTimer();
+  }
+
+  updateUserData({String data = ''}) async {
+    if ((data ?? '').isNotEmpty) {
+      disposeTimer();
+      // addToSheelaConversation(text: "Uploading your data");
+      try {
+        var model = BleDataModel.fromJson(
+          jsonDecode(data),
+        );
+
+        await Future.delayed(Duration(
+          seconds: 2,
+        ));
+        addToSheelaConversation(
+          text:
+              "Completed, your SPO2 is ${model.data.sPO2} and pulse is ${model.data.pulse} ",
+        );
+        bool response = await BleConnectApiProvider().uploadBleDataReadings(
+          model,
+        );
+        await Future.delayed(Duration(
+          seconds: 6,
+        ));
+        addToSheelaConversation(
+          text: response
+              ? "Uploaded your readings to server"
+              : "Failed to upload the readings",
+        );
+      } catch (e) {
+        addToSheelaConversation(
+          text: "Failed to upload the readings",
+        );
+      }
+    }
   }
 
   ChatScreenViewModel() {
@@ -114,12 +219,51 @@ class ChatScreenViewModel extends ChangeNotifier {
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
+  addToSheelaConversation({String text = ''}) async {
+    // if (!isMicListening) {
+    //   isMicListening = true;
+    //   notifyListeners();
+    // }
+    isLoading = true;
+    Conversation model = new Conversation(
+      isMayaSaid: true,
+      text: text,
+      name: prof.result != null
+          ? prof.result.firstName + ' ' + prof.result.lastName
+          : '',
+    );
+    conversations.add(model);
+    isMayaSpeaks = 0;
+    final lan = Utils.getCurrentLanCode();
+    String langCodeForRequest;
+    if (lan != "undef") {
+      final langCode = lan.split("-").first;
+      langCodeForRequest = langCode;
+      //print(langCode);
+    }
+    // isLoading = false;
+    conversations[conversations.length - 1].isSpeaking = true;
+    isSheelaSpeaking = true;
+    notifyListeners();
+    var response = await variable.tts_platform.invokeMethod(variable.strtts, {
+      parameters.strMessage: text,
+      parameters.strIsClose: false,
+      parameters.strLanguage: langCodeForRequest
+    });
+    if (response == 1) {
+      isMayaSpeaks = 1;
+    }
+    conversations[conversations.length - 1].isSpeaking = false;
+    isSheelaSpeaking = false;
+    notifyListeners();
+  }
+
   startMayaAutomatically({String message}) {
     isLoading = true;
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(
-          (message != null && message.isNotEmpty)
+          ((message ?? '').isNotEmpty)
               ? '/provider_message'
               : variable.strhiMaya,
           screen: _screen,
@@ -354,24 +498,25 @@ class ChatScreenViewModel extends ChangeNotifier {
   }) async {
     stopTTSEngine();
 
-    if(!isRedirectionNeed){
-       Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(payload, screen: _screen);
-    });
+    if (!isRedirectionNeed) {
+      Future.delayed(Duration(seconds: 1), () {
+        sendToMaya(payload, screen: _screen);
+      });
 
-    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
-    Conversation model = new Conversation(
-        isMayaSaid: false,
-        text: buttonText,
-        name: prof.result != null
-            ? prof.result.firstName + ' ' + prof.result.lastName
-            : '',
-        timeStamp: date,
-        redirect: isRedirect,
-        screen: _screen);
+      var date =
+          new FHBUtils().getFormattedDateString(DateTime.now().toString());
+      Conversation model = new Conversation(
+          isMayaSaid: false,
+          text: buttonText,
+          name: prof.result != null
+              ? prof.result.firstName + ' ' + prof.result.lastName
+              : '',
+          timeStamp: date,
+          redirect: isRedirect,
+          screen: _screen);
 
-    conversations.add(model);
-    notifyListeners();
+      conversations.add(model);
+      notifyListeners();
     }
     Future.delayed(Duration(seconds: 3), () {
       conversations.forEach((conversation) {
@@ -416,7 +561,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     Future.delayed(Duration(seconds: 1), () {
       _screen = parameters.strSheela;
       sendToMaya(
-          (message != null && message.isNotEmpty)
+          ((message ?? '').isNotEmpty)
               ? '/provider_message'
               : variable.strhiMaya,
           screen: _screen,
@@ -962,9 +1107,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
-          allowAppointmentNotification=true;
-          allowSymptomsNotification=true;
-          allowVitalNotification=true;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -978,9 +1123,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
-        allowAppointmentNotification=true;
-        allowSymptomsNotification=true;
-        allowVitalNotification=true;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
 
         var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
         healthReportListForUserRepository
@@ -999,7 +1144,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                 qa_subscription,
                 preColor,
                 greColor,
-                tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                tagsList,
+                allowAppointmentNotification,
+                allowVitalNotification,
+                allowSymptomsNotification)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel.isSuccess) {
@@ -1022,7 +1170,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                     qa_subscription,
                     preColor,
                     greColor,
-                    tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                    tagsList,
+                    allowAppointmentNotification,
+                    allowVitalNotification,
+                    allowSymptomsNotification)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -1106,29 +1257,35 @@ class ChatScreenViewModel extends ChangeNotifier {
         ? getDeviceSelectionModel.result[0].tags
         : new List();
 
-    allowAppointmentNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+    allowAppointmentNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting
+            .caregiverCommunicationSetting?.appointments
         : true;
 
-
-    allowVitalNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+    allowVitalNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.vitals
         : true;
 
-
-    allowSymptomsNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+    allowSymptomsNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
-
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1151,7 +1308,10 @@ class ChatScreenViewModel extends ChangeNotifier {
             qa_subscription,
             preColor,
             greColor,
-            tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -1175,7 +1335,10 @@ class ChatScreenViewModel extends ChangeNotifier {
                   qa_subscription,
                   preColor,
                   greColor,
-                  tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                  tagsList,
+                  allowAppointmentNotification,
+                  allowVitalNotification,
+                  allowSymptomsNotification)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

@@ -75,21 +75,26 @@ class _ChatScreenState extends State<ChatScreen>
           });
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.sheelaInputs != null &&
-        widget?.arguments?.sheelaInputs != '') {
-      getMyViewModel(sheelaInputs: widget?.arguments?.sheelaInputs);
+    if (widget?.arguments?.takeActiveDeviceReadings &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      getMyViewModel().addToSheelaConversation(
+        text: "Device Connected",
+      );
+      getMyViewModel().setupListenerForReadings();
     } else {
-      widget?.arguments?.isSheelaAskForLang
-          ? (widget?.arguments?.rawMessage != null &&
-                  widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel()
-                  .askUserForLanguage(message: widget?.arguments?.rawMessage)
-              : getMyViewModel().askUserForLanguage()
-          : (widget?.arguments?.rawMessage != null &&
-                  widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel().startMayaAutomatically(
-                  message: widget?.arguments?.rawMessage)
-              : getMyViewModel().startMayaAutomatically();
+      if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
+        getMyViewModel(
+          sheelaInputs: widget?.arguments?.sheelaInputs,
+        );
+      } else {
+        widget?.arguments?.isSheelaAskForLang
+            ? getMyViewModel().askUserForLanguage(
+                message: widget?.arguments?.rawMessage,
+              )
+            : getMyViewModel().startMayaAutomatically(
+                message: widget?.arguments?.rawMessage,
+              );
+      }
     }
   }
 
@@ -124,6 +129,7 @@ class _ChatScreenState extends State<ChatScreen>
     });
     WidgetsBinding.instance.removeObserver(this);
     animationController?.dispose();
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.disposeTimer();
     super.dispose();
   }
 
@@ -416,6 +422,7 @@ class _ChatScreenState extends State<ChatScreen>
     Provider.of<ChatScreenViewModel>(context, listen: false)
         .updateAppState(false);
     stopTTSEngine();
+    Provider.of<ChatScreenViewModel>(context, listen: false).disposeTimer();
     Navigator.pop(context);
   }
 }

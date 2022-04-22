@@ -68,6 +68,7 @@ import kotlin.system.exitProcess
 
 class MainActivity : FlutterActivity() {
 
+//    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
@@ -88,6 +89,7 @@ class MainActivity : FlutterActivity() {
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel: EventSink
+    private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
     private var voiceText = ""
@@ -327,6 +329,10 @@ class MainActivity : FlutterActivity() {
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
             if (!bluetoothAdapter.isEnabled)
             {
+                if (::BLEEventChannel.isInitialized) {
+                    BLEEventChannel.success("enablebluetooth|please enable bluetooth")
+                }
+                //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
                 Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
                 return
             }
@@ -338,6 +344,10 @@ class MainActivity : FlutterActivity() {
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                     onPermissionGranted(permission)
                 } else {
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("permissiondenied|no permission granted")
+                    }
+                  //  bluetoothFlutterResult.success("permissiondenied|no permission granted")
                     permissionDeniedList.add(permission)
                 }
             }
@@ -590,6 +600,11 @@ class MainActivity : FlutterActivity() {
 
                         override fun onStartConnect() {
                             Log.d("startScan", "onStartConnect ")
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("scanstarted|connection started")
+                            }
+                           // bluetoothFlutterResult.success("scanstarted|connection started")
+
                             //dev_status!!.text = "Connecting ..."
                         }
 
@@ -600,6 +615,10 @@ class MainActivity : FlutterActivity() {
                             //dev_status!!.text = "ConnectFail SPO2..."
                             autoRepeatScan = 1
                             startScanTimer()
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("connectionfailed| connection failed")
+                            }
+                           // bluetoothFlutterResult.success("connectionfailed| connection failed")
 
                             //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
                         }
@@ -701,6 +720,11 @@ class MainActivity : FlutterActivity() {
                                                             pulseRate,
                                                             0
                                                         )
+                                                        if (::BLEEventChannel.isInitialized) {
+                                                            BLEEventChannel.success("measurement|"+postBleData)
+                                                        }
+                                                       // bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
+
                                                     }
                                                 } else {
                                                     //dev_data!!.text = "Reading SPO2."
@@ -711,6 +735,10 @@ class MainActivity : FlutterActivity() {
                                         }
                                     }
                                 })
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("connected|"+bleName+" connected successfully!!!")
+                            }
+                            //bluetoothFlutterResult.success("connected|"+bleName+" connected successfully!!!")
                         }
 
                         override fun onDisConnected(
@@ -733,6 +761,11 @@ class MainActivity : FlutterActivity() {
                             }
                             autoRepeatScan = 1
                             startScanTimer()
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("disconnected|"+bleName+" disconnected successfully!!!")
+                            }
+                           // bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
+
                         }
                     })
                 }
@@ -936,7 +969,16 @@ class MainActivity : FlutterActivity() {
                     }
                 }
         )
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, Constants.Bluetooth_EVE_STREAM).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    BLEEventChannel = events!!
+                }
 
+                override fun onCancel(arguments: Any?) {
+                }
+            }
+        )
 
         MethodChannel(
                 flutterEngine.dartExecutor.binaryMessenger,
@@ -1068,6 +1110,7 @@ class MainActivity : FlutterActivity() {
                 call, result ->
             if(call.method == "bleconnect")
             {
+               // bluetoothFlutterResult=result
                 Log.d("BLE VITALS","StartingPoint")
                 BleManager.getInstance().init(application)
                 BleManager.getInstance()
@@ -1077,7 +1120,7 @@ class MainActivity : FlutterActivity() {
 
                 val temp = checkPermissionStartScan()
 
-                try {
+/*                try {
                     statusBleTimer = Timer()
                     statusBleTimer.schedule(object : TimerTask()
                     {
@@ -1102,7 +1145,7 @@ class MainActivity : FlutterActivity() {
                     }, 1000)
                     //scanningBleTimer.cancel()
                     //scanningBleTimer.purge()
-                }, 12000)
+                }, 12000)*/
 
             }
         }
