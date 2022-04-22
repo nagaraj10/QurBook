@@ -50,10 +50,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                           'Please re-try after some time',
                         ),
                       )
-                    : val.qurHomeRegimenResponseModel.result.upcomingActivities.length!=0?Container(
+                    : val.qurHomeRegimenResponseModel.regimentsList.length!=0?Container(
                         child: PageView.builder(
-                          itemCount: val.qurHomeRegimenResponseModel.result
-                              .upcomingActivities.length,
+                          itemCount: val.qurHomeRegimenResponseModel.regimentsList.length,
                           scrollDirection: Axis.vertical,
                           onPageChanged: (int index) {
                             setState(() {
@@ -66,8 +65,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                 context,
                                 10,
                                 itemIndex,
-                                val.qurHomeRegimenResponseModel.result
-                                    .upcomingActivities[itemIndex],
+                                val.qurHomeRegimenResponseModel.regimentsList[itemIndex],
                             val.nextRegimenPosition);
                           },
                         ),
@@ -82,7 +80,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
 
   Widget _buildCarouselItem(BuildContext context, int carouselIndex,
-      int itemIndex, UpcomingActivities regimen,int nextRegimenPosition) {
+      int itemIndex, RegimentDataModel regimen,int nextRegimenPosition) {
     return Transform.scale(
       scale: controller.currentIndex == itemIndex ? 1 : 0.9,
       child: Padding(
@@ -232,4 +230,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
     return first + second;
   }
+
+  showRegimenDialog(){
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text('Dialog Title'),
+          content: Text('This is my content'),
+        )
+    );
+  }
 }
+
+
