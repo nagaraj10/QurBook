@@ -22,6 +22,8 @@ object Constants {
     val CN_ROUTE = "navigation.channel"
     val CN_ONG_NS = "ongoing_ns.channel"
     val CN_EVE_STREAM = "com.example.agoraflutterquickstart/stream"
+    val Bluetooth_EVE_STREAM = "QurbookBLE/stream"
+
     val FROM_LANG = "com.example.agoraflutterquickstart/stream"
     val TO_LANG = "com.example.agoraflutterquickstart/stream"
     val EN_US = "en_US"
