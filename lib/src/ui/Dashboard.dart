@@ -75,9 +75,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   [_showMaya, _provider, _records, _family, _coverImage]));
     });
     */
-    dbInitialize();
-    QurPlanReminders.getTheRemindersFromAPI();
-    callImportantsMethod();
+    //dbInitialize();
+    //QurPlanReminders.getTheRemindersFromAPI();
+    //callImportantsMethod();
 
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
