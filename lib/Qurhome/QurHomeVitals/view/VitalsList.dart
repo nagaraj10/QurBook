@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
+import 'package:myfhb/common/CommonCircularQurHome.dart';
+import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
+import 'package:provider/provider.dart';
+
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
-import '../../../constants/fhb_constants.dart';
-import '../../../constants/fhb_parameters.dart';
 import '../../../common/errors_widget.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../constants/fhb_parameters.dart';
+import '../../../constants/fhb_parameters.dart' as parameters;
+import '../../../constants/router_variable.dart' as router;
+import '../../../constants/variable_constant.dart' as variable;
 import '../../../devices/device_dashboard_arguments.dart';
+import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:provider/provider.dart';
-import '../../../regiment/view_model/regiment_view_model.dart';
-import '../../../constants/variable_constant.dart' as variable;
-import '../../../constants/fhb_parameters.dart' as parameters;
-import '../../../constants/fhb_constants.dart' as Constants;
-import '../../../constants/router_variable.dart' as router;
 import '../../../src/utils/screenutils/size_extensions.dart';
 
 class VitalsList extends StatefulWidget {
@@ -34,7 +37,7 @@ class VitalsList extends StatefulWidget {
 }
 
 class _VitalsListState extends State<VitalsList> {
-  DevicesViewModel devicesViewModel;
+  final controller = Get.put(VitalListController());
 
   LastMeasureSyncValues deviceValues;
   DeviceData finalList;
@@ -131,7 +134,7 @@ class _VitalsListState extends State<VitalsList> {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+    await controller.getDeviceSelection().then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
@@ -297,44 +300,21 @@ class _VitalsListState extends State<VitalsList> {
   }
 
   Widget getBody(BuildContext context) {
-    var _devicesmodel = Provider.of<DevicesViewModel>(context);
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        height: constraints.maxHeight,
-        child: DefaultTabController(
-          length: 4,
-          initialIndex:
-              Provider.of<RegimentViewModel>(context, listen: false).tabIndex,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    width: 1.sw,
-                    alignment: Alignment.center,
-                    child: getValues(context, _devicesmodel),
-                  ),
-                ),
-              ),
-            ],
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: getValues(context),
           ),
         ),
-      );
-    });
+      ],
+    );
   }
 
-  Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
+  Widget getValues(BuildContext context) {
     return FutureBuilder<LastMeasureSyncValues>(
-        future: devicesViewModel.fetchDeviceDetails(),
+        future: controller.fetchDeviceDetails(),
         builder: (context, snapshot) {
-          Provider.of<RegimentViewModel>(
-            context,
-            listen: false,
-          ).handleSearchField();
-          Provider.of<RegimentViewModel>(
-            context,
-            listen: false,
-          ).updateTabIndex(currentIndex: 1);
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
             return projectWidget(context);
