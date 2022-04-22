@@ -36,6 +36,7 @@ class SymptomItemCard extends StatelessWidget {
   final dynamic formName;
 
   final controller = Get.find<SymptomListController>();
+  final _apiProvider = SymptomService();
 
   SymptomItemCard({
     @required this.index,
@@ -474,9 +475,7 @@ class SymptomItemCard extends StatelessWidget {
                             canDismiss: false,
                           );
                           var saveResponse =
-                              await Provider.of<RegimentViewModel>(context,
-                                      listen: false)
-                                  .saveFormData(
+                              await _apiProvider.saveFormDataQurHome(
                             eid: eid,
                           );
                           if (saveResponse?.isSuccess ?? false) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
+import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_query.dart';
@@ -27,7 +28,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class FormDataDialog extends StatefulWidget {
-  const FormDataDialog({
+  FormDataDialog({
     @required this.fieldsData,
     @required this.eid,
     @required this.color,
@@ -77,6 +78,10 @@ class FormDataDialogState extends State<FormDataDialog> {
   TimeOfDay _currentTime = new TimeOfDay.now();
 
   DateTime initDate;
+
+  var saveResponse;
+
+  final _apiProvider = SymptomService();
 
   @override
   void initState() {
@@ -953,21 +958,35 @@ class FormDataDialogState extends State<FormDataDialog> {
                                                 canDismiss: false,
                                               );
                                             }
+                                            if (widget.isFromQurHome) {
+                                              saveResponse = await _apiProvider
+                                                  .saveFormDataQurHome(
+                                                eid: eid,
+                                                events: events,
+                                                isFollowEvent:
+                                                    widget.isFollowEvent,
+                                                followEventContext:
+                                                    widget.followEventContext,
+                                                selectedDate: initDate,
+                                                selectedTime: _currentTime,
+                                              );
+                                            } else {
+                                              saveResponse = await Provider.of<
+                                                          RegimentViewModel>(
+                                                      context,
+                                                      listen: false)
+                                                  .saveFormData(
+                                                eid: eid,
+                                                events: events,
+                                                isFollowEvent:
+                                                    widget.isFollowEvent,
+                                                followEventContext:
+                                                    widget.followEventContext,
+                                                selectedDate: initDate,
+                                                selectedTime: _currentTime,
+                                              );
+                                            }
 
-                                            final saveResponse = await Provider
-                                                    .of<RegimentViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                .saveFormData(
-                                              eid: eid,
-                                              events: events,
-                                              isFollowEvent:
-                                                  widget.isFollowEvent,
-                                              followEventContext:
-                                                  widget.followEventContext,
-                                              selectedDate: initDate,
-                                              selectedTime: _currentTime,
-                                            );
                                             if (saveResponse?.isSuccess ??
                                                 false) {
                                               if (widget.isFromQurHome) {
