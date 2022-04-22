@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
+import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -74,7 +76,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   int delayTime = 0;
   int playingIndex = 0;
   bool isMicListening = false;
-
+  bool disableMic = false;
   List<Conversation> get getMyConversations => conversations;
 
   int get getisMayaSpeaks => isMayaSpeaks;
@@ -91,12 +93,16 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
-    canSpeak = canSheelaSpeak;
-    if (!canSheelaSpeak) {
-      isLoading = false;
-      stopTTSEngine();
+    if (disableMic) {
+      isLoading = true;
+    } else {
+      canSpeak = canSheelaSpeak;
+      if (!canSheelaSpeak) {
+        isLoading = false;
+        stopTTSEngine();
+      }
+      if (!isInitial) notifyListeners();
     }
-    if (!isInitial) notifyListeners();
   }
 
   void clearMyConversation() {
@@ -121,8 +127,10 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   void _enableTimer() {
+    disableMic = true;
     _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
       print(val);
+
       List<String> receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
         switch ((receivedValues.first ?? "")) {
@@ -147,8 +155,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                 text: receivedValues.last ?? 'Request Timeout');
             break;
           case "measurement":
-            addToSheelaConversation(
-                text: receivedValues.last ?? 'Request Timeout');
+            updateUserData(data: receivedValues.last);
             break;
           case "disconnected":
             FlutterToast()
@@ -163,8 +170,45 @@ class ChatScreenViewModel extends ChangeNotifier {
     });
   }
 
-  setupListenerForReadings() {
+  setupListenerForReadings() async {
+    await Future.delayed(Duration(seconds: 2));
+    addToSheelaConversation(text: "Measuring SPO2...");
     _enableTimer();
+  }
+
+  updateUserData({String data = ''}) async {
+    if ((data ?? '').isNotEmpty) {
+      disposeTimer();
+      // addToSheelaConversation(text: "Uploading your data");
+      try {
+        var model = BleDataModel.fromJson(
+          jsonDecode(data),
+        );
+
+        await Future.delayed(Duration(
+          seconds: 2,
+        ));
+        addToSheelaConversation(
+          text:
+              "Completed, your SPO2 is ${model.data.sPO2} and pulse is ${model.data.pulse} ",
+        );
+        bool response = await BleConnectApiProvider().uploadBleDataReadings(
+          model,
+        );
+        await Future.delayed(Duration(
+          seconds: 6,
+        ));
+        addToSheelaConversation(
+          text: response
+              ? "Uploaded your readings to server"
+              : "Failed to upload the readings",
+        );
+      } catch (e) {
+        addToSheelaConversation(
+          text: "Failed to upload the readings",
+        );
+      }
+    }
   }
 
   ChatScreenViewModel() {
