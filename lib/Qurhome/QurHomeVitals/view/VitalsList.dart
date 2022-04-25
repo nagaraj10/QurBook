@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -5,12 +8,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
-import 'package:provider/provider.dart';
 
 import '../../../add_family_user_info/services/add_family_user_info_repository.dart';
 import '../../../common/CommonUtil.dart';
@@ -23,7 +22,6 @@ import '../../../constants/fhb_parameters.dart' as parameters;
 import '../../../constants/router_variable.dart' as router;
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../devices/device_dashboard_arguments.dart';
-import '../../../regiment/view_model/regiment_view_model.dart';
 import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -36,7 +34,7 @@ class VitalsList extends StatefulWidget {
   _VitalsListState createState() => _VitalsListState();
 }
 
-class _VitalsListState extends State<VitalsList> {
+class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   final controller = Get.put(VitalListController());
 
   LastMeasureSyncValues deviceValues;
@@ -114,6 +112,8 @@ class _VitalsListState extends State<VitalsList> {
   final double circleRadius = 38;
   final double circleBorderWidth = 0;
 
+  AnimationController animationController;
+
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -121,16 +121,61 @@ class _VitalsListState extends State<VitalsList> {
     super.initState();
   }
 
+  void initBleTimer() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 500));
+      animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 30),
+      );
+      animationController.addListener(() {
+        notify();
+        if (animationController.isAnimating) {
+          controller.updateTimerValue(animationController.value);
+        } else {
+          controller.updateTimerValue(1.0);
+        }
+      });
+      showSearchingBleDialog(context);
+      await Future.delayed(Duration(seconds: 1));
+      controller.checkForConnectedDevices(animationController);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void notify() {
+    try {
+      if (countText == '00') {
+        if (animationController.isAnimating) {
+          animationController.stop();
+          animationController.dispose();
+        }
+        Get.back();
+        if (!controller.foundBLE.value) {
+          toast.getToast(NoDeviceFound, Colors.red);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device Value Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    try {
+      animationController.dispose();
+      FocusManager.instance.primaryFocus.unfocus();
+      super.dispose();
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'Device Value Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
@@ -710,6 +755,7 @@ class _VitalsListState extends State<VitalsList> {
       value1ForWeight,
       value1ForTemp,
       String value2ForBp) {
+    initBleTimer();
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,
@@ -2543,6 +2589,132 @@ class _VitalsListState extends State<VitalsList> {
     ).then((value) {
       setState(() {});
     });
+  }
+
+  String get countText {
+    Duration count = animationController.duration * animationController.value;
+    return animationController.isDismissed
+        ? '${(animationController.duration.inSeconds % 60).toString().padLeft(2, '0')}'
+        : '${(count.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
+  Widget startProgressIndicator() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 130,
+          height: 130,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey.shade300,
+            color: Color(
+              CommonUtil().getQurhomeGredientColor(),
+            ),
+            value: controller.timerProgress.value,
+            strokeWidth: 8,
+          ),
+        ),
+        AnimatedBuilder(
+          animation: animationController,
+          builder: (context, child) => Text(
+            countText,
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  showSearchingBleDialog(BuildContext context) {
+    try {
+      animationController.reverse(
+          from:
+              animationController.value == 0 ? 1.0 : animationController.value);
+    } catch (e) {
+      print(e);
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          Timer.periodic(Duration(seconds: 1), (Timer t) {
+            setState(() {});
+          });
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Container(
+                  width: 1.sw,
+                  height: 1.sh / 2.7,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                size: 30.0.sp,
+                              ),
+                              onPressed: () {
+                                try {
+                                  animationController.stop();
+                                  animationController.dispose();
+                                  Get.back();
+                                } catch (e) {
+                                  print(e);
+                                }
+                              })
+                        ],
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 10.0.h,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    ScanningForDevices,
+                                    style: TextStyle(
+                                      color: Color(
+                                        CommonUtil().getQurhomeGredientColor(),
+                                      ),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 30.0.h,
+                              ),
+                              startProgressIndicator(),
+                              SizedBox(
+                                height: 15.0.h,
+                              ),
+                              // callAddFamilyStreamBuilder(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
+          );
+        });
+      },
+    );
   }
 }
 
