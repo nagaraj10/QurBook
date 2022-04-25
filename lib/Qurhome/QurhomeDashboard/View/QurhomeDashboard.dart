@@ -90,14 +90,19 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                             color: Colors.black,
                           ),
                           children: <TextSpan>[
-                            if(controller.currentSelectedIndex.value==0||controller.currentSelectedIndex.value==1)...{
+                            if (controller.currentSelectedIndex.value == 0 ||
+                                controller.currentSelectedIndex.value == 1) ...{
                               TextSpan(text: 'Hello '),
                             },
-                            TextSpan(text: controller.appBarTitle.value, style: const TextStyle(fontWeight: FontWeight.bold,color: Colors.black)),
+                            TextSpan(
+                                text: controller.appBarTitle.value,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
                           ],
                         ),
                       ),
-                      SizedBox(height : 3),
+                      SizedBox(height: 3),
                       Text(
                         getFormatedDate(),
                         style: TextStyle(
@@ -107,7 +112,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       ),
                     ],
                   ),
-
                   SizedBox(width: 70.w)
                 ],
               ),
@@ -143,21 +147,21 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   1.0,
                 ),
               ),
-              actions: [
-                InkWell(
-                  onTap: () {
-                    controller.checkForConnectedDevices();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: AssetImageWidget(
-                      icon: icon_vitals_qurhome,
-                      height: 22.h,
-                      width: 22.h,
-                    ),
-                  ),
-                )
-              ],
+              // actions: [
+              //   InkWell(
+              //     onTap: () {
+              //       controller.checkForConnectedDevices();
+              //     },
+              //     child: Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 8),
+              //       child: AssetImageWidget(
+              //         icon: icon_vitals_qurhome,
+              //         height: 22.h,
+              //         width: 22.h,
+              //       ),
+              //     ),
+              //   )
+              // ],
             ),
             body: getCurrentTab(),
             floatingActionButton: Padding(
@@ -353,6 +357,4 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     DateTime now = DateTime.now();
     return DateFormat('dd MMM yyyy').format(now);
   }
-
 }
-
