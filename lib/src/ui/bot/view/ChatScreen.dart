@@ -422,6 +422,8 @@ class _ChatScreenState extends State<ChatScreen>
     Provider.of<ChatScreenViewModel>(context, listen: false)
         .updateAppState(false);
     stopTTSEngine();
+    Provider.of<ChatScreenViewModel>(context, listen: false).movedToBackScreen =
+        true;
     Provider.of<ChatScreenViewModel>(context, listen: false).disposeTimer();
     Navigator.pop(context);
   }

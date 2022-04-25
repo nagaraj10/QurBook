@@ -12,12 +12,14 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_qurhub_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
 class QurHomeApiProvider {
+  DateTime selectedRegimenDate = DateTime.now();
 
   Future<dynamic> getRegimenList(String date) async {
     http.Response responseJson;
@@ -25,6 +27,18 @@ class QurHomeApiProvider {
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
     try {
+      RegimentResponseModel regimentsData;
+
+      regimentsData = await RegimentService.getRegimentData(
+        dateSelected: CommonUtil.dateConversionToApiFormat(
+          selectedRegimenDate,
+          isIndianTime: true,
+        ),
+        isSymptoms: 0,
+
+      );
+      return regimentsData;
+
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.get(
         '${CommonUtil.BASE_URL_FROM_RES}kiosk/$userId?date=$date',

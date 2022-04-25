@@ -15,6 +15,7 @@ import '../../../constants/variable_constant.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import 'package:intl/intl.dart';
 
 class QurhomeDashboard extends StatefulWidget {
   @override
@@ -26,6 +27,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
   double buttonSize = 70;
   int index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.updateTabIndex(0);
+  }
 
   BorderSide getBorder() {
     return BorderSide(
@@ -72,11 +79,38 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                     : SizedBox.shrink(),
                           ))
                       : SizedBox.shrink(),
-                  Text(
-                    controller.appBarTitle.value,
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                  Column(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          // Note: Styles for TextSpans must be explicitly defined.
+                          // Child text spans will inherit styles from parent
+                          style: const TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.black,
+                          ),
+                          children: <TextSpan>[
+                            if (controller.currentSelectedIndex.value == 0 ||
+                                controller.currentSelectedIndex.value == 1) ...{
+                              TextSpan(text: 'Hello '),
+                            },
+                            TextSpan(
+                                text: controller.appBarTitle.value,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 3),
+                      Text(
+                        getFormatedDate(),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(width: 70.w)
                 ],
@@ -113,21 +147,21 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   1.0,
                 ),
               ),
-              actions: [
-                InkWell(
-                  onTap: () {
-                    controller.checkForConnectedDevices();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: AssetImageWidget(
-                      icon: icon_vitals_qurhome,
-                      height: 22.h,
-                      width: 22.h,
-                    ),
-                  ),
-                )
-              ],
+              // actions: [
+              //   InkWell(
+              //     onTap: () {
+              //       controller.checkForConnectedDevices();
+              //     },
+              //     child: Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 8),
+              //       child: AssetImageWidget(
+              //         icon: icon_vitals_qurhome,
+              //         height: 22.h,
+              //         width: 22.h,
+              //       ),
+              //     ),
+              //   )
+              // ],
             ),
             body: getCurrentTab(),
             floatingActionButton: Padding(
@@ -317,5 +351,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
   void bottomTapped(int index) {
     controller.updateTabIndex(index);
+  }
+
+  String getFormatedDate() {
+    DateTime now = DateTime.now();
+    return DateFormat('dd MMM yyyy').format(now);
   }
 }
