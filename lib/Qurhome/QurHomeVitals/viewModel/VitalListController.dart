@@ -23,6 +23,7 @@ class VitalListController extends GetxController {
   static const stream = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
   var foundBLE = false.obs;
+  var isShowTimerDialog = true.obs;
 
   Future<LastMeasureSyncValues> fetchDeviceDetails() async {
     try {
@@ -59,10 +60,19 @@ class VitalListController extends GetxController {
     }
   }
 
-  void checkForConnectedDevices(AnimationController animationController) {
+  updateisShowTimerDialog(bool value) async {
+    try {
+      isShowTimerDialog.value = value;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void checkForConnectedDevices(
+      AnimationController animationController, StreamController<int> _events) {
     try {
       foundBLE.value = false;
-      _enableTimer(animationController);
+      _enableTimer(animationController, _events);
       BleConnectController bleController = Get.put(BleConnectController());
       bleController.getBleConnectData(Get.context);
       Future.delayed(Duration(seconds: 10)).then((value) {
@@ -86,7 +96,8 @@ class VitalListController extends GetxController {
     }
   }
 
-  void _enableTimer(AnimationController animationController) {
+  void _enableTimer(
+      AnimationController animationController, StreamController<int> _events) {
     try {
       _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
         print(val);
@@ -112,9 +123,13 @@ class VitalListController extends GetxController {
             case "connected":
               foundBLE.value = true;
               _disableTimer();
-              animationController.stop();
-              animationController.dispose();
-              Get.back();
+              try {
+                animationController.stop();
+                _events.close();
+                Navigator.pop(Get.context);
+              } catch (e) {
+                print(e);
+              }
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(

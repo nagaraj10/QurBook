@@ -114,11 +114,41 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
 
   AnimationController animationController;
 
+  int _counter = 0;
+  StreamController<int> _events = StreamController<int>();
+  Timer _timer;
+
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
-    mInitialTime = DateTime.now();
-    super.initState();
+    try {
+      FocusManager.instance.primaryFocus.unfocus();
+      _events.add(30);
+      mInitialTime = DateTime.now();
+      controller.updateisShowTimerDialog(true);
+      super.initState();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _startTimer() {
+    try {
+      _counter = 30;
+      if (_timer != null) {
+        _timer.cancel();
+      }
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!_events.isClosed) {
+          (_counter > 0) ? _counter-- : _timer.cancel();
+          _events.add(_counter);
+          notify();
+        } else {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void initBleTimer() async {
@@ -129,16 +159,19 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
         duration: Duration(seconds: 30),
       );
       animationController.addListener(() {
-        notify();
         if (animationController.isAnimating) {
           controller.updateTimerValue(animationController.value);
         } else {
           controller.updateTimerValue(1.0);
         }
       });
-      showSearchingBleDialog(context);
+      if (controller.isShowTimerDialog.value) {
+        _startTimer();
+        showSearchingBleDialog(context);
+        controller.updateisShowTimerDialog(false);
+      }
       await Future.delayed(Duration(seconds: 1));
-      controller.checkForConnectedDevices(animationController);
+      controller.checkForConnectedDevices(animationController, _events);
     } catch (e) {
       print(e);
     }
@@ -146,12 +179,12 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
 
   void notify() {
     try {
-      if (countText == '00') {
+      if (_counter == 0) {
         if (animationController.isAnimating) {
           animationController.stop();
-          animationController.dispose();
         }
-        Get.back();
+        _events.close();
+        Navigator.pop(context);
         if (!controller.foundBLE.value) {
           toast.getToast(NoDeviceFound, Colors.red);
         }
@@ -165,6 +198,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   void dispose() {
     try {
       animationController.dispose();
+      _events.close();
       FocusManager.instance.primaryFocus.unfocus();
       super.dispose();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
@@ -2591,14 +2625,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
     });
   }
 
-  String get countText {
-    Duration count = animationController.duration * animationController.value;
-    return animationController.isDismissed
-        ? '${(animationController.duration.inSeconds % 60).toString().padLeft(2, '0')}'
-        : '${(count.inSeconds % 60).toString().padLeft(2, '0')}';
-  }
-
-  Widget startProgressIndicator() {
+  Widget startProgressIndicator(String strText) {
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -2617,7 +2644,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
         AnimatedBuilder(
           animation: animationController,
           builder: (context, child) => Text(
-            countText,
+            "$strText",
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
@@ -2642,74 +2669,78 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
       barrierDismissible: false,
       builder: (context) {
         return StatefulBuilder(builder: (context, setState) {
-          Timer.periodic(Duration(seconds: 1), (Timer t) {
-            setState(() {});
-          });
           return WillPopScope(
             onWillPop: () async => false,
             child: AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              content: Container(
-                  width: 1.sw,
-                  height: 1.sh / 2.7,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                size: 30.0.sp,
-                              ),
-                              onPressed: () {
-                                try {
-                                  animationController.stop();
-                                  animationController.dispose();
-                                  Get.back();
-                                } catch (e) {
-                                  print(e);
-                                }
-                              })
-                        ],
-                      ),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 10.0.h,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    ScanningForDevices,
-                                    style: TextStyle(
-                                      color: Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      ),
-                                      fontSize: 20,
+              content: StreamBuilder<int>(
+                  stream: _events.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    print(snapshot.data.toString());
+                    return Container(
+                        width: 1.sw,
+                        height: 1.sh / 2.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 30.0.sp,
                                     ),
-                                  ),
-                                ],
+                                    onPressed: () {
+                                      try {
+                                        animationController.stop();
+                                        _events.close();
+                                        Navigator.pop(context);
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    })
+                              ],
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          ScanningForDevices,
+                                          style: TextStyle(
+                                            color: Color(
+                                              CommonUtil()
+                                                  .getQurhomeGredientColor(),
+                                            ),
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 30.0.h,
+                                    ),
+                                    startProgressIndicator(
+                                        snapshot.data.toString()),
+                                    SizedBox(
+                                      height: 15.0.h,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                height: 30.0.h,
-                              ),
-                              startProgressIndicator(),
-                              SizedBox(
-                                height: 15.0.h,
-                              ),
-                              // callAddFamilyStreamBuilder(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
+                            ),
+                          ],
+                        ));
+                  }),
             ),
           );
         });
