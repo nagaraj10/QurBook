@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -326,6 +327,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
+
                           if (regimen.hasform) {
                             onCardPressed(context, regimen,
                                 aid: regimen.aid,
@@ -345,15 +347,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                       Expanded(
                           child: Center(
                               child: InkWell(
-                                onTap: (){
-                                  Navigator.pop(context);
-                                },
-                                child: Image.asset(
-                        'assets/Qurhome/remove.png',
-                        height: 50,
-                        width: 50,
-                      ),
-                              ))),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Image.asset(
+                          'assets/Qurhome/remove.png',
+                          height: 50,
+                          width: 50,
+                        ),
+                      ))),
                     ],
                   ),
                   SizedBox(
@@ -459,140 +461,148 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             regimen.otherinfo.toJson().toString().contains('1')) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
-      Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogOpened);
-      var value = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  getIcon(
-                      regimen.activityname, regimen.uformname, regimen.metadata,
-                      sizeOfIcon: 30),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        getFormatedTitle(regimen.title),
-                        style: TextStyle(
-                            color: Color(
-                              CommonUtil().getQurhomeGredientColor(),
-                            ),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
+      var dashboardController = Get.find<QurhomeDashboardController>();
+      if (((fieldsResponseModel.result.fields.first.title ?? '').isNotEmpty) &&
+          (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
+              "oxygen".toLowerCase()) &&
+          (dashboardController != null)) {
+        dashboardController.checkForConnectedDevices();
+      } else {
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogOpened);
+        var value = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    getIcon(regimen.activityname, regimen.uformname,
+                        regimen.metadata,
+                        sizeOfIcon: 30),
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          getFormatedTitle(regimen.title),
+                          style: TextStyle(
+                              color: Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              ),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
-                  ),
-                  // getIcon(regimen.activityname, regimen.uformname,
-                  //     regimen.metadata,sizeOfIcon : 30),
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              FormDataDialog(
-                fieldsData: fieldsResponseModel.result.fields,
-                eid: eventId,
-                color: getColor(
-                    regimen.activityname, regimen.uformname, regimen.metadata),
-                mediaData: regimen.otherinfo,
-                formTitle: getDialogTitle(context, regimen),
-                canEdit: canEdit || isValidSymptom(context),
-                isFromQurHome: true,
-                triggerAction: (String triggerEventId, String followContext) {
-                  Provider.of<RegimentViewModel>(Get.context, listen: false)
-                      .updateRegimentStatus(RegimentStatus.DialogClosed);
-                  Get.back();
-                  onCardPressed(
-                    Get.context,
-                    regimen,
-                    eventIdReturn: triggerEventId,
-                    followEventContext: followContext,
-                  );
-                },
-                followEventContext: followEventContext,
-                isFollowEvent: eventIdReturn != null,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Text('Remind me in'),
-                      Container(
-                        color: Colors.grey,
-                        height: 1,
-                        width: 110,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Stack(
-                    children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: '5 mins',
-                          elevation: 16,
-                          onChanged: (String newValue) {
-                            // setState(() {
-                            //   dropdownValue = newValue!;
-                            // });
-                          },
-                          items: <String>[
-                            '5 mins',
-                            '10 mins',
-                            '15 mins',
-                            '20 mins'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 36.0),
-                        child: Container(
+                    // getIcon(regimen.activityname, regimen.uformname,
+                    //     regimen.metadata,sizeOfIcon : 30),
+                  ],
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                FormDataDialog(
+                  fieldsData: fieldsResponseModel.result.fields,
+                  eid: eventId,
+                  color: getColor(regimen.activityname, regimen.uformname,
+                      regimen.metadata),
+                  mediaData: regimen.otherinfo,
+                  formTitle: getDialogTitle(context, regimen),
+                  canEdit: canEdit || isValidSymptom(context),
+                  isFromQurHome: true,
+                  triggerAction: (String triggerEventId, String followContext) {
+                    Provider.of<RegimentViewModel>(Get.context, listen: false)
+                        .updateRegimentStatus(RegimentStatus.DialogClosed);
+                    Get.back();
+                    onCardPressed(
+                      Get.context,
+                      regimen,
+                      eventIdReturn: triggerEventId,
+                      followEventContext: followContext,
+                    );
+                  },
+                  followEventContext: followEventContext,
+                  isFollowEvent: eventIdReturn != null,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        Text('Remind me in'),
+                        Container(
                           color: Colors.grey,
                           height: 1,
-                          width: 78,
+                          width: 110,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Stack(
+                      children: [
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: '5 mins',
+                            elevation: 16,
+                            onChanged: (String newValue) {
+                              // setState(() {
+                              //   dropdownValue = newValue!;
+                              // });
+                            },
+                            items: <String>[
+                              '5 mins',
+                              '10 mins',
+                              '15 mins',
+                              '20 mins'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Snooze'),
-                style: ElevatedButton.styleFrom(
-                    primary: Color(CommonUtil().getMyPrimaryColor())),
-              )
-            ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 36.0),
+                          child: Container(
+                            color: Colors.grey,
+                            height: 1,
+                            width: 78,
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Snooze'),
+                  style: ElevatedButton.styleFrom(
+                      primary: Color(CommonUtil().getMyPrimaryColor())),
+                )
+              ],
+            ),
           ),
-        ),
-      );
-      if (value != null && (value ?? false)) {
-        LoaderClass.showLoadingDialog(
-          Get.context,
-          canDismiss: false,
         );
-        Future.delayed(Duration(milliseconds: 300), () async {
-          await Provider.of<RegimentViewModel>(context, listen: false)
-              .fetchRegimentData();
-          LoaderClass.hideLoadingDialog(Get.context);
-        });
-      }
+        if (value != null && (value ?? false)) {
+          LoaderClass.showLoadingDialog(
+            Get.context,
+            canDismiss: false,
+          );
+          Future.delayed(Duration(milliseconds: 300), () async {
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+            LoaderClass.hideLoadingDialog(Get.context);
+          });
+        }
 
-      Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogClosed);
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogClosed);
+      }
     } else if (!regimen.hasform) {
       FlutterToast().getToast(
         tickInfo,
