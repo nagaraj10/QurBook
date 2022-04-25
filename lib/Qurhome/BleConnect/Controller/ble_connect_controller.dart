@@ -36,6 +36,7 @@ class BleConnectController extends GetxController {
       const platform = MethodChannel('bleConnect');
       try {
         var result = await platform.invokeMethod('bleconnect');
+        printInfo(info: "Result from $result");
         isBleScanning.value = false;
         if (result != null &&
             validString(result.toString().toLowerCase())
@@ -49,7 +50,7 @@ class BleConnectController extends GetxController {
               "SPO2 Value${validString(bleDataModel.data.sPO2.toString())}\n" +
               "Pulse Value ${validString(bleDataModel.data.pulse.toString())}\n";
           print("BLE RESULT ${bleDataModel}");
-          uploadBleData(context);
+          uploadBleData();
         } else if (result != null &&
             validString(result.toString().toLowerCase())
                 .contains("connected")) {
@@ -78,31 +79,31 @@ class BleConnectController extends GetxController {
     return "";
   }
 
-  uploadBleData(BuildContext context) async {
-    try {
-      strProgressMessage.value = "uploading the ble data readings...";
-      errorMessage.value = "";
-      loadingData.value = true;
-      http.Response response =
-          await _apiProvider.uploadBleDataReadings(bleDataModel);
-      if (response.statusCode == 200) {
-        loadingData.value = false;
-        print("uploadBleData response ${json.decode(response.body)}");
-        BleDataResponseModel bleDataResponseModel =
-            BleDataResponseModel.fromJson(json.decode(response.body));
-        if (bleDataResponseModel.isSuccess) {
-          toast.getToast(
-              validString("SPO2 value updated successfully"), Colors.green);
-        } else {
-          toast.getToast(validString(response.body), Colors.red);
-        }
-      } else {
-        loadingData.value = false;
-        toast.getToast(validString(response.body), Colors.red);
-      }
-    } catch (e) {
-      loadingData.value = false;
-      toast.getToast(validString(e.toString()), Colors.red);
-    }
+  uploadBleData() async {
+    // try {
+    //   strProgressMessage.value = "uploading the ble data readings...";
+    //   errorMessage.value = "";
+    //   loadingData.value = true;
+    //   http.Response response =
+    //       await _apiProvider.uploadBleDataReadings(bleDataModel);
+    //   if (response.statusCode == 200) {
+    //     loadingData.value = false;
+    //     print("uploadBleData response ${json.decode(response.body)}");
+    //     BleDataResponseModel bleDataResponseModel =
+    //         BleDataResponseModel.fromJson(json.decode(response.body));
+    //     if (bleDataResponseModel.isSuccess) {
+    //       toast.getToast(
+    //           validString("SPO2 value updated successfully"), Colors.green);
+    //     } else {
+    //       toast.getToast(validString(response.body), Colors.red);
+    //     }
+    //   } else {
+    //     loadingData.value = false;
+    //     toast.getToast(validString(response.body), Colors.red);
+    //   }
+    // } catch (e) {
+    //   loadingData.value = false;
+    //   toast.getToast(validString(e.toString()), Colors.red);
+    // }
   }
 }

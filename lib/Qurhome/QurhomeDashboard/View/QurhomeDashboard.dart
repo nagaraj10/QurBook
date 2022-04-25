@@ -143,6 +143,21 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   1.0,
                 ),
               ),
+              actions: [
+                InkWell(
+                  onTap: () {
+                    controller.checkForConnectedDevices();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: AssetImageWidget(
+                      icon: icon_vitals_qurhome,
+                      height: 22.h,
+                      width: 22.h,
+                    ),
+                  ),
+                )
+              ],
             ),
             body: getCurrentTab(),
             floatingActionButton: Padding(

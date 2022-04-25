@@ -137,32 +137,26 @@ class BleConnectApiProvider {
     }
   }
 
-  Future<dynamic> uploadBleDataReadings(BleDataModel bleDataModel) async {
+  Future<bool> uploadBleDataReadings(BleDataModel bleDataModel) async {
     http.Response responseJson;
-    await PreferenceUtil.init();
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlotWithUserId();
-      /*var data = {
-        "data-raw": bleDataModel,
-      };*/
-      print("header $header");
-      //print("data $data");
+      var body = json.encode(bleDataModel);
       responseJson = await ApiServices.post(
-        'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/qur-hub/device-data/kiosk/send-device-data',
+        CommonUtil.BASE_URL_QURHUB + qr_BLEDataUpload,
         headers: header,
-        body: json.encode(bleDataModel),
-        timeOutSeconds: 50,
+        body: body,
       );
-
       if (responseJson.statusCode == 200) {
-        return responseJson;
+        return true;
       } else {
-        return responseJson;
+        return false;
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
+      return false;
     } catch (e) {
-      return null;
+      return false;
     }
   }
 }

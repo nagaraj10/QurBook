@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
+import 'package:myfhb/Qurhome/QurHomeSymptoms/viewModel/SymptomListController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -9,6 +11,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
@@ -92,4 +95,24 @@ class SymptomService {
     LoaderQurHome.hideLoadingDialog(Get.context);
     return response;
   }
+
+  Future<SaveResponseModel> saveFormDataQurHome({
+    String eid,
+    String events,
+    bool isFollowEvent,
+    String followEventContext,
+    DateTime selectedDate,
+    TimeOfDay selectedTime
+  }) async {
+    //updateInitialShowIndex(isDone: true);
+    return await SymptomListController.saveFormData(
+      eid: eid,
+      events: events,
+      isFollowEvent: isFollowEvent,
+      followEventContext: followEventContext,
+      selectedDate: selectedDate??DateTime.now(),
+      selectedTime: selectedTime??TimeOfDay.now(),
+    );
+  }
+
 }
