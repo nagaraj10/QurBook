@@ -180,9 +180,11 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   void notify() {
     try {
       if (_counter == 0) {
-        if (animationController.isAnimating) {
-          animationController.stop();
-        }
+        Timer(Duration(milliseconds: 1000), () {
+          if (animationController.isAnimating) {
+            animationController.stop();
+          }
+        });
         _events.close();
         Navigator.pop(context);
         if (!controller.foundBLE.value) {
@@ -2694,7 +2696,11 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                                     ),
                                     onPressed: () {
                                       try {
-                                        animationController.stop();
+                                        Timer(Duration(milliseconds: 1000), () {
+                                          if (animationController.isAnimating) {
+                                            animationController.stop();
+                                          }
+                                        });
                                         _events.close();
                                         Navigator.pop(context);
                                       } catch (e) {

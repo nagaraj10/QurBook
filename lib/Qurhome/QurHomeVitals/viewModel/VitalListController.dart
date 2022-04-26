@@ -124,7 +124,11 @@ class VitalListController extends GetxController {
               foundBLE.value = true;
               _disableTimer();
               try {
-                animationController.stop();
+                Timer(Duration(milliseconds: 1000), () {
+                  if (animationController.isAnimating) {
+                    animationController.stop();
+                  }
+                });
                 _events.close();
                 Navigator.pop(Get.context);
               } catch (e) {
