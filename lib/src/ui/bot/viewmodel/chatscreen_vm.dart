@@ -154,8 +154,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "connected":
-            addToSheelaConversation(
-                text: receivedValues.last ?? 'Request Timeout');
+            // addToSheelaConversation(
+            //     text: receivedValues.last ?? 'Request Timeout');
             break;
           case "measurement":
             updateUserData(data: receivedValues.last);
@@ -179,7 +179,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       if (!movedToBackScreen) {
         if (showFailure) {
           addToSheelaConversation(
-              text: "Failed to get readings from the device");
+              text: "Failed to measure values. Please try again");
         }
         await Future.delayed(Duration(seconds: 4));
         movedToBackScreen = true;
@@ -196,8 +196,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   setupListenerForReadings() async {
-    await Future.delayed(Duration(seconds: 2));
-    addToSheelaConversation(text: "Measuring SPO2...");
+    await Future.delayed(Duration(seconds: 4));
+    addToSheelaConversation(text: "Checking for SpO2 value");
     _enableTimer();
     Future.delayed(Duration(seconds: 30)).then((value) {
       if (_timerSubscription != null) {
@@ -214,29 +214,34 @@ class ChatScreenViewModel extends ChangeNotifier {
         var model = BleDataModel.fromJson(
           jsonDecode(data),
         );
-
         await Future.delayed(Duration(
           seconds: 2,
         ));
         addToSheelaConversation(
+          text: "Completed ",
+        );
+        await Future.delayed(Duration(
+          seconds: 3,
+        ));
+        addToSheelaConversation(
           text:
-              "Completed, your SPO2 is ${model.data.sPO2} and pulse is ${model.data.pulse} ",
+              "Your SpO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse}",
         );
         bool response = await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
         await Future.delayed(Duration(
-          seconds: 6,
+          seconds: 5,
         ));
         addToSheelaConversation(
           text: response
-              ? "Uploaded your readings to server"
-              : "Failed to upload the readings",
+              ? "Values saved"
+              : "Failed to save the values, Please try again",
         );
         moveToBack(showFailure: false);
       } catch (e) {
         addToSheelaConversation(
-          text: "Failed to upload the readings",
+          text: "Failed to save the values, Please try again",
         );
         moveToBack(showFailure: false);
       }

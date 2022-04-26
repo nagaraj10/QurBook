@@ -78,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen>
     if (widget?.arguments?.takeActiveDeviceReadings &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
-        text: "Device Connected",
+        text: "Your SpO2 device is connected",
       );
       getMyViewModel().setupListenerForReadings();
     } else {
