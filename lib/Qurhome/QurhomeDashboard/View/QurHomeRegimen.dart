@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -11,11 +12,13 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_qurhub_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 
@@ -96,7 +99,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       int itemIndex, RegimentDataModel regimen, int nextRegimenPosition) {
     return InkWell(
       onTap: () {
-        showRegimenDialog(regimen);
+        showRegimenDialog(regimen,itemIndex);
       },
       child: Transform.scale(
         scale: controller.currentIndex == itemIndex ? 1 : 0.9,
@@ -125,10 +128,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                         : '',
                     style: TextStyle(
                         color: controller.currentIndex == itemIndex ||
-                                nextRegimenPosition == itemIndex
+                            nextRegimenPosition == itemIndex
                             ? Color(
-                                CommonUtil().getQurhomeGredientColor(),
-                              )
+                          CommonUtil().getQurhomeGredientColor(),
+                        )
                             : Colors.grey,
                         fontSize: 16),
                   ),
@@ -141,21 +144,53 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                     width: 20,
                   ),
                   Expanded(
-                    child: Text(
-                      getFormatedTitle(regimen.title),
-                      style: TextStyle(
-                          color: controller.currentIndex == itemIndex ||
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          getFormatedTitle(regimen.title),
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: controller.currentIndex == itemIndex ||
                                   nextRegimenPosition == itemIndex
-                              ? Color(
-                                  CommonUtil().getQurhomeGredientColor(),
-                                )
-                              : Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400),
+                                  ? Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
+                                  : Colors.grey,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        if(regimen.ack_local != null)...{
+                          Visibility(
+                            visible: regimen.ack_local != null,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '${CommonUtil().regimentDateFormat(
+                                    regimen?.asNeeded
+                                        ? regimen?.ack_local ??
+                                        DateTime.now()
+                                        : regimen?.ack_local ??
+                                        DateTime.now(),
+                                    isAck: true,
+                                  )}',
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        }
+
+
+                      ],
                     ),
                   ),
                 ],
               ),
+
             ),
           ),
         ),
@@ -276,156 +311,204 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     return first + second;
   }
 
-  showRegimenDialog(RegimentDataModel regimen) {
+  showRegimenDialog(RegimentDataModel regimen, int index) {
     showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-              contentPadding: EdgeInsets.all(0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      children: [
-                        getIcon(regimen.activityname, regimen.uformname,
-                            regimen.metadata,
-                            sizeOfIcon: 30),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              getFormatedTitle(regimen.title),
-                              style: TextStyle(
-                                  color: Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  ),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ),
-                        ),
-                        // getIcon(regimen.activityname, regimen.uformname,
-                        //     regimen.metadata,sizeOfIcon : 30),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                  contentPadding: EdgeInsets.all(0),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(
-                          child: Center(
-                              child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          if (regimen.hasform) {
-                            onCardPressed(context, regimen,
-                                aid: regimen.aid,
-                                uid: regimen.uid,
-                                formId: regimen.uformid,
-                                formName: regimen.uformname);
-                          } else {
-                            callLogApi(regimen);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/Qurhome/accept.png',
-                          height: 50,
-                          width: 50,
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          children: [
+                            getIcon(regimen.activityname, regimen.uformname,
+                                regimen.metadata,
+                                sizeOfIcon: 30),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  getFormatedTitle(regimen.title),
+                                  style: TextStyle(
+                                      color: Color(
+                                        CommonUtil().getQurhomeGredientColor(),
+                                      ),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                            ),
+                            if (regimen?.activityOrgin != strAppointmentRegimen)
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (regimen.isPlaying) {
+                                        stopRegimenTTS();
+                                        regimen.isPlaying = false;
+                                        setState(() {
+                                        });
+                                      } else {
+                                        stopRegimenTTS();
+                                        regimen.isPlaying = true;
+                                        setState(() {
+
+                                        });
+                                        Provider.of<ChatScreenViewModel>(Get.context, listen: false)
+                                            ?.startTTSEngine(
+                                          textToSpeak: regimen?.title ?? '',
+                                          dynamicText: regimen?.sayTextDynamic ?? '',
+                                          isRegiment: true,
+                                          onStop: () {
+                                            stopRegimenTTS();
+                                            regimen.isPlaying = false;
+                                            setState(() {
+                                            });
+                                          },
+                                        );
+                                      }
+                                    },
+                                    child: Icon(
+                                      regimen.isPlaying
+                                          ? Icons.stop_circle_outlined
+                                          : Icons.play_circle_fill_rounded,
+                                      size: 30.0,
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
-                      ))),
-                      Expanded(
-                          child: Center(
-                              child: InkWell(
-                                onTap: (){
-                                  Navigator.pop(context);
-                                },
-                                child: Image.asset(
-                        'assets/Qurhome/remove.png',
-                        height: 50,
-                        width: 50,
                       ),
-                              ))),
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Center(
+                                  child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                              if (regimen.hasform) {
+                                onCardPressed(context, regimen,
+                                    aid: regimen.aid,
+                                    uid: regimen.uid,
+                                    formId: regimen.uformid,
+                                    formName: regimen.uformname);
+                              } else {
+                                callLogApi(regimen);
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/Qurhome/accept.png',
+                              height: 50,
+                              width: 50,
+                            ),
+                          ))),
+                          Expanded(
+                              child: Center(
+                                  child: InkWell(
+                                    onTap: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Image.asset(
+                            'assets/Qurhome/remove.png',
+                            height: 50,
+                            width: 50,
+                          ),
+                                  ),),),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Text('Remind me in'),
+                                // Container(
+                                //   color: Colors.grey,
+                                //   height: 1,
+                                //   width: 110,
+                                // )
+                              ],
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Stack(
+                              children: [
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: '5 mins',
+                                    elevation: 16,
+                                    onChanged: (String newValue) {
+                                      // setState(() {
+                                      //   dropdownValue = newValue!;
+                                      // });
+                                    },
+                                    items: <String>[
+                                      '5 mins',
+                                      '10 mins',
+                                      '15 mins',
+                                      '20 mins'
+                                    ].map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 36.0),
+                                  child: Container(
+                                    color: Colors.grey,
+                                    height: 1,
+                                    width: 78,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Snooze'),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color(CommonUtil().getMyPrimaryColor())),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      )
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Text('Remind me in'),
-                            // Container(
-                            //   color: Colors.grey,
-                            //   height: 1,
-                            //   width: 110,
-                            // )
-                          ],
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Stack(
-                          children: [
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: '5 mins',
-                                elevation: 16,
-                                onChanged: (String newValue) {
-                                  // setState(() {
-                                  //   dropdownValue = newValue!;
-                                  // });
-                                },
-                                items: <String>[
-                                  '5 mins',
-                                  '10 mins',
-                                  '15 mins',
-                                  '20 mins'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 36.0),
-                              child: Container(
-                                color: Colors.grey,
-                                height: 1,
-                                width: 78,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Snooze'),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color(CommonUtil().getMyPrimaryColor())),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  )
-                ],
-              ),
-            ));
+                );
+            }
+          );}
+    );
   }
 
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
@@ -463,121 +546,30 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           .updateRegimentStatus(RegimentStatus.DialogOpened);
       var value = await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  getIcon(
-                      regimen.activityname, regimen.uformname, regimen.metadata,
-                      sizeOfIcon: 30),
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        getFormatedTitle(regimen.title),
-                        style: TextStyle(
-                            color: Color(
-                              CommonUtil().getQurhomeGredientColor(),
-                            ),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ),
-                  ),
-                  // getIcon(regimen.activityname, regimen.uformname,
-                  //     regimen.metadata,sizeOfIcon : 30),
-                ],
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              FormDataDialog(
-                fieldsData: fieldsResponseModel.result.fields,
-                eid: eventId,
-                color: getColor(
-                    regimen.activityname, regimen.uformname, regimen.metadata),
-                mediaData: regimen.otherinfo,
-                formTitle: getDialogTitle(context, regimen),
-                canEdit: canEdit || isValidSymptom(context),
-                isFromQurHome: true,
-                triggerAction: (String triggerEventId, String followContext) {
-                  Provider.of<RegimentViewModel>(Get.context, listen: false)
-                      .updateRegimentStatus(RegimentStatus.DialogClosed);
-                  Get.back();
-                  onCardPressed(
-                    Get.context,
-                    regimen,
-                    eventIdReturn: triggerEventId,
-                    followEventContext: followContext,
-                  );
-                },
-                followEventContext: followEventContext,
-                isFollowEvent: eventIdReturn != null,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Text('Remind me in'),
-                      Container(
-                        color: Colors.grey,
-                        height: 1,
-                        width: 110,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Stack(
-                    children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: '5 mins',
-                          elevation: 16,
-                          onChanged: (String newValue) {
-                            // setState(() {
-                            //   dropdownValue = newValue!;
-                            // });
-                          },
-                          items: <String>[
-                            '5 mins',
-                            '10 mins',
-                            '15 mins',
-                            '20 mins'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 36.0),
-                        child: Container(
-                          color: Colors.grey,
-                          height: 1,
-                          width: 78,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Snooze'),
-                style: ElevatedButton.styleFrom(
-                    primary: Color(CommonUtil().getMyPrimaryColor())),
-              )
-            ],
-          ),
-        ),
+        builder: (context) =>
+            FormDataDialog(
+              fieldsData: fieldsResponseModel.result.fields,
+              eid: eventId,
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              mediaData: regimen.otherinfo,
+              formTitle: getDialogTitle(context, regimen),
+              canEdit: canEdit || isValidSymptom(context),
+              isFromQurHome: false,
+              triggerAction: (String triggerEventId, String followContext) {
+                Provider.of<RegimentViewModel>(Get.context, listen: false)
+                    .updateRegimentStatus(RegimentStatus.DialogClosed);
+                Get.back();
+                onCardPressed(
+                  Get.context,
+                  regimen,
+                  eventIdReturn: triggerEventId,
+                  followEventContext: followContext,
+                );
+              },
+              followEventContext: followEventContext,
+              isFollowEvent: eventIdReturn != null,
+            ),
+
       );
       if (value != null && (value ?? false)) {
         LoaderClass.showLoadingDialog(
@@ -691,13 +683,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           'Logged Successfully',
           Colors.red,
         );
-        // Future.delayed(Duration(milliseconds: 300),
-        //         () async {
-        //       await Provider.of<RegimentViewModel>(context,
-        //           listen: false)
-        //           .fetchRegimentData();
-        //       LoaderClass.hideLoadingDialog(Get.context);
-        //     });
+        controller.getRegimenList();
+
         LoaderClass.hideLoadingDialog(Get.context);
       } else {
         LoaderClass.hideLoadingDialog(Get.context);
