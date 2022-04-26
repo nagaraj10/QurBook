@@ -30,12 +30,13 @@ class VitalDetailController extends GetxController {
     filterBtnOnTap.value = index;
   }
 
-  Future<List<dynamic>> fetchBPDetailsQurHome({bool isLoading = false}) async {
+  Future<List<dynamic>> fetchBPDetailsQurHome(
+      {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBPData();
+      var resp = await _helper.getBPData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
         return [];
@@ -98,12 +99,13 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchGLDetailsQurHome({bool isLoading = false}) async {
+  Future<List<dynamic>> fetchGLDetailsQurHome(
+      {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBloodGlucoseData();
+      var resp = await _helper.getBloodGlucoseData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
         return [];
@@ -162,12 +164,13 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchOXYDetailsQurHome({bool isLoading = false}) async {
+  Future<List<dynamic>> fetchOXYDetailsQurHome(
+      {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getOxygenSaturationData();
+      var resp = await _helper.getOxygenSaturationData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
         return [];
@@ -232,12 +235,13 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchTMPDetailsQurHome({bool isLoading = false}) async {
+  Future<List<dynamic>> fetchTMPDetailsQurHome(
+      {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getBodyTemperatureData();
+      var resp = await _helper.getBodyTemperatureData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
         return [];
@@ -291,12 +295,13 @@ class VitalDetailController extends GetxController {
     }
   }
 
-  Future<List<dynamic>> fetchWVDetailsQurHome({bool isLoading}) async {
+  Future<List<dynamic>> fetchWVDetailsQurHome(
+      {bool isLoading = false, String filter = ''}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      var resp = await _helper.getWeightData();
+      var resp = await _helper.getWeightData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
         return [];
