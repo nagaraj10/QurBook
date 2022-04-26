@@ -3,14 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/QurHub/Models/add_network_model.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 
 class BleConnectController extends GetxController {
   final _apiProvider = BleConnectApiProvider();
