@@ -99,60 +99,57 @@ class VitalListController extends GetxController {
   void _enableTimer(
       AnimationController animationController, StreamController<int> _events) {
     try {
-      _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
-        print(val);
-        List<String> receivedValues = val.split('|');
-        if ((receivedValues ?? []).length > 0) {
-          switch ((receivedValues.first ?? "")) {
-            case "enablebluetooth":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
-              break;
-            case "permissiondenied":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
-              break;
-            case "scanstarted":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
-              break;
-            case "connectionfailed":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
-              break;
-            case "connected":
-              foundBLE.value = true;
-              _disableTimer();
-              try {
-                Timer(Duration(milliseconds: 1000), () {
-                  if (animationController.isAnimating) {
-                    animationController.stop();
-                  }
-                });
-                _events.close();
-                Navigator.pop(Get.context);
-              } catch (e) {
-                print(e);
-              }
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  takeActiveDeviceReadings: true,
-                ),
-              );
-              break;
+      if (!_events.isClosed) {
+        _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
+          print(val);
+          List<String> receivedValues = val.split('|');
+          if ((receivedValues ?? []).length > 0) {
+            switch ((receivedValues.first ?? "")) {
+              case "enablebluetooth":
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+                break;
+              case "permissiondenied":
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+                break;
+              case "scanstarted":
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+                break;
+              case "connectionfailed":
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+                break;
+              case "connected":
+                foundBLE.value = true;
+                _disableTimer();
+                try {
+                  _events.close();
+                  Navigator.pop(Get.context);
+                } catch (e) {
+                  print(e);
+                }
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    takeActiveDeviceReadings: true,
+                  ),
+                );
+                break;
 
-            case "disconnected":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
-              break;
+              case "disconnected":
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+                break;
 
-            default:
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+              default:
+                FlutterToast().getToast(
+                    receivedValues.last ?? 'Request Timeout', Colors.red);
+            }
           }
-        }
-      });
+        });
+      }
     } catch (e) {
       print(e);
     }

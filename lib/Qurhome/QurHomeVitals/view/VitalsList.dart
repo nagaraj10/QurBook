@@ -169,9 +169,9 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
         _startTimer();
         showSearchingBleDialog(context);
         controller.updateisShowTimerDialog(false);
+        await Future.delayed(Duration(seconds: 1));
+        controller.checkForConnectedDevices(animationController, _events);
       }
-      await Future.delayed(Duration(seconds: 1));
-      controller.checkForConnectedDevices(animationController, _events);
     } catch (e) {
       print(e);
     }
@@ -2696,11 +2696,6 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                                     ),
                                     onPressed: () {
                                       try {
-                                        Timer(Duration(milliseconds: 1000), () {
-                                          if (animationController.isAnimating) {
-                                            animationController.stop();
-                                          }
-                                        });
                                         _events.close();
                                         Navigator.pop(context);
                                       } catch (e) {

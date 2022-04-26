@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -174,15 +175,23 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   moveToBack({bool showFailure = true}) async {
-    if (!movedToBackScreen) {
-      if (showFailure) {
-        addToSheelaConversation(text: "Failed to get readings from the device");
+    try {
+      if (!movedToBackScreen) {
+        if (showFailure) {
+          addToSheelaConversation(
+              text: "Failed to get readings from the device");
+        }
+        await Future.delayed(Duration(seconds: 4));
+        movedToBackScreen = true;
+        updateAppState(false);
+        stopTTSEngine();
+        final QurhomeDashboardController qurhomeDashboardController =
+            Get.find();
+        qurhomeDashboardController.updateTabIndex(0);
+        Get.back();
       }
-      await Future.delayed(Duration(seconds: 4));
-      movedToBackScreen = true;
-      updateAppState(false);
-      stopTTSEngine();
-      Get.back();
+    } catch (e) {
+      print(e);
     }
   }
 

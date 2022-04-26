@@ -627,7 +627,7 @@ class MainActivity : FlutterActivity() {
                             Log.d("startScan", "onConnectSuccess ")
                             //val devName: String = bleDevice!!.getName()
                             bleName = bleDevice!!.getName()
-                            Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
+                            //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
                             sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
                             SPO2_ReadingCount = 0
                             val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
