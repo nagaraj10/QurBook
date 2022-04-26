@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -128,10 +129,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                         : '',
                     style: TextStyle(
                         color: controller.currentIndex == itemIndex ||
-                            nextRegimenPosition == itemIndex
+                                nextRegimenPosition == itemIndex
                             ? Color(
-                          CommonUtil().getQurhomeGredientColor(),
-                        )
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
                             : Colors.grey,
                         fontSize: 16),
                   ),
@@ -190,7 +191,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   ),
                 ],
               ),
-
             ),
           ),
         ),
@@ -542,7 +542,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             regimen.otherinfo.toJson().toString().contains('1')) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
-      Provider.of<RegimentViewModel>(context, listen: false)
+      var dashboardController = Get.find<QurhomeDashboardController>();
+      if (((fieldsResponseModel.result.fields.first.title ?? '').isNotEmpty) &&
+          (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
+              "oxygen".toLowerCase()) &&
+          (dashboardController != null)) {
+        dashboardController.checkForConnectedDevices();
+      } else {Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
       var value = await showDialog(
         context: context,
@@ -570,21 +576,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               isFollowEvent: eventIdReturn != null,
             ),
 
-      );
-      if (value != null && (value ?? false)) {
-        LoaderClass.showLoadingDialog(
-          Get.context,
-          canDismiss: false,
         );
-        Future.delayed(Duration(milliseconds: 300), () async {
-          await Provider.of<RegimentViewModel>(context, listen: false)
-              .fetchRegimentData();
-          LoaderClass.hideLoadingDialog(Get.context);
-        });
-      }
+        if (value != null && (value ?? false)) {
+          LoaderClass.showLoadingDialog(
+            Get.context,
+            canDismiss: false,
+          );
+          Future.delayed(Duration(milliseconds: 300), () async {
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+            LoaderClass.hideLoadingDialog(Get.context);
+          });
+        }
 
-      Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogClosed);
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogClosed);
+      }
     } else if (!regimen.hasform) {
       FlutterToast().getToast(
         tickInfo,
