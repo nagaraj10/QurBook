@@ -544,13 +544,6 @@ class FormDataDialogState extends State<FormDataDialog> {
         bottom: 10.0.w,
       ),
     );*/
-    if(widget.isFromQurHome){
-      return Column(
-        children: [
-          getBody()
-        ],
-      );
-    }else{
       return AlertDialog(
         title:getTitle(),
         titlePadding: EdgeInsets.only(
@@ -567,27 +560,16 @@ class FormDataDialogState extends State<FormDataDialog> {
           bottom: 10.0.w,
         ),
       );
-    }
-
   }
 
   getBody(){
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
-        if(widget.isFromQurHome){
-          return Container(
-            height: 300,
-            width: 0.75.sw,
-            child: getListView(),
-          );
-        }else{
-          return Container(
-            width: 0.75.sw,
-            child: getListView(),
-          );
-        }
-
-      },
+        return Container(
+          width: 0.75.sw,
+          child: getListView(),
+        );
+      }
     );
   }
 
