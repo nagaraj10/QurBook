@@ -975,7 +975,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               if (saveResponse?.isSuccess ??
                                   false) {
                                 if (widget.isFromQurHome) {
-                                  LoaderClass.hideLoadingDialog(
+                                  LoaderQurHome.hideLoadingDialog(
                                       Get.context);
                                 } else {
                                   LoaderClass.hideLoadingDialog(
