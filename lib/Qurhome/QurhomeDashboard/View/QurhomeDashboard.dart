@@ -102,14 +102,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 3),
-                      Text(
-                        getFormatedDate(),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
+                      if(controller.currentSelectedIndex.value==0||controller.currentSelectedIndex.value==1)...{
+                        SizedBox(height: 3),
+                        Text(
+                          getFormatedDate(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
                         ),
-                      ),
+                      },
                     ],
                   ),
                   SizedBox(width: 70.w)

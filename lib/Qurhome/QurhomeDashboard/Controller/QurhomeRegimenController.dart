@@ -20,21 +20,22 @@ class QurhomeRegimenController extends GetxController {
     try {
       loadingData.value = true;
 
-      // var now = new DateTime.now();
-      // var formatter = new DateFormat('yyyy-MM-dd');
-      // String formattedDate = formatter.format(now);
-      // http.Response response = await _apiProvider.getRegimenList(formattedDate);
-      // if (response == null) {
-      //   // failed to get the data, we are showing the error on UI
-      // } else {
-      //   qurHomeRegimenResponseModel = QurHomeRegimenResponseModel.fromJson(json.decode(response.body));
-      // }
       qurHomeRegimenResponseModel=await  _apiProvider.getRegimenList("");
       loadingData.value = false;
       for (int i=0;i<qurHomeRegimenResponseModel.regimentsList.length;i++) {
           if(DateTime.now().isBefore(qurHomeRegimenResponseModel.regimentsList[i].estart)){
-            nextRegimenPosition=i;
-            currentIndex=i;
+            if(qurHomeRegimenResponseModel.regimentsList[i].ack_local != null){
+              if(qurHomeRegimenResponseModel.regimentsList.length>(i+1)){
+                nextRegimenPosition=i+1;
+                currentIndex=i+1;
+              }else{
+                nextRegimenPosition=i;
+                currentIndex=i;
+              }
+            }else{
+              nextRegimenPosition=i;
+              currentIndex=i;
+            }
             break;
           }
       }
