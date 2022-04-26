@@ -39,7 +39,6 @@ import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:get/get.dart';
 
-
 class DisplayPictureScreen extends StatefulWidget {
   final List<String> imagePath;
 
@@ -107,10 +106,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   String audioPath = '';
 
   bool skipTapped;
-  
-  String tempUnit="F";
-  String weightUnit="Kg";
-  String heightUnit="feet";
+
+  String tempUnit = "F";
+  String weightUnit = "Kg";
+  String heightUnit = "feet";
 
   List<T> map<T>(List list, Function handler) {
     List<T> result = [];
@@ -211,10 +210,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       BuildContext context, String categoryName, String deviceName) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
-     tempUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-     weightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-     heightUnit=PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
-
+    tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    heightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
 
     audioPath = '';
     containsAudio = false;
@@ -528,11 +526,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName,tempMainUnit:tempUnit,updateUnit: (unitValue) async {
-          tempUnit =unitValue;
-
-          setState(() {});
-        });
+            fileName,
+            tempMainUnit: tempUnit,
+            updateUnit: (unitValue) async {
+              tempUnit = unitValue;
+              setState(() {});
+            });
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
@@ -567,11 +566,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             null,
             false,
             deviceController,
-            fileName,weightUnit: weightUnit,updateUnit: (unitValue) async {
-          weightUnit =unitValue;
+            fileName,
+            weightUnit: weightUnit,
+            updateUnit: (unitValue) async {
+              weightUnit = unitValue;
 
-          setState(() {});
-        });
+              setState(() {});
+            });
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {
@@ -823,7 +824,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               ),
               items: widget.imagePath.map((imgUrl) {
                 return Builder(
-                  builder: (BuildContext context)  {
+                  builder: (BuildContext context) {
                     return Container(
                         width: 1.sw,
                         margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -990,6 +991,4 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       setState(() {});
     }
   }
-
-
 }

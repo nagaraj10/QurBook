@@ -150,7 +150,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null && (data.healthRecordCollection?.length??0) > 0) {
+              if (data != null &&
+                  (data.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 print(mediMasterId.length);
                 if (mediMasterId.length > 0) {
@@ -384,7 +385,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     deviceReadings[i].unit.toLowerCase() ==
                             CommonConstants.strOxygenUnits.toLowerCase()
                         ? CommonConstants.strOxygenUnitsName
-                        : getUnitForTemperature(deviceReadings[i].unit),
+                        : getUnitForTemperature(" " + deviceReadings[i].unit),
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],
@@ -406,17 +407,15 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   }
 
   getUnitForTemperature(String unit) {
-    if(unit.toLowerCase() ==
-        strParamUnitFarenheit
-            .toLowerCase()){
+    if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
       return strParamUnitFarenheit;
-    }else if(unit.toLowerCase()==CommonConstants.strTemperatureValue.toLowerCase()){
+    } else if (unit.toLowerCase() ==
+        CommonConstants.strTemperatureValue.toLowerCase()) {
       return strParamUnitFarenheit;
-    }else if(unit.toLowerCase()=="c".toLowerCase()){
+    } else if (unit.toLowerCase() == "c".toLowerCase()) {
       return strParamUnitCelsius;
-    }else{
-      return strParamUnitCelsius;
+    } else {
+      return unit;
     }
-
   }
 }

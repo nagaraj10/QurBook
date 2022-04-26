@@ -42,23 +42,21 @@ class _ChooseUnitState extends State<ChooseUnit> {
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
 
-  Height heightObj,weightObj,tempObj;
-  FlutterToast toast=new FlutterToast();
-  String userMappingId='';
+  Height heightObj, weightObj, tempObj;
+  FlutterToast toast = new FlutterToast();
+  String userMappingId = '';
 
-  bool isSettingChanged=false;
-
+  bool isSettingChanged = false;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
         if (isTouched) {
-          if(isSettingChanged) {
+          if (isSettingChanged) {
             _onWillPop();
-          }else{
+          } else {
             Navigator.pop(context, false);
-
           }
         } else {
           Navigator.pop(context, false);
@@ -75,7 +73,11 @@ class _ChooseUnitState extends State<ChooseUnit> {
               size: 24.0.sp,
             ),
             onPressed: () {
-              isTouched ? isSettingChanged?_onWillPop() :Navigator.of(context).pop(): Navigator.of(context).pop();
+              isTouched
+                  ? isSettingChanged
+                      ? _onWillPop()
+                      : Navigator.of(context).pop()
+                  : Navigator.of(context).pop();
             },
           ),
           flexibleSpace: GradientAppBar(),
@@ -118,34 +120,28 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   applyUnitSelection() async {
-    preferredMeasurement=new PreferredMeasurement(height: heightObj,weight: weightObj,temperature: tempObj);
-    profileSetting.preferredMeasurement=preferredMeasurement;
-    var body=jsonEncode({
-      'id':userMappingId,
-      'profileSetting':profileSetting
-    });
-    await healthReportListForUserRepository.updateUnitPreferences(body).then((value){
+    preferredMeasurement = new PreferredMeasurement(
+        height: heightObj, weight: weightObj, temperature: tempObj);
+    profileSetting.preferredMeasurement = preferredMeasurement;
+    var body =
+        jsonEncode({'id': userMappingId, 'profileSetting': profileSetting});
+    await healthReportListForUserRepository
+        .updateUnitPreferences(body)
+        .then((value) {
       if (value?.isSuccess ?? false) {
-        toast.getToast(value?. message,Colors.green);
-      }else{
-        toast.getToast(value?. message,Colors.red);
-
+        toast.getToast(value?.message, Colors.green);
+      } else {
+        toast.getToast(value?.message, Colors.red);
       }
-
-
-
     });
 
     await PreferenceUtil.saveString(
         Constants.STR_KEY_HEIGHT, heightObj.unitCode);
     await PreferenceUtil.saveString(
         Constants.STR_KEY_WEIGHT, weightObj.unitCode);
-    await PreferenceUtil.saveString(
-        Constants.STR_KEY_TEMP, tempObj.unitCode);
+    await PreferenceUtil.saveString(Constants.STR_KEY_TEMP, tempObj.unitCode);
 
     closeDialog();
-
-
   }
 
   Widget getBody() {
@@ -165,15 +161,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
                 Container(
                     child: InkWell(
                       onTap: () {
-                        isSettingChanged=true;
+                        isSettingChanged = true;
 
                         if (!isPounds) {
                           setState(() {
                             isPounds = true;
                             isKg = false;
-                            weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_US,unitName:'pounds');
-
-
+                            weightObj = new Height(
+                                unitCode: Constants.STR_VAL_WEIGHT_US,
+                                unitName: 'pounds');
                           });
                         }
                       },
@@ -221,14 +217,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ],
                       )),
                       onTap: () {
-                        isSettingChanged=true;
+                        isSettingChanged = true;
 
                         if (!isKg) {
                           setState(() {
                             isPounds = false;
                             isKg = true;
-                            weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_IND,unitName:'kilograms');
-
+                            weightObj = new Height(
+                                unitCode: Constants.STR_VAL_WEIGHT_IND,
+                                unitName: 'kilograms');
                           });
                         }
                       },
@@ -249,14 +246,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
                 Container(
                     child: InkWell(
                       onTap: () {
-                        isSettingChanged=true;
+                        isSettingChanged = true;
 
                         if (!isInchFeet) {
                           setState(() {
                             isCenti = false;
                             isInchFeet = true;
-                            heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_IND,unitName:'feet/Inches');
-
+                            heightObj = new Height(
+                                unitCode: Constants.STR_VAL_HEIGHT_IND,
+                                unitName: 'feet/Inches');
                           });
                         }
                       },
@@ -304,14 +302,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ),
                       ),
                       onTap: () {
-                        isSettingChanged=true;
+                        isSettingChanged = true;
 
                         if (!isCenti) {
                           setState(() {
                             isInchFeet = false;
                             isCenti = true;
-                            heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_US,unitName:'centimeters');
-
+                            heightObj = new Height(
+                                unitCode: Constants.STR_VAL_HEIGHT_US,
+                                unitName: 'centimeters');
                           });
                         }
                       },
@@ -333,13 +332,14 @@ class _ChooseUnitState extends State<ChooseUnit> {
                     child: InkWell(
                       onTap: () {
                         if (!isCele) {
-                          isSettingChanged=true;
+                          isSettingChanged = true;
 
                           setState(() {
                             isFaren = false;
                             isCele = true;
-                            tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_US,unitName:'celsius');
-
+                            tempObj = new Height(
+                                unitCode: Constants.STR_VAL_TEMP_US,
+                                unitName: 'celsius');
                           });
                         }
                       },
@@ -386,15 +386,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
                         ],
                       )),
                       onTap: () {
-                        isSettingChanged=true;
+                        isSettingChanged = true;
 
                         if (!isFaren) {
                           setState(() {
                             isCele = false;
                             isFaren = true;
-                            tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_IND,unitName:'farenheit');
-
-
+                            tempObj = new Height(
+                                unitCode: Constants.STR_VAL_TEMP_IND,
+                                unitName: 'farenheit');
                           });
                         }
                       },
@@ -411,18 +411,20 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   Widget getAppColorsAndDeviceValues() {
-    return profileSetting==null?FutureBuilder<GetDeviceSelectionModel>(
-      future: getProfileSetings(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CommonCircularIndicator();
-        } else if (snapshot.hasError) {
-          return ErrorsWidget();
-        } else {
-          return getBody();
-        }
-      },
-    ):getBody();
+    return profileSetting == null
+        ? FutureBuilder<GetDeviceSelectionModel>(
+            future: getProfileSetings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CommonCircularIndicator();
+              } else if (snapshot.hasError) {
+                return ErrorsWidget();
+              } else {
+                return getBody();
+              }
+            },
+          )
+        : getBody();
   }
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
@@ -433,93 +435,119 @@ class _ChooseUnitState extends State<ChooseUnit> {
         selectionResult = value;
         if (value.result != null && value.result.length > 0) {
           if (value.result[0] != null) {
-            profileSetting  = value.result[0].profileSetting;
-            userMappingId=value.result[0].id;
+            profileSetting = value.result[0].profileSetting;
+            userMappingId = value.result[0].id;
 
             if (profileSetting != null) {
               if (profileSetting.preferredMeasurement != null) {
                 preferredMeasurement = profileSetting.preferredMeasurement;
-                weightObj=preferredMeasurement.weight;
+                try {
+                  weightObj = preferredMeasurement?.weight;
 
-                await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                    preferredMeasurement.weight?.unitCode);
-                if (preferredMeasurement.weight?.unitCode ==
-                    Constants.STR_VAL_WEIGHT_IND) {
-                  isKg = true;
-                  isPounds = false;
+                  await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      preferredMeasurement.weight?.unitCode);
+                } catch (e) {
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
+                }
+                if (preferredMeasurement.weight != null) {
+                  if (preferredMeasurement.weight?.unitCode ==
+                      Constants.STR_VAL_WEIGHT_IND) {
+                    isKg = true;
+                    isPounds = false;
+                  } else {
+                    isKg = false;
+                    isPounds = true;
+                  }
                 } else {
-                  isKg = false;
-                  isPounds = true;
+                  if (CommonUtil.REGION_CODE != "IN") {
+                    isKg = false;
+                    isPounds = true;
+                    weightObj = new Height(
+                        unitCode: Constants.STR_VAL_WEIGHT_US,
+                        unitName: 'pounds');
+                  } else {
+                    isKg = true;
+                    isPounds = false;
+                    weightObj = new Height(
+                        unitCode: Constants.STR_VAL_WEIGHT_IND,
+                        unitName: 'kilograms');
+                  }
                 }
 
-                await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                    preferredMeasurement.height?.unitCode);
+                try {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode);
 
-                heightObj=preferredMeasurement.height;
-
-                if (preferredMeasurement.height?.unitCode ==
-                    Constants.STR_VAL_HEIGHT_IND) {
-                  isInchFeet = true;
-                  isCenti = false;
-                } else {
-                  isInchFeet = false;
-                  isCenti = true;
+                  heightObj = preferredMeasurement?.height;
+                } catch (e) {
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
                 }
 
-                await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                    preferredMeasurement.temperature?.unitCode);
-                tempObj=preferredMeasurement.temperature;
-
-                if (preferredMeasurement.temperature?.unitCode ==
-                    Constants.STR_VAL_TEMP_IND) {
-                  isFaren = true;
-                  isCele = false;
+                if (preferredMeasurement.height != null) {
+                  if (preferredMeasurement.height?.unitCode ==
+                      Constants.STR_VAL_HEIGHT_IND) {
+                    isInchFeet = true;
+                    isCenti = false;
+                  } else {
+                    isInchFeet = false;
+                    isCenti = true;
+                  }
                 } else {
-                  isFaren = false;
-                  isCele = true;
+                  if (CommonUtil.REGION_CODE != "IN") {
+                    isInchFeet = false;
+                    isCenti = true;
+                    heightObj = new Height(
+                        unitCode: Constants.STR_VAL_HEIGHT_IND,
+                        unitName: 'feet/Inches');
+                  } else {
+                    isInchFeet = true;
+                    isCenti = false;
+                    heightObj = new Height(
+                        unitCode: Constants.STR_VAL_HEIGHT_US,
+                        unitName: 'centimeters');
+                  }
+                }
+
+                try {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                      preferredMeasurement.temperature?.unitCode);
+                  tempObj = preferredMeasurement?.temperature;
+                } catch (e) {
+                  await PreferenceUtil.saveString(
+                      Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+                }
+
+                if (preferredMeasurement.temperature != null) {
+                  if (preferredMeasurement.temperature?.unitCode ==
+                      Constants.STR_VAL_TEMP_IND) {
+                    isFaren = true;
+                    isCele = false;
+                  } else {
+                    isFaren = false;
+                    isCele = true;
+                  }
+                } else {
+                  if (CommonUtil.REGION_CODE != "IN") {
+                    isFaren = false;
+                    isCele = true;
+                    tempObj = new Height(
+                        unitCode: Constants.STR_VAL_TEMP_US,
+                        unitName: 'celsius');
+                  } else {
+                    isFaren = true;
+                    isCele = false;
+                    tempObj = new Height(
+                        unitCode: Constants.STR_VAL_TEMP_IND,
+                        unitName: 'farenheit');
+                  }
                 }
 
                 return selectionResult;
               } else {
-                if (CommonUtil.REGION_CODE != "IN") {
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+                commonMethodTosetDefaultValue();
 
-                  heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_US,unitName:'feet/Inches');
-                  weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_US,unitName:'pounds');
-                  tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_US,unitName:'celsius');
-                  isKg = true;
-                  isPounds = false;
-
-                  isInchFeet = true;
-                  isCenti = false;
-
-                  isFaren = true;
-                  isCele = false;
-                } else {
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
-                  await PreferenceUtil.saveString(
-                      Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
-
-                  heightObj=new Height(unitCode:Constants.STR_VAL_HEIGHT_IND,unitName:'centimeters');
-                  weightObj=new Height(unitCode:Constants.STR_VAL_WEIGHT_IND,unitName:'kilograms');
-                  tempObj=new Height(unitCode:Constants.STR_VAL_TEMP_IND,unitName:'farenheit');
-                  isKg = false;
-                  isPounds = true;
-
-                  isInchFeet = false;
-                  isCenti = true;
-
-                  isFaren = false;
-                  isCele = true;
-                }
                 return selectionResult;
               }
             }
@@ -527,5 +555,53 @@ class _ChooseUnitState extends State<ChooseUnit> {
         }
       }
     });
+  }
+
+  commonMethodTosetDefaultValue() async {
+    if (CommonUtil.REGION_CODE != "IN") {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'centimeters');
+      weightObj =
+          new Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+      tempObj =
+          new Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+      isKg = true;
+      isPounds = false;
+
+      isInchFeet = true;
+      isCenti = false;
+
+      isFaren = true;
+      isCele = false;
+    } else {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'feet/Inches');
+      weightObj = new Height(
+          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+      tempObj = new Height(
+          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+      isKg = false;
+      isPounds = true;
+
+      isInchFeet = false;
+      isCenti = true;
+
+      isFaren = false;
+      isCele = true;
+    }
   }
 }
