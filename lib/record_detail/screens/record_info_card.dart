@@ -44,10 +44,10 @@ class RecordInfoCard {
               children: <Widget>[
                 ClipOval(
                     child: metaInfo.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(metaInfo
-                            .doctor
-                            .profilePicThumbnailUrl,metaInfo
-                        .doctor) //getDoctorProfileImageWidget(metaInfo)
+                        ? CommonUtil().getDoctorProfileImageWidget(
+                            metaInfo.doctor.profilePicThumbnailUrl,
+                            metaInfo
+                                .doctor) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50.0.h,
                             height: 50.0.h,
@@ -96,7 +96,8 @@ class RecordInfoCard {
                             /* toBeginningOfSentenceCase(
                                     metaInfo.hospital.healthOrganizationName) */
                             metaInfo?.hospital?.healthOrganizationName
-                                ?.capitalizeFirstofEach??"",
+                                    ?.capitalizeFirstofEach ??
+                                "",
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -699,7 +700,8 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
               ),
               Expanded(
                 flex: 2,
-                child: FittedBox(child:Row(
+                child: FittedBox(
+                    child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
@@ -711,9 +713,10 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                     ),
                     Text(
                         deviceReadings[i].unit.toLowerCase() ==
-                            CommonConstants.strOxygenUnits.toLowerCase()
+                                CommonConstants.strOxygenUnits.toLowerCase()
                             ? CommonConstants.strOxygenUnitsName
-                            : getUnitForTemperature(deviceReadings[i].unit),
+                            : getUnitForTemperature(
+                                " " + deviceReadings[i].unit),
                         style: TextStyle(
                             color: Colors.black54, fontSize: 14.0.sp)),
                   ],
@@ -842,17 +845,14 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
 }
 
 getUnitForTemperature(String unit) {
-  if(unit.toLowerCase() ==
-      strParamUnitFarenheit
-          .toLowerCase()){
+  if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
     return strParamUnitFarenheit;
-  }else if(unit.toLowerCase()==CommonConstants.strTemperatureValue.toLowerCase()){
+  } else if (unit.toLowerCase() ==
+      CommonConstants.strTemperatureValue.toLowerCase()) {
     return strParamUnitFarenheit;
-  }else if(unit.toLowerCase()=="c".toLowerCase()){
+  } else if (unit.toLowerCase() == "c".toLowerCase()) {
     return strParamUnitCelsius;
-  }else{
-    return strParamUnitCelsius;
+  } else {
+    return unit;
   }
-
 }
-
