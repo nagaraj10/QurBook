@@ -78,7 +78,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isMicListening = false;
   bool disableMic = false;
   List<Conversation> get getMyConversations => conversations;
-
+  bool movedToBackScreen = false;
   int get getisMayaSpeaks => isMayaSpeaks;
   AudioPlayer audioPlayerForTTS = AudioPlayer();
   AudioPlayer newAudioPlay1 = AudioPlayer();
@@ -128,8 +128,9 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   void _enableTimer() {
     disableMic = true;
+    movedToBackScreen = false;
     _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
-      print(val);
+      // print(val);
 
       List<String> receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
@@ -147,8 +148,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "connectionfailed":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // moveToBack();
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "connected":
             addToSheelaConversation(
@@ -158,8 +160,9 @@ class ChatScreenViewModel extends ChangeNotifier {
             updateUserData(data: receivedValues.last);
             break;
           case "disconnected":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            moveToBack();
             break;
 
           default:
@@ -170,10 +173,28 @@ class ChatScreenViewModel extends ChangeNotifier {
     });
   }
 
+  moveToBack({bool showFailure = true}) async {
+    if (!movedToBackScreen) {
+      if (showFailure) {
+        addToSheelaConversation(text: "Failed to get readings from the device");
+      }
+      await Future.delayed(Duration(seconds: 4));
+      movedToBackScreen = true;
+      updateAppState(false);
+      stopTTSEngine();
+      Get.back();
+    }
+  }
+
   setupListenerForReadings() async {
     await Future.delayed(Duration(seconds: 2));
     addToSheelaConversation(text: "Measuring SPO2...");
     _enableTimer();
+    Future.delayed(Duration(seconds: 30)).then((value) {
+      if (_timerSubscription != null) {
+        moveToBack();
+      }
+    });
   }
 
   updateUserData({String data = ''}) async {
@@ -203,10 +224,12 @@ class ChatScreenViewModel extends ChangeNotifier {
               ? "Uploaded your readings to server"
               : "Failed to upload the readings",
         );
+        moveToBack(showFailure: false);
       } catch (e) {
         addToSheelaConversation(
           text: "Failed to upload the readings",
         );
+        moveToBack(showFailure: false);
       }
     }
   }
