@@ -138,7 +138,7 @@ class MainActivity : FlutterActivity() {
     private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
     var alarmManager: AlarmManager? = null
 
-    var elapsedTime=3000;
+    var elapsedTime=3000
 
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
@@ -170,7 +170,7 @@ class MainActivity : FlutterActivity() {
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
             if (Constants.TXT_PLAIN == type) {
-                handleSendText(intent); // Handle text being sent
+                handleSendText(intent) // Handle text being sent
             }
         }
         //registerReceiver(smsBroadcastReceiver,
@@ -179,7 +179,7 @@ class MainActivity : FlutterActivity() {
 //        builder = AlertDialog.Builder(context)
 //        builder.setCancelable(true)
         dialog = Dialog(this)
-        customLayout = getLayoutInflater().inflate(R.layout.progess_dialog, null)
+        customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
         displayText = customLayout.findViewById(R.id.displayTxt)
         sendBtn = customLayout.findViewById(R.id.send)
         edit_view = customLayout.findViewById(R.id.edit_view)
@@ -202,7 +202,7 @@ class MainActivity : FlutterActivity() {
             speechRecognizer!!.cancel()
             if (dialog.isShowing) {
                 try {
-                    _result?.let {
+                    _result.let {
                         _result.success("")
                     }
                 } catch (e: Exception) {
@@ -333,7 +333,7 @@ class MainActivity : FlutterActivity() {
                     BLEEventChannel.success("enablebluetooth|please enable bluetooth")
                 }
                 //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
-                Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
+                //Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
                 return
             }
             Log.d("check BLE Permissions", "checkPermissionsStarcScan")
@@ -394,7 +394,6 @@ class MainActivity : FlutterActivity() {
 
     private fun checkGPSIsOpen(): Boolean {
         val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
-            ?: return false
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
@@ -537,9 +536,9 @@ class MainActivity : FlutterActivity() {
 
                 override fun onScanning(bleDevice: BleDevice)
                 {
-                    if (bleDevice.getName() == null) return
-                    val DevName: String = bleDevice.getName()
-                    Log.d("startScan", "Found " + DevName + " " + bleDevice.getMac())
+                    if (bleDevice.name == null) return
+                    val DevName: String = bleDevice.name
+                    Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
                     if (DevName == "GSH601" || DevName == "Mike")
                     {
                         stopScan()
@@ -626,9 +625,19 @@ class MainActivity : FlutterActivity() {
                         override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
                             Log.d("startScan", "onConnectSuccess ")
                             //val devName: String = bleDevice!!.getName()
-                            bleName = bleDevice!!.getName()
+                            bleName = bleDevice!!.name
+                            var bleMacId: String
+                            bleMacId = bleDevice!!.mac
+                            var bleDeviceType: String
+                            bleDeviceType = "SPO2"
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("macid|"+bleMacId)
+                            }
                             //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
                             sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("bleDeviceType|"+bleDeviceType)
+                            }
                             SPO2_ReadingCount = 0
                             val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
                             DumpServicesChars(services)
@@ -886,7 +895,7 @@ class MainActivity : FlutterActivity() {
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
@@ -986,8 +995,8 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_APP_VERSION) {
                 //logics to get version code
-                val appVersion = getAppVersion();
-                result.success(appVersion);
+                val appVersion = getAppVersion()
+                result.success(appVersion)
             } else {
                 result.notImplemented()
             }
@@ -1160,7 +1169,7 @@ class MainActivity : FlutterActivity() {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.unregisterNetworkCallback(mNetworkCallback)
         }
-        return 1;
+        return 1
     }
     private val mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         @RequiresApi(Build.VERSION_CODES.M)
@@ -1194,8 +1203,8 @@ class MainActivity : FlutterActivity() {
             return 1
         }
         else {
-            var networkSSID = ssid;
-            var networkPass = password;
+            var networkSSID = ssid
+            var networkPass = password
             var conf = WifiConfiguration()
             conf.SSID = "\"" + networkSSID + "\""
             conf.preSharedKey = "\""+ networkPass +"\""
@@ -1325,7 +1334,7 @@ class MainActivity : FlutterActivity() {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
             } else if (data != null) {
-                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
+                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data}"
             } else {
                 if (redirect_to != null) {
                     if (redirect_to.contains("sheela")) {
@@ -1334,10 +1343,10 @@ class MainActivity : FlutterActivity() {
                             sharedValue =
                                     "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
                         } else {
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
                         }
                     } else {
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
                     }
                 }
 
@@ -1358,7 +1367,7 @@ class MainActivity : FlutterActivity() {
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
             if (Constants.TXT_PLAIN == type) {
-                handleSendText(intent); // Handle text being sent
+                handleSendText(intent) // Handle text being sent
             }
         }
     }
@@ -1479,7 +1488,7 @@ class MainActivity : FlutterActivity() {
                         SpeechRecognizer.ERROR_SERVER -> message = "error from server"
                         SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
                         else -> {
-                            message = "Didn't understand, please try again.";
+                            message = "Didn't understand, please try again."
                         }
                     }
                     this@MainActivity.runOnUiThread(
@@ -1567,7 +1576,7 @@ class MainActivity : FlutterActivity() {
                 override fun onPartialResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if(data!=null&&data.size>0) {
-                        finalWords = data!![0].toString()
+                        finalWords = data[0].toString()
                         isPartialResultInvoked = true
                         this@MainActivity.runOnUiThread(
                             object : Runnable {
@@ -1666,7 +1675,7 @@ class MainActivity : FlutterActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager =
                     getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
-            if (km.isKeyguardSecure()) {
+            if (km.isKeyguardSecure) {
                 //user has set pin/password/pattern
                 val authIntent: Intent = km.createConfirmDeviceCredentialIntent(
                         Constants.KEY_GAURD_TITLE,
@@ -1714,7 +1723,7 @@ class MainActivity : FlutterActivity() {
         val versionCode: Int = BuildConfig.VERSION_CODE
         val versionName: String = BuildConfig.VERSION_NAME
 
-        return "v$versionName b${versionCode.toString()}"
+        return "v$versionName b$versionCode"
     }
 
     private fun requestPermissionFromUSer() {
@@ -1812,7 +1821,7 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            calendar.add(Calendar.MINUTE, -remindBefore.toInt());
+            calendar.add(Calendar.MINUTE, -remindBefore.toInt())
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
@@ -1853,7 +1862,7 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            calendar.add(Calendar.MINUTE, remindin.toInt());
+            calendar.add(Calendar.MINUTE, remindin.toInt())
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
@@ -1943,9 +1952,9 @@ class MainActivity : FlutterActivity() {
         )
         val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent)
         }else{
-            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
         }
 
     }catch (e:Exception){
@@ -1990,7 +1999,7 @@ class MainActivity : FlutterActivity() {
     private fun validateMicAvailability(): Boolean {
         var available = true
         val am: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        if (am.getMode() === AudioManager.MODE_IN_COMMUNICATION) {
+        if (am.mode === AudioManager.MODE_IN_COMMUNICATION) {
             //Mic is in use
             available = false
         }

@@ -653,6 +653,7 @@ const String GET_HUB_ID = 'http://qurhub.local/gethubid';
 const String SERIAL_NUMBER = 'serialNumber';
 const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
+const String ISVIRTUALHUB = 'isVirtualHub';
 
 double height = 0.0;
 double width = 0.0;

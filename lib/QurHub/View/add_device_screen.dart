@@ -4,16 +4,14 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/Controller/add_device_controller.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -25,7 +23,8 @@ class AddDeviceScreen extends StatefulWidget {
   _AddDeviceScreenState createState() => _AddDeviceScreenState();
 }
 
-class _AddDeviceScreenState extends State<AddDeviceScreen> {
+class _AddDeviceScreenState extends State<AddDeviceScreen>
+    with TickerProviderStateMixin {
   final controller = Get.put(AddDeviceController());
   List<SharedByUsers> _familyNames = new List();
   bool isFamilyChanged = false;
@@ -35,12 +34,37 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
   bool isDeviceIdEmptied = false;
   var selectedId = '';
   String createdBy = '';
+  FlutterToast toast = FlutterToast();
+  final HubListController hubListController = Get.find();
 
   @override
   void initState() {
-    selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    controller.getFamilyMembers();
-    super.initState();
+    try {
+      selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      controller.getFamilyMembers();
+      if (hubListController.isFromQurHomeinQurBook.value) {
+        deviceIdController.text = hubListController.bleMacId.value;
+      }
+      super.initState();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    try {
+      FocusManager.instance.primaryFocus.unfocus();
+      super.dispose();
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'Add Device Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -61,9 +85,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
         centerTitle: false,
         elevation: 0,
       ),
-      body: Obx(
-        () {
-          return  controller.loadingData.isTrue
+      body: Obx(() {
+        return controller.loadingData.isTrue
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -76,8 +99,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                             getView(),
                             Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: dropDownButton(
-                                  controller.familyMembers.result.sharedByUsers),
+                              child: dropDownButton(controller
+                                  .familyMembers.result.sharedByUsers),
                             ),
                           ],
                         ),
@@ -96,8 +119,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
                       ),
                       getButton(),
                     ],
-                  );}
-      ),
+                  );
+      }),
     );
   }
 
@@ -108,15 +131,17 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
         padding: const EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () {
-            if(deviceIdController.text.length!=0){
-              if(nickNameController.text.length!=0){
-
-                controller.saveDevice(hubId : widget.hubId,deviceId:deviceIdController.text,nickName:nickNameController.text,userId : selectedId);
-
-              }else{
+            if (deviceIdController.text.length != 0) {
+              if (nickNameController.text.length != 0) {
+                controller.saveDevice(
+                    hubId: widget.hubId,
+                    deviceId: deviceIdController.text,
+                    nickName: nickNameController.text,
+                    userId: selectedId);
+              } else {
                 FlutterToast().getToast('Please Enter Nick Name', Colors.red);
               }
-            }else{
+            } else {
               FlutterToast().getToast('Please Enter Device ID', Colors.red);
             }
           },
@@ -128,10 +153,13 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Text(
-                'Add New Device',
+                hubListController.isFromQurHomeinQurBook.value
+                    ? 'Save'
+                    : 'Add New Device',
                 style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),
@@ -144,7 +172,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: qrCodeView(),
         ),
         Padding(
@@ -152,6 +180,8 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
           child: TextFormField(
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: deviceIdController,
+            enabled:
+                hubListController.isFromQurHomeinQurBook.value ? false : true,
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.done,
             style: TextStyle(
@@ -207,8 +237,11 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     );
   }
 
-  Widget qrCodeView(){
-    return SizedBox(height: 50,width: 50,);
+  Widget qrCodeView() {
+    return SizedBox(
+      height: 50,
+      width: 50,
+    );
   }
 
   Widget dropDownButton(List<SharedByUsers> sharedByMeList) {
@@ -313,9 +346,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen> {
     );
   }
 
-
-
-  exitApp(){
+  exitApp() {
     print('working on this');
   }
 }
