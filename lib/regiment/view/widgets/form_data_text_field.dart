@@ -9,7 +9,7 @@ class FormDataTextField extends StatelessWidget {
   const FormDataTextField({
     @required this.fieldData,
     this.isNumberOnly = false,
-    this.isFromQurHome = false,
+    this.isFromQurHomeSymptom = false,
     @required this.updateValue,
     @required this.canEdit,
   });
@@ -18,7 +18,7 @@ class FormDataTextField extends StatelessWidget {
   final bool isNumberOnly;
   final Function(FieldModel updatedFieldData) updateValue;
   final bool canEdit;
-  final bool isFromQurHome;
+  final bool isFromQurHomeSymptom;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class FormDataTextField extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
-            color: isFromQurHome
+            color: isFromQurHomeSymptom
                 ? Color(CommonUtil()
                 .getQurhomePrimaryColor())
                 : Color(

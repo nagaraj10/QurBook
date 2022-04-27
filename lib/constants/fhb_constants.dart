@@ -655,6 +655,15 @@ const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
 const String ISVIRTUALHUB = 'isVirtualHub';
 
+//Qurhome vitals
+const String filterTitleDay = 'Day';
+const String filterTitleWeek = 'Week';
+const String filterTitleMonth = 'Month';
+
+const String filterApiDay = 'day';
+const String filterApiWeek = 'week';
+const String filterApiMonth = 'month';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;

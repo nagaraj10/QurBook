@@ -65,7 +65,7 @@ class DeviceHealthRecord {
     return response;
   }
 
-  Future<dynamic> queryBydeviceInterval(String jsonString) async {
+  Future<dynamic> queryBydeviceInterval(String jsonString,{String filter=''}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.getByRecordDataType(
@@ -75,7 +75,8 @@ class DeviceHealthRecord {
             query.qr_slash +
             userID +
             query.qr_slash +
-            query.qr_DeviceInterval,
+            query.qr_DeviceInterval+
+            (filter!=''?query.qr_calendarType+filter:''),
         jsonString);
     return response;
   }

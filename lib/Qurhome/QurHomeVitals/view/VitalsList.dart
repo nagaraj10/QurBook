@@ -26,6 +26,7 @@ import '../../../src/model/GetDeviceSelectionModel.dart';
 import '../../../src/model/user/MyProfileModel.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import 'VitalsDetails.dart';
 
 class VitalsList extends StatefulWidget {
   const VitalsList({Key key}) : super(key: key);
@@ -808,22 +809,16 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
               ),
               child: GestureDetector(
                 onTap: () {
-                  /*Navigator.push(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ChangeNotifierProvider(
-                              create: (context) => DevicesViewModel(),
-                              child: EachDeviceValues(
-                                sheelaRequestString:
-                                    variable.requestSheelaForbp,
-                                device_name: strDataTypeBP,
-                                device_icon: Devices_BP_Tool,
-                                deviceNameForAdding: Constants.STR_BP_MONITOR,
-                              ),
+                        builder: (context) => VitalsDetails(
+                              sheelaRequestString: variable.requestSheelaForbp,
+                              device_name: strDataTypeBP,
+                              device_icon: Devices_BP_Tool,
+                              deviceNameForAdding: Constants.STR_BP_MONITOR,
                             )),
-                  ).then((value) {
-                    setState(() {});
-                  });*/
+                  );
                 },
                 child: Container(
                   // height: 170.0.h,
@@ -1169,24 +1164,18 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
-                            /*Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => DevicesViewModel(),
-                                  child: EachDeviceValues(
-                                    sheelaRequestString:
-                                        variable.requestSheelaForglucose,
-                                    device_name: strGlusoceLevel,
-                                    device_icon: Devices_GL_Tool,
-                                    deviceNameForAdding:
-                                        Constants.STR_GLUCOMETER,
-                                  ),
+                                builder: (context) => VitalsDetails(
+                                  sheelaRequestString:
+                                      variable.requestSheelaForglucose,
+                                  device_name: strGlusoceLevel,
+                                  device_icon: Devices_GL_Tool,
+                                  deviceNameForAdding: Constants.STR_GLUCOMETER,
                                 ),
                               ),
-                            ).then((value) {
-                              setState(() {});
-                            });*/
+                            );
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1558,24 +1547,19 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
-                            /*Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => DevicesViewModel(),
-                                  child: EachDeviceValues(
-                                    sheelaRequestString:
-                                        variable.requestSheelaFortemperature,
-                                    device_name: strTemperature,
-                                    device_icon: Devices_THM_Tool,
-                                    deviceNameForAdding:
-                                        Constants.STR_THERMOMETER,
-                                  ),
+                                builder: (context) => VitalsDetails(
+                                  sheelaRequestString:
+                                      variable.requestSheelaFortemperature,
+                                  device_name: strTemperature,
+                                  device_icon: Devices_THM_Tool,
+                                  deviceNameForAdding:
+                                      Constants.STR_THERMOMETER,
                                 ),
                               ),
-                            ).then((value) {
-                              setState(() {});
-                            });*/
+                            );
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1892,23 +1876,18 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
-                            /*Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString:
-                                              variable.requestSheelaForpo,
-                                          device_name: strOxgenSaturation,
-                                          device_icon: Devices_OxY_Tool,
-                                          deviceNameForAdding:
-                                              Constants.STR_PULSE_OXIMETER,
-                                        ),
+                                  builder: (context) => VitalsDetails(
+                                        sheelaRequestString:
+                                            variable.requestSheelaForpo,
+                                        device_name: strOxgenSaturation,
+                                        device_icon: Devices_OxY_Tool,
+                                        deviceNameForAdding:
+                                            Constants.STR_PULSE_OXIMETER,
                                       )),
-                            ).then((value) {
-                              setState(() {});
-                            });*/
+                            );
                           },
                           child: Container(
                             width: 190.0.w,
@@ -2248,23 +2227,17 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
                       child: Container(
                         child: GestureDetector(
                           onTap: () {
-                            /*Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VitalsDetails(
                                           sheelaRequestString:
                                               variable.requestSheelaForweight,
                                           device_name: strWeight,
                                           device_icon: Devices_WS_Tool,
                                           deviceNameForAdding:
                                               Constants.STR_WEIGHING_SCALE,
-                                        ),
-                                      )),
-                            ).then((value) {
-                              setState(() {});
-                            });*/
+                                        )));
                           },
                           child: Container(
                             width: 190.0.w,

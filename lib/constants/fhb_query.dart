@@ -136,6 +136,7 @@ const String qr_sessiontoken = 'sessiontoken=';
 const String qr_LastSync = 'latest-sync';
 const String qr_LastMeasureSync = 'latest-measure-sync';
 const String qr_DeviceInterval = 'device-interval';
+const String qr_calendarType = '?calendarType=';
 const String qr_DeviceInfo = 'device-health-record';
 const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';

@@ -38,7 +38,8 @@ class FormDataDialog extends StatefulWidget {
     @required this.triggerAction,
     this.isFollowEvent,
     this.followEventContext,
-    this.isFromQurHome = false,
+    this.isFromQurHomeSymptom = false,
+    this.isFromQurHomeRegimen = false,
   });
 
   final List<FieldModel> fieldsData;
@@ -49,7 +50,8 @@ class FormDataDialog extends StatefulWidget {
   final bool canEdit;
   final Function(String eventId, String followContext) triggerAction;
   final bool isFollowEvent;
-  final bool isFromQurHome;
+  final bool isFromQurHomeSymptom;
+  final bool isFromQurHomeRegimen;
   final String followEventContext;
 
   @override
@@ -602,7 +604,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                   child: FormFieldWidget(
                     canEdit: widget.canEdit ?? false,
                     fieldData: fieldsData[index],
-                    isFromQurHome: widget.isFromQurHome,
+                    isFromQurHomeSymptom: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen,
                     updateValue: (
                         updatedFieldData, {
                           isAdd,
@@ -674,7 +676,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             height: 18.0.h,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              color: widget.isFromQurHome
+                              color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                                   ? Color(CommonUtil()
                                   .getQurhomePrimaryColor())
                                   : Color(CommonUtil()
@@ -868,7 +870,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           'Select Date:',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            color: widget.isFromQurHome
+                            color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                                 ? Color(CommonUtil()
                                 .getQurhomePrimaryColor())
                                 : Color(
@@ -904,7 +906,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           'Select Time:',
                           style: TextStyle(
                               fontSize: 14.sp,
-                              color: widget.isFromQurHome
+                              color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                                   ? Color(CommonUtil()
                                   .getQurhomePrimaryColor())
                                   : Color(CommonUtil()
@@ -946,7 +948,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               saveMap.forEach((key, value) {
                                 events += '&$key=$value';
                               });
-                              if (widget.isFromQurHome) {
+                              if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
                                 LoaderQurHome.showLoadingDialog(
                                   Get.context,
                                   canDismiss: false,
@@ -974,8 +976,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                               );
                               if (saveResponse?.isSuccess ??
                                   false) {
-                                if (widget.isFromQurHome) {
-                                  LoaderClass.hideLoadingDialog(
+                                if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
+                                  LoaderQurHome.hideLoadingDialog(
                                       Get.context);
                                 } else {
                                   LoaderClass.hideLoadingDialog(
@@ -1010,7 +1012,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           }
                         }
                             : null,
-                        color: widget.isFromQurHome
+                        color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                             ? Color(
                             CommonUtil().getQurhomePrimaryColor())
                             : Color(CommonUtil().getMyPrimaryColor()),
@@ -1115,7 +1117,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           Get.back();
                         }
                       },
-                      color: widget.isFromQurHome
+                      color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                           ? Color(CommonUtil().getQurhomePrimaryColor())
                           : Color(CommonUtil().getMyPrimaryColor()),
                       shape: RoundedRectangleBorder(
@@ -1142,7 +1144,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                           onPressed: () {
                             Get.back();
                           },
-                          color: widget.isFromQurHome
+                          color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
                               ? Color(CommonUtil().getQurhomePrimaryColor())
                               : Color(CommonUtil().getMyPrimaryColor()),
                           shape: RoundedRectangleBorder(
