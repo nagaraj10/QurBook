@@ -98,7 +98,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                 text: controller.appBarTitle.value,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                                    color: Colors.black),
+                            ),
                           ],
                         ),
                       ),
