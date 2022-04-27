@@ -604,7 +604,7 @@ class SymptomItemCard extends StatelessWidget {
           },
           followEventContext: followEventContext,
           isFollowEvent: eventIdReturn != null,
-          isFromQurHome: true,
+          isFromQurHomeSymptom: true,
 
         ),
       );
