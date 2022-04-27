@@ -560,7 +560,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               mediaData: regimen.otherinfo,
               formTitle: getDialogTitle(context, regimen),
               canEdit: canEdit || isValidSymptom(context),
-              isFromQurHome: false,
+              isFromQurHomeSymptom: false,
               triggerAction: (String triggerEventId, String followContext) {
                 Provider.of<RegimentViewModel>(Get.context, listen: false)
                     .updateRegimentStatus(RegimentStatus.DialogClosed);
