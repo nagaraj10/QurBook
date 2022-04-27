@@ -552,9 +552,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getFormData(eid: eventId);
-    print("fields responsemodel");
-    print(fieldsResponseModel?.isSuccess);
-    print("-----");
+
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
             regimen.otherinfo.toJson().toString().contains('1'))
@@ -580,7 +578,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               mediaData: regimen.otherinfo,
               formTitle: getDialogTitle(context, regimen),
               canEdit: canEdit || isValidSymptom(context),
-              isFromQurHome: false,
+              isFromQurHomeSymptom: false,
               isFromQurHomeRegimen:true,
               triggerAction: (String triggerEventId, String followContext) {
                 Provider.of<RegimentViewModel>(Get.context, listen: false)
