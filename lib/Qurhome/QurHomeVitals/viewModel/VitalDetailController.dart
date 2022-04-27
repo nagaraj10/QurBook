@@ -18,7 +18,7 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 class VitalDetailController extends GetxController {
   final GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
   var loadingData = false.obs;
-  var filterBtnOnTap = 3.obs;
+  var filterBtnOnTap = 0.obs;
 
   var bpList = [].obs;
   var gulList = [].obs;

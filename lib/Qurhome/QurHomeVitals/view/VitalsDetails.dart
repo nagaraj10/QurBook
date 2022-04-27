@@ -45,10 +45,11 @@ import '../../../src/utils/screenutils/size_extensions.dart';
 import 'ButtonGroup.dart';
 
 class VitalsDetails extends StatefulWidget {
-  const VitalsDetails({this.device_name,
-    this.device_icon,
-    this.sheelaRequestString,
-    this.deviceNameForAdding});
+  const VitalsDetails(
+      {this.device_name,
+      this.device_icon,
+      this.sheelaRequestString,
+      this.deviceNameForAdding});
 
   final String device_name;
   final String device_icon;
@@ -62,9 +63,7 @@ class VitalsDetails extends StatefulWidget {
 class _VitalsDetailsState extends State<VitalsDetails> {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String errorMsg = '',
-      errorMsgDia = '',
-      errorMsgSys = '';
+  String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   bool onOkClicked = false;
   String categoryName = STR_DEVICES;
 
@@ -85,7 +84,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
   List<bool> isSelected = List(3);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
-  HealthReportListForUserBlock();
+      HealthReportListForUserBlock();
 
   List<String> imagePathMain = List();
 
@@ -113,7 +112,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
       mediaTypesResponse = value;
     });
 
-    controllerGetx.onTapFilterBtn(3);
+    controllerGetx.onTapFilterBtn(0);
 
     initGetX();
   }
@@ -122,27 +121,32 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
-          controllerGetx.fetchBPDetailsQurHome(isLoading: true);
+          controllerGetx.fetchBPDetailsQurHome(
+              filter: getFilterData(0), isLoading: true);
         }
         break;
       case strGlusoceLevel:
         {
-          controllerGetx.fetchGLDetailsQurHome(isLoading: true);
+          controllerGetx.fetchGLDetailsQurHome(
+              filter: getFilterData(0), isLoading: true);
         }
         break;
       case strOxgenSaturation:
         {
-          controllerGetx.fetchOXYDetailsQurHome(isLoading: true);
+          controllerGetx.fetchOXYDetailsQurHome(
+              filter: getFilterData(0), isLoading: true);
         }
         break;
       case strWeight:
         {
-          controllerGetx.fetchWVDetailsQurHome(isLoading: true);
+          controllerGetx.fetchWVDetailsQurHome(
+              filter: getFilterData(0), isLoading: true);
         }
         break;
       case strTemperature:
         {
-          controllerGetx.fetchTMPDetailsQurHome(isLoading: true);
+          controllerGetx.fetchTMPDetailsQurHome(
+              filter: getFilterData(0), isLoading: true);
         }
         break;
       default:
@@ -157,14 +161,12 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
-           controllerGetx.fetchBPDetailsQurHome(
-              filter: getFilterData(selected));
+          controllerGetx.fetchBPDetailsQurHome(filter: getFilterData(selected));
         }
         break;
       case strGlusoceLevel:
         {
-          controllerGetx.fetchGLDetailsQurHome(
-              filter: getFilterData(selected));
+          controllerGetx.fetchGLDetailsQurHome(filter: getFilterData(selected));
         }
         break;
       case strOxgenSaturation:
@@ -175,8 +177,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         break;
       case strWeight:
         {
-          controllerGetx.fetchWVDetailsQurHome(
-              filter: getFilterData(selected));
+          controllerGetx.fetchWVDetailsQurHome(filter: getFilterData(selected));
         }
         break;
       case strTemperature:
@@ -200,10 +201,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Device Value Screen',
       'screenSessionTime':
-      '${DateTime
-          .now()
-          .difference(mInitialTime)
-          .inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -237,8 +235,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         ],
         flexibleSpace: GradientAppBarQurhome(),
       ),
-      body: Obx(() =>
-          Container(
+      body: Obx(() => Container(
             color: Colors.grey[200],
             child: Column(
               children: [
@@ -246,11 +243,15 @@ class _VitalsDetailsState extends State<VitalsDetails> {
             Container(child: getAddDeviceReadings()),*/
                 SizedBoxWidget(height: 10.0.h),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ButtonGroup(
-                      titles: [filterTitleDay, filterTitleWeek, filterTitleMonth],
+                      titles: [
+                        filterTitleDay,
+                        filterTitleWeek,
+                        filterTitleMonth
+                      ],
                       current: controllerGetx.filterBtnOnTap.value,
                       color: Colors.white,
                       secondaryColor:
@@ -260,37 +261,22 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                         filterRefresh(selected);
                       },
                     ),
-                    OutlinedButton(
-                        onPressed: () {},
-                        child: Text('Switch',
-                            style: TextStyle(
-                                color: Color(
-                                    CommonUtil().getQurhomePrimaryColor()))),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            width: 1.0,
-                            color: Color(CommonUtil().getQurhomePrimaryColor()),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ))
                   ],
                 ),
                 SizedBoxWidget(height: 14.0.h),
                 controllerGetx.loadingData.isTrue
                     ? SafeArea(
-                  child: SizedBox(
-                    height: 1.sh / 1.3,
-                    child: Container(
-                        child: Center(
-                          child: CommonCircularQurHome(),
-                        )),
-                  ),
-                )
+                        child: SizedBox(
+                          height: 1.sh / 1.3,
+                          child: Container(
+                              child: Center(
+                            child: CommonCircularQurHome(),
+                          )),
+                        ),
+                      )
                     : Expanded(
-                  child: getValues(context),
-                ),
+                        child: getValues(context),
+                      ),
               ],
             ),
           )),
@@ -565,10 +551,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         }
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
         postMediaData[parameters.strfileName] =
-            deviceName + '_${DateTime
-                .now()
-                .toUtc()
-                .millisecondsSinceEpoch}';
+            deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
         var dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
@@ -614,8 +597,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
       await showDialog(
           context: context,
-          builder: (context) =>
-              AlertDialog(
+          builder: (context) => AlertDialog(
                 title: Text(variable.strAPP_NAME),
                 content: Text(validationMsg),
               ));
@@ -635,8 +617,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else if ((isSelected[0] == null &&
-            isSelected[1] == false &&
-            isSelected[2] == false) ||
+                isSelected[1] == false &&
+                isSelected[2] == false) ||
             (isSelected[0] == false &&
                 isSelected[1] == null &&
                 isSelected[2] == null) ||
@@ -729,7 +711,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   Widget getCardForBPMonitor(String deviceName) {
     return Container(
-      //height: 70.0.h,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -787,7 +769,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.0.sp,
                                       color:
-                                      Color(CommonConstants.bplightColor)),
+                                          Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -825,26 +807,23 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                     errorMsgSys = errorValue ?? "";
                                     errorMsg = errorMsgSys;
                                   });
-                                },
-                                    errorMsgSys,
-                                    variable.strbpunit,
-                                    deviceName,
+                                }, errorMsgSys, variable.strbpunit, deviceName,
                                     range: "Sys")
                               ],
                             ),
                           )),
                       Expanded(
                           child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Dia',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14.0.sp,
-                                    color: Color(CommonConstants.bplightColor)),
-                                softWrap: true,
-                              ),
-                              /*Container(
+                        children: <Widget>[
+                          Text(
+                            'Dia',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.0.sp,
+                                color: Color(CommonConstants.bplightColor)),
+                            softWrap: true,
+                          ),
+                          /*Container(
                                 constraints: BoxConstraints(maxWidth: 100),
                                 child: TextFormField(
                                     controller: diaStolicPressure,
@@ -869,22 +848,19 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                     cursorWidth: 0.5,
                                     onSaved: (input) => setState(() {})),
                               ),*/
-                              fhbBasicWidget.getErrorMsgForUnitEntered(
-                                  context,
-                                  CommonConstants.strDiastolicPressure,
-                                  commonConstants.bpDPUNIT,
-                                  diaStolicPressure, (errorValue) {
-                                setState(() {
-                                  errorMsgDia = errorValue;
-                                  errorMsg = errorMsgDia;
-                                });
-                              },
-                                  errorMsgDia,
-                                  variable.strbpunit,
-                                  deviceName,
-                                  range: "Dia")
-                            ],
-                          )),
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                              context,
+                              CommonConstants.strDiastolicPressure,
+                              commonConstants.bpDPUNIT,
+                              diaStolicPressure, (errorValue) {
+                            setState(() {
+                              errorMsgDia = errorValue;
+                              errorMsg = errorMsgDia;
+                            });
+                          }, errorMsgDia, variable.strbpunit, deviceName,
+                              range: "Dia")
+                        ],
+                      )),
                       Expanded(
                           flex: 1,
                           child: Padding(
@@ -898,7 +874,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14.0.sp,
                                       color:
-                                      Color(CommonConstants.bplightColor)),
+                                          Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
                                 /*Container(
@@ -936,10 +912,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                   setState(() {
                                     errorMsg = errorValue;
                                   });
-                                },
-                                    errorMsg,
-                                    variable.strpulse,
-                                    deviceName,
+                                }, errorMsg, variable.strpulse, deviceName,
                                     range: ""),
                               ],
                             ),
@@ -958,7 +931,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   Widget getCardForThermometer(String deviceName) {
     return Container(
-      //height: 70.0.h,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1044,12 +1017,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      },
-                          errorMsg,
-                          'F',
-                          deviceName,
-                          range: "",
-                          device: "Temp")
+                      }, errorMsg, 'F', deviceName, range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -1060,7 +1028,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
                             color:
-                            Color(CommonUtil().getQurhomePrimaryColor())),
+                                Color(CommonUtil().getQurhomePrimaryColor())),
                         softWrap: true,
                       ),
                       Container(
@@ -1086,7 +1054,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   Widget getCardForPulseOxidometer(String deviceName) {
     return Container(
-      //height: 70.0.h,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1134,42 +1102,39 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                 children: [
                   Expanded(
                       child: Column(
-                        children: <Widget>[
-                          Text(
-                            'SPO2',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strOxygenSaturation,
-                              commonConstants.poOxySatUNIT,
-                              deviceController, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          },
-                              errorMsg,
-                              variable.strpulseUnit,
-                              deviceName,
-                              range: ""),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'SPO2',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strOxygenSaturation,
+                          commonConstants.poOxySatUNIT,
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulseUnit, deviceName,
+                          range: ""),
+                    ],
+                  )),
                   Expanded(
                       child: Column(
-                        children: <Widget>[
-                          Text(
-                            'PRBpm',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.0.sp,
-                                color: Color(CommonConstants.pulselightColor)),
-                            softWrap: true,
-                          ),
-                          /* Container(
+                    children: <Widget>[
+                      Text(
+                        'PRBpm',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonConstants.pulselightColor)),
+                        softWrap: true,
+                      ),
+                      /* Container(
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
@@ -1197,21 +1162,17 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                 cursorWidth: 0.5,
                                 onSaved: (input) => setState(() {})),
                           ),*/
-                          fhbBasicWidget.getErrorMsgForUnitEntered(
-                              context,
-                              CommonConstants.strPulse,
-                              commonConstants.poPulseUNIT,
-                              pulse, (errorValue) {
-                            setState(() {
-                              errorMsg = errorValue;
-                            });
-                          },
-                              errorMsg,
-                              variable.strpulse,
-                              deviceName,
-                              range: ""),
-                        ],
-                      ))
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strPulse,
+                          commonConstants.poPulseUNIT,
+                          pulse, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, variable.strpulse, deviceName, range: ""),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -1221,7 +1182,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   Widget getCardForWeighingScale(String deviceName) {
     return Container(
-      //height: 70.0.h,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1281,10 +1242,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      },
-                          errorMsg,
-                          commonConstants.weightUNIT,
-                          deviceName),
+                      }, errorMsg, commonConstants.weightUNIT, deviceName),
                     ],
                   ),
                 ],
@@ -1296,7 +1254,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   Widget getCardForGlucometer(String deviceName) {
     return Container(
-      //height: 70.0.h,
+        //height: 70.0.h,
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         decoration: BoxDecoration(
@@ -1358,20 +1316,17 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                       setState(() {
                         errorMsg = errorValue;
                       });
-                    },
-                        errorMsg,
-                        variable.strGlucUnit,
-                        deviceName,
+                    }, errorMsg, variable.strGlucUnit, deviceName,
                         range: ((isSelected[0] == null &&
-                            isSelected[1] == false) ||
-                            (isSelected[0] == false &&
-                                isSelected[1] == null) ||
-                            (isSelected[0] == null &&
-                                isSelected[1] == null))
+                                    isSelected[1] == false) ||
+                                (isSelected[0] == false &&
+                                    isSelected[1] == null) ||
+                                (isSelected[0] == null &&
+                                    isSelected[1] == null))
                             ? 'Random'
                             : isSelected[0] == true
-                            ? 'Fast'
-                            : 'PP')
+                                ? 'Fast'
+                                : 'PP')
                   ],
                 )),
             SizedBox(
@@ -1384,85 +1339,85 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                 children: [
                   Expanded(
                       child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Fasting',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[0],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[0] = value;
-                                      isSelected[1] = null;
-                                      isSelected[2] = null;
-                                    });
-                                  })),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'Fasting',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[0],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[0] = value;
+                                  isSelected[1] = null;
+                                  isSelected[2] = null;
+                                });
+                              })),
+                    ],
+                  )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
                       child: Column(
-                        children: <Widget>[
-                          Text(
-                            'PP',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[1],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[1] = value;
-                                      isSelected[0] = null;
-                                      isSelected[2] = null;
-                                    });
-                                  })),
-                        ],
-                      )),
+                    children: <Widget>[
+                      Text(
+                        'PP',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[1],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[1] = value;
+                                  isSelected[0] = null;
+                                  isSelected[2] = null;
+                                });
+                              })),
+                    ],
+                  )),
                   SizedBox(
                     width: 5.0.w,
                   ),
                   Expanded(
                       child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Random',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12.0.sp,
-                                color: Colors.grey),
-                            softWrap: true,
-                          ),
-                          Container(
-                              width: 50.0.w,
-                              constraints: BoxConstraints(maxWidth: 100.0.w),
-                              child: MyCheckbox(
-                                  value: isSelected[2],
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSelected[2] = value;
-                                      isSelected[0] = null;
-                                      isSelected[1] = null;
-                                    });
-                                  })),
-                        ],
-                      ))
+                    children: <Widget>[
+                      Text(
+                        'Random',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12.0.sp,
+                            color: Colors.grey),
+                        softWrap: true,
+                      ),
+                      Container(
+                          width: 50.0.w,
+                          constraints: BoxConstraints(maxWidth: 100.0.w),
+                          child: MyCheckbox(
+                              value: isSelected[2],
+                              onChanged: (value) {
+                                setState(() {
+                                  isSelected[2] = value;
+                                  isSelected[0] = null;
+                                  isSelected[1] = null;
+                                });
+                              })),
+                    ],
+                  ))
                 ],
               ),
             ),
@@ -1490,7 +1445,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           final translis = controllerGetx?.bpList?.value;
           //List<WVResult> translist = translis.first;
           final List<BPResult> bpResultNew =
-          translis?.isNotEmpty ? translis?.first : [];
+              translis?.isNotEmpty ? translis?.first : [];
           bpResultNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue
                 .compareTo(translisCopy.dateTimeValue);
@@ -1499,55 +1454,54 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
           return bpResult?.isNotEmpty
               ? GroupedListView<BPResult, String>(
-            groupBy: (element) =>
-                getFormattedDateTime(element.startDateTime),
-            elements: bpResult,
-            sort: false,
-            groupSeparatorBuilder: (value) =>
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      SizedBoxWidget(width: 15.0.w),
-                      Text(
-                        todayDate != value ? value : 'Today, ' + value,
-                        style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: bpResult,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            indexedItemBuilder: (context, i, index) {
-              return buildRowForBp(
-                  bpResult[index].sourceType,
-                  getFormattedDateTime(bpResult[index].startDateTime),
-                  '${bpResult[index].systolic}',
-                  '${bpResult[index].diastolic}',
-                  '',
-                  'Systolic',
-                  'Diastolic',
-                  '',
-                  getFormattedTime(bpResult[index].startDateTime),
-                  bpResult[index].bpm != null
-                      ? bpResult[index].bpm.toString()
-                      : '',
-                  bpResult[index].deviceId);
-            },
-          )
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForBp(
+                        bpResult[index].sourceType,
+                        getFormattedDateTime(bpResult[index].startDateTime),
+                        '${bpResult[index].systolic}',
+                        '${bpResult[index].diastolic}',
+                        '',
+                        'Systolic',
+                        'Diastolic',
+                        '',
+                        getFormattedTime(bpResult[index].startDateTime),
+                        bpResult[index].bpm != null
+                            ? bpResult[index].bpm.toString()
+                            : '',
+                        bpResult[index].deviceId);
+                  },
+                )
               : Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  'No health record details available.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: variable.font_roboto),
-                ),
-              ),
-            ),
-          );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
         }
         break;
       case strGlusoceLevel:
@@ -1555,7 +1509,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           var translis = controllerGetx?.gulList?.value;
           //List<WVResult> translist = translis.first;
           final List<GVResult> translistNew =
-          translis?.isNotEmpty ? translis?.first : [];
+              translis?.isNotEmpty ? translis?.first : [];
           translistNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue
                 .compareTo(translisCopy.dateTimeValue);
@@ -1564,56 +1518,55 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
           return translist?.isNotEmpty
               ? GroupedListView<GVResult, String>(
-            groupBy: (element) =>
-                getFormattedDateTime(element.startDateTime),
-            elements: translist,
-            sort: false,
-            groupSeparatorBuilder: (value) =>
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      SizedBoxWidget(width: 15.0.w),
-                      Text(
-                        todayDate != value ? value : 'Today, ' + value,
-                        style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            indexedItemBuilder: (context, i, index) {
-              return buildRowForGulcose(
-                  translist[index].sourceType,
-                  getFormattedDateTime(translist[index].startDateTime),
-                  '${translist[index].bloodGlucoseLevel}',
-                  translist[index].mealContext == null ||
-                      translist[index].mealContext == ''
-                      ? 'Random'
-                      : translist[index].mealContext,
-                  '',
-                  'Blood Glucose',
-                  'Meal Type',
-                  '',
-                  getFormattedTime(translist[index].startDateTime),
-                  translist[index].bgUnit,
-                  translist[index].deviceId);
-            },
-          )
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForGulcose(
+                        translist[index].sourceType,
+                        getFormattedDateTime(translist[index].startDateTime),
+                        '${translist[index].bloodGlucoseLevel}',
+                        translist[index].mealContext == null ||
+                                translist[index].mealContext == ''
+                            ? 'Random'
+                            : translist[index].mealContext,
+                        '',
+                        'Blood Glucose',
+                        'Meal Type',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        translist[index].bgUnit,
+                        translist[index].deviceId);
+                  },
+                )
               : Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  'No health record details available.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: variable.font_roboto),
-                ),
-              ),
-            ),
-          );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
         }
         break;
       case strOxgenSaturation:
@@ -1621,7 +1574,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           var translis = controllerGetx?.oxyList?.value;
           //List<WVResult> translist = translis.first;
           final List<OxyResult> translistNew =
-          translis?.isNotEmpty ? translis?.first : [];
+              translis?.isNotEmpty ? translis?.first : [];
           translistNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue
                 .compareTo(translisCopy.dateTimeValue);
@@ -1630,54 +1583,53 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           // final List<DeviceIntervalData> deviceFullList = translis.last;
           return translist?.isNotEmpty
               ? GroupedListView<OxyResult, String>(
-            groupBy: (element) =>
-                getFormattedDateTime(element.startDateTime),
-            elements: translist,
-            sort: false,
-            groupSeparatorBuilder: (value) =>
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      SizedBoxWidget(width: 15.0.w),
-                      Text(
-                        todayDate != value ? value : 'Today, ' + value,
-                        style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            indexedItemBuilder: (context, i, index) {
-              return buildRowForOxygen(
-                  translist[index].sourceType,
-                  getFormattedDateTime(translist[index].startDateTime),
-                  '${translist[index].oxygenSaturation}',
-                  '',
-                  '',
-                  'SPO2',
-                  '',
-                  '',
-                  getFormattedTime(translist[index].startDateTime),
-                  '',
-                  translist[index].bpm,
-                  translist[index].deviceId);
-            },
-          )
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForOxygen(
+                        translist[index].sourceType,
+                        getFormattedDateTime(translist[index].startDateTime),
+                        '${translist[index].oxygenSaturation}',
+                        '',
+                        '',
+                        'SPO2',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        '',
+                        translist[index].bpm,
+                        translist[index].deviceId);
+                  },
+                )
               : Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  'No health record details available.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: variable.font_roboto),
-                ),
-              ),
-            ),
-          );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
         }
         break;
       case strWeight:
@@ -1685,7 +1637,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           var translis = controllerGetx?.weightList?.value;
           //List<WVResult> translist = translis.first;
           final List<WVResult> translistNew =
-          translis?.isNotEmpty ? translis?.first : [];
+              translis?.isNotEmpty ? translis?.first : [];
           translistNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue
                 .compareTo(translisCopy.dateTimeValue);
@@ -1694,53 +1646,52 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
           return translist?.isNotEmpty
               ? GroupedListView<WVResult, String>(
-            groupBy: (element) =>
-                getFormattedDateTime(element.startDateTime),
-            elements: translist,
-            sort: false,
-            groupSeparatorBuilder: (value) =>
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      SizedBoxWidget(width: 15.0.w),
-                      Text(
-                        todayDate != value ? value : 'Today, ' + value,
-                        style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            indexedItemBuilder: (context, i, index) {
-              return buildRowForTempWeight(
-                  translist[index].sourceType,
-                  getFormattedDateTime(translist[index].startDateTime),
-                  translist[index].weight,
-                  '',
-                  '',
-                  'Weight',
-                  '',
-                  '',
-                  getFormattedTime(translist[index].startDateTime),
-                  'Kg',
-                  translist[index].deviceId);
-            },
-          )
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(translist[index].startDateTime),
+                        translist[index].weight,
+                        '',
+                        '',
+                        'Weight',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        'Kg',
+                        translist[index].deviceId);
+                  },
+                )
               : Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  'No health record details available.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: variable.font_roboto),
-                ),
-              ),
-            ),
-          );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
         }
         break;
       case strTemperature:
@@ -1749,8 +1700,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //List<WVResult> translist = translis.first;
           final List<TMPResult> translistNew = translis?.isNotEmpty
               ? translis?.isNotEmpty
-              ? translis?.first
-              : []
+                  ? translis?.first
+                  : []
               : [];
           translistNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue
@@ -1760,53 +1711,52 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
           return translist?.isNotEmpty
               ? GroupedListView<TMPResult, String>(
-            groupBy: (element) =>
-                getFormattedDateTime(element.startDateTime),
-            elements: translist,
-            sort: false,
-            groupSeparatorBuilder: (value) =>
-                Padding(
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      SizedBoxWidget(width: 15.0.w),
-                      Text(
-                        todayDate != value ? value : 'Today, ' + value,
-                        style: TextStyle(
-                            fontSize: 14.0.sp,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                  groupBy: (element) =>
+                      getFormattedDateTime(element.startDateTime),
+                  elements: translist,
+                  sort: false,
+                  groupSeparatorBuilder: (value) => Padding(
+                    padding: const EdgeInsets.all(6),
+                    child: Row(
+                      children: [
+                        SizedBoxWidget(width: 15.0.w),
+                        Text(
+                          todayDate != value ? value : 'Today, ' + value,
+                          style: TextStyle(
+                              fontSize: 14.0.sp,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-            indexedItemBuilder: (context, i, index) {
-              return buildRowForTempWeight(
-                  translist[index].sourceType,
-                  getFormattedDateTime(translist[index].startDateTime),
-                  translist[index].temperature,
-                  '',
-                  '',
-                  'Temperature',
-                  '',
-                  '',
-                  getFormattedTime(translist[index].startDateTime),
-                  'F',
-                  translist[index].deviceId);
-            },
-          )
+                  indexedItemBuilder: (context, i, index) {
+                    return buildRowForTempWeight(
+                        translist[index].sourceType,
+                        getFormattedDateTime(translist[index].startDateTime),
+                        translist[index].temperature,
+                        '',
+                        '',
+                        'Temperature',
+                        '',
+                        '',
+                        getFormattedTime(translist[index].startDateTime),
+                        'F',
+                        translist[index].deviceId);
+                  },
+                )
               : Container(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(left: 40, right: 40),
-                child: Text(
-                  'No health record details available.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: variable.font_roboto),
-                ),
-              ),
-            ),
-          );
+                  child: Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 40, right: 40),
+                      child: Text(
+                        'No health record details available.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontFamily: variable.font_roboto),
+                      ),
+                    ),
+                  ),
+                );
         }
         break;
       default:
@@ -1852,7 +1802,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     }
   }
 
-  Widget buildRowForBp(String type,
+  Widget buildRowForBp(
+      String type,
       String date,
       String value1,
       String value2,
@@ -1881,7 +1832,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                     Center(
                       child: Text(time,
                           style:
-                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -1897,125 +1848,125 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Text(
-                        valuename1,
-                        style: TextStyle(
-                            color: Colors.black, fontSize: 13.0.sp),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 5.0.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            value1 == '' ? '' : value1,
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2.0.w,
-                          ),
-                          Text(
-                            value1 == '' ? '' : 'mm Hg',
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 11.0.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              valuename1,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 13.0.sp),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 5.0.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  value1 == '' ? '' : value1,
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2.0.w,
+                                ),
+                                Text(
+                                  value1 == '' ? '' : 'mm Hg',
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 11.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
                 valuename2 != ''
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Text(
-                        valuename2 == '' ? '' : valuename2,
-                        style: TextStyle(
-                            color: Colors.black, fontSize: 13.0.sp),
-                      ),
-                      SizedBox(
-                        height: 5.0.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            value2,
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2,
-                          ),
-                          Text(
-                            value1 == '' ? '' : 'mm Hg',
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 11.0.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              valuename2 == '' ? '' : valuename2,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 13.0.sp),
+                            ),
+                            SizedBox(
+                              height: 5.0.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  value2,
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2,
+                                ),
+                                Text(
+                                  value1 == '' ? '' : 'mm Hg',
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 11.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
                 bpm != ''
                     ? Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Text(
-                        'Pulse',
-                        style: TextStyle(
-                            color: Colors.black, fontSize: 13.0.sp),
-                      ),
-                      SizedBox(
-                        height: 5.0.h,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            bpm != '' ? bpm : '',
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 15.0.sp,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          SizedBoxWidget(
-                            width: 2,
-                          ),
-                          Text(
-                            bpm == '' ? '' : CommonConstants.strPulseUnit,
-                            style: TextStyle(
-                                color: Color(CommonUtil()
-                                    .getQurhomePrimaryColor()),
-                                fontSize: 11.0.sp),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Text(
+                              'Pulse',
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 13.0.sp),
+                            ),
+                            SizedBox(
+                              height: 5.0.h,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  bpm != '' ? bpm : '',
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                SizedBoxWidget(
+                                  width: 2,
+                                ),
+                                Text(
+                                  bpm == '' ? '' : CommonConstants.strPulseUnit,
+                                  style: TextStyle(
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                      fontSize: 11.0.sp),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBox(),
                 /*getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)*/
@@ -2094,7 +2045,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     }
   }
 
-  Widget buildRowForGulcose(String type,
+  Widget buildRowForGulcose(
+      String type,
       String date,
       String value1,
       String value2,
@@ -2145,7 +2097,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                       Text(
                         getMealText(value2),
                         style:
-                        TextStyle(color: Colors.black, fontSize: 13.0.sp),
+                            TextStyle(color: Colors.black, fontSize: 13.0.sp),
                       ),
                       SizedBox(
                         height: 5.0.h,
@@ -2255,7 +2207,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     return mealText;
   }
 
-  Widget buildRowForTempWeight(String type,
+  Widget buildRowForTempWeight(
+      String type,
       String date,
       String value1,
       String value2,
@@ -2305,7 +2258,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                     Center(
                       child: Text(time,
                           style:
-                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -2318,46 +2271,46 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Column(
-                        children: [
-                          Text(
-                            valuename1,
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 13.0.sp),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                value1 == '' ? '' : value1,
-                                style: TextStyle(
-                                    color: Color(CommonUtil()
-                                        .getQurhomePrimaryColor()),
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              SizedBoxWidget(
-                                width: 2,
-                              ),
-                              Text(
-                                unit != '' ? unit : '',
-                                style: TextStyle(
-                                    color: Color(CommonUtil()
-                                        .getQurhomePrimaryColor()),
-                                    fontSize: 14.0.sp),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  valuename1,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 13.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      value1 == '' ? '' : value1,
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor()),
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBoxWidget(
+                                      width: 2,
+                                    ),
+                                    Text(
+                                      unit != '' ? unit : '',
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor()),
+                                          fontSize: 14.0.sp),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
                 /* getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)*/
@@ -2369,7 +2322,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
     );
   }
 
-  Widget buildRowForOxygen(String type,
+  Widget buildRowForOxygen(
+      String type,
       String date,
       String value1,
       String value2,
@@ -2420,7 +2374,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                     Center(
                       child: Text(time,
                           style:
-                          TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
+                              TextStyle(color: Colors.grey, fontSize: 11.0.sp)),
                     ),
                     SizedBox(
                       height: 2.0.h,
@@ -2433,73 +2387,73 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                 ),
                 valuename1 != ''
                     ? Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Column(
-                        children: [
-                          Text(
-                            valuename1,
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 13.0.sp),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                value1 == '' ? '' : value1,
-                                style: TextStyle(
-                                    color: Color(CommonUtil()
-                                        .getQurhomePrimaryColor()),
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              SizedBoxWidget(
-                                width: 5,
-                              ),
-                              Text(
-                                unit != '' ? unit : '',
-                                style: TextStyle(
-                                    color: Color(CommonUtil()
-                                        .getQurhomePrimaryColor()),
-                                    fontSize: 14.0.sp),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  valuename1,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 13.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      value1 == '' ? '' : value1,
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor()),
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    SizedBoxWidget(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      unit != '' ? unit : '',
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor()),
+                                          fontSize: 14.0.sp),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
                 bpm != ''
                     ? Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 5.0.h),
-                      Column(
-                        children: [
-                          Text(
-                            'PRBpm',
-                            style: TextStyle(
-                                color: Colors.black, fontSize: 13.0.sp),
-                            textAlign: TextAlign.center,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                bpm == '' ? '' : bpm,
-                                style: TextStyle(
-                                    color: Color(CommonUtil()
-                                        .getQurhomePrimaryColor()),
-                                    fontSize: 15.0.sp,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              /* SizedBoxWidget(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(height: 5.0.h),
+                            Column(
+                              children: [
+                                Text(
+                                  'PRBpm',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 13.0.sp),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      bpm == '' ? '' : bpm,
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getQurhomePrimaryColor()),
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    /* SizedBoxWidget(
                               width: 5,
                             ),
                             Text(
@@ -2509,13 +2463,13 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                                       new CommonUtil().getMyPrimaryColor()),
                                   fontSize: 14.0.sp),
                             ),*/
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
                     : SizedBoxWidget(),
                 /*getDeleteIcon(deviceId, type),
                 SizedBoxWidget(width: 10)*/
