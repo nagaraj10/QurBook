@@ -19,6 +19,8 @@ import 'package:myfhb/regiment/models/regiment_qurhub_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +36,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   final controller = Get.put(QurhomeRegimenController());
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
-
+  String snoozeValue="5 mins";
   List<RegimentDataModel> regimenList = [];
 
   @override
@@ -314,9 +316,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   showRegimenDialog(RegimentDataModel regimen, int index) {
     showDialog(
         context: context,
-        builder: (context) {
+        builder: (__) {
           return StatefulBuilder(
-            builder: (context, setState) {
+            builder: (_, setState) {
               return AlertDialog(
                   contentPadding: EdgeInsets.all(0),
                   content: Column(
@@ -384,7 +386,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                           ? Icons.stop_circle_outlined
                                           : Icons.play_circle_fill_rounded,
                                       size: 30.0,
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: Color(CommonUtil().getQurhomePrimaryColor()),
                                     ),
                                   ),
                                 ),
@@ -461,12 +463,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               children: [
                                 DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    value: '5 mins',
+                                    value: snoozeValue,
                                     elevation: 16,
                                     onChanged: (String newValue) {
-                                      // setState(() {
-                                      //   dropdownValue = newValue!;
-                                      // });
+                                      setState(() {
+                                        snoozeValue = newValue;
+                                      });
                                     },
                                     items: <String>[
                                       '5 mins',
@@ -495,10 +497,24 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          var time=snoozeValue.split(" ");
+                          Reminder reminder=Reminder();
+                          reminder.uformname=regimen.uformname.toString();
+                          reminder.activityname=regimen.activityname.toString();
+                          reminder.title=regimen.title.toString();
+                          reminder.description=regimen.description.toString();
+                          reminder.eid=regimen.eid.toString();
+                          reminder.estart=regimen.estart.add( Duration(minutes: int.parse(time[0]))).toString();
+                          reminder.remindin=regimen.remindin.toString();
+                          reminder.remindbefore=regimen.remindin.toString();
+                          List<Reminder> data=[reminder];
+                          QurPlanReminders.updateReminderswithLocal(data);
+                          Navigator.pop(context);
+                        },
                         child: Text('Snooze'),
                         style: ElevatedButton.styleFrom(
-                            primary: Color(CommonUtil().getMyPrimaryColor())),
+                            primary: Color(CommonUtil().getQurhomePrimaryColor())),
                       ),
                       SizedBox(
                         height: 10,
@@ -536,31 +552,34 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getFormData(eid: eventId);
-    print(fieldsResponseModel);
+
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
-            regimen.otherinfo.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
-            RegimentStatus.DialogOpened) {
+            regimen.otherinfo.toJson().toString().contains('1'))
+        && Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
+            RegimentStatus.DialogOpened
+    ) {
       var dashboardController = Get.find<QurhomeDashboardController>();
       if (((fieldsResponseModel.result.fields.first.title ?? '').isNotEmpty) &&
           (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
               "oxygen".toLowerCase()) &&
           (dashboardController != null)) {
         dashboardController.checkForConnectedDevices();
-      } else {Provider.of<RegimentViewModel>(context, listen: false)
+      } else {
+        Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogOpened);
       var value = await showDialog(
         context: context,
-        builder: (context) =>
+        builder: (_) =>
             FormDataDialog(
               fieldsData: fieldsResponseModel.result.fields,
               eid: eventId,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: Color(CommonUtil().getQurhomePrimaryColor()),
               mediaData: regimen.otherinfo,
               formTitle: getDialogTitle(context, regimen),
               canEdit: canEdit || isValidSymptom(context),
               isFromQurHomeSymptom: false,
+              isFromQurHomeRegimen:true,
               triggerAction: (String triggerEventId, String followContext) {
                 Provider.of<RegimentViewModel>(Get.context, listen: false)
                     .updateRegimentStatus(RegimentStatus.DialogClosed);
