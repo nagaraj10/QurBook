@@ -1,19 +1,24 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:provider/provider.dart';
+
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
-import '../../claim/screen/ClaimRecordDisplay.dart';
+
 import '../../chat_socket/view/ChatDetail.dart';
 import '../../chat_socket/view/ChatUserList.dart';
+import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
+import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
 import '../../constants/fhb_parameters.dart' as parameters;
+import '../../constants/router_variable.dart' as router;
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../myPlan/view/myPlanDetail.dart';
@@ -24,17 +29,15 @@ import '../../src/ui/SplashScreen.dart';
 import '../../src/ui/bot/SuperMaya.dart';
 import '../../src/ui/bot/view/ChatScreen.dart' as bot;
 import '../../src/ui/bot/view/sheela_arguments.dart';
+import '../../src/utils/PageNavigator.dart';
 import '../../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
 import '../../telehealth/features/Notifications/view/notification_main.dart';
 import '../../telehealth/features/chat/view/chat.dart';
 import '../../telehealth/features/chat/view/home.dart';
-import '../model/NotificationModel.dart';
-import '../../constants/router_variable.dart' as router;
-import '../../src/utils/PageNavigator.dart';
-import '../utils/audiocall_provider.dart';
 import '../../widgets/checkout_page.dart';
-import 'package:provider/provider.dart';
+import '../model/NotificationModel.dart';
+import '../utils/audiocall_provider.dart';
 
 class IosNotificationHandler {
   final myDB = FirebaseFirestore.instance;
@@ -46,12 +49,14 @@ class IosNotificationHandler {
   bool rejectAction = false;
   bool viewMemberAction = false;
   bool communicationSettingAction = false;
+  bool notificationReceivedFromKilledState = false;
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
       (call) async {
         if (call.method == variable.notificationResponseMethod) {
           if (!isAlreadyLoaded) {
+            notificationReceivedFromKilledState = true;
             await 4.seconds;
             isAlreadyLoaded = true;
           }
@@ -219,7 +224,7 @@ class IosNotificationHandler {
         );
       }
     } else if (model.redirect == parameters.chat) {
-      if (isAlreadyLoaded) {
+      if (!notificationReceivedFromKilledState) {
         if ((model.doctorId ?? '').isNotEmpty &&
             (model.doctorName ?? '').isNotEmpty &&
             (model.doctorPicture ?? '').isNotEmpty) {
@@ -240,16 +245,17 @@ class IosNotificationHandler {
           Get.to(() => ChatUserList());
         }
       } else {
-        Get.to(() => SplashScreen(
-              nsRoute: parameters.chat,
-            ));
+        notificationReceivedFromKilledState = false;
+        await PreferenceUtil.saveNotificationData(model);
       }
     } else if (model.redirect == 'sheela') {
-      fbaLog(eveParams: {
-        'eventTime': '${DateTime.now()}',
-        'ns_type': 'sheela',
-        'navigationPage': 'Sheela Start Page',
-      });
+      fbaLog(
+        eveParams: {
+          'eventTime': '${DateTime.now()}',
+          'ns_type': 'sheela',
+          'navigationPage': 'Sheela Start Page',
+        },
+      );
       if (isAlreadyLoaded) {
         if ((model.notificationListId ?? '').isNotEmpty) {
           FetchNotificationService()
