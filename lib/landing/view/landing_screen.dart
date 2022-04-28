@@ -181,9 +181,10 @@ class _LandingScreenState extends State<LandingScreen> {
   changeTabToAppointments() async {
     try {
       var notificationData = await PreferenceUtil.getNotifiationData();
+      await PreferenceUtil.removeNotificationData();
+
       if (notificationData.redirect == 'appointmentList') {
         landingViewModel.updateTabIndex(3);
-        await PreferenceUtil.removeNotificationData();
       } else if (notificationData.redirect == chat) {
         if ((notificationData.doctorId ?? '').isNotEmpty &&
             (notificationData.doctorName ?? '').isNotEmpty &&
@@ -207,6 +208,7 @@ class _LandingScreenState extends State<LandingScreen> {
       }
     } catch (e) {
       //print(e.toString());
+      await PreferenceUtil.removeNotificationData();
     }
   }
 
