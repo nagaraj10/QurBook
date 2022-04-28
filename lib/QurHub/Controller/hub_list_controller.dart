@@ -1,21 +1,22 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
-import 'package:myfhb/QurHub/Models/add_network_model.dart';
-import 'package:myfhb/QurHub/Models/hub_list_response.dart';
-import 'package:myfhb/QurHub/View/add_device_screen.dart';
-import 'package:myfhb/QurHub/View/hub_list_screen.dart';
-import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
-import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
-import 'package:myfhb/feedback/Provider/FeedbackApiProvider.dart';
-import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
+
+import '../../Qurhome/BleConnect/Controller/ble_connect_controller.dart';
+import '../../constants/fhb_constants.dart';
+import '../../feedback/Model/FeedbackCategoriesTypeModel.dart';
+import '../../feedback/Model/FeedbackTypeModel.dart';
+import '../../feedback/Provider/FeedbackApiProvider.dart';
+import '../ApiProvider/hub_api_provider.dart';
+import '../Models/add_network_model.dart';
+import '../Models/hub_list_response.dart';
+import '../View/add_device_screen.dart';
+import '../View/hub_list_screen.dart';
 
 class HubListController extends GetxController {
   final _apiProvider = HubApiProvider();

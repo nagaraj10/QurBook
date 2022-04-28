@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 
@@ -61,6 +62,9 @@ class _HomeWidgetState extends State<HomeWidget> {
         () {
           Get.lazyPut(
             () => QurhomeDashboardController(),
+          );
+          Get.lazyPut(
+            () => HubListController(),
           );
         },
       ),
