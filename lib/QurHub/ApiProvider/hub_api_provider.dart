@@ -39,14 +39,15 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> saveDevice(
-      String hubId, String deviceId, String nickName,String userId) async {
+  Future<dynamic> saveDevice(String hubId, String deviceId, String nickName,
+      String userId, String deviceType) async {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
     // var userId = PreferenceUtil.getStringValue(KEY_USERID);
     var data = {
       "deviceId": deviceId,
+      "deviceType": deviceType,
       "userHubId": hubId,
       "userId": userId,
       "additionalDetails": {}
@@ -169,6 +170,33 @@ class HubApiProvider {
         SERIAL_NUMBER: hubId,
         NICK_NAME: nickName,
         ADDITION_DETAILS: {},
+      };
+      responseJson = await ApiServices.post(
+        '${CommonUtil.BASE_URL_QURHUB}user-hub',
+        headers: header,
+        body: json.encode(data),
+        timeOutSeconds: 50,
+      );
+
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      } else {
+        return responseJson;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> callCreateVirtualHub() async {
+    http.Response responseJson;
+    await PreferenceUtil.init();
+    try {
+      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      var data = {
+        ISVIRTUALHUB: true,
       };
       responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-hub',

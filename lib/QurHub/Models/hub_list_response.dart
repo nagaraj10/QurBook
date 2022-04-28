@@ -6,7 +6,8 @@ class HubListResponse {
 
   HubListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+    result =
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -33,15 +34,15 @@ class Result {
 
   Result(
       {this.id,
-        this.nickName,
-        this.additionalDetails,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.hubId,
-        this.userId,
-        this.hub,
-        this.userDeviceCollection});
+      this.nickName,
+      this.additionalDetails,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.hubId,
+      this.userId,
+      this.hub,
+      this.userDeviceCollection});
 
   Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -80,15 +81,56 @@ class Result {
   }
 }
 
-class Hub{
+class AdditionalDetails {
+  bool isVirtualHub;
+
+  AdditionalDetails({this.isVirtualHub});
+
+  AdditionalDetails.fromJson(Map<String, dynamic> json) {
+    try {
+      isVirtualHub = json['isVirtualHub'];
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['isVirtualHub'] = this.isVirtualHub;
+    } catch (e) {
+      print(e);
+    }
+    return data;
+  }
+}
+
+class Hub {
   String id;
   String name;
   String serialNumber;
-  Hub({this.id, this.name, this.serialNumber});
+  AdditionalDetails additionalDetails;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  Hub(
+      {this.id,
+      this.name,
+      this.serialNumber,
+      this.additionalDetails,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
   Hub.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     serialNumber = json['serialNumber'];
+    additionalDetails = json['additionalDetails'] != null
+        ? new AdditionalDetails.fromJson(json['additionalDetails'])
+        : null;
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
   }
 }
 
@@ -108,16 +150,16 @@ class UserDeviceCollection {
 
   UserDeviceCollection(
       {this.id,
-        this.userHubId,
-        this.pairHash,
-        this.additionalDetails,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.hubId,
-        this.deviceId,
-        this.userId,
-        this.user,
+      this.userHubId,
+      this.pairHash,
+      this.additionalDetails,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.hubId,
+      this.deviceId,
+      this.userId,
+      this.user,
       this.device});
 
   UserDeviceCollection.fromJson(Map<String, dynamic> json) {
@@ -132,7 +174,8 @@ class UserDeviceCollection {
     deviceId = json['deviceId'];
     userId = json['userId'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
-    device = json['device'] != null ? new Device.fromJson(json['device']) : null;
+    device =
+        json['device'] != null ? new Device.fromJson(json['device']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -154,31 +197,31 @@ class UserDeviceCollection {
   }
 }
 
-class Device{
+class Device {
   String id;
   String serialNumber;
   DeviceType deviceType;
-  Device({this.id,this.serialNumber,this.deviceType});
+  Device({this.id, this.serialNumber, this.deviceType});
 
   Device.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     serialNumber = json['serialNumber'];
-    deviceType = json['deviceType'] != null ? new DeviceType.fromJson(json['deviceType']) : null;
-
+    deviceType = json['deviceType'] != null
+        ? new DeviceType.fromJson(json['deviceType'])
+        : null;
   }
 }
 
-class DeviceType{
+class DeviceType {
   String id;
   String code;
 
-  DeviceType({this.id,this.code});
+  DeviceType({this.id, this.code});
 
   DeviceType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     code = json['code'];
   }
-
 }
 
 class User {
@@ -215,35 +258,35 @@ class User {
 
   User(
       {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicUrl,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.providerId,
-        this.additionalInfo,
-        this.firstLoggedIn});
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicUrl,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.providerId,
+      this.additionalInfo,
+      this.firstLoggedIn});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -331,14 +374,14 @@ class AdditionalInfo {
 
   AdditionalInfo(
       {this.age,
-        this.height,
-        this.offset,
-        this.weight,
-        // this.language,
-        this.mrdNumber,
-        this.uhidNumber,
-        this.visitReason,
-        this.patientHistory});
+      this.height,
+      this.offset,
+      this.weight,
+      // this.language,
+      this.mrdNumber,
+      this.uhidNumber,
+      this.visitReason,
+      this.patientHistory});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     age = json['age'];
