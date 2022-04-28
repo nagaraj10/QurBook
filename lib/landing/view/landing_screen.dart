@@ -9,22 +9,24 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
-import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
-import 'package:myfhb/chat_socket/view/ChatUserList.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/landing/service/landing_service.dart';
-import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/utils/dynamic_links.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+
+import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
+
+import '../../chat_socket/constants/const_socket.dart';
+import '../../chat_socket/model/TotalCountModel.dart';
+import '../../chat_socket/model/UserChatListModel.dart';
+import '../../chat_socket/view/ChatUserList.dart';
+import '../../chat_socket/viewModel/chat_socket_view_model.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../constants/fhb_constants.dart';
+import '../service/landing_service.dart';
+import 'corp_users_welcome_dialog.dart';
+import '../../src/blocs/Category/CategoryListBlock.dart';
+import '../../src/model/user/MyProfileResult.dart';
+import '../../src/utils/dynamic_links.dart';
+import '../../telehealth/features/chat/view/PDFViewerController.dart';
+import '../../user_plans/view_model/user_plans_view_model.dart';
 
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -36,8 +38,9 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../reminders/QurPlanReminders.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
@@ -188,6 +191,26 @@ class _LandingScreenState extends State<LandingScreen> {
       if (notificationData.redirect == 'appointmentList') {
         landingViewModel.updateTabIndex(3);
         await PreferenceUtil.removeNotificationData();
+      } else if (notificationData.redirect == chat) {
+        if ((notificationData.doctorId ?? '').isNotEmpty &&
+            (notificationData.doctorName ?? '').isNotEmpty &&
+            (notificationData.doctorPicture ?? '').isNotEmpty) {
+          Get.to(
+            () => ChatDetail(
+              peerId: notificationData.doctorId,
+              peerName: notificationData.doctorName,
+              peerAvatar: notificationData.doctorPicture,
+              patientId: "",
+              patientName: "",
+              patientPicture: "",
+              isFromVideoCall: false,
+              isCareGiver: false,
+              isForGetUserId: true,
+            ),
+          );
+        } else {
+          Get.to(() => ChatUserList());
+        }
       }
     } catch (e) {
       //print(e.toString());
