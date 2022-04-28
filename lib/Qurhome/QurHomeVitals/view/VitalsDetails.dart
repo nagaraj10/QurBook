@@ -290,7 +290,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
               sheelaInputs: widget.sheelaRequestString,
             ),
           ).then((value) {
-            setState(() {});
+            controllerGetx.onTapFilterBtn(0);
+            filterRefresh(0);
           });
           /* Navigator.of(context).push(
             MaterialPageRoute(
