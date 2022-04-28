@@ -102,10 +102,13 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
                               child: dropDownButton(controller
                                   .familyMembers.result.sharedByUsers),
                             ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            getButton(),
                           ],
                         ),
                       ),
-                      getButton(),
                     ],
                   )
                 : Stack(
@@ -114,10 +117,13 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
                         child: Column(
                           children: [
                             getView(),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            getButton(),
                           ],
                         ),
                       ),
-                      getButton(),
                     ],
                   );
       }),
@@ -126,9 +132,9 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
 
   Widget getButton() {
     return Align(
-      alignment: Alignment.bottomCenter,
+      //alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(8.0),
         child: InkWell(
           onTap: () {
             if (deviceIdController.text.length != 0) {
@@ -151,7 +157,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
             ),
             color: Color(CommonUtil().getMyPrimaryColor()),
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(12.0),
               child: Text(
                 hubListController.isFromQurHomeinQurBook.value
                     ? 'Save'

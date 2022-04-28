@@ -31,6 +31,7 @@ const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String ScanningForDevices = 'Scanning for devices...';
 const String NoDeviceFound = 'No Device Found';
+const String DeviceAlreadyMapped = 'Device Already Mapped';
 const String careGiver = 'Caregiver Communication Settings';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';

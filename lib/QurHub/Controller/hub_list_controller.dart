@@ -103,7 +103,7 @@ class HubListController extends GetxController {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         if (addNetworkModel.isSuccess) {
-          toast.getToast(validString(addNetworkModel.message), Colors.green);
+          //toast.getToast(validString(addNetworkModel.message), Colors.green);
           getHubList();
         } else {
           toast.getToast(validString(addNetworkModel.message), Colors.red);
@@ -137,6 +137,16 @@ class HubListController extends GetxController {
       Get.to(
         HubListScreen(),
       );
+    } catch (e) {}
+  }
+
+  navigateToAddDeviceScreen() async {
+    try {
+      Navigator.push(
+        Get.context,
+        MaterialPageRoute(
+            builder: (context) => AddDeviceScreen(hubId: hubId.value)),
+      ).then((value) => {getHubList()});
     } catch (e) {}
   }
 
@@ -201,11 +211,22 @@ class HubListController extends GetxController {
               foundBLE.value = true;
               disableTimer();
               searchingBleDevice.value = false;
-              Navigator.push(
-                Get.context,
-                MaterialPageRoute(
-                    builder: (context) => AddDeviceScreen(hubId: hubId.value)),
-              ).then((value) => {getHubList()});
+              List<UserDeviceCollection> userDeviceCollection = [];
+              if (hubListResponse.result != null &&
+                  hubListResponse.result.userDeviceCollection != null &&
+                  hubListResponse.result.userDeviceCollection.length > 0) {
+                userDeviceCollection =
+                    hubListResponse.result.userDeviceCollection;
+                final index = userDeviceCollection.indexWhere((element) =>
+                    validString(element.device.serialNumber) == bleMacId.value);
+                if (index >= 0) {
+                  toast.getToast(DeviceAlreadyMapped, Colors.red);
+                } else {
+                  navigateToAddDeviceScreen();
+                }
+              } else {
+                navigateToAddDeviceScreen();
+              }
               break;
 
             case "disconnected":

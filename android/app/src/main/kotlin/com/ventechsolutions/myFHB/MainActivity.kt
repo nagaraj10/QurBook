@@ -143,8 +143,6 @@ class MainActivity : FlutterActivity() {
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
 
-    var IsBleScanning = 0
-
     private val DEVICE_SPO2 = 1
     private val DEVICE_TEMP = 2
     private val DEVICE_WT = 3
@@ -156,8 +154,6 @@ class MainActivity : FlutterActivity() {
     var postBleData: String? = null
 
     var scanningBleTimer = Timer()
-
-    var statusBleTimer = Timer()
 
     var bleName: String? = null
 
@@ -235,15 +231,6 @@ class MainActivity : FlutterActivity() {
          super.onStop()
          unregisterReceiver(smsBroadcastReceiver)
      }*/
-
-
-    fun setReadyToScan() {
-        IsBleScanning = 0
-    }
-
-    fun canStopScanning() {
-        IsBleScanning = 1
-    }
 
     fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int): String?
     {
@@ -486,8 +473,10 @@ class MainActivity : FlutterActivity() {
         return java.lang.Byte.toUnsignedInt(b!!)
     }
 
-    private fun startScanTimer() {
+    private fun startScanTimer()
+    {
         try {
+            autoRepeatScan = 1
             scanningBleTimer = Timer()
             scanningBleTimer.schedule(object : TimerTask() {
                 override fun run() {
@@ -503,6 +492,10 @@ class MainActivity : FlutterActivity() {
     {
         try {
             autoRepeatScan = 0
+            if (scanningBleTimer != null)
+            {
+                scanningBleTimer.cancel();
+            }
             BleManager.getInstance().cancelScan()
         }catch (ex:Exception){
             Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -516,17 +509,16 @@ class MainActivity : FlutterActivity() {
             {
                 override fun onScanStarted(success: Boolean) {
                     Log.d("startScan", "onScanStarted")
-                    canStopScanning()
                 }
 
 
                 override fun onScanFinished(scanResultList: List<BleDevice?>) {
                     Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
                     Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
-                    setReadyToScan()
                     if (autoRepeatScan == 1) {
                         startScanTimer()
                     }
+                    //stopScan()
                 }
 
                 override fun onLeScan(bleDevice: BleDevice?) {
@@ -609,7 +601,6 @@ class MainActivity : FlutterActivity() {
 
 
                         override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
-                            setReadyToScan()
                             Log.e("startScan", "onConnectFail ")
                             //dev_status!!.text = "ConnectFail SPO2..."
                             autoRepeatScan = 1
@@ -768,11 +759,10 @@ class MainActivity : FlutterActivity() {
                                 Log.d("startScan", " DisConnected ")
                                 //Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
                             }
-                            autoRepeatScan = 1
-                            startScanTimer()
                             if (::BLEEventChannel.isInitialized) {
                                 BLEEventChannel.success("disconnected|"+bleName+" disconnected successfully!!!")
                             }
+                            //stopScan()
                            // bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
 
                         }
@@ -789,12 +779,10 @@ class MainActivity : FlutterActivity() {
                         }
 
                         override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
-                            setReadyToScan()
                             Log.e("startScan", "onConnectFail ")
                             //dev_status!!.text = "ConnectFail TEMP..."
                             autoRepeatScan = 1
                             startScanTimer()
-
                             //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
                         }
 
@@ -879,8 +867,7 @@ class MainActivity : FlutterActivity() {
                                 Log.d("startScan", " DisConnected ")
                                 //Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
                             }
-                            autoRepeatScan = 1
-                            startScanTimer()
+                            //stopScan()
                         }
                     })
                 }
