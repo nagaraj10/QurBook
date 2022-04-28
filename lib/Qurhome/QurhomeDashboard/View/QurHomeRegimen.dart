@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_svg/svg.dart';
@@ -107,7 +108,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       child: Transform.scale(
         scale: controller.currentIndex == itemIndex ? 1 : 0.9,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -123,73 +124,81 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
+              child: Stack(
                 children: [
-                  Text(
-                    regimen.estart != null
-                        ? DateFormat('hh:mm a').format(regimen.estart)
-                        : '',
-                    style: TextStyle(
-                        color: controller.currentIndex == itemIndex ||
-                                nextRegimenPosition == itemIndex
-                            ? Color(
-                                CommonUtil().getQurhomeGredientColor(),
-                              )
-                            : Colors.grey,
-                        fontSize: 16),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  getIcon(regimen.activityname, regimen.uformname,
-                      regimen.metadata),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          getFormatedTitle(regimen.title),
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: controller.currentIndex == itemIndex ||
-                                  nextRegimenPosition == itemIndex
-                                  ? Color(
-                                CommonUtil().getQurhomeGredientColor(),
-                              )
-                                  : Colors.grey,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        if(regimen.ack_local != null)...{
-                          Visibility(
-                            visible: regimen.ack_local != null,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  '${CommonUtil().regimentDateFormat(
-                                    regimen?.asNeeded
-                                        ? regimen?.ack_local ??
-                                        DateTime.now()
-                                        : regimen?.ack_local ??
-                                        DateTime.now(),
-                                    isAck: true,
-                                  )}',
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                  ),
-                                ),
-                              ],
+                  if(regimen.ack_local != null)...{
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child:Visibility(
+                        visible: regimen.ack_local != null,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${CommonUtil().regimentDateFormat(
+                                regimen?.asNeeded
+                                    ? regimen?.ack_local ??
+                                    DateTime.now()
+                                    : regimen?.ack_local ??
+                                    DateTime.now(),
+                                isAck: true,
+                              )}',
+                              style: TextStyle(
+                                fontSize: 10.0,
+                              ),
                             ),
-                          ),
-                        }
+                          ],
+                        ),
+                      ),
+                    )
+                  },
 
-
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        regimen.estart != null
+                            ? DateFormat('hh:mm a').format(regimen.estart)
+                            : '',
+                        style: TextStyle(
+                            color: controller.currentIndex == itemIndex ||
+                                    nextRegimenPosition == itemIndex
+                                ? Color(
+                                    CommonUtil().getQurhomeGredientColor(),
+                                  )
+                                : Colors.grey,
+                            fontSize: 15,fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      getIcon(regimen.activityname, regimen.uformname,
+                          regimen.metadata),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                regimen.title,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    color: controller.currentIndex == itemIndex ||
+                                        nextRegimenPosition == itemIndex
+                                        ? Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    )
+                                        : Colors.grey,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
