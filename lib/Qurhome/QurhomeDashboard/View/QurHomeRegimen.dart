@@ -603,18 +603,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               followEventContext: followEventContext,
               isFollowEvent: eventIdReturn != null,
             ),
-
         );
         if (value != null && (value ?? false)) {
-          LoaderClass.showLoadingDialog(
-            Get.context,
-            canDismiss: false,
-          );
-          Future.delayed(Duration(milliseconds: 300), () async {
-            await Provider.of<RegimentViewModel>(context, listen: false)
-                .fetchRegimentData();
-            LoaderClass.hideLoadingDialog(Get.context);
-          });
+          // LoaderClass.showLoadingDialog(
+          //   Get.context,
+          //   canDismiss: false,
+          // );
+          // Future.delayed(Duration(milliseconds: 300), () async {
+          //   await Provider.of<RegimentViewModel>(context, listen: false)
+          //       .fetchRegimentData();
+          //   LoaderClass.hideLoadingDialog(Get.context);
+          // });
+          controller.getRegimenList();
         }
 
         Provider.of<RegimentViewModel>(context, listen: false)
