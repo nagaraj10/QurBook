@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -15,7 +16,6 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonUtil.dart';
 
-
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
@@ -23,9 +23,12 @@ class QurhomeDashboardController extends GetxController {
   StreamSubscription _timerSubscription;
   var foundBLE = false;
   var movedToNextScreen = false;
+  String bleMacId;
+  HubListController hubController;
+
   @override
   void onInit() {
-    _enableTimer();
+    getHubDetails();
     super.onInit();
   }
 
@@ -33,6 +36,11 @@ class QurhomeDashboardController extends GetxController {
   void onClose() {
     _disableTimer();
     super.onClose();
+  }
+
+  getHubDetails() {
+    hubController = Get.find<HubListController>();
+    hubController.getHubList();
   }
 
   void _disableTimer() {
@@ -64,19 +72,30 @@ class QurhomeDashboardController extends GetxController {
             FlutterToast()
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
+          case "macid":
+            bleMacId = validString(receivedValues.last);
+            break;
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+
             LoaderClass.hideLoadingDialog(Get.context);
             foundBLE = true;
             movedToNextScreen = true;
             _disableTimer();
-            Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                takeActiveDeviceReadings: true,
-              ),
-            );
+            if (checkForParedDevice()) {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  takeActiveDeviceReadings: true,
+                ),
+              );
+            } else {
+              FlutterToast().getToast(
+                'Connected Device is not Mapped for you',
+                Colors.red,
+              );
+            }
             break;
 
           case "disconnected":
@@ -90,6 +109,31 @@ class QurhomeDashboardController extends GetxController {
         }
       }
     });
+  }
+
+  String validString(String strText) {
+    try {
+      if (strText == null)
+        return "";
+      else if (strText.trim().isEmpty)
+        return "";
+      else
+        return strText.trim();
+    } catch (e) {}
+    return "";
+  }
+
+  bool checkForParedDevice() {
+    try {
+      var userDeviceCollection =
+          hubController.hubListResponse.result.userDeviceCollection;
+      final index = userDeviceCollection.indexWhere(
+        (element) => validString(element.device.serialNumber) == bleMacId,
+      );
+      return index >= 0;
+    } catch (e) {
+      return false;
+    }
   }
 
   void checkForConnectedDevices() {
@@ -122,11 +166,10 @@ class QurhomeDashboardController extends GetxController {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
           ? myProfile.result.firstName.capitalizeFirstofEach +
-          ' ' +
-          myProfile.result.lastName.capitalizeFirstofEach
+              ' ' +
+              myProfile.result.lastName.capitalizeFirstofEach
           : '';
     } catch (e) {}
-    print("fullname: "+fulName);
     switch (currentSelectedIndex.value) {
       case 0:
         appBarTitle = '$fulName'.obs;
