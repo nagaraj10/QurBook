@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
+import 'package:provider/provider.dart';
+
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
@@ -20,7 +23,6 @@ import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/utils/dynamic_links.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -32,8 +34,9 @@ import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../common/SwitchProfile.dart';
 import '../../common/errors_widget.dart';
-import '../../constants/fhb_constants.dart' as constants;
 import '../../constants/fhb_constants.dart' as Constants;
+import '../../constants/fhb_constants.dart' as constants;
+import '../../constants/fhb_parameters.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../reminders/QurPlanReminders.dart';
 import '../../src/model/GetDeviceSelectionModel.dart';
@@ -131,7 +134,6 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
-
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .off(getChatTotalCountOn);
@@ -157,11 +159,10 @@ class _LandingScreenState extends State<LandingScreen> {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =
             TotalCountModel.fromJson(countResponseOn);
-        if(totalCountModelOn!=null){
+        if (totalCountModelOn != null) {
           Provider.of<ChatSocketViewModel>(Get.context, listen: false)
               ?.updateChatTotalCount(totalCountModelOn);
         }
-
       }
     });
   }
@@ -183,6 +184,26 @@ class _LandingScreenState extends State<LandingScreen> {
       if (notificationData.redirect == 'appointmentList') {
         landingViewModel.updateTabIndex(3);
         await PreferenceUtil.removeNotificationData();
+      } else if (notificationData.redirect == chat) {
+        if ((notificationData.doctorId ?? '').isNotEmpty &&
+            (notificationData.doctorName ?? '').isNotEmpty &&
+            (notificationData.doctorPicture ?? '').isNotEmpty) {
+          Get.to(
+            () => ChatDetail(
+              peerId: notificationData.doctorId,
+              peerName: notificationData.doctorName,
+              peerAvatar: notificationData.doctorPicture,
+              patientId: "",
+              patientName: "",
+              patientPicture: "",
+              isFromVideoCall: false,
+              isCareGiver: false,
+              isForGetUserId: true,
+            ),
+          );
+        } else {
+          Get.to(() => ChatUserList());
+        }
       }
     } catch (e) {
       //print(e.toString());
@@ -721,11 +742,9 @@ class _LandingScreenState extends State<LandingScreen> {
         CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
         _categoryListBlock.getCategoryLists().then((value) {});
-      } catch(e){
-      }
+      } catch (e) {}
 
       getFamilyRelationAndMediaType();
-
     } catch (e) {}
 
     try {
