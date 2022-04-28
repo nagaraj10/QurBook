@@ -65,8 +65,8 @@ class QurhomeDashboardController extends GetxController {
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "scanstarted":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            /*FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);*/
             break;
           case "connectionfailed":
             FlutterToast()
@@ -91,7 +91,7 @@ class QurhomeDashboardController extends GetxController {
                 ),
               );
             } else {
-              FlutterToast().getToast(
+              FlutterToast().getToastForLongTime(
                 'Connected Device is not Mapped for you',
                 Colors.red,
               );
