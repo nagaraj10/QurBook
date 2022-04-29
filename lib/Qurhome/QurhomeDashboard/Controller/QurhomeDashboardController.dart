@@ -83,8 +83,6 @@ class QurhomeDashboardController extends GetxController {
             if (!isFromVitalsList) {
               milliSeconds = 0;
               LoaderClass.hideLoadingDialog(Get.context);
-            } else {
-              //Navigator.pop(Get.context);
             }
             foundBLE.value = true;
             movedToNextScreen = true;

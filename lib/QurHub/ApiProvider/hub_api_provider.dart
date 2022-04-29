@@ -20,7 +20,7 @@ class HubApiProvider {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.get(
@@ -44,7 +44,7 @@ class HubApiProvider {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
-    // var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    // var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     var data = {
       "deviceId": deviceId,
       "deviceType": deviceType,
@@ -76,7 +76,7 @@ class HubApiProvider {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     var data = {"userHubId": hubId};
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
@@ -101,7 +101,7 @@ class HubApiProvider {
     http.Response responseJson;
     final url = qr_hub + '/';
     await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
 
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
