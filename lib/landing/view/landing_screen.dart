@@ -7,9 +7,9 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
-
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -754,6 +754,9 @@ class _LandingScreenState extends State<LandingScreen> {
         () {
           Get.lazyPut(
             () => QurhomeDashboardController(),
+          );
+          Get.lazyPut(
+            () => HubListController(),
           );
         },
       ),
