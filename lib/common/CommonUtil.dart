@@ -1309,6 +1309,38 @@ class CommonUtil {
     return updatedDate;
   }
 
+  regimentDateFormatV2(
+      DateTime newDateTime, {
+        bool isAck = false,
+        bool isLanding = false,
+      }) {
+    DateFormat newFormat;
+    var updatedDate = '';
+    final currentTime = DateTime.now();
+    if (newDateTime.day == currentTime.day &&
+        newDateTime.month == currentTime.month &&
+        newDateTime.year == currentTime.year) {
+      if (isAck) {
+        newFormat = DateFormat('hh:mm a');
+      } else if (isLanding) {
+        newFormat = DateFormat('HH:mm');
+      } else {
+        newFormat = DateFormat('MMM d, yyyy');
+      }
+    } else {
+      if (isAck) {
+        newFormat = DateFormat("MMM d, yyyy hh:mm a");
+      } else if (isLanding) {
+        newFormat = DateFormat('MMM d, HH:mm');
+      } else {
+        newFormat = DateFormat('EEE, MMM d, yyyy');
+      }
+    }
+    updatedDate = updatedDate + newFormat.format(newDateTime);
+    return updatedDate;
+  }
+
+
   dateTimeString(DateTime dateTime) {
     if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
       final newFormat = DateFormat('MMM d, yyyy hh:mm a');

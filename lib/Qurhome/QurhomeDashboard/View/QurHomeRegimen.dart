@@ -50,72 +50,119 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(() => controller.loadingData.isTrue
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : GetBuilder<QurhomeRegimenController>(
-              id: "newUpdate",
-              builder: (val) {
-                print("working builder");
-                return val.qurHomeRegimenResponseModel == null
-                    ? const Center(
-                        child: Text(
-                          'Please re-try after some time',
-                        ),
-                      )
-                    : val.qurHomeRegimenResponseModel.regimentsList.length != 0
-                        ? Container(
-                            child: PageView.builder(
-                              itemCount: val.qurHomeRegimenResponseModel
-                                  .regimentsList.length,
-                              scrollDirection: Axis.vertical,
-                              onPageChanged: (int index) {
-                                setState(() {
-                                  controller.currentIndex = index;
-                                });
-                              },
-                              controller: PageController(
-                                  initialPage: val.nextRegimenPosition,
-                                  viewportFraction: 0.15),
-                              itemBuilder:
-                                  (BuildContext context, int itemIndex) {
-                                return _buildCarouselItem(
-                                    context,
-                                    10,
-                                    itemIndex,
-                                    val.qurHomeRegimenResponseModel
-                                        .regimentsList[itemIndex],
-                                    val.nextRegimenPosition);
-                              },
+      body: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16.0),
+              child: Container(
+                height: 40,
+                width: 80,
+                decoration: const BoxDecoration(
+                  color:Color(0xFFFB5422),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(100),
+                    bottomRight: Radius.circular(100),
+                  ),
+                ),
+                child: Center(
+                  child: Text('SOS', style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold
+                  ),),
+                ),
+              ),
+            ),
+          ),
+          Obx(() => controller.loadingData.isTrue
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : GetBuilder<QurhomeRegimenController>(
+                  id: "newUpdate",
+                  builder: (val) {
+                    print("working builder");
+                    return val.qurHomeRegimenResponseModel == null
+                        ? const Center(
+                            child: Text(
+                              'Please re-try after some time',
                             ),
                           )
-                        : const Center(
-                            child: Text(
-                              'No activities scheduled today',
-                            ),
-                          );
-              })),
+                        : val.qurHomeRegimenResponseModel.regimentsList
+                                    .length !=
+                                0
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 50.0),
+                                child: Container(
+                                  child: PageView.builder(
+                                    itemCount: val.qurHomeRegimenResponseModel
+                                        .regimentsList.length,
+                                    scrollDirection: Axis.vertical,
+                                    onPageChanged: (int index) {
+                                      setState(() {
+                                        controller.currentIndex = index;
+                                      });
+                                    },
+                                    controller: PageController(
+                                        initialPage: val.nextRegimenPosition,
+                                        viewportFraction: 1 / 5),
+                                    itemBuilder:
+                                        (BuildContext context, int itemIndex) {
+                                      return _buildCarouselItem(
+                                          context,
+                                          itemIndex,
+                                          val.qurHomeRegimenResponseModel
+                                              .regimentsList[itemIndex],
+                                          val.nextRegimenPosition);
+                                    },
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Text(
+                                  'No activities scheduled today',
+                                ),
+                              );
+                  })),
+        ],
+      ),
     );
   }
 
-  Widget _buildCarouselItem(BuildContext context, int carouselIndex,
-      int itemIndex, RegimentDataModel regimen, int nextRegimenPosition) {
+  getCurrentRatio(int itemIndex) {
+    if (controller.currentIndex == itemIndex) {
+      return 1.0;
+    } else if ((controller.currentIndex - 1) == itemIndex ||
+        (controller.currentIndex + 1) == itemIndex) {
+      return 0.9;
+    } else if ((controller.currentIndex - 2) == itemIndex ||
+        (controller.currentIndex + 2) == itemIndex) {
+      return 0.8;
+    } else {
+      return 0.8;
+    }
+  }
+
+  Widget _buildCarouselItem(BuildContext context, int itemIndex,
+      RegimentDataModel regimen, int nextRegimenPosition) {
     return InkWell(
       onTap: () {
         showRegimenDialog(regimen, itemIndex);
       },
       child: Transform.scale(
-        scale: controller.currentIndex == itemIndex ? 1 : 0.9,
+        scale: getCurrentRatio(itemIndex),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
+                  color: Colors.grey.withOpacity(0.2),
                   spreadRadius: 5,
                   blurRadius: 7,
                   offset: Offset(0, 3), // changes position of shadow
@@ -134,15 +181,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
+                            Image.asset(
+                              'assets/Qurhome/seen.png',
+                              height: 12.0,
+                              width: 12.0,
+                              color: controller.currentIndex == itemIndex ||
+                                      nextRegimenPosition == itemIndex
+                                  ? Color(
+                                      CommonUtil().getQurhomePrimaryColor(),
+                                    )
+                                  : Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 2,
+                            ),
                             Text(
-                              '${CommonUtil().regimentDateFormat(
+                              '${CommonUtil().regimentDateFormatV2(
                                 regimen?.asNeeded
                                     ? regimen?.ack_local ?? DateTime.now()
                                     : regimen?.ack_local ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
-                                fontSize: 10.0,
+                                fontSize: 11.0,
                               ),
                             ),
                           ],
@@ -150,55 +211,49 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                       ),
                     )
                   },
-                  Row(
-                    children: [
-                      Text(
-                        regimen.estart != null
-                            ? DateFormat('hh:mm a').format(regimen.estart)
-                            : '',
-                        style: TextStyle(
-                            color: controller.currentIndex == itemIndex ||
-                                    nextRegimenPosition == itemIndex
-                                ? Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  )
-                                : Colors.grey,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      getIcon(regimen.activityname, regimen.uformname,
-                          regimen.metadata),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: Text(
-                                regimen.title,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    color:
-                                        controller.currentIndex == itemIndex ||
-                                                nextRegimenPosition == itemIndex
-                                            ? Color(
-                                                CommonUtil()
-                                                    .getQurhomeGredientColor(),
-                                              )
-                                            : Colors.grey,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ],
+                  Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Text(
+                          regimen.estart != null
+                              ? DateFormat('hh:mm a').format(regimen.estart)
+                              : '',
+                          style: TextStyle(
+                              color: controller.currentIndex == itemIndex ||
+                                      nextRegimenPosition == itemIndex
+                                  ? Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    )
+                                  : Colors.grey,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500),
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: 20,
+                        ),
+                        getIcon(regimen.activityname, regimen.uformname,
+                            regimen.metadata, itemIndex, nextRegimenPosition),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                          child: Text(
+                            regimen.title.toString().trim(),
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: controller.currentIndex == itemIndex ||
+                                        nextRegimenPosition == itemIndex
+                                    ? Color(
+                                        CommonUtil().getQurhomeGredientColor(),
+                                      )
+                                    : Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -209,8 +264,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     );
   }
 
-  dynamic getIcon(
-      Activityname activityname, Uformname uformName, Metadata metadata,
+  dynamic getIcon(Activityname activityname, Uformname uformName,
+      Metadata metadata, int itemIndex, int nextRegimenPosition,
       {double sizeOfIcon}) {
     final iconSize = sizeOfIcon ?? 40.0;
     try {
@@ -220,28 +275,37 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
-            ),
+            color: controller.currentIndex == itemIndex ||
+                    nextRegimenPosition == itemIndex
+                ? Color(
+                    CommonUtil().getQurhomePrimaryColor(),
+                  )
+                : Colors.grey,
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
-            ),
+            color: controller.currentIndex == itemIndex ||
+                    nextRegimenPosition == itemIndex
+                ? Color(
+                    CommonUtil().getQurhomePrimaryColor(),
+                  )
+                : Colors.grey,
             errorWidget: (context, url, error) {
-              return getDefaultIcon(activityname, uformName, iconSize);
+              return getDefaultIcon(activityname, uformName, iconSize,
+                  itemIndex, nextRegimenPosition);
             },
           );
         }
       } else {
-        return getDefaultIcon(activityname, uformName, iconSize);
+        return getDefaultIcon(
+            activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
       }
     } catch (e) {
-      return getDefaultIcon(activityname, uformName, iconSize);
+      return getDefaultIcon(
+          activityname, uformName, iconSize, itemIndex, nextRegimenPosition);
     }
   }
 
@@ -249,6 +313,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     Activityname activityname,
     Uformname uformName,
     double iconSize,
+    int itemIndex,
+    int nextRegimenPosition,
   ) {
     var isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb.png';
@@ -267,7 +333,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           isDefault = false;
           cardIcon = 'assets/devices/os_dashboard.png';
         } else {
-          cardIcon = 'assets/launcher/myfhb.png';
+          cardIcon = 'assets/Qurhome/Qurhome.png';
         }
         break;
       case Activityname.MEDICATION:
@@ -277,7 +343,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         cardIcon = Icons.screen_search_desktop;
         break;
       default:
-        cardIcon = 'assets/launcher/myfhb.png';
+        cardIcon = 'assets/Qurhome/Qurhome.png';
     }
     var cardIconWidget = (cardIcon is String)
         ? Image.asset(
@@ -288,9 +354,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         : Icon(
             cardIcon,
             size: iconSize - 5.0,
-            color: Color(
-              CommonUtil().getQurhomeGredientColor(),
-            ),
+            color: controller.currentIndex == itemIndex ||
+                    nextRegimenPosition == itemIndex
+                ? Color(
+                    CommonUtil().getQurhomePrimaryColor(),
+                  )
+                : Colors.grey,
           );
     return cardIconWidget;
   }
@@ -337,7 +406,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                     child: Row(
                       children: [
                         getIcon(regimen.activityname, regimen.uformname,
-                            regimen.metadata,
+                            regimen.metadata, index, 0,
                             sizeOfIcon: 30),
                         SizedBox(
                           width: 10,
@@ -574,7 +643,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
               "oxygen".toLowerCase()) &&
           (dashboardController != null)) {
-        dashboardController.checkForConnectedDevices(false);
+        dashboardController.checkForConnectedDevices();
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
