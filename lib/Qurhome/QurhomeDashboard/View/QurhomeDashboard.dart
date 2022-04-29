@@ -106,7 +106,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       if(controller.currentSelectedIndex.value==0||controller.currentSelectedIndex.value==1)...{
                         SizedBox(height: 3),
                         Text(
-                          getFormatedDate(),
+                          'Today, '+getFormatedDate(),
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey,
