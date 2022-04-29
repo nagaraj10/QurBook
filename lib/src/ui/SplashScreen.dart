@@ -185,16 +185,19 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle != '') {
                         var chatParsedData = widget.bundle?.split('&');
                         Get.to(() => ChatDetail(
-                              peerId: chatParsedData[2],
-                              peerName: chatParsedData[3],
-                              peerAvatar: chatParsedData[4],
-                              groupId: chatParsedData[5],
-                              patientId: '',
-                              patientName: '',
-                              patientPicture: '',
-                              isFromVideoCall: false,
-                              isCareGiver: false,
-                            ));
+                                  peerId: chatParsedData[2],
+                                  peerName: chatParsedData[3],
+                                  peerAvatar: chatParsedData[4],
+                                  groupId: chatParsedData[5],
+                                  patientId: '',
+                                  patientName: '',
+                                  patientPicture: '',
+                                  isFromVideoCall: false,
+                                  isCareGiver: false,
+                                ))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                        ;
                       } else {
                         Get.to(ChatUserList()).then((value) =>
                             PageNavigator.goToPermanent(

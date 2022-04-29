@@ -742,16 +742,19 @@ class _MyFHBState extends State<MyFHB> {
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));*/
           Get.to(() => ChatDetail(
-                peerId: passedValArr[2],
-                peerName: passedValArr[3],
-                peerAvatar: passedValArr[4],
-                groupId: passedValArr[5],
-                patientId: '',
-                patientName: '',
-                patientPicture: '',
-                isFromVideoCall: false,
-                isCareGiver: false,
-              ));
+                    peerId: passedValArr[2],
+                    peerName: passedValArr[3],
+                    peerAvatar: passedValArr[4],
+                    groupId: passedValArr[5],
+                    patientId: '',
+                    patientName: '',
+                    patientPicture: '',
+                    isFromVideoCall: false,
+                    isCareGiver: false,
+                  ))
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
+          ;
         } else if (passedValArr[1] == 'mycart') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
