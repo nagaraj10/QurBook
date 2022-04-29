@@ -258,8 +258,8 @@ class _HubListScreenState extends State<HubListScreen> {
         }
       },
       child: Container(
-        width: 200.0.w,
-        height: 45.0.h,
+        width: 250.0.w,
+        height: 48.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -298,8 +298,8 @@ class _HubListScreenState extends State<HubListScreen> {
         }
       },
       child: Container(
-        width: 220.0.w,
-        height: 45.0.h,
+        width: 260.0.w,
+        height: 48.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(10)),

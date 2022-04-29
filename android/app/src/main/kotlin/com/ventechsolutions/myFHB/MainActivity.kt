@@ -496,7 +496,9 @@ class MainActivity : FlutterActivity() {
             {
                 scanningBleTimer.cancel();
             }
-            BleManager.getInstance().cancelScan()
+            Handler().postDelayed({
+                BleManager.getInstance().cancelScan()
+            }, 1000)
         }catch (ex:Exception){
             Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
@@ -515,9 +517,9 @@ class MainActivity : FlutterActivity() {
                 override fun onScanFinished(scanResultList: List<BleDevice?>) {
                     Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
                     Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
-                    if (autoRepeatScan == 1) {
+                    /*if (autoRepeatScan == 1) {
                         startScanTimer()
-                    }
+                    }*/
                     //stopScan()
                 }
 

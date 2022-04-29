@@ -60,18 +60,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                 height: 40,
                 width: 80,
                 decoration: const BoxDecoration(
-                  color:Color(0xFFFB5422),
+                  color: Color(0xFFFB5422),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(100),
                     bottomRight: Radius.circular(100),
                   ),
                 ),
                 child: Center(
-                  child: Text('SOS', style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold
-                  ),),
+                  child: Text(
+                    'SOS',
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ),
@@ -643,7 +645,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
               "oxygen".toLowerCase()) &&
           (dashboardController != null)) {
-        dashboardController.checkForConnectedDevices();
+        dashboardController.checkForConnectedDevices(false);
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);

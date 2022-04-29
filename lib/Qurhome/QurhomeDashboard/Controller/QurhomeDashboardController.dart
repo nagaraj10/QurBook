@@ -21,7 +21,7 @@ class QurhomeDashboardController extends GetxController {
   var appBarTitle = ' '.obs;
   static const stream = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
-  var foundBLE = false;
+  var foundBLE = false.obs;
   var movedToNextScreen = false;
   String bleMacId;
   HubListController hubController;
@@ -50,8 +50,9 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  void _enableTimer() {
+  void _enableTimer(bool isFromVitalsList) {
     _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
+      int milliSeconds = 100;
       print(val);
       List<String> receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
@@ -79,18 +80,25 @@ class QurhomeDashboardController extends GetxController {
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-
-            LoaderClass.hideLoadingDialog(Get.context);
-            foundBLE = true;
+            if (!isFromVitalsList) {
+              milliSeconds = 0;
+              LoaderClass.hideLoadingDialog(Get.context);
+            } else {
+              //Navigator.pop(Get.context);
+            }
+            foundBLE.value = true;
             movedToNextScreen = true;
             _disableTimer();
             if (checkForParedDevice()) {
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  takeActiveDeviceReadings: true,
-                ),
-              );
+              Future.delayed(Duration(milliseconds: milliSeconds))
+                  .then((value) {
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    takeActiveDeviceReadings: true,
+                  ),
+                );
+              });
             } else {
               FlutterToast().getToastForLongTime(
                 'No device found',
@@ -137,26 +145,36 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  void checkForConnectedDevices() {
-    LoaderClass.showLoadingDialog(Get.context);
-    foundBLE = false;
-    movedToNextScreen = false;
-    _enableTimer();
-    BleConnectController bleController = Get.put(BleConnectController());
-    bleController.getBleConnectData(Get.context);
-    Future.delayed(const Duration(seconds: 10)).then((value) {
-      if (!foundBLE && !movedToNextScreen) {
-        LoaderClass.hideLoadingDialog(Get.context);
-        _disableTimer();
-        //Device Not Connected
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForpo,
-          ),
-        );
+  void checkForConnectedDevices(bool isFromVitalsList) {
+    try {
+      int seconds = 30;
+      if (!isFromVitalsList) {
+        seconds = 10;
+        LoaderClass.showLoadingDialog(Get.context);
       }
-    });
+      foundBLE.value = false;
+      movedToNextScreen = false;
+      _enableTimer(isFromVitalsList);
+      BleConnectController bleController = Get.put(BleConnectController());
+      bleController.getBleConnectData(Get.context);
+      Future.delayed(Duration(seconds: seconds)).then((value) {
+        if (!foundBLE.value && !movedToNextScreen) {
+          _disableTimer();
+          if (!isFromVitalsList) {
+            LoaderClass.hideLoadingDialog(Get.context);
+            //Device Not Connected
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                sheelaInputs: requestSheelaForpo,
+              ),
+            );
+          }
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void updateTabIndex(int newIndex) {

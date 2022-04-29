@@ -343,7 +343,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
                   selectedId = user.child.id;
                 }
               } else {
-                selectedId = createdBy;
+                selectedId = user.id;
               }
             });
           },

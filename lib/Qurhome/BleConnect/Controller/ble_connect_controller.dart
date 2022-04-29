@@ -52,7 +52,7 @@ class BleConnectController extends GetxController {
         } else if (result != null &&
             validString(result.toString().toLowerCase())
                 .contains("connected")) {
-          toast.getToast(validString(result.toString()), Colors.green);
+          //toast.getToast(validString(result.toString()), Colors.green);
         } else {
           loadingData.value = false;
           errorMessage.value =
