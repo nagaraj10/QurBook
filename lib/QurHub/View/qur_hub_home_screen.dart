@@ -82,8 +82,9 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
         }
       },
       child: Container(
-        width: 200.0.w,
-        height: 45.0.h,
+        width: 250.0.w,
+        //height: 45.0.h,
+        padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -131,8 +132,9 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
         }
       },
       child: Container(
-        width: 200.0.w,
-        height: 45.0.h,
+        width: 250.0.w,
+        //height: 45.0.h,
+        padding: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(10)),

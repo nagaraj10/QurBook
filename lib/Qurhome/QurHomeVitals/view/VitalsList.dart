@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
@@ -119,6 +120,8 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
   @override
   void initState() {
     try {
@@ -171,7 +174,12 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
         showSearchingBleDialog(context);
         controller.updateisShowTimerDialog(false);
         await Future.delayed(Duration(seconds: 1));
-        controller.checkForConnectedDevices(animationController, _events);
+        qurhomeDashboardController.checkForConnectedDevices(true);
+        qurhomeDashboardController.foundBLE.listen((val) {
+          if (val) {
+            closeDialog();
+          }
+        });
       }
     } catch (e) {
       print(e);
@@ -181,17 +189,30 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   void notify() {
     try {
       if (_counter == 0) {
-        Timer(Duration(milliseconds: 1000), () {
-          if (animationController.isAnimating) {
-            animationController.stop();
-          }
-        });
-        _events.close();
-        Navigator.pop(context);
-        if (!controller.foundBLE.value) {
+        closeDialog();
+        if (!qurhomeDashboardController.foundBLE.value) {
           toast.getToast(NoDeviceFound, Colors.red);
         }
       }
+      /*else {
+        if (qurhomeDashboardController.foundBLE) {
+          closeDialog();
+        }
+      }*/
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void closeDialog() {
+    try {
+      Timer(Duration(milliseconds: 1000), () {
+        if (animationController.isAnimating) {
+          animationController.stop();
+        }
+      });
+      _events.close();
+      Navigator.pop(Get.context);
     } catch (e) {
       print(e);
     }

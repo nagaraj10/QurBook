@@ -37,7 +37,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   final controller = Get.put(QurhomeRegimenController());
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
-  String snoozeValue="5 mins";
+  String snoozeValue = "5 mins";
   List<RegimentDataModel> regimenList = [];
 
   @override
@@ -103,7 +103,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       int itemIndex, RegimentDataModel regimen, int nextRegimenPosition) {
     return InkWell(
       onTap: () {
-        showRegimenDialog(regimen,itemIndex);
+        showRegimenDialog(regimen, itemIndex);
       },
       child: Transform.scale(
         scale: controller.currentIndex == itemIndex ? 1 : 0.9,
@@ -126,10 +126,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Stack(
                 children: [
-                  if(regimen.ack_local != null)...{
+                  if (regimen.ack_local != null) ...{
                     Align(
                       alignment: Alignment.bottomRight,
-                      child:Visibility(
+                      child: Visibility(
                         visible: regimen.ack_local != null,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -137,10 +137,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             Text(
                               '${CommonUtil().regimentDateFormat(
                                 regimen?.asNeeded
-                                    ? regimen?.ack_local ??
-                                    DateTime.now()
-                                    : regimen?.ack_local ??
-                                    DateTime.now(),
+                                    ? regimen?.ack_local ?? DateTime.now()
+                                    : regimen?.ack_local ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
@@ -152,7 +150,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                       ),
                     )
                   },
-
                   Row(
                     children: [
                       Text(
@@ -166,7 +163,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                     CommonUtil().getQurhomeGredientColor(),
                                   )
                                 : Colors.grey,
-                            fontSize: 15,fontWeight: FontWeight.w500),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500),
                       ),
                       SizedBox(
                         width: 20,
@@ -185,12 +183,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                 regimen.title,
                                 maxLines: 2,
                                 style: TextStyle(
-                                    color: controller.currentIndex == itemIndex ||
-                                        nextRegimenPosition == itemIndex
-                                        ? Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    )
-                                        : Colors.grey,
+                                    color:
+                                        controller.currentIndex == itemIndex ||
+                                                nextRegimenPosition == itemIndex
+                                            ? Color(
+                                                CommonUtil()
+                                                    .getQurhomeGredientColor(),
+                                              )
+                                            : Colors.grey,
                                     fontSize: 15,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -326,214 +326,216 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     showDialog(
         context: context,
         builder: (__) {
-          return StatefulBuilder(
-            builder: (_, setState) {
-              return AlertDialog(
-                  contentPadding: EdgeInsets.all(0),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          children: [
-                            getIcon(regimen.activityname, regimen.uformname,
-                                regimen.metadata,
-                                sizeOfIcon: 30),
-                            SizedBox(
-                              width: 10,
+          return StatefulBuilder(builder: (_, setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Row(
+                      children: [
+                        getIcon(regimen.activityname, regimen.uformname,
+                            regimen.metadata,
+                            sizeOfIcon: 30),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              getFormatedTitle(regimen.title),
+                              style: TextStyle(
+                                  color: Color(
+                                    CommonUtil().getQurhomeGredientColor(),
+                                  ),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
                             ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  getFormatedTitle(regimen.title),
-                                  style: TextStyle(
-                                      color: Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      ),
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                              ),
+                          ),
+                        ),
+                        if (regimen?.activityOrgin != strAppointmentRegimen)
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 10.0,
                             ),
-                            if (regimen?.activityOrgin != strAppointmentRegimen)
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (regimen.isPlaying) {
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  if (regimen.isPlaying) {
+                                    stopRegimenTTS();
+                                    regimen.isPlaying = false;
+                                    setState(() {});
+                                  } else {
+                                    stopRegimenTTS();
+                                    regimen.isPlaying = true;
+                                    setState(() {});
+                                    Provider.of<ChatScreenViewModel>(
+                                            Get.context,
+                                            listen: false)
+                                        ?.startTTSEngine(
+                                      textToSpeak: regimen?.title ?? '',
+                                      dynamicText:
+                                          regimen?.sayTextDynamic ?? '',
+                                      isRegiment: true,
+                                      onStop: () {
                                         stopRegimenTTS();
                                         regimen.isPlaying = false;
-                                        setState(() {
-                                        });
-                                      } else {
-                                        stopRegimenTTS();
-                                        regimen.isPlaying = true;
-                                        setState(() {
-
-                                        });
-                                        Provider.of<ChatScreenViewModel>(Get.context, listen: false)
-                                            ?.startTTSEngine(
-                                          textToSpeak: regimen?.title ?? '',
-                                          dynamicText: regimen?.sayTextDynamic ?? '',
-                                          isRegiment: true,
-                                          onStop: () {
-                                            stopRegimenTTS();
-                                            regimen.isPlaying = false;
-                                            setState(() {
-                                            });
-                                          },
-                                        );
-                                      }
-                                    },
-                                    child: Icon(
-                                      regimen.isPlaying
-                                          ? Icons.stop_circle_outlined
-                                          : Icons.play_circle_fill_rounded,
-                                      size: 30.0,
-                                      color: Color(CommonUtil().getQurhomePrimaryColor()),
-                                    ),
-                                  ),
+                                        setState(() {});
+                                      },
+                                    );
+                                  }
+                                },
+                                child: Icon(
+                                  regimen.isPlaying
+                                      ? Icons.stop_circle_outlined
+                                      : Icons.play_circle_fill_rounded,
+                                  size: 30.0,
+                                  color: Color(
+                                      CommonUtil().getQurhomePrimaryColor()),
                                 ),
                               ),
-                          ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Center(
+                              child: InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                          if (regimen.hasform) {
+                            onCardPressed(context, regimen,
+                                aid: regimen.aid,
+                                uid: regimen.uid,
+                                formId: regimen.uformid,
+                                formName: regimen.uformname);
+                          } else {
+                            callLogApi(regimen);
+                          }
+                        },
+                        child: Image.asset(
+                          'assets/Qurhome/accept.png',
+                          height: 50,
+                          width: 50,
                         ),
-                      ),
-                      Container(
-                        height: 1,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Center(
-                                  child: InkWell(
+                      ))),
+                      Expanded(
+                        child: Center(
+                          child: InkWell(
                             onTap: () {
                               Navigator.pop(context);
-                              if (regimen.hasform) {
-                                onCardPressed(context, regimen,
-                                    aid: regimen.aid,
-                                    uid: regimen.uid,
-                                    formId: regimen.uformid,
-                                    formName: regimen.uformname);
-                              } else {
-                                callLogApi(regimen);
-                              }
                             },
                             child: Image.asset(
-                              'assets/Qurhome/accept.png',
+                              'assets/Qurhome/remove.png',
                               height: 50,
                               width: 50,
                             ),
-                          ))),
-                          Expanded(
-                              child: Center(
-                                  child: InkWell(
-                                    onTap: (){
-                                      Navigator.pop(context);
-                                    },
-                                    child: Image.asset(
-                            'assets/Qurhome/remove.png',
-                            height: 50,
-                            width: 50,
                           ),
-                                  ),),),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Column(
-                              children: [
-                                Text('Remind me in'),
-                                // Container(
-                                //   color: Colors.grey,
-                                //   height: 1,
-                                //   width: 110,
-                                // )
-                              ],
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Stack(
-                              children: [
-                                DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value: snoozeValue,
-                                    elevation: 16,
-                                    onChanged: (String newValue) {
-                                      setState(() {
-                                        snoozeValue = newValue;
-                                      });
-                                    },
-                                    items: <String>[
-                                      '5 mins',
-                                      '10 mins',
-                                      '15 mins',
-                                      '20 mins'
-                                    ].map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 36.0),
-                                  child: Container(
-                                    color: Colors.grey,
-                                    height: 1,
-                                    width: 78,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
                         ),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          var time=snoozeValue.split(" ");
-                          Reminder reminder=Reminder();
-                          reminder.uformname=regimen.uformname.toString();
-                          reminder.activityname=regimen.activityname.toString();
-                          reminder.title=regimen.title.toString();
-                          reminder.description=regimen.description.toString();
-                          reminder.eid=regimen.eid.toString();
-                          reminder.estart=regimen.estart.add( Duration(minutes: int.parse(time[0]))).toString();
-                          reminder.remindin=regimen.remindin.toString();
-                          reminder.remindbefore=regimen.remindin.toString();
-                          List<Reminder> data=[reminder];
-                          QurPlanReminders.updateReminderswithLocal(data);
-                          Navigator.pop(context);
-                        },
-                        child: Text('Snooze'),
-                        style: ElevatedButton.styleFrom(
-                            primary: Color(CommonUtil().getQurhomePrimaryColor())),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      )
                     ],
                   ),
-                );
-            }
-          );}
-    );
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          children: [
+                            Text('Remind me in'),
+                            // Container(
+                            //   color: Colors.grey,
+                            //   height: 1,
+                            //   width: 110,
+                            // )
+                          ],
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Stack(
+                          children: [
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: snoozeValue,
+                                elevation: 16,
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    snoozeValue = newValue;
+                                  });
+                                },
+                                items: <String>[
+                                  '5 mins',
+                                  '10 mins',
+                                  '15 mins',
+                                  '20 mins'
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 36.0),
+                              child: Container(
+                                color: Colors.grey,
+                                height: 1,
+                                width: 78,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      var time = snoozeValue.split(" ");
+                      Reminder reminder = Reminder();
+                      reminder.uformname = regimen.uformname.toString();
+                      reminder.activityname = regimen.activityname.toString();
+                      reminder.title = regimen.title.toString();
+                      reminder.description = regimen.description.toString();
+                      reminder.eid = regimen.eid.toString();
+                      reminder.estart = regimen.estart
+                          .add(Duration(minutes: int.parse(time[0])))
+                          .toString();
+                      reminder.remindin = regimen.remindin.toString();
+                      reminder.remindbefore = regimen.remindin.toString();
+                      List<Reminder> data = [reminder];
+                      QurPlanReminders.updateReminderswithLocal(data);
+                      Navigator.pop(context);
+                    },
+                    child: Text('Snooze'),
+                    style: ElevatedButton.styleFrom(
+                        primary: Color(CommonUtil().getQurhomePrimaryColor())),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
+              ),
+            );
+          });
+        });
   }
 
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
@@ -564,45 +566,43 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
     if (fieldsResponseModel.isSuccess &&
         (fieldsResponseModel.result.fields.isNotEmpty ||
-            regimen.otherinfo.toJson().toString().contains('1'))
-        && Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
-            RegimentStatus.DialogOpened
-    ) {
+            regimen.otherinfo.toJson().toString().contains('1')) &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
+            RegimentStatus.DialogOpened) {
       var dashboardController = Get.find<QurhomeDashboardController>();
       if (((fieldsResponseModel.result.fields.first.title ?? '').isNotEmpty) &&
           (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
               "oxygen".toLowerCase()) &&
           (dashboardController != null)) {
-        dashboardController.checkForConnectedDevices();
+        dashboardController.checkForConnectedDevices(false);
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogOpened);
-      var value = await showDialog(
-        context: context,
-        builder: (_) =>
-            FormDataDialog(
-              fieldsData: fieldsResponseModel.result.fields,
-              eid: eventId,
-              color: Color(CommonUtil().getQurhomePrimaryColor()),
-              mediaData: regimen.otherinfo,
-              formTitle: getDialogTitle(context, regimen),
-              canEdit: canEdit || isValidSymptom(context),
-              isFromQurHomeSymptom: false,
-              isFromQurHomeRegimen:true,
-              triggerAction: (String triggerEventId, String followContext) {
-                Provider.of<RegimentViewModel>(Get.context, listen: false)
-                    .updateRegimentStatus(RegimentStatus.DialogClosed);
-                Get.back();
-                onCardPressed(
-                  Get.context,
-                  regimen,
-                  eventIdReturn: triggerEventId,
-                  followEventContext: followContext,
-                );
-              },
-              followEventContext: followEventContext,
-              isFollowEvent: eventIdReturn != null,
-            ),
+            .updateRegimentStatus(RegimentStatus.DialogOpened);
+        var value = await showDialog(
+          context: context,
+          builder: (_) => FormDataDialog(
+            fieldsData: fieldsResponseModel.result.fields,
+            eid: eventId,
+            color: Color(CommonUtil().getQurhomePrimaryColor()),
+            mediaData: regimen.otherinfo,
+            formTitle: getDialogTitle(context, regimen),
+            canEdit: canEdit || isValidSymptom(context),
+            isFromQurHomeSymptom: false,
+            isFromQurHomeRegimen: true,
+            triggerAction: (String triggerEventId, String followContext) {
+              Provider.of<RegimentViewModel>(Get.context, listen: false)
+                  .updateRegimentStatus(RegimentStatus.DialogClosed);
+              Get.back();
+              onCardPressed(
+                Get.context,
+                regimen,
+                eventIdReturn: triggerEventId,
+                followEventContext: followContext,
+              );
+            },
+            followEventContext: followEventContext,
+            isFollowEvent: eventIdReturn != null,
+          ),
         );
         if (value != null && (value ?? false)) {
           // LoaderClass.showLoadingDialog(
