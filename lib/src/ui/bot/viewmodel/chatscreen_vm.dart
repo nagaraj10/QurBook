@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
@@ -93,6 +94,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
+  HubListController hublistController;
+
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     if (disableMic) {
       isLoading = true;
@@ -211,9 +214,12 @@ class ChatScreenViewModel extends ChangeNotifier {
       disposeTimer();
       // addToSheelaConversation(text: "Uploading your data");
       try {
+        hublistController = Get.find<HubListController>();
         var model = BleDataModel.fromJson(
           jsonDecode(data),
         );
+        model.hubId = hublistController.virtualHubId;
+        model.deviceId = hublistController.bleMacId.value;
         await Future.delayed(Duration(
           seconds: 2,
         ));
