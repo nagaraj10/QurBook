@@ -74,6 +74,7 @@ class QurhomeDashboardController extends GetxController {
             break;
           case "macid":
             bleMacId = validString(receivedValues.last);
+            hubController.bleMacId.value = bleMacId;
             break;
           case "connected":
             // FlutterToast()
