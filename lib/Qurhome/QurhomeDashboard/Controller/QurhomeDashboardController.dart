@@ -92,7 +92,7 @@ class QurhomeDashboardController extends GetxController {
               );
             } else {
               FlutterToast().getToast(
-                'Connected Device is not Mapped for you',
+                'No device found',
                 Colors.red,
               );
             }
