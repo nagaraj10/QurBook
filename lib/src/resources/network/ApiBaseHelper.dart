@@ -1815,6 +1815,7 @@ class ApiBaseHelper {
         formData = FormData.fromMap({
           'folderName': 'event',
           'userId': userId,
+          'userLinkId': userId,
         });
 
         var fileName = File(imagePaths);
