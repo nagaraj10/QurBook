@@ -34,6 +34,7 @@ class HubListController extends GetxController {
   var bleMacId = "".obs;
   var bleDeviceType = "".obs;
   var hubId = "".obs;
+  var virtualHubId = "";
 
   getHubList() async {
     try {
@@ -43,6 +44,7 @@ class HubListController extends GetxController {
         // failed to get the data, we are showing the error on UI
       } else {
         hubListResponse = HubListResponse.fromJson(json.decode(response.body));
+        virtualHubId = hubListResponse.result.hub.serialNumber;
       }
       loadingData.value = false;
       update(["newUpdate"]);
