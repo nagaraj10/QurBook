@@ -854,7 +854,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         myProfile.lastName != null) {
       return Text(
         myProfile.firstName[0].toUpperCase() +
-            myProfile.lastName[0].toUpperCase(),
+            (myProfile.lastName.length>0?myProfile.lastName[0].toUpperCase():''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,

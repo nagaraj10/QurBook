@@ -1452,7 +1452,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         myProfile.lastName != null) {
       return Text(
         myProfile.firstName[0].toUpperCase() +
-            myProfile.lastName[0].toUpperCase(),
+            (myProfile.lastName.length>0?myProfile.lastName[0].toUpperCase():''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 28.0.sp,

@@ -2108,8 +2108,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.sharedbyme.child.lastName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase() +
-                            widget.arguments.sharedbyme.child.lastName[0]
-                                .toUpperCase()
+                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                            .toUpperCase():'')
                         : widget.arguments.sharedbyme.child.firstName != null
                             ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase()
@@ -2129,8 +2129,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.sharedbyme.child.lastName != null
                       ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase() +
-                          widget.arguments.sharedbyme.child.lastName[0]
-                              .toUpperCase()
+                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                          .toUpperCase():'')
                       : widget.arguments.sharedbyme.child.firstName != null
                           ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase()
@@ -2152,8 +2152,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.sharedbyme.child.lastName != null
                     ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase() +
-                        widget.arguments.sharedbyme.child.lastName[0]
-                            .toUpperCase()
+                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                        .toUpperCase():'')
                     : widget.arguments.sharedbyme.child.firstName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase()
@@ -2196,8 +2196,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.myProfileResult.lastName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase() +
-                            widget.arguments.myProfileResult.lastName[0]
-                                .toUpperCase()
+                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                            .toUpperCase():'')
                         : widget.arguments.myProfileResult.firstName != null
                             ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase()
@@ -2217,8 +2217,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.myProfileResult.lastName != null
                       ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase() +
-                          widget.arguments.myProfileResult.lastName[0]
-                              .toUpperCase()
+                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                          .toUpperCase():'')
                       : widget.arguments.myProfileResult.firstName != null
                           ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase()
@@ -2240,8 +2240,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.myProfileResult.lastName != null
                     ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase() +
-                        widget.arguments.myProfileResult.lastName[0]
-                            .toUpperCase()
+                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
+                        .toUpperCase():'')
                     : widget.arguments.myProfileResult.firstName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase()
