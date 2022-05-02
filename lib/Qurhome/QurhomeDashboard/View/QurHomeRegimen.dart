@@ -14,6 +14,9 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_qurhub_response_model.dart';
@@ -414,31 +417,30 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                           width: 10,
                         ),
                         Expanded(
-                          child: Column(children:[
-                            Center(
-                              child: Text(
-                                regimen.title.toString().trim(),
-                                style: TextStyle(
-                                    color: Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    ),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400),
-                              ),
+                            child: Column(children: [
+                          Center(
+                            child: Text(
+                              regimen.title.toString().trim(),
+                              style: TextStyle(
+                                  color: Color(
+                                    CommonUtil().getQurhomeGredientColor(),
+                                  ),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
                             ),
-                            Center(
-                              child: Text(
-                                regimen.estart != null
-                                    ? DateFormat('hh:mm a').format(regimen.estart)
-                                    : '',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
+                          ),
+                          Center(
+                            child: Text(
+                              regimen.estart != null
+                                  ? DateFormat('hh:mm a').format(regimen.estart)
+                                  : '',
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500),
                             ),
-                          ])
-                        ),
+                          ),
+                        ])),
                         if (regimen?.activityOrgin != strAppointmentRegimen)
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -622,6 +624,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         });
   }
 
+  String removeAllWhitespaces(String string) {
+    return string.replaceAll(' ', '');
+  }
+
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
       {String eventIdReturn,
       String followEventContext,
@@ -654,11 +660,45 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
       var dashboardController = Get.find<QurhomeDashboardController>();
-      if (((fieldsResponseModel.result.fields.first.title ?? '').isNotEmpty) &&
-          (fieldsResponseModel.result.fields.first.title.toLowerCase() ==
-              "oxygen".toLowerCase()) &&
-          (dashboardController != null)) {
+      if (((regimen.title ?? '').isNotEmpty) &&
+          ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
+              (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
+        var dashboardController = Get.find<QurhomeDashboardController>();
         dashboardController.checkForConnectedDevices(false);
+      } else if (((regimen.title ?? '').isNotEmpty) &&
+          (removeAllWhitespaces(regimen.title).toLowerCase() ==
+              "bloodpressure")) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            sheelaInputs: requestSheelaForbp,
+          ),
+        );
+      } else if (((regimen.title ?? '').isNotEmpty) &&
+          (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            sheelaInputs: requestSheelaForweight,
+          ),
+        );
+      } else if (((regimen.title ?? '').isNotEmpty) &&
+          (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            sheelaInputs: requestSheelaForglucose,
+          ),
+        );
+      } else if (((regimen.title ?? '').isNotEmpty) &&
+          (removeAllWhitespaces(regimen.title).toLowerCase() ==
+              "temperature")) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            sheelaInputs: requestSheelaFortemperature,
+          ),
+        );
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
