@@ -414,17 +414,30 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                           width: 10,
                         ),
                         Expanded(
-                          child: Center(
-                            child: Text(
-                              getFormatedTitle(regimen.title),
-                              style: TextStyle(
-                                  color: Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  ),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
+                          child: Column(children:[
+                            Center(
+                              child: Text(
+                                regimen.title.toString().trim(),
+                                style: TextStyle(
+                                    color: Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    ),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
                             ),
-                          ),
+                            Center(
+                              child: Text(
+                                regimen.estart != null
+                                    ? DateFormat('hh:mm a').format(regimen.estart)
+                                    : '',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ])
                         ),
                         if (regimen?.activityOrgin != strAppointmentRegimen)
                           Padding(
