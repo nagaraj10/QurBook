@@ -1107,7 +1107,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result.lastName != null) {
     return Text(
       myProfile.result.firstName[0].toUpperCase() +
-          myProfile.result.lastName[0].toUpperCase(),
+          (myProfile.result.lastName.length>0?myProfile.result.lastName[0].toUpperCase():''),
       style: TextStyle(
         color: Colors.white,
         fontSize: 22.0.sp,
@@ -1142,7 +1142,7 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
       myProfile.result.lastName != null) {
     return Text(
       myProfile.result.firstName[0].toUpperCase() +
-          myProfile.result.lastName[0].toUpperCase(),
+          (myProfile.result.lastName.length>0?myProfile.result.lastName[0].toUpperCase():''),
       style: TextStyle(
         color: textColor ?? Colors.white,
         fontSize: 28.0.sp,
