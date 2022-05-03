@@ -15,6 +15,8 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.d
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/view/widgets/media_icon_widget.dart';
+import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 
 import 'package:myfhb/constants/variable_constant.dart';
@@ -491,6 +493,33 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   Container(
                     height: 1,
                     color: Colors.grey,
+                  ),
+                  Visibility(
+                    visible: regimen.hashtml,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 5,
+                        ),
+                        MediaIconWidget(
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
+                          icon: Icons.menu_book_rounded,
+                          onPressed: () {
+                            Get.to(
+                              RegimentWebView(
+                                title: regimen.title.toString().trim(),
+                                selectedUrl: regimen?.htmltemplate,
+                              ),
+                            );
+                            // CommonUtil().openWebViewNew(
+                            //   regimentData.title,
+                            //   regimentData.htmltemplate,
+                            //   true,
+                            // );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 30,
