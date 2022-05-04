@@ -806,7 +806,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
-  void openAlertDialogBasedOnRecordDetails() {
+  void openAlertDialogBasedOnRecordDetails() async {
     categoryName = widget.data.metadata.healthRecordCategory.categoryName;
 
     if (widget.data.metadata.doctor != null) {
@@ -820,9 +820,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
     createdDateMethod();
 
-    tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    heightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
+    tempUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    weightUnit =await PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    heightUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
 
     if (categoryName != Constants.STR_DEVICES) {
       var date = widget.data.metadata.dateOfVisit ?? '';

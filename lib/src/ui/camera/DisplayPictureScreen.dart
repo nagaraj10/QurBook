@@ -207,12 +207,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   saveMediaDialog(
-      BuildContext context, String categoryName, String deviceName) {
+      BuildContext context, String categoryName, String deviceName) async {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
-    tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
-    weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    heightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
+    tempUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    weightUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    heightUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_HEIGHT);
 
     audioPath = '';
     containsAudio = false;
