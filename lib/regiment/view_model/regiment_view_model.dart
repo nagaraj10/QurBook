@@ -407,7 +407,7 @@ class RegimentViewModel extends ChangeNotifier {
   }) async {
     LoaderClass.showLoadingDialog(
       Get.context,
-      canDismiss: false,
+      canDismiss: true,
     );
     var response = await RegimentService.getFormData(
       eid: eid,

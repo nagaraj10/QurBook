@@ -1799,7 +1799,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveRegimentMedia(
-      String url, String imagePaths, String userId) async {
+      String url, String imagePaths, String userId,String providerId) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1816,6 +1816,7 @@ class ApiBaseHelper {
           'folderName': 'event',
           'userId': userId,
           'userLinkId': userId,
+          'providerLinkId':providerId
         });
 
         var fileName = File(imagePaths);

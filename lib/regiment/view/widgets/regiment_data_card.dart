@@ -450,7 +450,7 @@ class RegimentDataCard extends StatelessWidget {
                           Get.to(
                             () => ImageViewer(
                               imageUrl,
-                              eid,
+                              eid,regimentData?.providerid
                             ),
                           );
                         }
@@ -652,6 +652,7 @@ class RegimentDataCard extends StatelessWidget {
           },
           followEventContext: followEventContext,
           isFollowEvent: eventIdReturn != null,
+          providerId: regimentData?.providerid,
         ),
       );
       if (value != null && (value ?? false)) {
