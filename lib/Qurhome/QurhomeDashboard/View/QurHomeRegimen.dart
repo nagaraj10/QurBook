@@ -16,6 +16,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
@@ -151,6 +152,43 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     }
   }
 
+  String getDeviceType() {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    return data.size.shortestSide < 600 ? 'phone' :'tablet';
+  }
+
+  double getPaddingWidth(){
+    if(getDeviceType()=='phone'){
+      return 25.0;
+    }else{
+      return MediaQuery.of(context).size.width*03;
+    }
+  }
+
+  Color getCardBackgroundColor(int itemIndex,int nextRegimenPosition){
+    if(controller.currentIndex == itemIndex){
+      return Colors.white;
+    }else if(nextRegimenPosition == itemIndex){
+      return Color(
+        CommonUtil().getQurhomePrimaryColor(),
+      );
+    }else{
+      return Colors.white;
+    }
+  }
+
+  Color getTextAndIconColor(int itemIndex,int nextRegimenPosition){
+    if(controller.currentIndex == itemIndex){
+      return Color(
+        CommonUtil().getQurhomePrimaryColor(),
+      );
+    }else if(nextRegimenPosition == itemIndex){
+      return Colors.white;
+    }else{
+      return Colors.grey;
+    }
+  }
+
   Widget _buildCarouselItem(BuildContext context, int itemIndex,
       RegimentDataModel regimen, int nextRegimenPosition) {
     return InkWell(
@@ -163,7 +201,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: getCardBackgroundColor(itemIndex,nextRegimenPosition),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
@@ -175,7 +213,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(horizontal:16.0,vertical: 8.0),
               child: Stack(
                 children: [
                   if (regimen.ack_local != null) ...{
@@ -190,12 +228,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               'assets/Qurhome/seen.png',
                               height: 12.0,
                               width: 12.0,
-                              color: controller.currentIndex == itemIndex ||
-                                      nextRegimenPosition == itemIndex
-                                  ? Color(
-                                      CommonUtil().getQurhomePrimaryColor(),
-                                    )
-                                  : Colors.grey,
+                              color: getTextAndIconColor(itemIndex,nextRegimenPosition),
                             ),
                             SizedBox(
                               width: 2,
@@ -209,6 +242,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               )}',
                               style: TextStyle(
                                 fontSize: 11.0,
+                                color: getTextAndIconColor(itemIndex,nextRegimenPosition),
                               ),
                             ),
                           ],
@@ -225,13 +259,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               ? DateFormat('hh:mm a').format(regimen.estart)
                               : '',
                           style: TextStyle(
-                              color: controller.currentIndex == itemIndex ||
-                                      nextRegimenPosition == itemIndex
-                                  ? Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    )
-                                  : Colors.grey,
-                              fontSize: 15,
+                              color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                              fontSize: 15.h,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
@@ -247,14 +276,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             regimen.title.toString().trim(),
                             maxLines: 2,
                             style: TextStyle(
-                                color: controller.currentIndex == itemIndex ||
-                                        nextRegimenPosition == itemIndex
-                                    ? Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      )
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
+                                color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                                fontSize: 16.h,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],
@@ -272,7 +296,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   dynamic getIcon(Activityname activityname, Uformname uformName,
       Metadata metadata, int itemIndex, int nextRegimenPosition,
       {double sizeOfIcon}) {
-    final iconSize = sizeOfIcon ?? 40.0;
+    final iconSize = sizeOfIcon ?? 40.0.h;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
@@ -280,24 +304,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
             errorWidget: (context, url, error) {
               return getDefaultIcon(activityname, uformName, iconSize,
                   itemIndex, nextRegimenPosition);
@@ -359,12 +373,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         : Icon(
             cardIcon,
             size: iconSize - 5.0,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
           );
     return cardIconWidget;
   }

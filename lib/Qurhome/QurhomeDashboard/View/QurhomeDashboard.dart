@@ -37,7 +37,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   BorderSide getBorder() {
     return BorderSide(
       color: Color(CommonUtil().getQurhomeGredientColor()),
-      width: 2.0,
+      width: 1.0,
     );
   }
 
@@ -108,7 +108,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         Text(
                           'Today, '+getFormatedDate(),
                           style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 12.h,
                             color: Colors.grey,
                           ),
                         ),
@@ -220,9 +220,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
               child: Container(
                 decoration: BoxDecoration(
                   border: Border(
-                    left: getBorder(),
+                    // left: getBorder(),
                     top: getBorder(),
-                    right: getBorder(),
+                    // right: getBorder(),
                   ),
                 ),
                 child: Row(
@@ -260,7 +260,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                                   CommonUtil()
                                                       .getQurhomeGredientColor(),
                                                 ),
-                                      fontSize: 20,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                   Spacer(
@@ -305,7 +306,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                                   CommonUtil()
                                                       .getQurhomeGredientColor(),
                                                 ),
-                                      fontSize: 20,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                   Spacer(
