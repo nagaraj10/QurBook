@@ -145,7 +145,7 @@ class QurhomeDashboardController extends GetxController {
 
   void checkForConnectedDevices(bool isFromVitalsList) {
     try {
-      int seconds = 30;
+      int seconds = 180;
       if (!isFromVitalsList) {
         seconds = 10;
         LoaderClass.showLoadingDialog(Get.context);
