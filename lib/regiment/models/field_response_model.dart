@@ -73,19 +73,19 @@ class FieldModel {
   });
 
   dynamic fieldid;
-  String providerid;
-  String formid;
-  String title;
+  dynamic providerid;
+  dynamic formid;
+  dynamic title;
   String description;
-  String uomid;
-  String fdata;
+  dynamic uomid;
+  dynamic fdata;
   FieldType ftype;
   String vmin;
   String vmax;
   String amin;
   String amax;
   dynamic validation;
-  String seq;
+  dynamic seq;
   String depth;
   DateTime ts;
   dynamic deleted;

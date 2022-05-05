@@ -40,6 +40,7 @@ class FormDataDialog extends StatefulWidget {
     this.followEventContext,
     this.isFromQurHomeSymptom = false,
     this.isFromQurHomeRegimen = false,
+    @required this.providerId
   });
 
   final List<FieldModel> fieldsData;
@@ -53,6 +54,7 @@ class FormDataDialog extends StatefulWidget {
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
   final String followEventContext;
+  final String providerId;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -80,6 +82,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   TimeOfDay _currentTime = new TimeOfDay.now();
 
   DateTime initDate;
+  String providerId;
 
   var saveResponse;
 
@@ -93,6 +96,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     eid = widget.eid;
     color = widget.color;
     mediaData = widget.mediaData;
+    providerId=widget.providerId;
   }
 
   @override
@@ -718,7 +722,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                         });
                         if (imagePaths != null &&
                             imagePaths != '') {
-                          saveMediaRegiment(imagePaths)
+                          saveMediaRegiment(imagePaths,providerId)
                               .then((value) {
                             if (value.isSuccess) {
                               setState(() {
@@ -1179,11 +1183,11 @@ class FormDataDialogState extends State<FormDataDialog> {
     }
   }
 
-  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
+  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.saveRegimentMedia(
-        qr_save_regi_media, imagePaths, patientId);
+        qr_save_regi_media, imagePaths, patientId,providerId);
     return AddMediaRegimentModel.fromJson(response);
   }
 
@@ -1207,7 +1211,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         imagePaths = croppedFile.path;
 
         if (imagePaths != null && imagePaths != '') {
-          saveMediaRegiment(imagePaths).then((value) {
+          saveMediaRegiment(imagePaths,providerId).then((value) {
             if (value.isSuccess) {
               var file = File(croppedFile.path);
               setState(() {
@@ -1263,7 +1267,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       }
     });
     if (imagePaths != null && imagePaths != '') {
-      await saveMediaRegiment(imagePaths).then((value) {
+      await saveMediaRegiment(imagePaths,providerId).then((value) {
         if (value.isSuccess) {
           isUploading.value = false;
           setState(() {

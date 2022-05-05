@@ -22,8 +22,9 @@ import '../../../constants/fhb_constants.dart' as Constants;
 class ImageViewer extends StatefulWidget {
   String imageURL;
   String eid;
+  String providerId;
 
-  ImageViewer(this.imageURL, this.eid);
+  ImageViewer(this.imageURL, this.eid,this.providerId);
 
   @override
   _ImageViewerState createState() => _ImageViewerState();
@@ -144,7 +145,7 @@ class _ImageViewerState extends State<ImageViewer> {
         var imagePaths = croppedFile.path;
 
         if ((imagePaths ?? '').isNotEmpty) {
-          saveMediaRegiment(imagePaths).then((value) {
+          saveMediaRegiment(imagePaths,widget.providerId).then((value) {
             LoaderClass.hideLoadingDialog(Get.context);
             if (value.isSuccess) {
               setState(() {
@@ -178,7 +179,7 @@ class _ImageViewerState extends State<ImageViewer> {
     _image = File(pickedFile.path);
 
     if ((_image.path ?? '').isNotEmpty) {
-      await saveMediaRegiment(_image.path).then((value) {
+      await saveMediaRegiment(_image.path,widget.providerId).then((value) {
         LoaderClass.hideLoadingDialog(Get.context);
 
         if (value.isSuccess) {
@@ -199,10 +200,10 @@ class _ImageViewerState extends State<ImageViewer> {
     }
   }
 
-  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
+  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final response = await _helper.saveRegimentMedia(
-        qr_save_regi_media, imagePaths, patientId);
+        qr_save_regi_media, imagePaths, patientId,providerId);
     return AddMediaRegimentModel.fromJson(response);
   }
 
