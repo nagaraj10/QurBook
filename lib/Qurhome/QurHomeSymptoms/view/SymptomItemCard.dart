@@ -402,7 +402,7 @@ class SymptomItemCard extends StatelessWidget {
                           Get.to(
                             () => ImageViewer(
                               imageUrl,
-                              eid,
+                              eid,regimentData?.providerid
                             ),
                           );
                         }
