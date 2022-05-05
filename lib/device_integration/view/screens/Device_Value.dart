@@ -1509,7 +1509,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
-    dev.debugger();
      switch (widget.device_name) {
       case strDataTypeBP:
         {
