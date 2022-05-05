@@ -399,7 +399,7 @@ class _MyFamilyState extends State<MyFamily> {
                                   data.child?.firstName != null &&
                                           data.child.lastName != null
                                       ? data.child.firstName[0].toUpperCase() +
-                                          data.child.lastName[0].toUpperCase()
+                                      (data.child.lastName.length>0?data.child.lastName[0].toUpperCase():'')
                                       : data.child.firstName != null
                                           ? data.child.firstName[0]
                                               .toUpperCase()

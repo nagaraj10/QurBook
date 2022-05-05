@@ -24,6 +24,7 @@ import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/DatabseUtil.dart';
 import 'constants/router_variable.dart';
+import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
@@ -302,6 +303,9 @@ Future<void> main() async {
           ),
           provider.ChangeNotifierProvider<LanguageProvider>(
             create: (_) => LanguageProvider(),
+          ),
+          provider.ChangeNotifierProvider<DevicesViewModel>(
+            create: (_) => DevicesViewModel(),
           ),
         ],
         child: MyFHB(),
@@ -762,16 +766,19 @@ class _MyFHBState extends State<MyFHB> {
           )).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));*/
           Get.to(() => ChatDetail(
-                peerId: passedValArr[2],
-                peerName: passedValArr[3],
-                peerAvatar: passedValArr[4],
-                groupId: passedValArr[5],
-                patientId: '',
-                patientName: '',
-                patientPicture: '',
-                isFromVideoCall: false,
-                isCareGiver: false,
-              ));
+                    peerId: passedValArr[2],
+                    peerName: passedValArr[3],
+                    peerAvatar: passedValArr[4],
+                    groupId: passedValArr[5],
+                    patientId: '',
+                    patientName: '',
+                    patientPicture: '',
+                    isFromVideoCall: false,
+                    isCareGiver: false,
+                  ))
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
+          ;
         } else if (passedValArr[1] == 'mycart') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

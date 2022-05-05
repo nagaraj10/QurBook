@@ -1799,7 +1799,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveRegimentMedia(
-      String url, String imagePaths, String userId) async {
+      String url, String imagePaths, String userId,String providerId) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1815,6 +1815,8 @@ class ApiBaseHelper {
         formData = FormData.fromMap({
           'folderName': 'event',
           'userId': userId,
+          'userLinkId': userId,
+          'providerLinkId':providerId
         });
 
         var fileName = File(imagePaths);
@@ -2448,6 +2450,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getSymptomList(String url) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> checkUserDelink(String url, String jsonData) async {
     var responseJson;
     try {
@@ -2457,9 +2473,9 @@ class ApiBaseHelper {
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
+
     return responseJson;
   }
-
 
 /*
   Future<dynamic> getMemberShipDetails(String url) async {

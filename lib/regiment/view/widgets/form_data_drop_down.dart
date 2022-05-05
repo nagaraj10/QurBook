@@ -9,11 +9,13 @@ class FormDataDropDown extends StatefulWidget {
     @required this.fieldData,
     @required this.updateValue,
     @required this.canEdit,
+    this.isFromQurHomeSymptom = false,
   });
 
   final FieldModel fieldData;
   final Function(FieldModel updatedfieldData) updateValue;
   final bool canEdit;
+  final bool isFromQurHomeSymptom;
 
   @override
   _FormDataDropDownState createState() => _FormDataDropDownState();
@@ -63,7 +65,11 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
-            color: Color(CommonUtil().getMyPrimaryColor()),
+            color: widget.isFromQurHomeSymptom
+                ? Color(CommonUtil()
+                .getQurhomePrimaryColor())
+                : Color(
+                CommonUtil().getMyPrimaryColor()),
           ),
         ),
         SizedBox(

@@ -1,11 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
@@ -37,7 +41,7 @@ class _ChatScreenState extends State<ChatScreen>
   MyProfileModel myProfile =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   ScrollController controller = new ScrollController();
-
+  bool isFromQurhome = PreferenceUtil.getIfQurhomeisAcive();
   bool isLoading = false;
 
   @override
@@ -71,21 +75,26 @@ class _ChatScreenState extends State<ChatScreen>
           });
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.sheelaInputs != null &&
-        widget?.arguments?.sheelaInputs != '') {
-      getMyViewModel(sheelaInputs: widget?.arguments?.sheelaInputs);
+    if (widget?.arguments?.takeActiveDeviceReadings &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      getMyViewModel().addToSheelaConversation(
+        text: "Your SpO2 device is connected",
+      );
+      getMyViewModel().setupListenerForReadings();
     } else {
-      widget?.arguments?.isSheelaAskForLang
-          ? (widget?.arguments?.rawMessage != null &&
-                  widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel()
-                  .askUserForLanguage(message: widget?.arguments?.rawMessage)
-              : getMyViewModel().askUserForLanguage()
-          : (widget?.arguments?.rawMessage != null &&
-                  widget?.arguments?.rawMessage?.isNotEmpty)
-              ? getMyViewModel().startMayaAutomatically(
-                  message: widget?.arguments?.rawMessage)
-              : getMyViewModel().startMayaAutomatically();
+      if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
+        getMyViewModel(
+          sheelaInputs: widget?.arguments?.sheelaInputs,
+        );
+      } else {
+        widget?.arguments?.isSheelaAskForLang
+            ? getMyViewModel().askUserForLanguage(
+                message: widget?.arguments?.rawMessage,
+              )
+            : getMyViewModel().startMayaAutomatically(
+                message: widget?.arguments?.rawMessage,
+              );
+      }
     }
   }
 
@@ -120,6 +129,7 @@ class _ChatScreenState extends State<ChatScreen>
     });
     WidgetsBinding.instance.removeObserver(this);
     animationController?.dispose();
+    Provider.of<ChatScreenViewModel>(context, listen: false)?.disposeTimer();
     super.dispose();
   }
 
@@ -134,7 +144,10 @@ class _ChatScreenState extends State<ChatScreen>
       final langCode = lan.split("-").first;
       currentLanguage = langCode;
     }
-    CommonUtil.supportedLanguages.forEach((language, languageCode) {
+    CommonUtil.supportedLanguages.forEach((
+      language,
+      languageCode,
+    ) {
       languagesMenuList.add(
         PopupMenuItem<String>(
           value: languageCode,
@@ -189,6 +202,69 @@ class _ChatScreenState extends State<ChatScreen>
     }
   }
 
+  AppBar getQurhomeAppbar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      centerTitle: true,
+      elevation: 0,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Image.asset(
+            icon_mayaMain,
+            height: 30.h,
+            width: 30.h,
+          ),
+          SizedBox(
+            width: 4,
+          ),
+          Text(
+            variable.strMaya,
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+          Spacer(
+            flex: 2,
+          ),
+        ],
+      ),
+      leading: Container(
+        margin: EdgeInsets.only(
+          left: 8.h,
+        ),
+        child: InkWell(
+          onTap: () {
+            _backToPrevious();
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 8.h,
+              vertical: 4.h,
+            ),
+            child: AssetImageWidget(
+              icon: icon_qurhome,
+              height: 30.h,
+              width: 30.h,
+            ),
+          ),
+        ),
+      ),
+      bottom: PreferredSize(
+        child: Container(
+          color: Color(
+            CommonUtil().getQurhomeGredientColor(),
+          ),
+          height: 1.0,
+        ),
+        preferredSize: Size.fromHeight(
+          1.0,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -200,49 +276,51 @@ class _ChatScreenState extends State<ChatScreen>
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          title: Text(variable.strMaya),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (!isLoading) {
-                _backToPrevious();
-              }
-            },
-          ),
-          actions: [
-            Visibility(
-              visible: !Platform.isIOS,
-              child: PopupMenuButton<String>(
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: 10.0.w,
-                  ),
-                  child: Image.asset(
-                    variable.icon_language,
-                    width: 35.0.sp,
-                    height: 35.0.sp,
+        appBar: isFromQurhome
+            ? getQurhomeAppbar()
+            : AppBar(
+                flexibleSpace: GradientAppBar(),
+                title: Text(variable.strMaya),
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back_ios,
+                    size: 24.0.sp,
                     color: Colors.white,
                   ),
+                  onPressed: () {
+                    if (!isLoading) {
+                      _backToPrevious();
+                    }
+                  },
                 ),
-                onSelected: (languageCode) {
-                  PreferenceUtil.saveString(constants.SHEELA_LANG,
-                      CommonUtil.langaugeCodes[languageCode ?? 'undef']);
-                  Provider.of<ChatScreenViewModel>(context, listen: false)
-                      .updateDeviceSelectionModel(
-                    preferredLanguage: languageCode,
-                  );
-                },
-                itemBuilder: (BuildContext context) => getSupportedLanguages(),
+                actions: [
+                  Visibility(
+                    visible: !Platform.isIOS,
+                    child: PopupMenuButton<String>(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          right: 10.0.w,
+                        ),
+                        child: Image.asset(
+                          variable.icon_language,
+                          width: 35.0.sp,
+                          height: 35.0.sp,
+                        ),
+                      ),
+                      onSelected: (languageCode) {
+                        PreferenceUtil.saveString(constants.SHEELA_LANG,
+                            CommonUtil.langaugeCodes[languageCode ?? 'undef']);
+                        Provider.of<ChatScreenViewModel>(context, listen: false)
+                            .updateDeviceSelectionModel(
+                          preferredLanguage: languageCode,
+                        );
+                      },
+                      itemBuilder: (BuildContext context) =>
+                          getSupportedLanguages(),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
             if (model?.isMicListening ?? false) {
@@ -255,6 +333,9 @@ class _ChatScreenState extends State<ChatScreen>
             closeIfByeSaid(model.conversations);
             return ChatData(conversations: model.getMyConversations);
           },
+        ),
+        bottomNavigationBar: Container(
+          height: 0,
         ),
         floatingActionButton: Visibility(
           visible:
@@ -311,7 +392,9 @@ class _ChatScreenState extends State<ChatScreen>
                       ? Colors.red
                       : Provider.of<ChatScreenViewModel>(context).isLoading
                           ? Colors.black45
-                          : Color(CommonUtil().getMyPrimaryColor()),
+                          : isFromQurhome
+                              ? Color(CommonUtil().getQurhomeGredientColor())
+                              : Color(CommonUtil().getMyPrimaryColor()),
             ),
           ),
         ),
@@ -339,6 +422,9 @@ class _ChatScreenState extends State<ChatScreen>
     Provider.of<ChatScreenViewModel>(context, listen: false)
         .updateAppState(false);
     stopTTSEngine();
+    Provider.of<ChatScreenViewModel>(context, listen: false).movedToBackScreen =
+        true;
+    Provider.of<ChatScreenViewModel>(context, listen: false).disposeTimer();
     Navigator.pop(context);
   }
 }

@@ -83,6 +83,8 @@ class NotificationModel {
       'needToHighlight': needToHighlight,
       'meeting_id': meeting_id,
       'doctorId': doctorId,
+      'doctorName': doctorName,
+      'doctorPicture': doctorPicture,
       'username': username,
       'type': type,
       'externalLink': externalLink,
@@ -107,6 +109,8 @@ class NotificationModel {
     needToHighlight = message['needToHighlight'];
     meeting_id = message['meeting_id'];
     doctorId = message['doctorId'];
+    doctorName = message['doctorName'];
+    doctorPicture = message['doctorPicture'];
     username = message['username'];
     type = message['type'];
     externalLink = message['externalLink'];

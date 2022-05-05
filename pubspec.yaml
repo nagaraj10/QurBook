@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: ../myfhb-flutter-common
+    path: C:\\FlutterProjects\\myfhb-flutter-common
 
   # The following adds the Cupertino Icons font to your application.
   firebase_core: ^1.3.0
@@ -125,6 +125,8 @@ dependencies:
 
   flutter_mdns_plugin: ^0.0.2
 
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -150,6 +152,8 @@ flutter:
     - assets/user/profile_pic_ph.png
     - assets/user/gold-member.png
     - assets/icons/
+    - assets/Qurhome/Qurhome.png
+    - assets/Qurhome/
     - assets/launcher/myfhb.png
     - assets/navicons/
     - assets/norecordfound.png

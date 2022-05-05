@@ -444,6 +444,23 @@ class PreferenceUtil {
     );
   }
 
+  static bool getIfQurhomeisAcive() {
+    return _prefsInstance.getBool(
+          Constants.KEY_IS_Active_Qurhome,
+        ) ??
+        false;
+  }
+
+  static Future<bool> saveIfQurhomeisAcive({
+    bool qurhomeStatus = false,
+  }) async {
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.KEY_IS_Active_Qurhome,
+      qurhomeStatus,
+    );
+  }
+
   static save(String key, value) async {
     var prefs = await SharedPreferences.getInstance();
     await prefs.setString(key, json.encode(value));

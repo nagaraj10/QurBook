@@ -91,26 +91,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
-    //setReminder();
     CommonUtil().ListenForTokenUpdate();
-
-    Provider.of<ChatSocketViewModel>(Get.context)
-        ?.initSocket();
-
-  }
-
-  void setReminder() {
-    var selecteTimeInDate =
-        "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
-    var ch_android = const MethodChannel('android/notification');
-    var mappedReminder = {
-      'id': 001,
-      'title': 'Take BP tablet',
-      'desc': 'dont forgot to take tablets',
-      'date': '2021-04-13',
-      'time': '$selecteTimeInDate',
-    };
-    ch_android.invokeMethod('remindMe', {'data': jsonEncode(mappedReminder)});
+    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
   }
 
   @override
@@ -203,16 +185,19 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle != '') {
                         var chatParsedData = widget.bundle?.split('&');
                         Get.to(() => ChatDetail(
-                          peerId: chatParsedData[2],
-                          peerName: chatParsedData[3],
-                          peerAvatar: chatParsedData[4],
-                          groupId: chatParsedData[5],
-                          patientId: '',
-                          patientName: '',
-                          patientPicture: '',
-                          isFromVideoCall: false,
-                          isCareGiver: false,
-                        ));
+                                  peerId: chatParsedData[2],
+                                  peerName: chatParsedData[3],
+                                  peerAvatar: chatParsedData[4],
+                                  groupId: chatParsedData[5],
+                                  patientId: '',
+                                  patientName: '',
+                                  patientPicture: '',
+                                  isFromVideoCall: false,
+                                  isCareGiver: false,
+                                ))
+                            .then((value) => PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                        ;
                       } else {
                         Get.to(ChatUserList()).then((value) =>
                             PageNavigator.goToPermanent(
@@ -244,8 +229,10 @@ class _SplashScreenState extends State<SplashScreen> {
                         var rawTitle = widget.bundle?.split('|')[0];
                         var rawBody = widget.bundle?.split('|')[1];
                         var notificationListId = widget.bundle?.split('|')[2];
-                        if(notificationListId!=null && notificationListId!=''){
-                            FetchNotificationService().inAppUnreadAction(notificationListId);
+                        if (notificationListId != null &&
+                            notificationListId != '') {
+                          FetchNotificationService()
+                              .inAppUnreadAction(notificationListId);
                         }
 
                         String sheela_lang = PreferenceUtil.getStringValue(
@@ -301,21 +288,21 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
-                    }else if(widget.nsRoute == 'familyMemberCaregiverRequest'){
+                    } else if (widget.nsRoute ==
+                        'familyMemberCaregiverRequest') {
                       final temp = widget.bundle.split('|');
-                      if(temp[0]=='accept'){
+                      if (temp[0] == 'accept') {
                         CaregiverAPIProvider().approveCareGiver(
                           phoneNumber: temp[1],
                           code: temp[2],
                         );
-                      }else{
+                      } else {
                         CaregiverAPIProvider().rejectCareGiver(
-                          receiver:temp[3],
+                          receiver: temp[3],
                           requestor: temp[4],
                         );
                       }
                       PageNavigator.goToPermanent(context, router.rt_Landing);
-
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
@@ -370,28 +357,29 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': '${widget.templateName}',
                       });
                       final temp = widget.templateName.split('|');
-                      final dataOne=temp[1]??'';
-                      final dataTwo=temp[2];
-                      if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
-                        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+                      final dataOne = temp[1] ?? '';
+                      final dataTwo = temp[2];
+                      if (dataTwo.runtimeType == String &&
+                          (dataTwo ?? '').isNotEmpty) {
+                        final userId =
+                            PreferenceUtil.getStringValue(KEY_USERID);
                         if ((widget.bundle ?? '') == userId) {
                           CommonUtil().navigateToRecordDetailsScreen(dataTwo);
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(
-                            widget.bundle??'',
+                            widget.bundle ?? '',
                             redirect: temp[0],
                           );
                         }
-                      }else{
+                      } else {
                         if (widget.bundle != null && widget.bundle != '') {
                           CommonUtil().navigateToMyRecordsCategory(
                               temp[1], [widget.bundle], true);
                         } else {
-                          CommonUtil().navigateToMyRecordsCategory(
-                              temp[1], null, true);
+                          CommonUtil()
+                              .navigateToMyRecordsCategory(temp[1], null, true);
                         }
                       }
-
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -544,23 +532,20 @@ class _SplashScreenState extends State<SplashScreen> {
                           .then((data) {
                         FetchNotificationService().updateNsOnTapAction(body);
                       });
-                    }else if(widget.nsRoute=='careGiverMemberProfile'){
+                    } else if (widget.nsRoute == 'careGiverMemberProfile') {
                       Navigator.pushNamed(
                         context,
                         router.rt_FamilyDetailScreen,
                         arguments: MyFamilyDetailArguments(
                             caregiverRequestor: widget.bundle),
                       );
-                    }else if(widget.nsRoute=='communicationSetting'){
+                    } else if (widget.nsRoute == 'communicationSetting') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CareGiverSettings(),
+                          builder: (context) => CareGiverSettings(),
                         ),
-                      ).then((value) {
-
-                      });
+                      ).then((value) {});
                     } else if (widget.nsRoute == 'claimList') {
                       final userId = widget?.bundle['userId'];
                       final claimId = widget?.bundle['claimId'];

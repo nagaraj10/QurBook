@@ -26,7 +26,9 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: PreferenceUtil.getIfQurhomeisAcive()
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         CircleAvatar(
           child: Image.asset(
@@ -43,29 +45,47 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                variable.strMAYA,
-                style: Theme.of(context).textTheme.body1,
-                softWrap: true,
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      variable.strMAYA,
+                      style: Theme.of(context).textTheme.body1,
+                      softWrap: true,
+                    ),
               Card(
                 color: Colors.transparent,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(25),
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25))),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    topLeft: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.circular(25)
+                        : Radius.zero,
+                    bottomRight: Radius.circular(25),
+                    bottomLeft: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Radius.zero
+                        : Radius.circular(25),
+                  ),
+                ),
                 child: Container(
                   // constraints: BoxConstraints(
                   //   maxWidth: 1.sw * .6,
                   // ),
                   padding: const EdgeInsets.all(15.0),
                   decoration: BoxDecoration(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    color: PreferenceUtil.getIfQurhomeisAcive()
+                        ? Colors.white
+                        : Color(
+                            CommonUtil().getMyPrimaryColor(),
+                          ),
                     borderRadius: BorderRadius.only(
                       topRight: Radius.circular(25),
-                      bottomLeft: Radius.circular(25),
+                      topLeft: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.circular(25)
+                          : Radius.zero,
                       bottomRight: Radius.circular(25),
+                      bottomLeft: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Radius.zero
+                          : Radius.circular(25),
                     ),
                   ),
                   child: FutureBuilder(
@@ -82,11 +102,15 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                "${c.timeStamp}",
-                style:
-                    Theme.of(context).textTheme.body1.apply(color: Colors.grey),
-              ),
+              PreferenceUtil.getIfQurhomeisAcive()
+                  ? Container()
+                  : Text(
+                      "${c.timeStamp}",
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .apply(color: Colors.grey),
+                    ),
               SizedBox(width: 10.0.w),
               Column(
                 children: [
@@ -94,11 +118,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     elevation: 5,
                     color: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: 1.sw,
@@ -106,7 +132,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: PreferenceUtil.getIfQurhomeisAcive()
+                            ? Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
+                            : Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -162,7 +194,9 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           Text(
                             c?.videoLinks[0]?.title,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 15.0.sp),
+                              color: Colors.white,
+                              fontSize: 15.0.sp,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -174,11 +208,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     elevation: 5,
                     color: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: 1.sw,
@@ -186,7 +222,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: PreferenceUtil.getIfQurhomeisAcive()
+                            ? Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
+                            : Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -242,7 +284,9 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           Text(
                             c?.videoLinks[1]?.title,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 15.0.sp),
+                              color: Colors.white,
+                              fontSize: 15.0.sp,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -254,11 +298,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     elevation: 5,
                     color: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: 1.sw,
@@ -266,7 +312,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: PreferenceUtil.getIfQurhomeisAcive()
+                            ? Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
+                            : Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -322,7 +374,9 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           Text(
                             c?.videoLinks[2]?.title,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 15.0.sp),
+                              color: Colors.white,
+                              fontSize: 15.0.sp,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -334,11 +388,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                     elevation: 5,
                     color: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10))),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                        bottomLeft: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    ),
                     child: Container(
                       constraints: BoxConstraints(
                         maxWidth: 1.sw,
@@ -346,7 +402,13 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        color: PreferenceUtil.getIfQurhomeisAcive()
+                            ? Color(
+                                CommonUtil().getQurhomeGredientColor(),
+                              )
+                            : Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              ),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           topRight: Radius.circular(10),
@@ -402,7 +464,9 @@ class ReceiverLayoutWithIntroVideo extends StatelessWidget {
                           Text(
                             c?.videoLinks[3]?.title,
                             style: TextStyle(
-                                color: Colors.white, fontSize: 15.0.sp),
+                              color: Colors.white,
+                              fontSize: 15.0.sp,
+                            ),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),

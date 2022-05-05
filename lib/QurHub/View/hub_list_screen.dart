@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -10,12 +9,13 @@ import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/QurHub/View/add_network_view.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 
 import 'add_device_screen.dart';
+import '../../../constants/variable_constant.dart' as variable;
 
 class HubListScreen extends StatefulWidget {
   const HubListScreen({Key key}) : super(key: key);
@@ -26,11 +26,16 @@ class HubListScreen extends StatefulWidget {
 
 class _HubListScreenState extends State<HubListScreen> {
   final controller = Get.put(HubListController());
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
-    controller.getHubList();
-    super.initState();
+    try {
+      controller.getHubList();
+      super.initState();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -63,59 +68,165 @@ class _HubListScreenState extends State<HubListScreen> {
                             'Please re-try after some time',
                           ),
                         )
-                      : Container(
-                          child: val.hubListResponse.isSuccess
-                              ? val.hubListResponse.result != null
-                                  ? Stack(children: [
-                                      SingleChildScrollView(
-                                        child: listContent(
-                                            val.hubListResponse.result),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              bottom: 20.0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddDeviceScreen(
-                                                            hubId: val
-                                                                .hubListResponse
-                                                                .result
-                                                                .id)),
-                                              ).then((value) =>
-                                                  {controller.getHubList()});
-                                            },
-                                            child: Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15.0),
-                                              ),
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: Text(
-                                                  'Add New Device',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
+                      : !controller.isFromQurHomeinQurBook.value
+                          ? Container(
+                              child: val.hubListResponse.isSuccess
+                                  ? val.hubListResponse.result != null &&
+                                          val.hubListResponse.result.hub
+                                                  .additionalDetails !=
+                                              null &&
+                                          !val.hubListResponse.result.hub
+                                              .additionalDetails.isVirtualHub
+                                      ? Stack(children: [
+                                          SingleChildScrollView(
+                                            child: listContent(
+                                                val.hubListResponse.result),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 20.0),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AddDeviceScreen(
+                                                                hubId: val
+                                                                    .hubListResponse
+                                                                    .result
+                                                                    .id)),
+                                                  ).then((value) => {
+                                                        controller.getHubList()
+                                                      });
+                                                },
+                                                child: Card(
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0),
+                                                  ),
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    child: Text(
+                                                      'Add New Device',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
                                             ),
+                                          )
+                                        ])
+                                      : pairNewDeviveBtn()
+                                  : pairNewDeviveBtn(),
+                            )
+                          : Container(
+                              child: val.hubListResponse.isSuccess
+                                  ? val.hubListResponse.result != null &&
+                                          val.hubListResponse.result.hub
+                                                  .additionalDetails !=
+                                              null &&
+                                          val.hubListResponse.result.hub
+                                              .additionalDetails.isVirtualHub
+                                      ? Stack(children: [
+                                          SingleChildScrollView(
+                                            child: listContent(
+                                                val.hubListResponse.result),
                                           ),
-                                        ),
-                                      )
-                                    ])
-                                  : pairNewDeviveBtn()
-                              : pairNewDeviveBtn(),
-                        );
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 20.0),
+                                              child: Obx(
+                                                () => Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    controller
+                                                            .searchingBleDevice
+                                                            .isTrue
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              CircularProgressIndicator(),
+                                                              SizedBox(
+                                                                width: 8,
+                                                              ),
+                                                              FittedBox(
+                                                                child: Text(
+                                                                  ScanningForDevices,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          )
+                                                        : InkWell(
+                                                            onTap: () async {
+                                                              try {
+                                                                controller.hubId
+                                                                        .value =
+                                                                    val
+                                                                        .hubListResponse
+                                                                        .result
+                                                                        .id;
+                                                                controller
+                                                                    .checkForConnectedDevices();
+                                                              } catch (e) {
+                                                                print(e);
+                                                              }
+                                                            },
+                                                            child: Card(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15.0),
+                                                              ),
+                                                              color: Color(
+                                                                  CommonUtil()
+                                                                      .getMyPrimaryColor()),
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .all(
+                                                                        10.0),
+                                                                child: Text(
+                                                                  'Add New Device',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ])
+                                      : pairNewVirtualHubBtn()
+                                  : pairNewVirtualHubBtn(),
+                            );
                 })),
       );
 
@@ -147,8 +258,8 @@ class _HubListScreenState extends State<HubListScreen> {
         }
       },
       child: Container(
-        width: 200.0.w,
-        height: 45.0.h,
+        width: 250.0.w,
+        height: 48.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -177,6 +288,46 @@ class _HubListScreenState extends State<HubListScreen> {
     );
   }
 
+  Widget pairNewVirtualHubBtn() {
+    final pairNewVirtualHubWithGesture = InkWell(
+      onTap: () async {
+        try {
+          controller.callCreateVirtualHub(context);
+        } catch (e) {
+          print(e);
+        }
+      },
+      child: Container(
+        width: 260.0.w,
+        height: 48.0.h,
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            variable.strCreateNewVirtualHub,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+    return Center(
+      child: pairNewVirtualHubWithGesture,
+    );
+  }
+
   Widget listContent(Result result) {
     return Column(
       children: [
@@ -199,7 +350,7 @@ class _HubListScreenState extends State<HubListScreen> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        result.nickName,
+                        validString(result.nickName),
                         style: TextStyle(fontSize: 12),
                       ),
                     ],
@@ -223,7 +374,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                 ),
                               ),
                               Text(
-                                result.hub.serialNumber,
+                                validString(result.hub.serialNumber),
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 13),
@@ -247,7 +398,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                 ),
                               ),
                               Text(
-                                changeDateFormat(result.createdOn),
+                                changeDateFormat(validString(result.createdOn)),
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 13),
                               )
@@ -264,8 +415,8 @@ class _HubListScreenState extends State<HubListScreen> {
                     onTap: () {
                       unPairDialog(
                           type: 'hub',
-                          hubId: result.id,
-                          idName: result.hub.name);
+                          hubId: validString(result.id),
+                          idName: validString(result.hub.name));
                     },
                     child: Card(
                       color: Color(CommonUtil().getMyPrimaryColor()),
@@ -318,12 +469,18 @@ class _HubListScreenState extends State<HubListScreen> {
                                                   index] !=
                                               null
                                           ? getProfilePicWidget(
-                                              result.userDeviceCollection[index]
-                                                  .user.profilePicThumbnailUrl,
-                                              result.userDeviceCollection[index]
-                                                  .user.firstName,
-                                              result.userDeviceCollection[index]
-                                                  .user.lastName,
+                                              validString(result
+                                                  .userDeviceCollection[index]
+                                                  .user
+                                                  .profilePicThumbnailUrl),
+                                              validString(result
+                                                  .userDeviceCollection[index]
+                                                  .user
+                                                  .firstName),
+                                              validString(result
+                                                  .userDeviceCollection[index]
+                                                  .user
+                                                  .lastName),
                                               Color(CommonUtil()
                                                   .getMyPrimaryColor()))
                                           : Container(
@@ -364,8 +521,10 @@ class _HubListScreenState extends State<HubListScreen> {
                                           ),
                                           Expanded(
                                             child: Text(
-                                              result.userDeviceCollection[index]
-                                                  .device.serialNumber,
+                                              validString(result
+                                                  .userDeviceCollection[index]
+                                                  .device
+                                                  .serialNumber),
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   color: Colors.grey[700],
@@ -375,7 +534,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                         ],
                                       ),
                                       Text(
-                                        'Connected ${changeDateFormat(result.userDeviceCollection[index].createdOn)}',
+                                        'Connected ${changeDateFormat(validString(result.userDeviceCollection[index].createdOn))}',
                                         style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12),
@@ -542,4 +701,16 @@ class _HubListScreenState extends State<HubListScreen> {
                   ],
                 ));
           });
+
+  String validString(String strText) {
+    try {
+      if (strText == null)
+        return "";
+      else if (strText.trim().isEmpty)
+        return "";
+      else
+        return strText.trim();
+    } catch (e) {}
+    return "";
+  }
 }

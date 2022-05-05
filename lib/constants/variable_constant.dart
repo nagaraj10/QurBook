@@ -145,6 +145,9 @@ const String icon_edit_image = 'assets/icons/edit.png';
 const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
+const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
+const String icon_vitals_qurhome = 'assets/dashboard/vitals_qurhome.png';
+const String icon_symptom_qurhome = 'assets/dashboard/symptom_qurhome.png';
 const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
 const String icon_qurplanIntro = 'assets/IntroScreensImages/Intro03.png';
 const String icon_ReminderIntro = 'assets/IntroScreensImages/Intro05.png';
@@ -197,11 +200,13 @@ const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_true_desk = 'assets/dashboard/truedesk_icon.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_qurhub = 'assets/dashboard/qurhub.svg';
+const String icon_qr_code = 'assets/icons/qr_code.png';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
 const String icon_refer_friend_icon = 'assets/icons/refer_a_friend.png';
 const String icon_report_icon = 'assets/icons/report_icon.png';
 const String icon_help_support = 'assets/icons/help_support.png';
+const String icon_dashboardCard = 'assets/Qurhome/QurhomeCard.svg';
 // const String icon_check_symptoms = 'assets/dashboard/symptoms.svg';
 // const String icon_how_to_use = 'assets/dashboard/information.svg';
 // const String icon_my_family = 'assets/dashboard/home.svg';
@@ -331,7 +336,7 @@ const String strrelationshipType = 'relationshipType';
 const String strparentToChild = 'parentToChild';
 
 //for myFamilyDetails
-const String strDateYear = '"yyyy-MM-dd"';
+const String strDateYear = "yyyy-MM-dd";
 const String strFetchingHealth = 'Getting Health Report';
 const String strFetchCategory = 'Fetching Category';
 const String strNodata = 'No Data Available';
@@ -574,6 +579,9 @@ const String strAddDevice = 'Tap to add device widgets to your home screen';
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strQurHub = 'QurHub';
+const String strQurHomeinQurBook = 'QurHome in QurBook';
+const String strQurHubIoTdevice = 'QurHub IoT device';
+const String strCreateNewVirtualHub = 'Create New Virtual Hub';
 const String strMyProvider = 'My Provider';
 const String strMyPlans = 'My Plan';
 const String strExtImg = '.png';
@@ -713,16 +721,13 @@ const String icon_qurhub_switch = 'assets/icons/switch.svg';
 const String icon_qurhub_wifi = 'assets/icons/wifi.svg';
 
 //Caregiver Setting
-const String strAllowVitals="Allow Vitals";
-const String strAllowSymptoms="Allow Symptoms";
-const String strAllowAppointments="Allow Appointments";
-
+const String strAllowVitals = "Allow Vitals";
+const String strAllowSymptoms = "Allow Symptoms";
+const String strAllowAppointments = "Allow Appointments";
 const String strAlert = 'Alert';
 
-const String patientId="patientId";
-const String familyMemberId="familyMemberId";
-
-
+const String patientId = "patientId";
+const String familyMemberId = "familyMemberId";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
