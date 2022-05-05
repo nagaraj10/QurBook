@@ -44,7 +44,10 @@ class HubListController extends GetxController {
         // failed to get the data, we are showing the error on UI
       } else {
         hubListResponse = HubListResponse.fromJson(json.decode(response.body));
-        virtualHubId = hubListResponse.result.hub.serialNumber;
+        if (hubListResponse.result != null &&
+            hubListResponse.result.hub != null) {
+          virtualHubId = validString(hubListResponse.result.hub.serialNumber);
+        }
       }
       loadingData.value = false;
       update(["newUpdate"]);

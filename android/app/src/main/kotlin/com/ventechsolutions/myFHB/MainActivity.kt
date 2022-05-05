@@ -517,9 +517,9 @@ class MainActivity : FlutterActivity() {
                 override fun onScanFinished(scanResultList: List<BleDevice?>) {
                     Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
                     Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
-                    /*if (autoRepeatScan == 1) {
+                    if (autoRepeatScan == 1) {
                         startScanTimer()
-                    }*/
+                    }
                     //stopScan()
                 }
 
