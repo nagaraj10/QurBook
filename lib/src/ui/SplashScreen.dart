@@ -91,24 +91,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
-    //setReminder();
     CommonUtil().ListenForTokenUpdate();
-
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
-  }
-
-  void setReminder() {
-    var selecteTimeInDate =
-        "${TimeOfDay.now().hour}-${TimeOfDay.now().minute + 3}";
-    var ch_android = const MethodChannel('android/notification');
-    var mappedReminder = {
-      'id': 001,
-      'title': 'Take BP tablet',
-      'desc': 'dont forgot to take tablets',
-      'date': '2021-04-13',
-      'time': '$selecteTimeInDate',
-    };
-    ch_android.invokeMethod('remindMe', {'data': jsonEncode(mappedReminder)});
   }
 
   @override

@@ -250,12 +250,7 @@ class _ChatUserListState extends State<ChatUserList> {
                     builder: (context) => ChatDetail(
                         peerId: userChatList?.peerId,
                         peerAvatar: userChatList?.profilePicThumbnailURL,
-                        peerName: userChatList?.firstName != null &&
-                                userChatList?.firstName != ''
-                            ? userChatList?.firstName +
-                                ' ' +
-                                userChatList?.lastName
-                            : '',
+                        peerName: getDocName(userChatList),
                         patientId: '',
                         patientName: '',
                         patientPicture: '',
@@ -342,15 +337,9 @@ class _ChatUserListState extends State<ChatUserList> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
-                            userChatList.firstName != '' &&
-                                    userChatList.firstName != null
-                                ? userChatList?.firstName
-                                            ?.toString()
-                                            ?.capitalizeFirstofEach +
-                                        ' ' +
-                                        userChatList?.lastName ??
-                                    ''.toString()?.capitalizeFirstofEach
-                                : '',
+                            CommonUtil().capitalizeFirstofEach(
+                                getDocName(userChatList)
+                            ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
@@ -525,6 +514,27 @@ class _ChatUserListState extends State<ChatUserList> {
       widget.onBackPressed();
     }
     return Future.value(false);
+  }
+
+  String getDocName(PayloadChat userChatList) {
+    String name = '';
+    if (userChatList != null) {
+      if (userChatList?.firstName != null && userChatList?.firstName != '') {
+        if (userChatList?.lastName != null && userChatList?.lastName != '') {
+          name = userChatList.firstName
+              + ' ' + userChatList.lastName ??
+              '';
+        } else {
+          name = (userChatList?.firstName ?? '').toString();
+        }
+      } else {
+        name = '';
+      }
+    } else {
+      name = '';
+    }
+
+    return name;
   }
 
   @override

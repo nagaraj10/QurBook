@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
@@ -26,91 +27,99 @@ class MayaConvUI extends StatelessWidget {
       return Wrap(
         spacing: 10,
         children: c.buttons
-            .map((buttonData) => InkWell(
-                  onTap: ((c.singleuse != null && c.singleuse) &&
-                          (c.isActionDone != null && c.isActionDone))
-                      ? null
-                      : () {
-                          if (c.singleuse != null &&
-                              c.singleuse &&
-                              c.isActionDone != null) {
-                            c.isActionDone = true;
-                          }
-                          buttonData.isSelected = true;
+            .map(
+              (buttonData) => InkWell(
+                onTap: ((c.singleuse != null && c.singleuse) &&
+                        (c.isActionDone != null && c.isActionDone))
+                    ? null
+                    : () {
+                        if (c.singleuse != null &&
+                            c.singleuse &&
+                            c.isActionDone != null) {
+                          c.isActionDone = true;
+                        }
+                        buttonData.isSelected = true;
 
-                          if (buttonData?.redirectTo != null &&
-                              buttonData.redirectTo.contains('myfamily_list')) {
-                            Provider.of<ChatScreenViewModel>(context,
-                                    listen: false)
-                                .startSheelaFromButton(
-                              buttonText: buttonData.title,
-                              payload: buttonData.payload,
-                              isRedirectionNeed: true,
-                            );
-                            FlutterToast()
-                                .getToast('Redirecting...', Colors.black54);
-                            Get.toNamed(
-                              routervariable.rt_UserAccounts,
-                              arguments: UserAccountsArguments(
-                                selectedIndex: 1,
-                              ),
-                            ).then((value) => Provider.of<ChatScreenViewModel>(
-                                    context,
-                                    listen: false)
-                                .reEnableMicButton());
-                          } else if (buttonData?.redirectTo != null &&
-                              buttonData.redirectTo.contains('mycart')) {
-                            Provider.of<ChatScreenViewModel>(context,
-                                    listen: false)
-                                .startSheelaFromButton(
-                              buttonText: buttonData.title,
-                              payload: buttonData.payload,
-                              isRedirectionNeed: true,
-                            );
-                            FlutterToast()
-                                .getToast('Redirecting...', Colors.black54);
-                            Get.to(CheckoutPage());
-                          } else {
-                            Provider.of<ChatScreenViewModel>(context,
-                                    listen: false)
-                                .startSheelaFromButton(
-                              buttonText: buttonData.title,
-                              payload: buttonData.payload,
-                            );
-                          }
-                        },
-                  child: Card(
-                    color: (buttonData.isSelected ?? false)
-                        ? Colors.green
-                        : ((buttonData.isPlaying ?? false) && c.isSpeaking)
-                            ? Colors.lightBlueAccent
-                            : ((c.singleuse != null && c.singleuse) &&
-                                    (c.isActionDone != null && c.isActionDone))
-                                ? Colors.white.withOpacity(0.7)
-                                : Colors.white,
-                    margin: const EdgeInsets.only(top: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                        if (buttonData?.redirectTo != null &&
+                            buttonData.redirectTo.contains('myfamily_list')) {
+                          Provider.of<ChatScreenViewModel>(context,
+                                  listen: false)
+                              .startSheelaFromButton(
+                            buttonText: buttonData.title,
+                            payload: buttonData.payload,
+                            isRedirectionNeed: true,
+                          );
+                          FlutterToast()
+                              .getToast('Redirecting...', Colors.black54);
+                          Get.toNamed(
+                            routervariable.rt_UserAccounts,
+                            arguments: UserAccountsArguments(
+                              selectedIndex: 1,
+                            ),
+                          ).then((value) => Provider.of<ChatScreenViewModel>(
+                                  context,
+                                  listen: false)
+                              .reEnableMicButton());
+                        } else if (buttonData?.redirectTo != null &&
+                            buttonData.redirectTo.contains('mycart')) {
+                          Provider.of<ChatScreenViewModel>(context,
+                                  listen: false)
+                              .startSheelaFromButton(
+                            buttonText: buttonData.title,
+                            payload: buttonData.payload,
+                            isRedirectionNeed: true,
+                          );
+                          FlutterToast()
+                              .getToast('Redirecting...', Colors.black54);
+                          Get.to(CheckoutPage());
+                        } else {
+                          Provider.of<ChatScreenViewModel>(context,
+                                  listen: false)
+                              .startSheelaFromButton(
+                            buttonText: buttonData.title,
+                            payload: buttonData.payload,
+                          );
+                        }
+                      },
+                child: Card(
+                  color: (buttonData.isSelected ?? false)
+                      ? PreferenceUtil.getIfQurhomeisAcive()
+                          ? Color(CommonUtil().getQurhomeGredientColor())
+                          : Colors.green
+                      : ((buttonData.isPlaying ?? false) && c.isSpeaking)
+                          ? PreferenceUtil.getIfQurhomeisAcive()
+                              ? Color(CommonUtil().getQurhomeGredientColor())
+                              : Colors.lightBlueAccent
+                          : ((c.singleuse != null && c.singleuse) &&
+                                  (c.isActionDone != null && c.isActionDone))
+                              ? Colors.white.withOpacity(0.7)
+                              : Colors.white,
+                  margin: const EdgeInsets.only(top: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 5,
-                      ),
-                      child: Text(
-                        buttonData.title,
-                        style: TextStyle(
-                          color: ((buttonData.isPlaying ?? false) &&
-                                      c.isSpeaking) ||
-                                  (buttonData.isSelected ?? false)
-                              ? Colors.white
-                              : Color(new CommonUtil().getMyPrimaryColor()),
-                          fontSize: 16.0.sp,
-                        ),
+                    child: Text(
+                      buttonData.title,
+                      style: TextStyle(
+                        color: ((buttonData.isPlaying ?? false) &&
+                                    c.isSpeaking) ||
+                                (buttonData.isSelected ?? false)
+                            ? Colors.white
+                            : PreferenceUtil.getIfQurhomeisAcive()
+                                ? Color(CommonUtil().getQurhomeGredientColor())
+                                : Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 16.0.sp,
                       ),
                     ),
                   ),
-                ))
+                ),
+              ),
+            )
             .toList(),
       );
     } else {
@@ -125,11 +134,16 @@ class MayaConvUI extends StatelessWidget {
       children: [
         Expanded(
           child: Column(
+            crossAxisAlignment: PreferenceUtil.getIfQurhomeisAcive()
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.center,
             children: <Widget>[
               Text(
                 c.text,
                 style: Theme.of(context).textTheme.bodyText1.apply(
-                      color: Colors.white,
+                      color: PreferenceUtil.getIfQurhomeisAcive()
+                          ? Colors.black
+                          : Colors.white,
                     ),
               ),
               buttonWidgets(context),
@@ -199,7 +213,9 @@ class MayaConvUI extends StatelessWidget {
             child: Icon(
               c.isSpeaking ? Icons.pause : Icons.play_arrow,
               size: 24.0.sp,
-              color: Colors.white,
+              color: PreferenceUtil.getIfQurhomeisAcive()
+                  ? Colors.black
+                  : Colors.white,
             ),
           ),
         ),

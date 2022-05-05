@@ -29,7 +29,6 @@ import 'CommonConstants.dart';
 import 'dart:math' as math;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
-
 class FHBBasicWidget {
   FHBBasicWidget();
 
@@ -133,9 +132,9 @@ class FHBBasicWidget {
         child: TextField(
             enabled: isFileField ?? false,
             controller: searchController,
-            style:getTextStyleForValue(),
+            style: getTextStyleForValue(),
             decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left:20.0),
+              contentPadding: EdgeInsets.only(left: 20.0),
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey[300]),
               ),
@@ -146,8 +145,7 @@ class FHBBasicWidget {
   }
 
   getTextStyleForValue() {
-    return TextStyle(
-        color: Colors.black, fontSize: fhbStyles.fnt_category);
+    return TextStyle(color: Colors.black, fontSize: fhbStyles.fnt_category);
   }
 
   getTextStyleForTags() {
@@ -162,7 +160,7 @@ class FHBBasicWidget {
     var format = NumberFormat.simpleCurrency(locale: locale.toString());
     print("CURRENCY SYMBOL ${format.currencySymbol}"); // $
     print("CURRENCY NAME ${format.currencyName}");
-    return format.currencySymbol;// USD
+    return format.currencySymbol; // USD
   }
 
   Widget getTextFieldWithNoCallbacksForMemo(
@@ -301,7 +299,9 @@ class FHBBasicWidget {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
-              color: Color(CommonUtil().getMyPrimaryColor()),
+              color: PreferenceUtil.getIfQurhomeisAcive()
+                  ? Color(CommonUtil().getQurhomeGredientColor())
+                  : Color(CommonUtil().getMyPrimaryColor()),
               child: Center(
                 child: getFirstLastNameText(myProfile),
               ),
@@ -492,12 +492,9 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getAudioWidgetForChat(
-      String audioPathMain) {
+  Widget getAudioWidgetForChat(String audioPathMain) {
     return Column(
-      children: <Widget>[
-        AudioWidget(audioPathMain,null,isFromChat: true)
-      ],
+      children: <Widget>[AudioWidget(audioPathMain, null, isFromChat: true)],
     );
   }
 

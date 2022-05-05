@@ -5,24 +5,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/chat_socket/view/ChatDetail.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
-import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
-import 'package:myfhb/chat_socket/view/ChatUserList.dart';
-import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/landing/service/landing_service.dart';
-import 'package:myfhb/landing/view/corp_users_welcome_dialog.dart';
-import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/utils/dynamic_links.dart';
-import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:myfhb/user_plans/view_model/user_plans_view_model.dart';
+import '../../chat_socket/constants/const_socket.dart';
+import '../../chat_socket/model/TotalCountModel.dart';
+import '../../chat_socket/model/UserChatListModel.dart';
+import '../../chat_socket/view/ChatUserList.dart';
+import '../../chat_socket/viewModel/chat_socket_view_model.dart';
+import '../../common/common_circular_indicator.dart';
+import '../../constants/fhb_constants.dart';
+import '../service/landing_service.dart';
+import 'corp_users_welcome_dialog.dart';
+import '../../src/blocs/Category/CategoryListBlock.dart';
+import '../../src/model/user/MyProfileResult.dart';
+import '../../src/utils/dynamic_links.dart';
+import '../../telehealth/features/chat/view/PDFViewerController.dart';
+import '../../user_plans/view_model/user_plans_view_model.dart';
 
 import '../../add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import '../../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -94,11 +98,10 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+
     mInitialTime = DateTime.now();
     dbInitialize();
-
     userId = PreferenceUtil.getStringValue(KEY_USERID);
-
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
@@ -121,8 +124,12 @@ class _LandingScreenState extends State<LandingScreen> {
           .getQurPlanDashBoard();
     }
     Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-
-    Future.delayed(Duration(seconds: 1)).then((_) {
+    Future.delayed(const Duration(seconds: 0)).then((_) {
+      if (PreferenceUtil.getIfQurhomeisAcive()) {
+        moveToQurhome();
+      }
+    });
+    Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
           changeTabToAppointments();
@@ -282,239 +289,263 @@ class _LandingScreenState extends State<LandingScreen> {
       });
     }
     return FutureBuilder<MyProfileModel>(
-        future: profileData,
-        builder: (context, snapshot) {
-          return Scaffold(
-            key: _scaffoldKey,
-            backgroundColor: const Color(bgColorContainer),
-            body: WillPopScope(
-              onWillPop: _onBackPressed,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Column(
-                    children: [
-                      Visibility(
-                        visible: !landingViewModel.isSearchVisible,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: <Color>[
-                                Color(CommonUtil().getMyPrimaryColor()),
-                                Color(CommonUtil().getMyGredientColor()),
-                              ],
-                              stops: [0.3, 1.0],
-                            ),
-                            // color: Colors.white,
+      future: profileData,
+      builder: (context, snapshot) {
+        return Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: const Color(bgColorContainer),
+          body: WillPopScope(
+            onWillPop: _onBackPressed,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Column(
+                  children: [
+                    Visibility(
+                      visible: !landingViewModel.isSearchVisible,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: <Color>[
+                              Color(CommonUtil().getMyPrimaryColor()),
+                              Color(CommonUtil().getMyGredientColor()),
+                            ],
+                            stops: [0.3, 1.0],
                           ),
-                          child: SafeArea(
-                            child: Row(
-                              children: <Widget>[
-                                Material(
-                                  color: Colors.transparent,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.menu_rounded,
-                                    ),
-                                    color: Colors.white,
-                                    iconSize: 24.0.sp,
-                                    onPressed: () {
-                                      _scaffoldKey.currentState.openDrawer();
+                          // color: Colors.white,
+                        ),
+                        child: SafeArea(
+                          child: Row(
+                            children: <Widget>[
+                              Material(
+                                color: Colors.transparent,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.menu_rounded,
+                                  ),
+                                  color: Colors.white,
+                                  iconSize: 24.0.sp,
+                                  onPressed: () {
+                                    _scaffoldKey.currentState.openDrawer();
+                                  },
+                                ),
+                              ),
+                              Expanded(
+                                child: getAppBarTitle(),
+                              ),
+                              //TODO: Delete this - Added for Test
+                              // if (kDebugMode)
+                              //   IconButton(
+                              //     icon: Icon(Icons.cloud_upload),
+                              //     onPressed: () {
+                              //       CommonUtil.sendLogToServer();
+                              //     },
+                              //   ),
+
+                              Visibility(
+                                visible: landingViewModel.currentTabIndex == 4,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: 5.0.w,
+                                  ),
+                                  child: IconWidget(
+                                    icon: Icons.search,
+                                    colors: Colors.white,
+                                    size: 30.0.sp,
+                                    onTap: () {
+                                      landingViewModel?.changeSearchBar(
+                                        isEnabled: true,
+                                      );
                                     },
                                   ),
                                 ),
-                                Expanded(
-                                  child: getAppBarTitle(),
-                                ),
-                                //TODO: Delete this - Added for Test
-                                // if (kDebugMode)
-                                //   IconButton(
-                                //     icon: Icon(Icons.cloud_upload),
-                                //     onPressed: () {
-                                //       CommonUtil.sendLogToServer();
-                                //     },
-                                //   ),
-
-                                Visibility(
-                                  visible:
-                                      landingViewModel.currentTabIndex == 4,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      right: 5.0.w,
-                                    ),
-                                    child: IconWidget(
-                                      icon: Icons.search,
-                                      colors: Colors.white,
-                                      size: 30.0.sp,
-                                      onTap: () {
-                                        landingViewModel?.changeSearchBar(
-                                          isEnabled: true,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Center(
-                                  child: CommonUtil().getNotificationIcon(
-                                    context,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SwitchProfile().buildActions(
+                              ),
+                              Center(
+                                child: CommonUtil().getNotificationIcon(
                                   context,
-                                  _key,
-                                  () {
-                                    profileData = getMyProfile();
-                                    checkIfUserIdSame();
-                                    landingViewModel.getQurPlanDashBoard(
-                                        needNotify: true);
-                                    landingViewModel
-                                        .checkIfUserIdSame()
-                                        .then((value) {
-                                      isUserMainId = value;
-                                    });
-                                    setState(() {});
-                                    (context as Element).markNeedsBuild();
-                                  },
-                                  true,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            ),
+                              ),
+                              SwitchProfile().buildActions(
+                                context,
+                                _key,
+                                () {
+                                  profileData = getMyProfile();
+                                  checkIfUserIdSame();
+                                  landingViewModel.getQurPlanDashBoard(
+                                      needNotify: true);
+                                  landingViewModel
+                                      .checkIfUserIdSame()
+                                      .then((value) {
+                                    isUserMainId = value;
+                                  });
+                                  setState(() {});
+                                  (context as Element).markNeedsBuild();
+                                },
+                                true,
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: (snapshot.connectionState ==
-                                ConnectionState.waiting)
-                            ? CommonCircularIndicator()
-                            : (snapshot.hasError)
-                                ? Center(
-                                    child: ErrorsWidget(),
-                                  )
-                                : getCurrentTab(),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            drawer: NavigationDrawer(
-              myProfile: myProfile,
-              moveToLoginPage: moveToLoginPage,
-              userChangedbool: landingViewModel.isUserMainId,
-              refresh: (userChanged) => refresh(
-                userChanged: userChanged,
-              ),
-            ),
-            bottomNavigationBar: Container(
-              decoration: const BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54,
-                    blurRadius: 1,
-                  ),
-                ],
-              ),
-              child: BottomNavigationBar(
-                currentIndex: landingViewModel.currentTabIndex,
-                type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10.sp,
-                unselectedFontSize: 10.sp,
-                selectedLabelStyle: TextStyle(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    Expanded(
+                      child:
+                          (snapshot.connectionState == ConnectionState.waiting)
+                              ? CommonCircularIndicator()
+                              : (snapshot.hasError)
+                                  ? Center(
+                                      child: ErrorsWidget(),
+                                    )
+                                  : getCurrentTab(),
+                    ),
+                  ],
                 ),
-                unselectedLabelStyle: const TextStyle(
+              ],
+            ),
+          ),
+          drawer: NavigationDrawer(
+            myProfile: myProfile,
+            moveToLoginPage: moveToLoginPage,
+            userChangedbool: landingViewModel.isUserMainId,
+            refresh: (userChanged) => refresh(
+              userChanged: userChanged,
+            ),
+          ),
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              boxShadow: [
+                BoxShadow(
                   color: Colors.black54,
+                  blurRadius: 1,
                 ),
-                selectedIconTheme: IconThemeData(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
-                unselectedIconTheme: const IconThemeData(
-                  color: Colors.black54,
-                ),
-                items: [
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(
-                        variable.icon_home,
-                      ),
-                    ),
-                    title: Text(
-                      variable.strhome,
-                      style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 0
-                            ? Color(
-                                CommonUtil().getMyPrimaryColor(),
-                              )
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: getChatSocketIcon(),
-                    title: Text(
-                      variable.strChat,
-                      style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 1
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Image.asset(
-                      variable.icon_mayaMain,
-                      height: 25,
-                      width: 25,
-                    ),
-                    title: Text(
-                      variable.strMaya,
-                      style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 2
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_th),
-                    ),
-                    title: Text(
-                      constants.strAppointment,
-                      style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 3
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  ),
-                  BottomNavigationBarItem(
-                    icon: ImageIcon(
-                      AssetImage(variable.icon_records),
-                    ),
-                    title: Text(
-                      variable.strMyRecords,
-                      style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 4
-                            ? Color(CommonUtil().getMyPrimaryColor())
-                            : Colors.black54,
-                      ),
-                    ),
-                  )
-                ],
-                //backgroundColor: Colors.grey[200],
-                onTap: (index) {
-                  landingViewModel.updateTabIndex(index);
-                },
-              ),
+              ],
             ),
-          );
-        });
+            child: BottomNavigationBar(
+              currentIndex: landingViewModel.currentTabIndex,
+              type: BottomNavigationBarType.fixed,
+              selectedFontSize: 10.sp,
+              unselectedFontSize: 10.sp,
+              selectedLabelStyle: TextStyle(
+                color: Color(CommonUtil().getMyPrimaryColor()),
+              ),
+              unselectedLabelStyle: const TextStyle(
+                color: Colors.black54,
+              ),
+              selectedIconTheme: IconThemeData(
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+              ),
+              unselectedIconTheme: const IconThemeData(
+                color: Colors.black54,
+              ),
+              items: [
+                BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(
+                      variable.icon_home,
+                    ),
+                  ),
+                  title: Text(
+                    variable.strhome,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 0
+                          ? Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            )
+                          : Colors.black54,
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: getChatSocketIcon(),
+                  title: Text(
+                    variable.strChat,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 1
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: Image.asset(
+                    variable.icon_mayaMain,
+                    height: 25,
+                    width: 25,
+                  ),
+                  title: Text(
+                    variable.strMaya,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 2
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: const ImageIcon(
+                    AssetImage(variable.icon_th),
+                  ),
+                  title: Text(
+                    constants.strAppointment,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 3
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
+                ),
+                BottomNavigationBarItem(
+                  icon: ImageIcon(
+                    AssetImage(variable.icon_records),
+                  ),
+                  title: Text(
+                    variable.strMyRecords,
+                    style: TextStyle(
+                      color: landingViewModel.currentTabIndex == 4
+                          ? Color(CommonUtil().getMyPrimaryColor())
+                          : Colors.black54,
+                    ),
+                  ),
+                )
+              ],
+              //backgroundColor: Colors.grey[200],
+              onTap: (index) {
+                landingViewModel.updateTabIndex(index);
+              },
+            ),
+          ),
+          // floatingActionButton: FloatingActionButton.extended(
+          //   onPressed: () {
+          //     moveToQurhome();
+          //   },
+          //   label: const Text(
+          //     'Qurhome',
+          //     style: TextStyle(
+          //       color: Colors.white,
+          //     ),
+          //   ),
+          //   icon: Container(
+          //     padding: const EdgeInsets.all(
+          //       4,
+          //     ),
+          //     height: 50.0.h,
+          //     width: 50.0.h,
+          //     child: AssetImageWidget(
+          //       icon: variable.icon_qurhome,
+          //     ),
+          //   ),
+          //   backgroundColor: Color(
+          //     CommonUtil().getQurhomeGredientColor(),
+          //   ),
+          // ),
+        );
+      },
+    );
   }
 
   Widget getChatIcon() {
@@ -713,6 +744,23 @@ class _LandingScreenState extends State<LandingScreen> {
       profileData = getMyProfile();
     }
     setState(() {});
+  }
+
+  void moveToQurhome() {
+    PreferenceUtil.saveIfQurhomeisAcive(qurhomeStatus: true);
+    Get.to(
+      () => QurhomeDashboard(),
+      binding: BindingsBuilder(
+        () {
+          Get.lazyPut(
+            () => QurhomeDashboardController(),
+          );
+          Get.lazyPut(
+            () => HubListController(),
+          );
+        },
+      ),
+    );
   }
 
   void dbInitialize() {

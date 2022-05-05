@@ -32,7 +32,7 @@ const String qr_updateDefaultProvider = 'updateDefaultProvider';
 const String qr_isOriginalPicRequired = 'isOriginalPicRequired=false';
 const String qr_isOriginalPicRequiredTrue = 'isOriginalPicRequired=true';
 const String qr_language = 'reference-data?search-name=Language';
-
+const String qr_BLEDataUpload = 'device-data/kiosk/send-device-data';
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
 
@@ -136,6 +136,7 @@ const String qr_sessiontoken = 'sessiontoken=';
 const String qr_LastSync = 'latest-sync';
 const String qr_LastMeasureSync = 'latest-measure-sync';
 const String qr_DeviceInterval = 'device-interval';
+const String qr_calendarType = '?calendarType=';
 const String qr_DeviceInfo = 'device-health-record';
 const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';
@@ -356,4 +357,10 @@ const String qr_chat_socket_get_user_id_doc_include = '?include=personal';
 
 const String qr_hub = 'qur-hub/user-hub';
 
-const String qr_delink_check="user-relationship/check-caregiver-association";
+// qurHome Symptom
+
+const String qr_list_symptom = 'qurplan-node-mysql/get-userFormData/';
+const String qr_symp_date = '?date=';
+const String qr_is_symptom =
+    '&isSymptom=true&asNeeded=false&providerId=null&page=1&size=50&searchText=&sorts=activity|ASC';
+const String qr_delink_check = "user-relationship/check-caregiver-association";

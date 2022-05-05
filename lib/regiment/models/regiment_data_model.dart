@@ -43,6 +43,7 @@ class RegimentDataModel {
       this.doseMeal,
       this.doseRepeat,
       this.metadata,
+        this.isActive,
       this.isPlaying = false,
       this.scheduled = false,
       this.asNeeded = false,
@@ -82,6 +83,7 @@ class RegimentDataModel {
   final dynamic deleted;
   final dynamic evDuration;
   final bool hashtml;
+  final bool isActive;
   final dynamic hascustform;
   final dynamic htmltemplate;
   final dynamic dosesNeeded;

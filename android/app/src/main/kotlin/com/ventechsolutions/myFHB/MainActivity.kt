@@ -1,11 +1,18 @@
 package com.ventechsolutions.myFHB
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattService
 import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.LocationManager
 import android.media.AudioManager
 import android.net.*
 import android.net.wifi.WifiConfiguration
@@ -14,7 +21,7 @@ import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.os.SystemClock
+import android.provider.Settings
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
@@ -29,6 +36,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.multidex.BuildConfig
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -36,6 +44,13 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.ventechsolutions.myFHB.bluetooth.BleManager
+import com.ventechsolutions.myFHB.bluetooth.callback.BleGattCallback
+import com.ventechsolutions.myFHB.bluetooth.callback.BleIndicateCallback
+import com.ventechsolutions.myFHB.bluetooth.callback.BleNotifyCallback
+import com.ventechsolutions.myFHB.bluetooth.callback.BleScanCallback
+import com.ventechsolutions.myFHB.bluetooth.data.BleDevice
+import com.ventechsolutions.myFHB.bluetooth.exception.BleException
 import com.ventechsolutions.myFHB.constants.Constants
 import com.ventechsolutions.myFHB.services.*
 import io.flutter.embedding.android.FlutterActivity
@@ -44,16 +59,16 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
-import kotlinx.android.synthetic.main.progess_dialog.*
-import java.lang.StringBuilder
 import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.experimental.and
 import kotlin.system.exitProcess
 
 
 class MainActivity : FlutterActivity() {
 
+//    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
@@ -63,6 +78,7 @@ class MainActivity : FlutterActivity() {
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val STREAM = Constants.CN_EVE_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
+    private val BLECONNECT = Constants.BLE_CONNECT
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -73,6 +89,7 @@ class MainActivity : FlutterActivity() {
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel: EventSink
+    private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
     private var voiceText = ""
@@ -121,7 +138,24 @@ class MainActivity : FlutterActivity() {
     private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
     var alarmManager: AlarmManager? = null
 
-    var elapsedTime=3000;
+    var elapsedTime=3000
+
+    private val REQUEST_CODE_OPEN_GPS = 1
+    private val REQUEST_CODE_PERMISSION_LOCATION = 2
+
+    private val DEVICE_SPO2 = 1
+    private val DEVICE_TEMP = 2
+    private val DEVICE_WT = 3
+    private val DEVICE_BP = 4
+    private val DEVICE_BGL = 5
+
+    var autoRepeatScan = 1
+
+    var postBleData: String? = null
+
+    var scanningBleTimer = Timer()
+
+    var bleName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,7 +166,7 @@ class MainActivity : FlutterActivity() {
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
             if (Constants.TXT_PLAIN == type) {
-                handleSendText(intent); // Handle text being sent
+                handleSendText(intent) // Handle text being sent
             }
         }
         //registerReceiver(smsBroadcastReceiver,
@@ -141,7 +175,7 @@ class MainActivity : FlutterActivity() {
 //        builder = AlertDialog.Builder(context)
 //        builder.setCancelable(true)
         dialog = Dialog(this)
-        customLayout = getLayoutInflater().inflate(R.layout.progess_dialog, null)
+        customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
         displayText = customLayout.findViewById(R.id.displayTxt)
         sendBtn = customLayout.findViewById(R.id.send)
         edit_view = customLayout.findViewById(R.id.edit_view)
@@ -164,7 +198,7 @@ class MainActivity : FlutterActivity() {
             speechRecognizer!!.cancel()
             if (dialog.isShowing) {
                 try {
-                    _result?.let {
+                    _result.let {
                         _result.success("")
                     }
                 } catch (e: Exception) {
@@ -198,9 +232,659 @@ class MainActivity : FlutterActivity() {
          unregisterReceiver(smsBroadcastReceiver)
      }*/
 
+    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int): String?
+    {
+        var DataToPost = ""
+        val DevSeq = "03" // Kiran
+        //String DevSeq="02";//Kunduru
+        try {
+            if (deviceType == DEVICE_SPO2) // SPO2
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceId\" : \"DV:WG:SP:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceType\" : \"SPO2\" , \"Data\" : {"
+                DataToPost += " \"SPO2\" : \""
+                DataToPost += v1
+                DataToPost += "\" ,"
+                DataToPost += " \"Pulse\" : \""
+                DataToPost += v2
+                DataToPost += "\" "
+                DataToPost += " }}"
+            } else if (deviceType == DEVICE_TEMP) // TEMP
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceId\" : \"DV:WG:TE:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceType\" : \"TEMP\" , \"unit\" : \"centigrade\" , \"Data\" : {"
+                DataToPost += " \"Temperature\" : \""
+                DataToPost += v1
+                DataToPost += "\" "
+                DataToPost += " }}"
+            } else if (deviceType == DEVICE_WT) // WEIGHT
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceId\" : \"DV:WG:WT:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceType\" : \"WEIGHT\" , \"unit\" : \"lbs\" , \"Data\" : {"
+                DataToPost += " \"Weight\" : \""
+                DataToPost += v1
+                DataToPost += "\" "
+                DataToPost += " }}"
+            } else if (deviceType == DEVICE_BP) // BP2
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceId\" : \"DV:WG:BP:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceType\" : \"BP\" , \"Data\" : {"
+                DataToPost += " \"Systolic\" : \""
+                DataToPost += v1
+                DataToPost += "\" ,"
+                DataToPost += " \"Diastolic\" : \""
+                DataToPost += v2
+                DataToPost += "\" ,"
+                DataToPost += " \"Pulse\" : \""
+                DataToPost += v3
+                DataToPost += "\" "
+                DataToPost += " }}"
+            } else if (deviceType == DEVICE_BGL) // BGL
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceId\" : \"DV:WG:BG:00:00:$DevSeq\" ,"
+                DataToPost += " \"deviceType\" : \"BGL\" , \"Data\" : {"
+                DataToPost += " \"Bgl\" : \""
+                DataToPost += v1
+                DataToPost += "\" "
+                DataToPost += " }}"
+            } else  // None
+            {
+                DataToPost = "{ \"Status\" : \"$Status\" , "
+                DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
+                DataToPost += " \"Data\" : {"
+                DataToPost += " }}"
+            }
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+        return DataToPost
+    }
+
+    private fun checkPermissionStartScan()
+    {
+        try {
+            val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+            if (!bluetoothAdapter.isEnabled)
+            {
+                if (::BLEEventChannel.isInitialized) {
+                    BLEEventChannel.success("enablebluetooth|please enable bluetooth")
+                }
+                //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
+                //Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
+                return
+            }
+            Log.d("check BLE Permissions", "checkPermissionsStarcScan")
+            val permissions = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+            val permissionDeniedList: MutableList<String> = ArrayList()
+            for (permission in permissions) {
+                val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
+                if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    onPermissionGranted(permission)
+                } else {
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("permissiondenied|no permission granted")
+                    }
+                  //  bluetoothFlutterResult.success("permissiondenied|no permission granted")
+                    permissionDeniedList.add(permission)
+                }
+            }
+            if (!permissionDeniedList.isEmpty()) {
+                val deniedPermissions = permissionDeniedList.toTypedArray()
+                ActivityCompat.requestPermissions(
+                    this,
+                    deniedPermissions,
+                    REQUEST_CODE_PERMISSION_LOCATION
+                )
+            }
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onPermissionGranted(permission: String) {
+        try {
+            when (permission) {
+                Manifest.permission.ACCESS_FINE_LOCATION -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkGPSIsOpen()) {
+                    AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Error")
+                        .setMessage("Allow Location ?")
+                        .setNegativeButton("Cancel",
+                            { dialog, which -> finish() })
+                        .setPositiveButton("setting",
+                            { dialog, which ->
+                                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                                startActivityForResult(intent, REQUEST_CODE_OPEN_GPS)
+                            })
+                        .setCancelable(false)
+                        .show()
+                } else {
+                    //setScanRule();
+                    autoRepeatScan = 1
+                    startScanTimer()
+                }
+            }
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun checkGPSIsOpen(): Boolean {
+        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+
+    var uploaded = 0
+    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int)
+    {
+        try {
+            postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3)
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun GetBitMaskPermissonStr(data: Int): String?
+    {
+        var ret = ""
+        try {
+            if (data and BluetoothGattCharacteristic.PERMISSION_READ != 0) ret += " PERMISSION_READ "
+            if (data and BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED != 0) ret += " PERMISSION_READ_ENCRYPTED  "
+            if (data and BluetoothGattCharacteristic.PERMISSION_READ_ENCRYPTED_MITM != 0) ret += "  PERMISSION_READ_ENCRYPTED_MITM  "
+            if (data and BluetoothGattCharacteristic.PERMISSION_WRITE != 0) ret += "  PERMISSION_WRITE  "
+            if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED != 0) ret += "  PERMISSION_WRITE_ENCRYPTED  "
+            if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED_MITM != 0) ret += "  PERMISSION_WRITE_ENCRYPTED_MITM "
+            if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED != 0) ret += "  PERMISSION_WRITE_SIGNED  "
+            if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED_MITM != 0) ret += "  PERMISSION_WRITE_SIGNED_MITM  "
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+        return ret
+    }
+
+    fun GetBitMaskPropertyStr(data: Int): String? {
+        var ret = ""
+        try {
+            if (data and BluetoothGattCharacteristic.PROPERTY_BROADCAST != 0) ret += "  PROPERTY_BROADCAST  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_EXTENDED_PROPS != 0) ret += "  PROPERTY_EXTENDED_PROPS  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_INDICATE != 0) ret += "  PROPERTY_INDICATE  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_NOTIFY != 0) ret += " PROPERTY_NOTIFY  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_READ != 0) ret += "  PROPERTY_READ  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE != 0) ret += "  PROPERTY_SIGNED_WRITE  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_WRITE != 0) ret += "  PROPERTY_WRITE  "
+            if (data and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE != 0) ret += "  PROPERTY_WRITE_NO_RESPONSE  "
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+        return ret
+    }
+
+
+    fun DumpServicesChars(services: List<BluetoothGattService>) {
+        try {
+            for (i in services.indices) {
+                val bluetoothGattService = services[i]
+                val uuid_service = bluetoothGattService.uuid.toString()
+                Log.e("DumpServicesChars", "Serv: $uuid_service")
+                val chars = BleManager.getInstance().getBluetoothGattCharacteristics(services[i])
+                for (j in chars.indices) {
+                    val c = chars[j]
+                    val uuid_chars = c.uuid.toString()
+                    var st: String? = "       Charac: "
+                    st += uuid_chars
+                    st += GetBitMaskPermissonStr(c.permissions)
+                    st += GetBitMaskPropertyStr(c.properties)
+                    Log.e("DumpServicesChars", st!!)
+                }
+            }
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    fun BytesToStr(data: ByteArray): String {
+        var st = ""
+        try {
+            for (i in data.indices) {
+                st += String.format("%02x ", data[i])
+            }
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+
+        return st
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getUB(b: Byte?): Int {
+        return java.lang.Byte.toUnsignedInt(b!!)
+    }
+
+    private fun startScanTimer()
+    {
+        try {
+            autoRepeatScan = 1
+            scanningBleTimer = Timer()
+            scanningBleTimer.schedule(object : TimerTask() {
+                override fun run() {
+                    startScan()
+                }
+            }, 1000)
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun stopScan()
+    {
+        try {
+            autoRepeatScan = 0
+            if (scanningBleTimer != null)
+            {
+                scanningBleTimer.cancel();
+            }
+            Handler().postDelayed({
+                BleManager.getInstance().cancelScan()
+            }, 1000)
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+        
+    }
+
+    private fun startScan() {
+        try {
+            BleManager.getInstance().scan(object : BleScanCallback()
+            {
+                override fun onScanStarted(success: Boolean) {
+                    Log.d("startScan", "onScanStarted")
+                }
+
+
+                override fun onScanFinished(scanResultList: List<BleDevice?>) {
+                    Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
+                    Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
+                    /*if (autoRepeatScan == 1) {
+                        startScanTimer()
+                    }*/
+                    //stopScan()
+                }
+
+                override fun onLeScan(bleDevice: BleDevice?) {
+                    super.onLeScan(bleDevice)
+                }
+
+
+                override fun onScanning(bleDevice: BleDevice)
+                {
+                    if (bleDevice.name == null) return
+                    val DevName: String = bleDevice.name
+                    Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
+                    if (DevName == "GSH601" || DevName == "Mike")
+                    {
+                        stopScan()
+                        connectToSPO2(bleDevice)
+                    }
+                    if (DevName == "GSH_862B") {
+                        stopScan()
+                        connectToBP(bleDevice)
+                    }
+                    if (DevName == "GSH230") {
+                        stopScan()
+                        connectToWT(bleDevice)
+                    }
+                    if (DevName == "GSH BH") {
+                        stopScan()
+                        connectToTEMP(bleDevice)
+                    }
+                    if (DevName == "GSH_BGM902") {
+                        stopScan()
+                        connectToBGL(bleDevice)
+                    }
+                }
+
+
+                private fun connectToWT(bleDevice: BleDevice) {}
+
+
+                private fun connectToBP(bleDevice: BleDevice) {}
+
+
+                private val BIT_SYNC = 0x80 // package head = 1, other byte = 0
+
+                //byte0
+                private val BIT_SIGNAL_STR = 0x0F //Signal strength 0~8
+                private val BIT_SIGNAL = 0x10 //0 = OK, 1 = no signal
+                private val BIT_PROBE = 0x20 //0 = OK, 1 = probe unplugged
+                private val BIT_PULSE = 0x40 //1 = pulse beep
+
+                //byte1
+                private val BIT_PLETH = 0x7F //Pleth 0~100, 0 = invalid
+
+                //byte2
+                private val BIT_BARGRAPH = 0x0F //0~15, 0 = invalid
+                private val BIT_FINGER = 0x10 //0 = OK, 1 = no finger
+                private val BIT_PULSE_RESEARCH = 0x20 //0 = OK, 1 = pulse research
+                private val BIT_PLUSE_RATE_BIT7 = 0x40 // is bit7 of pulse rate
+
+                //byte3
+                private val BIT_PLUSE_RATE_BIT0_6 = 0x7F // need add BIT_PLUSE_RATE_BIT7, 0xFF = invalid
+
+                //byte4
+                private val BIT_SPO2 = 0x7F // 0~100    0x7f = invalid
+                private val UUID_SERVICE_DATA_SPO2 = "49535343-fe7d-4ae5-8fa9-9fafd205e455"
+                private val UUID_CHARACTER_NOTIFY_SPO2 = "49535343-1e4d-4bd9-ba61-23c647249616"
+                var SPO2_ReadingCount = 0
+                private fun connectToSPO2(bleDevice: BleDevice) {
+                    BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
+
+                        override fun onStartConnect() {
+                            Log.d("startScan", "onStartConnect ")
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("scanstarted|connection started")
+                            }
+                           // bluetoothFlutterResult.success("scanstarted|connection started")
+
+                            //dev_status!!.text = "Connecting ..."
+                        }
+
+
+                        override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
+                            Log.e("startScan", "onConnectFail ")
+                            //dev_status!!.text = "ConnectFail SPO2..."
+                            autoRepeatScan = 1
+                            startScanTimer()
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("connectionfailed| connection failed")
+                            }
+                           // bluetoothFlutterResult.success("connectionfailed| connection failed")
+
+                            //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
+                        }
+
+                        override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
+                            Log.d("startScan", "onConnectSuccess ")
+                            //val devName: String = bleDevice!!.getName()
+                            bleName = bleDevice!!.name
+                            var bleMacId: String
+                            bleMacId = bleDevice!!.mac
+                            var bleDeviceType: String
+                            bleDeviceType = "SPO2"
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("macid|"+bleMacId)
+                            }
+                            //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
+                            sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("bleDeviceType|"+bleDeviceType)
+                            }
+                            SPO2_ReadingCount = 0
+                            val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
+                            DumpServicesChars(services)
+                            BleManager.getInstance().notify(
+                                bleDevice,
+                                UUID_SERVICE_DATA_SPO2,
+                                UUID_CHARACTER_NOTIFY_SPO2,
+                                object : BleNotifyCallback() {
+                                    override fun onNotifySuccess() {
+                                        Log.e("startScan", "onNotifySuccess ")
+                                    }
+
+                                    override fun onNotifyFailure(exception: BleException?) {
+                                        Log.e("startScan", "onNotifyFailure ")
+                                    }
+
+                                    @RequiresApi(Build.VERSION_CODES.O)
+                                    override  fun onCharacteristicChanged(data: ByteArray) {
+                                        //Log.e(GTAG, "onCharacteristicChanged "+BytesToStr(data));
+                                        var signalStrength: Int
+                                        var isNoSignal: Int
+                                        var isProbeUnplugged: Int
+                                        var isBeep: Int
+                                        var pleth: Int
+                                        var bargraph: Int
+                                        var isNoFinger: Int
+                                        var isResearch: Int
+                                        var pulseRate: Int
+                                        var spo2: Int
+                                        var index: Int
+                                        index = 0
+                                        while (index < data.size) {
+                                            if (data[index] and BIT_SYNC.toByte() != 0.toByte()) {
+                                                signalStrength = getUB(data[index]) and BIT_SIGNAL_STR
+                                                isNoSignal = getUB(data[index]) and BIT_SIGNAL
+                                                isProbeUnplugged = getUB(data[index]) and BIT_PROBE
+                                                isBeep = getUB(data[index]) and BIT_PULSE
+                                                pleth = getUB(data[index + 1]) and BIT_PLETH
+                                                bargraph = getUB(data[index + 2]) and BIT_BARGRAPH
+                                                isNoFinger = getUB(data[index + 2]) and BIT_FINGER
+                                                isResearch =
+                                                    getUB(data[index + 2]) and BIT_PULSE_RESEARCH
+                                                pulseRate =
+                                                    getUB(data[index + 2]) and BIT_PLUSE_RATE_BIT7 shl 1
+                                                pulseRate += getUB(data[index + 3]) and BIT_PLUSE_RATE_BIT0_6
+                                                spo2 = getUB(data[index + 4]) and BIT_SPO2
+
+
+                                                //Serial.print("SPO2_Stable ");Serial.println(SPO2_Stable);
+                                                //Serial.print("Signal Strength ");Serial.println(signalStrength);
+                                                //Serial.print("No Signal ");Serial.println(isNoSignal);
+                                                //Serial.print("Probe Unplugged ");Serial.println(isProbeUnplugged);
+                                                //Serial.print("Pulse Beep=");Serial.println(isBeep);
+
+                                                //Serial.print("Pleth=");Serial.println(pleth);
+
+                                                //Serial.print("Bargraph ");Serial.println(bargraph);
+                                                //Serial.print("No Finger ");Serial.print(isNoFinger);
+                                                //Serial.print("Pulse Research=");Serial.println(isResearch);
+
+                                                //Serial.print("Pulse Rate ");Serial.print(pulseRate);
+                                                //Serial.print("SPO2 ");Serial.print(spo2);
+                                                //Serial.println();
+
+                                                /*
+                                                    Log.d(GTAG,String.format("No Finger %d",isNoFinger));
+                                                    Log.d(GTAG,String.format("Pulse Rate %d",pulseRate));
+                                                    Log.d(GTAG,String.format("SPO2 %d",spo2));
+                                                    */if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127) {
+                                                    SPO2_ReadingCount++
+                                                    //dev_data.setText(String.format("%d PR %d SPO2 %d , F=%d",SPO2_ReadingCount,pulseRate,spo2,isNoFinger));
+                                                    /*dev_data!!.text = String.format(
+                                                        "PR %d SPO2 %d , F=%d",
+                                                        pulseRate,
+                                                        spo2,
+                                                        isNoFinger
+                                                    )*/
+                                                    if (SPO2_ReadingCount == 30 && uploaded == 0) {
+                                                        Log.d(
+                                                            "startScan",
+                                                            String.format("Pulse Rate %d", pulseRate)
+                                                        )
+                                                        Log.d("startScan", String.format("SPO2 %d", spo2))
+                                                        uploaded = 1
+                                                        sendPost(
+                                                            "Measurement",
+                                                            DEVICE_SPO2,
+                                                            spo2,
+                                                            pulseRate,
+                                                            0
+                                                        )
+                                                        if (::BLEEventChannel.isInitialized) {
+                                                            BLEEventChannel.success("measurement|"+postBleData)
+                                                        }
+                                                       // bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
+
+                                                    }
+                                                } else {
+                                                    //dev_data!!.text = "Reading SPO2."
+                                                    SPO2_ReadingCount = 0
+                                                }
+                                            }
+                                            index += 5
+                                        }
+                                    }
+                                })
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("connected|"+bleName+" connected successfully!!!")
+                            }
+                            //bluetoothFlutterResult.success("connected|"+bleName+" connected successfully!!!")
+                        }
+
+                        override fun onDisConnected(
+                            isActiveDisConnected: Boolean,
+                            bleDevice: BleDevice?,
+                            gatt: BluetoothGatt?,
+                            status: Int
+                        ) {
+                            Log.d("startScan", "onDisConnected ")
+                            //dev_status!!.text = "DisConnected SPO2."
+                            sendPost("Disconnected", DEVICE_SPO2, 0, 0, 0)
+                            uploaded = 0
+                            if (isActiveDisConnected) {
+                                Log.d("startScan", "isActiveDisConnected DisConnected ")
+
+                                //Toast.makeText(MainActivity.this, getString(R.string.active_disconnected), Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.d("startScan", " DisConnected ")
+                                //Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
+                            }
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("disconnected|"+bleName+" disconnected successfully!!!")
+                            }
+                            //stopScan()
+                           // bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
+
+                        }
+                    })
+                }
+
+                //********************************************************************************************************************
+                val UUID_TEMPERATURE_SERVICE = "00001809-0000-1000-8000-00805f9b34fb"
+                val UUID_TEMPERATURE_INDICATE_CHARACTERISTIC = "00002a1c-0000-1000-8000-00805f9b34fb"
+                private fun connectToTEMP(bleDevice: BleDevice) {
+                    BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
+                        override fun onStartConnect() {
+                            Log.d("startScan", "onStartConnect ")
+                        }
+
+                        override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
+                            Log.e("startScan", "onConnectFail ")
+                            //dev_status!!.text = "ConnectFail TEMP..."
+                            autoRepeatScan = 1
+                            startScanTimer()
+                            //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
+                        }
+
+                        override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
+                            Log.d("startScan", "onConnectSuccess ")
+                            //dev_status!!.text = "Connected to TEMP."
+                            sendPost("Connected", DEVICE_TEMP, 0, 0, 0)
+                            val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
+                            DumpServicesChars(services)
+                            BleManager.getInstance().indicate(
+                                bleDevice,
+                                UUID_TEMPERATURE_SERVICE,
+                                UUID_TEMPERATURE_INDICATE_CHARACTERISTIC,
+                                object : BleIndicateCallback() {
+                                    override fun onIndicateSuccess() {
+                                        Log.e("startScan", "onIndicateSuccess ")
+                                    }
+
+                                    override fun onIndicateFailure(exception: BleException?) {
+                                        Log.e("startScan", "onIndicateFailure ")
+                                    }
+
+                                    @RequiresApi(Build.VERSION_CODES.O)
+                                    override fun onCharacteristicChanged(data: ByteArray) {
+                                        Log.e("startScan", "onCharacteristicChanged " + BytesToStr(data))
+                                        /*
+    0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9
+    07 7e 0e 00 fe 00 00 00 00 00 00 04 02
+    * */
+                                        val tmp32 =
+                                            getUB(data[1]) + (getUB(data[2]) shl 8) + (getUB(data[3]) shl 16)
+                                        val temperatureC = tmp32.toFloat() / 100
+                                        val temperatureF = temperatureC * 9 / 5 + 32
+                                        val MeasureCount = getUB(data[11])
+                                        val st = StringBuilder()
+                                        st.append(" Temperature C: ")
+                                        st.append(temperatureC)
+                                        st.append(" Temperature F: ")
+                                        st.append(temperatureF)
+                                        st.append(" MeasureCount: ")
+                                        st.append(MeasureCount)
+                                        var MeasurementLocation = ""
+                                        if (data[12].equals(2) ) MeasurementLocation = " Forehead "
+                                        if (data[12] .equals(9)) MeasurementLocation = " EAR "
+                                        st.append(MeasurementLocation)
+                                        Log.e("startScan", st.toString())
+                                        /*dev_data!!.text = String.format(
+                                            "Temp C %.2f Temp F %.2f Count %d ",
+                                            temperatureC,
+                                            temperatureF,
+                                            MeasureCount
+                                        ) + MeasurementLocation*/
+                                        if (uploaded == 0) {
+                                            uploaded = 1
+                                            sendPost(
+                                                "Measurement",
+                                                DEVICE_TEMP,
+                                                temperatureF.toInt(),
+                                                0,
+                                                0
+                                            )
+                                        }
+                                    }
+                                })
+                        }
+
+                        override fun onDisConnected(
+                            isActiveDisConnected: Boolean,
+                            bleDevice: BleDevice?,
+                            gatt: BluetoothGatt?,
+                            status: Int
+                        ) {
+                            Log.d("startScan", "onDisConnected ")
+                            //dev_status!!.text = "DisConnected TEMP."
+                            sendPost("Disconnected", DEVICE_TEMP, 0, 0, 0)
+                            uploaded = 0
+                            if (isActiveDisConnected) {
+                                Log.d("startScan", "isActiveDisConnected DisConnected ")
+
+                                //Toast.makeText(MainActivity.this, getString(R.string.active_disconnected), Toast.LENGTH_LONG).show();
+                            } else {
+                                Log.d("startScan", " DisConnected ")
+                                //Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
+                            }
+                            //stopScan()
+                        }
+                    })
+                }
+
+                private fun connectToBGL(bleDevice: BleDevice) {}
+            })
+        }catch (ex:Exception){
+            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        GeneratedPluginRegistrant.registerWith(flutterEngine);
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
@@ -283,7 +967,16 @@ class MainActivity : FlutterActivity() {
                     }
                 }
         )
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, Constants.Bluetooth_EVE_STREAM).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    BLEEventChannel = events!!
+                }
 
+                override fun onCancel(arguments: Any?) {
+                }
+            }
+        )
 
         MethodChannel(
                 flutterEngine.dartExecutor.binaryMessenger,
@@ -291,8 +984,8 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_APP_VERSION) {
                 //logics to get version code
-                val appVersion = getAppVersion();
-                result.success(appVersion);
+                val appVersion = getAppVersion()
+                result.success(appVersion)
             } else {
                 result.notImplemented()
             }
@@ -411,6 +1104,50 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BLECONNECT).setMethodCallHandler {
+                call, result ->
+            if(call.method == "bleconnect")
+            {
+               // bluetoothFlutterResult=result
+                Log.d("BLE VITALS","StartingPoint")
+                BleManager.getInstance().init(application)
+                BleManager.getInstance()
+                    .enableLog(true)
+                    .setReConnectCount(1, 5000)
+                    .setConnectOverTime(20000).operateTimeout = 5000
+
+                val temp = checkPermissionStartScan()
+
+/*                try {
+                    statusBleTimer = Timer()
+                    statusBleTimer.schedule(object : TimerTask()
+                    {
+                        override fun run() {
+                            if(postBleData?.contains("deviceConnected") == true)
+                            {
+                                result.success(bleName+" connected successfully!!!")
+                            }else if(postBleData?.contains("Disconnected") == true){
+                                result.success(bleName+" disconnected successfully!!!")
+                            }
+                        }
+                    }, 2000)
+                }catch (ex:Exception){
+                    Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+
+                Handler().postDelayed({
+                    result.success(postBleData)
+                    Handler().postDelayed({
+                        scanningBleTimer.cancel();
+                        statusBleTimer.cancel();
+                    }, 1000)
+                    //scanningBleTimer.cancel()
+                    //scanningBleTimer.purge()
+                }, 12000)*/
+
+            }
+        }
+
 
     }
 
@@ -421,7 +1158,7 @@ class MainActivity : FlutterActivity() {
             val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.unregisterNetworkCallback(mNetworkCallback)
         }
-        return 1;
+        return 1
     }
     private val mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         @RequiresApi(Build.VERSION_CODES.M)
@@ -455,8 +1192,8 @@ class MainActivity : FlutterActivity() {
             return 1
         }
         else {
-            var networkSSID = ssid;
-            var networkPass = password;
+            var networkSSID = ssid
+            var networkPass = password
             var conf = WifiConfiguration()
             conf.SSID = "\"" + networkSSID + "\""
             conf.preSharedKey = "\""+ networkPass +"\""
@@ -586,7 +1323,7 @@ class MainActivity : FlutterActivity() {
             if (HRMId != null && HRMId != "") {
                 sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${HRMId}"
             } else if (data != null) {
-                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
+                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data}"
             } else {
                 if (redirect_to != null) {
                     if (redirect_to.contains("sheela")) {
@@ -595,10 +1332,10 @@ class MainActivity : FlutterActivity() {
                             sharedValue =
                                     "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
                         } else {
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
                         }
                     } else {
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
                     }
                 }
 
@@ -619,7 +1356,7 @@ class MainActivity : FlutterActivity() {
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
             if (Constants.TXT_PLAIN == type) {
-                handleSendText(intent); // Handle text being sent
+                handleSendText(intent) // Handle text being sent
             }
         }
     }
@@ -740,7 +1477,7 @@ class MainActivity : FlutterActivity() {
                         SpeechRecognizer.ERROR_SERVER -> message = "error from server"
                         SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
                         else -> {
-                            message = "Didn't understand, please try again.";
+                            message = "Didn't understand, please try again."
                         }
                     }
                     this@MainActivity.runOnUiThread(
@@ -828,7 +1565,7 @@ class MainActivity : FlutterActivity() {
                 override fun onPartialResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if(data!=null&&data.size>0) {
-                        finalWords = data!![0].toString()
+                        finalWords = data[0].toString()
                         isPartialResultInvoked = true
                         this@MainActivity.runOnUiThread(
                             object : Runnable {
@@ -927,7 +1664,7 @@ class MainActivity : FlutterActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager =
                     getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
-            if (km.isKeyguardSecure()) {
+            if (km.isKeyguardSecure) {
                 //user has set pin/password/pattern
                 val authIntent: Intent = km.createConfirmDeviceCredentialIntent(
                         Constants.KEY_GAURD_TITLE,
@@ -975,7 +1712,7 @@ class MainActivity : FlutterActivity() {
         val versionCode: Int = BuildConfig.VERSION_CODE
         val versionName: String = BuildConfig.VERSION_NAME
 
-        return "v$versionName b${versionCode.toString()}"
+        return "v$versionName b$versionCode"
     }
 
     private fun requestPermissionFromUSer() {
@@ -1073,7 +1810,7 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            calendar.add(Calendar.MINUTE, -remindBefore.toInt());
+            calendar.add(Calendar.MINUTE, -remindBefore.toInt())
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
@@ -1114,7 +1851,7 @@ class MainActivity : FlutterActivity() {
                 set(Calendar.SECOND, 0)
             }
 
-            calendar.add(Calendar.MINUTE, remindin.toInt());
+            calendar.add(Calendar.MINUTE, remindin.toInt())
 
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
@@ -1128,13 +1865,15 @@ class MainActivity : FlutterActivity() {
     }
 
     @SuppressLint("LaunchActivityFromNotification")
-    private fun createNotifiationBuilder(title:String,
-                                         body:String,
-                                         eId:String,
-                                         nsId: Int,
-                                         currentMillis : Long,
-                                         isCancel:Boolean,
-                                         isButtonShown:Boolean,){
+    private fun createNotifiationBuilder(
+        title: String,
+        body: String,
+        eId: String,
+        nsId: Int,
+        currentMillis: Long,
+        isCancel: Boolean,
+        isButtonShown: Boolean,
+    ){
         try{
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
 
@@ -1202,9 +1941,9 @@ class MainActivity : FlutterActivity() {
         )
         val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent)
         }else{
-            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
         }
 
     }catch (e:Exception){
@@ -1249,7 +1988,7 @@ class MainActivity : FlutterActivity() {
     private fun validateMicAvailability(): Boolean {
         var available = true
         val am: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        if (am.getMode() === AudioManager.MODE_IN_COMMUNICATION) {
+        if (am.mode === AudioManager.MODE_IN_COMMUNICATION) {
             //Mic is in use
             available = false
         }

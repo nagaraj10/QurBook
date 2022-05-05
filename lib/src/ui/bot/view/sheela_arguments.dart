@@ -3,11 +3,13 @@ class SheelaArgument {
   final String langCode;
   final String sheelaInputs;
   final String rawMessage;
+  final bool takeActiveDeviceReadings;
 
   SheelaArgument({
     this.isSheelaAskForLang,
     this.langCode,
     this.sheelaInputs,
-    this.rawMessage
+    this.rawMessage,
+    this.takeActiveDeviceReadings = false,
   });
 }

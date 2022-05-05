@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/ui/bot/widgets/pleasewait.dart';
 import 'package:myfhb/src/ui/bot/widgets/receiver.dart';
 import 'package:myfhb/src/ui/bot/widgets/receiver_video_intro.dart';
@@ -36,8 +37,10 @@ class ChatData extends StatelessWidget with ChangeNotifier {
       fit: StackFit.expand,
       children: [
         Container(
-          padding: EdgeInsets.only(bottom: 50),
-          color: Colors.white70,
+          padding: const EdgeInsets.only(bottom: 50),
+          color: PreferenceUtil.getIfQurhomeisAcive()
+              ? Colors.white10
+              : Colors.white70,
           child: SingleChildScrollView(
             controller: _controller,
             child: ListView.builder(
@@ -46,7 +49,7 @@ class ChatData extends StatelessWidget with ChangeNotifier {
                 shrinkWrap: true,
                 itemCount: conversations.length,
                 itemBuilder: (BuildContext ctxt, int index) => Padding(
-                    padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
+                    padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                     child: conversations[index].isMayaSaid
                         ? (conversations[index]?.videoLinks != null &&
                                 conversations[index]?.videoLinks?.length > 0)
