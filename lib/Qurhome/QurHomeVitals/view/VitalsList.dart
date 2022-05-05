@@ -126,7 +126,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
   void initState() {
     try {
       FocusManager.instance.primaryFocus.unfocus();
-      _events.add(30);
+      _events.add(180);
       mInitialTime = DateTime.now();
       controller.updateisShowTimerDialog(true);
       super.initState();
@@ -137,7 +137,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
 
   void _startTimer() {
     try {
-      _counter = 30;
+      _counter = 180;
       if (_timer != null) {
         _timer.cancel();
       }
@@ -160,7 +160,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
       await Future.delayed(Duration(milliseconds: 500));
       animationController = AnimationController(
         vsync: this,
-        duration: Duration(seconds: 30),
+        duration: Duration(seconds: 180),
       );
       animationController.addListener(() {
         if (animationController.isAnimating) {
@@ -2626,8 +2626,8 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
       alignment: Alignment.center,
       children: [
         SizedBox(
-          width: 130,
-          height: 130,
+          width: 140,
+          height: 140,
           child: CircularProgressIndicator(
             backgroundColor: Colors.grey.shade300,
             color: Color(
