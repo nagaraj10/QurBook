@@ -48,6 +48,8 @@ import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'dart:developer' as dev;
+
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -1507,7 +1509,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
-    switch (widget.device_name) {
+     switch (widget.device_name) {
       case strDataTypeBP:
         {
           return FutureBuilder<List<dynamic>>(
@@ -1668,6 +1670,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
+                print("translis"+translis.toString());
                 final List<OxyResult> translistNew =
                 translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {

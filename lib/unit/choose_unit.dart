@@ -17,6 +17,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/user/Tags.dart';
 
 class ChooseUnit extends StatefulWidget {
   @override
@@ -47,6 +48,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
   String userMappingId = '';
 
   bool isSettingChanged = false;
+  List<Tags> tagsList = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,13 +123,13 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   applyUnitSelection() async {
-    preferredMeasurement = new PreferredMeasurement(
+    var preferredMeasurementNew = new PreferredMeasurement(
         height: heightObj, weight: weightObj, temperature: tempObj);
     profileSetting.preferredMeasurement = preferredMeasurement;
     var body =
         jsonEncode({'id': userMappingId, 'profileSetting': profileSetting});
     await healthReportListForUserRepository
-        .updateUnitPreferences(body)
+        .updateUnitPreferences(userMappingId,profileSetting,preferredMeasurementNew,tagsList)
         .then((value) {
       if (value?.isSuccess ?? false) {
         toast.getToast(value?.message, Colors.green);
@@ -428,8 +431,11 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
+    
+     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
     await healthReportListForUserRepository
-        .getDeviceSelection()
+        .getDeviceSelection(userIdFromBloc: userId)
         .then((value) async {
       if (value.isSuccess) {
         selectionResult = value;
@@ -437,6 +443,12 @@ class _ChooseUnitState extends State<ChooseUnit> {
           if (value.result[0] != null) {
             profileSetting = value.result[0].profileSetting;
             userMappingId = value.result[0].id;
+            if(value.result[0].tags!=null){
+              tagsList = value.result[0].tags != null &&
+                  value.result[0].tags.length > 0
+                  ? value.result[0].tags
+                  : new List();
+            }
 
             if (profileSetting != null) {
               if (profileSetting.preferredMeasurement != null) {
