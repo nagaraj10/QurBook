@@ -61,15 +61,13 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.fieldData.title,
+          CommonUtil().showDescriptionTextRegimen(widget.fieldData),
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
             color: widget.isFromQurHomeSymptom
-                ? Color(CommonUtil()
-                .getQurhomePrimaryColor())
-                : Color(
-                CommonUtil().getMyPrimaryColor()),
+                ? Color(CommonUtil().getQurhomePrimaryColor())
+                : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         SizedBox(
@@ -80,8 +78,11 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
             fontSize: 16.0.sp,
           ),
           hint: Text(
-            (widget.fieldData?.title ?? '').isNotEmpty
+            /*(widget.fieldData?.title ?? '').isNotEmpty
                 ? '${Constants.select} ${widget.fieldData?.title}'
+                : '',*/
+            (widget.fieldData?.title ?? '').isNotEmpty
+                ? '${Constants.select}'
                 : '',
             style: TextStyle(
               fontSize: 14.0.sp,
