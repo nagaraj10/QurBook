@@ -11,6 +11,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -4429,13 +4430,31 @@ class CommonUtil {
         .join(' ');
   }
 
-  String showDescriptionTextRegimen(FieldModel fieldModel) {
+  String showDescriptionTextForm(FieldModel fieldModel) {
     String desc = '';
 
     if (fieldModel?.description != null && fieldModel?.description != '') {
       desc = fieldModel?.description;
     } else if (fieldModel?.title != null && fieldModel?.title != '') {
       desc = fieldModel?.title;
+    } else {
+      desc = '';
+    }
+
+    return desc;
+  }
+
+  String showDescTextRegimenList(VitalsData vitalsData) {
+    String desc = '';
+
+    if (vitalsData != null) {
+      if (vitalsData?.description != null && vitalsData?.description != '') {
+        desc = vitalsData?.description;
+      } else if (vitalsData?.vitalName != null && vitalsData?.vitalName != '') {
+        desc = vitalsData?.vitalName;
+      } else {
+        desc = '';
+      }
     } else {
       desc = '';
     }

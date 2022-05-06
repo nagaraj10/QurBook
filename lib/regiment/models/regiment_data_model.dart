@@ -43,7 +43,7 @@ class RegimentDataModel {
       this.doseMeal,
       this.doseRepeat,
       this.metadata,
-        this.isActive,
+      this.isActive,
       this.isPlaying = false,
       this.scheduled = false,
       this.asNeeded = false,
@@ -284,6 +284,7 @@ class VitalsData {
       this.value,
       this.type,
       this.display,
+      this.description,
       this.alarm,
       this.amin,
       this.amax,
@@ -297,6 +298,7 @@ class VitalsData {
   dynamic value;
   dynamic type;
   dynamic display;
+  dynamic description;
   dynamic alarm;
   dynamic amin;
   dynamic amax;
@@ -312,6 +314,7 @@ class VitalsData {
       value: json['value'],
       type: json['type'],
       display: json['display'],
+      description: json['description'] != null ? json['description'] : null,
       alarm: json['alarm'],
       amin: json['amin'],
       amax: json['amax'],
@@ -327,6 +330,7 @@ class VitalsData {
         'value': value,
         'type': type,
         'display': display,
+        'description': description,
         'alarm': alarm,
         'amin': amin,
         'amax': amax,

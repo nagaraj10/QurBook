@@ -61,7 +61,7 @@ class _FormDataDropDownState extends State<FormDataDropDown> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          CommonUtil().showDescriptionTextRegimen(widget.fieldData),
+          CommonUtil().showDescriptionTextForm(widget.fieldData),
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,

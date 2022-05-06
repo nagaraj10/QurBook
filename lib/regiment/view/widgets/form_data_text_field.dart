@@ -26,7 +26,7 @@ class FormDataTextField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '${CommonUtil().showDescriptionTextRegimen(fieldData)}',
+          '${CommonUtil().showDescriptionTextForm(fieldData)}',
           style: TextStyle(
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
