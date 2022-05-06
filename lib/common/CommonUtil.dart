@@ -10,6 +10,8 @@ import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/regiment/models/field_response_model.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -150,7 +152,7 @@ class CommonUtil {
   final String CONTENT_NO_REFUND =
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
-  static bool dialogboxOpen=false;
+  static bool dialogboxOpen = false;
 
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
@@ -1310,10 +1312,10 @@ class CommonUtil {
   }
 
   regimentDateFormatV2(
-      DateTime newDateTime, {
-        bool isAck = false,
-        bool isLanding = false,
-      }) {
+    DateTime newDateTime, {
+    bool isAck = false,
+    bool isLanding = false,
+  }) {
     DateFormat newFormat;
     var updatedDate = '';
     final currentTime = DateTime.now();
@@ -1339,7 +1341,6 @@ class CommonUtil {
     updatedDate = updatedDate + newFormat.format(newDateTime);
     return updatedDate;
   }
-
 
   dateTimeString(DateTime dateTime) {
     if (dateTime != null && (dateTime?.toString()?.isNotEmpty ?? false)) {
@@ -4328,7 +4329,7 @@ class CommonUtil {
     });
   }
 
-  static commonDialogBox(String msg) async{
+  static commonDialogBox(String msg) async {
     await Get.defaultDialog(
       content: Padding(
         padding: EdgeInsets.symmetric(
@@ -4336,7 +4337,7 @@ class CommonUtil {
         ),
         child: Text(
           msg,
-           textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 14,
           ),
@@ -4381,11 +4382,10 @@ class CommonUtil {
       //   ],
       // ),
     );
-
   }
 
-  void showCommonDialogBox(String msg,BuildContext context) {
-    dialogboxOpen=true;
+  void showCommonDialogBox(String msg, BuildContext context) {
+    dialogboxOpen = true;
     showDialog(
         context: context,
         builder: (context) {
@@ -4399,7 +4399,7 @@ class CommonUtil {
                     size: 24.0.sp,
                   ),
                   onPressed: () {
-                    dialogboxOpen=false;
+                    dialogboxOpen = false;
                     Navigator.of(context).pop();
                   })
             ],
@@ -4407,8 +4407,7 @@ class CommonUtil {
         });
   }
 
-
-  Widget qurHomeMainIcon(){
+  Widget qurHomeMainIcon() {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 8.h,
@@ -4429,6 +4428,38 @@ class CommonUtil {
         .split(' ')
         .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
         .join(' ');
+  }
+
+  String showDescriptionTextForm(FieldModel fieldModel) {
+    String desc = '';
+
+    if (fieldModel?.description != null && fieldModel?.description != '') {
+      desc = fieldModel?.description;
+    } else if (fieldModel?.title != null && fieldModel?.title != '') {
+      desc = fieldModel?.title;
+    } else {
+      desc = '';
+    }
+
+    return desc;
+  }
+
+  String showDescTextRegimenList(VitalsData vitalsData) {
+    String desc = '';
+
+    if (vitalsData != null) {
+      if (vitalsData?.description != null && vitalsData?.description != '') {
+        desc = vitalsData?.description;
+      } else if (vitalsData?.vitalName != null && vitalsData?.vitalName != '') {
+        desc = vitalsData?.vitalName;
+      } else {
+        desc = '';
+      }
+    } else {
+      desc = '';
+    }
+
+    return desc;
   }
 }
 

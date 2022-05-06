@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -45,6 +46,7 @@ class QurhomeDashboardController extends GetxController {
 
   void _disableTimer() {
     if (_timerSubscription != null) {
+      hubController.eid = null;
       _timerSubscription.cancel();
       _timerSubscription = null;
     }
@@ -96,6 +98,9 @@ class QurhomeDashboardController extends GetxController {
                     takeActiveDeviceReadings: true,
                   ),
                 );
+              }).then((_) {
+                var regController = Get.find<QurhomeRegimenController>();
+                regController.getRegimenList();
               });
             } else {
               FlutterToast().getToastForLongTime(
@@ -134,6 +139,7 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
+
       final index = userDeviceCollection.indexWhere(
         (element) => validString(element.device.serialNumber) == bleMacId,
       );
@@ -143,7 +149,11 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  void checkForConnectedDevices(bool isFromVitalsList) {
+  void checkForConnectedDevices(
+    bool isFromVitalsList, {
+    String eid,
+    String uid,
+  }) {
     try {
       int seconds = 180;
       if (!isFromVitalsList) {
@@ -155,16 +165,19 @@ class QurhomeDashboardController extends GetxController {
       _enableTimer(isFromVitalsList);
       BleConnectController bleController = Get.put(BleConnectController());
       bleController.getBleConnectData(Get.context);
+      hubController.eid = eid;
+      hubController.uid = uid;
       Future.delayed(Duration(seconds: seconds)).then((value) {
         if (!foundBLE.value && !movedToNextScreen) {
           _disableTimer();
+          hubController.eid = null;
           if (!isFromVitalsList) {
             LoaderClass.hideLoadingDialog(Get.context);
             //Device Not Connected
             Get.toNamed(
               rt_Sheela,
               arguments: SheelaArgument(
-                sheelaInputs: requestSheelaForpo,
+                eId: eid,
               ),
             );
           }

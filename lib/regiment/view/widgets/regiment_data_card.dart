@@ -181,19 +181,19 @@ class RegimentDataCard extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                          Text(
-                                            '${CommonUtil().regimentDateFormat(
-                                              regimentData?.asNeeded
-                                                  ? regimentData?.ack_local ??
-                                                      DateTime.now()
-                                                  : regimentData?.ack_local ??
-                                                      DateTime.now(),
-                                              isAck: true,
-                                            )}',
-                                            style: TextStyle(
-                                              fontSize: 12.0.sp,
-                                            ),
+                                        Text(
+                                          '${CommonUtil().regimentDateFormat(
+                                            regimentData?.asNeeded
+                                                ? regimentData?.ack_local ??
+                                                    DateTime.now()
+                                                : regimentData?.ack_local ??
+                                                    DateTime.now(),
+                                            isAck: true,
+                                          )}',
+                                          style: TextStyle(
+                                            fontSize: 12.0.sp,
                                           ),
+                                        ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 5.0.w),
                                           child: InkWell(
@@ -397,7 +397,7 @@ class RegimentDataCard extends StatelessWidget {
               children: [
                 Text(
                   //TODO: Replace with actual value from API
-                  '${vitalData.vitalName} : ',
+                  '${CommonUtil().showDescTextRegimenList(vitalData)} : ',
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.grey,
@@ -449,9 +449,7 @@ class RegimentDataCard extends StatelessWidget {
                       ? () {
                           Get.to(
                             () => ImageViewer(
-                              imageUrl,
-                              eid,regimentData?.providerid
-                            ),
+                                imageUrl, eid, regimentData?.providerid),
                           );
                         }
                       : null,
@@ -586,7 +584,7 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   String getDialogTitle(BuildContext context) {
-    String title = '';
+    var title = '';
     if (!(regimentData?.asNeeded ?? false) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
