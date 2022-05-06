@@ -154,37 +154,37 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
   String getDeviceType() {
     final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-    return data.size.shortestSide < 600 ? 'phone' :'tablet';
+    return data.size.shortestSide < 600 ? 'phone' : 'tablet';
   }
 
-  double getPaddingWidth(){
-    if(getDeviceType()=='phone'){
+  double getPaddingWidth() {
+    if (getDeviceType() == 'phone') {
       return 25.0;
-    }else{
-      return MediaQuery.of(context).size.width*03;
+    } else {
+      return MediaQuery.of(context).size.width * 03;
     }
   }
 
-  Color getCardBackgroundColor(int itemIndex,int nextRegimenPosition){
-    if(controller.currentIndex == itemIndex){
+  Color getCardBackgroundColor(int itemIndex, int nextRegimenPosition) {
+    if (controller.currentIndex == itemIndex) {
       return Colors.white;
-    }else if(nextRegimenPosition == itemIndex){
+    } else if (nextRegimenPosition == itemIndex) {
       return Color(
         CommonUtil().getQurhomePrimaryColor(),
       );
-    }else{
+    } else {
       return Colors.white;
     }
   }
 
-  Color getTextAndIconColor(int itemIndex,int nextRegimenPosition){
-    if(controller.currentIndex == itemIndex){
+  Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
+    if (controller.currentIndex == itemIndex) {
       return Color(
         CommonUtil().getQurhomePrimaryColor(),
       );
-    }else if(nextRegimenPosition == itemIndex){
+    } else if (nextRegimenPosition == itemIndex) {
       return Colors.white;
-    }else{
+    } else {
       return Colors.grey;
     }
   }
@@ -201,7 +201,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: getCardBackgroundColor(itemIndex,nextRegimenPosition),
+              color: getCardBackgroundColor(itemIndex, nextRegimenPosition),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
@@ -213,7 +213,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal:16.0,vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Stack(
                 children: [
                   if (regimen.ack_local != null) ...{
@@ -228,7 +229,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               'assets/Qurhome/seen.png',
                               height: 12.0,
                               width: 12.0,
-                              color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
                             ),
                             SizedBox(
                               width: 2,
@@ -242,7 +244,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               )}',
                               style: TextStyle(
                                 fontSize: 11.0,
-                                color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                                color: getTextAndIconColor(
+                                    itemIndex, nextRegimenPosition),
                               ),
                             ),
                           ],
@@ -259,7 +262,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               ? DateFormat('hh:mm a').format(regimen.estart)
                               : '',
                           style: TextStyle(
-                              color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
                               fontSize: 15.h,
                               fontWeight: FontWeight.w500),
                         ),
@@ -276,7 +280,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             regimen.title.toString().trim(),
                             maxLines: 2,
                             style: TextStyle(
-                                color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+                                color: getTextAndIconColor(
+                                    itemIndex, nextRegimenPosition),
                                 fontSize: 16.h,
                                 fontWeight: FontWeight.w600),
                           ),
@@ -304,14 +309,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
             errorWidget: (context, url, error) {
               return getDefaultIcon(activityname, uformName, iconSize,
                   itemIndex, nextRegimenPosition);
@@ -373,7 +378,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         : Icon(
             cardIcon,
             size: iconSize - 5.0,
-            color: getTextAndIconColor(itemIndex,nextRegimenPosition),
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
     return cardIconWidget;
   }
@@ -673,49 +678,45 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
         var dashboardController = Get.find<QurhomeDashboardController>();
-        dashboardController.checkForConnectedDevices(false);
+        dashboardController.checkForConnectedDevices(
+          false,
+          eid: regimen.eid,
+          uid: regimen.uid,
+        );
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForbp,
+            eId: regimen.eid,
           ),
-        ).then((value) => {
-        controller.getRegimenList()
-        });
+        ).then((value) => {controller.getRegimenList()});
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForweight,
+            eId: regimen.eid,
           ),
-        ).then((value) => {
-          controller.getRegimenList()
-        });
+        ).then((value) => {controller.getRegimenList()});
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForglucose,
+            eId: regimen.eid,
           ),
-        ).then((value) => {
-        controller.getRegimenList()
-        });
+        ).then((value) => {controller.getRegimenList()});
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
-            sheelaInputs: requestSheelaFortemperature,
+            eId: regimen.eid,
           ),
-        ).then((value) => {
-        controller.getRegimenList()
-        });
+        ).then((value) => {controller.getRegimenList()});
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);

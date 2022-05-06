@@ -95,6 +95,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
   HubListController hublistController;
+  String eId;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     if (disableMic) {
@@ -220,6 +221,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         );
         model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId.value;
+        model.eid = hublistController.eid;
+        model.uid = hublistController.uid;
         await Future.delayed(Duration(
           seconds: 2,
         ));
@@ -627,7 +630,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  sendToMaya(String msg, {String screen, String providerMsg}) async {
+  sendToMaya(
+    String msg, {
+    String screen,
+    String providerMsg,
+  }) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     auth_token = await PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
     user_name = prof.result != null
@@ -652,6 +659,13 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
     reqJson[parameters.strProviderMsg] = providerMsg;
+    if (eId != null) {
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.KIOSK_remind,
+        parameters.KIOSK_eid: eId
+      };
+      eId = null;
+    }
     screenValue = screen;
     isLoading = true;
 

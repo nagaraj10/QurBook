@@ -81,6 +81,9 @@ class _ChatScreenState extends State<ChatScreen>
         text: "Your SpO2 device is connected",
       );
       getMyViewModel().setupListenerForReadings();
+    } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {
+      getMyViewModel().eId = widget?.arguments?.eId;
+      getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
     } else {
       if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
         getMyViewModel(
