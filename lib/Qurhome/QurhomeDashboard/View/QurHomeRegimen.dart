@@ -682,7 +682,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           arguments: SheelaArgument(
             sheelaInputs: requestSheelaForbp,
           ),
-        );
+        ).then((value) => {
+        controller.getRegimenList()
+        });
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
         Get.toNamed(
@@ -690,7 +692,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           arguments: SheelaArgument(
             sheelaInputs: requestSheelaForweight,
           ),
-        );
+        ).then((value) => {
+          controller.getRegimenList()
+        });
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
         Get.toNamed(
@@ -698,7 +702,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           arguments: SheelaArgument(
             sheelaInputs: requestSheelaForglucose,
           ),
-        );
+        ).then((value) => {
+        controller.getRegimenList()
+        });
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
@@ -707,7 +713,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           arguments: SheelaArgument(
             sheelaInputs: requestSheelaFortemperature,
           ),
-        );
+        ).then((value) => {
+        controller.getRegimenList()
+        });
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
