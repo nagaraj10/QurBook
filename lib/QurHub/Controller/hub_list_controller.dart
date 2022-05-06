@@ -35,6 +35,8 @@ class HubListController extends GetxController {
   var bleDeviceType = "".obs;
   var hubId = "".obs;
   var virtualHubId = "";
+  var eid;
+  var uid;
 
   getHubList() async {
     try {

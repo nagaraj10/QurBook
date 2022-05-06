@@ -4,6 +4,7 @@ class SheelaArgument {
   final String sheelaInputs;
   final String rawMessage;
   final bool takeActiveDeviceReadings;
+  final eId;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -11,5 +12,6 @@ class SheelaArgument {
     this.sheelaInputs,
     this.rawMessage,
     this.takeActiveDeviceReadings = false,
+    this.eId,
   });
 }
