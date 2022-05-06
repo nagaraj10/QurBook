@@ -1,16 +1,20 @@
 class SendMailTo {
   SendMailTo({
-    String id,
+    dynamic id,
   }) {
     _id = id;
   }
 
   SendMailTo.fromJson(dynamic json) {
+    try{
     _id = json['id'];
+    }catch(e){
+      
+    }
   }
-  String _id;
+  dynamic _id;
 
-  String get id => _id;
+  dynamic get id => _id;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
