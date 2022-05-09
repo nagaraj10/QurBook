@@ -228,7 +228,6 @@ class ChatScreenViewModel extends ChangeNotifier {
         var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
         String actualDateTime = formatterDateTime.format(now);
         model.ackLocal = actualDateTime;
-        print("model.ackLocal ${model.ackLocal.toString()}");
         hublistController.eid = null;
         hublistController.uid = null;
         await Future.delayed(Duration(
