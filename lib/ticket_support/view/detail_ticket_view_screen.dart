@@ -215,17 +215,19 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),
-                      Text(
-                        constants.notificationDate(
-                            '${ticket.preferredDate.toString()}'),
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          fontWeight: FontWeight.w100,
-                        ),
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
+                      ticket.preferredDate != null
+                          ? Text(
+                              constants.notificationDate(
+                                  '${ticket.preferredDate.toString()}'),
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w100,
+                              ),
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            )
+                          : SizedBox(),
                       Row(
                         children: [
                           Spacer(
@@ -331,7 +333,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
               SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Container(
-                    height: MediaQuery.of(context).size.height*0.55,
+                    height: MediaQuery.of(context).size.height * 0.55,
                     width: double.infinity, //height of TabBarView
                     child: TabBarView(children: <Widget>[
                       Center(
@@ -951,7 +953,6 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       ticketViewModel.userTicketService
           .uploadAttachment(ticketId, file)
           .then((value) {
-
         if (value) {
           FlutterToast().getToast('Uploaded Successfully', Colors.grey);
           callTicketDetailsApi();

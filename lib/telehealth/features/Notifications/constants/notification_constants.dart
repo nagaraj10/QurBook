@@ -13,8 +13,9 @@ const String strRemiderPostFrequency3 = 'PlanExpiryReminderPostfrequency3';
 const String strRemiderPostFrequency7 = 'PlanExpiryReminderPostfrequency7';
 const String strRemiderPostFrequency14 = 'PlanExpiryReminderPostfrequency14';
 
-String notificationDate(String value) =>
-    DateFormat('dd MMM yyyy').format(DateTime.parse(value)).toString();
+String notificationDate(String value) => value != null
+    ? DateFormat('dd MMM yyyy').format(DateTime.parse(value ?? '')).toString()
+    : '';
 
 String changeDateFormat(String value) {
   var pos = value.lastIndexOf('.');
