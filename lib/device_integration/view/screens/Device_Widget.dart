@@ -228,7 +228,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
@@ -819,18 +823,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForTemp = '';
       }
 
-      try{
-        unitForTemp=deviceValues.bodyTemperature.entities[0].temperatureUnit!=null?deviceValues.bodyTemperature.entities[0].temperatureUnit.name:'';
-      }catch(e){
-        unitForTemp='';
+      try {
+        unitForTemp =
+            deviceValues.bodyTemperature.entities[0].temperatureUnit != null
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                : '';
+      } catch (e) {
+        unitForTemp = '';
       }
     } else {
       dateForTemp = '';
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
-      timeForTemp ='';
-      unitForTemp='';
+      timeForTemp = '';
+      unitForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues
@@ -861,22 +868,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForWeigh = '';
       }
 
-      try{
-        try{
-          unitForWeight=deviceValues.bodyWeight.entities[0].weightUnit!=null?deviceValues.bodyWeight.entities[0].weightUnit.name:'';
-        }catch(e){
-          unitForWeight='';
+      try {
+        try {
+          unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+              ? deviceValues.bodyWeight.entities[0].weightUnit.name
+              : '';
+        } catch (e) {
+          unitForWeight = '';
         }
-      }catch(e){
-
-      }
+      } catch (e) {}
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
       timeForWeight = '';
-      unitForWeight='';
+      unitForWeight = '';
     }
 
     return getDeviceData(
@@ -898,7 +905,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         devicevalue1ForOs,
         devicevalue1ForWeight,
         devicevalue1ForTemp,
-        devicevalue2ForBp,unitForTemp,unitForWeight);
+        devicevalue2ForBp,
+        unitForTemp,
+        unitForWeight);
   }
 
   void callBackToRefresh() {
@@ -998,7 +1007,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       value1ForOs,
       value1ForWeight,
       value1ForTemp,
-      String value2ForBp,String unitForTemp,String unitForWeight) {
+      String value2ForBp,
+      String unitForTemp,
+      String unitForWeight) {
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,
@@ -2085,7 +2096,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           value1ForTemp != '' &&
                                                                   value1ForTemp !=
                                                                       null
-                                                              ? unitForTemp!=null?unitForTemp.capitalizeFirstofEach:''
+                                                              ? unitForTemp !=
+                                                                      null
+                                                                  ? unitForTemp
+                                                                      .capitalizeFirstofEach
+                                                                  : ''
                                                               : '-',
                                                           style: TextStyle(
                                                             fontSize: 12.0.sp,
@@ -2778,7 +2793,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                       '' &&
                                                                   value1ForWeight !=
                                                                       null
-                                                              ? unitForWeight!=null?unitForWeight?.capitalizeFirstofEach:''
+                                                              ? unitForWeight !=
+                                                                      null
+                                                                  ? unitForWeight
+                                                                      ?.capitalizeFirstofEach
+                                                                  : ''
                                                               : '',
                                                           style: TextStyle(
                                                             fontSize: 10.0.sp,
@@ -2843,7 +2862,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                             '' &&
                                                                         averageForWeigh !=
                                                                             null
-                                                                    ? unitForWeight!=null?unitForWeight.capitalizeFirstofEach:''
+                                                                    ? unitForWeight !=
+                                                                            null
+                                                                        ? unitForWeight
+                                                                            .capitalizeFirstofEach
+                                                                        : ''
                                                                     : '',
                                                                 style:
                                                                     TextStyle(
