@@ -243,17 +243,22 @@ class _TicketsList extends State<TicketsList> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
-                          Text(
-                            constants.notificationDate(
-                                '${ticketList[i].preferredDate.toString()}'),
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w100,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
+                          ticketList[i].preferredDate != null
+                              ? Text(
+                                  constants.notificationDate(ticketList[i]
+                                              .preferredDate !=
+                                          null
+                                      ? '${ticketList[i].preferredDate?.toString()}'
+                                      : ''),
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w100,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                )
+                              : SizedBox(),
                           Row(
                             children: [
                               Spacer(

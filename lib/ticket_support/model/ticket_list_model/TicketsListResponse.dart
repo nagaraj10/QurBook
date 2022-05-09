@@ -296,7 +296,7 @@ class Role {
 
 class Group {
   List<Members> members;
-  List<SendMailTo> sendMailTo;
+  List<String> sendMailTo;
   bool public;
   String sId;
   String name;
@@ -310,12 +310,7 @@ class Group {
         members.add(new Members.fromJson(v));
       });
     }
-    if (json['sendMailTo'] != null) {
-      sendMailTo = new List<SendMailTo>();
-      json['sendMailTo'].forEach((v) {
-        sendMailTo.add(new SendMailTo.fromJson(v));
-      });
-    }
+    sendMailTo = json['sendMailTo'].cast<String>();
     public = json['public'];
     sId = json['_id'];
     name = json['name'];
@@ -327,7 +322,7 @@ class Group {
       data['members'] = this.members.map((v) => v.toJson()).toList();
     }
     if (this.sendMailTo != null) {
-      data['sendMailTo'] = this.sendMailTo.map((v) => v.toJson()).toList();
+      data['sendMailTo'] = this.sendMailTo;
     }
     data['public'] = this.public;
     data['_id'] = this.sId;
