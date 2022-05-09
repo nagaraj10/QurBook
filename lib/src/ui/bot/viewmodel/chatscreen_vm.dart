@@ -223,6 +223,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         model.deviceId = hublistController.bleMacId.value;
         model.eid = hublistController.eid;
         model.uid = hublistController.uid;
+        hublistController.eid = null;
+        hublistController.uid = null;
         await Future.delayed(Duration(
           seconds: 2,
         ));

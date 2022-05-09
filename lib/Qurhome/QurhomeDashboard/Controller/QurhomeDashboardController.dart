@@ -46,7 +46,6 @@ class QurhomeDashboardController extends GetxController {
 
   void _disableTimer() {
     if (_timerSubscription != null) {
-      hubController.eid = null;
       _timerSubscription.cancel();
       _timerSubscription = null;
     }
@@ -164,13 +163,14 @@ class QurhomeDashboardController extends GetxController {
       movedToNextScreen = false;
       _enableTimer(isFromVitalsList);
       BleConnectController bleController = Get.put(BleConnectController());
-      bleController.getBleConnectData(Get.context);
       hubController.eid = eid;
       hubController.uid = uid;
+      bleController.getBleConnectData(Get.context);
+
       Future.delayed(Duration(seconds: seconds)).then((value) {
         if (!foundBLE.value && !movedToNextScreen) {
           _disableTimer();
-          hubController.eid = null;
+
           if (!isFromVitalsList) {
             LoaderClass.hideLoadingDialog(Get.context);
             //Device Not Connected
