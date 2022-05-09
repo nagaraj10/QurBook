@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
@@ -223,6 +224,11 @@ class ChatScreenViewModel extends ChangeNotifier {
         model.deviceId = hublistController.bleMacId.value;
         model.eid = hublistController.eid;
         model.uid = hublistController.uid;
+        var now = DateTime.now();
+        var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
+        String actualDateTime = formatterDateTime.format(now);
+        model.ackLocal = actualDateTime;
+        print("model.ackLocal ${model.ackLocal.toString()}");
         hublistController.eid = null;
         hublistController.uid = null;
         await Future.delayed(Duration(
