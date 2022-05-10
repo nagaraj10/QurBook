@@ -217,11 +217,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Stack(
                 children: [
-                  if (regimen.ack_local != null) ...{
+                  if (regimen.ack != null) ...{
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Visibility(
-                        visible: regimen.ack_local != null,
+                        visible: regimen.ack != null,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -238,8 +238,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             Text(
                               '${CommonUtil().regimentDateFormatV2(
                                 regimen?.asNeeded
-                                    ? regimen?.ack_local ?? DateTime.now()
-                                    : regimen?.ack_local ?? DateTime.now(),
+                                    ? regimen?.ack ?? DateTime.now()
+                                    : regimen?.ack ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
