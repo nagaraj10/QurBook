@@ -104,6 +104,7 @@ import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -4441,7 +4442,7 @@ class CommonUtil {
       desc = '';
     }
 
-    return desc;
+    return parseHtmlString(desc);
   }
 
   String showDescTextRegimenList(VitalsData vitalsData) {
@@ -4460,6 +4461,12 @@ class CommonUtil {
     }
 
     return desc;
+  }
+
+  String parseHtmlString(String htmlString) {
+    var unescape = new HtmlUnescape();
+    var text = unescape.convert(htmlString);
+    return text;
   }
 }
 
