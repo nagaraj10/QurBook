@@ -13,6 +13,7 @@ import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -195,6 +196,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         final QurhomeDashboardController qurhomeDashboardController =
             Get.find();
         qurhomeDashboardController.updateTabIndex(0);
+        final QurhomeRegimenController qurhomeRegimenController =
+        Get.find();
+        qurhomeRegimenController.getRegimenList();
         Get.back();
       }
     } catch (e) {
