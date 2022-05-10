@@ -22,6 +22,7 @@ class QurhomeRegimenController extends GetxController {
 
       qurHomeRegimenResponseModel=await  _apiProvider.getRegimenList("");
       loadingData.value = false;
+      qurHomeRegimenResponseModel.regimentsList.removeWhere((element) => element?.isEventDisabled);
       for (int i=0;i<qurHomeRegimenResponseModel.regimentsList.length;i++) {
           if(DateTime.now().isBefore(qurHomeRegimenResponseModel.regimentsList[i].estart)){
             if(qurHomeRegimenResponseModel.regimentsList[i].ack_local != null){
