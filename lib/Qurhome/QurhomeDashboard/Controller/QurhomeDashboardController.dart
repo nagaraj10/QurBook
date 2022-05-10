@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -81,6 +82,8 @@ class QurhomeDashboardController extends GetxController {
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            var regController = Get.find<QurhomeRegimenController>();
+
             if (!isFromVitalsList) {
               milliSeconds = 0;
               LoaderClass.hideLoadingDialog(Get.context);
@@ -98,7 +101,6 @@ class QurhomeDashboardController extends GetxController {
                   ),
                 );
               }).then((_) {
-                var regController = Get.find<QurhomeRegimenController>();
                 regController.getRegimenList();
               });
             } else {
@@ -106,6 +108,14 @@ class QurhomeDashboardController extends GetxController {
                 'No device found',
                 Colors.red,
               );
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  eId: hubController.eid,
+                ),
+              ).then((_) {
+                regController.getRegimenList();
+              });
             }
             break;
 
@@ -138,10 +148,11 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
+      var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
 
-      final index = userDeviceCollection.indexWhere(
-        (element) => validString(element.device.serialNumber) == bleMacId,
-      );
+      final index = userDeviceCollection.indexWhere((element) =>
+          (validString(element.device.serialNumber) == bleMacId) &&
+          (element.userId == activeUser));
       return index >= 0;
     } catch (e) {
       return false;
