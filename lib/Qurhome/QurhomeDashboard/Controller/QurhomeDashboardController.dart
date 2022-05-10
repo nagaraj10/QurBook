@@ -108,14 +108,16 @@ class QurhomeDashboardController extends GetxController {
                 'No device found',
                 Colors.red,
               );
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: hubController.eid,
-                ),
-              ).then((_) {
-                regController.getRegimenList();
-              });
+              if (!isFromVitalsList) {
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    eId: hubController.eid,
+                  ),
+                ).then((_) {
+                  regController.getRegimenList();
+                });
+              }
             }
             break;
 
@@ -152,7 +154,7 @@ class QurhomeDashboardController extends GetxController {
 
       final index = userDeviceCollection.indexWhere((element) =>
           (validString(element.device.serialNumber) == bleMacId) &&
-          (element.userId == activeUser));
+          ((element.userId ?? '') == activeUser));
       return index >= 0;
     } catch (e) {
       return false;
