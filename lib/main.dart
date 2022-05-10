@@ -23,6 +23,7 @@ import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
+import 'common/firebase_analytics_service.dart';
 import 'constants/router_variable.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
@@ -179,7 +180,6 @@ Future<void> main() async {
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
-
     //get secret from resource
     final resList = <dynamic>[];
     await CommonUtil.getResourceLoader().then((value) {
@@ -208,6 +208,10 @@ Future<void> main() async {
     await FHBUtils.instance.getDb();
 
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    // ]);
 
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
@@ -279,6 +283,10 @@ Future<void> main() async {
         );
       }
     });
+
+    var firebase=FirebaseAnalyticsService();
+    firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
+    firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
       provider.MultiProvider(
         providers: [

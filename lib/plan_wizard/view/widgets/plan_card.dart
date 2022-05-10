@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -33,6 +36,15 @@ class PlanCard extends StatelessWidget {
                   .healthTitle = healthCondition?.title ?? '';
               Provider.of<PlanWizardViewModel>(context, listen: false)
                   .changeCurrentPage(1);
+
+              var firebase=FirebaseAnalyticsService();
+              firebase.trackEvent("on_plan_added",
+                  {
+                    "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                    "title" : healthCondition?.title ?? '',
+                    "tag" : healthCondition?.tags ?? ''
+                  }
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(
