@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/view/ChatUserList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -42,6 +43,13 @@ class DynamicLinks {
       await PreferenceUtil.saveString(KEY_DYNAMIC_URL, '');
       if ((deepLink?.queryParameters?.length ?? 0) > 0 &&
           (deepLink?.queryParameters['module'] ?? '').isNotEmpty) {
+        var firebase=FirebaseAnalyticsService();
+        firebase.trackEvent("on_deep_link_clicked",
+            {
+              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+              "type" : deepLink?.queryParameters['module']
+            }
+        );
         switch (deepLink?.queryParameters['module']) {
           case 'qurplan':
             var planWizardViewModel =
