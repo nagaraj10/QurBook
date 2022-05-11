@@ -712,8 +712,19 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             eId: regimen.eid,
           ),
         ).then((value) => {controller.getRegimenList()});*/
-        var dashboardController = Get.find<QurhomeDashboardController>();
-        dashboardController.getGPSCheckStartBP();
+        if(checkCanEdit(regimen)){
+          var dashboardController = Get.find<QurhomeDashboardController>();
+          dashboardController.getGPSCheckStartBP();
+        }else{
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
+
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
         if(checkCanEdit(regimen)){
