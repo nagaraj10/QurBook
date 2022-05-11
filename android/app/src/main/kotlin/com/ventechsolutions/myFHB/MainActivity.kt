@@ -751,7 +751,12 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                         var spo2: Int
                                         var index: Int
                                         index = 0
+//                                        Log.d(
+//                                            "received",
+//                                            String.format("received data", data)
+//                                        )
                                         while (index < data.size) {
+
                                             if (data[index] and BIT_SYNC.toByte() != 0.toByte()) {
                                                 signalStrength =
                                                     getUB(data[index]) and BIT_SIGNAL_STR
@@ -769,27 +774,27 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                                 spo2 = getUB(data[index + 4]) and BIT_SPO2
 
 
-                                                //Serial.print("SPO2_Stable ");Serial.println(SPO2_Stable);
-                                                //Serial.print("Signal Strength ");Serial.println(signalStrength);
-                                                //Serial.print("No Signal ");Serial.println(isNoSignal);
-                                                //Serial.print("Probe Unplugged ");Serial.println(isProbeUnplugged);
-                                                //Serial.print("Pulse Beep=");Serial.println(isBeep);
+//                                                Serial.print("SPO2_Stable ");Serial.println(SPO2_Stable);
+//                                                Serial.print("Signal Strength ");Serial.println(signalStrength);
+//                                                Serial.print("No Signal ");Serial.println(isNoSignal);
+//                                                Serial.print("Probe Unplugged ");Serial.println(isProbeUnplugged);
+//                                                Serial.print("Pulse Beep=");Serial.println(isBeep);
+//
+//                                                Serial.print("Pleth=");Serial.println(pleth);
+//
+//                                                Serial.print("Bargraph ");Serial.println(bargraph);
+//                                                Serial.print("No Finger ");Serial.print(isNoFinger);
+//                                                Serial.print("Pulse Research=");Serial.println(isResearch);
+//
+//                                                Serial.print("Pulse Rate ");Serial.print(pulseRate);
+//                                                Serial.print("SPO2 ");Serial.print(spo2);
+//                                                Serial.println();
 
-                                                //Serial.print("Pleth=");Serial.println(pleth);
 
-                                                //Serial.print("Bargraph ");Serial.println(bargraph);
-                                                //Serial.print("No Finger ");Serial.print(isNoFinger);
-                                                //Serial.print("Pulse Research=");Serial.println(isResearch);
-
-                                                //Serial.print("Pulse Rate ");Serial.print(pulseRate);
-                                                //Serial.print("SPO2 ");Serial.print(spo2);
-                                                //Serial.println();
-
-                                                /*
-                                                    Log.d(GTAG,String.format("No Finger %d",isNoFinger));
-                                                    Log.d(GTAG,String.format("Pulse Rate %d",pulseRate));
-                                                    Log.d(GTAG,String.format("SPO2 %d",spo2));
-                                                    */if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127) {
+//                                                    Log.d("nofinger",String.format("No Finger %d",isNoFinger));
+//                                                    Log.d("pluse",String.format("Pulse Rate %d",pulseRate));
+//                                                    Log.d("spo2",String.format("SPO2 %d",spo2));
+                                                    if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
                                                     SPO2_ReadingCount++
                                                     //dev_data.setText(String.format("%d PR %d SPO2 %d , F=%d",SPO2_ReadingCount,pulseRate,spo2,isNoFinger));
                                                     /*dev_data!!.text = String.format(
@@ -798,7 +803,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                                         spo2,
                                                         isNoFinger
                                                     )*/
-                                                    if (SPO2_ReadingCount == 30 && uploaded == 0) {
+                                                        Log.d("data received",String.format(
+                                                            "PR %d SPO2 %d , F=%d",
+                                                            pulseRate,
+                                                            spo2,
+                                                            isNoFinger
+                                                        ))
+                                                    if ( uploaded == 0) {
                                                         Log.d(
                                                             "startScan",
                                                             String.format(

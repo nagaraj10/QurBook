@@ -226,11 +226,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Stack(
                 children: [
-                  if (regimen.ack_local != null) ...{
+                  if (regimen.ack != null) ...{
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Visibility(
-                        visible: regimen.ack_local != null,
+                        visible: regimen.ack != null,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -247,8 +247,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             Text(
                               '${CommonUtil().regimentDateFormatV2(
                                 regimen?.asNeeded
-                                    ? regimen?.ack_local ?? DateTime.now()
-                                    : regimen?.ack_local ?? DateTime.now(),
+                                    ? regimen?.ack ?? DateTime.now()
+                                    : regimen?.ack ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
@@ -686,12 +686,23 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       if (((regimen.title ?? '').isNotEmpty) &&
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
-        var dashboardController = Get.find<QurhomeDashboardController>();
-        dashboardController.checkForConnectedDevices(
-          false,
-          eid: regimen.eid,
-          uid: regimen.uid,
-        );
+        if(checkCanEdit(regimen)){
+          var dashboardController = Get.find<QurhomeDashboardController>();
+          dashboardController.checkForConnectedDevices(
+            false,
+            eid: regimen.eid,
+            uid: regimen.uid,
+          );
+        }else{
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
+
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
@@ -705,29 +716,62 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         dashboardController.getGPSCheckStartBP();
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            eId: regimen.eid,
-          ),
-        ).then((value) => {controller.getRegimenList()});
+        if(checkCanEdit(regimen)){
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        }else{
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
+
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            eId: regimen.eid,
-          ),
-        ).then((value) => {controller.getRegimenList()});
+        if(checkCanEdit(regimen)){
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        }else{
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
+
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            eId: regimen.eid,
-          ),
-        ).then((value) => {controller.getRegimenList()});
+        if(checkCanEdit(regimen)){
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        }else{
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
+
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -850,12 +894,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     return cardColor;
   }
 
+  bool checkCanEdit(RegimentDataModel regimen){
+    return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+            RegimentMode.Schedule;
+  }
+
   Future<void> callLogApi(RegimentDataModel regimen) async {
     stopRegimenTTS();
 
-    final canEdit = regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Schedule;
+    final canEdit = checkCanEdit(regimen);
     if (canEdit || isValidSymptom(context)) {
       LoaderClass.showLoadingDialog(
         Get.context,

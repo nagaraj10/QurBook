@@ -30,6 +30,7 @@ class QurhomeDashboardController extends GetxController {
   var movedToNextScreen = false;
   String bleMacId;
   HubListController hubController;
+  var regController;
 
   @override
   void onInit() {
@@ -50,7 +51,6 @@ class QurhomeDashboardController extends GetxController {
 
   void _disableTimer() {
     if (_timerSubscription != null) {
-      hubController.eid = null;
       _timerSubscription.cancel();
       _timerSubscription = null;
     }
@@ -90,6 +90,7 @@ class QurhomeDashboardController extends GetxController {
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+
             if (!isFromVitalsList) {
               milliSeconds = 0;
               LoaderClass.hideLoadingDialog(Get.context);
@@ -105,16 +106,25 @@ class QurhomeDashboardController extends GetxController {
                   arguments: SheelaArgument(
                     takeActiveDeviceReadings: true,
                   ),
-                );
-              }).then((_) {
-                var regController = Get.find<QurhomeRegimenController>();
-                regController.getRegimenList();
+                ).then((_) {
+                  regController.getRegimenList();
+                });
               });
             } else {
               FlutterToast().getToastForLongTime(
                 'No device found',
                 Colors.red,
               );
+              if (!isFromVitalsList) {
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    eId: hubController.eid,
+                  ),
+                ).then((_) {
+                  regController.getRegimenList();
+                });
+              }
             }
             break;
 
@@ -147,10 +157,11 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
+      var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
 
-      final index = userDeviceCollection.indexWhere(
-        (element) => validString(element.device.serialNumber) == bleMacId,
-      );
+      final index = userDeviceCollection.indexWhere((element) =>
+          (validString(element.device.serialNumber) == bleMacId) &&
+          ((element.userId ?? '') == activeUser));
       return index >= 0;
     } catch (e) {
       return false;
@@ -163,6 +174,7 @@ class QurhomeDashboardController extends GetxController {
     String uid,
   }) {
     try {
+      regController = Get.find<QurhomeRegimenController>();
       int seconds = 180;
       if (!isFromVitalsList) {
         seconds = 10;
@@ -172,13 +184,14 @@ class QurhomeDashboardController extends GetxController {
       movedToNextScreen = false;
       _enableTimer(isFromVitalsList);
       BleConnectController bleController = Get.put(BleConnectController());
-      bleController.getBleConnectData(Get.context);
       hubController.eid = eid;
       hubController.uid = uid;
+      bleController.getBleConnectData(Get.context);
+
       Future.delayed(Duration(seconds: seconds)).then((value) {
         if (!foundBLE.value && !movedToNextScreen) {
           _disableTimer();
-          hubController.eid = null;
+
           if (!isFromVitalsList) {
             LoaderClass.hideLoadingDialog(Get.context);
             //Device Not Connected
@@ -187,7 +200,9 @@ class QurhomeDashboardController extends GetxController {
               arguments: SheelaArgument(
                 eId: eid,
               ),
-            );
+            ).then((_) {
+              regController.getRegimenList();
+            });
           }
         }
       });
@@ -201,7 +216,7 @@ class QurhomeDashboardController extends GetxController {
     MyProfileModel myProfile;
     String fulName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       fulName = myProfile.result != null
           ? myProfile.result.firstName.capitalizeFirstofEach +
               ' ' +
