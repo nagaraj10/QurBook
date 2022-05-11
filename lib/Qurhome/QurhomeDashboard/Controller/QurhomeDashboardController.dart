@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -21,7 +23,9 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   static const stream = EventChannel('QurbookBLE/stream');
+  static const streamBp = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
+  StreamSubscription _bpPressureSubscription;
   var foundBLE = false.obs;
   var movedToNextScreen = false;
   String bleMacId;
@@ -49,6 +53,10 @@ class QurhomeDashboardController extends GetxController {
       hubController.eid = null;
       _timerSubscription.cancel();
       _timerSubscription = null;
+    }
+    if (_bpPressureSubscription != null) {
+      _bpPressureSubscription.cancel();
+      _bpPressureSubscription = null;
     }
   }
 
@@ -213,6 +221,53 @@ class QurhomeDashboardController extends GetxController {
       case 3:
         appBarTitle = 'Symptoms'.obs;
         break;
+    }
+  }
+
+  Future<void> checkForBpConnection() async {
+    try {
+      _getPermissionValuesNative();
+      const platform = MethodChannel(ISBPCONNECT);
+      var result = await platform.invokeMethod(ISBPCONNECT);
+      printInfo(info: "Result from native$result");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _getPermissionValuesNative() {
+    _bpPressureSubscription ??= streamBp.receiveBroadcastStream().listen((val) {
+      print(val);
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "enablebluetooth":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "permissiondenied":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          default:
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+        }
+      }
+    });
+  }
+
+  getGPSCheckStartBP() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    /*var permissionStatus =
+      await CommonUtil.askPermissionForLocation(isLocation: false);*/
+    if (!serviceEnabled) {
+      FlutterToast().getToast(
+          'Please turn on your GPS location services and try again',
+          Colors.red);
+      return;
+    } else {
+      checkForBpConnection();
     }
   }
 }

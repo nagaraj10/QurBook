@@ -659,6 +659,8 @@ const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
 const String ISVIRTUALHUB = 'isVirtualHub';
 
+const String ISBPCONNECT = 'bpconnect';
+
 //Qurhome vitals
 const String filterTitleDay = 'Day';
 const String filterTitleWeek = 'Week';

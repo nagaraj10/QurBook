@@ -4,7 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -44,6 +46,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   String snoozeValue = "5 mins";
   List<RegimentDataModel> regimenList = [];
 
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
   @override
   void initState() {
     controller.getRegimenList();
@@ -71,12 +75,17 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   ),
                 ),
                 child: Center(
-                  child: Text(
-                    'SOS',
-                    style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                  child: InkWell(
+                    onTap: () async {
+                      //qurhomeDashboardController.getGPSCheckStartBP();
+                    },
+                    child: Text(
+                      'SOS',
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -686,12 +695,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
-        Get.toNamed(
+        /*Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
             eId: regimen.eid,
           ),
-        ).then((value) => {controller.getRegimenList()});
+        ).then((value) => {controller.getRegimenList()});*/
+        var dashboardController = Get.find<QurhomeDashboardController>();
+        dashboardController.getGPSCheckStartBP();
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
         Get.toNamed(

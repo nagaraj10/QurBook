@@ -104,4 +104,27 @@
     <string name="flutter_downloader_notification_failed">Download failed</string>
     <string name="flutter_downloader_notification_complete">Download complete</string>
     <string name="flutter_downloader_notification_paused">Download paused</string>
+
+    <string name="success">Success</string>
+    <string name="failure">Failure</string>
+    <string name="no_data">No data</string>
+
+    <string name="create_bond_option">Create Bond Option</string>
+    <string name="create_bond_before_catt_connection">Used Before gatt connection</string>
+    <string name="create_bond_after_services_discovered">Used After services discovered</string>
+    <string name="create_bond_not_use">Not Use</string>
+    <string name="remove_bond_option">Remove Bond Option</string>
+    <string name="remove_bond_use">Used before connection process every time</string>
+    <string name="remove_bond_not_use">Not Use</string>
+    <string name="assist_pairing_dialog">Assist Pairing Dialog</string>
+    <string name="auto_pairing">Auto Pairing</string>
+    <string name="auto_enter_the_pin_code">Auto Enter the Pin Code</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="stable_connection">Stable Connection</string>
+    <string name="stable_connection_wait_time">Stable Connection Wait Time</string>
+    <string name="connection_retry">Connection Retry</string>
+    <string name="connection_retry_delay_time">Connection Retry Delay Time</string>
+    <string name="connection_retry_count">Connection Retry Count</string>
+    <string name="refresh_use">Refresh at the end of session</string>
+
 </resources>
