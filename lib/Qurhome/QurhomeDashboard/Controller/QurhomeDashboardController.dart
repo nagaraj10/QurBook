@@ -27,6 +27,7 @@ class QurhomeDashboardController extends GetxController {
   var movedToNextScreen = false;
   String bleMacId;
   HubListController hubController;
+  var regController;
 
   @override
   void onInit() {
@@ -82,7 +83,6 @@ class QurhomeDashboardController extends GetxController {
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            var regController = Get.find<QurhomeRegimenController>();
 
             if (!isFromVitalsList) {
               milliSeconds = 0;
@@ -99,9 +99,9 @@ class QurhomeDashboardController extends GetxController {
                   arguments: SheelaArgument(
                     takeActiveDeviceReadings: true,
                   ),
-                );
-              }).then((_) {
-                regController.getRegimenList();
+                ).then((_) {
+                  regController.getRegimenList();
+                });
               });
             } else {
               FlutterToast().getToastForLongTime(
@@ -167,6 +167,7 @@ class QurhomeDashboardController extends GetxController {
     String uid,
   }) {
     try {
+      regController = Get.find<QurhomeRegimenController>();
       int seconds = 180;
       if (!isFromVitalsList) {
         seconds = 10;
@@ -192,7 +193,9 @@ class QurhomeDashboardController extends GetxController {
               arguments: SheelaArgument(
                 eId: eid,
               ),
-            );
+            ).then((_) {
+              regController.getRegimenList();
+            });
           }
         }
       });
