@@ -4460,13 +4460,28 @@ class CommonUtil {
       desc = '';
     }
 
-    return desc;
+    return parseHtmlString(desc);
   }
 
   String parseHtmlString(String htmlString) {
-    var unescape = new HtmlUnescape();
-    var text = unescape.convert(htmlString);
+    var text = "";
+    if (validString(htmlString).trim().isNotEmpty) {
+      var unescape = new HtmlUnescape();
+      text = unescape.convert(htmlString);
+    }
     return text;
+  }
+
+  String validString(String strText) {
+    try {
+      if (strText == null)
+        return "";
+      else if (strText.trim().isEmpty)
+        return "";
+      else
+        return strText.trim();
+    } catch (e) {}
+    return "";
   }
 }
 
