@@ -46,7 +46,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
   List<Conversation> conversations = new List();
-  static var uuid = Uuid().v1();
+  var uuid = Uuid().v1();
   var user_id;
   var user_name;
   var auth_token;
