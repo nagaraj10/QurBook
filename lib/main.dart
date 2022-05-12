@@ -490,6 +490,15 @@ class _MyFHBState extends State<MyFHB> {
         CommonUtil.sendLogToServer();
       }
       final passedValArr = cMsg.split('&');
+      if (passedValArr[0] == 'facebookdeeplink') {
+        var firebase=FirebaseAnalyticsService();
+        firebase.trackEvent("on_facebook_clicked",
+            {
+              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+              "total" : passedValArr[1]
+            }
+        );
+      }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {

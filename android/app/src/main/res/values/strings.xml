@@ -104,4 +104,11 @@
     <string name="flutter_downloader_notification_failed">Download failed</string>
     <string name="flutter_downloader_notification_complete">Download complete</string>
     <string name="flutter_downloader_notification_paused">Download paused</string>
+
+
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+
+
 </resources>

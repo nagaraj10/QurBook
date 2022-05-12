@@ -47,7 +47,7 @@ class DynamicLinks {
         firebase.trackEvent("on_deep_link_clicked",
             {
               "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-              "type" : deepLink?.queryParameters['module']
+              "type" : deepLink?.queryParameters
             }
         );
         switch (deepLink?.queryParameters['module']) {
