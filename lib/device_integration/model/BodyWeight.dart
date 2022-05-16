@@ -36,7 +36,7 @@ class BodyWeightEntity {
   String id;
   DateTime startDateTime;
   DateTime endDateTime;
-  String weight;
+  dynamic weight;
   RefrenceValueMeta weightUnit;
   DeviceHealthRecord deviceHealthRecord;
   AverageAsOfNow averageAsOfNow;

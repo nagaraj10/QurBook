@@ -1555,13 +1555,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = '';
         }
 
-        if (widget
-            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget
-                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
+            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget
-                  ?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget?.arguments?.sharedbyme?.membershipOfferedBy;
         }
       } else {
         if (widget
@@ -1571,13 +1568,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = widget
               ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
         }
-        if (widget
-            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget
-                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
+            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget
-                  ?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget?.arguments?.sharedbyme?.membershipOfferedBy;
         }
       }
       if (widget.arguments.sharedbyme != null) {
@@ -1752,8 +1746,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (value.result.membershipOfferedBy != null &&
             value.result.membershipOfferedBy != '') {
-          cntrlr_corp_name.text =
-              value.result.membershipOfferedBy;
+          cntrlr_corp_name.text = value.result.membershipOfferedBy;
         }
       });
     }
@@ -2135,8 +2128,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.sharedbyme.child.lastName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase() +
-                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                            .toUpperCase():'')
+                            (widget.arguments.sharedbyme.child.lastName.length >
+                                    0
+                                ? widget.arguments.sharedbyme.child.lastName[0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments.sharedbyme.child.firstName != null
                             ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase()
@@ -2156,8 +2152,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.sharedbyme.child.lastName != null
                       ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase() +
-                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                          .toUpperCase():'')
+                          (widget.arguments.sharedbyme.child.lastName.length > 0
+                              ? widget.arguments.sharedbyme.child.lastName[0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments.sharedbyme.child.firstName != null
                           ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase()
@@ -2179,8 +2177,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.sharedbyme.child.lastName != null
                     ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase() +
-                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                        .toUpperCase():'')
+                        (widget.arguments.sharedbyme.child.lastName.length > 0
+                            ? widget.arguments.sharedbyme.child.lastName[0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments.sharedbyme.child.firstName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase()
@@ -2223,8 +2223,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.myProfileResult.lastName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase() +
-                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                            .toUpperCase():'')
+                            (widget.arguments.sharedbyme.child.lastName.length >
+                                    0
+                                ? widget.arguments.sharedbyme.child.lastName[0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments.myProfileResult.firstName != null
                             ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase()
@@ -2244,8 +2247,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.myProfileResult.lastName != null
                       ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase() +
-                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                          .toUpperCase():'')
+                          (widget.arguments.sharedbyme.child.lastName.length > 0
+                              ? widget.arguments.sharedbyme.child.lastName[0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments.myProfileResult.firstName != null
                           ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase()
@@ -2267,8 +2272,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.myProfileResult.lastName != null
                     ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase() +
-                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                        .toUpperCase():'')
+                        (widget.arguments.sharedbyme.child.lastName.length > 0
+                            ? widget.arguments.sharedbyme.child.lastName[0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments.myProfileResult.firstName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase()
@@ -2554,11 +2561,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         SHEELA_LANG, CommonUtil.langaugeCodes[languageCode] ?? 'en-IN');
   }
 
-  void setUserId() {
+  void setUserId() async {
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.userId = widget.arguments.id;
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
+      addFamilyUserInfoBloc.userId =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     } else {
       addFamilyUserInfoBloc.userId =
           widget.arguments.addFamilyUserInfo.childInfo.id;
@@ -2618,20 +2626,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           ?.userProfileSettingCollection3[0].profileSetting;
       if (profileSetting != null) {
         if (profileSetting?.preferredMeasurement != null) {
-          String heightUnit =
-              await profileSetting?.preferredMeasurement.height.unitCode;
-          String weightUnit =
-              await profileSetting?.preferredMeasurement.weight.unitCode;
-          if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
-            isFeetOrInches = true;
-          } else {
-            isFeetOrInches = false;
-          }
+          try {
+            String heightUnit =
+                await profileSetting?.preferredMeasurement?.height?.unitCode;
+            String weightUnit =
+                await profileSetting?.preferredMeasurement?.weight?.unitCode;
+            if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+              isFeetOrInches = true;
+            } else {
+              isFeetOrInches = false;
+            }
 
-          if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
-            isKg = true;
-          } else {
-            isKg = false;
+            if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+              isKg = true;
+            } else {
+              isKg = false;
+            }
+          } catch (e) {
+            if (CommonUtil.REGION_CODE == 'IND') {
+              isFeetOrInches = true;
+              isKg = true;
+            } else {
+              isFeetOrInches = false;
+              isKg = false;
+            }
           }
         } else {
           if (CommonUtil.REGION_CODE == 'IND') {

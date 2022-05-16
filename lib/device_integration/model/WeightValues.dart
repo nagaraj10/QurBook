@@ -20,8 +20,7 @@ class WeightValues {
     final data = Map<String, dynamic>();
     data[is_Success] = isSuccess;
     if (result != null) {
-      data[dataResult] =
-          result.map((wgtvalue) => wgtvalue.toJson()).toList();
+      data[dataResult] = result.map((wgtvalue) => wgtvalue.toJson()).toList();
     }
     return data;
   }
@@ -31,7 +30,7 @@ class WVResult {
   String sourceType;
   String startDateTime;
   String endDateTime;
-  String weight;
+  dynamic weight;
   String weightUnit;
   String deviceId;
   DateTime dateTimeValue;

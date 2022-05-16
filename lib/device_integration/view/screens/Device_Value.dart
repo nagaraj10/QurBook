@@ -193,13 +193,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 heightObj = preferredMeasurement.height;
 
-                if (preferredMeasurement.height?.unitCode ==
-                    Constants.STR_VAL_HEIGHT_IND) {
-                  isInchFeet = true;
-                  isCenti = false;
-                } else {
-                  isInchFeet = false;
-                  isCenti = true;
+                if (heightObj != null) {
+                  if (preferredMeasurement.height?.unitCode ==
+                      Constants.STR_VAL_HEIGHT_IND) {
+                    isInchFeet = true;
+                    isCenti = false;
+                  } else {
+                    isInchFeet = false;
+                    isCenti = true;
+                  }
                 }
 
                 await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
