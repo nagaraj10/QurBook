@@ -208,8 +208,10 @@ Future<void> main() async {
     await FHBUtils.instance.getDb();
 
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await saveUnitSystemToPreference();
-
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    // ]);
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
