@@ -220,9 +220,8 @@ class HubListController extends GetxController {
               disableTimer();
               searchingBleDevice.value = false;
               List<UserDeviceCollection> userDeviceCollection = [];
-              if (hubListResponse.result != null &&
-                  hubListResponse.result.userDeviceCollection != null &&
-                  hubListResponse.result.userDeviceCollection.length > 0) {
+              if ((hubListResponse.result?.userDeviceCollection ?? []).length >
+                  0) {
                 userDeviceCollection =
                     hubListResponse.result.userDeviceCollection;
                 final index = userDeviceCollection.indexWhere((element) =>
