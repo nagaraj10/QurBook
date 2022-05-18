@@ -150,7 +150,7 @@ class Input {
   String pfPainfulUrination;
   String source;
   String uid;
-  ProviderId providerId;
+  String providerId;
 
   Input({this.action,
     this.ackLocal,
@@ -169,9 +169,7 @@ class Input {
     pfPainfulUrination = json['pf_Painful_Urination'];
     source = json['source'];
     uid = json['uid'];
-    providerId = json['providerId'] != null
-        ? new ProviderId.fromJson(json['providerId'])
-        : null;
+    providerId = json['providerId'] ;
   }
 
   Map<String, dynamic> toJson() {
@@ -183,14 +181,12 @@ class Input {
     data['pf_Painful_Urination'] = this.pfPainfulUrination;
     data['source'] = this.source;
     data['uid'] = this.uid;
-    if (this.providerId != null) {
-      data['providerId'] = this.providerId.toJson();
-    }
+    data['providerId'] = this.providerId;
     return data;
   }
 }
 
-class ProviderId {
+/*class ProviderId {
   int providerId;
   String providerName;
   String linkid;
@@ -210,4 +206,4 @@ class ProviderId {
     data['linkid'] = this.linkid;
     return data;
   }
-}
+}*/
