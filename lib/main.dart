@@ -160,6 +160,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'src/model/user/user_accounts_arguments.dart';
 import 'authentication/view_model/otp_view_model.dart';
 import 'landing/view_model/landing_view_model.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -180,6 +181,8 @@ Future<void> main() async {
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
+    final facebookAppEvents = FacebookAppEvents();
+    facebookAppEvents.logEvent(name: "started",parameters: {"data":"value"});
     //get secret from resource
     final resList = <dynamic>[];
     await CommonUtil.getResourceLoader().then((value) {

@@ -67,6 +67,10 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
+import com.facebook.FacebookSdk;
+import com.facebook.FacebookSdk.setAutoLogAppEventsEnabled
+import com.facebook.LoggingBehavior
+import com.facebook.appevents.AppEventsLogger;
 
 
 class MainActivity : FlutterActivity() {
@@ -162,12 +166,14 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //todo this must be un command when go to production
-        //this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
-        // Get user consent
         setAutoInitEnabled(true)
         fullyInitialize()
+        FacebookSdk.setIsDebugEnabled(true)
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        setAutoLogAppEventsEnabled(true)
+        AppEventsLogger.newLogger(this).logEvent("started")
+        // Get user consent
+
         AppLinkData.fetchDeferredAppLinkData(this) {it->
             if (::mEventChannel.isInitialized) {
                 mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
