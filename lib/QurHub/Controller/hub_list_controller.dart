@@ -204,8 +204,8 @@ class HubListController extends GetxController {
                   receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "scanstarted":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+              // FlutterToast().getToast(
+              //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "connectionfailed":
               FlutterToast().getToast(
@@ -237,13 +237,13 @@ class HubListController extends GetxController {
               break;
 
             case "disconnected":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+              // FlutterToast().getToast(
+              //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
 
             default:
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast().getToast(
+            //     receivedValues.last ?? 'Request Timeout', Colors.red);
           }
         }
       });
