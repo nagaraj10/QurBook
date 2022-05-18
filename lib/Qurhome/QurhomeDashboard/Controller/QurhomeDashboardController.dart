@@ -272,7 +272,7 @@ class QurhomeDashboardController extends GetxController {
     });
   }
 
-  getGPSCheckStartBP() async {
+  scanBpSessionStart() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     /*var permissionStatus =
       await CommonUtil.askPermissionForLocation(isLocation: false);*/

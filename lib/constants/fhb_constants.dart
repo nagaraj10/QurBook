@@ -30,6 +30,7 @@ const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String ScanningForDevices = 'Scanning for devices...';
+const String ScanningForBpDevices = 'Scanning for Bp devices...';
 const String NoDeviceFound = 'No Device Found';
 const String DeviceAlreadyMapped = 'Device Already Mapped';
 const String careGiver = 'Caregiver Communication Settings';

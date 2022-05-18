@@ -704,13 +704,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
-        /*Get.toNamed(
+        Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(
             eId: regimen.eid,
           ),
-        ).then((value) => {controller.getRegimenList()});*/
-        if(checkCanEdit(regimen)){
+        ).then((value) => {controller.getRegimenList()});
+        /*if(checkCanEdit(regimen)){
           var dashboardController = Get.find<QurhomeDashboardController>();
           dashboardController.getGPSCheckStartBP();
         }else{
@@ -721,7 +721,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                 : activitiesError,
             Colors.red,
           );
-        }
+        }*/
 
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {

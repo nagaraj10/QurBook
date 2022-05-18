@@ -1309,7 +1309,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 parseScanListJson(deviceInfo)
 
             },
-            CompletionBlock { reason -> /*mHandler.post(Runnable { _onScanCompletion(reason) })*/ Log.e(
+            CompletionBlock { reason -> /*mHandler.post(Runnable { _onScanCompletion(reason) })*/
+                Log.e(
                 "reason: ",
                 "" + reason.toString()
             )

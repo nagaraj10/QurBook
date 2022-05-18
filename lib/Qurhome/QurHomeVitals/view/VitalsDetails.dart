@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
@@ -60,7 +63,7 @@ class VitalsDetails extends StatefulWidget {
   _VitalsDetailsState createState() => _VitalsDetailsState();
 }
 
-class _VitalsDetailsState extends State<VitalsDetails> {
+class _VitalsDetailsState extends State<VitalsDetails> with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
@@ -98,6 +101,15 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   final controllerGetx = Get.put(VitalDetailController());
 
+  AnimationController animationController;
+
+  final controllerVitalList = Get.put(VitalListController());
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
+  int _counter = 0;
+  StreamController<int> _events = StreamController<int>();
+  Timer _timer;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -114,6 +126,10 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
     controllerGetx.onTapFilterBtn(0);
 
+    _events.add(180);
+
+    controllerVitalList.updateisShowTimerDialog(true);
+
     initGetX();
   }
 
@@ -123,6 +139,8 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         {
           controllerGetx.fetchBPDetailsQurHome(
               filter: getFilterData(0), isLoading: true);
+
+          initBpTimer();
         }
         break;
       case strGlusoceLevel:
@@ -154,6 +172,211 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           //statements;
         }
         break;
+    }
+  }
+
+  void initBpTimer() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 500));
+      animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 180),
+      );
+      animationController.addListener(() {
+        if (animationController.isAnimating) {
+          controllerVitalList.updateTimerValue(animationController.value);
+        } else {
+          controllerVitalList.updateTimerValue(1.0);
+        }
+      });
+      if (controllerVitalList.isShowTimerDialog.value) {
+        _startTimer();
+        showSearchingBleDialog(context);
+        controllerVitalList.updateisShowTimerDialog(false);
+        await Future.delayed(Duration(seconds: 1));
+        qurhomeDashboardController.scanBpSessionStart();
+        qurhomeDashboardController.foundBLE.listen((val) {
+          if (val) {
+            closeDialog();
+          }
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  showSearchingBleDialog(BuildContext context) {
+    try {
+      animationController.reverse(
+          from:
+          animationController.value == 0 ? 1.0 : animationController.value);
+    } catch (e) {
+      print(e);
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: StreamBuilder<int>(
+                  stream: _events.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    print(snapshot.data.toString());
+                    return Container(
+                        width: 1.sw,
+                        height: 1.sh / 2.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 30.0.sp,
+                                    ),
+                                    onPressed: () {
+                                      try {
+                                        _events.close();
+                                        Navigator.pop(context);
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    })
+                              ],
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          ScanningForBpDevices,
+                                          style: TextStyle(
+                                            color: Color(
+                                              CommonUtil()
+                                                  .getQurhomeGredientColor(),
+                                            ),
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 30.0.h,
+                                    ),
+                                    startProgressIndicator(
+                                        snapshot.data.toString()),
+                                    SizedBox(
+                                      height: 15.0.h,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ));
+                  }),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  Widget startProgressIndicator(String strText) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 140,
+          height: 140,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey.shade300,
+            color: Color(
+              CommonUtil().getQurhomeGredientColor(),
+            ),
+            value: controllerVitalList.timerProgress.value,
+            strokeWidth: 8,
+          ),
+        ),
+        AnimatedBuilder(
+          animation: animationController,
+          builder: (context, child) => Text(
+            "$strText",
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _startTimer() {
+    try {
+      _counter = 180;
+      if (_timer != null) {
+        _timer.cancel();
+      }
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!_events.isClosed) {
+          (_counter > 0) ? _counter-- : _timer.cancel();
+          _events.add(_counter);
+          notify();
+        } else {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void notify() {
+    try {
+      if (_counter == 0) {
+        closeDialog();
+        if (!qurhomeDashboardController.foundBLE.value) {
+          toast.getToast(NoDeviceFound, Colors.red);
+        }
+      }
+      /*else {
+        if (qurhomeDashboardController.foundBLE) {
+          closeDialog();
+        }
+      }*/
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void closeDialog() {
+    try {
+      Timer(Duration(milliseconds: 1000), () {
+        if (animationController.isAnimating) {
+          animationController.stop();
+        }
+      });
+      _events.close();
+      Navigator.pop(Get.context);
+    } catch (e) {
+      print(e);
     }
   }
 
