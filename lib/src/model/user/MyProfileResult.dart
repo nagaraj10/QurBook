@@ -239,16 +239,16 @@ class AdditionalInfo {
       }
     }
 
-    weight = json['weight']?.toString();
     try {
-      heightObj = json['height'] != null
-          ? new HeightObj.fromJson(json['height'])
-          : null;
+      if (json['height'].runtimeType == String) {
+        height = json['height'];
+      } else {
+        heightObj =
+            json['height'] != null ? HeightObj.fromJson(json['height']) : null;
+      }
     } catch (e) {}
 
-    try {
-      height = json['height']?.toString();
-    } catch (e) {}
+    weight = json['weight']?.toString();
 
     try {
       if (json.containsKey('language')) {

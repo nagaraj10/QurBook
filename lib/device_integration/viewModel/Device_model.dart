@@ -291,8 +291,9 @@ class DevicesViewModel with ChangeNotifier {
               sourceType: dataElement.sourceType.description,
               startDateTime: tempValue.startDateTime.toIso8601String(),
               endDateTime: tempValue.endDateTime.toIso8601String(),
-              temperature: tempValue.temperature,
-              temperatureUnit: tempValue.temperatureUnit.name.capitalizeFirstofEach,
+              temperature: tempValue.temperature.toString(),
+              temperatureUnit:
+                  tempValue.temperatureUnit.name.capitalizeFirstofEach,
               deviceId: dataElement.deviceId,
               dateTimeValue: tempValue.startDateTime);
           ret.add(tempList);
@@ -338,7 +339,7 @@ class DevicesViewModel with ChangeNotifier {
               sourceType: dataElement.sourceType.description,
               startDateTime: weightValue.startDateTime.toIso8601String(),
               endDateTime: weightValue.endDateTime.toIso8601String(),
-              weight: weightValue.weight,
+              weight: weightValue.weight.toString(),
               weightUnit: weightValue.weightUnit != null
                   ? weightValue.weightUnit.name
                   : 'Kg',

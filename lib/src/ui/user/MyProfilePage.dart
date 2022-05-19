@@ -806,20 +806,30 @@ class _MyProfilePageState extends State<MyProfilePage> {
     var profileSetting = data.userProfileSettingCollection3[0].profileSetting;
     if (profileSetting != null) {
       if (profileSetting?.preferredMeasurement != null) {
-        String heightUnit =
-            profileSetting?.preferredMeasurement.height.unitCode;
-        String weightUnit =
-            profileSetting?.preferredMeasurement.weight.unitCode;
-        if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
-          isFeetOrInches = true;
-        } else {
-          isFeetOrInches = false;
-        }
+        try {
+          String heightUnit =
+              profileSetting?.preferredMeasurement?.height?.unitCode;
+          String weightUnit =
+              profileSetting?.preferredMeasurement?.weight?.unitCode;
+          if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+            isFeetOrInches = true;
+          } else {
+            isFeetOrInches = false;
+          }
 
-        if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
-          isKg = true;
-        } else {
-          isKg = false;
+          if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+            isKg = true;
+          } else {
+            isKg = false;
+          }
+        } catch (e) {
+          if (CommonUtil.REGION_CODE == 'IND') {
+            isFeetOrInches = true;
+            isKg = true;
+          } else {
+            isFeetOrInches = false;
+            isKg = false;
+          }
         }
       }
     } else {

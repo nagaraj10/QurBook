@@ -50,7 +50,6 @@ class _ChooseUnitState extends State<ChooseUnit> {
   bool isSettingChanged = false;
   List<Tags> tagsList = [];
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -129,7 +128,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
     var body =
         jsonEncode({'id': userMappingId, 'profileSetting': profileSetting});
     await healthReportListForUserRepository
-        .updateUnitPreferences(userMappingId,profileSetting,preferredMeasurementNew,tagsList)
+        .updateUnitPreferences(
+            userMappingId, profileSetting, preferredMeasurementNew, tagsList)
         .then((value) {
       if (value?.isSuccess ?? false) {
         toast.getToast(value?.message, Colors.green);
@@ -431,8 +431,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
   }
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
-    
-     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
@@ -443,9 +442,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
           if (value.result[0] != null) {
             profileSetting = value.result[0].profileSetting;
             userMappingId = value.result[0].id;
-            if(value.result[0].tags!=null){
+            if (value.result[0].tags != null) {
               tagsList = value.result[0].tags != null &&
-                  value.result[0].tags.length > 0
+                      value.result[0].tags.length > 0
                   ? value.result[0].tags
                   : new List();
             }
