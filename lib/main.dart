@@ -207,7 +207,14 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    //await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]);
     // SystemChrome.setPreferredOrientations([
     //   DeviceOrientation.landscapeLeft,
     //   DeviceOrientation.landscapeRight,

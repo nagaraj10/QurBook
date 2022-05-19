@@ -191,6 +191,7 @@ const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
+const String icon_undo = 'assets/icons/ic_undo.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
