@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -26,6 +27,7 @@ class QurhomeDashboardController extends GetxController {
   var movedToNextScreen = false;
   String bleMacId;
   HubListController hubController;
+  var regController;
 
   @override
   void onInit() {
@@ -81,6 +83,7 @@ class QurhomeDashboardController extends GetxController {
           case "connected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+
             if (!isFromVitalsList) {
               milliSeconds = 0;
               LoaderClass.hideLoadingDialog(Get.context);
@@ -96,27 +99,36 @@ class QurhomeDashboardController extends GetxController {
                   arguments: SheelaArgument(
                     takeActiveDeviceReadings: true,
                   ),
-                );
-              }).then((_) {
-                var regController = Get.find<QurhomeRegimenController>();
-                regController.getRegimenList();
+                ).then((_) {
+                  regController.getRegimenList();
+                });
               });
             } else {
               FlutterToast().getToastForLongTime(
                 'No device found',
                 Colors.red,
               );
+              if (!isFromVitalsList) {
+                Get.toNamed(
+                  rt_Sheela,
+                  arguments: SheelaArgument(
+                    eId: hubController.eid,
+                  ),
+                ).then((_) {
+                  regController.getRegimenList();
+                });
+              }
             }
             break;
 
           case "disconnected":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
 
           default:
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+          // FlutterToast()
+          //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
         }
       }
     });
@@ -138,10 +150,11 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
+      var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
 
-      final index = userDeviceCollection.indexWhere(
-        (element) => validString(element.device.serialNumber) == bleMacId,
-      );
+      final index = userDeviceCollection.indexWhere((element) =>
+          (validString(element.device.serialNumber) == bleMacId) &&
+          ((element.userId ?? '') == activeUser));
       return index >= 0;
     } catch (e) {
       return false;
@@ -154,6 +167,7 @@ class QurhomeDashboardController extends GetxController {
     String uid,
   }) {
     try {
+      regController = Get.find<QurhomeRegimenController>();
       int seconds = 180;
       if (!isFromVitalsList) {
         seconds = 10;
@@ -179,7 +193,9 @@ class QurhomeDashboardController extends GetxController {
               arguments: SheelaArgument(
                 eId: eid,
               ),
-            );
+            ).then((_) {
+              regController.getRegimenList();
+            });
           }
         }
       });
@@ -193,7 +209,7 @@ class QurhomeDashboardController extends GetxController {
     MyProfileModel myProfile;
     String fulName = '';
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       fulName = myProfile.result != null
           ? myProfile.result.firstName.capitalizeFirstofEach +
               ' ' +
