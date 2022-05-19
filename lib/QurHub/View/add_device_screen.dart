@@ -177,10 +177,10 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
   Widget getView() {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: qrCodeView(),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.all(8.0),
+        //   child: qrCodeView(),
+        // ),
         Padding(
           padding: EdgeInsets.all(16),
           child: TextFormField(
