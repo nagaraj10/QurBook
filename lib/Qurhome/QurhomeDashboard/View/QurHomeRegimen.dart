@@ -684,103 +684,101 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       if (((regimen.title ?? '').isNotEmpty) &&
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
-        if(checkCanEdit(regimen)){
+        if (checkCanEdit(regimen)) {
           var dashboardController = Get.find<QurhomeDashboardController>();
           dashboardController.checkForConnectedDevices(
             false,
             eid: regimen.eid,
             uid: regimen.uid,
           );
-        }else{
+        } else {
           FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
                 ? symptomsError
                 : activitiesError,
             Colors.red,
           );
         }
-
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            eId: regimen.eid,
-          ),
-        ).then((value) => {controller.getRegimenList()});
-        /*if(checkCanEdit(regimen)){
-          var dashboardController = Get.find<QurhomeDashboardController>();
-          dashboardController.getGPSCheckStartBP();
-        }else{
+        if (checkCanEdit(regimen)) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        } else {
           FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
                 ? symptomsError
                 : activitiesError,
             Colors.red,
           );
-        }*/
-
+        }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
-        if(checkCanEdit(regimen)){
+        if (checkCanEdit(regimen)) {
           Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
           ).then((value) => {controller.getRegimenList()});
-        }else{
+        } else {
           FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
                 ? symptomsError
                 : activitiesError,
             Colors.red,
           );
         }
-
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
-        if(checkCanEdit(regimen)){
+        if (checkCanEdit(regimen)) {
           Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
           ).then((value) => {controller.getRegimenList()});
-        }else{
+        } else {
           FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
                 ? symptomsError
                 : activitiesError,
             Colors.red,
           );
         }
-
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
-        if(checkCanEdit(regimen)){
+        if (checkCanEdit(regimen)) {
           Get.toNamed(
             rt_Sheela,
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
           ).then((value) => {controller.getRegimenList()});
-        }else{
+        } else {
           FlutterToast().getToast(
-            (Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-                RegimentMode.Symptoms)
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
                 ? symptomsError
                 : activitiesError,
             Colors.red,
           );
         }
-
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -903,7 +901,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     return cardColor;
   }
 
-  bool checkCanEdit(RegimentDataModel regimen){
+  bool checkCanEdit(RegimentDataModel regimen) {
     return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;

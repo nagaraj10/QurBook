@@ -11,6 +11,7 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		54306596271580D00009B704 /* SheelaAIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54306594271580D00009B704 /* SheelaAIVC.swift */; };
 		54306597271580D00009B704 /* SheelaAI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54306595271580D00009B704 /* SheelaAI.storyboard */; };
+		54952BF22834E7C600F8C975 /* ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54952BF12834E7C600F8C975 /* ext.swift */; };
 		80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 996E3B725118A754721F1163 /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -97,6 +98,7 @@
 		3CF16C5C5BD768B96DF09B2D /* Pods-AwesomeServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		54306594271580D00009B704 /* SheelaAIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheelaAIVC.swift; sourceTree = "<group>"; };
 		54306595271580D00009B704 /* SheelaAI.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SheelaAI.storyboard; sourceTree = "<group>"; };
+		54952BF12834E7C600F8C975 /* ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ext.swift; sourceTree = "<group>"; };
 		6E0A76D1D8ADFDBB286AD081 /* Pods-AwesomeServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		73D8D04941CB079C61DFA273 /* Pods-AwesomeServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 		9C07AB2B24F393F000DCE725 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				54952BF12834E7C600F8C975 /* ext.swift */,
 				9C07AB8824F3951100DCE725 /* Loading.swift */,
 			);
 			path = Extensions;
@@ -742,6 +745,7 @@
 				9C07AB7824F3948900DCE725 /* NVActivityIndicatorAnimationPacman.swift in Sources */,
 				9C07AB6224F3948900DCE725 /* NVActivityIndicatorAnimationBallTrianglePath.swift in Sources */,
 				9C07AB7A24F3948900DCE725 /* NVActivityIndicatorAnimationCubeTransition.swift in Sources */,
+				54952BF22834E7C600F8C975 /* ext.swift in Sources */,
 				9C07AB6C24F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotatePulse.swift in Sources */,
 				9C07AB7724F3948900DCE725 /* NVActivityIndicatorAnimationBallScaleRippleMultiple.swift in Sources */,
 				9C07AB6324F3948900DCE725 /* NVActivityIndicatorAnimationBallDoubleBounce.swift in Sources */,

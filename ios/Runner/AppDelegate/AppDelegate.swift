@@ -7,9 +7,124 @@ import Firebase
 import IQKeyboardManagerSwift
 import SystemConfiguration.CaptiveNetwork
 import CoreLocation
+import CoreBluetooth
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
+@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate ,FlutterStreamHandler, CBCentralManagerDelegate, CBPeripheralDelegate{
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+        case .unknown:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .resetting:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unsupported:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unauthorized:
+            eventSink?("permissiondenied|no permission granted")
+        case .poweredOff:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .poweredOn:
+            eventSink?("scanstarted|connection started")
+            centralManager.scanForPeripherals(withServices: [Constants.poServiceCBUUID])
+        default:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        }
+    }
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
+            // Able to retrive the MAC id
+            let decodedString = newdata.hexEncodedString()
+            let macID = decodedString.inserting()
+            eventSink?("macid|"+macID)
+            eventSink?("bleDeviceType|SPO2")
+            poPeripheral = peripheral
+            poPeripheral.delegate = self
+            centralManager.connect(poPeripheral)
+        }else{
+            //failed to get the mac id
+            eventSink?("connectionfailed| connection failed")
+        }
+        centralManager.stopScan()
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        eventSink?("connected|connected successfully!!!")
+        poPeripheral.discoverServices([Constants.poServiceCBUUID])
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else { return }
+        for service in services {
+            print(service)
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else { return }
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.read) {
+                print("\(characteristic.uuid): properties contains .read")
+                peripheral.readValue(for: characteristic)
+            }
+            if characteristic.properties.contains(.notify) {
+                print("\(characteristic.uuid): properties contains .notify")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print(characteristic.uuid)
+        switch characteristic.uuid {
+        case Constants.poMeasurementCharacteristicCBUUID:
+            spoReading(from: characteristic)
+        default:
+            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+        }
+    }
+    
+    func spoReading(from characteristic: CBCharacteristic)  {
+        guard let characteristicData = characteristic.value else { return  }
+        var index = 0
+        let byteArray = [UInt8](characteristicData)
+        while(index<byteArray.count){
+            let fingure = byteArray[index+2] & Constants.BIT_FINGER
+            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
+            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
+            let spo = byteArray[index+4] & Constants.BIT_SPO2
+            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
+                let data : [String:Any] = [
+                    "Status" : "measurement",
+                    "deviceType" : "SPO2",
+                    "Data" : [
+                        "SPO2" : String(describing: spo),
+                        "Pulse" : String(describing: pulse)
+                    ]
+                ]
+                if let serlized = data.jsonStringRepresentation{
+                    print(serlized)
+                    eventSink?("measurement|"+serlized)
+                }
+            }
+            index += 5
+        }
+    }
+    
+    func onListen(withArguments arguments: Any?,
+                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = eventSink
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        return nil
+    }
+    
+    func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        return nil
+    }
+    
     
     var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: Language.instance.setlanguage()))!
     var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
@@ -42,10 +157,12 @@ import CoreLocation
     let planRenewButton = "planRenewButton"
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
-
+    var centralManager: CBCentralManager!
+    var poPeripheral: CBPeripheral!
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
+    var eventSink: FlutterEventSink? = nil
     
     override func application(
         _ application: UIApplication,
@@ -106,15 +223,15 @@ import CoreLocation
         let acceptAction = UNNotificationAction(identifier: "Accept", title: "Accept", options: [.foreground])
         let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
-
+        
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
                                                              intentIdentifiers: [],
                                                              options: [])
         let showViewMemberAndCommunicationButtonscategory = UNNotificationCategory(identifier: showViewMemberAndCommunicationButtons,
-                                                             actions:  [viewMemberAction, communicationsettingsAction],
-                                                             intentIdentifiers: [],
-                                                             options: [])
+                                                                                   actions:  [viewMemberAction, communicationsettingsAction],
+                                                                                   intentIdentifiers: [],
+                                                                                   options: [])
         let showSingleButtonCategory = UNNotificationCategory(identifier: showSingleButtonCat,
                                                               actions:  [declineAction],
                                                               intentIdentifiers: [],
@@ -132,6 +249,9 @@ import CoreLocation
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
                                               binaryMessenger: controller.binaryMessenger)
+        let evChannel =  FlutterEventChannel(name: Constants.devicesEventChannel, binaryMessenger: controller.binaryMessenger)
+        evChannel.setStreamHandler(self)
+        
         sttChannel.setMethodCallHandler({
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             // Note: this method is invoked on the UI thread.
@@ -484,6 +604,7 @@ import CoreLocation
             }
         }
     }
+    
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
@@ -594,57 +715,43 @@ extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
     }
     
 }
-extension AppDelegate:CLLocationManagerDelegate{
-    func setupWifiListener(messanger:FlutterBinaryMessenger){
-        let iOSChannel = FlutterMethodChannel(name: Constants.iOSMethodChannel, binaryMessenger: messanger)
-        iOSChannel.setMethodCallHandler {[weak self] (call, result) in
-            guard self != nil else{
-                result(FlutterMethodNotImplemented)
-                return
-            }
-            if call.method == Constants.getWifiDetailsMethod{
-                result(getCurrentWifiDetails())
-                return
-            }else{
-                result(FlutterMethodNotImplemented)
-                return
-            }
-        }
-    }
-}
-func getCurrentWifiDetails() -> Any{
-    
-    let status = CLLocationManager.authorizationStatus()
-    if (status == .notDetermined){
-        return "location"
-    }
-    if let interfaces = CNCopySupportedInterfaces() as NSArray? {
-        for interface in interfaces {
-            if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
-                let ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String ?? ""
-                let bssid = interfaceInfo[kCNNetworkInfoKeyBSSID as String] as? String ?? ""
-                print(ssid)
-                print(bssid)
-                let data = [ "SSID": ssid,"BSSID" : bssid]
-                return data
-            }
-        }
-    }
-    return ""
-}
-extension Date {
-    // Convert local time to UTC (or GMT)
-    func toGlobalTime() -> Date {
-        let timezone = TimeZone.current
-        let seconds = -TimeInterval(timezone.secondsFromGMT(for: self))
-        return Date(timeInterval: seconds, since: self)
-    }
-    
-    // Convert UTC (or GMT) to local time
-    func toLocalTime() -> Date {
-        let timezone = TimeZone.current
-        let seconds = TimeInterval(timezone.secondsFromGMT(for: self))
-        return Date(timeInterval: seconds, since: self)
-    }
-    
-}
+//extension AppDelegate:CLLocationManagerDelegate{
+//    func setupWifiListener(messanger:FlutterBinaryMessenger){
+//        let iOSChannel = FlutterMethodChannel(name: Constants.iOSMethodChannel, binaryMessenger: messanger)
+//        iOSChannel.setMethodCallHandler {[weak self] (call, result) in
+//            guard self != nil else{
+//                result(FlutterMethodNotImplemented)
+//                return
+//            }
+//            if call.method == Constants.getWifiDetailsMethod{
+//                result(getCurrentWifiDetails())
+//                return
+//            }else{
+//                result(FlutterMethodNotImplemented)
+//                return
+//            }
+//        }
+//    }
+//
+//}
+//func getCurrentWifiDetails() -> Any{
+//
+//    let status = CLLocationManager.authorizationStatus()
+//    if (status == .notDetermined){
+//        return "location"
+//    }
+//    if let interfaces = CNCopySupportedInterfaces() as NSArray? {
+//        for interface in interfaces {
+//            if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
+//                let ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String ?? ""
+//                let bssid = interfaceInfo[kCNNetworkInfoKeyBSSID as String] as? String ?? ""
+//                print(ssid)
+//                print(bssid)
+//                let data = [ "SSID": ssid,"BSSID" : bssid]
+//                return data
+//            }
+//        }
+//    }
+//    return ""
+//}
+
