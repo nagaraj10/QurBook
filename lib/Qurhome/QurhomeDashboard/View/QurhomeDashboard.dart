@@ -34,8 +34,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     try {
       super.initState();
       if (CommonUtil().isTablet) {
-        buttonSize = 90;
-        textFontSize = 22;
+        buttonSize = 100;
+        textFontSize = 26;
       }
       controller.updateTabIndex(0);
     } catch (e) {
@@ -77,8 +77,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                 ? CommonUtil().isTablet
                                     ? AssetImageWidget(
                                         icon: icon_vitals_qurhome,
-                                        height: 26.h,
-                                        width: 26.h,
+                                        height: 22.h,
+                                        width: 22.h,
                                       )
                                     : AssetImageWidget(
                                         icon: icon_vitals_qurhome,
@@ -89,8 +89,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                     ? CommonUtil().isTablet
                                         ? AssetImageWidget(
                                             icon: icon_symptom_qurhome,
-                                            height: 26.h,
-                                            width: 26.h,
+                                            height: 22.h,
+                                            width: 22.h,
                                           )
                                         : AssetImageWidget(
                                             icon: icon_symptom_qurhome,
@@ -145,7 +145,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   ? IconWidget(
                       icon: Icons.arrow_back_ios,
                       colors: Colors.black,
-                      size: CommonUtil().isTablet ? 30.0 : 24.0,
+                      size: CommonUtil().isTablet ? 35.0 : 24.0,
                       onTap: () {
                         Get.back();
                         PreferenceUtil.saveIfQurhomeisAcive(
@@ -164,8 +164,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           child: CommonUtil().isTablet
                               ? AssetImageWidget(
                                   icon: icon_qurhome,
-                                  height: 35.h,
-                                  width: 35.h,
+                                  height: 45.h,
+                                  width: 45.h,
                                 )
                               : CommonUtil().qurHomeMainIcon())),
               bottom: PreferredSize(
