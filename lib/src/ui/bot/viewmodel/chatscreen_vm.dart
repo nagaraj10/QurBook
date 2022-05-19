@@ -151,8 +151,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "scanstarted":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "connectionfailed":
             // moveToBack();
@@ -173,8 +173,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             break;
 
           default:
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+          // FlutterToast()
+          //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
         }
       }
     });

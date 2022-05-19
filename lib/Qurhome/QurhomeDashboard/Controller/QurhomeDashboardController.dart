@@ -122,13 +122,13 @@ class QurhomeDashboardController extends GetxController {
             break;
 
           case "disconnected":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
 
           default:
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+          // FlutterToast()
+          //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
         }
       }
     });
