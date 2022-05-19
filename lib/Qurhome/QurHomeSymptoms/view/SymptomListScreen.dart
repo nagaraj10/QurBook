@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/viewModel/SymptomListController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../common/CommonUtil.dart';
@@ -30,6 +32,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   void initState() {
     super.initState();
 
+    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
     controller.getSymptomList(isLoading: true);
 
     /* symptomsList = Provider.of<SymptomViewModel>(context, listen: false)
