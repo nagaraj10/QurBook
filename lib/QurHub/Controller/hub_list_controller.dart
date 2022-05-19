@@ -204,8 +204,8 @@ class HubListController extends GetxController {
                   receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "scanstarted":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+              // FlutterToast().getToast(
+              //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "connectionfailed":
               FlutterToast().getToast(
@@ -220,9 +220,8 @@ class HubListController extends GetxController {
               disableTimer();
               searchingBleDevice.value = false;
               List<UserDeviceCollection> userDeviceCollection = [];
-              if (hubListResponse.result != null &&
-                  hubListResponse.result.userDeviceCollection != null &&
-                  hubListResponse.result.userDeviceCollection.length > 0) {
+              if ((hubListResponse.result?.userDeviceCollection ?? []).length >
+                  0) {
                 userDeviceCollection =
                     hubListResponse.result.userDeviceCollection;
                 final index = userDeviceCollection.indexWhere((element) =>
@@ -238,13 +237,13 @@ class HubListController extends GetxController {
               break;
 
             case "disconnected":
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+              // FlutterToast().getToast(
+              //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
 
             default:
-              FlutterToast().getToast(
-                  receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast().getToast(
+            //     receivedValues.last ?? 'Request Timeout', Colors.red);
           }
         }
       });
