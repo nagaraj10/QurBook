@@ -812,7 +812,10 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
-    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {

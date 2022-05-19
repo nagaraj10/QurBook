@@ -37,7 +37,7 @@ class BodyTemperatureEntity {
   // String id;
   DateTime startDateTime;
   DateTime endDateTime;
-  String temperature;
+  dynamic temperature;
   RefrenceValueMeta temperatureUnit;
   DeviceHealthRecord deviceHealthRecord;
   AverageAsOfNow averageAsOfNow;
