@@ -152,6 +152,50 @@ class SymptomItemCard extends StatelessWidget {
                               top: 5.0.h,
                             ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Container(
+                                    padding: EdgeInsets.only(right: 5.0),
+                                    child: Text(
+                                      CommonUtil()
+                                          .validString(title)
+                                          .toUpperCase(),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 12.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    if (regimentData.isPlaying) {
+                                      stopRegimenTTS();
+                                    } else {
+                                      controller.startSymptomTTS(
+                                        index,
+                                        staticText: regimentData?.title ?? '',
+                                        dynamicText:
+                                            regimentData?.sayTextDynamic ?? '',
+                                      );
+                                    }
+                                  },
+                                  child: Icon(
+                                    regimentData.isPlaying
+                                        ? Icons.stop_circle_outlined
+                                        : Icons.play_circle_fill_rounded,
+                                    size: 30.0.sp,
+                                    color: color,
+                                  ),
+                                ),
+                              ],
+                            ) /*Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
@@ -194,7 +238,8 @@ class SymptomItemCard extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            ),
+                            )*/
+                            ,
                           ),
                           Padding(
                             padding: EdgeInsets.only(
