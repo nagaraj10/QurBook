@@ -10,120 +10,7 @@ import CoreLocation
 import CoreBluetooth
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate ,FlutterStreamHandler, CBCentralManagerDelegate, CBPeripheralDelegate{
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-        case .unknown:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .resetting:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .unsupported:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .unauthorized:
-            eventSink?("permissiondenied|no permission granted")
-        case .poweredOff:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .poweredOn:
-            eventSink?("scanstarted|connection started")
-            centralManager.scanForPeripherals(withServices: [Constants.poServiceCBUUID])
-        default:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        }
-    }
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
-            // Able to retrive the MAC id
-            let decodedString = newdata.hexEncodedString()
-            let macID = decodedString.inserting()
-            eventSink?("macid|"+macID)
-            eventSink?("bleDeviceType|SPO2")
-            poPeripheral = peripheral
-            poPeripheral.delegate = self
-            centralManager.connect(poPeripheral)
-        }else{
-            //failed to get the mac id
-            eventSink?("connectionfailed| connection failed")
-        }
-        centralManager.stopScan()
-        
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        eventSink?("connected|connected successfully!!!")
-        poPeripheral.discoverServices([Constants.poServiceCBUUID])
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
-        for service in services {
-            print(service)
-            peripheral.discoverCharacteristics(nil, for: service)
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            if characteristic.properties.contains(.read) {
-                print("\(characteristic.uuid): properties contains .read")
-                peripheral.readValue(for: characteristic)
-            }
-            if characteristic.properties.contains(.notify) {
-                print("\(characteristic.uuid): properties contains .notify")
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print(characteristic.uuid)
-        switch characteristic.uuid {
-        case Constants.poMeasurementCharacteristicCBUUID:
-            spoReading(from: characteristic)
-        default:
-            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
-        }
-    }
-    
-    func spoReading(from characteristic: CBCharacteristic)  {
-        guard let characteristicData = characteristic.value else { return  }
-        var index = 0
-        let byteArray = [UInt8](characteristicData)
-        while(index<byteArray.count){
-            let fingure = byteArray[index+2] & Constants.BIT_FINGER
-            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
-            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
-            let spo = byteArray[index+4] & Constants.BIT_SPO2
-            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
-                let data : [String:Any] = [
-                    "Status" : "measurement",
-                    "deviceType" : "SPO2",
-                    "Data" : [
-                        "SPO2" : String(describing: spo),
-                        "Pulse" : String(describing: pulse)
-                    ]
-                ]
-                if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
-                    eventSink?("measurement|"+serlized)
-                }
-            }
-            index += 5
-        }
-    }
-    
-    func onListen(withArguments arguments: Any?,
-                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
-        self.eventSink = eventSink
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        return nil
-    }
-    
-    func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        eventSink = nil
-        return nil
-    }
+@objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
     
     
     var speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: Language.instance.setlanguage()))!
@@ -712,6 +599,128 @@ extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
     }
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
+    }
+    
+}
+
+extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripheralDelegate{
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        switch central.state {
+        case .unknown:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .resetting:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unsupported:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .unauthorized:
+            eventSink?("permissiondenied|no permission granted")
+        case .poweredOff:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        case .poweredOn:
+            eventSink?("scanstarted|connection started")
+            centralManager.scanForPeripherals(withServices: [Constants.poServiceCBUUID])
+        default:
+            eventSink?("enablebluetooth|please enable bluetooth")
+        }
+    }
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
+            // Able to retrive the MAC id
+            let decodedString = newdata.hexEncodedString()
+            let macID = decodedString.inserting()
+            eventSink?("macid|"+macID)
+            eventSink?("bleDeviceType|SPO2")
+            poPeripheral = peripheral
+            poPeripheral.delegate = self
+            centralManager.connect(poPeripheral)
+        }else{
+            //failed to get the mac id
+            eventSink?("connectionfailed| connection failed")
+        }
+        centralManager.stopScan()
+        
+    }
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        eventSink?("connected|connected successfully!!!")
+        poPeripheral.discoverServices([Constants.poServiceCBUUID])
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else { return }
+        for service in services {
+            print(service)
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else { return }
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.read) {
+                print("\(characteristic.uuid): properties contains .read")
+                peripheral.readValue(for: characteristic)
+            }
+            if characteristic.properties.contains(.notify) {
+                print("\(characteristic.uuid): properties contains .notify")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print(characteristic.uuid)
+        switch characteristic.uuid {
+        case Constants.poMeasurementCharacteristicCBUUID:
+            spoReading(from: characteristic,peripheral:peripheral)
+        default:
+            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+        }
+    }
+    
+    func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
+        guard let characteristicData = characteristic.value else { return  }
+        var index = 0
+        let byteArray = [UInt8](characteristicData)
+        while(index<byteArray.count){
+            let fingure = byteArray[index+2] & Constants.BIT_FINGER
+            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
+            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
+            let spo = byteArray[index+4] & Constants.BIT_SPO2
+            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
+                let data : [String:Any] = [
+                    "Status" : "Measurement",
+                    "deviceType" : "SPO2",
+                    "Data" : [
+                        "SPO2" : String(describing: spo),
+                        "Pulse" : String(describing: pulse)
+                    ]
+                ]
+                if let serlized = data.jsonStringRepresentation{
+                    print(serlized)
+                    eventSink?("measurement|"+serlized)
+                    eventSink = nil
+                    centralManager.stopScan()
+                    if( characteristic.isNotifying){
+                        peripheral.setNotifyValue(false, for: characteristic)
+                    }
+                }
+            }
+            index += 5
+        }
+    }
+    
+    func onListen(withArguments arguments: Any?,
+                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = eventSink
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        return nil
+    }
+    
+    func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        return nil
     }
     
 }
