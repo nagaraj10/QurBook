@@ -181,8 +181,6 @@ Future<void> main() async {
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
-    final facebookAppEvents = FacebookAppEvents();
-    facebookAppEvents.logEvent(name: "started",parameters: {"data":"value"});
     //get secret from resource
     final resList = <dynamic>[];
     await CommonUtil.getResourceLoader().then((value) {
@@ -242,7 +240,21 @@ Future<void> main() async {
     await appsflyerSdk.initSdk(
       registerConversionDataCallback: true,
       registerOnAppOpenAttributionCallback: true,
+      registerOnDeepLinkingCallback: true
     );
+
+    appsflyerSdk.onDeepLinkingStream.forEach((element) {
+      final facebookAppEvents = FacebookAppEvents();
+      facebookAppEvents.logEvent(name: "deeplinkclicked",parameters: {"user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),"data":element.toString()});
+      var firebase=FirebaseAnalyticsService();
+        firebase.trackEvent("on_deep_link_clicked",
+            {
+              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+              "type" : "facebookdeeplink"
+            }
+        );
+    });
+
 
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
@@ -495,6 +507,7 @@ class _MyFHBState extends State<MyFHB> {
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'facebookdeeplink') {
         var firebase=FirebaseAnalyticsService();
+        print(passedValArr[1]);
         firebase.trackEvent("on_facebook_clicked",
             {
               "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),

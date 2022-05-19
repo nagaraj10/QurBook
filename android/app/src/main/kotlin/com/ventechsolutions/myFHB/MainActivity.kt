@@ -174,7 +174,15 @@ class MainActivity : FlutterActivity() {
         AppEventsLogger.newLogger(this).logEvent("started")
         // Get user consent
 
+        val target: Uri? = getIntent().getData()
+        Log.e("deeplink", "onCreate: "+target )
+        if (target != null) {
+            mEventChannel.success("facebookdeeplink&"+target.toString());
+        } else {
+            // activity was created in a normal fashion
+        }
         AppLinkData.fetchDeferredAppLinkData(this) {it->
+            Log.e("deeplinks", "onCreate: "+it?.appLinkData )
             if (::mEventChannel.isInitialized) {
                 mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
             }
