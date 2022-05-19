@@ -101,6 +101,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     );
 
     PreferenceUtil.init();
+
+    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
   }
 
   @override

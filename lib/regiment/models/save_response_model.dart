@@ -13,7 +13,8 @@ class SaveResponseModel {
         result: SaveResultModel.fromJson(json['result'] ?? {}),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'isSuccess': isSuccess,
         'result': result.toJson(),
       };
@@ -54,7 +55,8 @@ class SaveResultModel {
         ackLocal: json['ack_local'],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'eventrow': eventrow.toJson(),
         'result': result.toJson(),
         'missing': missing,
@@ -72,27 +74,33 @@ class Actions {
     this.planid,
     this.title,
     this.returnData,
+    this.input
   });
 
   final String type;
   final String planid;
   final String title;
   final ReturnModel returnData;
+  Input input;
 
-  factory Actions.fromJson(Map<String, dynamic> json) => Actions(
+  factory Actions.fromJson(Map<String, dynamic> json) =>
+      Actions(
         type: json['type'],
         planid: json['planid'],
         title: json['title'],
         returnData: json['ret'] is List || json['ret'] == null
             ? null
             : ReturnModel.fromJson(json['ret'] ?? {}),
+        input: json['input'] != null ? new Input.fromJson(json['input']) : null,
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'type': type,
         'planid': planid,
         'title': title,
         'ret': returnData.toJson(),
+        'input':input.toJson(),
       };
 }
 
@@ -113,7 +121,8 @@ class ReturnModel {
   final String context;
   final String eid;
 
-  factory ReturnModel.fromJson(Map<String, dynamic> json) => ReturnModel(
+  factory ReturnModel.fromJson(Map<String, dynamic> json) =>
+      ReturnModel(
         action: json['Action'],
         message: json['Message'],
         activityName: json['ActivityName'],
@@ -122,7 +131,8 @@ class ReturnModel {
         eid: json['eid']?.toString(),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'Action': action,
         'Message': message,
         'ActivityName': activityName,
@@ -131,3 +141,69 @@ class ReturnModel {
         'eid': eid,
       };
 }
+
+class Input {
+  String action;
+  String ackLocal;
+  String eid;
+  String patientId;
+  String pfPainfulUrination;
+  String source;
+  String uid;
+  String providerId;
+
+  Input({this.action,
+    this.ackLocal,
+    this.eid,
+    this.patientId,
+    this.pfPainfulUrination,
+    this.source,
+    this.uid,
+    this.providerId});
+
+  Input.fromJson(Map<String, dynamic> json) {
+    action = json['Action'];
+    ackLocal = json['ack_local'];
+    eid = json['eid'];
+    patientId = json['patientId'];
+    pfPainfulUrination = json['pf_Painful_Urination'];
+    source = json['source'];
+    uid = json['uid'];
+    providerId = json['providerId'] ;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Action'] = this.action;
+    data['ack_local'] = this.ackLocal;
+    data['eid'] = this.eid;
+    data['patientId'] = this.patientId;
+    data['pf_Painful_Urination'] = this.pfPainfulUrination;
+    data['source'] = this.source;
+    data['uid'] = this.uid;
+    data['providerId'] = this.providerId;
+    return data;
+  }
+}
+
+/*class ProviderId {
+  int providerId;
+  String providerName;
+  String linkid;
+
+  ProviderId({this.providerId, this.providerName, this.linkid});
+
+  ProviderId.fromJson(Map<String, dynamic> json) {
+    providerId = json['providerId'];
+    providerName = json['providerName'];
+    linkid = json['linkid'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['providerId'] = this.providerId;
+    data['providerName'] = this.providerName;
+    data['linkid'] = this.linkid;
+    return data;
+  }
+}*/

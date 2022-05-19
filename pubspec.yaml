@@ -124,6 +124,7 @@ dependencies:
   esptouch_flutter: ^1.0.0
   facebook_app_events: ^0.16.0
   flutter_mdns_plugin: ^0.0.2
+  html_unescape: ^2.0.0
 
 
 
