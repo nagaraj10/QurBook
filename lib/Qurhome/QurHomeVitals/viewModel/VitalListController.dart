@@ -19,8 +19,6 @@ class VitalListController extends GetxController {
   final GetGFDataFromFHBRepo _helperRepo = GetGFDataFromFHBRepo();
   ApiBaseHelper _helper = ApiBaseHelper();
   var loadingData = false.obs;
-  var timerProgress = 1.0.obs;
-  var isShowTimerDialog = true.obs;
 
   Future<LastMeasureSyncValues> fetchDeviceDetails() async {
     try {
@@ -47,21 +45,5 @@ class VitalListController extends GetxController {
         query.qr_member_id +
         userId);
     return GetDeviceSelectionModel.fromJson(response);
-  }
-
-  updateTimerValue(double value) async {
-    try {
-      timerProgress.value = value;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  updateisShowTimerDialog(bool value) async {
-    try {
-      isShowTimerDialog.value = value;
-    } catch (e) {
-      print(e);
-    }
   }
 }
