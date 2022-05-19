@@ -4,6 +4,8 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_new_plan/view/AddNewPlan.dart';
 import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -166,6 +168,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   Get.to(AddProviderPlan(
                                       planWizardViewModel.selectedTag));
                                 } else {
+
                                   new AddNewPlan().addNewPlan(
                                       context,
                                       feedbackCode,

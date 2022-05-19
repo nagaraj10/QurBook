@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
@@ -613,6 +615,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
+    var firebase=FirebaseAnalyticsService();
+    firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
     if(widget.fromSignUp!=null&&widget.fromSignUp){
       PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
     }else{
@@ -643,6 +647,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
                         int.parse(widget.selectedCountryCode))
                     .then((value) {
+
                   moveToDashboardScreen();
                 });
               });

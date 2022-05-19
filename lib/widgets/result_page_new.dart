@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -157,6 +159,13 @@ class _ResultPage extends State<PaymentResultPage> {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
+                              var firebase=FirebaseAnalyticsService();
+                              firebase.trackEvent("on_payment_done",
+                                  {
+                                    "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                                    "status" : status
+                                  }
+                              );
                               if (status) {
                                 //widget.closePage(STR_SUCCESS);
                                 SchedulerBinding.instance

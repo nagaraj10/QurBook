@@ -4483,6 +4483,15 @@ class CommonUtil {
     } catch (e) {}
     return "";
   }
+
+  String get _getDeviceType {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    return data.size.shortestSide < 550 ? 'phone' : 'tablet';
+  }
+
+  bool get isTablet {
+    return _getDeviceType == 'tablet';
+  }
 }
 
 extension CapExtension on String {
