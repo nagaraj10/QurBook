@@ -32,7 +32,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   void initState() {
     super.initState();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+        [];
     controller.getSymptomList(isLoading: true);
 
     /* symptomsList = Provider.of<SymptomViewModel>(context, listen: false)
@@ -63,7 +64,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                       crossAxisCount: 4,
                                       crossAxisSpacing: 10.0.w,
                                       mainAxisSpacing: 10.0.w,
-                                      childAspectRatio: 0.95,
+                                      //childAspectRatio: 0.95,
                                     ),
                                     padding: EdgeInsets.only(
                                       bottom: 10.0.h,
