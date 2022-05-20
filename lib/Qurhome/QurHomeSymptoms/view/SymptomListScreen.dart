@@ -42,9 +42,9 @@ class _SymptomListScreen extends State<SymptomListScreen> {
         body: Obx(() => controller.loadingData.isTrue
             ? CommonCircularQurHome()
             : Padding(
-              padding: const EdgeInsets.fromLTRB(14,24,14,0),
-              child: Container(
-                  child: Column(
+                padding: const EdgeInsets.fromLTRB(14, 24, 14, 0),
+                child: Container(
+                    child: Column(
                   children: [
                     Expanded(
                         child: controller.symptomList?.value?.length != 0
@@ -77,7 +77,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                         symptomData.activityname,
                                         symptomData.uformname,
                                         symptomData.metadata),
-                                    vitalsData: symptomData.uformdata?.vitalsData,
+                                    vitalsData:
+                                        symptomData.uformdata?.vitalsData,
                                     eid: symptomData.eid,
                                     mediaData: symptomData.otherinfo,
                                     startTime: symptomData.estart,
@@ -100,7 +101,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                               ))
                   ],
                 )),
-            )));
+              )));
   }
 
   /*Widget getSymptomList() {

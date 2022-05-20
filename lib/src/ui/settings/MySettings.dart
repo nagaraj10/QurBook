@@ -24,7 +24,6 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'AppleHealthSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
-
 class MySettings extends StatefulWidget {
   @override
   _MySettingsState createState() => _MySettingsState();
@@ -64,12 +63,11 @@ class _MySettingsState extends State<MySettings> {
 
   var userMappingId = '';
   bool isTouched = false;
-  List<Tags> tagsList =
-  new List<Tags>();
+  List<Tags> tagsList = new List<Tags>();
 
-  bool allowAppointmentNotification=true;
-  bool allowVitalNotification=true;
-  bool allowSymptomsNotification=true;
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
 
   @override
   void initState() {
@@ -140,9 +138,9 @@ class _MySettingsState extends State<MySettings> {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
-          allowAppointmentNotification=true;
-          allowSymptomsNotification=true;
-          allowVitalNotification=true;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -156,9 +154,9 @@ class _MySettingsState extends State<MySettings> {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
-        allowAppointmentNotification=true;
-        allowSymptomsNotification=true;
-        allowVitalNotification=true;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
       }
     });
     return selectionResult;
@@ -181,7 +179,11 @@ class _MySettingsState extends State<MySettings> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            greColor,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -214,7 +216,11 @@ class _MySettingsState extends State<MySettings> {
             preferred_language,
             qa_subscription,
             priColor,
-            greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            greColor,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -327,34 +333,40 @@ class _MySettingsState extends State<MySettings> {
               ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
               : 'Y';
 
-      tagsList=getDeviceSelectionModel
-          .result[0].tags!=null && getDeviceSelectionModel
-          .result[0].tags.length>0?getDeviceSelectionModel
-          .result[0].tags:new List();
+      tagsList = getDeviceSelectionModel.result[0].tags != null &&
+              getDeviceSelectionModel.result[0].tags.length > 0
+          ? getDeviceSelectionModel.result[0].tags
+          : new List();
 
-      allowAppointmentNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+      allowAppointmentNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel.result[0].profileSetting
+              .caregiverCommunicationSetting?.appointments
           : true;
 
-
-      allowVitalNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+      allowVitalNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.vitals
           : true;
 
-
-      allowSymptomsNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+      allowSymptomsNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
           : true;
-
     });
   }
 
@@ -387,6 +399,7 @@ class _MySettingsState extends State<MySettings> {
         body: Column(
           children: [
             Expanded(
+              flex: 2,
               child: ListView(
                 padding: EdgeInsets.all(10),
                 children: <Widget>[
@@ -573,6 +586,34 @@ class _MySettingsState extends State<MySettings> {
                                   ],
                                 ))
                             : SizedBox.shrink(),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                        ListTile(
+                          leading: CommonUtil().qurHomeMainIcon(),
+                          title: Text(variable.strQurHome),
+                          subtitle: Text(
+                            variable.strDefaultUI,
+                            style: TextStyle(fontSize: 12.0.sp),
+                          ),
+                          trailing: Transform.scale(
+                            scale: 0.8,
+                            child: Switch(
+                              value: PreferenceUtil.getIfQurhomeisAcive(),
+                              activeColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              onChanged: (bool newValue) {
+                                setState(
+                                  () {
+                                    PreferenceUtil.saveIfQurhomeisAcive(
+                                        qurhomeStatus: newValue);
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        ),
                         Container(
                           height: 1,
                           color: Colors.grey[200],

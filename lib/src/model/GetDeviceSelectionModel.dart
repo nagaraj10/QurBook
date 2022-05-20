@@ -36,14 +36,14 @@ class SelectionResult {
   String lastModifiedOn;
   List<Tags> tags;
 
-
   SelectionResult(
       {this.id,
-        this.userId,
-        this.profileSetting,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,this.tags});
+      this.userId,
+      this.profileSetting,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.tags});
 
   SelectionResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -89,29 +89,29 @@ class ProfileSetting {
   bool allowDevice;
   bool thermoMeter;
   bool pulseOximeter;
+  bool qurhomeDefaultUI;
+
   int preColor;
   int greColor;
   String preferred_language;
   String qa_subscription;
   CaregiverCommunicationSetting caregiverCommunicationSetting;
 
-
-
   ProfileSetting(
       {this.bpMonitor,
-        this.googleFit,
-        this.healthFit,
-        this.allowDigit,
-        this.glucoMeter,
-        this.weighScale,
-        this.allowDevice,
-        this.thermoMeter,
-        this.pulseOximeter,
-        this.preColor,
-        this.greColor,
-        this.preferred_language,
-        this.qa_subscription,this.caregiverCommunicationSetting
-      });
+      this.googleFit,
+      this.healthFit,
+      this.allowDigit,
+      this.glucoMeter,
+      this.weighScale,
+      this.allowDevice,
+      this.thermoMeter,
+      this.pulseOximeter,
+      this.preColor,
+      this.greColor,
+      this.preferred_language,
+      this.qa_subscription,
+      this.caregiverCommunicationSetting});
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -123,17 +123,18 @@ class ProfileSetting {
     allowDevice = json['allowDevice'];
     thermoMeter = json['thermoMeter'];
     pulseOximeter = json['pulseOximeter'];
+    qurhomeDefaultUI = (json['qurhome_ui'] ?? false);
+
     preColor = json['priColor'];
     greColor = json['greColor'];
     preferred_language = json['preferred_language'];
     qa_subscription = json['qa-subscription'];
-    if(json.containsKey('caregiverCommunicationSetting')){
+    if (json.containsKey('caregiverCommunicationSetting')) {
       caregiverCommunicationSetting =
-      json['caregiverCommunicationSetting'] != null
-          ? new CaregiverCommunicationSetting.fromJson(
-          json['caregiverCommunicationSetting'])
-          : null;
-
+          json['caregiverCommunicationSetting'] != null
+              ? new CaregiverCommunicationSetting.fromJson(
+                  json['caregiverCommunicationSetting'])
+              : null;
     }
   }
 
@@ -152,6 +153,8 @@ class ProfileSetting {
     data['greColor'] = greColor;
     data['preferred_language'] = preferred_language;
     data['qa-subscription'] = qa_subscription;
+    data['qa-qurhome_ui'] = qurhomeDefaultUI;
+
     if (this.caregiverCommunicationSetting != null) {
       data['caregiverCommunicationSetting'] =
           this.caregiverCommunicationSetting.toJson();
