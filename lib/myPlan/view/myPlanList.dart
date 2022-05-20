@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/FHBBasicWidget.dart';
@@ -109,7 +110,9 @@ class _MyPlanState extends State<MyPlanList> {
       return Scaffold(
           floatingActionButton: addplanbutton?FloatingActionButton.extended(
             onPressed: () async {
-              //TODO: Uncomment for actual plans screen
+              var firebase=FirebaseAnalyticsService();
+              firebase.trackEvent("on_add_plan_button_click",{"user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN)});
+
               // await Get.toNamed(rt_Diseases);
               await Get.toNamed(rt_PlanWizard).then(
                   (value) => FocusManager.instance.primaryFocus.unfocus());
