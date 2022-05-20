@@ -6,8 +6,10 @@ import 'package:myfhb/add_provider_plan/model/AddProviderPlanResponse.dart';
 import 'package:myfhb/add_provider_plan/model/ProviderOrganizationResponse.dart';
 import 'package:myfhb/add_provider_plan/service/PlanProviderViewModel.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/plan_wizard/view/widgets/Rounded_CheckBox.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
@@ -412,6 +414,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                   RoundedCheckBox(
                     isSelected: planList.isBookmarked,
                     onTap: () async {
+
                       planList.isBookmarked = !planList.isBookmarked;
                       setState(() {});
                     },

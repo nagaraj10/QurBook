@@ -16,6 +16,7 @@ import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -67,6 +68,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
+
+    var firebase=FirebaseAnalyticsService();
+    firebase.trackCurrentScreen("checkoutPage","");
   }
 
   @override
@@ -618,6 +622,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value?.totalProductCount ?? 0;
+    var firebase=FirebaseAnalyticsService();
+    firebase.trackEvent("on_pay_clicked",
+        {
+          "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+          "total" : mCartTotal
+        }
+    );
     var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};
     print("bodybodybody" + body.toString());
     if (mCartTotal > 0) {

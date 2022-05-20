@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,16 +10,14 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
@@ -60,7 +59,8 @@ class VitalsDetails extends StatefulWidget {
   _VitalsDetailsState createState() => _VitalsDetailsState();
 }
 
-class _VitalsDetailsState extends State<VitalsDetails> {
+class _VitalsDetailsState extends State<VitalsDetails>
+    with TickerProviderStateMixin {
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
@@ -98,23 +98,237 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   final controllerGetx = Get.put(VitalDetailController());
 
+  AnimationController animationController;
+
+  int _counter = 0;
+  StreamController<int> _events = StreamController<int>();
+  Timer _timer;
+
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-    catgoryDataList = PreferenceUtil.getCategoryType();
-    if (catgoryDataList == null) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        catgoryDataList = value.result;
+    try {
+      mInitialTime = DateTime.now();
+      super.initState();
+      _events.add(180);
+      controllerGetx.updateisShowTimerDialog(true);
+      catgoryDataList = PreferenceUtil.getCategoryType();
+      if (catgoryDataList == null) {
+        _categoryListBlock.getCategoryLists().then((value) {
+          catgoryDataList = value.result;
+        });
+      }
+      _mediaTypeBlock.getMediTypesList().then((value) {
+        mediaTypesResponse = value;
       });
+
+      controllerGetx.onTapFilterBtn(0);
+
+      initGetX();
+    } catch (e) {
+      print(e);
     }
-    _mediaTypeBlock.getMediTypesList().then((value) {
-      mediaTypesResponse = value;
-    });
+  }
 
-    controllerGetx.onTapFilterBtn(0);
+  void _startTimer() {
+    try {
+      _counter = 180;
+      if (_timer != null) {
+        _timer.cancel();
+      }
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!_events.isClosed) {
+          (_counter > 0) ? _counter-- : _timer.cancel();
+          _events.add(_counter);
+          notify();
+        } else {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
-    initGetX();
+  void initBleTimer() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 500));
+      animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 180),
+      );
+      animationController.addListener(() {
+        if (animationController.isAnimating) {
+          controllerGetx.updateTimerValue(animationController.value);
+        } else {
+          controllerGetx.updateTimerValue(1.0);
+        }
+      });
+      if (controllerGetx.isShowTimerDialog.value) {
+        _startTimer();
+        showSearchingBleDialog(context);
+        controllerGetx.updateisShowTimerDialog(false);
+        await Future.delayed(Duration(seconds: 1));
+        qurhomeDashboardController.checkForConnectedDevices(true);
+        qurhomeDashboardController.foundBLE.listen((val) {
+          if (val) {
+            closeDialog();
+          }
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void notify() {
+    try {
+      if (_counter == 0) {
+        closeDialog();
+        if (!qurhomeDashboardController.foundBLE.value) {
+          toast.getToast(NoDeviceFound, Colors.red);
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void closeDialog() {
+    try {
+      Timer(Duration(milliseconds: 1000), () {
+        if (animationController.isAnimating) {
+          animationController.stop();
+        }
+      });
+      _events.close();
+      Navigator.pop(Get.context);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget startProgressIndicator(String strText) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 140,
+          height: 140,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey.shade300,
+            color: Color(
+              CommonUtil().getQurhomeGredientColor(),
+            ),
+            value: controllerGetx.timerProgress.value,
+            strokeWidth: 8,
+          ),
+        ),
+        AnimatedBuilder(
+          animation: animationController,
+          builder: (context, child) => Text(
+            "$strText",
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  showSearchingBleDialog(BuildContext context) {
+    try {
+      animationController.reverse(
+          from:
+              animationController.value == 0 ? 1.0 : animationController.value);
+    } catch (e) {
+      print(e);
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: StreamBuilder<int>(
+                  stream: _events.stream,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    print(snapshot.data.toString());
+                    return Container(
+                        width: 1.sw,
+                        height: 1.sh / 2.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.close,
+                                      size: 30.0.sp,
+                                    ),
+                                    onPressed: () {
+                                      try {
+                                        _events.close();
+                                        Navigator.pop(context);
+                                      } catch (e) {
+                                        print(e);
+                                      }
+                                    })
+                              ],
+                            ),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          ScanningForDevices,
+                                          style: TextStyle(
+                                            color: Color(
+                                              CommonUtil()
+                                                  .getQurhomeGredientColor(),
+                                            ),
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 30.0.h,
+                                    ),
+                                    startProgressIndicator(
+                                        snapshot.data.toString()),
+                                    SizedBox(
+                                      height: 15.0.h,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ));
+                  }),
+            ),
+          );
+        });
+      },
+    );
   }
 
   void initGetX() {
@@ -196,13 +410,19 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
   @override
   void dispose() {
-    super.dispose();
-    fbaLog(eveName: 'qurbook_screen_event', eveParams: {
-      'eventTime': '${DateTime.now()}',
-      'pageName': 'Device Value Screen',
-      'screenSessionTime':
-          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
-    });
+    try {
+      animationController.dispose();
+      _events.close();
+      super.dispose();
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'pageName': 'Device Value Screen',
+        'screenSessionTime':
+            '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -212,12 +432,12 @@ class _VitalsDetailsState extends State<VitalsDetails> {
       appBar: AppBar(
         title: Text(
           getStringValue(),
-          style: TextStyle(fontSize: 18.0.sp),
+          style: TextStyle(fontSize: CommonUtil().isTablet ? 22.0.sp : 18.0.sp),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            size: 24.0.sp,
+            size: CommonUtil().isTablet ? 26.0.sp : 24.0.sp,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -226,11 +446,11 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         actions: <Widget>[
           Image.asset(
             widget.device_icon,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet ? 40.0.h : 45.0.h,
+            width: CommonUtil().isTablet ? 40.0.h : 45.0.h,
           ),
           SizedBoxWidget(
-            width: 15.0.w,
+            width: CommonUtil().isTablet ? 18.0.w : 15.0.w,
           )
         ],
         flexibleSpace: GradientAppBarQurhome(),
@@ -255,7 +475,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                       current: controllerGetx.filterBtnOnTap.value,
                       color: Colors.white,
                       secondaryColor:
-                      Color(CommonUtil().getQurhomePrimaryColor()),
+                          Color(CommonUtil().getQurhomePrimaryColor()),
                       onTab: (selected) {
                         controllerGetx.onTapFilterBtn(selected);
                         filterRefresh(selected);
@@ -282,7 +502,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
           )),
       floatingActionButton: IconButton(
         icon: Image.asset(icon_mayaMain),
-        iconSize: 60,
+        iconSize: CommonUtil().isTablet ? 90 : 60,
         onPressed: () {
           Get.toNamed(
             rt_Sheela,
@@ -1439,6 +1659,11 @@ class _VitalsDetailsState extends State<VitalsDetails> {
   }
 
   Widget getValues(BuildContext context) {
+    String strText =
+        CommonUtil().validString(widget.deviceNameForAdding).toLowerCase();
+    if (strText.contains("pulse")) {
+      initBleTimer();
+    }
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:

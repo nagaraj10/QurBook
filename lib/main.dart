@@ -23,6 +23,7 @@ import 'chat_socket/view/ChatDetail.dart';
 import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
+import 'common/firebase_analytics_service.dart';
 import 'constants/router_variable.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
@@ -159,6 +160,7 @@ import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 import 'src/model/user/user_accounts_arguments.dart';
 import 'authentication/view_model/otp_view_model.dart';
 import 'landing/view_model/landing_view_model.dart';
+import 'package:facebook_app_events/facebook_app_events.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -179,7 +181,6 @@ Future<void> main() async {
     // Get a specific camera from the list of available cameras.
     firstCamera = cameras[0];
     routes = await router.setRouter(listOfCameras);
-
     //get secret from resource
     final resList = <dynamic>[];
     await CommonUtil.getResourceLoader().then((value) {
@@ -207,7 +208,7 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    CommonUtil().initPortraitMode();
 
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
@@ -233,9 +234,22 @@ Future<void> main() async {
     final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
     await appsflyerSdk.initSdk(
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true,
-    );
+        registerConversionDataCallback: true,
+        registerOnAppOpenAttributionCallback: true,
+        registerOnDeepLinkingCallback: true);
+
+    appsflyerSdk.onDeepLinkingStream.forEach((element) {
+      final facebookAppEvents = FacebookAppEvents();
+      facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
+        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+        "data": element.toString()
+      });
+      var firebase = FirebaseAnalyticsService();
+      firebase.trackEvent("on_deep_link_clicked", {
+        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+        "type": "facebookdeeplink"
+      });
+    });
 
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
@@ -279,6 +293,10 @@ Future<void> main() async {
         );
       }
     });
+
+    var firebase = FirebaseAnalyticsService();
+    firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
+    firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
       provider.MultiProvider(
         providers: [
@@ -482,6 +500,14 @@ class _MyFHBState extends State<MyFHB> {
         CommonUtil.sendLogToServer();
       }
       final passedValArr = cMsg.split('&');
+      if (passedValArr[0] == 'facebookdeeplink') {
+        var firebase = FirebaseAnalyticsService();
+        print(passedValArr[1]);
+        firebase.trackEvent("on_facebook_clicked", {
+          "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+          "total": passedValArr[1]
+        });
+      }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {

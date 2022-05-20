@@ -22,6 +22,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -81,6 +82,10 @@ class _ChatScreenState extends State<ChatScreen>
         text: "Your SpO2 device is connected",
       );
       getMyViewModel().setupListenerForReadings();
+    } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {
+      getMyViewModel().eId = widget?.arguments?.eId;
+      getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
+      getMyViewModel().uuid = Uuid().v1();
     } else {
       if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
         getMyViewModel(

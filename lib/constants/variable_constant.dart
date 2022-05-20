@@ -191,6 +191,7 @@ const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
+const String icon_undo = 'assets/icons/ic_undo.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -510,11 +511,11 @@ const String _wordsFromMaya = 'waiting for maya to speak';
 const String strhiMaya = 'Hi Sheela';
 const String strtts = 'textToSpeech';
 const String strtapToSpeak = 'Tap to Speak';
-const String requestSheelaForbp = 'record my bp';
-const String requestSheelaFortemperature = 'record my temperature';
-const String requestSheelaForglucose = 'record my glucose';
-const String requestSheelaForpo = 'record my po';
-const String requestSheelaForweight = 'record my weight';
+const String requestSheelaForbp = 'Record my BP readings';
+const String requestSheelaFortemperature = 'Record my Temperature';
+const String requestSheelaForglucose = 'Record my Glucometer readings';
+const String requestSheelaForpo = 'Record my Pulse oximeter readings';
+const String requestSheelaForweight = 'Record my Weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strdevice = 'QURBOOK_SHEELA';

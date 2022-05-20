@@ -4,6 +4,9 @@ class BleDataModel {
   String deviceId;
   String deviceType;
   Data data;
+  String eid;
+  String uid;
+  String ackLocal;
 
   BleDataModel(
       {this.status, this.hubId, this.deviceId, this.deviceType, this.data});
@@ -14,6 +17,9 @@ class BleDataModel {
       hubId = json['hubId'];
       deviceId = json['deviceId'];
       deviceType = json['deviceType'];
+      eid = json['eid'];
+      uid = json['uid'];
+      ackLocal = json['ackLocal'];
       data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
     } catch (e) {
       print(e);
@@ -27,6 +33,9 @@ class BleDataModel {
       data['hubId'] = this.hubId;
       data['deviceId'] = this.deviceId;
       data['deviceType'] = this.deviceType;
+      data['eid'] = this.eid;
+      data['uid'] = this.uid;
+      data['ackLocal'] = this.ackLocal;
       if (this.data != null) {
         data['Data'] = this.data.toJson();
       }

@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -44,7 +46,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
   List<Conversation> conversations = new List();
-  static var uuid = Uuid().v1();
+  var uuid = Uuid().v1();
   var user_id;
   var user_name;
   var auth_token;
@@ -95,6 +97,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
   HubListController hublistController;
+  String eId;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     if (disableMic) {
@@ -148,8 +151,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "scanstarted":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast()
+            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "connectionfailed":
             // moveToBack();
@@ -170,8 +173,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             break;
 
           default:
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+          // FlutterToast()
+          //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
         }
       }
     });
@@ -191,6 +194,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         final QurhomeDashboardController qurhomeDashboardController =
             Get.find();
         qurhomeDashboardController.updateTabIndex(0);
+        final QurhomeRegimenController qurhomeRegimenController =
+        Get.find();
+        qurhomeRegimenController.getRegimenList();
         Get.back();
       }
     } catch (e) {
@@ -220,6 +226,14 @@ class ChatScreenViewModel extends ChangeNotifier {
         );
         model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId.value;
+        model.eid = hublistController.eid;
+        model.uid = hublistController.uid;
+        var now = DateTime.now();
+        var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
+        String actualDateTime = formatterDateTime.format(now);
+        model.ackLocal = actualDateTime;
+        hublistController.eid = null;
+        hublistController.uid = null;
         await Future.delayed(Duration(
           seconds: 2,
         ));
@@ -627,7 +641,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     // notifyListeners();
   }
 
-  sendToMaya(String msg, {String screen, String providerMsg}) async {
+  sendToMaya(
+    String msg, {
+    String screen,
+    String providerMsg,
+  }) async {
     prof = await PreferenceUtil.getProfileData(constants.KEY_PROFILE);
     auth_token = await PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
     user_name = prof.result != null
@@ -652,6 +670,13 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
     reqJson[parameters.strProviderMsg] = providerMsg;
+    if (eId != null) {
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.KIOSK_remind,
+        parameters.KIOSK_eid: eId
+      };
+      eId = null;
+    }
     screenValue = screen;
     isLoading = true;
 

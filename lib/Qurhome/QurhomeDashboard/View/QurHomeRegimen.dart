@@ -18,6 +18,7 @@ import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/media_icon_widget.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
@@ -54,6 +55,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -62,8 +65,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             child: Padding(
               padding: const EdgeInsets.only(right: 16.0),
               child: Container(
-                height: 40,
-                width: 80,
+                height: 40.h,
+                width: 80.h,
                 decoration: const BoxDecoration(
                   color: Color(0xFFFB5422),
                   borderRadius: BorderRadius.only(
@@ -75,7 +78,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   child: Text(
                     'SOS',
                     style: TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 14.0.h,
                         color: Colors.white,
                         fontWeight: FontWeight.bold),
                   ),
@@ -115,7 +118,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                     },
                                     controller: PageController(
                                         initialPage: val.nextRegimenPosition,
-                                        viewportFraction: 1 / 5),
+                                        viewportFraction: 1 / (isPortrait==true?5:3)),
                                     itemBuilder:
                                         (BuildContext context, int itemIndex) {
                                       return _buildCarouselItem(
@@ -123,7 +126,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                           itemIndex,
                                           val.qurHomeRegimenResponseModel
                                               .regimentsList[itemIndex],
-                                          val.nextRegimenPosition);
+                                          val.nextRegimenPosition,
+                                          isPortrait);
                                     },
                                   ),
                                 ),
@@ -153,8 +157,45 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     }
   }
 
+  String getDeviceType() {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    return data.size.shortestSide < 600 ? 'phone' : 'tablet';
+  }
+
+  double getPaddingWidth() {
+    if (getDeviceType() == 'phone') {
+      return 25.0;
+    } else {
+      return MediaQuery.of(context).size.width * 03;
+    }
+  }
+
+  Color getCardBackgroundColor(int itemIndex, int nextRegimenPosition) {
+    if (controller.currentIndex == itemIndex) {
+      return Colors.white;
+    } else if (nextRegimenPosition == itemIndex) {
+      return Color(
+        CommonUtil().getQurhomePrimaryColor(),
+      );
+    } else {
+      return Colors.white;
+    }
+  }
+
+  Color getTextAndIconColor(int itemIndex, int nextRegimenPosition) {
+    if (controller.currentIndex == itemIndex) {
+      return Color(
+        CommonUtil().getQurhomePrimaryColor(),
+      );
+    } else if (nextRegimenPosition == itemIndex) {
+      return Colors.white;
+    } else {
+      return Colors.grey;
+    }
+  }
+
   Widget _buildCarouselItem(BuildContext context, int itemIndex,
-      RegimentDataModel regimen, int nextRegimenPosition) {
+      RegimentDataModel regimen, int nextRegimenPosition,bool isPortrait) {
     return InkWell(
       onTap: () {
         showRegimenDialog(regimen, itemIndex);
@@ -162,10 +203,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       child: Transform.scale(
         scale: getCurrentRatio(itemIndex),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: isPortrait?25.0:MediaQuery.of(context).size.width/5, vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: getCardBackgroundColor(itemIndex, nextRegimenPosition),
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
               boxShadow: [
                 BoxShadow(
@@ -177,14 +218,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: Stack(
                 children: [
-                  if (regimen.ack_local != null) ...{
+                  if (regimen.ack != null) ...{
                     Align(
                       alignment: Alignment.bottomRight,
                       child: Visibility(
-                        visible: regimen.ack_local != null,
+                        visible: regimen.ack != null,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -192,12 +234,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               'assets/Qurhome/seen.png',
                               height: 12.0,
                               width: 12.0,
-                              color: controller.currentIndex == itemIndex ||
-                                      nextRegimenPosition == itemIndex
-                                  ? Color(
-                                      CommonUtil().getQurhomePrimaryColor(),
-                                    )
-                                  : Colors.grey,
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
                             ),
                             SizedBox(
                               width: 2,
@@ -205,12 +243,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             Text(
                               '${CommonUtil().regimentDateFormatV2(
                                 regimen?.asNeeded
-                                    ? regimen?.ack_local ?? DateTime.now()
-                                    : regimen?.ack_local ?? DateTime.now(),
+                                    ? regimen?.ack ?? DateTime.now()
+                                    : regimen?.ack ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
                                 fontSize: 11.0,
+                                color: getTextAndIconColor(
+                                    itemIndex, nextRegimenPosition),
                               ),
                             ),
                           ],
@@ -227,13 +267,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                               ? DateFormat('hh:mm a').format(regimen.estart)
                               : '',
                           style: TextStyle(
-                              color: controller.currentIndex == itemIndex ||
-                                      nextRegimenPosition == itemIndex
-                                  ? Color(
-                                      CommonUtil().getQurhomeGredientColor(),
-                                    )
-                                  : Colors.grey,
-                              fontSize: 15,
+                              color: getTextAndIconColor(
+                                  itemIndex, nextRegimenPosition),
+                              fontSize: 15.h,
                               fontWeight: FontWeight.w500),
                         ),
                         SizedBox(
@@ -249,14 +285,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                             regimen.title.toString().trim(),
                             maxLines: 2,
                             style: TextStyle(
-                                color: controller.currentIndex == itemIndex ||
-                                        nextRegimenPosition == itemIndex
-                                    ? Color(
-                                        CommonUtil().getQurhomeGredientColor(),
-                                      )
-                                    : Colors.grey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500),
+                                color: getTextAndIconColor(
+                                    itemIndex, nextRegimenPosition),
+                                fontSize: 16.h,
+                                fontWeight: FontWeight.w600),
                           ),
                         ),
                       ],
@@ -274,7 +306,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   dynamic getIcon(Activityname activityname, Uformname uformName,
       Metadata metadata, int itemIndex, int nextRegimenPosition,
       {double sizeOfIcon}) {
-    final iconSize = sizeOfIcon ?? 40.0;
+    final iconSize = sizeOfIcon ?? 40.0.h;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
@@ -282,24 +314,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
         } else {
           return CachedNetworkImage(
             imageUrl: metadata?.icon,
             height: iconSize,
             width: iconSize,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
             errorWidget: (context, url, error) {
               return getDefaultIcon(activityname, uformName, iconSize,
                   itemIndex, nextRegimenPosition);
@@ -361,12 +383,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         : Icon(
             cardIcon,
             size: iconSize - 5.0,
-            color: controller.currentIndex == itemIndex ||
-                    nextRegimenPosition == itemIndex
-                ? Color(
-                    CommonUtil().getQurhomePrimaryColor(),
-                  )
-                : Colors.grey,
+            color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
     return cardIconWidget;
   }
@@ -692,42 +709,101 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       if (((regimen.title ?? '').isNotEmpty) &&
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
-        var dashboardController = Get.find<QurhomeDashboardController>();
-        dashboardController.checkForConnectedDevices(false);
+        if (checkCanEdit(regimen)) {
+          var dashboardController = Get.find<QurhomeDashboardController>();
+          dashboardController.checkForConnectedDevices(
+            false,
+            eid: regimen.eid,
+            uid: regimen.uid,
+          );
+        } else {
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForbp,
-          ),
-        );
+        if (checkCanEdit(regimen)) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        } else {
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForweight,
-          ),
-        );
+        if (checkCanEdit(regimen)) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        } else {
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "bloodsugar")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            sheelaInputs: requestSheelaForglucose,
-          ),
-        );
+        if (checkCanEdit(regimen)) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        } else {
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "temperature")) {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            sheelaInputs: requestSheelaFortemperature,
-          ),
-        );
+        if (checkCanEdit(regimen)) {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: regimen.eid,
+            ),
+          ).then((value) => {controller.getRegimenList()});
+        } else {
+          FlutterToast().getToast(
+            (Provider.of<RegimentViewModel>(context, listen: false)
+                        .regimentMode ==
+                    RegimentMode.Symptoms)
+                ? symptomsError
+                : activitiesError,
+            Colors.red,
+          );
+        }
       } else {
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogOpened);
@@ -850,12 +926,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     return cardColor;
   }
 
+  bool checkCanEdit(RegimentDataModel regimen) {
+    return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+            RegimentMode.Schedule;
+  }
+
   Future<void> callLogApi(RegimentDataModel regimen) async {
     stopRegimenTTS();
 
-    final canEdit = regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Schedule;
+    final canEdit = checkCanEdit(regimen);
     if (canEdit || isValidSymptom(context)) {
       LoaderClass.showLoadingDialog(
         Get.context,

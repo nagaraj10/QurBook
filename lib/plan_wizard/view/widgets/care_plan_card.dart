@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/firebase_analytics_service.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
@@ -195,6 +197,15 @@ class CarePlanCard extends StatelessWidget {
                                               .currentPackageFreeCareId ==
                                           planList.packageid,
                               onTap: () async {
+                                var firebase=FirebaseAnalyticsService();
+                                firebase.trackEvent("on_plan_selected",
+                                    {
+                                      "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                                      "planId" : planList.packageid,
+                                      "type" : "add or remove",
+                                      "name" : planList.title
+                                    }
+                                );
                                 if (planList.isSubscribed == '1') {
                                   if (planList.isExtendable == '1') {
                                     var isSelected =
@@ -208,14 +219,38 @@ class CarePlanCard extends StatelessWidget {
                                     if (isSelected) {
                                       commonRemoveCartDialog(context, planList,
                                           planList.packageid,orginalPrice);
+                                      firebase.trackEvent("on_plan_selected",
+                                          {
+                                            "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                                            "planId" : planList.packageid,
+                                            "type" : "remove",
+                                            "name" : planList.title
+                                          }
+                                      );
                                     } else {
                                       _alertForSubscribedPlan(context,orginalPrice);
+                                      firebase.trackEvent("on_plan_selected",
+                                          {
+                                            "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                                            "planId" : planList.packageid,
+                                            "type" : "add",
+                                            "name" : planList.title
+                                          }
+                                      );
                                     }
                                   } else {
                                     FlutterToast()
                                         .getToast(renewalLimit, Colors.black);
                                   }
                                 } else {
+                                  firebase.trackEvent("on_plan_selected",
+                                      {
+                                        "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+                                        "planId" : planList.packageid,
+                                        "type" : "add or remove",
+                                        "name" : planList.title
+                                      }
+                                  );
                                   var isSelected =
                                       Provider.of<PlanWizardViewModel>(
                                               context,
@@ -226,6 +261,7 @@ class CarePlanCard extends StatelessWidget {
                                   if (isSelected) {
                                     commonRemoveCartDialog(
                                         context, planList, planList.packageid,orginalPrice);
+
                                   } else {
                                     bool canProceed =
                                         await Provider.of<PlanWizardViewModel>(
@@ -314,6 +350,15 @@ class CarePlanCard extends StatelessWidget {
   }
 
   onCardTapped(BuildContext context) {
+    var firebase=FirebaseAnalyticsService();
+    firebase.trackEvent("on_plan_view",
+        {
+          "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+          "planId" : planList.packageid,
+          "type" : "plan view",
+          "name" : planList.title
+        }
+    );
     Navigator.push(
       context,
       MaterialPageRoute(

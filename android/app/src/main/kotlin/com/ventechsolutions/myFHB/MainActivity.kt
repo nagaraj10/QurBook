@@ -38,6 +38,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.multidex.BuildConfig
+import com.facebook.FacebookSdk.fullyInitialize
+import com.facebook.FacebookSdk.setAutoInitEnabled
+import com.facebook.applinks.AppLinkData
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -64,6 +67,10 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
+import com.facebook.FacebookSdk;
+import com.facebook.FacebookSdk.setAutoLogAppEventsEnabled
+import com.facebook.LoggingBehavior
+import com.facebook.appevents.AppEventsLogger;
 
 
 class MainActivity : FlutterActivity() {
@@ -159,8 +166,28 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //todo this must be un command when go to production
-        //this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        setAutoInitEnabled(true)
+        fullyInitialize()
+        FacebookSdk.setIsDebugEnabled(true)
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        setAutoLogAppEventsEnabled(true)
+        AppEventsLogger.newLogger(this).logEvent("started")
+        // Get user consent
+
+        val target: Uri? = getIntent().getData()
+        Log.e("deeplink", "onCreate: "+target )
+        if (target != null) {
+            mEventChannel.success("facebookdeeplink&"+target.toString());
+        } else {
+            // activity was created in a normal fashion
+        }
+        AppLinkData.fetchDeferredAppLinkData(this) {it->
+            Log.e("deeplinks", "onCreate: "+it?.appLinkData )
+            if (::mEventChannel.isInitialized) {
+                mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
+            }
+        }
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val action = intent.action
         val type = intent.type
@@ -517,9 +544,9 @@ class MainActivity : FlutterActivity() {
                 override fun onScanFinished(scanResultList: List<BleDevice?>) {
                     Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
                     Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
-                    /*if (autoRepeatScan == 1) {
+                    if (autoRepeatScan == 1) {
                         startScanTimer()
-                    }*/
+                    }
                     //stopScan()
                 }
 
@@ -662,7 +689,12 @@ class MainActivity : FlutterActivity() {
                                         var spo2: Int
                                         var index: Int
                                         index = 0
+//                                        Log.d(
+//                                            "received",
+//                                            String.format("received data", data)
+//                                        )
                                         while (index < data.size) {
+
                                             if (data[index] and BIT_SYNC.toByte() != 0.toByte()) {
                                                 signalStrength = getUB(data[index]) and BIT_SIGNAL_STR
                                                 isNoSignal = getUB(data[index]) and BIT_SIGNAL
@@ -679,27 +711,27 @@ class MainActivity : FlutterActivity() {
                                                 spo2 = getUB(data[index + 4]) and BIT_SPO2
 
 
-                                                //Serial.print("SPO2_Stable ");Serial.println(SPO2_Stable);
-                                                //Serial.print("Signal Strength ");Serial.println(signalStrength);
-                                                //Serial.print("No Signal ");Serial.println(isNoSignal);
-                                                //Serial.print("Probe Unplugged ");Serial.println(isProbeUnplugged);
-                                                //Serial.print("Pulse Beep=");Serial.println(isBeep);
+//                                                Serial.print("SPO2_Stable ");Serial.println(SPO2_Stable);
+//                                                Serial.print("Signal Strength ");Serial.println(signalStrength);
+//                                                Serial.print("No Signal ");Serial.println(isNoSignal);
+//                                                Serial.print("Probe Unplugged ");Serial.println(isProbeUnplugged);
+//                                                Serial.print("Pulse Beep=");Serial.println(isBeep);
+//
+//                                                Serial.print("Pleth=");Serial.println(pleth);
+//
+//                                                Serial.print("Bargraph ");Serial.println(bargraph);
+//                                                Serial.print("No Finger ");Serial.print(isNoFinger);
+//                                                Serial.print("Pulse Research=");Serial.println(isResearch);
+//
+//                                                Serial.print("Pulse Rate ");Serial.print(pulseRate);
+//                                                Serial.print("SPO2 ");Serial.print(spo2);
+//                                                Serial.println();
 
-                                                //Serial.print("Pleth=");Serial.println(pleth);
 
-                                                //Serial.print("Bargraph ");Serial.println(bargraph);
-                                                //Serial.print("No Finger ");Serial.print(isNoFinger);
-                                                //Serial.print("Pulse Research=");Serial.println(isResearch);
-
-                                                //Serial.print("Pulse Rate ");Serial.print(pulseRate);
-                                                //Serial.print("SPO2 ");Serial.print(spo2);
-                                                //Serial.println();
-
-                                                /*
-                                                    Log.d(GTAG,String.format("No Finger %d",isNoFinger));
-                                                    Log.d(GTAG,String.format("Pulse Rate %d",pulseRate));
-                                                    Log.d(GTAG,String.format("SPO2 %d",spo2));
-                                                    */if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127) {
+//                                                    Log.d("nofinger",String.format("No Finger %d",isNoFinger));
+//                                                    Log.d("pluse",String.format("Pulse Rate %d",pulseRate));
+//                                                    Log.d("spo2",String.format("SPO2 %d",spo2));
+                                                    if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
                                                     SPO2_ReadingCount++
                                                     //dev_data.setText(String.format("%d PR %d SPO2 %d , F=%d",SPO2_ReadingCount,pulseRate,spo2,isNoFinger));
                                                     /*dev_data!!.text = String.format(
@@ -708,7 +740,13 @@ class MainActivity : FlutterActivity() {
                                                         spo2,
                                                         isNoFinger
                                                     )*/
-                                                    if (SPO2_ReadingCount == 30 && uploaded == 0) {
+                                                        Log.d("data received",String.format(
+                                                            "PR %d SPO2 %d , F=%d",
+                                                            pulseRate,
+                                                            spo2,
+                                                            isNoFinger
+                                                        ))
+                                                    if ( uploaded == 0) {
                                                         Log.d(
                                                             "startScan",
                                                             String.format("Pulse Rate %d", pulseRate)

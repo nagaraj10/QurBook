@@ -30,7 +30,7 @@ class _BleConnectScreenState extends State<BleConnectScreen> {
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
-              size: 24.0.sp,
+              size: CommonUtil().isTablet ? 35.0 : 24.0,
             ),
             onPressed: () {
               Get.back();

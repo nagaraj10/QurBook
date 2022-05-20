@@ -40,6 +40,7 @@ class FormDataDialog extends StatefulWidget {
     this.followEventContext,
     this.isFromQurHomeSymptom = false,
     this.isFromQurHomeRegimen = false,
+    @required this.providerId
   });
 
   final List<FieldModel> fieldsData;
@@ -53,6 +54,7 @@ class FormDataDialog extends StatefulWidget {
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
   final String followEventContext;
+  final String providerId;
 
   @override
   State<StatefulWidget> createState() => FormDataDialogState();
@@ -80,6 +82,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   TimeOfDay _currentTime = new TimeOfDay.now();
 
   DateTime initDate;
+  String providerId;
 
   var saveResponse;
 
@@ -93,6 +96,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     eid = widget.eid;
     color = widget.color;
     mediaData = widget.mediaData;
+    providerId=widget.providerId;
   }
 
   @override
@@ -718,7 +722,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                         });
                         if (imagePaths != null &&
                             imagePaths != '') {
-                          saveMediaRegiment(imagePaths)
+                          saveMediaRegiment(imagePaths,providerId)
                               .then((value) {
                             if (value.isSuccess) {
                               setState(() {
@@ -947,6 +951,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               var events = '';
                               saveMap.forEach((key, value) {
                                 events += '&$key=$value';
+                                Provider.of<RegimentViewModel>(context, listen: false).cachedEvents.add('&$key=$value'.toString());
                               });
                               if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
                                 LoaderQurHome.showLoadingDialog(
@@ -1067,123 +1072,136 @@ class FormDataDialogState extends State<FormDataDialog> {
         (returnAction?.message ?? '').isNotEmpty) {
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 24.0.sp,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-          titlePadding: EdgeInsets.only(
-            top: 10.0.h,
-            right: 5.0.w,
-            left: 15.0.w,
-          ),
-          content: Container(
-            width: 0.75.sw,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        barrierDismissible: false,
+        builder: (context) => WillPopScope(
+          onWillPop: (){
+            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+            Get.back();
+          },
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    bottom: 10.0.h,
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 24.0.sp,
                   ),
-                  child: Text(
-                    returnAction?.message ?? '',
-                    style: TextStyle(
-                      fontSize: 16.0.sp,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RaisedButton(
-                      onPressed: () {
-                        if (returnAction?.eid != null &&
-                            (returnAction?.action ?? '') == startActivity) {
-                          widget.triggerAction(
-                            returnAction?.eid,
-                            returnAction?.context,
-                          );
-                        } else {
-                          Get.back();
-                        }
-                      },
-                      color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
-                          : Color(CommonUtil().getMyPrimaryColor()),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            5.0.sp,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        okButton,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    if (returnAction?.action == startActivity)
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0.w,
-                        ),
-                        child: RaisedButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                5.0.sp,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            laterButton,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+                  onPressed: () {
+                    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                    Navigator.pop(context);
+                  }
                 ),
               ],
             ),
-          ),
-          contentPadding: EdgeInsets.only(
-            top: 0.0.h,
-            left: 10.0.w,
-            right: 10.0.w,
-            bottom: 10.0.w,
+            titlePadding: EdgeInsets.only(
+              top: 10.0.h,
+              right: 5.0.w,
+              left: 15.0.w,
+            ),
+            content: Container(
+              width: 0.75.sw,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    child: Text(
+                      returnAction?.message ?? '',
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {
+                          if (returnAction?.eid != null &&
+                              (returnAction?.action ?? '') == startActivity) {
+                            widget.triggerAction(
+                              returnAction?.eid,
+                              returnAction?.context,
+                            );
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                            ? Color(CommonUtil().getQurhomePrimaryColor())
+                            : Color(CommonUtil().getMyPrimaryColor()),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              5.0.sp,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          okButton,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (returnAction?.action == startActivity)
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.0.w,
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                              Get.back();
+                            },
+                            color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                                ? Color(CommonUtil().getQurhomePrimaryColor())
+                                : Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  5.0.sp,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              laterButton,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            contentPadding: EdgeInsets.only(
+              top: 0.0.h,
+              left: 10.0.w,
+              right: 10.0.w,
+              bottom: 10.0.w,
+            ),
           ),
         ),
       );
+    }else{
+      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
     }
   }
 
-  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths) async {
+  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.saveRegimentMedia(
-        qr_save_regi_media, imagePaths, patientId);
+        qr_save_regi_media, imagePaths, patientId,providerId);
     return AddMediaRegimentModel.fromJson(response);
   }
 
@@ -1207,7 +1225,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         imagePaths = croppedFile.path;
 
         if (imagePaths != null && imagePaths != '') {
-          saveMediaRegiment(imagePaths).then((value) {
+          saveMediaRegiment(imagePaths,providerId).then((value) {
             if (value.isSuccess) {
               var file = File(croppedFile.path);
               setState(() {
@@ -1263,7 +1281,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       }
     });
     if (imagePaths != null && imagePaths != '') {
-      await saveMediaRegiment(imagePaths).then((value) {
+      await saveMediaRegiment(imagePaths,providerId).then((value) {
         if (value.isSuccess) {
           isUploading.value = false;
           setState(() {
