@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -4482,6 +4483,28 @@ class CommonUtil {
         return strText.trim();
     } catch (e) {}
     return "";
+  }
+
+  void initPortraitMode() async {
+    try {
+      await SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp]);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void initQurHomePortraitLandScapeMode() async {
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown
+      ]);
+    } catch (e) {
+      print(e);
+    }
   }
 
   String get _getDeviceType {
