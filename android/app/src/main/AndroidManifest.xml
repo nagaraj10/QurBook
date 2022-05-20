@@ -40,8 +40,6 @@
         android:name="com.ventechsolutions.myFHB.MyApp"
         android:label="QurBook US"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true"
-        tools:targetApi="m"
         android:allowBackup="false"
         android:fullBackupOnly="false"
         android:hardwareAccelerated="true"
