@@ -256,27 +256,54 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           },
         ),
         isCareGiver?Divider():Container(),
-        isCareGiver? ListTile(
-          title: Text(variable.strCareGiverSettings,
-              style: TextStyle(fontWeight: FontWeight.w500)),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 16.0.sp,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    CareGiverSettings(),
+        isCareGiver? Column(
+          children: [
+            ListTile(
+              title: Text(variable.strCareGiverSettings,
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16.0.sp,
               ),
-            ).then((value) {
-              if (value) {
-                setState(() {});
-              }
-            });
-            //PageNavigator.goTo(context, router.rt_AppSettings);
-          },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CareGiverSettings(),
+                  ),
+                ).then((value) {
+                  if (value) {
+                    setState(() {});
+                  }
+                });
+                //PageNavigator.goTo(context, router.rt_AppSettings);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text(variable.strNonAdherenceSettings,
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16.0.sp,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CareGiverSettings(),
+                  ),
+                ).then((value) {
+                  if (value) {
+                    setState(() {});
+                  }
+                });
+                //PageNavigator.goTo(context, router.rt_AppSettings);
+              },
+            ),
+          ],
         ):Container(),
         /*Divider(),
         Theme(
