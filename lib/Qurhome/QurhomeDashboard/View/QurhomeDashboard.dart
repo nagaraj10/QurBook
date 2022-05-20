@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      CommonUtil().initQurHomePortraitLandScapeMode();
       if (CommonUtil().isTablet) {
         buttonSize = 100;
         textFontSize = 26;
@@ -48,6 +50,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       color: Color(CommonUtil().getQurhomeGredientColor()),
       width: 1.0,
     );
+  }
+
+  @override
+  dispose() {
+    try {
+      CommonUtil().initPortraitMode();
+      super.dispose();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
