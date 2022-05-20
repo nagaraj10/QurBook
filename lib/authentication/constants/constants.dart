@@ -120,6 +120,7 @@ const String strBearer = 'Bearer';
 const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
 const String strResendGenerateOTP = 'user-relationship/generate-otp';
+const String strAdditionalInstructions = 'Additional Instructions';
 
 //tickets
 const String ticketCreatedSuccessfully='Ticket Created Successfully';
