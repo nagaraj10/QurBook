@@ -26,6 +26,9 @@ class VitalDetailController extends GetxController {
   var tempList = [].obs;
   var weightList = [].obs;
 
+  var timerProgress = 1.0.obs;
+  var isShowTimerDialog = true.obs;
+
   void onTapFilterBtn(int index) {
     filterBtnOnTap.value = index;
   }
@@ -354,6 +357,22 @@ class VitalDetailController extends GetxController {
     } catch (e) {
       weightList.value = [];
       loadingData.value = false;
+    }
+  }
+
+  updateTimerValue(double value) async {
+    try {
+      timerProgress.value = value;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  updateisShowTimerDialog(bool value) async {
+    try {
+      isShowTimerDialog.value = value;
+    } catch (e) {
+      print(e);
     }
   }
 }

@@ -47,6 +47,7 @@ class RegimentViewModel extends ChangeNotifier {
   RegimentFilter regimentFilter = RegimentFilter.Scheduled;
   String redirectEventId = '';
   ActivityStatus activityStatus = ActivityStatus.Loaded;
+  List<String> cachedEvents = [];
 
   void updateInitialShowIndex({
     bool isDone = false,
@@ -580,4 +581,5 @@ class RegimentViewModel extends ChangeNotifier {
     LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
+
 }

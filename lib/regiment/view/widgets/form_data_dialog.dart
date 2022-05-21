@@ -951,6 +951,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               var events = '';
                               saveMap.forEach((key, value) {
                                 events += '&$key=$value';
+                                Provider.of<RegimentViewModel>(context, listen: false).cachedEvents.add('&$key=$value'.toString());
                               });
                               if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
                                 LoaderQurHome.showLoadingDialog(
@@ -1071,115 +1072,128 @@ class FormDataDialogState extends State<FormDataDialog> {
         (returnAction?.message ?? '').isNotEmpty) {
       await showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.close,
-                  size: 24.0.sp,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-          titlePadding: EdgeInsets.only(
-            top: 10.0.h,
-            right: 5.0.w,
-            left: 15.0.w,
-          ),
-          content: Container(
-            width: 0.75.sw,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        barrierDismissible: false,
+        builder: (context) => WillPopScope(
+          onWillPop: (){
+            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+            Get.back();
+          },
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    bottom: 10.0.h,
+                IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 24.0.sp,
                   ),
-                  child: Text(
-                    returnAction?.message ?? '',
-                    style: TextStyle(
-                      fontSize: 16.0.sp,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RaisedButton(
-                      onPressed: () {
-                        if (returnAction?.eid != null &&
-                            (returnAction?.action ?? '') == startActivity) {
-                          widget.triggerAction(
-                            returnAction?.eid,
-                            returnAction?.context,
-                          );
-                        } else {
-                          Get.back();
-                        }
-                      },
-                      color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                          ? Color(CommonUtil().getQurhomePrimaryColor())
-                          : Color(CommonUtil().getMyPrimaryColor()),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            5.0.sp,
-                          ),
-                        ),
-                      ),
-                      child: Text(
-                        okButton,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    if (returnAction?.action == startActivity)
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 20.0.w,
-                        ),
-                        child: RaisedButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                              ? Color(CommonUtil().getQurhomePrimaryColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                5.0.sp,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            laterButton,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
+                  onPressed: () {
+                    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                    Navigator.pop(context);
+                  }
                 ),
               ],
             ),
-          ),
-          contentPadding: EdgeInsets.only(
-            top: 0.0.h,
-            left: 10.0.w,
-            right: 10.0.w,
-            bottom: 10.0.w,
+            titlePadding: EdgeInsets.only(
+              top: 10.0.h,
+              right: 5.0.w,
+              left: 15.0.w,
+            ),
+            content: Container(
+              width: 0.75.sw,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    child: Text(
+                      returnAction?.message ?? '',
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        onPressed: () {
+                          if (returnAction?.eid != null &&
+                              (returnAction?.action ?? '') == startActivity) {
+                            widget.triggerAction(
+                              returnAction?.eid,
+                              returnAction?.context,
+                            );
+                          } else {
+                            Get.back();
+                          }
+                        },
+                        color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                            ? Color(CommonUtil().getQurhomePrimaryColor())
+                            : Color(CommonUtil().getMyPrimaryColor()),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              5.0.sp,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          okButton,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (returnAction?.action == startActivity)
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.0.w,
+                          ),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                              Get.back();
+                            },
+                            color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                                ? Color(CommonUtil().getQurhomePrimaryColor())
+                                : Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  5.0.sp,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              laterButton,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            contentPadding: EdgeInsets.only(
+              top: 0.0.h,
+              left: 10.0.w,
+              right: 10.0.w,
+              bottom: 10.0.w,
+            ),
           ),
         ),
       );
+    }else{
+      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
     }
   }
 

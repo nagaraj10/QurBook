@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
@@ -26,13 +27,23 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   final controller = Get.put(QurhomeDashboardController());
 
   double buttonSize = 70;
+  double textFontSize = 16;
   int index = 0;
 
   @override
   void initState() {
-    super.initState();
-    controller.updateTabIndex(0);
-    CommonUtil().requestQurhomeDialog();
+    try {
+      super.initState();
+      CommonUtil().requestQurhomeDialog();
+      CommonUtil().initQurHomePortraitLandScapeMode();
+      if (CommonUtil().isTablet) {
+        buttonSize = 100;
+        textFontSize = 26;
+      }
+      controller.updateTabIndex(0);
+    } catch (e) {
+      print(e);
+    }
   }
 
   BorderSide getBorder() {
@@ -40,6 +51,16 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       color: Color(CommonUtil().getQurhomeGredientColor()),
       width: 1.0,
     );
+  }
+
+  @override
+  dispose() {
+    try {
+      CommonUtil().initPortraitMode();
+      super.dispose();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -66,17 +87,29 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                               vertical: 4.h,
                             ),
                             child: controller.currentSelectedIndex == 2
-                                ? AssetImageWidget(
-                                    icon: icon_vitals_qurhome,
-                                    height: 22.h,
-                                    width: 22.h,
-                                  )
-                                : controller.currentSelectedIndex == 3
+                                ? CommonUtil().isTablet
                                     ? AssetImageWidget(
-                                        icon: icon_symptom_qurhome,
+                                        icon: icon_vitals_qurhome,
                                         height: 22.h,
                                         width: 22.h,
                                       )
+                                    : AssetImageWidget(
+                                        icon: icon_vitals_qurhome,
+                                        height: 22.h,
+                                        width: 22.h,
+                                      )
+                                : controller.currentSelectedIndex == 3
+                                    ? CommonUtil().isTablet
+                                        ? AssetImageWidget(
+                                            icon: icon_symptom_qurhome,
+                                            height: 22.h,
+                                            width: 22.h,
+                                          )
+                                        : AssetImageWidget(
+                                            icon: icon_symptom_qurhome,
+                                            height: 22.h,
+                                            width: 22.h,
+                                          )
                                     : SizedBox.shrink(),
                           ))
                       : SizedBox.shrink(),
@@ -86,8 +119,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         text: TextSpan(
                           // Note: Styles for TextSpans must be explicitly defined.
                           // Child text spans will inherit styles from parent
-                          style: const TextStyle(
-                            fontSize: 16.0,
+                          style: TextStyle(
+                            fontSize: textFontSize,
                             color: Colors.black,
                           ),
                           children: <TextSpan>[
@@ -97,7 +130,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                             },
                             TextSpan(
                               text: controller.appBarTitle.value,
-                              style: const TextStyle(
+                              style: TextStyle(
+                                  fontSize: textFontSize,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             ),
@@ -124,7 +158,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   ? IconWidget(
                       icon: Icons.arrow_back_ios,
                       colors: Colors.black,
-                      size: 24.0,
+                      size: CommonUtil().isTablet ? 35.0 : 24.0,
                       onTap: () {
                         Get.back();
                       },
@@ -137,7 +171,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           onTap: () {
                             bottomTapped(0);
                           },
-                          child: CommonUtil().qurHomeMainIcon())),
+                          child: CommonUtil().isTablet
+                              ? AssetImageWidget(
+                                  icon: icon_qurhome,
+                                  height: 45.h,
+                                  width: 45.h,
+                                )
+                              : CommonUtil().qurHomeMainIcon())),
               bottom: PreferredSize(
                 child: Container(
                   color: Color(
@@ -259,7 +299,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                                   CommonUtil()
                                                       .getQurhomeGredientColor(),
                                                 ),
-                                      fontSize: 16,
+                                      fontSize: textFontSize,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -305,7 +345,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                                   CommonUtil()
                                                       .getQurhomeGredientColor(),
                                                 ),
-                                      fontSize: 16,
+                                      fontSize: textFontSize,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),

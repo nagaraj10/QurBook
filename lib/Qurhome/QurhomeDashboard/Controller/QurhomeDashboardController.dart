@@ -108,6 +108,9 @@ class QurhomeDashboardController extends GetxController {
                   ),
                 ).then((_) {
                   regController.getRegimenList();
+                  if (isFromVitalsList) {
+                    Get.back();
+                  }
                 });
               });
             } else {
