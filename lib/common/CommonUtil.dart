@@ -1931,9 +1931,8 @@ class CommonUtil {
   static updateDefaultUIStatus(bool status) {
     HealthReportListForUserRepository().getDeviceSelection().then((result) {
       if (result.isSuccess && (result.result.first?.profileSetting != null)) {
-        var settings = result.result.first?.profileSetting;
-        settings.qurhomeDefaultUI = status;
-        final body = jsonEncode(result.result.first.toProfileSettingJson());
+        result.result.first?.profileSetting.qurhomeDefaultUI = status;
+        var body = jsonEncode(result.result.first.toProfileSettingJson());
         ApiBaseHelper().updateDeviceSelection(qr_user_profile_no_slash, body);
       }
     });
