@@ -265,6 +265,24 @@ class _MySettingsState extends State<MySettings> {
               getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
           ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
           : true;
+      if (getDeviceSelectionModel.isSuccess) {
+        if (getDeviceSelectionModel
+                .result[0]?.profileSetting?.qurhomeDefaultUI ??
+            false) {
+          if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+            PreferenceUtil.saveQurhomeAsDefaultUI(
+              qurhomeStatus: true,
+            );
+          }
+        } else {
+          if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
+            PreferenceUtil.saveQurhomeAsDefaultUI(
+              qurhomeStatus: false,
+            );
+          }
+        }
+      }
+
       _isdigitRecognition =
           getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
@@ -600,14 +618,15 @@ class _MySettingsState extends State<MySettings> {
                           trailing: Transform.scale(
                             scale: 0.8,
                             child: Switch(
-                              value: PreferenceUtil.getIfQurhomeisAcive(),
+                              value: PreferenceUtil.getIfQurhomeisDefaultUI(),
                               activeColor:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               onChanged: (bool newValue) {
                                 setState(
                                   () {
-                                    PreferenceUtil.saveIfQurhomeisAcive(
-                                        qurhomeStatus: newValue);
+                                    PreferenceUtil.saveQurhomeAsDefaultUI(
+                                      qurhomeStatus: newValue,
+                                    );
                                   },
                                 );
                               },

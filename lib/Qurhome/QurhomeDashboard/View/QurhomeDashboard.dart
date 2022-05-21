@@ -32,6 +32,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     super.initState();
     controller.updateTabIndex(0);
+    CommonUtil().requestQurhomeDialog();
   }
 
   BorderSide getBorder() {
@@ -95,18 +96,19 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                               TextSpan(text: 'Hello '),
                             },
                             TextSpan(
-                                text: controller.appBarTitle.value,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                              text: controller.appBarTitle.value,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
                       ),
-                      if(controller.currentSelectedIndex.value==0||controller.currentSelectedIndex.value==1)...{
+                      if (controller.currentSelectedIndex.value == 0 ||
+                          controller.currentSelectedIndex.value == 1) ...{
                         SizedBox(height: 3),
                         Text(
-                          'Today, '+getFormatedDate(),
+                          'Today, ' + getFormatedDate(),
                           style: TextStyle(
                             fontSize: 12.h,
                             color: Colors.grey,
@@ -125,9 +127,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       size: 24.0,
                       onTap: () {
                         Get.back();
-                        PreferenceUtil.saveIfQurhomeisAcive(
-                          qurhomeStatus: false,
-                        );
                       },
                     )
                   : Container(
@@ -327,9 +326,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
           ),
           onWillPop: () async {
             Get.back();
-            PreferenceUtil.saveIfQurhomeisAcive(
-              qurhomeStatus: false,
-            );
+
             return true;
           },
         ));

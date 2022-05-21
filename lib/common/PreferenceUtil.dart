@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:flutter/widgets.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'CommonConstants.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../language/model/Language.dart';
@@ -46,6 +47,11 @@ class PreferenceUtil {
   static saveShownIntroScreens() async {
     final instance = await _prefs;
     await instance.setBool(Constants.KeyShowIntroScreens, true);
+  }
+
+  static saveShownQurhomeDefaultUI() async {
+    final instance = await _prefs;
+    await instance.setBool(Constants.KeyShowQurhomeDefaultUI, true);
   }
 
   static Future<bool> saveMediaData(
@@ -457,6 +463,24 @@ class PreferenceUtil {
     final instance = await _prefs;
     return instance.setBool(
       Constants.KEY_IS_Active_Qurhome,
+      qurhomeStatus,
+    );
+  }
+
+  static bool getIfQurhomeisDefaultUI() {
+    return _prefsInstance.getBool(
+          Constants.QurhomeDefaultUI,
+        ) ??
+        false;
+  }
+
+  static Future<bool> saveQurhomeAsDefaultUI({
+    bool qurhomeStatus = false,
+  }) async {
+    CommonUtil.updateDefaultUIStatus(qurhomeStatus);
+    final instance = await _prefs;
+    return instance.setBool(
+      Constants.QurhomeDefaultUI,
       qurhomeStatus,
     );
   }

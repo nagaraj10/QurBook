@@ -62,6 +62,15 @@ class SelectionResult {
     }
   }
 
+  Map<String, dynamic> toProfileSettingJson() {
+    final data = <String, dynamic>{};
+    data['id'] = id;
+    if (profileSetting != null) {
+      data['profileSetting'] = profileSetting.toJson();
+    }
+    return data;
+  }
+
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = id;
@@ -124,7 +133,6 @@ class ProfileSetting {
     thermoMeter = json['thermoMeter'];
     pulseOximeter = json['pulseOximeter'];
     qurhomeDefaultUI = (json['qurhome_ui'] ?? false);
-
     preColor = json['priColor'];
     greColor = json['greColor'];
     preferred_language = json['preferred_language'];
@@ -153,8 +161,7 @@ class ProfileSetting {
     data['greColor'] = greColor;
     data['preferred_language'] = preferred_language;
     data['qa-subscription'] = qa_subscription;
-    data['qa-qurhome_ui'] = qurhomeDefaultUI;
-
+    data['qurhome_ui'] = qurhomeDefaultUI;
     if (this.caregiverCommunicationSetting != null) {
       data['caregiverCommunicationSetting'] =
           this.caregiverCommunicationSetting.toJson();
