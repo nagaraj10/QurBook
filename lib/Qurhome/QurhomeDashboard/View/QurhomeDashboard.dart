@@ -35,8 +35,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     try {
       super.initState();
       CommonUtil().requestQurhomeDialog();
-      CommonUtil().initQurHomePortraitLandScapeMode();
       if (CommonUtil().isTablet) {
+        CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
         textFontSize = 26;
       }
