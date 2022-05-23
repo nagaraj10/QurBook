@@ -109,7 +109,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   @override
   void initState() {
