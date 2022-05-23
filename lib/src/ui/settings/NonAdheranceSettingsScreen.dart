@@ -22,6 +22,12 @@ class _NonAdheranceSettingsScreenState
   final controller = Get.put(NonAdheranceSettingController());
 
   @override
+  void initState() {
+    controller.getFamilyMemberList();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +66,7 @@ class _NonAdheranceSettingsScreenState
                             'Please re-try after some time',
                           ),
                         )
-                      : val.familyResponseList.result.sharedByUsers != 0
+                      : val.familyResponseList.result.sharedByUsers.length != 0
                           ? showData(
                               val.familyResponseList.result.sharedByUsers)
                           : const Center(
@@ -75,14 +81,16 @@ class _NonAdheranceSettingsScreenState
   }
 
   showData(List<SharedByUsers> sharedByUsers) {
+    print(sharedByUsers.length);
     return ListView.builder(
+      shrinkWrap: true,
         itemCount: sharedByUsers.length,
         itemBuilder: (context, index) {
           return Card(
             child: Row(
               children: [
                 Text(sharedByUsers[index].nickName),
-
+                Text('')
               ],
             ),
           );

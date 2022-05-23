@@ -14,6 +14,7 @@ class NonAdheranceSettingController extends GetxController {
   getFamilyMemberList() async {
     try {
       loadingData.value = true;
+      // familyResponseList = await familyRepository.getFamilyMembersListNew();
       familyResponseList = await familyRepository.getFamilyMembersListNew();
       loadingData.value = false;
       update(["newUpdate"]);
