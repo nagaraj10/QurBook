@@ -217,11 +217,11 @@ Future<void> main() async {
     //   }
     // });
 
-      if (CommonUtil().isTablet) {
-        CommonUtil().initQurHomePortraitLandScapeMode();
-      } else {
+      // if (CommonUtil().isTablet) {
+      //   CommonUtil().initQurHomePortraitLandScapeMode();
+      // } else {
         CommonUtil().initPortraitMode();
-      }
+      // }
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 

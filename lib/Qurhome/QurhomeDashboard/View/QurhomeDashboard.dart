@@ -36,7 +36,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       super.initState();
       CommonUtil().requestQurhomeDialog();
       if (CommonUtil().isTablet) {
-        CommonUtil().initLandScapeMode();
+        CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
         textFontSize = 26;
       }
@@ -56,9 +56,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
-      if(CommonUtil().isTablet){
-        CommonUtil().initQurHomePortraitLandScapeMode();
-      }
+      CommonUtil().initPortraitMode();
       super.dispose();
     } catch (e) {
       print(e);
