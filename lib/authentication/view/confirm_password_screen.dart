@@ -23,7 +23,8 @@ class ChangePasswordScreen extends StatefulWidget {
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
-class _ChangePasswordScreenState extends State<ChangePasswordScreen> with CodeAutoFill {
+class _ChangePasswordScreenState extends State<ChangePasswordScreen>
+    with CodeAutoFill {
   final CodeController = TextEditingController();
   final NewPasswordController = TextEditingController();
   final NewPasswordAgainController = TextEditingController();
@@ -62,7 +63,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> with CodeAu
     });
   }
 
-   @override
+  @override
   void codeUpdated() {
     setState(() {
       CodeController.text = code;
@@ -79,7 +80,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> with CodeAu
         child: Stack(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                  horizontal: CommonUtil().isTablet ? 50 : 20),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -278,7 +280,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> with CodeAu
                     ),
                     SizedBox(height: 10.0.h),
                     Visibility(
-                      visible: otpViewModel.timerSeconds == 0 && CommonUtil.REGION_CODE == 'IN',
+                      visible: otpViewModel.timerSeconds == 0 &&
+                          CommonUtil.REGION_CODE == 'IN',
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

@@ -1849,7 +1849,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: color ?? Colors.white,
-                      size: 30.0.sp,
+                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: count),
