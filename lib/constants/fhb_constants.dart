@@ -29,6 +29,7 @@ const String KEY_CART_PLAN = 'cartPlan';
 const String KEY_UN_SUBCRIBE_BTN = 'unSubscribeBtn';
 const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
+const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String ScanningForDevices = 'Scanning for devices...';
 const String NoDeviceFound = 'No Device Found';
 const String DeviceAlreadyMapped = 'Device Already Mapped';
@@ -139,6 +140,7 @@ const String INTRO_SLIDE_DESC_5 =
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KeyShowIntroScreens = 'KeyShowIntroScreens';
+const String KeyShowQurhomeDefaultUI = 'KeyShowQurhomeDefaultUI';
 
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 
@@ -451,7 +453,6 @@ const String STR_HEALTHORG_LABID = '34c16c83-2ae6-40e4-9643-5d929eb135e4';
 const String SHEELA_LANG = 'sheela_lang';
 const String KIOSK_SHEELA = 'kiosk to sheela communication';
 
-
 const String STR_FAMILY_ADD_MSG =
     'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
 
@@ -467,6 +468,9 @@ const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
 const String STR_UPDATE_AVAIL = 'We\'ve Upgraded!';
 const String STR_UPDATE_CONTENT =
     'A newer version of the app is available. Please update to continue.';
+
+const String strQurhomeDefaultUI =
+    'Do you want to retain QurHome as your Default landing screen';
 const String STR_UPDATE_NOW = 'Update Now';
 const String STR_LATER = 'Later';
 const String STR_FIREBASE_REMOTE_KEY = 'force_update_current_version_myfhb';

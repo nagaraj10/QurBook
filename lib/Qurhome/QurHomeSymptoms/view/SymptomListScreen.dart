@@ -32,7 +32,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   void initState() {
     super.initState();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+        [];
     controller.getSymptomList(isLoading: true);
 
     /* symptomsList = Provider.of<SymptomViewModel>(context, listen: false)

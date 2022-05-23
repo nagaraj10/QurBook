@@ -85,7 +85,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   String version = '';
   PreferredMeasurement preferredMeasurement;
-
   List<Tags> tagsList = [];
 
   bool allowAppointmentNotification = true;

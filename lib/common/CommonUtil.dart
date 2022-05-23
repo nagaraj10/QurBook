@@ -13,6 +13,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -1928,6 +1929,16 @@ class CommonUtil {
     }
   }
 
+  static updateDefaultUIStatus(bool status) {
+    HealthReportListForUserRepository().getDeviceSelection().then((result) {
+      if (result.isSuccess && (result.result.first?.profileSetting != null)) {
+        result.result.first?.profileSetting.qurhomeDefaultUI = status;
+        var body = jsonEncode(result.result.first.toProfileSettingJson());
+        ApiBaseHelper().updateDeviceSelection(qr_user_profile_no_slash, body);
+      }
+    });
+  }
+
   static showFamilyMemberPlanExpiryDialog(String pateintName,
       {String redirect = myCartDetails}) async {
     await Get.defaultDialog(
@@ -2062,6 +2073,98 @@ class CommonUtil {
                     )
                   /*else
                     SizedBox.shrink(),*/
+                ],
+              );
+      },
+    );
+  }
+
+  requestQurhomeDialog() async {
+    var isShown = PreferenceUtil.isKeyValid(KeyShowQurhomeDefaultUI);
+    if (!isShown) {
+      await Future.delayed(const Duration(seconds: 0));
+      _showDefaultUIDialog();
+      PreferenceUtil.saveShownQurhomeDefaultUI();
+    }
+  }
+
+  _showDefaultUIDialog() async {
+    await showDialog<String>(
+      context: Get.context,
+      barrierDismissible: true,
+      builder: (context) {
+        var message = strQurhomeDefaultUI;
+        final btnLabel = STR_YES;
+        final btnLabelCancel = STR_NO;
+        return Platform.isIOS
+            ? CupertinoAlertDialog(
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Get.back();
+                      if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+                        PreferenceUtil.saveQurhomeAsDefaultUI(
+                          qurhomeStatus: true,
+                        );
+                      }
+                    },
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(
+                          getMyPrimaryColor(),
+                        ),
+                      ),
+                    ),
+                    onPressed: () => Get.back(),
+                  )
+                  /*else
+                    SizedBox.shrink(),*/
+                ],
+              )
+            : AlertDialog(
+                content: Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Get.back();
+                      if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+                        PreferenceUtil.saveQurhomeAsDefaultUI(
+                          qurhomeStatus: true,
+                        );
+                      }
+                    },
+                    child: Text(
+                      btnLabel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    child: Text(
+                      btnLabelCancel,
+                      style: TextStyle(
+                        color: Color(getMyPrimaryColor()),
+                      ),
+                    ),
+                    onPressed: () => Get.back(),
+                  )
                 ],
               );
       },
