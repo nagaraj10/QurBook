@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:ui' as ui;
 
 import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -208,14 +209,39 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    Future.delayed(Duration(seconds: 0)).then((_) {
-      if (PreferenceUtil.getIfQurhomeisAcive()) {
+    // Future.delayed(Duration(seconds: 0)).then((_) {
+    //   if (PreferenceUtil.getIfQurhomeisAcive()) {
+    //     CommonUtil().initQurHomePortraitLandScapeMode();
+    //   } else {
+    //     CommonUtil().initPortraitMode();
+    //   }
+    // });
+    bool isTablet;
+    bool isPhone;
+
+    final double devicePixelRatio = ui.window.devicePixelRatio;
+    final ui.Size size = ui.window.physicalSize;
+    final double width = size.width;
+    final double height = size.height;
+
+
+    if(devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
+      isTablet = true;
+      isPhone = false;
+    }
+    else if(devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
+      isTablet = true;
+      isPhone = false;
+    }
+    else {
+      isTablet = false;
+      isPhone = true;
+    }
+      if (isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
       } else {
         CommonUtil().initPortraitMode();
       }
-    });
-
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
