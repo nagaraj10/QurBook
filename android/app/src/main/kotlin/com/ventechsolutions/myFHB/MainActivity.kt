@@ -111,6 +111,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BLECONNECT = Constants.BLE_CONNECT
     private val BPCONNECT = Constants.BP_CONNECT
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
+    private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -236,16 +237,16 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         // Get user consent
 
         val target: Uri? = getIntent().getData()
-        Log.e("deeplink", "onCreate: "+target )
+        Log.e("deeplink", "onCreate: " + target)
         if (target != null) {
-            mEventChannel.success("facebookdeeplink&"+target.toString());
+            mEventChannel.success("facebookdeeplink&" + target.toString());
         } else {
             // activity was created in a normal fashion
         }
-        AppLinkData.fetchDeferredAppLinkData(this) {it->
-            Log.e("deeplinks", "onCreate: "+it?.appLinkData )
+        AppLinkData.fetchDeferredAppLinkData(this) { it ->
+            Log.e("deeplinks", "onCreate: " + it?.appLinkData)
             if (::mEventChannel.isInitialized) {
-                mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
+                mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
             }
         }
 
@@ -823,7 +824,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 //                                                    Log.d("nofinger",String.format("No Finger %d",isNoFinger));
 //                                                    Log.d("pluse",String.format("Pulse Rate %d",pulseRate));
 //                                                    Log.d("spo2",String.format("SPO2 %d",spo2));
-                                                    if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
+                                                if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
                                                     SPO2_ReadingCount++
                                                     //dev_data.setText(String.format("%d PR %d SPO2 %d , F=%d",SPO2_ReadingCount,pulseRate,spo2,isNoFinger));
                                                     /*dev_data!!.text = String.format(
@@ -832,13 +833,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                                         spo2,
                                                         isNoFinger
                                                     )*/
-                                                        Log.d("data received",String.format(
+                                                    Log.d(
+                                                        "data received", String.format(
                                                             "PR %d SPO2 %d , F=%d",
                                                             pulseRate,
                                                             spo2,
                                                             isNoFinger
-                                                        ))
-                                                    if ( uploaded == 0) {
+                                                        )
+                                                    )
+                                                    if (uploaded == 0) {
                                                         Log.d(
                                                             "startScan",
                                                             String.format(
@@ -1324,7 +1327,26 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 try {
                     mOHQDeviceManager!!.stopScan();
                 } catch (e: Exception) {
-                    Log.d("Catch", ""+e.toString())
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BP_ENABLE_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == BP_ENABLE_CHECK) {
+                Log.d("BLUETOOTH_ENABLE_CHECK", "Bluetooth Enable Check")
+                try {
+                    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                    if (!bluetoothAdapter.isEnabled) {
+                        result.success(false)
+                    } else {
+                        result.success(true)
+                    }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
                 }
             }
         }
@@ -1355,9 +1377,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             },
             CompletionBlock { reason -> /*mHandler.post(Runnable { _onScanCompletion(reason) })*/
                 Log.e(
-                "reason: ",
-                "" + reason.toString()
-            )
+                    "reason: ",
+                    "" + reason.toString()
+                )
             })
         //mIsScanning = true
         //mDiscoveredDevices.clear()

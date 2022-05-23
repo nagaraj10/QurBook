@@ -79,4 +79,6 @@ object Constants {
     val BLE_CONNECT ="bleConnect"
     val BP_CONNECT ="bpconnect"
     val BP_SCAN_CANCEL ="bpscancancel"
+    val BP_ENABLE_CHECK ="bluetooth_enable_check"
+    val BP_LOCATION_CHECK ="bp_location_check"
 }

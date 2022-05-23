@@ -760,20 +760,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
         if (checkCanEdit(regimen)) {
-          CommonUtil().dialogForScanDevices(context, onPressManual: () {
-            stopBpScan();
-            Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                eId: regimen.eid,
-              ),
-            ).then((value) => {controller.getRegimenList()});
-          }, onPressCancel: () async {
-            stopBpScan();
-          });
-          hubController.eid = regimen.eid;
-          hubController.uid = regimen.uid;
-          qurhomeDashboardController.scanBpSessionStart();
+            hubController.eid = regimen.eid;
+            hubController.uid = regimen.uid;
+            qurhomeDashboardController.scanBpSessionStart(isFromVitals: false);
+
         } else {
           FlutterToast().getToast(
             (Provider
@@ -902,13 +892,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
 
   stopRegimenTTS() {
     Provider.of<RegimentViewModel>(Get.context, listen: false).stopRegimenTTS();
-  }
-
-  stopBpScan() async {
-    Get.back();
-    const platform = MethodChannel(IS_BP_SCAN_CANCEL);
-    var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
-    print("scan_cancel_result$result");
   }
 
   bool isValidSymptom(BuildContext context) {

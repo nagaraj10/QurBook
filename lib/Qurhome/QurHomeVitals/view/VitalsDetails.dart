@@ -130,7 +130,13 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
       controllerGetx.onTapFilterBtn(0);
 
-      initGetX();
+      initGetX().then((value) {
+        if (widget.device_name == strOxgenSaturation) {
+          initBleTimer();
+        } else if (widget.device_name == strDataTypeBP) {
+          initBpScan();
+        }
+      });
     } catch (e) {
       print(e);
     }
@@ -158,7 +164,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
   void initBleTimer() async {
     try {
-      await Future.delayed(Duration(milliseconds: 500));
+      qurhomeDashboardController.checkForConnectedDevices(true);
+      /*await Future.delayed(Duration(milliseconds: 500));
       animationController = AnimationController(
         vsync: this,
         duration: Duration(seconds: 180),
@@ -181,10 +188,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
             closeDialog();
           }
         });
-      }
+      }*/
     } catch (e) {
       print(e);
     }
+  }
+
+  void initBpScan() {
+    qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
   }
 
   void notify() {
@@ -336,7 +347,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     );
   }
 
-  void initGetX() {
+  Future<void> initGetX() async {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
@@ -1664,11 +1675,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget getValues(BuildContext context) {
-    String strText =
-        CommonUtil().validString(widget.deviceNameForAdding).toLowerCase();
-    if (strText.contains("pulse")) {
-      initBleTimer();
-    }
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:

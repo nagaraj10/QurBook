@@ -280,7 +280,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
       String actualDateTime = formatterDateTime.format(now);
       await Future.delayed(Duration(
-        seconds: 2,
+        seconds: 8,
       ));
       addToSheelaConversation(
         text:
@@ -295,7 +295,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           uId: hublistController.uid,
           qurHomeBpScanResult: qurhomeController?.qurHomeBpScanResultModel);
       await Future.delayed(Duration(
-        seconds: 2,
+        seconds: 5,
       ));
       addToSheelaConversation(
         text: response

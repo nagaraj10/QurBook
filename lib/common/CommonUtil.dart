@@ -4589,7 +4589,7 @@ class CommonUtil {
   }
 
   void dialogForScanDevices(
-      BuildContext context, {Function() onPressManual,Function() onPressCancel}) async {
+      BuildContext context, {Function() onPressManual,Function() onPressCancel,String title,bool isFromVital}) async {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black38,
@@ -4599,7 +4599,7 @@ class CommonUtil {
         child: Container(
           width: double.infinity,
           child: Material(
-            color: Colors.transparent.withOpacity(0.6),
+            color: Colors.transparent.withOpacity(0.8),
             child: Container(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -4614,12 +4614,12 @@ class CommonUtil {
                     padding: const EdgeInsets.fromLTRB(0, 80, 0, 120),
                     child: SizedBox(
                         width: 220.w,
-                        child: Text(strConnectBpMeter,
+                        child: Text(title,
                             style:
-                                TextStyle(fontSize: 16.sp, color: Colors.white),
+                                TextStyle(fontSize: 18.sp, color: Colors.white),
                             textAlign: TextAlign.center)),
                   ),
-                  SizedBox(
+                  if (!isFromVital) SizedBox(
                     width: 160.w,
                     child: TextButton(
                       child: Text(

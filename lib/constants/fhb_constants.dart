@@ -666,6 +666,8 @@ const String ISVIRTUALHUB = 'isVirtualHub';
 
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
+const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
+const String BP_LOCATION_CHECK = 'bp_location_check';
 
 //Qurhome vitals
 const String filterTitleDay = 'Day';
