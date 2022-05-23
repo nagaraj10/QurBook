@@ -32,11 +32,18 @@ class QurhomeDashboardController extends GetxController {
   @override
   void onInit() {
     getHubDetails();
+    PreferenceUtil.saveIfQurhomeisAcive(
+      qurhomeStatus: true,
+    );
+
     super.onInit();
   }
 
   @override
   void onClose() {
+    PreferenceUtil.saveIfQurhomeisAcive(
+      qurhomeStatus: false,
+    );
     _disableTimer();
     super.onClose();
   }

@@ -292,8 +292,12 @@ class HealthReportListForUserRepository {
       String qa_subscription,
       int priColor,
       int greColor,
-      List<Tags> tags,bool allowAppointmentALert,bool allowVitalALerts,bool allowsymptomsAlert) async {
-    var userIDMain=await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      List<Tags> tags,
+      bool allowAppointmentALert,
+      bool allowVitalALerts,
+      bool allowsymptomsAlert) async {
+    var userIDMain =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var body = jsonEncode({
       "userId": userIDMain,
       'profileSetting': {
@@ -310,9 +314,10 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
-        'caregiverCommunicationSetting':{
+        'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
+        'caregiverCommunicationSetting': {
           "vitals": allowVitalALerts ?? true,
-          "symptoms":  allowsymptomsAlert ?? true,
+          "symptoms": allowsymptomsAlert ?? true,
           "appointments": allowAppointmentALert ?? true
         }
       },
@@ -325,21 +330,25 @@ class HealthReportListForUserRepository {
   }
 
   Future<UpdateDeviceModel> updateDeviceModel(
-      userMappingId,
-      bool allowDigit,
-      bool allowDevice,
-      bool googleFit,
-      bool healthFit,
-      bool bpMonitor,
-      bool gluco,
-      bool pulseOximeter,
-      bool thermo,
-      bool weighScale,
-      String preferred_language,
-      String qa_subscription,
-      int priColor,
-      int greColor,
-      List<Tags> tagsList,bool allowAppointmentALert,bool allowVitalALerts,bool allowsymptomsAlert) async {
+    userMappingId,
+    bool allowDigit,
+    bool allowDevice,
+    bool googleFit,
+    bool healthFit,
+    bool bpMonitor,
+    bool gluco,
+    bool pulseOximeter,
+    bool thermo,
+    bool weighScale,
+    String preferred_language,
+    String qa_subscription,
+    int priColor,
+    int greColor,
+    List<Tags> tagsList,
+    bool allowAppointmentALert,
+    bool allowVitalALerts,
+    bool allowsymptomsAlert,
+  ) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -356,9 +365,10 @@ class HealthReportListForUserRepository {
         "priColor": priColor,
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
-        'caregiverCommunicationSetting':{
+        'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
+        'caregiverCommunicationSetting': {
           "vitals": allowVitalALerts ?? true,
-          "symptoms":  allowsymptomsAlert ?? true,
+          "symptoms": allowsymptomsAlert ?? true,
           "appointments": allowAppointmentALert ?? true
         }
       },
