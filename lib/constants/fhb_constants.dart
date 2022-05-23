@@ -661,6 +661,7 @@ const String ADDITION_DETAILS = 'additionalDetails';
 const String ISVIRTUALHUB = 'isVirtualHub';
 
 const String ISBPCONNECT = 'bpconnect';
+const String IS_BP_SCAN_CANCEL = 'bpscancancel';
 
 //Qurhome vitals
 const String filterTitleDay = 'Day';

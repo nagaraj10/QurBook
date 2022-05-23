@@ -813,7 +813,7 @@ class _VitalsListState extends State<VitalsList> with TickerProviderStateMixin {
       value1ForWeight,
       value1ForTemp,
       String value2ForBp) {
-    initBleTimer();
+    //initBleTimer();
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,

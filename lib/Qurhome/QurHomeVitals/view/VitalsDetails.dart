@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -119,16 +120,21 @@ class _VitalsDetailsState extends State<VitalsDetails> {
 
     controllerGetx.onTapFilterBtn(0);
 
-    initGetX();
+    initGetX().then((value) {
+      if (widget.device_name == strDataTypeBP) {
+        /*_displayDialog(context);
+        Future.delayed(Duration(seconds: 5),
+            qurhomeDashboardController.scanBpSessionStart());*/
+      }
+    });
   }
 
-  void initGetX() {
+  Future<void> initGetX() async {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
           controllerGetx.fetchBPDetailsQurHome(
               filter: getFilterData(0), isLoading: true);
-          //showAlert(context);
         }
         break;
       case strGlusoceLevel:
@@ -161,41 +167,6 @@ class _VitalsDetailsState extends State<VitalsDetails> {
         }
         break;
     }
-  }
-
-
-  showAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Row(
-              children:[
-                CommonCircularQurHome(),
-                Text('BP Reading Measuring')
-              ]
-          ),
-          content: Text("Click start button in your BP Machine"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Click for Manual"),
-              onPressed: () {
-                //Put your code here which you want to execute on Yes button click.
-                Navigator.of(context).pop();
-              },
-            ),
-
-            FlatButton(
-              child: Text("Cancel"),
-              onPressed: () {
-                //Put your code here which you want to execute on Cancel button click.
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   void filterRefresh(int selected) {
@@ -296,7 +267,7 @@ class _VitalsDetailsState extends State<VitalsDetails> {
                       current: controllerGetx.filterBtnOnTap.value,
                       color: Colors.white,
                       secondaryColor:
-                      Color(CommonUtil().getQurhomePrimaryColor()),
+                          Color(CommonUtil().getQurhomePrimaryColor()),
                       onTab: (selected) {
                         controllerGetx.onTapFilterBtn(selected);
                         filterRefresh(selected);

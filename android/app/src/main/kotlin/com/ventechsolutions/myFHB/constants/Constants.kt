@@ -78,4 +78,5 @@ object Constants {
     val CAREGIVER_REQUESTER ="caregiverRequestor"
     val BLE_CONNECT ="bleConnect"
     val BP_CONNECT ="bpconnect"
+    val BP_SCAN_CANCEL ="bpscancancel"
 }

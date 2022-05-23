@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
+import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -31,6 +33,8 @@ class QurhomeDashboardController extends GetxController {
   String bleMacId;
   HubListController hubController;
   var regController;
+  QurHomeBpScanResult qurHomeBpScanResultModel;
+  var qurHomeBpScanResult = [].obs;
 
   @override
   void onInit() {
@@ -240,14 +244,8 @@ class QurhomeDashboardController extends GetxController {
   }
 
   Future<void> checkForBpConnection() async {
-    try {
-      _getPermissionValuesNative();
-      const platform = MethodChannel(ISBPCONNECT);
-      var result = await platform.invokeMethod(ISBPCONNECT);
-      printInfo(info: "Result from native$result");
-    } catch (e) {
-      print(e);
-    }
+    _getPermissionValuesNative();
+    callNativeBpValues();
   }
 
   void _getPermissionValuesNative() {
@@ -270,6 +268,34 @@ class QurhomeDashboardController extends GetxController {
         }
       }
     });
+  }
+
+  callNativeBpValues() async{
+    try {
+      const platform = MethodChannel(ISBPCONNECT);
+      var result = await platform.invokeMethod(ISBPCONNECT);
+      var josnResult = convert.jsonDecode(result.toString());
+      qurHomeBpScanResultModel = QurHomeBpScanResult.fromJson(josnResult);
+      qurHomeBpScanResult.value = qurHomeBpScanResultModel?.measurementRecords;
+      if(qurHomeBpScanResultModel!=null){
+        if(qurHomeBpScanResultModel?.measurementRecords!=null){
+          if(qurHomeBpScanResultModel?.measurementRecords?.length>0??0){
+            Get.back();
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                  takeActiveDeviceReadings: false,
+                  isFromBpReading: true
+              ),
+            ).then((_) {
+              regController.getRegimenList();
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   scanBpSessionStart() async {

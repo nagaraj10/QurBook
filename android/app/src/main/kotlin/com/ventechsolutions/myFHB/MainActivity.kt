@@ -103,6 +103,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
     private val BPCONNECT = Constants.BP_CONNECT
+    private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -135,6 +136,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     //Blood pressure
     private lateinit var _resultBp: MethodChannel.Result
+    private lateinit var _resultBpCancel: MethodChannel.Result
 
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
@@ -203,7 +205,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private var mSessionAddress: String? = null
 
-    private val mSessionData = SessionData()
+    private var mSessionData = SessionData()
 
     //var mDiscoverDevice: DiscoveredDevice? = null
 
@@ -1285,6 +1287,21 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BP_CONNECT_CANCEL
+        ).setMethodCallHandler { call, result ->
+            _resultBpCancel = result
+            if (call.method == "bpscancancel") {
+                Log.d("BP SCAN CANCEL", "Cancel BP Scan ")
+                try {
+                    mOHQDeviceManager!!.stopScan();
+                } catch (e: Exception) {
+                    Log.d("Catch", ""+e.toString())
+                }
+            }
+        }
+
     }
 
     private fun startBpScan() {
@@ -1374,6 +1391,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private fun getBpAddress(address: String) {
 
         mAddress = address
+        mSessionData.deviceAddress = address
         mSessionAddress = address
 
         registerBpDevice();
@@ -2375,9 +2393,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     override fun onSessionComplete(sessionData: SessionData) {
         AppLog.vMethodIn(sessionData.completionReason!!.name)
         mSessionAddress = null
+        mSessionData = sessionData
         mSessionData.setCompletionReason(sessionData.completionReason)
-        Log.e("outputNative", "" + sessionData.toString());
-        _resultBp.success(sessionData.toString())
+        mSessionData.deviceAddress = mAddress
+        Log.e("outputNative", "" + mSessionData.toString());
+        _resultBp.success(mSessionData.toString())
         /*if (sessionData.completionReason!!.name == "Disconnected") {
             if (sessionData.measurementRecords!!.size > 0) {
 

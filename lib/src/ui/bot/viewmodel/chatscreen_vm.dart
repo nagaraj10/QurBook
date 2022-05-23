@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
+import 'package:myfhb/Qurhome/BpScan/model/ble_bp_data_model.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
@@ -81,12 +82,15 @@ class ChatScreenViewModel extends ChangeNotifier {
   int playingIndex = 0;
   bool isMicListening = false;
   bool disableMic = false;
+
   List<Conversation> get getMyConversations => conversations;
   bool movedToBackScreen = false;
+
   int get getisMayaSpeaks => isMayaSpeaks;
   AudioPlayer audioPlayerForTTS = AudioPlayer();
   AudioPlayer newAudioPlay1 = AudioPlayer();
   bool isAudioPlayerPlaying = false;
+
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   List<Tags> tagsList = new List<Tags>();
@@ -97,6 +101,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
   HubListController hublistController;
+  QurhomeDashboardController qurhomeController;
   String eId;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
@@ -194,8 +199,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         final QurhomeDashboardController qurhomeDashboardController =
             Get.find();
         qurhomeDashboardController.updateTabIndex(0);
-        final QurhomeRegimenController qurhomeRegimenController =
-        Get.find();
+        final QurhomeRegimenController qurhomeRegimenController = Get.find();
         qurhomeRegimenController.getRegimenList();
         Get.back();
       }
@@ -265,6 +269,45 @@ class ChatScreenViewModel extends ChangeNotifier {
         );
         moveToBack(showFailure: false);
       }
+    }
+  }
+
+  updateBPUserData() async {
+    try {
+      hublistController = Get.find<HubListController>();
+      qurhomeController = Get.find<QurhomeDashboardController>();
+      var now = DateTime.now();
+      var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
+      String actualDateTime = formatterDateTime.format(now);
+      await Future.delayed(Duration(
+        seconds: 2,
+      ));
+      addToSheelaConversation(
+        text:
+            "Your Systolic is  ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].systolicKey} "
+            "and Diastolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].diastolicKey} "
+            "and Pulse is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].pulseRateKey}",
+      );
+      bool response = await BleConnectApiProvider().uploadBleBPDataReadings(
+          ackLocal: actualDateTime,
+          hubId: hublistController.virtualHubId,
+          eId: hublistController.eid,
+          uId: hublistController.uid,
+          qurHomeBpScanResult: qurhomeController?.qurHomeBpScanResultModel);
+      await Future.delayed(Duration(
+        seconds: 2,
+      ));
+      addToSheelaConversation(
+        text: response
+            ? "Values saved"
+            : "Failed to save the values, Please try again",
+      );
+      moveToBack(showFailure: false);
+    } catch (e) {
+      addToSheelaConversation(
+        text: "Failed to save the values, Please try again",
+      );
+      moveToBack(showFailure: false);
     }
   }
 
