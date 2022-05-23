@@ -951,7 +951,9 @@ class FormDataDialogState extends State<FormDataDialog> {
                               var events = '';
                               saveMap.forEach((key, value) {
                                 events += '&$key=$value';
-                                Provider.of<RegimentViewModel>(context, listen: false).cachedEvents.add('&$key=$value'.toString());
+                                var provider=Provider.of<RegimentViewModel>(context, listen: false);
+                                provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+                                provider.cachedEvents.add('&$key=$value'.toString());
                               });
                               if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
                                 LoaderQurHome.showLoadingDialog(
@@ -1123,11 +1125,15 @@ class FormDataDialogState extends State<FormDataDialog> {
                         onPressed: () {
                           if (returnAction?.eid != null &&
                               (returnAction?.action ?? '') == startActivity) {
+                            if(returnAction?.activityName==''||returnAction?.activityName==null){
+                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            }
                             widget.triggerAction(
                               returnAction?.eid,
                               returnAction?.context,
                             );
                           } else {
+                            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
                             Get.back();
                           }
                         },

@@ -208,7 +208,13 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    CommonUtil().initPortraitMode();
+    Future.delayed(Duration(seconds: 0)).then((_) {
+      if (PreferenceUtil.getIfQurhomeisAcive()) {
+        CommonUtil().initQurHomePortraitLandScapeMode();
+      } else {
+        CommonUtil().initPortraitMode();
+      }
+    });
 
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
