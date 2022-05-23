@@ -15,9 +15,12 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/view/widgets/media_icon_widget.dart';
+import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -98,53 +101,54 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             child: CircularProgressIndicator(),
           )
               : GetBuilder<QurhomeRegimenController>(
-              id: "newUpdate",
-              builder: (val) {
-                print("working builder");
-                return val.qurHomeRegimenResponseModel == null
-                    ? const Center(
-                  child: Text(
-                    'Please re-try after some time',
-                  ),
-                )
-                    : val.qurHomeRegimenResponseModel.regimentsList
-                    .length !=
-                    0
-                    ? Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 50.0),
-                  child: Container(
-                    child: PageView.builder(
-                      itemCount: val.qurHomeRegimenResponseModel
-                          .regimentsList.length,
-                      scrollDirection: Axis.vertical,
-                      onPageChanged: (int index) {
-                        setState(() {
-                          controller.currentIndex = index;
-                        });
-                      },
-                      controller: PageController(
-                          initialPage: val.nextRegimenPosition,
-                          viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
-                      itemBuilder:
-                          (BuildContext context, int itemIndex) {
-                        return _buildCarouselItem(
-                            context,
-                            itemIndex,
-                            val.qurHomeRegimenResponseModel
-                                .regimentsList[itemIndex],
-                            val.nextRegimenPosition,
-                            isPortrait);
-                      },
-                    ),
-                  ),
-                )
-                    : const Center(
-                  child: Text(
-                    'No activities scheduled today',
-                  ),
-                );
-              })),
+                  id: "newUpdate",
+                  builder: (val) {
+                    print("working builder");
+                    return val.qurHomeRegimenResponseModel == null
+                        ? const Center(
+                            child: Text(
+                              'Please re-try after some time',
+                            ),
+                          )
+                        : val.qurHomeRegimenResponseModel.regimentsList
+                                    .length !=
+                                0
+                            ? Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 50.0),
+                                child: Container(
+                                  child: PageView.builder(
+                                    itemCount: val.qurHomeRegimenResponseModel
+                                        .regimentsList.length,
+                                    scrollDirection: Axis.vertical,
+                                    onPageChanged: (int index) {
+                                      setState(() {
+                                        controller.currentIndex = index;
+                                      });
+                                    },
+                                    controller: PageController(
+                                        initialPage: val.nextRegimenPosition,
+                                        viewportFraction:
+                                            1 / (isPortrait == true ? 5 : 3)),
+                                    itemBuilder:
+                                        (BuildContext context, int itemIndex) {
+                                      return _buildCarouselItem(
+                                          context,
+                                          itemIndex,
+                                          val.qurHomeRegimenResponseModel
+                                              .regimentsList[itemIndex],
+                                          val.nextRegimenPosition,
+                                          isPortrait);
+                                    },
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: Text(
+                                  'No activities scheduled today',
+                                ),
+                              );
+                  })),
         ],
       ),
     );
@@ -214,10 +218,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
         scale: getCurrentRatio(itemIndex),
         child: Padding(
           padding: EdgeInsets.symmetric(
-              horizontal: isPortrait ? 25.0 : MediaQuery
-                  .of(context)
-                  .size
-                  .width / 5, vertical: 8.0),
+              horizontal:
+                  isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5,
+              vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
               color: getCardBackgroundColor(itemIndex, nextRegimenPosition),
@@ -650,7 +653,39 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   ),
                   SizedBox(
                     height: 10,
-                  )
+                  ),
+                  Visibility(
+                    visible: regimen.hashtml,
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Get.to(
+                              RegimentWebView(
+                                title: regimen.title.toString().trim(),
+                                selectedUrl: regimen?.htmltemplate,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              strAdditionalInstructions,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 13.h,
+                                  fontStyle: FontStyle.italic,
+                                  decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             );

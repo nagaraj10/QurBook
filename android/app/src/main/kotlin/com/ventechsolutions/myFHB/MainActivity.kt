@@ -40,6 +40,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.multidex.BuildConfig
+import com.facebook.FacebookSdk.fullyInitialize
+import com.facebook.FacebookSdk.setAutoInitEnabled
+import com.facebook.applinks.AppLinkData
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -86,6 +89,10 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.experimental.and
 import kotlin.system.exitProcess
+import com.facebook.FacebookSdk;
+import com.facebook.FacebookSdk.setAutoLogAppEventsEnabled
+import com.facebook.LoggingBehavior
+import com.facebook.appevents.AppEventsLogger;
 
 
 class MainActivity : FlutterActivity(), SessionController.Listener,
@@ -220,8 +227,28 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //todo this must be un command when go to production
-        //this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        setAutoInitEnabled(true)
+        fullyInitialize()
+        FacebookSdk.setIsDebugEnabled(true)
+        FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
+        setAutoLogAppEventsEnabled(true)
+        AppEventsLogger.newLogger(this).logEvent("started")
+        // Get user consent
+
+        val target: Uri? = getIntent().getData()
+        Log.e("deeplink", "onCreate: "+target )
+        if (target != null) {
+            mEventChannel.success("facebookdeeplink&"+target.toString());
+        } else {
+            // activity was created in a normal fashion
+        }
+        AppLinkData.fetchDeferredAppLinkData(this) {it->
+            Log.e("deeplinks", "onCreate: "+it?.appLinkData )
+            if (::mEventChannel.isInitialized) {
+                mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
+            }
+        }
+
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val action = intent.action
         val type = intent.type

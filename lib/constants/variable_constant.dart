@@ -192,6 +192,7 @@ const String icon_no_internet = 'assets/no_internet.png';
 const String icon_something_wrong = 'assets/something-wrong.png';
 const String icon_refresh_dash = 'assets/icons/refresh_dash.png';
 const String icon_appointment_regimen = 'assets/icons/appointment_regimen.png';
+const String icon_undo = 'assets/icons/ic_undo.png';
 
 //Dashboard
 const String icon_call = 'assets/dashboard/call.svg';
@@ -575,11 +576,13 @@ const String strAllowGoogle = 'Allow app to recieve data from google Fit';
 const String strHealthKit = 'Apple Health';
 const String strAllowHealth = 'Allow app to recieve data from Apple Health';
 const String strAddDevice = 'Tap to add device widgets to your home screen';
+const String strDefaultUI = 'Set Qurhome as default UI';
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
 const String strQurHub = 'QurHub';
+const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
 const String strQurHubIoTdevice = 'QurHub IoT device';
 const String strCreateNewVirtualHub = 'Create New Virtual Hub';

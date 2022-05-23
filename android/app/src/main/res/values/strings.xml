@@ -127,4 +127,11 @@
     <string name="connection_retry_count">Connection Retry Count</string>
     <string name="refresh_use">Refresh at the end of session</string>
 
+
+
+    <string name="facebook_app_id">210576637358398</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">926a9953b0147966a48ae98ae9ecac99</string>
+
+
 </resources>
