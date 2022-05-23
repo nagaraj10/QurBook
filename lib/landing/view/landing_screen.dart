@@ -102,10 +102,10 @@ class _LandingScreenState extends State<LandingScreen> {
     mInitialTime = DateTime.now();
     dbInitialize();
     userId = PreferenceUtil.getStringValue(KEY_USERID);
+    moveToQurhome();
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
-
     var profilebanner =
         PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
@@ -124,11 +124,6 @@ class _LandingScreenState extends State<LandingScreen> {
           .getQurPlanDashBoard();
     }
     Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-    Future.delayed(const Duration(seconds: 0)).then((_) {
-      if (PreferenceUtil.getIfQurhomeisAcive()) {
-        moveToQurhome();
-      }
-    });
     Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
@@ -523,30 +518,6 @@ class _LandingScreenState extends State<LandingScreen> {
               },
             ),
           ),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   onPressed: () {
-          //     moveToQurhome();
-          //   },
-          //   label: const Text(
-          //     'Qurhome',
-          //     style: TextStyle(
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   icon: Container(
-          //     padding: const EdgeInsets.all(
-          //       4,
-          //     ),
-          //     height: 50.0.h,
-          //     width: 50.0.h,
-          //     child: AssetImageWidget(
-          //       icon: variable.icon_qurhome,
-          //     ),
-          //   ),
-          //   backgroundColor: Color(
-          //     CommonUtil().getQurhomeGredientColor(),
-          //   ),
-          // ),
         );
       },
     );
@@ -750,21 +721,34 @@ class _LandingScreenState extends State<LandingScreen> {
     setState(() {});
   }
 
-  void moveToQurhome() {
-    PreferenceUtil.saveIfQurhomeisAcive(qurhomeStatus: true);
-    Get.to(
-      () => QurhomeDashboard(),
-      binding: BindingsBuilder(
-        () {
-          Get.lazyPut(
-            () => QurhomeDashboardController(),
+  void moveToQurhome() async {
+    var result = await healthReportListForUserRepository.getDeviceSelection();
+    if (result.isSuccess) {
+      if (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false) {
+        if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+          PreferenceUtil.saveQurhomeAsDefaultUI(
+            qurhomeStatus: true,
           );
-          Get.lazyPut(
-            () => HubListController(),
-          );
-        },
-      ),
-    );
+        }
+        Get.to(
+          () => QurhomeDashboard(),
+          binding: BindingsBuilder(
+            () {
+              Get.lazyPut(
+                () => QurhomeDashboardController(),
+              );
+              Get.lazyPut(
+                () => HubListController(),
+              );
+            },
+          ),
+        );
+      } else if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
+        PreferenceUtil.saveQurhomeAsDefaultUI(
+          qurhomeStatus: false,
+        );
+      }
+    }
   }
 
   void dbInitialize() {

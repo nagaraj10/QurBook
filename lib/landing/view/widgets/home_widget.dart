@@ -55,9 +55,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void moveToQurhome() {
-    PreferenceUtil.saveIfQurhomeisAcive(
-      qurhomeStatus: true,
-    );
     Get.to(
       () => QurhomeDashboard(),
       binding: BindingsBuilder(

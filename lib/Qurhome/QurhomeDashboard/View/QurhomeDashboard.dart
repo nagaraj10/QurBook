@@ -34,6 +34,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      CommonUtil().requestQurhomeDialog();
       CommonUtil().initQurHomePortraitLandScapeMode();
       if (CommonUtil().isTablet) {
         buttonSize = 100;
@@ -161,9 +162,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       size: CommonUtil().isTablet ? 38.0 : 24.0,
                       onTap: () {
                         Get.back();
-                        PreferenceUtil.saveIfQurhomeisAcive(
-                          qurhomeStatus: false,
-                        );
                       },
                     )
                   : Container(
@@ -369,9 +367,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
           ),
           onWillPop: () async {
             Get.back();
-            PreferenceUtil.saveIfQurhomeisAcive(
-              qurhomeStatus: false,
-            );
+
             return true;
           },
         ));
