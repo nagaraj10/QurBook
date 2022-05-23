@@ -626,7 +626,8 @@ const String STR_NOTES_HINT =
 
 const String STR_YES = 'yes';
 const String STR_NO = 'no';
-
+const String strCamelYes = 'Yes';
+const String strCamelNo = 'No';
 const String Rmarks_HINT = "Remarks";
 
 // True desk
