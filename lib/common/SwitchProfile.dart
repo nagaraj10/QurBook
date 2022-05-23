@@ -99,7 +99,7 @@ class SwitchProfile {
             child: isFromDashborad
                 ? getCirleAvatarWithBorderIcon(myProfile)
                 : CircleAvatar(
-                    radius: 15,
+                    radius: CommonUtil().isTablet ? 18 : 15,
                     child: ClipOval(
                         child: myProfile != null
                             ? myProfile.result != null
@@ -233,7 +233,7 @@ class SwitchProfile {
     return Stack(
       children: [
         CircleAvatar(
-          radius: 18,
+          radius: CommonUtil().isTablet ? 20 : 18,
           child: ClipOval(
               child: myProfile != null
                   ? myProfile.result != null
@@ -290,7 +290,7 @@ class SwitchProfile {
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: 12,
+              size: CommonUtil().isTablet ? 14 : 12,
             )),
       ),
     );
