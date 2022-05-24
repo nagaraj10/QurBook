@@ -4621,7 +4621,7 @@ class CommonUtil {
                             textAlign: TextAlign.center)),
                   ),
                   if (!isFromVital) SizedBox(
-                    width: 160.w,
+                    width: 180.w,
                     child: TextButton(
                       child: Text(
                         'Enter Manually',
@@ -4640,7 +4640,7 @@ class CommonUtil {
                   ),
                   SizedBox(height: 5.h),
                   SizedBox(
-                    width: 160.w,
+                    width: 180.w,
                     child: TextButton(
                       child: Text(
                         'Cancel',
