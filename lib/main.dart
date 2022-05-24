@@ -14,7 +14,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
@@ -217,11 +216,11 @@ Future<void> main() async {
     //   }
     // });
 
-      // if (CommonUtil().isTablet) {
-      //   CommonUtil().initQurHomePortraitLandScapeMode();
-      // } else {
-        CommonUtil().initPortraitMode();
-      // }
+    // if (CommonUtil().isTablet) {
+    //   CommonUtil().initQurHomePortraitLandScapeMode();
+    // } else {
+    CommonUtil().initPortraitMode();
+    // }
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
