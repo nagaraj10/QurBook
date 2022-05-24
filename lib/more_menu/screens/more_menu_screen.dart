@@ -8,6 +8,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 

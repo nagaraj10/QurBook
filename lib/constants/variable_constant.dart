@@ -320,6 +320,7 @@ const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
 String strCareGiverSettings = 'Caregiver Communication Settings';
+String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';

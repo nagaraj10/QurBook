@@ -486,6 +486,54 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getNonAdheranceList(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> saveOrEditNonAdherance(String url,dynamic data) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    final body = convert.jsonEncode(data);
+    print(body);
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersWithoutOffset(),
+          body :body);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> remainderForApi(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    final body = convert.jsonEncode(["ACTREMSETTYPE"]);
+    print(body);
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersWithoutOffset(),
+      body :'["ACTREMSETTYPE"]');
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getProfileInfo(String url) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
