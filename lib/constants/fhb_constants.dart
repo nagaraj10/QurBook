@@ -35,6 +35,7 @@ const String ScanningForBpDevices = 'Scanning for Bp devices...';
 const String NoDeviceFound = 'No Device Found';
 const String DeviceAlreadyMapped = 'Device Already Mapped';
 const String careGiver = 'Caregiver Communication Settings';
+const String nonAdherance = 'Non-Adherence Settings';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';

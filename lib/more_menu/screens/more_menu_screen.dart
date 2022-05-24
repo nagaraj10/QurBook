@@ -6,6 +6,7 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -253,30 +254,56 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
-        isCareGiver ? Divider() : Container(),
-        isCareGiver
-            ? ListTile(
-                title: Text(variable.strCareGiverSettings,
-                    style: TextStyle(fontWeight: FontWeight.w500)),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16.0.sp,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CareGiverSettings(),
-                    ),
-                  ).then((value) {
-                    if (value) {
-                      setState(() {});
-                    }
-                  });
-                  //PageNavigator.goTo(context, router.rt_AppSettings);
-                },
-              )
-            : Container(),
+        isCareGiver?Divider():Container(),
+        isCareGiver? Column(
+          children: [
+            ListTile(
+              title: Text(variable.strCareGiverSettings,
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16.0.sp,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        CareGiverSettings(),
+                  ),
+                ).then((value) {
+                  if (value) {
+                    setState(() {});
+                  }
+                });
+                //PageNavigator.goTo(context, router.rt_AppSettings);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Text(variable.strNonAdherenceSettings,
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16.0.sp,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NonAdheranceSettingsScreen(),
+                  ),
+                ).then((value) {
+                  if (value) {
+                    setState(() {});
+                  }
+                });
+                //PageNavigator.goTo(context, router.rt_AppSettings);
+              },
+            ),
+          ],
+        ):Container(),
         /*Divider(),
         Theme(
           data: theme,
