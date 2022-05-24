@@ -54,7 +54,7 @@ class QurhomeDashboardController extends GetxController {
       qurhomeStatus: false,
     );
     _disableTimer();
-    bleController.stopBleScan();
+    //bleController.stopBleScan();
     super.onClose();
   }
 
