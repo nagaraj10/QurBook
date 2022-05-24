@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +38,7 @@ class HubListController extends GetxController {
   var virtualHubId = "";
   var eid;
   var uid;
+  BleConnectController bleController = Get.put(BleConnectController());
 
   getHubList() async {
     try {
@@ -158,16 +160,30 @@ class HubListController extends GetxController {
     } catch (e) {}
   }
 
-  void checkForConnectedDevices() {
+  checkForConnectedDevices() async {
     try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      bool isBluetoothEnable = false;
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      if (!isBluetoothEnable) {
+        FlutterToast().getToast(
+            'Please turn on your bluetooth and try again', Colors.red);
+        return;
+      } else if (!serviceEnabled) {
+        FlutterToast().getToast(
+            'Please turn on your GPS location services and try again',
+            Colors.red);
+        return;
+      }
       searchingBleDevice.value = true;
       _enableTimer();
-      BleConnectController bleController = Get.put(BleConnectController());
       bleController.getBleConnectData(Get.context);
       Future.delayed(Duration(seconds: 15)).then((value) {
         searchingBleDevice.value = false;
         if (!foundBLE.value) {
           disableTimer();
+          bleController.stopBleScan();
           toast.getToast(NoDeviceFound, Colors.red);
         }
       });
@@ -218,6 +234,7 @@ class HubListController extends GetxController {
               bleDeviceType.value = validString(receivedValues.last);
               foundBLE.value = true;
               disableTimer();
+              bleController.stopBleScan();
               searchingBleDevice.value = false;
               List<UserDeviceCollection> userDeviceCollection = [];
               if ((hubListResponse.result?.userDeviceCollection ?? []).length >

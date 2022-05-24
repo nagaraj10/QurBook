@@ -110,6 +110,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
     private val BPCONNECT = Constants.BP_CONNECT
+    private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private var sharedValue: String? = null
@@ -603,11 +604,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private fun stopScan() {
         try {
             autoRepeatScan = 0
-            if (scanningBleTimer != null) {
-                scanningBleTimer.cancel();
-            }
+            scanningBleTimer.cancel()
             Handler().postDelayed({
-                BleManager.getInstance().cancelScan()
+                if(BleManager.getInstance()!=null) {
+                    BleManager.getInstance().cancelScan()
+                }
             }, 1000)
         } catch (ex: Exception) {
             Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -1308,6 +1309,16 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     //scanningBleTimer.purge()
                 }, 12000)*/
 
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BLE_SCAN_CANCEL
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "bleScanCancel") {
+                Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
+                stopScan()
             }
         }
 

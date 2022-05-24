@@ -30,11 +30,13 @@ class QurhomeDashboardController extends GetxController {
   StreamSubscription _bpPressureSubscription;
   var foundBLE = false.obs;
   var movedToNextScreen = false;
+  var isDialogShowing = false.obs;
   String bleMacId;
   HubListController hubController;
   var regController;
   QurHomeBpScanResult qurHomeBpScanResultModel;
   var qurHomeBpScanResult = [].obs;
+  BleConnectController bleController = Get.put(BleConnectController());
 
   @override
   void onInit() {
@@ -52,6 +54,7 @@ class QurhomeDashboardController extends GetxController {
       qurhomeStatus: false,
     );
     _disableTimer();
+    bleController.stopBleScan();
     super.onClose();
   }
 
@@ -104,12 +107,16 @@ class QurhomeDashboardController extends GetxController {
 
             if (!isFromVitalsList) {
               milliSeconds = 0;
-              LoaderClass.hideLoadingDialog(Get.context);
+              //LoaderClass.hideLoadingDialog(Get.context);
             }
             foundBLE.value = true;
             movedToNextScreen = true;
             _disableTimer();
+            bleController.stopBleScan();
             if (checkForParedDevice(isFromBp: false)) {
+              if (isDialogShowing.value) {
+                Get.back();
+              }
               Future.delayed(Duration(milliseconds: milliSeconds))
                   .then((value) {
                 Get.toNamed(
@@ -183,26 +190,41 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  void checkForConnectedDevices(
-    bool isFromVitalsList, {
-    String eid,
-    String uid,
-  }) {
+  checkForConnectedDevices(
+      bool isFromVitalsList, {
+        String eid,
+        String uid,
+      }) async {
     try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      bool isBluetoothEnable = false;
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      if (!isBluetoothEnable) {
+        FlutterToast().getToast(
+            'Please turn on your bluetooth and try again', Colors.red);
+        return;
+      } else if (!serviceEnabled) {
+        FlutterToast().getToast(
+            'Please turn on your GPS location services and try again',
+            Colors.red);
+        return;
+      }
       regController = Get.find<QurhomeRegimenController>();
-      //int seconds = 180;
-      /* if (!isFromVitalsList) {
-        seconds = 10;
-        LoaderClass.showLoadingDialog(Get.context);
-      }*/
+      isDialogShowing.value = true;
       CommonUtil().dialogForScanDevices(Get.context, onPressCancel: () {
         foundBLE.value = false;
         movedToNextScreen = false;
         _disableTimer();
+        bleController.stopBleScan();
         Get.back();
+        isDialogShowing.value = false;
       }, onPressManual: () {
+        _disableTimer();
+        bleController.stopBleScan();
+        Get.back();
+        isDialogShowing.value = false;
         if (!isFromVitalsList) {
-          //LoaderClass.hideLoadingDialog(Get.context);
           //Device Not Connected
           Get.toNamed(
             rt_Sheela,
@@ -217,31 +239,9 @@ class QurhomeDashboardController extends GetxController {
       foundBLE.value = false;
       movedToNextScreen = false;
       _enableTimer(isFromVitalsList);
-      BleConnectController bleController = Get.put(BleConnectController());
       hubController.eid = eid;
       hubController.uid = uid;
       bleController.getBleConnectData(Get.context);
-
-      /*if (!foundBLE.value && !movedToNextScreen) {
-        _disableTimer();
-
-        if (!isFromVitalsList) {
-          //LoaderClass.hideLoadingDialog(Get.context);
-          //Device Not Connected
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: eid,
-            ),
-          ).then((_) {
-            regController.getRegimenList();
-          });
-        }
-      }*/
-
-      /* Future.delayed(Duration(seconds: seconds)).then((value) {
-
-      });*/
     } catch (e) {
       print(e);
     }
