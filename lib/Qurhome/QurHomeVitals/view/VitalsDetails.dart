@@ -4,12 +4,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
@@ -98,13 +101,15 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
   final controllerGetx = Get.put(VitalDetailController());
 
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
   AnimationController animationController;
 
   int _counter = 0;
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   @override
   void initState() {
@@ -125,7 +130,13 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
       controllerGetx.onTapFilterBtn(0);
 
-      initGetX();
+      initGetX().then((value) {
+        if (widget.device_name == strOxgenSaturation) {
+          initBleTimer();
+        } else if (widget.device_name == strDataTypeBP) {
+          initBpScan();
+        }
+      });
     } catch (e) {
       print(e);
     }
@@ -153,7 +164,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
   void initBleTimer() async {
     try {
-      await Future.delayed(Duration(milliseconds: 500));
+      qurhomeDashboardController.checkForConnectedDevices(true);
+      /*await Future.delayed(Duration(milliseconds: 500));
       animationController = AnimationController(
         vsync: this,
         duration: Duration(seconds: 180),
@@ -176,10 +188,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
             closeDialog();
           }
         });
-      }
+      }*/
     } catch (e) {
       print(e);
     }
+  }
+
+  void initBpScan() {
+    qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
   }
 
   void notify() {
@@ -340,7 +356,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     );
   }
 
-  void initGetX() {
+  Future<void> initGetX() async {
     switch (widget.device_name) {
       case strDataTypeBP:
         {
@@ -1669,11 +1685,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget getValues(BuildContext context) {
-    String strText =
-        CommonUtil().validString(widget.deviceNameForAdding).toLowerCase();
-    if (strText.contains("pulse")) {
-      initBleTimer();
-    }
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:

@@ -13,3 +13,6 @@ plugins.each { name, path ->
     include ":$name"
     project(":$name").projectDir = pluginDirectory
 }
+include ':ohq-reference-code'
+include ':android-core-bluetooth'
+include ':utility'

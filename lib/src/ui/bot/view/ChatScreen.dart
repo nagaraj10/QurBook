@@ -28,6 +28,7 @@ import 'package:uuid/uuid.dart';
 class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
   final SheelaArgument arguments;
+
   ChatScreen({this.arguments});
 
   @override
@@ -82,6 +83,12 @@ class _ChatScreenState extends State<ChatScreen>
         text: "Your SpO2 device is connected",
       );
       getMyViewModel().setupListenerForReadings();
+    } else if (widget?.arguments?.isFromBpReading &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      getMyViewModel().addToSheelaConversation(
+        text: "Your BP device is connected & Measured Readings",
+      );
+      getMyViewModel().updateBPUserData();
     } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {
       getMyViewModel().eId = widget?.arguments?.eId;
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);

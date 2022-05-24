@@ -4,6 +4,7 @@ class SheelaArgument {
   final String sheelaInputs;
   final String rawMessage;
   final bool takeActiveDeviceReadings;
+  final bool isFromBpReading;
   final eId;
 
   SheelaArgument({
@@ -12,6 +13,7 @@ class SheelaArgument {
     this.sheelaInputs,
     this.rawMessage,
     this.takeActiveDeviceReadings = false,
+    this.isFromBpReading = false,
     this.eId,
   });
 }
