@@ -112,7 +112,7 @@ public class OHQDeviceManager {
         return ret;
     }
 
-    public Bundle getDefaultConfig(@Nullable final List<OHQConfig.Key> keys) {
+    /*public Bundle getDefaultConfig(@Nullable final List<OHQConfig.Key> keys) {
         final Bundle config;
         if (mHandler.isCurrentThread()) {
             config = mCBCentralManager.getDefaultConfig(keys);
@@ -129,9 +129,9 @@ public class OHQDeviceManager {
             config = Types.autoCast(callback.getResult());
         }
         return config;
-    }
+    }*/
 
-    public Bundle getConfig(@Nullable final List<OHQConfig.Key> keys) {
+    /*public Bundle getConfig(@Nullable final List<OHQConfig.Key> keys) {
         final Bundle config;
         if (mHandler.isCurrentThread()) {
             config = mCBCentralManager.getConfig(keys);
@@ -148,7 +148,7 @@ public class OHQDeviceManager {
             config = Types.autoCast(callback.getResult());
         }
         return config;
-    }
+    }*/
 
     public void setConfig(@NonNull final Bundle config) {
         if (mHandler.isCurrentThread()) {
