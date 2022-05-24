@@ -664,6 +664,12 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                         stopScan()
                         connectToBGL(bleDevice)
                     }
+
+                    // BP DEVICE SCANNING
+                    if (DevName.contains("BLEsmart")) {
+                        stopScan()
+                        getBpAddress(bleDevice.mac);
+                    }
                 }
 
 
@@ -2446,7 +2452,18 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         mSessionData.setCompletionReason(sessionData.completionReason)
         mSessionData.deviceAddress = mAddress
         Log.e("outputNative", "" + mSessionData.toString());
-        _resultBp.success(mSessionData.toString())
+        if(mSessionData!=null && mSessionData.measurementRecords!=null && mSessionData.measurementRecords!!.size>0){
+            _resultBp.success(mSessionData.toString())
+            return
+        }
+
+        if (::BLEEventChannel.isInitialized) {
+            BLEEventChannel.success("macid|" + mAddress)
+        }
+
+        if (::BLEEventChannel.isInitialized) {
+            BLEEventChannel.success("bleDeviceType|" + "BP")
+        }
         /*if (sessionData.completionReason!!.name == "Disconnected") {
             if (sessionData.measurementRecords!!.size > 0) {
 
