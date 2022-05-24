@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:ui' as ui;
 
 import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -208,22 +209,19 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    //await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.landscapeLeft,
-    //   DeviceOrientation.landscapeRight,
-    // ]);
+    // Future.delayed(Duration(seconds: 0)).then((_) {
+    //   if (PreferenceUtil.getIfQurhomeisAcive()) {
+    //     CommonUtil().initQurHomePortraitLandScapeMode();
+    //   } else {
+    //     CommonUtil().initPortraitMode();
+    //   }
+    // });
 
-    await SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
-    ]);
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.landscapeLeft,
-    //   DeviceOrientation.landscapeRight,
-    // ]);
+      // if (CommonUtil().isTablet) {
+      //   CommonUtil().initQurHomePortraitLandScapeMode();
+      // } else {
+        CommonUtil().initPortraitMode();
+      // }
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
@@ -248,23 +246,22 @@ Future<void> main() async {
     final appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
     await appsflyerSdk.initSdk(
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true,
-      registerOnDeepLinkingCallback: true
-    );
+        registerConversionDataCallback: true,
+        registerOnAppOpenAttributionCallback: true,
+        registerOnDeepLinkingCallback: true);
 
     appsflyerSdk.onDeepLinkingStream.forEach((element) {
       final facebookAppEvents = FacebookAppEvents();
-      facebookAppEvents.logEvent(name: "deeplinkclicked",parameters: {"user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),"data":element.toString()});
-      var firebase=FirebaseAnalyticsService();
-        firebase.trackEvent("on_deep_link_clicked",
-            {
-              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-              "type" : "facebookdeeplink"
-            }
-        );
+      facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
+        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+        "data": element.toString()
+      });
+      var firebase = FirebaseAnalyticsService();
+      firebase.trackEvent("on_deep_link_clicked", {
+        "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+        "type": "facebookdeeplink"
+      });
     });
-
 
     if (Platform.isAndroid) {
       await FlutterDownloader.initialize(
@@ -309,7 +306,7 @@ Future<void> main() async {
       }
     });
 
-    var firebase=FirebaseAnalyticsService();
+    var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
     firebase.trackCurrentScreen("startScreen", "classOverride");
     runApp(
@@ -516,14 +513,12 @@ class _MyFHBState extends State<MyFHB> {
       }
       final passedValArr = cMsg.split('&');
       if (passedValArr[0] == 'facebookdeeplink') {
-        var firebase=FirebaseAnalyticsService();
+        var firebase = FirebaseAnalyticsService();
         print(passedValArr[1]);
-        firebase.trackEvent("on_facebook_clicked",
-            {
-              "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-              "total" : passedValArr[1]
-            }
-        );
+        firebase.trackEvent("on_facebook_clicked", {
+          "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+          "total": passedValArr[1]
+        });
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');

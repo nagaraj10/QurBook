@@ -66,20 +66,25 @@ class SymptomItemCard extends StatelessWidget {
       }
     });
     return orientation == Orientation.landscape && CommonUtil().isTablet
-        ? Card(
-            //elevation: 3.0,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20))),
-            child: ClipPath(
-              clipper: ShapeBorderClipper(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20))),
+        ? IntrinsicHeight(
+            child: Card(
+              //elevation: 3.0,
+              margin: EdgeInsets.only(
+                /*left: 10.0.w,
+                right: 10.0.w,*/
+                bottom: 3.0.h,
               ),
-              child: IntrinsicHeight(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              child: ClipPath(
+                clipper: ShapeBorderClipper(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                ),
                 child: Material(
                   color: Colors.white,
                   child: InkWell(
@@ -117,28 +122,28 @@ class SymptomItemCard extends StatelessWidget {
                                     children: [
                                       icon,
                                       /*Visibility(
-                                        visible: Provider.of<RegimentViewModel>(
-                                                        context,
-                                                        listen: false)
-                                                    .regimentMode ==
-                                                RegimentMode.Schedule &&
-                                            !(regimentData?.asNeeded ?? false),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            top: 2.0.h,
-                                          ),
-                                          child: Text(
-                                            time,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16.0.sp,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                    visible: Provider.of<RegimentViewModel>(
+                                                    context,
+                                                    listen: false)
+                                                .regimentMode ==
+                                            RegimentMode.Schedule &&
+                                        !(regimentData?.asNeeded ?? false),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: 2.0.h,
+                                      ),
+                                      child: Text(
+                                        time,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0.sp,
                                         ),
-                                      ),*/
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),*/
                                     ],
                                   ),
                                 ),
@@ -196,201 +201,215 @@ class SymptomItemCard extends StatelessWidget {
                                 ),
                               ],
                             ) /*Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    padding: EdgeInsets.only(right: 10.0),
-                                    child: Text(
-                                      CommonUtil()
-                                          .validString(title)
-                                          .toUpperCase(),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        fontSize: 12.0.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black,
-                                      ),
-                                    ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Text(
+                                  CommonUtil()
+                                      .validString(title)
+                                      .toUpperCase(),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: 12.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                InkWell(
-                                  onTap: () {
-                                    if (regimentData.isPlaying) {
-                                      stopRegimenTTS();
-                                    } else {
-                                      controller.startSymptomTTS(
-                                        index,
-                                        staticText: regimentData?.title ?? '',
-                                        dynamicText:
-                                            regimentData?.sayTextDynamic ?? '',
-                                      );
-                                    }
-                                  },
-                                  child: Icon(
-                                    regimentData.isPlaying
-                                        ? Icons.stop_circle_outlined
-                                        : Icons.play_circle_fill_rounded,
-                                    size: 30.0.sp,
-                                    color: color,
-                                  ),
-                                ),
-                              ],
-                            )*/
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () {
+                                if (regimentData.isPlaying) {
+                                  stopRegimenTTS();
+                                } else {
+                                  controller.startSymptomTTS(
+                                    index,
+                                    staticText: regimentData?.title ?? '',
+                                    dynamicText:
+                                        regimentData?.sayTextDynamic ?? '',
+                                  );
+                                }
+                              },
+                              child: Icon(
+                                regimentData.isPlaying
+                                    ? Icons.stop_circle_outlined
+                                    : Icons.play_circle_fill_rounded,
+                                size: 30.0.sp,
+                                color: color,
+                              ),
+                            ),
+                          ],
+                        )*/
                             ,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 15.0.w,
-                              right: 15.0.w,
-                              top: 5.0.h,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Visibility(
-                                  visible: mediaData.needPhoto == '1',
-                                  child: MediaIconWidget(
-                                    padding: 10.0.w,
-                                    color: color,
-                                    icon: imageUrl != null
-                                        ? Icons.camera_alt
-                                        : Icons.camera_alt_outlined,
-                                    onPressed: imageUrl != null
-                                        ? () {
-                                            Get.to(
-                                              () => ImageViewer(imageUrl, eid,
-                                                  regimentData?.providerid),
-                                            );
-                                          }
-                                        : null,
+                          mediaData != null || (regimentData?.hashtml ?? false)
+                              ? Padding(
+                                  padding: EdgeInsets.only(
+                                    left: 15.0.w,
+                                    right: 15.0.w,
+                                    top: 5.0.h,
                                   ),
-                                ),
-                                Visibility(
-                                  visible: mediaData.needAudio == '1',
-                                  child: MediaIconWidget(
-                                    padding: 10.0.w,
-                                    color: color,
-                                    icon: Icons.mic,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: mediaData.needVideo == '1',
-                                  child: MediaIconWidget(
-                                    padding: 10.0.w,
-                                    color: color,
-                                    icon: Icons.videocam,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: mediaData.needFile == '1',
-                                  child: MediaIconWidget(
-                                    padding: 10.0.w,
-                                    color: color,
-                                    icon: Icons.attach_file,
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: regimentData.hashtml,
-                                  child: MediaIconWidget(
-                                    padding: 10.0.w,
-                                    color: Colors.white,
-                                    icon: Icons.menu_book_rounded,
-                                    onPressed: () {
-                                      Get.to(
-                                        RegimentWebView(
-                                          title: title,
-                                          selectedUrl:
-                                              regimentData?.htmltemplate,
-                                        ),
-                                      );
-                                      // CommonUtil().openWebViewNew(
-                                      //   regimentData.title,
-                                      //   regimentData.htmltemplate,
-                                      //   true,
-                                      // );
-                                    },
-                                  ),
-                                ),
-                                Visibility(
-                                  visible: !regimentData.hasform,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      left: 10.0.w,
-                                    ),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          stopRegimenTTS();
-
-                                          final canEdit = startTime
-                                                      .difference(
-                                                          DateTime.now())
-                                                      .inMinutes <=
-                                                  15 &&
-                                              Provider.of<RegimentViewModel>(
-                                                          context,
-                                                          listen: false)
-                                                      .regimentMode ==
-                                                  RegimentMode.Schedule;
-                                          if (canEdit ||
-                                              isValidSymptom(context)) {
-                                            LoaderQurHome.showLoadingDialog(
-                                              Get.context,
-                                              canDismiss: false,
-                                            );
-                                            var saveResponse =
-                                                await _apiProvider
-                                                    .saveFormDataQurHome(
-                                              eid: eid,
-                                            );
-                                            if (saveResponse?.isSuccess ??
-                                                false) {
-                                              Future.delayed(
-                                                  Duration(milliseconds: 300),
-                                                  () async {
-                                                /*await Provider.of<RegimentViewModel>(context,
-                                          listen: false)
-                                      .fetchRegimentData();*/
-                                                await controller.getSymptomList(
-                                                    isLoading: false);
-                                                LoaderQurHome.hideLoadingDialog(
-                                                    Get.context);
-                                              });
-                                            } else {
-                                              LoaderQurHome.hideLoadingDialog(
-                                                  Get.context);
-                                            }
-                                          } else {
-                                            FlutterToast().getToast(
-                                              (Provider.of<RegimentViewModel>(
-                                                              context,
-                                                              listen: false)
-                                                          .regimentMode ==
-                                                      RegimentMode.Symptoms)
-                                                  ? symptomsError
-                                                  : activitiesError,
-                                              Colors.red,
-                                            );
-                                          }
-                                        },
-                                        child: Icon(
-                                          regimentData.ack == null
-                                              ? Icons.check_circle_outlined
-                                              : Icons.check_circle_rounded,
-                                          size: 30.0.sp,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Visibility(
+                                        visible: mediaData.needPhoto == '1',
+                                        child: MediaIconWidget(
+                                          padding: 10.0.w,
                                           color: color,
+                                          icon: imageUrl != null
+                                              ? Icons.camera_alt
+                                              : Icons.camera_alt_outlined,
+                                          onPressed: imageUrl != null
+                                              ? () {
+                                                  Get.to(
+                                                    () => ImageViewer(
+                                                        imageUrl,
+                                                        eid,
+                                                        regimentData
+                                                            ?.providerid),
+                                                  );
+                                                }
+                                              : null,
                                         ),
                                       ),
-                                    ),
+                                      Visibility(
+                                        visible: mediaData.needAudio == '1',
+                                        child: MediaIconWidget(
+                                          padding: 10.0.w,
+                                          color: color,
+                                          icon: Icons.mic,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: mediaData.needVideo == '1',
+                                        child: MediaIconWidget(
+                                          padding: 10.0.w,
+                                          color: color,
+                                          icon: Icons.videocam,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: mediaData.needFile == '1',
+                                        child: MediaIconWidget(
+                                          padding: 10.0.w,
+                                          color: color,
+                                          icon: Icons.attach_file,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: regimentData.hashtml,
+                                        child: MediaIconWidget(
+                                          padding: 10.0.w,
+                                          color: Colors.white,
+                                          icon: Icons.menu_book_rounded,
+                                          onPressed: () {
+                                            Get.to(
+                                              RegimentWebView(
+                                                title: title,
+                                                selectedUrl:
+                                                    regimentData?.htmltemplate,
+                                              ),
+                                            );
+                                            // CommonUtil().openWebViewNew(
+                                            //   regimentData.title,
+                                            //   regimentData.htmltemplate,
+                                            //   true,
+                                            // );
+                                          },
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: !regimentData.hasform,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 10.0.w,
+                                          ),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              onTap: () async {
+                                                stopRegimenTTS();
+
+                                                final canEdit = startTime
+                                                            .difference(
+                                                                DateTime.now())
+                                                            .inMinutes <=
+                                                        15 &&
+                                                    Provider.of<RegimentViewModel>(
+                                                                context,
+                                                                listen: false)
+                                                            .regimentMode ==
+                                                        RegimentMode.Schedule;
+                                                if (canEdit ||
+                                                    isValidSymptom(context)) {
+                                                  LoaderQurHome
+                                                      .showLoadingDialog(
+                                                    Get.context,
+                                                    canDismiss: false,
+                                                  );
+                                                  var saveResponse =
+                                                      await _apiProvider
+                                                          .saveFormDataQurHome(
+                                                    eid: eid,
+                                                  );
+                                                  if (saveResponse?.isSuccess ??
+                                                      false) {
+                                                    Future.delayed(
+                                                        Duration(
+                                                            milliseconds: 300),
+                                                        () async {
+                                                      /*await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .fetchRegimentData();*/
+                                                      await controller
+                                                          .getSymptomList(
+                                                              isLoading: false);
+                                                      LoaderQurHome
+                                                          .hideLoadingDialog(
+                                                              Get.context);
+                                                    });
+                                                  } else {
+                                                    LoaderQurHome
+                                                        .hideLoadingDialog(
+                                                            Get.context);
+                                                  }
+                                                } else {
+                                                  FlutterToast().getToast(
+                                                    (Provider.of<RegimentViewModel>(
+                                                                    context,
+                                                                    listen:
+                                                                        false)
+                                                                .regimentMode ==
+                                                            RegimentMode
+                                                                .Symptoms)
+                                                        ? symptomsError
+                                                        : activitiesError,
+                                                    Colors.red,
+                                                  );
+                                                }
+                                              },
+                                              child: Icon(
+                                                regimentData.ack == null
+                                                    ? Icons
+                                                        .check_circle_outlined
+                                                    : Icons
+                                                        .check_circle_rounded,
+                                                size: 30.0.sp,
+                                                color: color,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                )
+                              : Container(),
                           Expanded(child: Container()),
                           Visibility(
                             visible: (regimentData?.isModifiedToday ?? false) ||

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
@@ -33,7 +34,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      CommonUtil().requestQurhomeDialog();
       if (CommonUtil().isTablet) {
+        CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
         textFontSize = 26;
       }
@@ -51,11 +54,22 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   }
 
   @override
+  dispose() {
+    try {
+      CommonUtil().initPortraitMode();
+      super.dispose();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Obx(() => WillPopScope(
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
+              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
               elevation: 0,
               centerTitle: true,
               title: Row(
@@ -77,8 +91,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                 ? CommonUtil().isTablet
                                     ? AssetImageWidget(
                                         icon: icon_vitals_qurhome,
-                                        height: 22.h,
-                                        width: 22.h,
+                                        height: 24.h,
+                                        width: 24.h,
                                       )
                                     : AssetImageWidget(
                                         icon: icon_vitals_qurhome,
@@ -89,8 +103,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                     ? CommonUtil().isTablet
                                         ? AssetImageWidget(
                                             icon: icon_symptom_qurhome,
-                                            height: 22.h,
-                                            width: 22.h,
+                                            height: 24.h,
+                                            width: 24.h,
                                           )
                                         : AssetImageWidget(
                                             icon: icon_symptom_qurhome,
@@ -145,12 +159,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   ? IconWidget(
                       icon: Icons.arrow_back_ios,
                       colors: Colors.black,
-                      size: CommonUtil().isTablet ? 35.0 : 24.0,
+                      size: CommonUtil().isTablet ? 38.0 : 24.0,
                       onTap: () {
                         Get.back();
-                        PreferenceUtil.saveIfQurhomeisAcive(
-                          qurhomeStatus: false,
-                        );
                       },
                     )
                   : Container(
@@ -164,8 +175,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           child: CommonUtil().isTablet
                               ? AssetImageWidget(
                                   icon: icon_qurhome,
-                                  height: 45.h,
-                                  width: 45.h,
+                                  height: 48.h,
+                                  width: 48.h,
                                 )
                               : CommonUtil().qurHomeMainIcon())),
               bottom: PreferredSize(
@@ -356,9 +367,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
           ),
           onWillPop: () async {
             Get.back();
-            PreferenceUtil.saveIfQurhomeisAcive(
-              qurhomeStatus: false,
-            );
+
             return true;
           },
         ));

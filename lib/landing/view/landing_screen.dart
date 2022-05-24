@@ -102,10 +102,10 @@ class _LandingScreenState extends State<LandingScreen> {
     mInitialTime = DateTime.now();
     dbInitialize();
     userId = PreferenceUtil.getStringValue(KEY_USERID);
+    moveToQurhome();
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
-
     var profilebanner =
         PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
@@ -124,11 +124,6 @@ class _LandingScreenState extends State<LandingScreen> {
           .getQurPlanDashBoard();
     }
     Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-    Future.delayed(const Duration(seconds: 0)).then((_) {
-      if (PreferenceUtil.getIfQurhomeisAcive()) {
-        moveToQurhome();
-      }
-    });
     Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
@@ -304,6 +299,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     Visibility(
                       visible: !landingViewModel.isSearchVisible,
                       child: Container(
+                        //height: CommonUtil().isTablet ? 90.00 : null,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -326,7 +322,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                     Icons.menu_rounded,
                                   ),
                                   color: Colors.white,
-                                  iconSize: 24.0.sp,
+                                  iconSize:
+                                      CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
                                   onPressed: () {
                                     _scaffoldKey.currentState.openDrawer();
                                   },
@@ -353,7 +350,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                   child: IconWidget(
                                     icon: Icons.search,
                                     colors: Colors.white,
-                                    size: 30.0.sp,
+                                    size: CommonUtil().isTablet
+                                        ? 33.0.sp
+                                        : 30.0.sp,
                                     onTap: () {
                                       landingViewModel?.changeSearchBar(
                                         isEnabled: true,
@@ -519,30 +518,6 @@ class _LandingScreenState extends State<LandingScreen> {
               },
             ),
           ),
-          // floatingActionButton: FloatingActionButton.extended(
-          //   onPressed: () {
-          //     moveToQurhome();
-          //   },
-          //   label: const Text(
-          //     'Qurhome',
-          //     style: TextStyle(
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          //   icon: Container(
-          //     padding: const EdgeInsets.all(
-          //       4,
-          //     ),
-          //     height: 50.0.h,
-          //     width: 50.0.h,
-          //     child: AssetImageWidget(
-          //       icon: variable.icon_qurhome,
-          //     ),
-          //   ),
-          //   backgroundColor: Color(
-          //     CommonUtil().getQurhomeGredientColor(),
-          //   ),
-          // ),
         );
       },
     );
@@ -658,7 +633,7 @@ class _LandingScreenState extends State<LandingScreen> {
                             ? 'Hey User'
                             : '',
                     style: TextStyle(
-                      fontSize: 18.0.sp,
+                      fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
                     ),
@@ -746,21 +721,34 @@ class _LandingScreenState extends State<LandingScreen> {
     setState(() {});
   }
 
-  void moveToQurhome() {
-    PreferenceUtil.saveIfQurhomeisAcive(qurhomeStatus: true);
-    Get.to(
-      () => QurhomeDashboard(),
-      binding: BindingsBuilder(
-        () {
-          Get.lazyPut(
-            () => QurhomeDashboardController(),
+  void moveToQurhome() async {
+    var result = await healthReportListForUserRepository.getDeviceSelection();
+    if (result.isSuccess) {
+      if (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false) {
+        if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+          PreferenceUtil.saveQurhomeAsDefaultUI(
+            qurhomeStatus: true,
           );
-          Get.lazyPut(
-            () => HubListController(),
-          );
-        },
-      ),
-    );
+        }
+        Get.to(
+          () => QurhomeDashboard(),
+          binding: BindingsBuilder(
+            () {
+              Get.lazyPut(
+                () => QurhomeDashboardController(),
+              );
+              Get.lazyPut(
+                () => HubListController(),
+              );
+            },
+          ),
+        );
+      } else if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
+        PreferenceUtil.saveQurhomeAsDefaultUI(
+          qurhomeStatus: false,
+        );
+      }
+    }
   }
 
   void dbInitialize() {

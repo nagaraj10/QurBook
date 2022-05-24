@@ -141,6 +141,7 @@ class MayaConvUI extends StatelessWidget {
               Text(
                 c.text,
                 style: Theme.of(context).textTheme.bodyText1.apply(
+                      fontSizeFactor: CommonUtil().isTablet ? 1.6 : 1.0,
                       color: PreferenceUtil.getIfQurhomeisAcive()
                           ? Colors.black
                           : Colors.white,

@@ -12,15 +12,12 @@ import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/common/CommonCircularQurHome.dart';
-import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
 
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
@@ -258,76 +255,85 @@ class _VitalsDetailsState extends State<VitalsDetails>
         return StatefulBuilder(builder: (context, setState) {
           return WillPopScope(
             onWillPop: () async => false,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              content: StreamBuilder<int>(
-                  stream: _events.stream,
-                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                    print(snapshot.data.toString());
-                    return Container(
-                        width: 1.sw,
-                        height: 1.sh / 2.7,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                IconButton(
-                                    icon: Icon(
-                                      Icons.close,
-                                      size: 30.0.sp,
-                                    ),
-                                    onPressed: () {
-                                      try {
-                                        _events.close();
-                                        Navigator.pop(context);
-                                      } catch (e) {
-                                        print(e);
-                                      }
-                                    })
-                              ],
-                            ),
-                            Expanded(
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  children: <Widget>[
-                                    SizedBox(
-                                      height: 10.0.h,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Text(
-                                          ScanningForDevices,
-                                          style: TextStyle(
-                                            color: Color(
-                                              CommonUtil()
-                                                  .getQurhomeGredientColor(),
+            child: OrientationBuilder(builder: (context, orientation) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                content: StreamBuilder<int>(
+                    stream: _events.stream,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      print(snapshot.data.toString());
+                      return Container(
+                          width: orientation == Orientation.landscape &&
+                                  CommonUtil().isTablet
+                              ? 0.7.sw
+                              : 1.sw,
+                          height: orientation == Orientation.landscape &&
+                                  CommonUtil().isTablet
+                              ? 1.sh / 2
+                              : 1.sh / 2.7,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.close,
+                                        size: 30.0.sp,
+                                      ),
+                                      onPressed: () {
+                                        try {
+                                          _events.close();
+                                          Navigator.pop(context);
+                                        } catch (e) {
+                                          print(e);
+                                        }
+                                      })
+                                ],
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10.0.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            ScanningForDevices,
+                                            style: TextStyle(
+                                              color: Color(
+                                                CommonUtil()
+                                                    .getQurhomeGredientColor(),
+                                              ),
+                                              fontSize: 20,
                                             ),
-                                            fontSize: 20,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 30.0.h,
-                                    ),
-                                    startProgressIndicator(
-                                        snapshot.data.toString()),
-                                    SizedBox(
-                                      height: 15.0.h,
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 30.0.h,
+                                      ),
+                                      startProgressIndicator(
+                                          snapshot.data.toString()),
+                                      SizedBox(
+                                        height: 15.0.h,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ));
-                  }),
-            ),
+                            ],
+                          ));
+                    }),
+              );
+            }),
           );
         });
       },
@@ -433,14 +439,15 @@ class _VitalsDetailsState extends State<VitalsDetails>
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
+        toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
         title: Text(
           getStringValue(),
-          style: TextStyle(fontSize: 18.0.sp),
+          style: TextStyle(fontSize: CommonUtil().isTablet ? 22.0.sp : 18.0.sp),
         ),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            size: 24.0.sp,
+            size: CommonUtil().isTablet ? 38.0 : 24.0,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -449,11 +456,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
         actions: <Widget>[
           Image.asset(
             widget.device_icon,
-            height: 40.0.h,
-            width: 40.0.h,
+            height: CommonUtil().isTablet ? 43.0.h : 45.0.h,
+            width: CommonUtil().isTablet ? 43.0.h : 45.0.h,
           ),
           SizedBoxWidget(
-            width: 15.0.w,
+            width: CommonUtil().isTablet ? 18.0.w : 15.0.w,
           )
         ],
         flexibleSpace: GradientAppBarQurhome(),
@@ -505,7 +512,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
           )),
       floatingActionButton: IconButton(
         icon: Image.asset(icon_mayaMain),
-        iconSize: 60,
+        iconSize: CommonUtil().isTablet ? 90 : 60,
         onPressed: () {
           Get.toNamed(
             rt_Sheela,

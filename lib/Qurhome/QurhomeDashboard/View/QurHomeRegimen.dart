@@ -12,9 +12,12 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeRegimenResponseModel.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/regiment/view/widgets/media_icon_widget.dart';
+import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -116,7 +119,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                                     },
                                     controller: PageController(
                                         initialPage: val.nextRegimenPosition,
-                                        viewportFraction: 1 / (isPortrait==true?5:3)),
+                                        viewportFraction:
+                                            1 / (isPortrait == true ? 5 : 3)),
                                     itemBuilder:
                                         (BuildContext context, int itemIndex) {
                                       return _buildCarouselItem(
@@ -193,7 +197,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   }
 
   Widget _buildCarouselItem(BuildContext context, int itemIndex,
-      RegimentDataModel regimen, int nextRegimenPosition,bool isPortrait) {
+      RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
     return InkWell(
       onTap: () {
         showRegimenDialog(regimen, itemIndex);
@@ -201,7 +205,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
       child: Transform.scale(
         scale: getCurrentRatio(itemIndex),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: isPortrait?25.0:MediaQuery.of(context).size.width/5, vertical: 8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal:
+                  isPortrait ? 25.0 : MediaQuery.of(context).size.width / 5,
+              vertical: 8.0),
           child: Container(
             decoration: BoxDecoration(
               color: getCardBackgroundColor(itemIndex, nextRegimenPosition),
@@ -633,7 +640,39 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                   ),
                   SizedBox(
                     height: 10,
-                  )
+                  ),
+                  Visibility(
+                    visible: regimen.hashtml,
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Get.to(
+                              RegimentWebView(
+                                title: regimen.title.toString().trim(),
+                                selectedUrl: regimen?.htmltemplate,
+                              ),
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              strAdditionalInstructions,
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 13.h,
+                                  fontStyle: FontStyle.italic,
+                                  decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             );
@@ -898,7 +937,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+    return regimen.estart.difference(DateTime.now()).inMinutes.abs() <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
   }
