@@ -14,7 +14,6 @@ import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'SymptomItemCard.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SymptomListScreen extends StatefulWidget {
   @override
