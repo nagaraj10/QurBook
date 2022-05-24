@@ -299,6 +299,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     Visibility(
                       visible: !landingViewModel.isSearchVisible,
                       child: Container(
+                        //height: CommonUtil().isTablet ? 90.00 : null,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.centerLeft,
@@ -321,7 +322,8 @@ class _LandingScreenState extends State<LandingScreen> {
                                     Icons.menu_rounded,
                                   ),
                                   color: Colors.white,
-                                  iconSize: 24.0.sp,
+                                  iconSize:
+                                      CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
                                   onPressed: () {
                                     _scaffoldKey.currentState.openDrawer();
                                   },
@@ -348,7 +350,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                   child: IconWidget(
                                     icon: Icons.search,
                                     colors: Colors.white,
-                                    size: 30.0.sp,
+                                    size: CommonUtil().isTablet
+                                        ? 33.0.sp
+                                        : 30.0.sp,
                                     onTap: () {
                                       landingViewModel?.changeSearchBar(
                                         isEnabled: true,
@@ -629,7 +633,7 @@ class _LandingScreenState extends State<LandingScreen> {
                             ? 'Hey User'
                             : '',
                     style: TextStyle(
-                      fontSize: 18.0.sp,
+                      fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
                       color: Colors.white,
                       fontWeight: FontWeight.w400,
                     ),
