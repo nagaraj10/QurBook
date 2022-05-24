@@ -295,7 +295,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           uId: hublistController.uid,
           qurHomeBpScanResult: qurhomeController?.qurHomeBpScanResultModel);
       await Future.delayed(Duration(
-        seconds: 5,
+        seconds: 8,
       ));
       addToSheelaConversation(
         text: response
