@@ -83,7 +83,13 @@ class SharedByUsers {
   RelationsShipModel relationship;
   Child child;
   String membershipOfferedBy;
-
+  bool isCaregiver;
+  //for Non adherance
+  bool isNewUser=true;
+  String remainderForId;
+  String remainderFor;
+  String remainderMins;
+  String nonAdheranceId;
   SharedByUsers({this.id,
     this.status,
     this.nickName,
@@ -91,7 +97,7 @@ class SharedByUsers {
     this.createdOn,
     this.lastModifiedOn,
     this.relationship,
-    this.child,this.membershipOfferedBy});
+    this.child,this.membershipOfferedBy,this.isCaregiver,this.isNewUser,this.remainderFor,this.remainderMins,this.nonAdheranceId,this.remainderForId});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -100,6 +106,7 @@ class SharedByUsers {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    isCaregiver = json['isCaregiver']??false;
     if(json.containsKey('membershipOfferedBy'))
     membershipOfferedBy = json['membershipOfferedBy'];
     relationship = json['relationship'] != null
