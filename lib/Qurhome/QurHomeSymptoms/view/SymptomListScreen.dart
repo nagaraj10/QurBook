@@ -14,6 +14,7 @@ import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'SymptomItemCard.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SymptomListScreen extends StatefulWidget {
   @override
@@ -64,7 +65,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                       crossAxisCount: 4,
                                       crossAxisSpacing: 10.0.w,
                                       mainAxisSpacing: 10.0.w,
-                                      //childAspectRatio: 0.95,
+                                      childAspectRatio: 0.85,
                                     ),
                                     padding: EdgeInsets.only(
                                       bottom: 10.0.h,
