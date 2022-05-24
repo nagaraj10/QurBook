@@ -77,4 +77,9 @@ object Constants {
     val CAREGIVER_RECEIVER ="caregiverReceiver"
     val CAREGIVER_REQUESTER ="caregiverRequestor"
     val BLE_CONNECT ="bleConnect"
+    val CARE_COORDINATOR_USER_ID ="careCoordinatorUserId"
+    val PATIENT_NAME ="patientName"
+    val CARE_GIVER_NAME ="careGiverName"
+    val ACTIVITY_TIME ="activityTime"
+    val ACTIVITY_NAME ="activityName"
 }

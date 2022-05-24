@@ -547,6 +547,8 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        }else if(passedValArr[1] == 'escalateToCareCoordinatorToRegimen'){
+          CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6]);
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -1184,6 +1186,19 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'familyMemberCaregiverRequest') {
             return SplashScreen(
               nsRoute: 'familyMemberCaregiverRequest',
+              bundle: parsedData[2] +
+                  '|' +
+                  parsedData[3] +
+                  '|' +
+                  parsedData[4] +
+                  '|' +
+                  parsedData[5] +
+                  '|' +
+                  parsedData[6],
+            );
+          }else if (parsedData[1] == 'escalateToCareCoordinatorToRegimen') {
+            return SplashScreen(
+              nsRoute: 'escalateToCareCoordinatorToRegimen',
               bundle: parsedData[2] +
                   '|' +
                   parsedData[3] +

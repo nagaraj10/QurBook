@@ -1132,6 +1132,29 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> escalateNonAdherance(String url, dynamic jsonString) async {
+    var responseJson;
+    final Map<String, String> requestHeadersAuthContent = {};
+
+    requestHeadersAuthContent['Content-type'] = 'application/json';
+    requestHeadersAuthContent['authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeadersAuthContent[Constants.KEY_OffSet] =
+        CommonUtil().setTimeZone();
+
+    try {
+      var response = await ApiServices.post(
+        _baseUrl + url,
+        body: convert.jsonEncode(jsonString),
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+      );
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> associateRecords(String url, String jsonString) async {
     var responseJson;
     final Map<String, String> requestHeadersAuthContent = {};
