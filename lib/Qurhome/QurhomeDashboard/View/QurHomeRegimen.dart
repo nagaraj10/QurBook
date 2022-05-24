@@ -937,7 +937,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+    return regimen.estart.difference(DateTime.now()).inMinutes.abs() <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
   }
