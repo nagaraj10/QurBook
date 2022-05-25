@@ -42,6 +42,8 @@ import CoreBluetooth
     let showBothButtonsCat = "showBothButtonsCat"
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
+    let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
+
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
@@ -105,6 +107,7 @@ import CoreBluetooth
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
         let declineAction = UNNotificationAction(identifier: "Dismiss", title: "Dismiss", options: [.destructive])
         let renewNowAction = UNNotificationAction(identifier: "Renew", title: "Renew", options: [.foreground])
+        let esclateAction = UNNotificationAction(identifier: "Escalate", title: "Escalate", options: [.foreground])
         let callBackNowAction = UNNotificationAction(identifier: "Callback", title: "Call back", options: [.foreground])
         let rejectAction = UNNotificationAction(identifier: "Reject", title: "Reject", options: [.destructive])
         let acceptAction = UNNotificationAction(identifier: "Accept", title: "Accept", options: [.foreground])
@@ -113,6 +116,10 @@ import CoreBluetooth
         
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
                                                              actions:  [snoozeAction, declineAction],
+                                                             intentIdentifiers: [],
+                                                             options: [])
+        let esclateButtonscategory = UNNotificationCategory(identifier: escalateToCareCoordinatorButtons,
+                                                             actions:  [esclateAction],
                                                              intentIdentifiers: [],
                                                              options: [])
         let showViewMemberAndCommunicationButtonscategory = UNNotificationCategory(identifier: showViewMemberAndCommunicationButtons,
@@ -131,7 +138,7 @@ import CoreBluetooth
                                                                         actions:  [acceptAction,rejectAction],
                                                                         intentIdentifiers: [],
                                                                         options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory,esclateButtonscategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -555,6 +562,11 @@ import CoreBluetooth
                         "data" : data
                     ]
                 }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else if (response.actionIdentifier == "Escalate"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data

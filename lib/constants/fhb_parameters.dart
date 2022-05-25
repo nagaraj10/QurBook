@@ -659,6 +659,10 @@ const String accept = 'Accept';
 const String reject = 'Reject';
 const String viewMember = 'View Member';
 const String communicationSetting = 'Communication Setting';
+const String CARE_COORDINATOR_USER_ID = "careCoordinatorUserId";
+const String CARE_GIVER_NAME = "careGiverName";
+const String ACTIVITY_TIME = "activityTime";
+const String ACTIVITY_NAME = "activityName";
 
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
@@ -722,6 +726,7 @@ const String FETCH_LOG = 'FETCH_LOG';
 const String USERS = 'users';
 const String chat = 'chat';
 const String isWeb = 'isWeb';
+const String escalateToCareCoordinatorToRegimen = 'escalateToCareCoordinatorToRegimen';
 
 const String planId = 'planId';
 const String myCartDetails = 'mycartdetails';

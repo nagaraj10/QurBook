@@ -46,6 +46,7 @@ class IosNotificationHandler {
   bool renewAction = false;
   bool callbackAction = false;
   bool acceptAction = false;
+  bool escalteAction = false;
   bool rejectAction = false;
   bool viewMemberAction = false;
   bool communicationSettingAction = false;
@@ -79,6 +80,7 @@ class IosNotificationHandler {
             callbackAction = (actionKey == "Callback");
             rejectAction = (actionKey == "Reject");
             acceptAction = (actionKey == "Accept");
+            escalteAction = (actionKey == "Escalate");
             viewMemberAction =
                 (actionKey.toLowerCase() == "ViewMember".toLowerCase());
             communicationSettingAction = (actionKey.toLowerCase() ==
@@ -552,6 +554,17 @@ class IosNotificationHandler {
         'navigationPage': 'ManageActivities list',
       });
       Get.toNamed(rt_ManageActivitiesScreen);
+    } else if ((model.redirect ==
+            parameters.escalateToCareCoordinatorToRegimen) &&
+        escalteAction) {
+      escalteAction = false;
+      CommonUtil().escalateNonAdherance(
+        model.careCoordinatorUserId,
+        model.patientName,
+        model.careGiverName,
+        model.activityTime,
+        model.activityName,
+      );
     } else {
       isAlreadyLoaded
           ? PageNavigator.goTo(
