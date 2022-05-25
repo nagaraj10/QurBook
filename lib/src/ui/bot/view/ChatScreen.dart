@@ -28,6 +28,7 @@ import 'package:uuid/uuid.dart';
 class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
   final SheelaArgument arguments;
+
   ChatScreen({this.arguments});
 
   @override
@@ -82,6 +83,12 @@ class _ChatScreenState extends State<ChatScreen>
         text: "Your SpO2 device is connected",
       );
       getMyViewModel().setupListenerForReadings();
+    } else if (widget?.arguments?.isFromBpReading &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      getMyViewModel().addToSheelaConversation(
+        text: "Your BP device is connected & Measured Readings",
+      );
+      getMyViewModel().updateBPUserData();
     } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {
       getMyViewModel().eId = widget?.arguments?.eId;
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
@@ -210,31 +217,52 @@ class _ChatScreenState extends State<ChatScreen>
   AppBar getQurhomeAppbar() {
     return AppBar(
       backgroundColor: Colors.white,
+      toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Spacer(),
-          Image.asset(
-            icon_mayaMain,
-            height: 30.h,
-            width: 30.h,
-          ),
-          SizedBox(
-            width: 4,
-          ),
-          Text(
-            variable.strMaya,
-            style: TextStyle(
-              color: Colors.black,
+      title: CommonUtil().isTablet
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  icon_mayaMain,
+                  height: 32.h,
+                  width: 32.h,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  variable.strMaya,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Spacer(),
+                Image.asset(
+                  icon_mayaMain,
+                  height: 30.h,
+                  width: 30.h,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  variable.strMaya,
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                Spacer(
+                  flex: 2,
+                ),
+              ],
             ),
-          ),
-          Spacer(
-            flex: 2,
-          ),
-        ],
-      ),
       leading: Container(
         margin: EdgeInsets.only(
           left: 8.h,
@@ -243,17 +271,23 @@ class _ChatScreenState extends State<ChatScreen>
           onTap: () {
             _backToPrevious();
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 8.h,
-              vertical: 4.h,
-            ),
-            child: AssetImageWidget(
-              icon: icon_qurhome,
-              height: 30.h,
-              width: 30.h,
-            ),
-          ),
+          child: CommonUtil().isTablet
+              ? AssetImageWidget(
+                  icon: icon_qurhome,
+                  height: 48.h,
+                  width: 48.h,
+                )
+              : Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.h,
+                    vertical: 4.h,
+                  ),
+                  child: AssetImageWidget(
+                    icon: icon_qurhome,
+                    height: 30.h,
+                    width: 30.h,
+                  ),
+                ),
         ),
       ),
       bottom: PreferredSize(

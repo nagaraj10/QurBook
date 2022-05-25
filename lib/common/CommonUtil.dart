@@ -63,6 +63,7 @@ import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
 import '../reminders/QurPlanReminders.dart';
+import 'dart:ui' as ui;
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
 import '../src/blocs/User/MyProfileBloc.dart';
@@ -1849,7 +1850,7 @@ class CommonUtil {
                     icon: Icon(
                       Icons.notifications,
                       color: color ?? Colors.white,
-                      size: 30.0.sp,
+                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
                     ),
                     badgeColor: ColorUtils.countColor,
                     badgeCount: count),
@@ -4589,6 +4590,81 @@ class CommonUtil {
     return "";
   }
 
+  void dialogForScanDevices(
+      BuildContext context, {Function() onPressManual,Function() onPressCancel,String title,bool isFromVital}) async {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black38,
+      barrierLabel: 'Label',
+      barrierDismissible: false,
+      pageBuilder: (_, __, ___) => Center(
+        child: Container(
+          width: double.infinity,
+          child: Material(
+            color: Colors.transparent.withOpacity(0.8),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AssetImageWidget(
+                    icon: icon_device_scan_measure,
+                    height: 70.h,
+                    width: 70.w,
+                  ),
+                  SizedBox(height: 40.h),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 80, 0, 120),
+                    child: SizedBox(
+                        width: 220.w,
+                        child: Text(title,
+                            style:
+                                TextStyle(fontSize: 18.sp, color: Colors.white),
+                            textAlign: TextAlign.center)),
+                  ),
+                  if (!isFromVital) SizedBox(
+                    width: 180.w,
+                    child: TextButton(
+                      child: Text(
+                        'Enter Manually',
+                        style: TextStyle(
+                            color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            fontSize: 16.sp),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      onPressed: () {
+                        onPressManual();
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  SizedBox(
+                    width: 180.w,
+                    child: TextButton(
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color(CommonUtil().getQurhomePrimaryColor())),
+                      ),
+                      onPressed: () {
+                        onPressCancel();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void initPortraitMode() async {
     try {
       await SystemChrome.setPreferredOrientations(
@@ -4611,13 +4687,46 @@ class CommonUtil {
     }
   }
 
+  void initLandScapeMode() async {
+    try {
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeLeft,
+        DeviceOrientation.landscapeRight,
+      ]);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   String get _getDeviceType {
     final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     return data.size.shortestSide < 550 ? 'phone' : 'tablet';
   }
 
   bool get isTablet {
-    return _getDeviceType == 'tablet';
+    bool isTablet;
+    bool isPhone;
+
+    final double devicePixelRatio = ui.window.devicePixelRatio;
+    final ui.Size size = ui.window.physicalSize;
+    final double width = size.width;
+    final double height = size.height;
+
+
+    if(devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
+      isTablet = true;
+      isPhone = false;
+    }
+    else if(devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
+      isTablet = true;
+      isPhone = false;
+    }
+    else {
+      isTablet = false;
+      isPhone = true;
+    }
+
+    return isTablet;
   }
 }
 

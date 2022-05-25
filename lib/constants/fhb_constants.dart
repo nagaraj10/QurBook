@@ -31,9 +31,11 @@ const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String ScanningForDevices = 'Scanning for devices...';
+const String ScanningForBpDevices = 'Scanning for Bp devices...';
 const String NoDeviceFound = 'No Device Found';
 const String DeviceAlreadyMapped = 'Device Already Mapped';
 const String careGiver = 'Caregiver Communication Settings';
+const String nonAdherance = 'Non-Adherence Settings';
 const String NotificationData = 'NotificationData';
 const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
@@ -663,6 +665,11 @@ const String SERIAL_NUMBER = 'serialNumber';
 const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
 const String ISVIRTUALHUB = 'isVirtualHub';
+
+const String ISBPCONNECT = 'bpconnect';
+const String IS_BP_SCAN_CANCEL = 'bpscancancel';
+const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
+const String BP_LOCATION_CHECK = 'bp_location_check';
 
 //Qurhome vitals
 const String filterTitleDay = 'Day';

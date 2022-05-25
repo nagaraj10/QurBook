@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
+import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
+import 'package:myfhb/Qurhome/BpScan/model/ble_bp_data_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -147,6 +149,51 @@ class BleConnectApiProvider {
         headers: header,
         body: body,
       );
+      if (responseJson.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> uploadBleBPDataReadings(
+      {String ackLocal,
+      String hubId,
+      String eId,
+      String uId,
+      QurHomeBpScanResult qurHomeBpScanResult}) async {
+    http.Response responseJson;
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlotWithUserId();
+      var body = json.encode(
+            {
+              "Status": "Measurement",
+              "hubId": hubId,
+              "deviceId": qurHomeBpScanResult.deviceAddress,
+              "deviceType": "BP",
+              "eid": eId,
+              "uid": uId,
+              "ackLocal": ackLocal,
+              "Data": {
+                "Systolic":
+                    qurHomeBpScanResult?.measurementRecords[0].systolicKey,
+                "Diastolic":
+                    qurHomeBpScanResult?.measurementRecords[0].diastolicKey,
+                "Pulse": qurHomeBpScanResult?.measurementRecords[0].pulseRateKey
+              }
+            },
+          ),
+          responseJson = await ApiServices.post(
+            CommonUtil.BASE_URL_QURHUB + qr_BLEDataUpload,
+            headers: header,
+            body: body,
+          );
       if (responseJson.statusCode == 200) {
         return true;
       } else {

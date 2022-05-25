@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
+import 'dart:ui' as ui;
 
 import 'package:agora_rtc_engine/rtc_engine.dart' as rtc;
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -208,8 +209,19 @@ Future<void> main() async {
     await FHBUtils.instance.initPlatformState();
     await FHBUtils.instance.getDb();
 
-    CommonUtil().initPortraitMode();
+    // Future.delayed(Duration(seconds: 0)).then((_) {
+    //   if (PreferenceUtil.getIfQurhomeisAcive()) {
+    //     CommonUtil().initQurHomePortraitLandScapeMode();
+    //   } else {
+    //     CommonUtil().initPortraitMode();
+    //   }
+    // });
 
+      // if (CommonUtil().isTablet) {
+      //   CommonUtil().initQurHomePortraitLandScapeMode();
+      // } else {
+        CommonUtil().initPortraitMode();
+      // }
     try {
       CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
@@ -430,7 +442,9 @@ class _MyFHBState extends State<MyFHB> {
     CheckForShowingTheIntroScreens();
     chatViewModel.setCurrentChatRoomID('none');
     super.initState();
-    CommonUtil.askPermissionForCameraAndMic();
+    CommonUtil.askPermissionForCameraAndMic().then((value) {
+      CommonUtil.askPermissionForLocation();
+    });
     getMyRoute();
     _enableTimer();
 

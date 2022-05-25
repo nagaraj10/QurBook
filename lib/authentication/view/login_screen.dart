@@ -90,7 +90,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             child: Stack(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: CommonUtil().isTablet ? 50 : 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

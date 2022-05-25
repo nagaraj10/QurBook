@@ -136,6 +136,10 @@ class RegimentService {
       }
     } catch (e) {
       print(e);
+      return SaveResponseModel(
+        result: SaveResultModel(),
+        isSuccess: false,
+      );
       throw Exception('$e was thrown');
     }
   }

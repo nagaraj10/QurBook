@@ -146,6 +146,7 @@ const String icon_photo_image = 'assets/icons/photo_image.png';
 const String icon_save_image = 'assets/icons/save_image.png';
 const String icon_qurplan = 'assets/launcher/qurplan.png';
 const String icon_qurhome = 'assets/Qurhome/Qurhome.png';
+const String icon_device_scan_measure = 'assets/Qurhome/scan_search_device.gif';
 const String icon_vitals_qurhome = 'assets/dashboard/vitals_qurhome.png';
 const String icon_symptom_qurhome = 'assets/dashboard/symptom_qurhome.png';
 const String icon_languageIntro = 'assets/IntroScreensImages/Intro01.png';
@@ -320,6 +321,7 @@ const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
 String strCareGiverSettings = 'Caregiver Communication Settings';
+String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
@@ -595,6 +597,8 @@ const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
+const String strConnectBpMeter = 'Please connect your BP Meter and start recording';
+const String strConnectPulseMeter = 'Please connect your Pulse Oximeter and start recording';
 
 //introslider
 
