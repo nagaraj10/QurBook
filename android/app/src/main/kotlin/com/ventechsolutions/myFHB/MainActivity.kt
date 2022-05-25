@@ -21,12 +21,14 @@ import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -47,6 +49,14 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.neovisionaries.bluetooth.ble.advertising.ADStructure
+import com.ventechsolutions.myFHB.bloodpressure.controller.BluetoothPowerController
+import com.ventechsolutions.myFHB.bloodpressure.controller.ScanController
+import com.ventechsolutions.myFHB.bloodpressure.controller.SessionController
+import com.ventechsolutions.myFHB.bloodpressure.controller.util.AppLog
+import com.ventechsolutions.myFHB.bloodpressure.model.entity.DiscoveredDevice
+import com.ventechsolutions.myFHB.bloodpressure.model.entity.SessionData
+import com.ventechsolutions.myFHB.bloodpressure.model.enumerate.SettingKey
 import com.ventechsolutions.myFHB.bluetooth.BleManager
 import com.ventechsolutions.myFHB.bluetooth.callback.BleGattCallback
 import com.ventechsolutions.myFHB.bluetooth.callback.BleIndicateCallback
@@ -62,6 +72,18 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import jp.co.ohq.androidcorebluetooth.CBConfig.CreateBondOption
+import jp.co.ohq.androidcorebluetooth.CBConfig.RemoveBondOption
+import jp.co.ohq.ble.OHQConfig
+import jp.co.ohq.ble.OHQDeviceManager
+import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
+import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock
+import jp.co.ohq.ble.enumerate.OHQConnectionState
+import jp.co.ohq.ble.enumerate.OHQDeviceCategory
+import jp.co.ohq.ble.enumerate.OHQDeviceInfoKey
+import jp.co.ohq.ble.enumerate.OHQSessionOptionKey
+import jp.co.ohq.utility.Bundler
+import jp.co.ohq.utility.Types
 import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -73,9 +95,10 @@ import com.facebook.LoggingBehavior
 import com.facebook.appevents.AppEventsLogger;
 
 
-class MainActivity : FlutterActivity() {
+class MainActivity : FlutterActivity(), SessionController.Listener,
+    BluetoothPowerController.Listener {
 
-//    private lateinit var bluetoothFlutterResult: MethodChannel.Result
+    //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
     private val LISTEN4SMS = Constants.CN_LISTEN4SMS
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
@@ -86,6 +109,10 @@ class MainActivity : FlutterActivity() {
     private val STREAM = Constants.CN_EVE_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
+    private val BPCONNECT = Constants.BP_CONNECT
+    private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
+    private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
+    private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -116,6 +143,10 @@ class MainActivity : FlutterActivity() {
     private lateinit var _TTSResult: MethodChannel.Result
     //internal var smsBroadcastReceiver: SMSBroadcastReceiver? = null
 
+    //Blood pressure
+    private lateinit var _resultBp: MethodChannel.Result
+    private lateinit var _resultBpCancel: MethodChannel.Result
+
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
     private var patId: String? = null
@@ -145,7 +176,7 @@ class MainActivity : FlutterActivity() {
     private val CANCEL_REMINDER_METHOD_NAME = "removeReminder"
     var alarmManager: AlarmManager? = null
 
-    var elapsedTime=3000
+    var elapsedTime = 3000
 
     private val REQUEST_CODE_OPEN_GPS = 1
     private val REQUEST_CODE_PERMISSION_LOCATION = 2
@@ -164,6 +195,38 @@ class MainActivity : FlutterActivity() {
 
     var bleName: String? = null
 
+    private var mOHQDeviceManager: OHQDeviceManager? = null
+
+    private val ARG_MODE = "ARG_MODE"
+    private val ARG_ADDRESS = "ARG_ADDRESS"
+    private val ARG_OPTION = "ARG_OPTION"
+    private val ARG_PARTIAL_HISTORY_DATA = "ARG_PARTIAL_HISTORY_DATA"
+
+    private val CONNECTION_WAIT_TIME: Long = 60000
+    private var mSessionController: SessionController? = null
+
+    private var mAddress = ""
+
+    //private var mOption: Map<OHQSessionOptionKey, Object> = HashMap()
+    private var mOption: MutableMap<OHQSessionOptionKey, Any> = mutableMapOf()
+
+    private val mListener: ScanController.Listener? = null
+
+    private var mSessionAddress: String? = null
+
+    private var mSessionData = SessionData()
+
+    //var mDiscoverDevice: DiscoveredDevice? = null
+
+    var specifiedUserControl = true
+
+    private val CONSENT_CODE_OHQ = 0x020E
+    private val CONSENT_CODE_UNREGISTERED_USER = 0x0000
+
+    private val USER_INDEX_UNREGISTERED_USER = 0xFF
+
+    private val mDiscoveredDevices = LinkedHashMap<String, DiscoveredDevice>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
@@ -175,16 +238,16 @@ class MainActivity : FlutterActivity() {
         // Get user consent
 
         val target: Uri? = getIntent().getData()
-        Log.e("deeplink", "onCreate: "+target )
+        Log.e("deeplink", "onCreate: " + target)
         if (target != null) {
-            mEventChannel.success("facebookdeeplink&"+target.toString());
+            mEventChannel.success("facebookdeeplink&" + target.toString());
         } else {
             // activity was created in a normal fashion
         }
-        AppLinkData.fetchDeferredAppLinkData(this) {it->
-            Log.e("deeplinks", "onCreate: "+it?.appLinkData )
+        AppLinkData.fetchDeferredAppLinkData(this) { it ->
+            Log.e("deeplinks", "onCreate: " + it?.appLinkData)
             if (::mEventChannel.isInitialized) {
-                mEventChannel.success("facebookdeeplink&"+it?.appLinkData);
+                mEventChannel.success("facebookdeeplink&" + it?.appLinkData);
             }
         }
 
@@ -251,6 +314,28 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        /*if (specifiedUserControl) {
+            mOption[OHQSessionOptionKey.RegisterNewUserKey] = true
+            mOption[OHQSessionOptionKey.ConsentCodeKey] =
+                CONSENT_CODE_OHQ
+           *//* if (null != userIndex) {
+                mOption[OHQSessionOptionKey.UserIndexKey] =
+                    jp.co.ohq.blesampleomron.view.fragment.RegistrationOptionFragment.Arg.UserIndex.name
+            }
+            if (null != userData) {
+                mOption[OHQSessionOptionKey.UserDataKey] = userData
+            }*//*
+            mOption[OHQSessionOptionKey.DatabaseChangeIncrementValueKey] = 0.toLong()
+            mOption[OHQSessionOptionKey.UserDataUpdateFlagKey] = true
+        }
+        *//*if (Protocol.OmronExtension === protocol) {
+            mOption[OHQSessionOptionKey.AllowAccessToOmronExtendedMeasurementRecordsKey] = true
+            mOption[OHQSessionOptionKey.AllowControlOfReadingPositionToMeasurementRecordsKey] = true
+        }*/
+
+        mSessionController = SessionController(this, null)
+
+
     }
 
 
@@ -259,8 +344,7 @@ class MainActivity : FlutterActivity() {
          unregisterReceiver(smsBroadcastReceiver)
      }*/
 
-    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int): String?
-    {
+    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int): String? {
         var DataToPost = ""
         val DevSeq = "03" // Kiran
         //String DevSeq="02";//Kunduru
@@ -331,20 +415,18 @@ class MainActivity : FlutterActivity() {
                 DataToPost += " \"Data\" : {"
                 DataToPost += " }}"
             }
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
         return DataToPost
     }
 
-    private fun checkPermissionStartScan()
-    {
+    private fun checkPermissionStartScan(isFromBp: Boolean) {
         try {
             val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-            if (!bluetoothAdapter.isEnabled)
-            {
+            if (!bluetoothAdapter.isEnabled) {
                 if (::BLEEventChannel.isInitialized) {
-                    BLEEventChannel.success("enablebluetooth|please enable bluetooth")
+                    BLEEventChannel.success("enablebluetooth|Please turn on your bluetooth")
                 }
                 //bluetoothFlutterResult.success("enablebluetooth|please enable bluetooth")
                 //Toast.makeText(this@MainActivity, "Please turn on Bluetooth first", Toast.LENGTH_LONG).show()
@@ -356,12 +438,12 @@ class MainActivity : FlutterActivity() {
             for (permission in permissions) {
                 val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
                 if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted(permission)
+                    onPermissionGranted(permission, isFromBp)
                 } else {
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("permissiondenied|no permission granted")
                     }
-                  //  bluetoothFlutterResult.success("permissiondenied|no permission granted")
+                    //  bluetoothFlutterResult.success("permissiondenied|no permission granted")
                     permissionDeniedList.add(permission)
                 }
             }
@@ -373,12 +455,12 @@ class MainActivity : FlutterActivity() {
                     REQUEST_CODE_PERMISSION_LOCATION
                 )
             }
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun onPermissionGranted(permission: String) {
+    private fun onPermissionGranted(permission: String, isFromBp: Boolean) {
         try {
             when (permission) {
                 Manifest.permission.ACCESS_FINE_LOCATION -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkGPSIsOpen()) {
@@ -396,12 +478,19 @@ class MainActivity : FlutterActivity() {
                         .show()
                 } else {
                     //setScanRule();
-                    autoRepeatScan = 1
-                    startScanTimer()
+                    if (isFromBp) {
+                        //BP flow
+                        startBpScan()
+                    } else {
+                        // pulse reading flow
+                        autoRepeatScan = 1
+                        startScanTimer()
+                    }
+
                 }
             }
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -413,17 +502,15 @@ class MainActivity : FlutterActivity() {
 
 
     var uploaded = 0
-    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int)
-    {
+    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int) {
         try {
             postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3)
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun GetBitMaskPermissonStr(data: Int): String?
-    {
+    fun GetBitMaskPermissonStr(data: Int): String? {
         var ret = ""
         try {
             if (data and BluetoothGattCharacteristic.PERMISSION_READ != 0) ret += " PERMISSION_READ "
@@ -434,8 +521,8 @@ class MainActivity : FlutterActivity() {
             if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_ENCRYPTED_MITM != 0) ret += "  PERMISSION_WRITE_ENCRYPTED_MITM "
             if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED != 0) ret += "  PERMISSION_WRITE_SIGNED  "
             if (data and BluetoothGattCharacteristic.PERMISSION_WRITE_SIGNED_MITM != 0) ret += "  PERMISSION_WRITE_SIGNED_MITM  "
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
         return ret
     }
@@ -451,8 +538,8 @@ class MainActivity : FlutterActivity() {
             if (data and BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE != 0) ret += "  PROPERTY_SIGNED_WRITE  "
             if (data and BluetoothGattCharacteristic.PROPERTY_WRITE != 0) ret += "  PROPERTY_WRITE  "
             if (data and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE != 0) ret += "  PROPERTY_WRITE_NO_RESPONSE  "
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
         return ret
     }
@@ -475,8 +562,8 @@ class MainActivity : FlutterActivity() {
                     Log.e("DumpServicesChars", st!!)
                 }
             }
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -487,8 +574,8 @@ class MainActivity : FlutterActivity() {
             for (i in data.indices) {
                 st += String.format("%02x ", data[i])
             }
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
         return st
@@ -500,8 +587,7 @@ class MainActivity : FlutterActivity() {
         return java.lang.Byte.toUnsignedInt(b!!)
     }
 
-    private fun startScanTimer()
-    {
+    private fun startScanTimer() {
         try {
             autoRepeatScan = 1
             scanningBleTimer = Timer()
@@ -510,39 +596,39 @@ class MainActivity : FlutterActivity() {
                     startScan()
                 }
             }, 1000)
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun stopScan()
-    {
+    private fun stopScan() {
         try {
             autoRepeatScan = 0
-            if (scanningBleTimer != null)
-            {
-                scanningBleTimer.cancel();
-            }
+            scanningBleTimer.cancel()
             Handler().postDelayed({
-                BleManager.getInstance().cancelScan()
+                if(BleManager.getInstance()!=null) {
+                    BleManager.getInstance().cancelScan()
+                }
             }, 1000)
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
-        
+
     }
 
     private fun startScan() {
         try {
-            BleManager.getInstance().scan(object : BleScanCallback()
-            {
+            BleManager.getInstance().scan(object : BleScanCallback() {
                 override fun onScanStarted(success: Boolean) {
                     Log.d("startScan", "onScanStarted")
                 }
 
 
                 override fun onScanFinished(scanResultList: List<BleDevice?>) {
-                    Log.d("startScan", "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan))
+                    Log.d(
+                        "startScan",
+                        "onScanFinished autoRepeatScan:" + String.format("%d", autoRepeatScan)
+                    )
                     Log.d("startScan", "onScanFinished scanResultList:$scanResultList")
                     if (autoRepeatScan == 1) {
                         startScanTimer()
@@ -555,13 +641,11 @@ class MainActivity : FlutterActivity() {
                 }
 
 
-                override fun onScanning(bleDevice: BleDevice)
-                {
+                override fun onScanning(bleDevice: BleDevice) {
                     if (bleDevice.name == null) return
                     val DevName: String = bleDevice.name
                     Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
-                    if (DevName == "GSH601" || DevName == "Mike")
-                    {
+                    if (DevName == "GSH601" || DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
                     }
@@ -580,6 +664,12 @@ class MainActivity : FlutterActivity() {
                     if (DevName == "GSH_BGM902") {
                         stopScan()
                         connectToBGL(bleDevice)
+                    }
+
+                    // BP DEVICE SCANNING
+                    if (DevName.contains("BLEsmart")) {
+                        stopScan()
+                        getBpAddress(bleDevice.mac);
                     }
                 }
 
@@ -608,7 +698,8 @@ class MainActivity : FlutterActivity() {
                 private val BIT_PLUSE_RATE_BIT7 = 0x40 // is bit7 of pulse rate
 
                 //byte3
-                private val BIT_PLUSE_RATE_BIT0_6 = 0x7F // need add BIT_PLUSE_RATE_BIT7, 0xFF = invalid
+                private val BIT_PLUSE_RATE_BIT0_6 =
+                    0x7F // need add BIT_PLUSE_RATE_BIT7, 0xFF = invalid
 
                 //byte4
                 private val BIT_SPO2 = 0x7F // 0~100    0x7f = invalid
@@ -623,13 +714,16 @@ class MainActivity : FlutterActivity() {
                             if (::BLEEventChannel.isInitialized) {
                                 BLEEventChannel.success("scanstarted|connection started")
                             }
-                           // bluetoothFlutterResult.success("scanstarted|connection started")
+                            // bluetoothFlutterResult.success("scanstarted|connection started")
 
                             //dev_status!!.text = "Connecting ..."
                         }
 
 
-                        override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
+                        override fun onConnectFail(
+                            bleDevice: BleDevice?,
+                            exception: BleException?
+                        ) {
                             Log.e("startScan", "onConnectFail ")
                             //dev_status!!.text = "ConnectFail SPO2..."
                             autoRepeatScan = 1
@@ -637,12 +731,16 @@ class MainActivity : FlutterActivity() {
                             if (::BLEEventChannel.isInitialized) {
                                 BLEEventChannel.success("connectionfailed| connection failed")
                             }
-                           // bluetoothFlutterResult.success("connectionfailed| connection failed")
+                            // bluetoothFlutterResult.success("connectionfailed| connection failed")
 
                             //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
                         }
 
-                        override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
+                        override fun onConnectSuccess(
+                            bleDevice: BleDevice?,
+                            gatt: BluetoothGatt?,
+                            status: Int
+                        ) {
                             Log.d("startScan", "onConnectSuccess ")
                             //val devName: String = bleDevice!!.getName()
                             bleName = bleDevice!!.name
@@ -651,15 +749,16 @@ class MainActivity : FlutterActivity() {
                             var bleDeviceType: String
                             bleDeviceType = "SPO2"
                             if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("macid|"+bleMacId)
+                                BLEEventChannel.success("macid|" + bleMacId)
                             }
                             //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
                             sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
                             if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("bleDeviceType|"+bleDeviceType)
+                                BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                             }
                             SPO2_ReadingCount = 0
-                            val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
+                            val services =
+                                BleManager.getInstance().getBluetoothGattServices(bleDevice)
                             DumpServicesChars(services)
                             BleManager.getInstance().notify(
                                 bleDevice,
@@ -675,7 +774,7 @@ class MainActivity : FlutterActivity() {
                                     }
 
                                     @RequiresApi(Build.VERSION_CODES.O)
-                                    override  fun onCharacteristicChanged(data: ByteArray) {
+                                    override fun onCharacteristicChanged(data: ByteArray) {
                                         //Log.e(GTAG, "onCharacteristicChanged "+BytesToStr(data));
                                         var signalStrength: Int
                                         var isNoSignal: Int
@@ -696,7 +795,8 @@ class MainActivity : FlutterActivity() {
                                         while (index < data.size) {
 
                                             if (data[index] and BIT_SYNC.toByte() != 0.toByte()) {
-                                                signalStrength = getUB(data[index]) and BIT_SIGNAL_STR
+                                                signalStrength =
+                                                    getUB(data[index]) and BIT_SIGNAL_STR
                                                 isNoSignal = getUB(data[index]) and BIT_SIGNAL
                                                 isProbeUnplugged = getUB(data[index]) and BIT_PROBE
                                                 isBeep = getUB(data[index]) and BIT_PULSE
@@ -731,7 +831,7 @@ class MainActivity : FlutterActivity() {
 //                                                    Log.d("nofinger",String.format("No Finger %d",isNoFinger));
 //                                                    Log.d("pluse",String.format("Pulse Rate %d",pulseRate));
 //                                                    Log.d("spo2",String.format("SPO2 %d",spo2));
-                                                    if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
+                                                if (isNoFinger == 0 && pulseRate != 255 && pulseRate != 127 && spo2 < 101) {
                                                     SPO2_ReadingCount++
                                                     //dev_data.setText(String.format("%d PR %d SPO2 %d , F=%d",SPO2_ReadingCount,pulseRate,spo2,isNoFinger));
                                                     /*dev_data!!.text = String.format(
@@ -740,18 +840,26 @@ class MainActivity : FlutterActivity() {
                                                         spo2,
                                                         isNoFinger
                                                     )*/
-                                                        Log.d("data received",String.format(
+                                                    Log.d(
+                                                        "data received", String.format(
                                                             "PR %d SPO2 %d , F=%d",
                                                             pulseRate,
                                                             spo2,
                                                             isNoFinger
-                                                        ))
-                                                    if ( uploaded == 0) {
+                                                        )
+                                                    )
+                                                    if (uploaded == 0) {
                                                         Log.d(
                                                             "startScan",
-                                                            String.format("Pulse Rate %d", pulseRate)
+                                                            String.format(
+                                                                "Pulse Rate %d",
+                                                                pulseRate
+                                                            )
                                                         )
-                                                        Log.d("startScan", String.format("SPO2 %d", spo2))
+                                                        Log.d(
+                                                            "startScan",
+                                                            String.format("SPO2 %d", spo2)
+                                                        )
                                                         uploaded = 1
                                                         sendPost(
                                                             "Measurement",
@@ -761,9 +869,9 @@ class MainActivity : FlutterActivity() {
                                                             0
                                                         )
                                                         if (::BLEEventChannel.isInitialized) {
-                                                            BLEEventChannel.success("measurement|"+postBleData)
+                                                            BLEEventChannel.success("measurement|" + postBleData)
                                                         }
-                                                       // bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
+                                                        // bluetoothFlutterResult.success("measurement|"+DEVICE_SPO2.toString()+"|"+spo2+"|"+pulseRate+bleName+" connected successfully!!!")
 
                                                     }
                                                 } else {
@@ -776,7 +884,7 @@ class MainActivity : FlutterActivity() {
                                     }
                                 })
                             if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("connected|"+bleName+" connected successfully!!!")
+                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                             }
                             //bluetoothFlutterResult.success("connected|"+bleName+" connected successfully!!!")
                         }
@@ -800,10 +908,10 @@ class MainActivity : FlutterActivity() {
                                 //Toast.makeText(MainActivity.this, getString(R.string.disconnected), Toast.LENGTH_LONG).show();
                             }
                             if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("disconnected|"+bleName+" disconnected successfully!!!")
+                                BLEEventChannel.success("disconnected|" + bleName + " disconnected successfully!!!")
                             }
                             //stopScan()
-                           // bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
+                            // bluetoothFlutterResult.success("disconnected|"+bleName+" disconnected successfully!!!")
 
                         }
                     })
@@ -811,14 +919,19 @@ class MainActivity : FlutterActivity() {
 
                 //********************************************************************************************************************
                 val UUID_TEMPERATURE_SERVICE = "00001809-0000-1000-8000-00805f9b34fb"
-                val UUID_TEMPERATURE_INDICATE_CHARACTERISTIC = "00002a1c-0000-1000-8000-00805f9b34fb"
+                val UUID_TEMPERATURE_INDICATE_CHARACTERISTIC =
+                    "00002a1c-0000-1000-8000-00805f9b34fb"
+
                 private fun connectToTEMP(bleDevice: BleDevice) {
                     BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
                         override fun onStartConnect() {
                             Log.d("startScan", "onStartConnect ")
                         }
 
-                        override fun onConnectFail(bleDevice: BleDevice?, exception: BleException?) {
+                        override fun onConnectFail(
+                            bleDevice: BleDevice?,
+                            exception: BleException?
+                        ) {
                             Log.e("startScan", "onConnectFail ")
                             //dev_status!!.text = "ConnectFail TEMP..."
                             autoRepeatScan = 1
@@ -826,11 +939,16 @@ class MainActivity : FlutterActivity() {
                             //Toast.makeText(MainActivity.this, getString(R.string.connect_fail), Toast.LENGTH_LONG).show();
                         }
 
-                        override fun onConnectSuccess(bleDevice: BleDevice?, gatt: BluetoothGatt?, status: Int) {
+                        override fun onConnectSuccess(
+                            bleDevice: BleDevice?,
+                            gatt: BluetoothGatt?,
+                            status: Int
+                        ) {
                             Log.d("startScan", "onConnectSuccess ")
                             //dev_status!!.text = "Connected to TEMP."
                             sendPost("Connected", DEVICE_TEMP, 0, 0, 0)
-                            val services = BleManager.getInstance().getBluetoothGattServices(bleDevice)
+                            val services =
+                                BleManager.getInstance().getBluetoothGattServices(bleDevice)
                             DumpServicesChars(services)
                             BleManager.getInstance().indicate(
                                 bleDevice,
@@ -847,7 +965,10 @@ class MainActivity : FlutterActivity() {
 
                                     @RequiresApi(Build.VERSION_CODES.O)
                                     override fun onCharacteristicChanged(data: ByteArray) {
-                                        Log.e("startScan", "onCharacteristicChanged " + BytesToStr(data))
+                                        Log.e(
+                                            "startScan",
+                                            "onCharacteristicChanged " + BytesToStr(data)
+                                        )
                                         /*
     0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5  6  7  8  9
     07 7e 0e 00 fe 00 00 00 00 00 00 04 02
@@ -865,8 +986,8 @@ class MainActivity : FlutterActivity() {
                                         st.append(" MeasureCount: ")
                                         st.append(MeasureCount)
                                         var MeasurementLocation = ""
-                                        if (data[12].equals(2) ) MeasurementLocation = " Forehead "
-                                        if (data[12] .equals(9)) MeasurementLocation = " EAR "
+                                        if (data[12].equals(2)) MeasurementLocation = " Forehead "
+                                        if (data[12].equals(9)) MeasurementLocation = " EAR "
                                         st.append(MeasurementLocation)
                                         Log.e("startScan", st.toString())
                                         /*dev_data!!.text = String.format(
@@ -914,8 +1035,8 @@ class MainActivity : FlutterActivity() {
 
                 private fun connectToBGL(bleDevice: BleDevice) {}
             })
-        }catch (ex:Exception){
-            Toast.makeText(this@MainActivity,ex.localizedMessage, Toast.LENGTH_SHORT).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -944,7 +1065,7 @@ class MainActivity : FlutterActivity() {
                         CommonStatusCodes.SUCCESS -> {
                             // Get consent intent
                             val consentIntent =
-                                    extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
+                                extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
                             try {
                                 // Start activity to show consent dialog to user, activity must be started in
                                 // 5 minutes, otherwise you'll receive another TIMEOUT intent
@@ -962,8 +1083,8 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                ROUTE_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            ROUTE_CHANNEL
         ).setMethodCallHandler { call, result ->
             try {
                 if (call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)) {
@@ -979,8 +1100,8 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                ONGOING_NS_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            ONGOING_NS_CHANNEL
         ).setMethodCallHandler { call, result ->
             try {
                 if (call.method!!.contentEquals(Constants.FUN_ONG_NS)) {
@@ -996,16 +1117,19 @@ class MainActivity : FlutterActivity() {
         }
 
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM).setStreamHandler(
-                object : EventChannel.StreamHandler {
-                    override fun onListen(arguments: Any?, events: EventSink?) {
-                        mEventChannel = events!!
-                    }
-
-                    override fun onCancel(arguments: Any?) {
-                    }
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    mEventChannel = events!!
                 }
+
+                override fun onCancel(arguments: Any?) {
+                }
+            }
         )
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, Constants.Bluetooth_EVE_STREAM).setStreamHandler(
+        EventChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            Constants.Bluetooth_EVE_STREAM
+        ).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     BLEEventChannel = events!!
@@ -1017,8 +1141,8 @@ class MainActivity : FlutterActivity() {
         )
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                VERSION_CODES_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            VERSION_CODES_CHANNEL
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_APP_VERSION) {
                 //logics to get version code
@@ -1030,8 +1154,8 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                LISTEN4SMS
+            flutterEngine.dartExecutor.binaryMessenger,
+            LISTEN4SMS
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_LISTEN_SMS) {
                 listenForSMS()
@@ -1042,8 +1166,8 @@ class MainActivity : FlutterActivity() {
 
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                SECURITY_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            SECURITY_CHANNEL
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_KEY_GAURD) {
                 //logics to show security methods
@@ -1057,8 +1181,8 @@ class MainActivity : FlutterActivity() {
 
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                VOICE_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            VOICE_CHANNEL
         ).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_VALIDATE_MIC_AVAIL) {
                 val mic_status = validateMicAvailability()
@@ -1069,7 +1193,7 @@ class MainActivity : FlutterActivity() {
                 }
             } else if (call.method == Constants.FUN_VOICE_ASST) {
                 val lang_code =
-                        call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
+                    call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result = result
                 speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
                 //speakWithVoiceAssistant()//todo line need to remove
@@ -1079,15 +1203,15 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                TTS_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            TTS_CHANNEL
         ).setMethodCallHandler { call, result ->
             _TTSResult = result
             if (call.method == Constants.FUN_TEXT2SPEECH) {
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
                 val langCode =
-                        call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
+                    call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
                 tts!!.language = Locale(langCode!!) //todo this has to be uncomment
                 textToSpeech(msg!!, iscls!!)
             } else {
@@ -1096,14 +1220,14 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(
-                flutterEngine.dartExecutor.binaryMessenger,
-                REMINDER_CHANNEL
+            flutterEngine.dartExecutor.binaryMessenger,
+            REMINDER_CHANNEL
         ).setMethodCallHandler { call, result ->
             try {
                 if (call.method == REMINDER_METHOD_NAME) {
                     val data = call.argument<String>("data")
                     val retMap: Map<String, Any> = Gson().fromJson(
-                            data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
                     )
 
                     heyKindlyRemindMe(retMap)
@@ -1123,38 +1247,40 @@ class MainActivity : FlutterActivity() {
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             WIFICONNECT
-        ).setMethodCallHandler {
-                call, result ->
+        ).setMethodCallHandler { call, result ->
             if (call.method == "getTest") {
 
-                Log.e("QUR",call.arguments.toString())
-                val temp = getTest(call.argument<String>("SSID").toString(),call.argument<String>("Password").toString())
+                Log.e("QUR", call.arguments.toString())
+                val temp = getTest(
+                    call.argument<String>("SSID").toString(),
+                    call.argument<String>("Password").toString()
+                )
 
                 result.success(temp)
                 // Note: this method is invoked on the main thread.
                 // TODO
             }
-            if(call.method == "dc")
-            {
+            if (call.method == "dc") {
                 val temp = disconnect()
 
                 result.success(temp)
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, BLECONNECT).setMethodCallHandler {
-                call, result ->
-            if(call.method == "bleconnect")
-            {
-               // bluetoothFlutterResult=result
-                Log.d("BLE VITALS","StartingPoint")
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BLECONNECT
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "bleconnect") {
+                // bluetoothFlutterResult=result
+                Log.d("BLE VITALS", "StartingPoint")
                 BleManager.getInstance().init(application)
                 BleManager.getInstance()
                     .enableLog(true)
                     .setReConnectCount(1, 5000)
                     .setConnectOverTime(20000).operateTimeout = 5000
 
-                val temp = checkPermissionStartScan()
+                val temp = checkPermissionStartScan(false)
 
 /*                try {
                     statusBleTimer = Timer()
@@ -1186,30 +1312,196 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BLE_SCAN_CANCEL
+        ).setMethodCallHandler { call, result ->
+            if (call.method == "bleScanCancel") {
+                Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
+                stopScan()
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BPCONNECT
+        ).setMethodCallHandler { call, result ->
+            _resultBp = result
+            if (call.method == "bpconnect") {
+                Log.d("BP START", "StartingPoint")
+                //startBpScan()
+                checkPermissionStartScan(true)
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BP_CONNECT_CANCEL
+        ).setMethodCallHandler { call, result ->
+            _resultBpCancel = result
+            if (call.method == "bpscancancel") {
+                Log.d("BP SCAN CANCEL", "Cancel BP Scan ")
+                try {
+                    mOHQDeviceManager!!.stopScan();
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            BP_ENABLE_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == BP_ENABLE_CHECK) {
+                Log.d("BLUETOOTH_ENABLE_CHECK", "Bluetooth Enable Check")
+                try {
+                    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+                    if (!bluetoothAdapter.isEnabled) {
+                        result.success(false)
+                    } else {
+                        result.success(true)
+                    }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
 
     }
 
+    private fun startBpScan() {
+        //AppLog.vMethodIn()
+        /*if (mIsScanning) {
+            AppLog.e("Already scanning.")
+            return
+        }*/
+        mOHQDeviceManager = OHQDeviceManager.sharedInstance()
+        val scanFilter: MutableList<OHQDeviceCategory> = ArrayList()
+        //if (null != filteringDeviceCategory) {
+        //AppLog.d("filteringDeviceCategory:$filteringDeviceCategory")
+        scanFilter.add(OHQDeviceCategory.BloodPressureMonitor)
+        //}
+        mOHQDeviceManager!!.scanForDevicesWithCategories(
+            scanFilter,
+            ScanObserverBlock { deviceInfo ->
+                /*mHandler.post(Runnable { _onScan(deviceInfo) })*/
+                mOHQDeviceManager!!.stopScan()
+                Log.e("Scan List response", "" + deviceInfo.toString())
+
+                parseScanListJson(deviceInfo)
+
+            },
+            CompletionBlock { reason -> /*mHandler.post(Runnable { _onScanCompletion(reason) })*/
+                Log.e(
+                    "reason: ",
+                    "" + reason.toString()
+                )
+            })
+        //mIsScanning = true
+        //mDiscoveredDevices.clear()
+        /*mHandler.postDelayed(
+            mBatchedScanRunnable,
+            jp.co.ohq.blesampleomron.controller.ScanController.BATCHED_SCAN_INTERVAL
+        )*/
+    }
+
+    private fun parseScanListJson(deviceInfo: Map<OHQDeviceInfoKey, Any>) {
+        val address: String
+        if (!deviceInfo.containsKey(OHQDeviceInfoKey.AddressKey)) {
+            throw AndroidRuntimeException("The address must be present.")
+        }
+        if (null == Types.autoCast<String>(deviceInfo.get(OHQDeviceInfoKey.AddressKey)).also {
+                address = it
+            }) {
+            throw AndroidRuntimeException("The address must be present.")
+        }
+
+        val discoveredDevice: DiscoveredDevice? = if (mDiscoveredDevices.containsKey(address)) {
+            AppLog.d("Update discovered device. $address")
+            mDiscoveredDevices[address]
+        } else {
+            AppLog.d("New discovered device. $address")
+            DiscoveredDevice(address)
+        }
+
+        if (deviceInfo.containsKey(OHQDeviceInfoKey.AdvertisementDataKey)) {
+            val advertisementData: List<ADStructure> = Types.autoCast(
+                deviceInfo[OHQDeviceInfoKey.AdvertisementDataKey]
+            )
+            discoveredDevice!!.advertisementData = advertisementData
+        }
+        if (deviceInfo.containsKey(OHQDeviceInfoKey.CategoryKey)) {
+            val deviceCategory: OHQDeviceCategory =
+                Types.autoCast(deviceInfo[OHQDeviceInfoKey.CategoryKey])
+            discoveredDevice!!.deviceCategory = deviceCategory
+        }
+        if (deviceInfo.containsKey(OHQDeviceInfoKey.RSSIKey)) {
+            val rssi = Types.autoCast<Int>(deviceInfo[OHQDeviceInfoKey.RSSIKey])
+            discoveredDevice!!.rssi = rssi
+        }
+        if (deviceInfo.containsKey(OHQDeviceInfoKey.ModelNameKey)) {
+            val modelName = Types.autoCast<String>(deviceInfo[OHQDeviceInfoKey.ModelNameKey])
+            discoveredDevice!!.modelName = modelName
+        }
+        if (deviceInfo.containsKey(OHQDeviceInfoKey.LocalNameKey)) {
+            val localName = Types.autoCast<String>(deviceInfo[OHQDeviceInfoKey.LocalNameKey])
+            discoveredDevice!!.localName = localName
+        }
+
+        mDiscoveredDevices[address] = discoveredDevice!!
+
+        getBpAddress(address)
+    }
+
+    private fun getBpAddress(address: String) {
+
+        mAddress = address
+        mSessionData.deviceAddress = address
+        mSessionAddress = address
+
+        registerBpDevice();
+
+    }
+
+    private fun registerBpDevice() {
+        mSessionController!!.setConfig(getConfig(context))
+        mOption[OHQSessionOptionKey.ReadMeasurementRecordsKey] = true
+        mOption[OHQSessionOptionKey.ConnectionWaitTimeKey] = CONNECTION_WAIT_TIME
+        mSessionController!!.startSession(mAddress, mOption)
+    }
+
+    /*private fun transferBpData() {
+        mSessionController!!.setConfig(getConfig(context))
+        mOption[OHQSessionOptionKey.UserDataUpdateFlagKey] = false
+        mOption[OHQSessionOptionKey.ReadMeasurementRecordsKey] = true
+        mOption[OHQSessionOptionKey.ConnectionWaitTimeKey] = CONNECTION_WAIT_TIME
+        mSessionController!!.startSession(mAddress, mOption)
+    }*/
+
 
     private fun disconnect(): Int {
-        if(android.os.Build.VERSION.SDK_INT >= 29)
-        {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.unregisterNetworkCallback(mNetworkCallback)
         }
         return 1
     }
+
     private val mNetworkCallback = object : ConnectivityManager.NetworkCallback() {
         @RequiresApi(Build.VERSION_CODES.M)
         override fun onAvailable(network: Network) {
             //phone is connected to wifi network
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             connectivityManager.bindProcessToNetwork(network)
         }
     }
-    private fun getTest(ssid: String,password:String): Int {
 
-        if(android.os.Build.VERSION.SDK_INT >= 29)
-        {
+    private fun getTest(ssid: String, password: String): Int {
+
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
             val specifier = WifiNetworkSpecifier.Builder()
                 // .setSsidPattern(PatternMatcher("SSID", PatternMatcher.PATTERN_PREFIX))
                 .setSsid(ssid)
@@ -1220,7 +1512,8 @@ class MainActivity : FlutterActivity() {
                 .setNetworkSpecifier(specifier)
                 .build()
 
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
             connectivityManager.requestNetwork(request, mNetworkCallback)
 
@@ -1228,13 +1521,12 @@ class MainActivity : FlutterActivity() {
             //
 
             return 1
-        }
-        else {
+        } else {
             var networkSSID = ssid
             var networkPass = password
             var conf = WifiConfiguration()
             conf.SSID = "\"" + networkSSID + "\""
-            conf.preSharedKey = "\""+ networkPass +"\""
+            conf.preSharedKey = "\"" + networkPass + "\""
             var wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
             var netid = wifiManager.addNetwork(conf)
             wifiManager.disconnect()
@@ -1276,7 +1568,7 @@ class MainActivity : FlutterActivity() {
         val verificationCode = intent.getStringExtra(Constants.VERIFICATION_CODE)
         val caregiverRequestor = intent.getStringExtra(Constants.CAREGIVER_REQUESTER)
         val caregiverReceiver = intent.getStringExtra(Constants.CAREGIVER_RECEIVER)
-        val type  = intent.getStringExtra("type")
+        val type = intent.getStringExtra("type")
 
         val data = intent.getStringExtra(Constants.PROP_DATA)
         val prescriptionId = intent.getStringExtra(Constants.PROP_PRESCRIPTION_ID)
@@ -1305,39 +1597,40 @@ class MainActivity : FlutterActivity() {
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue =
-                    "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
-        } else if(redirect_to=="claimList"){
+                "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
+        } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${claimId}&${userId}"
-        }else if(redirect_to?.contains("myRecords") == true){
+        } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
-        }else if(redirect_to?.contains("familyMemberCaregiverRequest") == true){
+        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
-            sharedValue = "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
-        }else if(redirect_to?.contains("communicationSetting") == true){
+            sharedValue =
+                "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
+        } else if (redirect_to?.contains("communicationSetting") == true) {
 
             sharedValue = "ack&${redirect_to}"
-        }else if(redirect_to?.contains("careGiverMemberProfile") == true){
+        } else if (redirect_to?.contains("careGiverMemberProfile") == true) {
 
             sharedValue = "ack&${redirect_to}&${careGiverMemberId}"
-        }else if(redirect_to?.contains("communicationSetting") == true){
+        } else if (redirect_to?.contains("communicationSetting") == true) {
 
             sharedValue = "ack&${redirect_to}"
-        }else if (externalLink != null && externalLink != "") {
+        } else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink
             sharedValue = "openurl&$externalLink"
         } else if (sharedValue != null && username != null && docId != null && docPic != null && callType != null && isWeb != null) {
             sharedValue =
-                    "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}&${isWeb}"
+                "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}&${callType}&${isWeb}"
         } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {
             //todo redirect to telehealth page
             sharedValue =
-                    "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
+                "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
         } else if (sharedValue == Constants.PROP_DOC_CANCELLATION) {
             //todo redirect to telehealth page
             sharedValue =
-                    "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
+                "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
         } else if (providerReqId != null && providerReqId != "") {
             if (sharedValue == Constants.PROP_ACCEPT) {
                 sharedValue = "$sharedValue&${providerReqId}&${"accepted"}"
@@ -1346,16 +1639,16 @@ class MainActivity : FlutterActivity() {
             }
         } else if (data != null && ((data == "DoctorPatientAssociation") || (data == "QurplanCargiverPatientAssociation"))) {
             sharedValue =
-                    "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
+                "${Constants.PROP_ACK}&${redirect_to!!}&${"$doctorID|$docName|$docPic|$patId|$patName|$patPic|$message"}"
         } else if (data != null && data == "MissingActivitiesReminder") {
             sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${EVEId}"
         } else if ((planId != null && planId != "") && (templateName != null && templateName != "") && (userId != null && userId != "") && (patName != null && patName != "")) {
             if ((sharedValue == Constants.PROP_RENEW) || (sharedValue == Constants.PROP_CALLBACK)) {
                 sharedValue = "$sharedValue&${planId}&${"$templateName"}&${userId}&${patName}"
-            }else  if (redirect_to == Constants.MY_PLAN_DETAILS) {
+            } else if (redirect_to == Constants.MY_PLAN_DETAILS) {
                 sharedValue = "myplandetails&${planId}&${"$templateName"}&${userId}&${patName}"
             }
-        }else if (appLog != null && appLog == "FETCH_LOG") {
+        } else if (appLog != null && appLog == "FETCH_LOG") {
             sharedValue = appLog
         } else {
             if (HRMId != null && HRMId != "") {
@@ -1368,7 +1661,7 @@ class MainActivity : FlutterActivity() {
                         var redirectArray = redirect_to.split("|")
                         if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
                             sharedValue =
-                                    "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
+                                "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
                         } else {
                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
                         }
@@ -1381,7 +1674,7 @@ class MainActivity : FlutterActivity() {
             }
 
         }
-        Log.e("MainActivity","dataIntent: "+sharedValue)
+        Log.e("MainActivity", "dataIntent: " + sharedValue)
         if (::mEventChannel.isInitialized) {
             mEventChannel.success(sharedValue)
         }
@@ -1418,8 +1711,8 @@ class MainActivity : FlutterActivity() {
     private fun speakWithVoiceAssistant(langCode: String) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
@@ -1428,12 +1721,12 @@ class MainActivity : FlutterActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 50000000)
         intent.putExtra(
-                RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-                50000000
+            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+            50000000
         )
         intent.putExtra(
-                RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
-                50000000
+            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
+            50000000
         )
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
 
@@ -1445,15 +1738,15 @@ class MainActivity : FlutterActivity() {
                 override fun onBeginningOfSpeech() {
                     if (!dialog.isShowing) {
                         this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        //displayText.text = "Speak now"
-                                        micOn.visibility = View.VISIBLE
-                                        edit_view.visibility = View.GONE
-                                        listeningLayout.visibility = View.VISIBLE
-                                        tryMe.visibility = View.GONE
-                                    }
+                            object : Runnable {
+                                override fun run() {
+                                    //displayText.text = "Speak now"
+                                    micOn.visibility = View.VISIBLE
+                                    edit_view.visibility = View.GONE
+                                    listeningLayout.visibility = View.VISIBLE
+                                    tryMe.visibility = View.GONE
                                 }
+                            }
                         )
 
                         dialog.show()
@@ -1471,30 +1764,30 @@ class MainActivity : FlutterActivity() {
                         //do nothing
                     } else {
                         this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        if (listeningLayout.visibility == View.VISIBLE) {
-                                            listeningLayout.visibility = View.GONE
-                                            tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Please Retry"
-                                            customLayout.setOnClickListener {
-                                                this@MainActivity.runOnUiThread(
-                                                        object : Runnable {
-                                                            override fun run() {
-                                                                //displayText.text = "Speak now"
-                                                                micOn.visibility = View.VISIBLE
-                                                                edit_view.visibility = View.GONE
-                                                                spin_kit.visibility = View.VISIBLE
-                                                                listeningLayout.visibility = View.VISIBLE
-                                                                tryMe.visibility = View.GONE
-                                                                speechRecognizer!!.startListening(intent)
-                                                            }
-                                                        }
-                                                )
-                                            }
+                            object : Runnable {
+                                override fun run() {
+                                    if (listeningLayout.visibility == View.VISIBLE) {
+                                        listeningLayout.visibility = View.GONE
+                                        tryMe.visibility = View.VISIBLE
+                                        errorTxt.text = "Please Retry"
+                                        customLayout.setOnClickListener {
+                                            this@MainActivity.runOnUiThread(
+                                                object : Runnable {
+                                                    override fun run() {
+                                                        //displayText.text = "Speak now"
+                                                        micOn.visibility = View.VISIBLE
+                                                        edit_view.visibility = View.GONE
+                                                        spin_kit.visibility = View.VISIBLE
+                                                        listeningLayout.visibility = View.VISIBLE
+                                                        tryMe.visibility = View.GONE
+                                                        speechRecognizer!!.startListening(intent)
+                                                    }
+                                                }
+                                            )
                                         }
                                     }
                                 }
+                            }
                         )
 
                     }
@@ -1506,12 +1799,12 @@ class MainActivity : FlutterActivity() {
                         SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
                         SpeechRecognizer.ERROR_CLIENT -> message = "Client side error"
                         SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> message =
-                                "Insufficient permissions"
+                            "Insufficient permissions"
                         SpeechRecognizer.ERROR_NETWORK -> message = "Network error"
                         SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> message = "Network timeout"
                         SpeechRecognizer.ERROR_NO_MATCH -> message = "No match"
                         SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> message =
-                                "RecognitionService busy"
+                            "RecognitionService busy"
                         SpeechRecognizer.ERROR_SERVER -> message = "error from server"
                         SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
                         else -> {
@@ -1519,18 +1812,17 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                                }
+                        object : Runnable {
+                            override fun run() {
+                                //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
                             }
+                        }
                     )
                 }
 
                 override fun onResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    if(data!=null&&data.size> 0)
-                    {
+                    if (data != null && data.size > 0) {
                         finalWords = data[0].toString()
                         isPartialResultInvoked = false
                         //_result.success(finalWords)
@@ -1570,7 +1862,7 @@ class MainActivity : FlutterActivity() {
                                 }
                             )
                         }
-                    }else{
+                    } else {
                         this@MainActivity.runOnUiThread(
                             object : Runnable {
                                 override fun run() {
@@ -1602,7 +1894,7 @@ class MainActivity : FlutterActivity() {
 
                 override fun onPartialResults(bundle: Bundle) {
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    if(data!=null&&data.size>0) {
+                    if (data != null && data.size > 0) {
                         finalWords = data[0].toString()
                         isPartialResultInvoked = true
                         this@MainActivity.runOnUiThread(
@@ -1701,12 +1993,12 @@ class MainActivity : FlutterActivity() {
     private fun secureMe() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager =
-                    getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
+                getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure) {
                 //user has set pin/password/pattern
                 val authIntent: Intent = km.createConfirmDeviceCredentialIntent(
-                        Constants.KEY_GAURD_TITLE,
-                        Constants.KEY_GAURD_TITLE_DESC
+                    Constants.KEY_GAURD_TITLE,
+                    Constants.KEY_GAURD_TITLE_DESC
                 )
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
             } else {
@@ -1728,8 +2020,8 @@ class MainActivity : FlutterActivity() {
             tts!!.stop()
         } else {
             tts!!.speak(
-                    msg, TextToSpeech.QUEUE_FLUSH, null,
-                    TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID
+                msg, TextToSpeech.QUEUE_FLUSH, null,
+                TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID
             )
         }
 
@@ -1755,9 +2047,9 @@ class MainActivity : FlutterActivity() {
 
     private fun requestPermissionFromUSer() {
         ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.RECORD_AUDIO),
-                REQ_CODE
+            this,
+            arrayOf(android.Manifest.permission.RECORD_AUDIO),
+            REQ_CODE
         )
     }
 
@@ -1853,9 +2145,17 @@ class MainActivity : FlutterActivity() {
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
                 val eIdAppend = "${nsId}${"000"}"
-                val notificationAndAlarmId=NotificationID.currentMillis
-                SharedPrefUtils().saveAlarmId(this,eIdAppend,notificationAndAlarmId)
-                createNotifiationBuilder(title,body,eIdAppend,notificationAndAlarmId,calendar.timeInMillis,false,false)
+                val notificationAndAlarmId = NotificationID.currentMillis
+                SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
+                createNotifiationBuilder(
+                    title,
+                    body,
+                    eIdAppend,
+                    notificationAndAlarmId,
+                    calendar.timeInMillis,
+                    false,
+                    false
+                )
             }
         }
 
@@ -1872,9 +2172,17 @@ class MainActivity : FlutterActivity() {
 
         //check the reminder time with current time if its true allow user to create alaram
         if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
-            val notificationAndAlarmId=NotificationID.currentMillis
-            SharedPrefUtils().saveAlarmId(this,nsId,notificationAndAlarmId)
-            createNotifiationBuilder(title,body,nsId,notificationAndAlarmId,calendar.timeInMillis,false,true)
+            val notificationAndAlarmId = NotificationID.currentMillis
+            SharedPrefUtils().saveAlarmId(this, nsId, notificationAndAlarmId)
+            createNotifiationBuilder(
+                title,
+                body,
+                nsId,
+                notificationAndAlarmId,
+                calendar.timeInMillis,
+                false,
+                true
+            )
         }
 
         if (remindin.toInt() > 0) {
@@ -1894,9 +2202,17 @@ class MainActivity : FlutterActivity() {
             //check the reminder time with current time if its true allow user to create alaram
             if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
                 val eIdAppend = "${nsId}${"111"}"
-                val notificationAndAlarmId=NotificationID.currentMillis
-                SharedPrefUtils().saveAlarmId(this,eIdAppend,notificationAndAlarmId)
-                createNotifiationBuilder(title,body,eIdAppend,notificationAndAlarmId,calendar.timeInMillis,false,false)
+                val notificationAndAlarmId = NotificationID.currentMillis
+                SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
+                createNotifiationBuilder(
+                    title,
+                    body,
+                    eIdAppend,
+                    notificationAndAlarmId,
+                    calendar.timeInMillis,
+                    false,
+                    false
+                )
             }
         }
 
@@ -1911,24 +2227,30 @@ class MainActivity : FlutterActivity() {
         currentMillis: Long,
         isCancel: Boolean,
         isButtonShown: Boolean,
-    ){
-        try{
-        val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
+    ) {
+        try {
+            val _sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + this.packageName + "/" + R.raw.msg_tone)
 
-        val dismissIntent = Intent(this, DismissReceiver::class.java)
-        dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-        val dismissPendingIntent = PendingIntent.getBroadcast(
-            this,
-            nsId,
-            dismissIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
+            val dismissIntent = Intent(this, DismissReceiver::class.java)
+            dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+            val dismissPendingIntent = PendingIntent.getBroadcast(
+                this,
+                nsId,
+                dismissIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
             val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
             snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
             snoozeIntent.putExtra(this.getString(R.string.title), title)
             snoozeIntent.putExtra(this.getString(R.string.body), body)
-            val snoozePendingIntent = PendingIntent.getBroadcast(this, nsId, snoozeIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val snoozePendingIntent = PendingIntent.getBroadcast(
+                this,
+                nsId,
+                snoozeIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
 
 
             val onTapNS = Intent(this, OnTapNotification::class.java)
@@ -1939,54 +2261,69 @@ class MainActivity : FlutterActivity() {
             onTapNS.putExtra(Constants.PROP_DATA, "")
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
             onTapNS.putExtra(Constants.PROP_HRMID, "")
-            val onTapPendingIntent = PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
-        val builder : NotificationCompat.Builder
-        if(isButtonShown){
-            builder= NotificationCompat.Builder(context,"schedule")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-                .setContentTitle(title)
-                .setContentText(body)
-                .setContentIntent(onTapPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
-                .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
-                .setAutoCancel(true)
-                .setSound(_sound)
-                .setOnlyAlertOnce(false)
-        }else{
-            builder= NotificationCompat.Builder(context,"schedule")
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-                .setContentTitle(title)
-                .setContentText(body)
-                .setContentIntent(onTapPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(false)
-        }
-        val notification: Notification = builder.build()
-        val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
-        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-        notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            nsId,
-            notificationIntent,
-            PendingIntent.FLAG_CANCEL_CURRENT
-        )
-        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,currentMillis , pendingIntent)
-        }else{
-            alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
-        }
+            val onTapPendingIntent =
+                PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+            val builder: NotificationCompat.Builder
+            if (isButtonShown) {
+                builder = NotificationCompat.Builder(context, "schedule")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.mipmap.ic_launcher
+                        )
+                    )
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setContentIntent(onTapPendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
+                    .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
+                    .setAutoCancel(true)
+                    .setSound(_sound)
+                    .setOnlyAlertOnce(false)
+            } else {
+                builder = NotificationCompat.Builder(context, "schedule")
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(
+                        BitmapFactory.decodeResource(
+                            context.resources,
+                            R.mipmap.ic_launcher
+                        )
+                    )
+                    .setContentTitle(title)
+                    .setContentText(body)
+                    .setContentIntent(onTapPendingIntent)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(false)
+            }
+            val notification: Notification = builder.build()
+            val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
+            notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+            notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
+            val pendingIntent = PendingIntent.getBroadcast(
+                this,
+                nsId,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    currentMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
+            }
 
-    }catch (e:Exception){
-        Log.e("crash",e.message.toString())
-    }
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
+        }
     }
 
     private fun createNotificationChannel() {
@@ -2008,19 +2345,19 @@ class MainActivity : FlutterActivity() {
 
     @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun heyCancelMyReminder(nsId: String) {
-        val notificationAndAlarmId=SharedPrefUtils().getNotificationId(this,nsId)
+        val notificationAndAlarmId = SharedPrefUtils().getNotificationId(this, nsId)
         val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
         reminderBroadcaster.putExtra("nsid", notificationAndAlarmId)
         reminderBroadcaster.putExtra("isCancel", true)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val pendingIntent = PendingIntent.getBroadcast(
-                this,
+            this,
             notificationAndAlarmId,
-                reminderBroadcaster,
-                PendingIntent.FLAG_UPDATE_CURRENT
+            reminderBroadcaster,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
         alarmManager.cancel(pendingIntent)
-        SharedPrefUtils().deleteNotificationObject(this,notificationAndAlarmId)
+        SharedPrefUtils().deleteNotificationObject(this, notificationAndAlarmId)
     }
 
     private fun validateMicAvailability(): Boolean {
@@ -2034,10 +2371,9 @@ class MainActivity : FlutterActivity() {
     }
 
 
-
     object NotificationID {
-        private val atomic=AtomicInteger(0)
-        val currentMillis : Int get() =System.currentTimeMillis().toInt()
+        private val atomic = AtomicInteger(0)
+        val currentMillis: Int get() = System.currentTimeMillis().toInt()
 //        val currentMillis : Int get() = createRandomCode(5)
 
         fun createRandomCode(codeLength: Int): Int {
@@ -2050,6 +2386,127 @@ class MainActivity : FlutterActivity() {
             }
             return sb.toString().toInt()
         }
+    }
+
+    private fun getConfig(context: Context): Bundle {
+        val pref: SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(context)
+        var s: String?
+        val cOption: CreateBondOption
+        s = pref.getString(SettingKey.create_bond_option.name, null)
+        cOption = if (getString(R.string.create_bond_before_catt_connection).equals(s)) {
+            CreateBondOption.UsedBeforeGattConnection
+        } else if (getString(R.string.create_bond_after_services_discovered).equals(s)) {
+            CreateBondOption.UsedAfterServicesDiscovered
+        } else {
+            CreateBondOption.NotUse
+        }
+        val rOption: RemoveBondOption
+        s = pref.getString(SettingKey.remove_bond_option.name, null)
+        rOption = if (getString(R.string.remove_bond_use).equals(s)) {
+            RemoveBondOption.UsedBeforeConnectionProcessEveryTime
+        } else {
+            RemoveBondOption.NotUse
+        }
+        return Bundler.bundle(
+            OHQConfig.Key.CreateBondOption.name,
+            cOption,
+            OHQConfig.Key.RemoveBondOption.name,
+            rOption,
+            OHQConfig.Key.AssistPairingDialogEnabled.name,
+            pref.getBoolean(SettingKey.assist_pairing_dialog.name, false),
+            OHQConfig.Key.AutoPairingEnabled.name,
+            pref.getBoolean(SettingKey.auto_pairing.name, false),
+            OHQConfig.Key.AutoEnterThePinCodeEnabled.name,
+            pref.getBoolean(SettingKey.auto_enter_the_pin_code.name, false),
+            OHQConfig.Key.PinCode.name,
+            pref.getString(SettingKey.pin_code.name, "123456"),
+            OHQConfig.Key.StableConnectionEnabled.name,
+            pref.getBoolean(SettingKey.stable_connection.name, false),
+            OHQConfig.Key.StableConnectionWaitTime.name,
+            pref.getString(
+                SettingKey.stable_connection_wait_time.name,
+                "123456"
+            )?.let {
+                java.lang.Long.valueOf(
+                    it
+                )
+            },
+            OHQConfig.Key.ConnectionRetryEnabled.name,
+            pref.getBoolean(SettingKey.connection_retry.name, false),
+            OHQConfig.Key.ConnectionRetryDelayTime.name,
+            pref.getString(
+                SettingKey.connection_retry_delay_time.name,
+                "123456"
+            )?.let {
+                java.lang.Long.valueOf(
+                    it
+                )
+            },
+            OHQConfig.Key.ConnectionRetryCount.name,
+            pref.getString(SettingKey.connection_retry_count.name, "123456")
+                ?.let { Integer.valueOf(it) },
+            OHQConfig.Key.UseRefreshWhenDisconnect.name,
+            pref.getBoolean(SettingKey.refresh_use.name, false)
+        )
+    }
+
+    override fun onConnectionStateChanged(connectionState: OHQConnectionState) {
+        AppLog.vMethodIn(connectionState.name)
+        //mListener!!.onConnectionStateChanged(connectionState)
+    }
+
+    override fun onSessionComplete(sessionData: SessionData) {
+        AppLog.vMethodIn(sessionData.completionReason!!.name)
+        mSessionAddress = null
+        mSessionData = sessionData
+        mSessionData.setCompletionReason(sessionData.completionReason)
+        mSessionData.deviceAddress = mAddress
+        Log.e("outputNative", "" + mSessionData.toString());
+        if(mSessionData!=null && mSessionData.measurementRecords!=null && mSessionData.measurementRecords!!.size>0){
+            _resultBp.success(mSessionData.toString())
+            return
+        }
+
+        if (::BLEEventChannel.isInitialized) {
+            BLEEventChannel.success("macid|" + mAddress)
+        }
+
+        if (::BLEEventChannel.isInitialized) {
+            BLEEventChannel.success("bleDeviceType|" + "BP")
+        }
+        /*if (sessionData.completionReason!!.name == "Disconnected") {
+            if (sessionData.measurementRecords!!.size > 0) {
+
+            } else {
+                transferBpData()
+            }
+        }*/
+        //mListener!!.onSessionComplete(mSessionData)
+    }
+
+    /*override fun onDetailedStateChanged(newState: OHQDetailedState) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPairingRequest() {
+        TODO("Not yet implemented")
+    }*/
+
+    /*override fun onBondStateChanged(bondState: CBPeripheral.BondState) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAclConnectionStateChanged(aclConnectionState: CBPeripheral.AclConnectionState) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onGattConnectionStateChanged(gattConnectionState: CBPeripheral.GattConnectionState) {
+        TODO("Not yet implemented")
+    }*/
+
+    override fun onBluetoothStateChanged(enable: Boolean) {
+        TODO("Not yet implemented")
     }
 
 }

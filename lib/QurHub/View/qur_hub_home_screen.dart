@@ -54,10 +54,10 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     qurHomeBtn(),
-                    SizedBox(
+                    /*SizedBox(
                       height: 30,
                     ),
-                    qurHubIoTBtn(),
+                    qurHubIoTBtn(),*/
                   ],
                 ),
               ),
