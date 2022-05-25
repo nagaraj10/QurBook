@@ -104,9 +104,9 @@ class _NonAdheranceSettingsScreenState
                             }
                           });
                           if(sharedByUsers[index].isNewUser){
-                            controller.saveNonAdherance(sharedByUsers[index].remainderMins, sharedByUsers[index].child.id, id);
+                            controller.saveNonAdherance(sharedByUsers[index].remainderMins.split(" ")[0], sharedByUsers[index].child.id, id);
                           }else{
-                            controller.editNonAdherance(sharedByUsers[index].nonAdheranceId,sharedByUsers[index].remainderMins, sharedByUsers[index].child.id, id);
+                            controller.editNonAdherance(sharedByUsers[index].nonAdheranceId,sharedByUsers[index].remainderMins.split(" ")[0], sharedByUsers[index].child.id, id);
                           }
                         },
                         items: controller.remainderFor.map<DropdownMenuItem<String>>((String value) {
