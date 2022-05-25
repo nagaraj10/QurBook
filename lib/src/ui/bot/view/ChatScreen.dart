@@ -80,13 +80,13 @@ class _ChatScreenState extends State<ChatScreen>
     if (widget?.arguments?.takeActiveDeviceReadings &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
-        text: "Your SpO2 device is connected",
+        text: "Your SPO2 device is connected & reading values. Please wait",
       );
       getMyViewModel().setupListenerForReadings();
     } else if (widget?.arguments?.isFromBpReading &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
-        text: "Your BP monitor is connected & measured readings",
+        text: "Your BP device is connected & reading values. Please wait..",
       );
       getMyViewModel().updateBPUserData();
     } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {

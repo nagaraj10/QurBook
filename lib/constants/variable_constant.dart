@@ -598,7 +598,7 @@ const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
-const String strConnectBpMeter = 'Please connect your BP monitor and start recording';
+const String strConnectBpMeter = 'Please connect your BP device and start recording';
 const String strConnectPulseMeter = 'Please connect your pulse oximeter and start recording';
 
 //introslider
