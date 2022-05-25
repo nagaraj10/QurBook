@@ -179,7 +179,7 @@ class HubListController extends GetxController {
       searchingBleDevice.value = true;
       _enableTimer();
       bleController.getBleConnectData(Get.context);
-      Future.delayed(Duration(seconds: 15)).then((value) {
+      Future.delayed(Duration(seconds: 25)).then((value) {
         searchingBleDevice.value = false;
         if (!foundBLE.value) {
           disableTimer();
