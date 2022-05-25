@@ -25,6 +25,8 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'AppleHealthSettings.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 
+import 'NonAdheranceSettingsScreen.dart';
+
 class CareGiverSettings extends StatefulWidget {
   @override
   _CareGiverSettingsState createState() => _CareGiverSettingsState();
