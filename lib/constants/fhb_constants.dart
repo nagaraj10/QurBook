@@ -643,6 +643,8 @@ const String STR_NO = 'no';
 const String UnitPreference = 'Unit Preferences';
 const String STR_DATE_FORMAT = 'yyyy-MM-dd';
 const String STR_RENEWAL_DATE = 'Effective Renewal Date:';
+const String strCamelYes = 'Yes';
+const String strCamelNo = 'No';
 const String Rmarks_HINT = "Remarks";
 
 // True desk
