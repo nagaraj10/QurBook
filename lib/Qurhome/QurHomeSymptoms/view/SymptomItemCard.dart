@@ -1047,15 +1047,25 @@ class SymptomItemCard extends StatelessWidget {
             : false);
   }
 
-  String getDialogTitle(BuildContext context) {
+  String getDialogTitle(BuildContext context,String activityName) {
     String title = '';
     if (!(regimentData?.asNeeded ?? false) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
-      title =
-          '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+      if(activityName!=null && activityName!=''){
+        title = activityName?.capitalizeFirstofEach;
+      }else{
+        title =
+        '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+      }
+
     } else {
-      title = regimentData.title;
+      if(activityName!=null && activityName!=''){
+        title = activityName?.capitalizeFirstofEach;
+      }else{
+        title = regimentData.title;
+      }
+
     }
     return title;
   }
@@ -1063,6 +1073,7 @@ class SymptomItemCard extends StatelessWidget {
   Future<void> onCardPressed(BuildContext context,
       {String eventIdReturn,
       String followEventContext,
+        String activityName,
       dynamic uid,
       dynamic aid,
       dynamic formId,
@@ -1100,9 +1111,9 @@ class SymptomItemCard extends StatelessWidget {
           eid: eventId,
           color: color,
           mediaData: mediaData,
-          formTitle: getDialogTitle(context),
+          formTitle: getDialogTitle(context,activityName),
           canEdit: canEdit || isValidSymptom(context),
-          triggerAction: (String triggerEventId, String followContext) {
+          triggerAction: (String triggerEventId, String followContext,String activityName) {
             Provider.of<RegimentViewModel>(Get.context, listen: false)
                 .updateRegimentStatus(RegimentStatus.DialogClosed);
             Get.back();
@@ -1110,6 +1121,7 @@ class SymptomItemCard extends StatelessWidget {
               Get.context,
               eventIdReturn: triggerEventId,
               followEventContext: followContext,
+              activityName: activityName
             );
           },
           followEventContext: followEventContext,

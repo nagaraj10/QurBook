@@ -49,7 +49,7 @@ class FormDataDialog extends StatefulWidget {
   final Otherinfo mediaData;
   final String formTitle;
   final bool canEdit;
-  final Function(String eventId, String followContext) triggerAction;
+  final Function(String eventId, String followContext,String activityName) triggerAction;
   final bool isFollowEvent;
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
@@ -1131,6 +1131,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                             widget.triggerAction(
                               returnAction?.eid,
                               returnAction?.context,
+                              returnAction?.activityName,
                             );
                           } else {
                             Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
