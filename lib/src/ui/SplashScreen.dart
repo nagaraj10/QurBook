@@ -307,6 +307,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'escalateToCareCoordinatorToRegimen') {
                       final temp = widget.bundle.split('|');
                       CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4]);
+                      Get.toNamed(rt_Regimen);
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {

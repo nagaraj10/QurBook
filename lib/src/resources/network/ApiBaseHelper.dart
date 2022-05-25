@@ -1187,9 +1187,9 @@ class ApiBaseHelper {
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    requestHeadersAuthContent[Constants.KEY_OffSet] =
-        CommonUtil().setTimeZone();
-
+    // requestHeadersAuthContent[Constants.KEY_OffSet] =
+    //     CommonUtil().setTimeZone();
+    print(jsonString);
     try {
       var response = await ApiServices.post(
         _baseUrl + url,

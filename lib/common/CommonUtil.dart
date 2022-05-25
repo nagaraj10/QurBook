@@ -1655,7 +1655,6 @@ class CommonUtil {
       "activityName" : activityName,
     };
     var response =await apiBaseHelper.escalateNonAdherance('qurplan-node-mysql/escalate-nonadherence', params);
-    Get.toNamed(rt_Regimen);
   }
 
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,

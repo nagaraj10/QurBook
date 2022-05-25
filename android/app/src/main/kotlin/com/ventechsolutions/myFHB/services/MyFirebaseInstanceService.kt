@@ -650,7 +650,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .addAction(
                 R.drawable.ic_reschedule,
-                getString(R.string.ns_act_accept),
+                getString(R.string.ns_escalate),
                 acceptCareGiverPendingIntent
             )
             .setStyle(

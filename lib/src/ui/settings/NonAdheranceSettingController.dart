@@ -26,7 +26,7 @@ class NonAdheranceSettingController extends GetxController {
       });
       nonAdheranceResponseModel = await nonAdheranceRepository.getNonAdheranceList();
       familyResponseList = await familyRepository.getFamilyMembersListNew();
-      // familyResponseList.result.sharedByUsers.removeWhere((element) => !element.isCaregiver);
+      familyResponseList.result.sharedByUsers.removeWhere((element) => !element.isCaregiver);
       familyResponseList.result.sharedByUsers.forEach((element) {
         element.remainderFor=remainderFor[0];
         element.remainderForId=remainderForModel.result[0].id;

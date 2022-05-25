@@ -82,4 +82,9 @@ object Constants {
     val CARE_GIVER_NAME ="careGiverName"
     val ACTIVITY_TIME ="activityTime"
     val ACTIVITY_NAME ="activityName"
+    val BP_CONNECT ="bpconnect"
+    val BP_SCAN_CANCEL ="bpscancancel"
+    val BP_ENABLE_CHECK ="bluetooth_enable_check"
+    val BP_LOCATION_CHECK ="bp_location_check"
+    val BLE_SCAN_CANCEL ="bleScanCancel"
 }

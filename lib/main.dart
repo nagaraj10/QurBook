@@ -551,6 +551,7 @@ class _MyFHBState extends State<MyFHB> {
           }
         }else if(passedValArr[1] == 'escalateToCareCoordinatorToRegimen'){
           CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6]);
+          Get.toNamed(rt_Regimen);
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
