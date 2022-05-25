@@ -325,6 +325,7 @@ String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
+const String strCareGiverCommunication = 'Caregiver Communication';
 
 // for my family
 
