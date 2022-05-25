@@ -667,7 +667,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     }
 
                     // BP DEVICE SCANNING
-                    if (DevName.contains("BLEsmart")) {
+                    if (DevName.lowercase(Locale.getDefault()).contains("blesmart")) {
                         stopScan()
                         getBpAddress(bleDevice.mac);
                     }

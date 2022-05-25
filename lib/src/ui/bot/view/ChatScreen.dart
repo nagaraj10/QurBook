@@ -86,7 +86,7 @@ class _ChatScreenState extends State<ChatScreen>
     } else if (widget?.arguments?.isFromBpReading &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
-        text: "Your BP device is connected & Measured Readings",
+        text: "Your BP monitor is connected & measured readings",
       );
       getMyViewModel().updateBPUserData();
     } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {

@@ -2096,10 +2096,11 @@ class CommonUtil {
   }
 
   requestQurhomeDialog() async {
-    var isShown = PreferenceUtil.isKeyValid(KeyShowQurhomeDefaultUI);
-    if (!isShown) {
-      await Future.delayed(const Duration(seconds: 0));
-      _showDefaultUIDialog();
+    if (!PreferenceUtil.isKeyValid(KeyShowQurhomeDefaultUI)) {
+      if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
+        await Future.delayed(const Duration(seconds: 0));
+        _showDefaultUIDialog();
+      }
       PreferenceUtil.saveShownQurhomeDefaultUI();
     }
   }
@@ -2110,8 +2111,8 @@ class CommonUtil {
       barrierDismissible: true,
       builder: (context) {
         var message = strQurhomeDefaultUI;
-        final btnLabel = STR_YES;
-        final btnLabelCancel = STR_NO;
+        final btnLabel = strCamelYes;
+        final btnLabelCancel = strCamelNo;
         return Platform.isIOS
             ? CupertinoAlertDialog(
                 content: Text(

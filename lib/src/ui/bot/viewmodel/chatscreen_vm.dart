@@ -284,9 +284,9 @@ class ChatScreenViewModel extends ChangeNotifier {
       ));
       addToSheelaConversation(
         text:
-            "Your Systolic is  ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].systolicKey} "
-            "and Diastolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].diastolicKey} "
-            "and Pulse is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].pulseRateKey}",
+            "Your systolic is  ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].systolicKey} "
+            "and diastolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].diastolicKey} "
+            "and pulse is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].pulseRateKey}",
       );
       bool response = await BleConnectApiProvider().uploadBleBPDataReadings(
           ackLocal: actualDateTime,
@@ -300,12 +300,12 @@ class ChatScreenViewModel extends ChangeNotifier {
       addToSheelaConversation(
         text: response
             ? "Values saved"
-            : "Failed to save the values, Please try again",
+            : "Failed to save the values, please try again",
       );
       moveToBack(showFailure: false);
     } catch (e) {
       addToSheelaConversation(
-        text: "Failed to save the values, Please try again",
+        text: "Failed to save the values, please try again",
       );
       moveToBack(showFailure: false);
     }
