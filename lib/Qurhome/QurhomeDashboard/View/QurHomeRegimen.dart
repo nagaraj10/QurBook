@@ -700,6 +700,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
       {String eventIdReturn,
         String followEventContext,
+        String activityName,
         dynamic uid,
         dynamic aid,
         dynamic formId,
@@ -847,11 +848,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                 eid: eventId,
                 color: Color(CommonUtil().getQurhomePrimaryColor()),
                 mediaData: regimen.otherinfo,
-                formTitle: getDialogTitle(context, regimen),
+                formTitle: getDialogTitle(context, regimen,activityName),
                 canEdit: canEdit || isValidSymptom(context),
                 isFromQurHomeSymptom: false,
                 isFromQurHomeRegimen: true,
-                triggerAction: (String triggerEventId, String followContext) {
+                triggerAction: (String triggerEventId, String followContext,String activityName) {
                   Provider.of<RegimentViewModel>(Get.context, listen: false)
                       .updateRegimentStatus(RegimentStatus.DialogClosed);
                   Get.back();
@@ -860,6 +861,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
                     regimen,
                     eventIdReturn: triggerEventId,
                     followEventContext: followContext,
+                    activityName: activityName
                   );
                 },
                 followEventContext: followEventContext,
@@ -910,18 +912,27 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             : false);
   }
 
-  String getDialogTitle(BuildContext context, RegimentDataModel regimentData) {
+  String getDialogTitle(BuildContext context, RegimentDataModel regimentData,String activityName) {
     String title = '';
     if (!(regimentData?.asNeeded ?? false) &&
         Provider
             .of<RegimentViewModel>(context, listen: false)
             .regimentMode ==
             RegimentMode.Schedule) {
-      title =
-      '${regimentData?.estart != null ? DateFormat('hh:mm a').format(
-          regimentData.estart) : ''},${regimentData.title}';
+      if(activityName!=null && activityName!=''){
+        title = activityName?.capitalizeFirstofEach;
+      }else{
+        title =
+        '${regimentData?.estart != null ? DateFormat('hh:mm a').format(
+            regimentData.estart) : ''},${regimentData.title}';
+      }
+
     } else {
-      title = regimentData.title;
+      if(activityName!=null && activityName!=''){
+        title = activityName?.capitalizeFirstofEach;
+      }else{
+        title = regimentData.title;
+      }
     }
     return title;
   }
