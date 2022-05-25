@@ -49,6 +49,7 @@ class BleConnectController extends GetxController {
               "Pulse Value ${validString(bleDataModel.data.pulse.toString())}\n";
           print("BLE RESULT ${bleDataModel}");
           uploadBleData();
+          stopBleScan();
         } else if (result != null &&
             validString(result.toString().toLowerCase())
                 .contains("connected")) {
@@ -63,6 +64,13 @@ class BleConnectController extends GetxController {
       loadingData.value = false;
       errorMessage.value = "${e.toString()}";
     }
+  }
+
+  stopBleScan() async {
+    try {
+      const platform = MethodChannel('bleScanCancel');
+      var result = await platform.invokeMethod('bleScanCancel');
+    } catch (e) {}
   }
 
   String validString(String strText) {

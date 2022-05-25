@@ -1,12 +1,15 @@
 import 'dart:async';
-
+import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
+import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -22,12 +25,18 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   static const stream = EventChannel('QurbookBLE/stream');
+  static const streamBp = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
+  StreamSubscription _bpPressureSubscription;
   var foundBLE = false.obs;
   var movedToNextScreen = false;
+  var isDialogShowing = false.obs;
   String bleMacId;
   HubListController hubController;
   var regController;
+  QurHomeBpScanResult qurHomeBpScanResultModel;
+  var qurHomeBpScanResult = [].obs;
+  BleConnectController bleController = Get.put(BleConnectController());
 
   @override
   void onInit() {
@@ -45,6 +54,7 @@ class QurhomeDashboardController extends GetxController {
       qurhomeStatus: false,
     );
     _disableTimer();
+    //bleController.stopBleScan();
     super.onClose();
   }
 
@@ -57,6 +67,10 @@ class QurhomeDashboardController extends GetxController {
     if (_timerSubscription != null) {
       _timerSubscription.cancel();
       _timerSubscription = null;
+    }
+    if (_bpPressureSubscription != null) {
+      _bpPressureSubscription.cancel();
+      _bpPressureSubscription = null;
     }
   }
 
@@ -93,12 +107,16 @@ class QurhomeDashboardController extends GetxController {
 
             if (!isFromVitalsList) {
               milliSeconds = 0;
-              LoaderClass.hideLoadingDialog(Get.context);
+              //LoaderClass.hideLoadingDialog(Get.context);
             }
             foundBLE.value = true;
             movedToNextScreen = true;
             _disableTimer();
-            if (checkForParedDevice()) {
+            bleController.stopBleScan();
+            if (checkForParedDevice(isFromBp: false)) {
+              if (isDialogShowing.value) {
+                Get.back();
+              }
               Future.delayed(Duration(milliseconds: milliSeconds))
                   .then((value) {
                 Get.toNamed(
@@ -156,14 +174,15 @@ class QurhomeDashboardController extends GetxController {
     return "";
   }
 
-  bool checkForParedDevice() {
+  bool checkForParedDevice({bool isFromBp, String bleBPMacId}) {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
       var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
 
       final index = userDeviceCollection.indexWhere((element) =>
-          (validString(element.device.serialNumber) == bleMacId) &&
+          (validString(element.device.serialNumber) ==
+              (isFromBp ? bleBPMacId : bleMacId)) &&
           ((element.userId ?? '') == activeUser));
       return index >= 0;
     } catch (e) {
@@ -171,44 +190,58 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  void checkForConnectedDevices(
-    bool isFromVitalsList, {
-    String eid,
-    String uid,
-  }) {
+  checkForConnectedDevices(
+      bool isFromVitalsList, {
+        String eid,
+        String uid,
+      }) async {
     try {
-      regController = Get.find<QurhomeRegimenController>();
-      int seconds = 180;
-      if (!isFromVitalsList) {
-        seconds = 10;
-        LoaderClass.showLoadingDialog(Get.context);
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      bool isBluetoothEnable = false;
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      if (!isBluetoothEnable) {
+        FlutterToast().getToast(
+            'Please turn on your bluetooth and try again', Colors.red);
+        return;
+      } else if (!serviceEnabled) {
+        FlutterToast().getToast(
+            'Please turn on your GPS location services and try again',
+            Colors.red);
+        return;
       }
+      regController = Get.find<QurhomeRegimenController>();
+      isDialogShowing.value = true;
+      CommonUtil().dialogForScanDevices(Get.context, onPressCancel: () {
+        foundBLE.value = false;
+        movedToNextScreen = false;
+        _disableTimer();
+        bleController.stopBleScan();
+        Get.back();
+        isDialogShowing.value = false;
+      }, onPressManual: () {
+        _disableTimer();
+        bleController.stopBleScan();
+        Get.back();
+        isDialogShowing.value = false;
+        if (!isFromVitalsList) {
+          //Device Not Connected
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              eId: eid,
+            ),
+          ).then((_) {
+            regController.getRegimenList();
+          });
+        }
+      }, title: strConnectPulseMeter, isFromVital: isFromVitalsList);
       foundBLE.value = false;
       movedToNextScreen = false;
       _enableTimer(isFromVitalsList);
-      BleConnectController bleController = Get.put(BleConnectController());
       hubController.eid = eid;
       hubController.uid = uid;
       bleController.getBleConnectData(Get.context);
-
-      Future.delayed(Duration(seconds: seconds)).then((value) {
-        if (!foundBLE.value && !movedToNextScreen) {
-          _disableTimer();
-
-          if (!isFromVitalsList) {
-            LoaderClass.hideLoadingDialog(Get.context);
-            //Device Not Connected
-            Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                eId: eid,
-              ),
-            ).then((_) {
-              regController.getRegimenList();
-            });
-          }
-        }
-      });
     } catch (e) {
       print(e);
     }
@@ -240,5 +273,110 @@ class QurhomeDashboardController extends GetxController {
         appBarTitle = 'Symptoms'.obs;
         break;
     }
+  }
+
+  Future<void> checkForBpConnection({bool isFromVitals}) async {
+    _getPermissionValuesNative();
+
+    CommonUtil().dialogForScanDevices(Get.context, onPressManual: () {
+      stopBpScan();
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+          eId: hubController.eid,
+        ),
+      );
+    }, onPressCancel: () async {
+      stopBpScan();
+    }, title: strConnectBpMeter, isFromVital: isFromVitals);
+
+    callNativeBpValues();
+  }
+
+  void _getPermissionValuesNative() {
+    _bpPressureSubscription ??= streamBp.receiveBroadcastStream().listen((val) {
+      print(val);
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "enablebluetooth":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          case "permissiondenied":
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+            break;
+          default:
+            FlutterToast()
+                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+        }
+      }
+    });
+  }
+
+  callNativeBpValues() async {
+    try {
+      const platform = MethodChannel(ISBPCONNECT);
+      var result = await platform.invokeMethod(ISBPCONNECT);
+      var josnResult = convert.jsonDecode(result.toString());
+      qurHomeBpScanResultModel = QurHomeBpScanResult.fromJson(josnResult);
+      qurHomeBpScanResult.value = qurHomeBpScanResultModel?.measurementRecords;
+      if (qurHomeBpScanResultModel != null) {
+        if (qurHomeBpScanResultModel?.measurementRecords != null) {
+          if (qurHomeBpScanResultModel?.measurementRecords?.length > 0 ?? 0) {
+            if (checkForParedDevice(
+                isFromBp: true,
+                bleBPMacId: qurHomeBpScanResultModel?.deviceAddress)) {
+              Get.back();
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                    takeActiveDeviceReadings: false, isFromBpReading: true),
+              ).then((_) {
+                regController.getRegimenList();
+              });
+            } else {
+              Get.back();
+              FlutterToast().getToastForLongTime(
+                'No device found',
+                Colors.red,
+              );
+            }
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  scanBpSessionStart({bool isFromVitals}) async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool isBluetoothEnable = false;
+    bool isLocationGranted = false;
+    const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+    isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+    /*var permissionStatus =
+      await CommonUtil.askPermissionForLocation(isLocation: false);*/
+    if (!isBluetoothEnable) {
+      FlutterToast()
+          .getToast('Please turn on your bluetooth and try again', Colors.red);
+      return;
+    } else if (!serviceEnabled) {
+      FlutterToast().getToast(
+          'Please turn on your GPS location services and try again',
+          Colors.red);
+      return;
+    } else {
+      checkForBpConnection(isFromVitals: isFromVitals);
+    }
+  }
+
+  stopBpScan() async {
+    Get.back();
+    const platform = MethodChannel(IS_BP_SCAN_CANCEL);
+    var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
+    print("scan_cancel_result$result");
   }
 }

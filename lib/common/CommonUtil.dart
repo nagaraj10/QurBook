@@ -4604,6 +4604,81 @@ class CommonUtil {
     return "";
   }
 
+  void dialogForScanDevices(
+      BuildContext context, {Function() onPressManual,Function() onPressCancel,String title,bool isFromVital}) async {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black38,
+      barrierLabel: 'Label',
+      barrierDismissible: false,
+      pageBuilder: (_, __, ___) => Center(
+        child: Container(
+          width: double.infinity,
+          child: Material(
+            color: Colors.transparent.withOpacity(0.8),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AssetImageWidget(
+                    icon: icon_device_scan_measure,
+                    height: 70.h,
+                    width: 70.w,
+                  ),
+                  SizedBox(height: 40.h),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 80, 0, 120),
+                    child: SizedBox(
+                        width: 220.w,
+                        child: Text(title,
+                            style:
+                                TextStyle(fontSize: 18.sp, color: Colors.white),
+                            textAlign: TextAlign.center)),
+                  ),
+                  if (!isFromVital) SizedBox(
+                    width: 180.w,
+                    child: TextButton(
+                      child: Text(
+                        'Enter Manually',
+                        style: TextStyle(
+                            color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            fontSize: 16.sp),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.white),
+                      ),
+                      onPressed: () {
+                        onPressManual();
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 5.h),
+                  SizedBox(
+                    width: 180.w,
+                    child: TextButton(
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color(CommonUtil().getQurhomePrimaryColor())),
+                      ),
+                      onPressed: () {
+                        onPressCancel();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   void initPortraitMode() async {
     try {
       await SystemChrome.setPreferredOrientations(
