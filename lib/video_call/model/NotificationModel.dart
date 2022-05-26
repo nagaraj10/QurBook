@@ -24,6 +24,10 @@ class NotificationModel {
   String doctorName;
   String doctorPicture;
   String patientId;
+  String careCoordinatorUserId;
+  String careGiverName;
+  String activityTime;
+  String activityName;
   String patientName;
   String patientPicture;
   String externalLink;
@@ -67,6 +71,10 @@ class NotificationModel {
     this.verificationCode,
     this.patientPhoneNumber,
     this.notificationListId,
+    this.careCoordinatorUserId,
+    this.activityName,
+    this.activityTime,
+    this.careGiverName,
   });
 
   Map<String, dynamic> toMap() {
@@ -93,6 +101,10 @@ class NotificationModel {
       'isWeb': isWeb,
       'claimId': claimId,
       'notificationListId': notificationListId,
+      'careCoordinatorUserId': careCoordinatorUserId,
+      'activityName': activityName,
+      'activityTime': activityTime,
+      'careGiverName': careGiverName,
     };
   }
 
@@ -118,6 +130,10 @@ class NotificationModel {
     isWeb = message['isWeb'];
     claimId = message['claimId'];
     notificationListId = message['notificationListId'];
+    careCoordinatorUserId = message['careCoordinatorUserId'];
+    activityName = message['activityName'];
+    activityTime = message['activityTime'];
+    careGiverName = message['careGiverName'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -130,6 +146,7 @@ class NotificationModel {
         if (message[parameters.title] != null) {
           title = message[parameters.title];
         }
+
         if (message[parameters.callType] != null) {
           callType = message[parameters.callType];
         }
@@ -253,7 +270,18 @@ class NotificationModel {
         if (message[parameters.senderId] != null) {
           doctorId = message[parameters.senderId];
         }
-
+        if (message[parameters.CARE_COORDINATOR_USER_ID] != null) {
+          careCoordinatorUserId = message[parameters.CARE_COORDINATOR_USER_ID];
+        }
+        if (message[parameters.ACTIVITY_NAME] != null) {
+          activityName = message[parameters.ACTIVITY_NAME];
+        }
+        if (message[parameters.ACTIVITY_TIME] != null) {
+          activityTime = message[parameters.ACTIVITY_TIME];
+        }
+        if (message[parameters.CARE_GIVER_NAME] != null) {
+          careGiverName = message[parameters.CARE_GIVER_NAME];
+        }
         if (message[parameters.isWeb] != null) {
           if (message[parameters.isWeb].runtimeType == String) {
             isWeb = message[parameters.isWeb].toLowerCase() == 'true'
@@ -427,7 +455,18 @@ class NotificationModel {
     if (message[parameters.senderId] != null) {
       doctorId = message[parameters.senderId];
     }
-
+    if (message[parameters.CARE_COORDINATOR_USER_ID] != null) {
+      careCoordinatorUserId = message[parameters.CARE_COORDINATOR_USER_ID];
+    }
+    if (message[parameters.ACTIVITY_NAME] != null) {
+      activityName = message[parameters.ACTIVITY_NAME];
+    }
+    if (message[parameters.ACTIVITY_TIME] != null) {
+      activityTime = message[parameters.ACTIVITY_TIME];
+    }
+    if (message[parameters.CARE_GIVER_NAME] != null) {
+      careGiverName = message[parameters.CARE_GIVER_NAME];
+    }
     if (message[parameters.isWeb] != null) {
       if (message[parameters.isWeb].runtimeType == String) {
         isWeb =

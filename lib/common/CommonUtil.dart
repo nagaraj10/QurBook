@@ -9,11 +9,13 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -1641,6 +1643,18 @@ class CommonUtil {
         true,
       );
     } catch (e) {}
+  }
+
+  escalateNonAdherance(String careCoordinatorUserId, String patientName, String careGiverName, String activityTime, String activityName)async{
+    final apiBaseHelper = ApiBaseHelper();
+    var params={
+      "careCoordinatorUserId" : careCoordinatorUserId,
+      "patientName" : patientName,
+      "careGiverName" : careGiverName,
+      "activityTime" : activityTime,
+      "activityName" : activityName,
+    };
+    var response =await apiBaseHelper.escalateNonAdherance('qurplan-node-mysql/escalate-nonadherence', params);
   }
 
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,

@@ -63,6 +63,7 @@
     <string name="channel_miss_ns">Missed Alert</string>
     <string name="ns_act_accept">Accept</string>
     <string name="ns_act_reject">Reject</string>
+    <string name="ns_escalate">Escalate</string>
     <string name="ns_act_cancel">Cancel</string>
     <string name="ns_act_viewmember">View Member</string>
     <string name="ns_act_communication_settings">Communication Settings</string>
