@@ -210,7 +210,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   setupListenerForReadings() async {
     await Future.delayed(Duration(seconds: 4));
-    addToSheelaConversation(text: "Checking for SpO2 value");
+    //addToSheelaConversation(text: "Checking for SpO2 value");
     _enableTimer();
     Future.delayed(Duration(seconds: 30)).then((value) {
       if (_timerSubscription != null) {
@@ -238,19 +238,19 @@ class ChatScreenViewModel extends ChangeNotifier {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-        await Future.delayed(Duration(
+       /* await Future.delayed(Duration(
           seconds: 2,
         ));
         addToSheelaConversation(
           text: "Completed ",
-        );
-        await Future.delayed(Duration(
+        );*/
+        /*await Future.delayed(Duration(
           seconds: 3,
         ));
         addToSheelaConversation(
           text:
               "Your SpO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse}",
-        );
+        );*/
         bool response = await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
@@ -259,7 +259,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         ));
         addToSheelaConversation(
           text: response
-              ? "Values saved"
+              ? "Thank you. Your SpO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse} is successfully recorded, Bye!"
               : "Failed to save the values, Please try again",
         );
         moveToBack(showFailure: false);
@@ -280,28 +280,24 @@ class ChatScreenViewModel extends ChangeNotifier {
       var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
       String actualDateTime = formatterDateTime.format(now);
       await Future.delayed(Duration(
-        seconds: 8,
+        seconds: 2,
       ));
-      addToSheelaConversation(
-        text:
-            "Your systolic is  ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].systolicKey} "
-            "and diastolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].diastolicKey} "
-            "and pulse is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].pulseRateKey}",
-      );
       bool response = await BleConnectApiProvider().uploadBleBPDataReadings(
           ackLocal: actualDateTime,
           hubId: hublistController.virtualHubId,
           eId: hublistController.eid,
           uId: hublistController.uid,
           qurHomeBpScanResult: qurhomeController?.qurHomeBpScanResultModel);
-      await Future.delayed(Duration(
-        seconds: 8,
-      ));
       addToSheelaConversation(
         text: response
-            ? "Values saved"
+            ? "Thank you. Your BP systolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].systolicKey} "
+                ", Diastolic is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].diastolicKey} "
+                "and Pulse is ${qurhomeController?.qurHomeBpScanResultModel?.measurementRecords[0].pulseRateKey} is successfully recorded, Bye!"
             : "Failed to save the values, please try again",
       );
+      await Future.delayed(Duration(
+        seconds: 12,
+      ));
       moveToBack(showFailure: false);
     } catch (e) {
       addToSheelaConversation(
