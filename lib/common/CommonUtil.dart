@@ -36,6 +36,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:myfhb/widgets/device_type.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../add_family_user_info/services/add_family_user_info_repository.dart';
@@ -1645,16 +1646,18 @@ class CommonUtil {
     } catch (e) {}
   }
 
-  escalateNonAdherance(String careCoordinatorUserId, String patientName, String careGiverName, String activityTime, String activityName)async{
+  escalateNonAdherance(String careCoordinatorUserId, String patientName,
+      String careGiverName, String activityTime, String activityName) async {
     final apiBaseHelper = ApiBaseHelper();
-    var params={
-      "careCoordinatorUserId" : careCoordinatorUserId,
-      "patientName" : patientName,
-      "careGiverName" : careGiverName,
-      "activityTime" : activityTime,
-      "activityName" : activityName,
+    var params = {
+      "careCoordinatorUserId": careCoordinatorUserId,
+      "patientName": patientName,
+      "careGiverName": careGiverName,
+      "activityTime": activityTime,
+      "activityName": activityName,
     };
-    var response =await apiBaseHelper.escalateNonAdherance('qurplan-node-mysql/escalate-nonadherence', params);
+    var response = await apiBaseHelper.escalateNonAdherance(
+        'qurplan-node-mysql/escalate-nonadherence', params);
   }
 
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
@@ -4604,8 +4607,11 @@ class CommonUtil {
     return "";
   }
 
-  void dialogForScanDevices(
-      BuildContext context, {Function() onPressManual,Function() onPressCancel,String title,bool isFromVital}) async {
+  void dialogForScanDevices(BuildContext context,
+      {Function() onPressManual,
+      Function() onPressCancel,
+      String title,
+      bool isFromVital}) async {
     showGeneralDialog(
       context: context,
       barrierColor: Colors.black38,
@@ -4635,24 +4641,26 @@ class CommonUtil {
                                 TextStyle(fontSize: 18.sp, color: Colors.white),
                             textAlign: TextAlign.center)),
                   ),
-                  if (!isFromVital) SizedBox(
-                    width: 180.w,
-                    child: TextButton(
-                      child: Text(
-                        'Enter Manually',
-                        style: TextStyle(
-                            color: Color(CommonUtil().getQurhomePrimaryColor()),
-                            fontSize: 16.sp),
+                  if (!isFromVital)
+                    SizedBox(
+                      width: 180.w,
+                      child: TextButton(
+                        child: Text(
+                          'Enter Manually',
+                          style: TextStyle(
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                              fontSize: 16.sp),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                        ),
+                        onPressed: () {
+                          onPressManual();
+                        },
                       ),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () {
-                        onPressManual();
-                      },
                     ),
-                  ),
                   SizedBox(height: 5.h),
                   SizedBox(
                     width: 180.w,
@@ -4718,7 +4726,7 @@ class CommonUtil {
   }
 
   bool get isTablet {
-    bool isTablet;
+    /*bool isTablet;
     bool isPhone;
 
     final double devicePixelRatio = ui.window.devicePixelRatio;
@@ -4726,21 +4734,18 @@ class CommonUtil {
     final double width = size.width;
     final double height = size.height;
 
-
-    if(devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
+    if (devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
       isTablet = true;
       isPhone = false;
-    }
-    else if(devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
+    } else if (devicePixelRatio == 2 && (width >= 1920 || height >= 1920)) {
       isTablet = true;
       isPhone = false;
-    }
-    else {
+    } else {
       isTablet = false;
       isPhone = true;
-    }
+    }*/
 
-    return isTablet;
+    return Device.get().isTablet;
   }
 }
 
