@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -26,6 +29,8 @@ import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../../constants/variable_constant.dart' as variable;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   const QurHomeRegimenScreen({Key key}) : super(key: key);
@@ -34,7 +39,8 @@ class QurHomeRegimenScreen extends StatefulWidget {
   _QurHomeRegimenScreenState createState() => _QurHomeRegimenScreenState();
 }
 
-class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
+class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
+    with TickerProviderStateMixin {
   final controller = Get.put(QurhomeRegimenController());
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
@@ -44,11 +50,20 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
   var hubController = Get.find<HubListController>();
   var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
+  AnimationController animationController;
+
+  int _counter = 0;
+  StreamController<int> _events = StreamController<int>();
+  Timer _timer;
+
   @override
   void initState() {
-    controller.getRegimenList();
-
-    super.initState();
+    try {
+      controller.getRegimenList();
+      super.initState();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -58,27 +73,36 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Container(
-                height: 40.h,
-                width: 80.h,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFB5422),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(100),
-                    bottomRight: Radius.circular(100),
+          GestureDetector(
+            onTap: () {
+              try {
+                initSOSCall();
+              } catch (e) {
+                print(e);
+              }
+            },
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Container(
+                  height: 40.h,
+                  width: 80.h,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFB5422),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(100),
+                      bottomRight: Radius.circular(100),
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    'SOS',
-                    style: TextStyle(
-                        fontSize: 14.0.h,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold),
+                  child: Center(
+                    child: Text(
+                      'SOS',
+                      style: TextStyle(
+                          fontSize: 14.0.h,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -1000,6 +1024,372 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen> {
             : activitiesError,
         Colors.red,
       );
+    }
+  }
+
+  initSOSCall() async {
+    try {
+      LocationPermission permission;
+      bool serviceEnabled = false;
+      bool isInternetOn = await CommonUtil().checkInternetConnection();
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!isInternetOn) {
+        FlutterToast()
+            .getToast('Please turn on your internet and try again', Colors.red);
+        return;
+      }
+      if (!serviceEnabled) {
+        FlutterToast().getToast(
+            'Please turn on your GPS location services and try again',
+            Colors.red);
+        return;
+      }
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          FlutterToast().getToast(
+              "Location permissions are denied (actual value: $permission).",
+              Colors.red);
+          return;
+        }
+      }
+      initSOSTimer();
+      controller.getCurrentLocation();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void initSOSTimer() async {
+    try {
+      await Future.delayed(Duration(milliseconds: 50));
+      controller.updateisShowTimerDialog(true);
+      _counter = 0;
+      _events = StreamController<int>();
+      _events.add(10);
+      animationController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 10),
+      );
+      animationController.addListener(() {
+        if (animationController.isAnimating) {
+          controller.updateTimerValue(animationController.value);
+        } else {
+          controller.updateTimerValue(1.0);
+        }
+      });
+      if (controller.isShowTimerDialog.value) {
+        startTimer();
+        showSOSTimerDialog(context);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void startTimer() {
+    try {
+      _counter = 10;
+      if (_timer != null) {
+        _timer.cancel();
+      }
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (!_events.isClosed) {
+          (_counter > 0) ? _counter-- : _timer.cancel();
+          _events.add(_counter);
+          notify();
+        } else {
+          timer.cancel();
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void notify() {
+    try {
+      if (_counter == 0) {
+        closeDialog();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void closeDialog() {
+    try {
+      if (controller.isShowTimerDialog.value) {
+        Navigator.pop(context);
+        controller.updateisShowTimerDialog(false);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget startProgressIndicator(String strText) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          width: 140,
+          height: 140,
+          child: DottedBorder(
+            borderType: BorderType.Oval,
+            //radius: Radius.circular(20),
+            dashPattern: [9, 5],
+            color: Color(
+              CommonUtil().getQurhomeGredientColor(),
+            ),
+            strokeWidth: 3,
+            child: Container(),
+          ),
+        ),
+        AnimatedBuilder(
+          animation: animationController,
+          builder: (context, child) => Container(
+            margin: EdgeInsets.only(
+              top: 15.00,
+              bottom: 15.00,
+              left: 10.00,
+              right: 10.00,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "$strText",
+                  style: TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
+                    ),
+                  ),
+                ),
+                Text(
+                  sec,
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.normal,
+                    color: Color(
+                      CommonUtil().getQurhomeGredientColor(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  showSOSTimerDialog(BuildContext context) {
+    try {
+      animationController.reverse(
+          from:
+              animationController.value == 0 ? 1.0 : animationController.value);
+    } catch (e) {
+      print(e);
+    }
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: OrientationBuilder(builder: (context, orientation) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                content: StreamBuilder<int>(
+                    stream: _events.stream,
+                    builder:
+                        (BuildContext context, AsyncSnapshot<int> snapshot) {
+                      //print(snapshot.data.toString());
+                      return Container(
+                          width: orientation == Orientation.landscape &&
+                                  CommonUtil().isTablet
+                              ? 0.7.sw
+                              : 1.sw,
+                          height: orientation == Orientation.landscape &&
+                                  CommonUtil().isTablet
+                              ? 1.sh / 2
+                              : 1.sh / 2.4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              /*Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.close,
+                                        size: 30.0.sp,
+                                      ),
+                                      onPressed: () {
+                                        try {
+                                          _closeDialog();
+                                        } catch (e) {
+                                          print(e);
+                                        }
+                                      })
+                                ],
+                              ),*/
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10.0.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(
+                                            CallingEmergencyServiceIn,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.grey /*[200]*/,
+                                              fontSize: 20.0.sp,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20.0.h,
+                                      ),
+                                      startProgressIndicator(
+                                          snapshot.data.toString()),
+                                      SizedBox(
+                                        height: 45.0.h,
+                                      ),
+                                      Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            callNowSOSBtn(),
+                                            SizedBox(
+                                              width: 15.0.w,
+                                            ),
+                                            cancelSOSBtn(),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20.0.h,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ));
+                    }),
+              );
+            }),
+          );
+        });
+      },
+    );
+  }
+
+  Widget callNowSOSBtn() {
+    final callNowSOSWithGesture = InkWell(
+      onTap: () async {
+        try {
+          //TODO
+        } catch (e) {
+          print(e);
+        }
+      },
+      child: Container(
+        width: 110.0.w,
+        //height: 40.0.h,
+        padding: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getQurhomePrimaryColor()),
+          border: Border.all(
+            //width: 1.0,
+            // assign the color to the border color
+            color: Color(CommonUtil().getQurhomePrimaryColor()),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(6)),
+        ),
+        child: Center(
+          child: Text(
+            callNow,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+    return Center(
+      child: callNowSOSWithGesture,
+    );
+  }
+
+  Widget cancelSOSBtn() {
+    final cancelSOSWithGesture = InkWell(
+      onTap: () async {
+        try {
+          closeDialog();
+        } catch (e) {
+          print(e);
+        }
+      },
+      child: Container(
+        width: 110.0.w,
+        //height: 40.0.h,
+        padding: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            //width: 1.0,
+            // assign the color to the border color
+            color: Color(CommonUtil().getQurhomePrimaryColor()),
+          ),
+          borderRadius: BorderRadius.all(Radius.circular(6)),
+        ),
+        child: Center(
+          child: Text(
+            variable.Cancel,
+            style: TextStyle(
+              color: Color(CommonUtil().getQurhomePrimaryColor()),
+              fontSize: 18.0.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ),
+    );
+    return Center(
+      child: cancelSOSWithGesture,
+    );
+  }
+
+  @override
+  void dispose() {
+    try {
+      animationController.dispose();
+      _events.close();
+      super.dispose();
+    } catch (e) {
+      print(e);
     }
   }
 }
