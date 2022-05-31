@@ -26,25 +26,15 @@ class NonAdheranceSettingController extends GetxController {
       });
       nonAdheranceResponseModel = await nonAdheranceRepository.getNonAdheranceList();
       familyResponseList = await familyRepository.getFamilyMembersListNew();
-      familyResponseList.result.sharedByUsers.removeWhere((element) => !element.isCaregiver);
-      familyResponseList.result.sharedByUsers.forEach((element) {
+      familyResponseList.result.sharedToUsers.removeWhere((element) => !element.isCaregiver);
+      familyResponseList.result.sharedToUsers.forEach((element) {
         element.remainderFor=remainderFor[0];
         element.remainderForId=remainderForModel.result[0].id;
         element.remainderMins="15 Mins";
-        // nonAdheranceResponseModel.result.forEach((elementNon) {
-        //   if(elementNon.patient.id==element.child.id){
-        //     element.isNewUser=false;
-        //     element.nonAdheranceId=elementNon.id;
-        //     element.remainderMins=elementNon.remindAfterMins.toString();
-        //     element.remainderForId=elementNon.reminderFor.id;
-        //     element.remainderFor=elementNon.reminderFor.name;
-        //   }
-        // });
       });
-      familyResponseList.result.sharedByUsers.forEach((element) {
-
+      familyResponseList.result.sharedToUsers.forEach((element) {
         nonAdheranceResponseModel.result.forEach((elementNon) {
-          if(elementNon.patient.id==element.child.id){
+          if(elementNon.patient.id==element.parent.id){
             element.isNewUser=false;
             element.nonAdheranceId=elementNon.id;
             element.remainderMins=elementNon.remindAfterMins.toString()+' Mins';

@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 
@@ -448,6 +449,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                               payload?.redirectTo,
                             );
                           } else if (payload?.redirectTo == 'mycart') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          }else if (payload?.redirectTo == 'escalateToCareCoordinatorToRegimen') {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -986,6 +992,18 @@ class _NotificationScreen extends State<NotificationScreen> {
           setState(() {});
         });
         readUnreadAction(result);
+        break;
+      case "escalateToCareCoordinatorToRegimen":
+        final userId = PreferenceUtil.getStringValue(KEY_USERID);
+        if (result?.messageDetails?.payload?.userId == userId) {
+          Get.toNamed(rt_Regimen);
+          readUnreadAction(result);
+        } else {
+          CommonUtil.showFamilyMemberPlanExpiryDialog(
+            result?.messageDetails?.payload?.patientName,
+            redirect:"caregiver",
+          );
+        }
         break;
       case "AppointmentTransactionCancelledMidway":
         readUnreadAction(result);
