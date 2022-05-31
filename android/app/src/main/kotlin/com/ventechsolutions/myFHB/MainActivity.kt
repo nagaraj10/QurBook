@@ -1609,7 +1609,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         } else if(redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true){
 
-            sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}"
+            sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}"
         }else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
