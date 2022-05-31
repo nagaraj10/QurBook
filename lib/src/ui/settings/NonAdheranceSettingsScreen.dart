@@ -66,8 +66,8 @@ class _NonAdheranceSettingsScreenState
                             'Please re-try after some time',
                           ),
                         )
-                      : val.familyResponseList.result.sharedByUsers.length != 0
-                          ? showData(val.familyResponseList.result.sharedByUsers)
+                      : val.familyResponseList.result.sharedToUsers.length != 0
+                          ? showData(val.familyResponseList.result.sharedToUsers)
                           : const Center(
                               child: Text(
                                 'No Patients Found',
@@ -79,10 +79,10 @@ class _NonAdheranceSettingsScreenState
     );
   }
 
-  Widget showData(List<SharedByUsers> sharedByUsers) {
+  Widget showData(List<SharedToUsers> sharedToUsers) {
     return ListView.builder(
       shrinkWrap: true,
-        itemCount: sharedByUsers.length,
+        itemCount: sharedToUsers.length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
@@ -91,11 +91,11 @@ class _NonAdheranceSettingsScreenState
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Expanded(child: Text(getMemberName(sharedByUsers[index]),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),)),
+                    Expanded(child: Text(getMemberName(sharedToUsers[index]),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w500),)),
                     DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         elevation: 16,
-                        value:sharedByUsers[index].remainderFor,
+                        value:sharedToUsers[index].remainderFor,
                         onChanged: (String newValue) {
                           String id="";
                           controller.remainderForModel.result.forEach((element) {
@@ -103,10 +103,10 @@ class _NonAdheranceSettingsScreenState
                               id=element.id;
                             }
                           });
-                          if(sharedByUsers[index].isNewUser){
-                            controller.saveNonAdherance(sharedByUsers[index].remainderMins.split(" ")[0], sharedByUsers[index].child.id, id);
+                          if(sharedToUsers[index].isNewUser){
+                            controller.saveNonAdherance(sharedToUsers[index].remainderMins.split(" ")[0], sharedToUsers[index].parent.id, id);
                           }else{
-                            controller.editNonAdherance(sharedByUsers[index].nonAdheranceId,sharedByUsers[index].remainderMins.split(" ")[0], sharedByUsers[index].child.id, id);
+                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId,sharedToUsers[index].remainderMins.split(" ")[0], sharedToUsers[index].parent.id, id);
                           }
                         },
                         items: controller.remainderFor.map<DropdownMenuItem<String>>((String value) {
@@ -121,12 +121,12 @@ class _NonAdheranceSettingsScreenState
                     DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         elevation: 16,
-                        value: sharedByUsers[index].remainderMins,
+                        value: sharedToUsers[index].remainderMins,
                         onChanged: (String newValue) {
-                          if(sharedByUsers[index].isNewUser){
-                            controller.saveNonAdherance(newValue.split(" ")[0], sharedByUsers[index].child.id, sharedByUsers[index].remainderForId);
+                          if(sharedToUsers[index].isNewUser){
+                            controller.saveNonAdherance(newValue.split(" ")[0], sharedToUsers[index].parent.id, sharedToUsers[index].remainderForId);
                           }else{
-                            controller.editNonAdherance(sharedByUsers[index].nonAdheranceId,newValue.split(" ")[0], sharedByUsers[index].child.id, sharedByUsers[index].remainderForId);
+                            controller.editNonAdherance(sharedToUsers[index].nonAdheranceId,newValue.split(" ")[0], sharedToUsers[index].parent.id, sharedToUsers[index].remainderForId);
                           }
                         },
                         items: <String>['15 Mins', '30 Mins', '60 Mins']
@@ -147,13 +147,13 @@ class _NonAdheranceSettingsScreenState
         });
   }
 
-  getMemberName(SharedByUsers data){
+  getMemberName(SharedToUsers data){
     String fulName="";
-    if (data?.child?.firstName != null && data?.child?.firstName != '') {
-      fulName = data?.child?.firstName;
+    if (data?.parent?.firstName != null && data?.parent?.firstName != '') {
+      fulName = data?.parent?.firstName;
     }
-    if (data?.child?.lastName != null && data?.child?.lastName != '') {
-      fulName = fulName + ' ' + data?.child?.lastName;
+    if (data?.parent?.lastName != null && data?.parent?.lastName != '') {
+      fulName = fulName + ' ' + data?.parent?.lastName;
     }
     return fulName;
   }
