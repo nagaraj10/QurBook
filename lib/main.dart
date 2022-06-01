@@ -550,8 +550,17 @@ class _MyFHBState extends State<MyFHB> {
             // );
           }
         }else if(passedValArr[1] == 'escalateToCareCoordinatorToRegimen'){
-          CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6]);
-          Get.toNamed(rt_Regimen);
+          final userId = PreferenceUtil.getStringValue(KEY_USERID);
+          if (passedValArr[7] == userId) {
+            CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6]);
+            Get.toNamed(rt_Regimen);
+          } else {
+            CommonUtil.showFamilyMemberPlanExpiryDialog(
+              passedValArr[3],
+              redirect:"caregiver",
+            );
+          }
+
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(

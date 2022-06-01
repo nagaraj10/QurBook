@@ -21,6 +21,7 @@ class EscalateCareGiver:BroadcastReceiver() {
         val careGiverName = p1?.getStringExtra(Constants.CARE_GIVER_NAME)
         val activityTime = p1?.getStringExtra(Constants.ACTIVITY_TIME)
         val activityName = p1?.getStringExtra(Constants.ACTIVITY_NAME)
+        val userId = p1?.getStringExtra(Constants.PROB_USER_ID)
 
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
@@ -39,6 +40,7 @@ class EscalateCareGiver:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.CARE_GIVER_NAME,careGiverName)
         launchIntent?.putExtra(Constants.ACTIVITY_TIME,activityTime)
         launchIntent?.putExtra(Constants.ACTIVITY_NAME,activityName)
+        launchIntent?.putExtra(Constants.PROB_USER_ID,userId)
         launchIntent?.putExtra("type", type)
         p0.startActivity(launchIntent)
     }
