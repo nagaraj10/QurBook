@@ -32,6 +32,7 @@ class NotificationModel {
   String patientPicture;
   String externalLink;
   String patientPhoneNumber;
+  String uid;
   String verificationCode;
   String caregiverRequestor;
   String caregiverReceiver;
@@ -75,6 +76,7 @@ class NotificationModel {
     this.activityName,
     this.activityTime,
     this.careGiverName,
+    this.uid,
   });
 
   Map<String, dynamic> toMap() {
@@ -105,6 +107,7 @@ class NotificationModel {
       'activityName': activityName,
       'activityTime': activityTime,
       'careGiverName': careGiverName,
+      'uid': uid,
     };
   }
 
@@ -191,6 +194,9 @@ class NotificationModel {
         }
         if (message[parameters.patientPhoneNumber] != null) {
           patientPhoneNumber = message[parameters.patientPhoneNumber];
+        }
+        if (message[parameters.uid] != null) {
+          uid = message[parameters.uid];
         }
         if (message[parameters.verificationCode] != null) {
           verificationCode = message[parameters.verificationCode];
@@ -358,6 +364,9 @@ class NotificationModel {
     }
     if (message[parameters.patientPhoneNumber] != null) {
       patientPhoneNumber = message[parameters.patientPhoneNumber];
+    }
+    if (message[parameters.uid] != null) {
+      uid = message[parameters.uid];
     }
     if (message[parameters.verificationCode] != null) {
       verificationCode = message[parameters.verificationCode];
