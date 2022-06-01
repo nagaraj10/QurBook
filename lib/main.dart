@@ -552,7 +552,7 @@ class _MyFHBState extends State<MyFHB> {
         }else if(passedValArr[1] == 'escalateToCareCoordinatorToRegimen'){
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if (passedValArr[7] == userId) {
-            CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6]);
+            CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6],passedValArr[7],passedValArr[8],passedValArr[9]);
             Get.toNamed(rt_Regimen);
           } else {
             CommonUtil.showFamilyMemberPlanExpiryDialog(

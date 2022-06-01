@@ -308,7 +308,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       final temp = widget.bundle.split('|');
                       final userId = PreferenceUtil.getStringValue(KEY_USERID);
                       if (temp[5] == userId) {
-                        CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4]);
+                        CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4],temp[5],temp[6],temp[7]);
                         Get.toNamed(rt_Regimen);
                       } else {
                         CommonUtil.showFamilyMemberPlanExpiryDialog(
