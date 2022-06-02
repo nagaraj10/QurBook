@@ -564,6 +564,9 @@ class IosNotificationHandler {
         model.careGiverName,
         model.activityTime,
         model.activityName,
+        model.userId,
+        model.uid,
+        model.patientPhoneNumber
       );
     } else {
       isAlreadyLoaded

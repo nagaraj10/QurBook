@@ -628,6 +628,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.ACTIVITY_TIME, data[Constants.ACTIVITY_TIME])
         acceptCareGiverIntent.putExtra(Constants.ACTIVITY_NAME, data[Constants.ACTIVITY_NAME])
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        acceptCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
+        acceptCareGiverIntent.putExtra(Constants.UID, data[Constants.UID])
 
 
         val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(

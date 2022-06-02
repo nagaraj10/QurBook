@@ -1568,6 +1568,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val verificationCode = intent.getStringExtra(Constants.VERIFICATION_CODE)
         val caregiverRequestor = intent.getStringExtra(Constants.CAREGIVER_REQUESTER)
         val caregiverReceiver = intent.getStringExtra(Constants.CAREGIVER_RECEIVER)
+        val uid = intent.getStringExtra(Constants.UID)
         val type = intent.getStringExtra("type")
 
         val data = intent.getStringExtra(Constants.PROP_DATA)
@@ -1609,7 +1610,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         } else if(redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true){
 
-            sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}"
+            sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
         }else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
