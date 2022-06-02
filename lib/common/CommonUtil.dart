@@ -1647,7 +1647,7 @@ class CommonUtil {
   }
 
   escalateNonAdherance(String careCoordinatorUserId, String patientName,
-      String careGiverName, String activityTime, String activityName) async {
+      String careGiverName, String activityTime, String activityName,String userId,String uid,String patientPhoneNumber) async {
     final apiBaseHelper = ApiBaseHelper();
     var params = {
       "careCoordinatorUserId": careCoordinatorUserId,
@@ -1655,6 +1655,9 @@ class CommonUtil {
       "careGiverName": careGiverName,
       "activityTime": activityTime,
       "activityName": activityName,
+      "uid": uid,
+      "patientPhoneNumber": patientPhoneNumber,
+      "userId": userId,
     };
     var response = await apiBaseHelper.escalateNonAdherance(
         'qurplan-node-mysql/escalate-nonadherence', params);

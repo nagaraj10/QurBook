@@ -672,6 +672,7 @@ const String associationNotificationToCaregiver =
     'associationNotificationToCaregiver';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
+const String uid = 'uid';
 const String verificationCode = 'verificationCode';
 const String caregiverReceiver = 'caregiverReceiver';
 const String caregiverRequestor = 'caregiverRequestor';

@@ -306,8 +306,17 @@ class _SplashScreenState extends State<SplashScreen> {
                     }else if (widget.nsRoute ==
                         'escalateToCareCoordinatorToRegimen') {
                       final temp = widget.bundle.split('|');
-                      CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4]);
-                      Get.toNamed(rt_Regimen);
+                      final userId = PreferenceUtil.getStringValue(KEY_USERID);
+                      if (temp[5] == userId) {
+                        CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4],temp[5],temp[6],temp[7]);
+                        Get.toNamed(rt_Regimen);
+                      } else {
+                        CommonUtil.showFamilyMemberPlanExpiryDialog(
+                          temp[1],
+                          redirect:"caregiver",
+                        );
+                      }
+
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
