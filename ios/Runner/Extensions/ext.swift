@@ -52,18 +52,27 @@ extension Dictionary {
 }
 
 extension String {
-    func inserting() -> String {
+    func inserting(reverse:Bool = true) -> String {
         var result: String = ""
         let characters = Array(self)
         var sepCar:Array<String> = []
         var count = 0
         stride(from: 0, to: characters.count, by: 2).forEach {
             count += 1
-            if ($0+2 < characters.count) && (count <= 6){
-                sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
+            if (reverse){
+                if ($0+2 < characters.count) && (count <= 6){
+                    sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
+                }
+            }else{
+                if ($0+2 <= characters.count) && (count <= 6){
+                    sepCar.append(String(characters[$0..<min($0+2, characters.count)]))
+                }
             }
+            
         }
-        sepCar = sepCar.reversed()
+        if (reverse){
+            sepCar = sepCar.reversed()
+        }
         result = sepCar.joined(separator: ":").uppercased()
         print(result)
         return result

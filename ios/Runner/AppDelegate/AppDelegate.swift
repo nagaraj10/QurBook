@@ -43,7 +43,7 @@ import CoreBluetooth
     let showSingleButtonCat = "showSingleButtonCat"
     let planRenewButton = "planRenewButton"
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
-
+    
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
@@ -52,7 +52,7 @@ import CoreBluetooth
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
     var eventSink: FlutterEventSink? = nil
-    
+    var idForBP :NSUUID = NSUUID.init(uuidString: "11298CA7-09C6-9027-95EC-60F9BE51F1D9")!
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -99,9 +99,6 @@ import CoreBluetooth
             //            print("total notifications scheduled \(data.count)")
             
         }
-        // setupWifiListener(messanger: controller.binaryMessenger)
-        // getCurrentWifiDetails()
-        //        setUpReminders(messanger: controller.binaryMessenger)
         //Add Action button the Notification
         IQKeyboardManager.shared.enable = true
         let snoozeAction = UNNotificationAction(identifier: "Snooze", title: "Snooze", options: [])
@@ -119,9 +116,9 @@ import CoreBluetooth
                                                              intentIdentifiers: [],
                                                              options: [])
         let esclateButtonscategory = UNNotificationCategory(identifier: escalateToCareCoordinatorButtons,
-                                                             actions:  [esclateAction],
-                                                             intentIdentifiers: [],
-                                                             options: [])
+                                                            actions:  [esclateAction],
+                                                            intentIdentifiers: [],
+                                                            options: [])
         let showViewMemberAndCommunicationButtonscategory = UNNotificationCategory(identifier: showViewMemberAndCommunicationButtons,
                                                                                    actions:  [viewMemberAction, communicationsettingsAction],
                                                                                    intentIdentifiers: [],
@@ -630,14 +627,44 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
             eventSink?("enablebluetooth|please enable bluetooth")
         case .poweredOn:
             eventSink?("scanstarted|connection started")
-            centralManager.scanForPeripherals(withServices: [Constants.poServiceCBUUID])
+            centralManager.scanForPeripherals(withServices: [])
         default:
             eventSink?("enablebluetooth|please enable bluetooth")
         }
     }
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
+        
+        if let name =  advertisementData[Constants.BLENameData] as? String, name.lowercased().contains("blesmart"){
+                centralManager.stopScan()
+             let tempMacId = String(name.suffix(12))
+             print(tempMacId)
+             let macID = tempMacId.inserting(reverse: false)
+             print(macID)
+                OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) { deviceInfoKeys in
+                    OHQDeviceManager.shared().stopScan()
+                    OHQDeviceManager.shared().startSession(withDevice: deviceInfoKeys[OHQDeviceInfoKey.identifierKey] as! UUID, usingDataObserver: { dataType, data in
+                        print("---------------------------------------------------------")
+                        print("received data is ", data as? NSArray ?? [])
+                        //print(data)
+                    }, connectionObserver: {[weak self] state in
+                        guard let self = self else { return }
+                        print("current " ,state)
+                        if (state == OHQConnectionState.connected){
+                            self.eventSink?("macid|"+macID)
+                            self.eventSink?("bleDeviceType|BP")
+                        }
+                    }, completion: { completionReason in
+                        print("completed",completionReason)
+                    }, options: [
+                        OHQSessionOptionKey.readMeasurementRecordsKey : true,
+                        OHQSessionOptionKey.connectionWaitTimeKey : 60
+                    ])
+                } completion: { completionReason in
+                    print("completed",completionReason)
+                }
+                
+        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
             // Able to retrive the MAC id
             let decodedString = newdata.hexEncodedString()
             let macID = decodedString.inserting()
@@ -645,13 +672,12 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
             eventSink?("bleDeviceType|SPO2")
             poPeripheral = peripheral
             poPeripheral.delegate = self
+            centralManager.stopScan()
             centralManager.connect(poPeripheral)
         }else{
             //failed to get the mac id
             eventSink?("connectionfailed| connection failed")
         }
-        centralManager.stopScan()
-        
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -732,6 +758,7 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     
     func onCancel(withArguments arguments: Any?) -> FlutterError? {
         eventSink = nil
+        centralManager.stopScan()
         return nil
     }
     

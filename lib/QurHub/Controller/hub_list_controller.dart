@@ -162,19 +162,21 @@ class HubListController extends GetxController {
 
   checkForConnectedDevices() async {
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      bool isBluetoothEnable = false;
-      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
-      if (!isBluetoothEnable) {
-        FlutterToast().getToast(
-            'Please turn on your bluetooth and try again', Colors.red);
-        return;
-      } else if (!serviceEnabled) {
-        FlutterToast().getToast(
-            'Please turn on your GPS location services and try again',
-            Colors.red);
-        return;
+      if (Platform.isAndroid) {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        bool isBluetoothEnable = false;
+        const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+        isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+        if (!isBluetoothEnable) {
+          FlutterToast().getToast(
+              'Please turn on your bluetooth and try again', Colors.red);
+          return;
+        } else if (!serviceEnabled) {
+          FlutterToast().getToast(
+              'Please turn on your GPS location services and try again',
+              Colors.red);
+          return;
+        }
       }
       searchingBleDevice.value = true;
       _enableTimer();
