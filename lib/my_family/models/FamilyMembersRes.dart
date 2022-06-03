@@ -90,6 +90,7 @@ class SharedByUsers {
   String remainderFor;
   String remainderMins;
   String nonAdheranceId;
+  ChatListItem chatListItem;
   SharedByUsers({this.id,
     this.status,
     this.nickName,
@@ -97,7 +98,7 @@ class SharedByUsers {
     this.createdOn,
     this.lastModifiedOn,
     this.relationship,
-    this.child,this.membershipOfferedBy,this.isCaregiver,this.isNewUser,this.remainderFor,this.remainderMins,this.nonAdheranceId,this.remainderForId});
+    this.child,this.membershipOfferedBy,this.isCaregiver,this.isNewUser,this.remainderFor,this.remainderMins,this.nonAdheranceId,this.remainderForId,this.chatListItem});
 
   SharedByUsers.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -113,6 +114,9 @@ class SharedByUsers {
         ? RelationsShipModel.fromJson(json['relationship'])
         : null;
     child = json['child'] != null ? Child.fromJson(json['child']) : null;
+    chatListItem = json['chatListItem'] != null
+        ? new ChatListItem.fromJson(json['chatListItem'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -129,6 +133,9 @@ class SharedByUsers {
     }
     if (child != null) {
       data['child'] = child.toJson();
+    }
+    if (this.chatListItem != null) {
+      data['chatListItem'] = this.chatListItem.toJson();
     }
     return data;
   }
@@ -786,6 +793,55 @@ class VirtualUserParent {
     data['countryCode'] = countryCode;
     data['email'] = email;
     data['phoneNumber'] = phoneNumber;
+    return data;
+  }
+}
+
+class ChatListItem {
+  String id;
+  String peerId;
+  String userId;
+  String createdOn;
+  bool isActive;
+  bool isDisable;
+  bool isMuted;
+  int unReadNotificationCount;
+  String lastModifiedOn;
+
+  ChatListItem(
+      {this.id,
+        this.peerId,
+        this.userId,
+        this.createdOn,
+        this.isActive,
+        this.isDisable,
+        this.isMuted,
+        this.unReadNotificationCount,
+        this.lastModifiedOn});
+
+  ChatListItem.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    peerId = json['peerId'];
+    userId = json['userId'];
+    createdOn = json['createdOn'];
+    isActive = json['isActive'];
+    isDisable = json['isDisable'];
+    isMuted = json['isMuted'];
+    unReadNotificationCount = json['unReadNotificationCount'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['peerId'] = this.peerId;
+    data['userId'] = this.userId;
+    data['createdOn'] = this.createdOn;
+    data['isActive'] = this.isActive;
+    data['isDisable'] = this.isDisable;
+    data['isMuted'] = this.isMuted;
+    data['unReadNotificationCount'] = this.unReadNotificationCount;
+    data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
 }

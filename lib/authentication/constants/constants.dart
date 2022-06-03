@@ -198,6 +198,10 @@ const String strFreeDiet = 'FreeDiet';
 
 const String strAddPlan = 'Add Plan';
 
+const String strNewChatLabel = 'My Family';
+
+const String strLabelNoFamily = 'No data available';
+
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
 const String strPlusSymbol = '+';
