@@ -2055,7 +2055,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 firstNameController.text + ' ' + lastNameController.text);
             _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                      Constants.KEY_FAMILYMEMBER, value.result)
+                      Constants.KEY_FAMILYMEMBER, value?.result)
                   .then((value) {
                 //saveProfileImage();
                 /*  MySliverAppBar.imageURI = null;
