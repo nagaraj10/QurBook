@@ -1,4 +1,6 @@
 //Strings used in PatientLogin
+import 'dart:math';
+
 import 'package:url_launcher/url_launcher.dart';
 
 const String struserName = 'userName';
@@ -35,8 +37,10 @@ const String qurhealthSolutions = 'QurHealth Solutions';
 const String membership = 'Membership';
 const String platinum = 'Platinum';
 const String getStarted = 'Let\'s Get Started';
-const String longDescription = 'Membership for Qurbook app\nThat brings you the best-in-class health ecosystem partners for all your healthcare needs.';
-const String careEmployees = 'Cares for its employees and\ntheir family\'s health\n&\nHas offered you the';
+const String longDescription =
+    'Membership for Qurbook app\nThat brings you the best-in-class health ecosystem partners for all your healthcare needs.';
+const String careEmployees =
+    'Cares for its employees and\ntheir family\'s health\n&\nHas offered you the';
 
 //Strings used in VerifyPatient
 const String strSource = 'myFHBMobile';
@@ -123,7 +127,7 @@ const String strResendGenerateOTP = 'user-relationship/generate-otp';
 const String strAdditionalInstructions = 'Additional Instructions';
 
 //tickets
-const String ticketCreatedSuccessfully='Ticket Created Successfully';
+const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
 
 //Strings used in ChangePassword
 const String strChangePasswordText =
@@ -228,4 +232,13 @@ void openEmail({String sub = 'App Feedback', String body = ''}) async {
   } else {
     throw 'Could not launch $url';
   }
+}
+
+int getMyMeetingID() {
+  int min = 100000; //min and max values act as your 6 digit range
+  int max = 999999;
+  var randomizer = new Random();
+  var rNum = min + randomizer.nextInt(max - min);
+
+  return rNum;
 }

@@ -74,3 +74,76 @@ class LocationDataModel {
     return data;
   }
 }
+
+class Location {
+  String latitude;
+  String longitude;
+  String addressLine;
+  String countryName;
+  String countryCode;
+  String featureName;
+  String postalCode;
+  String adminArea;
+  String subAdminArea;
+  String locality;
+  String subLocality;
+  String thoroughfare;
+  String subThoroughfare;
+
+  Location(
+      {this.latitude,
+      this.longitude,
+      this.addressLine,
+      this.countryName,
+      this.countryCode,
+      this.featureName,
+      this.postalCode,
+      this.adminArea,
+      this.subAdminArea,
+      this.locality,
+      this.subLocality,
+      this.thoroughfare,
+      this.subThoroughfare});
+
+  Location.fromJson(Map<String, dynamic> json) {
+    try {
+      latitude = json['latitude'];
+      longitude = json['longitude'];
+      addressLine = json['addressLine'];
+      countryName = json['countryName'];
+      countryCode = json['countryCode'];
+      featureName = json['featureName'];
+      postalCode = json['postalCode'];
+      adminArea = json['adminArea'];
+      subAdminArea = json['subAdminArea'];
+      locality = json['locality'];
+      subLocality = json['subLocality'];
+      thoroughfare = json['thoroughfare'];
+      subThoroughfare = json['subThoroughfare'];
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['latitude'] = this.latitude;
+      data['longitude'] = this.longitude;
+      data['addressLine'] = this.addressLine;
+      data['countryName'] = this.countryName;
+      data['countryCode'] = this.countryCode;
+      data['featureName'] = this.featureName;
+      data['postalCode'] = this.postalCode;
+      data['adminArea'] = this.adminArea;
+      data['subAdminArea'] = this.subAdminArea;
+      data['locality'] = this.locality;
+      data['subLocality'] = this.subLocality;
+      data['thoroughfare'] = this.thoroughfare;
+      data['subThoroughfare'] = this.subThoroughfare;
+    } catch (e) {
+      print(e);
+    }
+    return data;
+  }
+}

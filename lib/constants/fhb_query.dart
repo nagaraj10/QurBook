@@ -35,6 +35,11 @@ const String qr_language = 'reference-data?search-name=Language';
 const String qr_BLEDataUpload = 'device-data/kiosk/send-device-data';
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
+const String qr_getCareCoordinatorId = 'qurplan-node-mysql/get-patient-carers/';
+const String qr_messaging = 'messaging';
+const String qr_triggerMissedCallNotification =
+    'messaging/sos-missed-call-notification';
+const String qr_callLog = 'call-log/sos';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';

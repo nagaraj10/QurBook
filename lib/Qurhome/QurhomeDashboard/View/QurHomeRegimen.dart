@@ -28,6 +28,7 @@ import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/video_call/pages/calling_page.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../../constants/variable_constant.dart' as variable;
@@ -1113,7 +1114,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void notify() {
     try {
       if (_counter == 0) {
-        closeDialog();
+        callNowSOS();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void callNowSOS() {
+    try {
+      closeDialog();
+      if (!controller.onGoingSOSCall.value) {
+        controller.callSOSEmergencyServices();
       }
     } catch (e) {
       print(e);
@@ -1124,6 +1136,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       if (controller.isShowTimerDialog.value) {
         Navigator.pop(context);
+        _events.close();
         controller.updateisShowTimerDialog(false);
       }
     } catch (e) {
@@ -1308,7 +1321,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     final callNowSOSWithGesture = InkWell(
       onTap: () async {
         try {
-          //TODO
+          callNowSOS();
         } catch (e) {
           print(e);
         }

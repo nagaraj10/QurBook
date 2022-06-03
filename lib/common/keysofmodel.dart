@@ -1,0 +1,197 @@
+///CallpushNSModel
+const String c_recipients = 'recipients';
+const String c_messageDetails = 'messageDetails';
+const String c_transportMedium = 'transportMedium';
+const String c_saveMessage = 'saveMessage';
+const String c_messageTitle = 'messageTitle';
+const String c_messageBody = 'messageBody';
+const String c_priority = 'priority';
+const String c_content = 'content';
+const String c_type = 'type';
+const String c_userName = 'userName';
+const String c_meetingId = 'meetingId';
+const String c_docId = 'doctorId';
+const String c_docPic = 'doctorPicture';
+const String c_payload = 'payload';
+const String c_content_type_key = 'Content-Type';
+const String c_accept_key = 'Accept';
+const String c_content_type_val = 'application/json';
+const String c_content_type_pdf = '.pdf';
+const String c_auth_key = 'Authorization';
+const String c_ns_type_call = 'call';
+const String c_pri_type_high = 'high';
+const String c_trans_medium_push = 'Push';
+const String c_res_isSuccess = 'isSuccess';
+const String c_pref_auth_token = 'auth_token';
+const String c_pref_display_name = 'display_name';
+const String c_ns_msg_video = 'Incoming video call';
+const String c_ns_msg_audio = 'Incoming audio call';
+const String c_doc_id = 'doctor_id';
+const String c_doc_pic = 'profile_image';
+const String c_doc_meta_id = 'id';
+const String c_doc_meta_token = 'token';
+const String c_doc_meta_name = 'name';
+const String c_doc_meta_pro_pic = 'profile_pic';
+const String c_file_img_type_jpg = '.jpg';
+const String c_file_img_type_png = '.png';
+const String c_file_img_type_jpeg = '.jpeg';
+const String c_error_msg_call_conn_prob =
+    'There is some problem to connect your call';
+const String c_error = 'error';
+const String c_user = 'user';
+const String c_MDY = 'MDY';
+const String c_YMD = 'YMD';
+const String c_DMY = 'DMY';
+const String c_Mdyh = 'MMM dd yyyy, hh:mm aa';
+const String c_yMdh = 'yyyy MMM dd, hh:mm aa';
+const String c_dMyh = 'dd MMM yyyy, hh:mm aa';
+const String c_Mdy = 'MM-dd-yyyy';
+const String c_yMd = 'yyyy-MM-dd';
+const String c_dMy = 'dd-MM-yyyy';
+const String c_yMd_Hms = 'yyyy-MM-dd HH:mm:ss';
+const String c_tts_platform = 'flutter.native/textToSpeech';
+const String c_vi_platform = 'flutter.native/voiceIntent';
+const String c_av_path = 'goFHB/Audio';
+const String c_my_secret = 'secrets.json';
+const String c_phno = 'phoneNumber';
+const String c_email = 'email';
+const String c_is_active = 'isActive';
+const String c_dt_id = 'deviceTokenId';
+const String c_dInfo = 'deviceInfo';
+const String c_plat_ios = 'IOSPLT';
+const String c_plat_and = 'ANDPLT';
+const String c_plat_code = 'platformCode';
+const String c_dev_info = 'device-info';
+const String c_device_type_code = 'deviceTypeCode';
+const String c_plat_ios_type = 'IOS';
+const String c_plat_and_type = 'ANDROID';
+const String c_pat_id = 'patientId';
+const String c_pat_name = 'patientName';
+const String c_pat_picture = 'patientPicture';
+const String supportPage = 'support_page';
+const String notificationPage = 'notification_page';
+const String c_ns_type_call_sub_type = 'callType';
+const String c_ns_type_isWeb = 'isWeb';
+//for sheela
+const String strIsMayaSaid = 'isMayaSaid';
+const String strText = 'text';
+const String strImageUrl = 'imageUrl';
+const String strTimeStamp = 'timeStamp';
+const String strName = 'name';
+const String strSayHI = 'Hi Sheela';
+const String strSheela = 'Sheela';
+const String strSHEELA = 'SHEELA';
+
+//speechmodel
+const String strSender = 'sender';
+const String strSenderName = 'Name';
+const String strSource = 'source';
+const String strSourceApp = 'goFHBMobile';
+const String strSessionId = 'sessionId';
+const String strReceiptId = 'recipient_id';
+const String strEndOfConv = 'endOfConv';
+const String strSpeechImageURL = 'imageURL';
+const String strMessage = 'message';
+const String strAuthToken = 'authToken';
+const String strlastLoggedIn = 'lastLoggedIn';
+const String strdevice = 'device';
+const String strtts = 'textToSpeech';
+const String strIsClose = 'isClose';
+const String strspeakAssistant = 'speakWithVoiceAssistant';
+const String strtapToSpeak = 'Tap to Speak';
+const String strtimezone = 'timezone';
+const String strPlatforType = 'device_type';
+const String strsingleuse = 'singleuse';
+const String strisActionDone = 'isActionDone';
+
+///images
+const String c_sheela_icon = 'assets/images/bottom-bar/maya_us.png';
+const String c_sheela_desc = 'Hi, I am Sheela your voice health assistant.';
+const String c_sheela_start = 'Start now';
+const String appIconWithTagLine = 'assets/images/others/QurHealth_tagline.png';
+const String icon_no_internet = 'assets/images/others/no_internet.png';
+const String icon_something_wrong = 'assets/images/others/something-wrong.png';
+
+const String strtexthtml = 'text/html';
+const String strUtf = 'utf-8';
+const String terms_of_service = 'Terms of use';
+const String file_termsandconditions = 'assets/help_docs/goFHB-T&C.html';
+const String privacy_policy = 'Privacy policy';
+const String file_privacy = 'assets/help_docs/goFHB-Privacy-Policy.html';
+const String icon_faq = 'assets/images/drawer-menu/faq.png';
+const String icon_whatsapp = 'assets/images/others/ic_whatsapp.png';
+const String c_faq = 'FAQ';
+const String c_refer_friend = 'Refer a Friend';
+const String c_refer_friend_icon =
+    'assets/images/drawer-menu/refer_a_friend.png';
+const String c_chat_with_whatsapp = 'Chat with Us';
+const String c_chat_with_whatsapp_begin_conv = 'Hi';
+const String c_qurhealth_helpline = '919566200555';
+const String c_faq_url = 'assets/help_docs/goFHB-FAQ.html';
+
+const String data = 'data';
+const String notification = 'notification';
+const String token = 'Token';
+const String launcher = '@mipmap/ic_launcher';
+const String channel_id = 'channel id';
+const String channel_name = 'channel NAME';
+const String channel_descrip = 'channel DESCRIPTION';
+const String custom_sound = 'Custom_Sound';
+const String aps = 'aps';
+const String ack = 'ack';
+const String appointment = 'appointment';
+const String appointmentDate = 'appointmentDate';
+const String bookingId = 'bookingId';
+const String FETCH_LOG = 'FETCH_LOG';
+
+const String type = 'type';
+const String gcmtype = 'gcm.notification.type';
+const String templateName = 'templateName';
+const String gcmtemplateName = 'gcm.notification.templateName';
+const String GoFHBDoctorOnboardingByHospital =
+    'GoFHBDoctorOnboardingByHospital';
+const String providerRequestId = 'providerRequestId';
+const String Accept = 'Accept';
+const String Decline = 'Decline';
+const String alert = 'alert';
+const String title = 'title';
+const String body = 'body';
+const String redirectTo = 'redirectTo';
+const String senderId = "senderId";
+const String senderProfilePic = "senderProfilePic";
+const String senderName = "senderName";
+const String sound = 'sound';
+const String onresume = 'OnResume New';
+const String onlaunch = 'OnLaunch New';
+const String gcmredirectTo = 'gcm.notification.redirectTo';
+const String appointmentList = 'appointmentList';
+const String gcmBookingId = 'gcm.notification.bookingId';
+const String gcmAppointmentDoctorReminder10 =
+    'gcm.notification.AppointmentDoctorReminder10';
+const String AppointmentDoctorReminder10 = 'AppointmentDoctorReminder10';
+const String gcmAppointmentDoctorReminder30 =
+    'gcm.notification.AppointmentDoctorReminder30';
+const String AppointmentDoctorReminder30 = 'AppointmentDoctorReminder30';
+const String username = 'username';
+const String meeting_id = 'meeting_id';
+const String doctorId = 'doctorId';
+const String userId = 'userId';
+const String speciality = 'speciality';
+const String appointmentHistory = 'appointmentHistory';
+const String chat = 'chat';
+const String serverErrorMsg = 'This request is no more valid';
+const String strButtons = 'buttons';
+const String profile = 'profile';
+const String patientList = 'patientList';
+//Confirm via call
+const String strVerifyCall = 'Confirm via Call';
+const String strOrText = 'OR';
+const String strOtpNotReceived =
+    'Don\'t you receive the OTP ? you can re-try in ';
+const String strCallDirect =
+    'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
+const String primaryNumber = 'Primary Number';
+const String alternateNumber = 'Alternate Number';
+const String strMicAlertMsg =
+    'The Mic is currently in use by another app. Please try later';
+const String strvalidateMicAvailablity = 'validateMicAvailability';
