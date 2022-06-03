@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
+import 'package:myfhb/chat_socket/model/InitChatFamilyModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatModel.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -40,6 +41,18 @@ class ChatSocketService {
     final response = await _helper.initNewChat(
         qr_chat_socket_init_chat_pat_doc, jsonString);
     return InitChatModel.fromJson(response);
+  }
+
+  Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,String familyName) async {
+    var body = {
+      "caregiverId": "${userId}",
+      "caregiverName": "${familyName}",
+      "userId": "${peerId}"
+    };
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.initNewChat(
+        qr_chat_socket_init_chat_pat_family, jsonString);
+    return InitChatFamilyModel.fromJson(response);
   }
 
   Future<GetUserIdModel> getUserIdFromDocId(String docId) async {

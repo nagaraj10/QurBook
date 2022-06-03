@@ -59,6 +59,7 @@ class ChatDetail extends StatefulWidget {
   final String message;
   final bool isCareGiver;
   final bool isForGetUserId;
+  final bool isFromFamilyListChat;
 
   final String lastDate;
 
@@ -77,6 +78,7 @@ class ChatDetail extends StatefulWidget {
       this.message,
       this.isCareGiver,
       this.isForGetUserId = false,
+      this.isFromFamilyListChat = false,
       this.lastDate})
       : super(key: key);
 
@@ -173,6 +175,8 @@ class ChatState extends State<ChatDetail> {
 
   bool isCallBackDisable = false;
 
+  bool isFromFamilyListChat = false;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
@@ -196,6 +200,7 @@ class ChatState extends State<ChatDetail> {
 
     isCareGiver = widget.isCareGiver;
     isForGetUserId = widget.isForGetUserId;
+    isFromFamilyListChat = widget.isFromFamilyListChat;
     isFromVideoCall = widget.isFromVideoCall;
 
     groupId = widget.groupId;
@@ -254,19 +259,35 @@ class ChatState extends State<ChatDetail> {
 
   void getGroupId() {
     if (groupId == '' || groupId == null) {
-      Provider.of<ChatSocketViewModel>(context, listen: false)
-          .initNewChat(chatPeerId)
-          .then((value) {
-        if (value != null) {
-          if (value?.result != null) {
-            if (value?.result?.chatListId != null &&
-                value?.result?.chatListId != '') {
-              groupId = value.result.chatListId;
-              updateReadCount();
+      if (isFromFamilyListChat) {
+        Provider.of<ChatSocketViewModel>(context, listen: false)
+            .initNewFamilyChat(chatPeerId, peerName)
+            .then((value) {
+          if (value != null) {
+            if (value?.result != null) {
+              if (value?.result?.chatListId != null &&
+                  value?.result?.chatListId != '') {
+                groupId = value.result.chatListId;
+                updateReadCount();
+              }
             }
           }
-        }
-      });
+        });
+      } else {
+        Provider.of<ChatSocketViewModel>(context, listen: false)
+            .initNewChat(chatPeerId)
+            .then((value) {
+          if (value != null) {
+            if (value?.result != null) {
+              if (value?.result?.chatListId != null &&
+                  value?.result?.chatListId != '') {
+                groupId = value.result.chatListId;
+                updateReadCount();
+              }
+            }
+          }
+        });
+      }
     } else {
       updateReadCount();
     }
@@ -940,56 +961,58 @@ class ChatState extends State<ChatDetail> {
                             fontSize: 16.0.sp,
                             color: Colors.white)),
                     !isCareGiverApi
-                        ? Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Booking Id: ' + bookingId,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    'Next Appointment: ' +
-                                        getFormattedDateTimeAppbar(
-                                            nextAppointmentDate),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                                Text(
-                                    toBeginningOfSentenceCase(
-                                        'Last Appointment: ' +
+                        ? !isFromFamilyListChat
+                            ? Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('Booking Id: ' + bookingId,
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontFamily: font_poppins,
+                                            fontSize: 12.0.sp,
+                                            color: Colors.white)),
+                                    Text(
+                                        'Next Appointment: ' +
                                             getFormattedDateTimeAppbar(
-                                                lastAppointmentDate)),
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white)),
-                              ],
-                            ),
-                          )
+                                                nextAppointmentDate),
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontFamily: font_poppins,
+                                            fontSize: 12.0.sp,
+                                            color: Colors.white)),
+                                    Text(
+                                        toBeginningOfSentenceCase(
+                                            'Last Appointment: ' +
+                                                getFormattedDateTimeAppbar(
+                                                    lastAppointmentDate)),
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                            fontFamily: font_poppins,
+                                            fontSize: 12.0.sp,
+                                            color: Colors.white)),
+                                  ],
+                                ),
+                              )
+                            : SizedBox.shrink()
                         : SizedBox.shrink(),
-                    Text(
-                      widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
-                          : '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontFamily: font_poppins,
-                          fontSize: 12.0.sp,
-                          color: Colors.white),
-                    )
+                    widget.lastDate != null
+                        ? Text(
+                            LAST_RECEIVED + widget.lastDate,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: font_poppins,
+                                fontSize: 12.0.sp,
+                                color: Colors.white),
+                          )
+                        : SizedBox.shrink()
                   ],
                 ),
               ))
@@ -2107,7 +2130,7 @@ class ChatState extends State<ChatDetail> {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
           healthRecordList = results[STR_META_ID] as List;
-          if (healthRecordList != null && healthRecordList?.length>0??0) {
+          if (healthRecordList != null && healthRecordList?.length > 0 ?? 0) {
             getAlertForFileSend(healthRecordList);
           }
           setState(() {});
