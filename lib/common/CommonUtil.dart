@@ -12,9 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
-import 'package:myfhb/video_call/model/messagedetails.dart.' as messageDetails;
 import 'package:myfhb/video_call/model/msgcontent.dart';
 import 'package:myfhb/video_call/model/payload.dart' as vsPayLoad;
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -24,9 +22,7 @@ import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -46,10 +42,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/RawMessage.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
-import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import 'package:myfhb/video_call/pages/calling_page.dart';
 import 'package:myfhb/video_call/pages/callmain_makecall.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
@@ -87,7 +81,6 @@ import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
 import '../reminders/QurPlanReminders.dart';
-import 'dart:ui' as ui;
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
 import '../src/blocs/User/MyProfileBloc.dart';
@@ -135,8 +128,6 @@ import 'package:html_unescape/html_unescape.dart';
 
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
-import 'package:myfhb/Prescription/model/fetch_prescription_detail/prescription_detail.dart'
-    as pre;
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -4838,7 +4829,6 @@ class VideoCallCommonUtils {
       String gender,
       bool isFromAppointment,
       String healthOrganizationId,
-      pre.PrescriptionDetail existingAdditionalInfo,
       dynamic slotDuration,
       dynamic isCallActualTime,
       HealthRecord healthRecord,
@@ -4920,7 +4910,6 @@ class VideoCallCommonUtils {
             name: isFrom.contains("SOS") ? "Emergency Services" : patName,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
-            existingAdditionalInfo: existingAdditionalInfo,
             isCallActualTime: isCallActualTime,
             patienInfo: patienInfo,
             isFromAppointment: isFromAppointment,
@@ -4954,7 +4943,6 @@ class VideoCallCommonUtils {
       String patientPicUrl,
       String gender,
       String healthOrganizationId,
-      pre.PrescriptionDetail existingAdditionalInfo,
       dynamic slotDuration,
       HealthRecord healthRecord,
       User patienInfo,
@@ -4996,7 +4984,6 @@ class VideoCallCommonUtils {
         patPicUrl: patientPicUrl,
         gender: gender,
         healthOrganizationId: healthOrganizationId,
-        existingAdditionalInfo: existingAdditionalInfo,
         slotDuration: slotDuration,
         healthRecords: healthRecord,
         patienInfo: patienInfo,
@@ -5154,24 +5141,7 @@ class VideoCallCommonUtils {
             bookId: bookId,
             patName: patName,
             callStartTime: call_start_time);
-        // Navigator.of(context).pop();
-        // Navigator.of(context).popUntil((route) => route.isFirst);
-        /*Navigator.pushAndRemoveUntil(
-            Get.context,
-            MaterialPageRoute(
-              builder: (context) => HomeSecreen(
-                arguments: HomeScreenArguments(
-                    authToken: token,
-                    doctorId: doctor_id,
-                    title: mtTitle,
-                    speciality: specialityName,
-                    bookindId: '',
-                    isHighLightAppointment: false,
-                    userId: userIdForNotify,
-                    isUpdateAlertShow: false),
-              ),
-            ),
-            (route) => false);*/
+        Navigator.pop(Get.context);
       }
     };
 
@@ -5321,12 +5291,17 @@ class VideoCallCommonUtils {
 
     rtcEngineEventHandler.remoteAudioStateChanged =
         (uid, state, reason, elapsed) {
+      var regController = Get.find<QurhomeRegimenController>();
+      String strText = "Patient";
+      if (regController.onGoingSOSCall.value) {
+        strText = "Emergency Services";
+      }
       if (state == AudioRemoteState.Stopped) {
         //FlutterToast().getToast('Patient is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteMuted) {
-        FlutterToast().getToast('Patient is on Mute', Colors.red);
+        FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteUnmuted) {
-        FlutterToast().getToast('Patient is on UnMute', Colors.green);
+        FlutterToast().getToast('$strText is on UnMute', Colors.green);
       }
       //uid is ID of the user whose audio state changes.
       /* if (reason == 1) {
@@ -5720,7 +5695,6 @@ class VideoCallCommonUtils {
       String cid,
       CallMetaData callMetaData,
       String healthOrganizationId,
-      pre.PrescriptionDetail existingAdditionalInfo,
       AudioPlayer audioPlayer,
       dynamic isCallActualTime,
       HealthRecord healthRecord,
@@ -5737,7 +5711,6 @@ class VideoCallCommonUtils {
           context: mContext,
           callMetaData: callMetaData,
           healthOrganizationId: healthOrganizationId,
-          existingAdditionalInfo: existingAdditionalInfo,
           audioPlayer: audioPlayer,
           isCallActualTime: isCallActualTime,
           healthRecord: healthRecord,
@@ -5752,7 +5725,6 @@ class VideoCallCommonUtils {
       String cid,
       CallMetaData callMetaData,
       String healthOrganizationId,
-      pre.PrescriptionDetail existingAdditionalInfo,
       AudioPlayer audioPlayer,
       dynamic isCallActualTime,
       HealthRecord healthRecord,
@@ -5859,7 +5831,6 @@ class VideoCallCommonUtils {
                   ? callMetaData?.mappointmentId
                   : '',
               healthOrganizationId: healthOrganizationId,
-              existingAdditionalInfo: existingAdditionalInfo,
               gender:
                   callMetaData?.mgender != null ? callMetaData?.mgender : '',
               patId: callMetaData?.patientPrescriptionId != null

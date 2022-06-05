@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/Prescription/model/fetch_prescription_detail/prescription_detail.dart'
-    as pre;
+
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -18,7 +17,6 @@ class CallingPage extends StatefulWidget {
   CallMetaData callMetaData;
   dynamic isCallActualTime;
   final healthOrganizationId;
-  pre.PrescriptionDetail existingAdditionalInfo = pre.PrescriptionDetail();
   User patienInfo;
   bool isFromAppointment;
   String patientPrescriptionId;
@@ -27,7 +25,6 @@ class CallingPage extends StatefulWidget {
       this.id,
       this.callMetaData,
       this.healthOrganizationId,
-      this.existingAdditionalInfo,
       this.isCallActualTime,
       this.patienInfo,
       this.isFromAppointment,
@@ -104,7 +101,6 @@ class _CallingPageState extends State<CallingPage> {
           cid: widget.id,
           callMetaData: widget.callMetaData,
           healthOrganizationId: widget.healthOrganizationId,
-          existingAdditionalInfo: widget.existingAdditionalInfo,
           audioPlayer: audioPlayer,
           isCallActualTime: widget.isCallActualTime,
           healthRecord: widget.callMetaData.healthRecord,

@@ -6,8 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/Prescription/model/fetch_prescription_detail/prescription_detail.dart'
-    as pre;
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/keysofmodel.dart';
@@ -32,7 +31,6 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 class CallMainMakeCall extends StatelessWidget {
   /// non-modifiable channel name of the page
   final String channelName;
-  pre.PrescriptionDetail existingAdditionalInfo = pre.PrescriptionDetail();
 
   /// non-modifiable client role of the page
   final ClientRole role;
@@ -66,7 +64,6 @@ class CallMainMakeCall extends StatelessWidget {
     this.patPicUrl,
     this.gender,
     this.healthOrganizationId,
-    this.existingAdditionalInfo,
     this.slotDuration,
     this.healthRecords,
     this.patienInfo,

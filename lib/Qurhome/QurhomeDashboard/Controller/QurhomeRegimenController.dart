@@ -15,7 +15,6 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;

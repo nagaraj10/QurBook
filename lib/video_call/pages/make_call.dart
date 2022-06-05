@@ -75,7 +75,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
           .stopRtcEngine();
       Screen.keepOn(false);
       _connectivitySubscription.cancel();
-      fbaLog(eveName: 'qurpro_screen_event', eveParams: {
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
         'pageName': 'Call Screen',
         'screenSessionTime':
@@ -103,10 +103,11 @@ class _MakeCallPageState extends State<MakeCallPage> {
     try {
       prefs = await SharedPreferences.getInstance();
       try {
-        doctor_id = /*await prefs.getString("doctor_id")*/"";
-        mtTitle = /*await prefs.getString("display_name")*/"";
-        specialityName = /*await prefs.getString("speciality")*/"";
-        userIdForNotify = await PreferenceUtil.getStringValue(constants.KEY_USERID);
+        doctor_id = /*await prefs.getString("doctor_id")*/ "";
+        mtTitle = /*await prefs.getString("display_name")*/ "";
+        specialityName = /*await prefs.getString("speciality")*/ "";
+        userIdForNotify =
+            await PreferenceUtil.getStringValue(constants.KEY_USERID);
       } catch (e) {}
       switch (result) {
         case ConnectivityResult.wifi:
