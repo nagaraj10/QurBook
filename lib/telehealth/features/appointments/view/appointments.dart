@@ -355,26 +355,36 @@ class _AppointmentsState extends State<Appointments> {
   Widget appBar() {
     return AppBar(
         flexibleSpace: GradientAppBar(),
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBoxWidget(
-              height: 0.0.h,
-              width: 30.0.w,
-            ),
-            IconWidget(
-              icon: Icons.arrow_back_ios,
-              colors: Colors.white,
-              size: 24.0.sp,
-              onTap: () {
-                Navigator.pop(context);
-                //PageNavigator.goToPermanent(context, router.rt_Dashboard);
-              },
-            ),
-          ],
-        ),
-        title: getTitle());
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      // leading: Row(
+      //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //     // mainAxisSize: MainAxisSize.max,
+      //     children: [
+      //       SizedBoxWidget(
+      //         height: 0.0.h,
+      //         width: 30.0.w,
+      //       ),
+      //       IconWidget(
+      //         icon: Icons.arrow_back_ios,
+      //         colors: Colors.white,
+      //         size: 11.0.sp,
+      //         onTap: () {
+      //
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      leading: IconWidget(
+        icon: Icons.arrow_back_ios,
+        colors: Colors.white,
+        size: 24.0.sp,
+        onTap: () {
+          Navigator.pop(context);
+          //PageNavigator.goToPermanent(context, router.rt_Dashboard);
+        },
+      ),
+        title: getTitle(),
+    );
   }
 
   Widget getTitle() {
