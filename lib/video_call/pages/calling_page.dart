@@ -52,8 +52,7 @@ class _CallingPageState extends State<CallingPage> {
       super.initState();
       name = widget.name;
       mInitialTime = DateTime.now();
-      /*var regController = Get.find<QurhomeRegimenController>();
-      regController.onGoingSOSCall.value = true;*/
+      regController.onGoingSOSCall.value = true;
     } catch (e) {
       print(e);
     }
@@ -65,7 +64,7 @@ class _CallingPageState extends State<CallingPage> {
       super.dispose();
       clearAudioPlayer();
       VideoCallCommonUtils.callActions.value = CallActions.CALLING;
-      fbaLog(eveName: 'qurpro_screen_event', eveParams: {
+      fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
         'pageName': 'Calling Screen',
         'screenSessionTime':
@@ -191,15 +190,15 @@ class _CallingPageState extends State<CallingPage> {
                           try {
                             clearAudioPlayer();
                             regController.onGoingSOSCall.value = false;
-                            if (widget.callMetaData != null) {
+                            /*if (widget.callMetaData != null) {
                               VideoCallCommonUtils.isMissedCallNsSent = true;
                               VideoCallCommonUtils().createMissedCallNS(
-                                  docName: /*widget.callMetaData.docName*/ regController
+                                  docName: */ /*widget.callMetaData.docName*/ /* regController
                                       .userName.value,
-                                  patId: /*widget.callMetaData.patId*/ regController
+                                  patId: */ /*widget.callMetaData.patId*/ /* regController
                                       .careCoordinatorId.value,
                                   bookingId: widget.callMetaData.bookId);
-                            }
+                            }*/
                             VideoCallCommonUtils().callEnd(context, widget.id);
                           } catch (e) {
                             print(e);

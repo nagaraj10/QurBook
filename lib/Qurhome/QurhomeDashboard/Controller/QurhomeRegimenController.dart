@@ -39,6 +39,8 @@ class QurhomeRegimenController extends GetxController {
   var userDOB = "".obs;
   var userMobNo = "".obs;
   var onGoingSOSCall = false.obs;
+  var resultId = "".obs;
+  var callStartTime = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
@@ -237,8 +239,6 @@ class QurhomeRegimenController extends GetxController {
             .getToast('Please turn on your internet and try again', Colors.red);
         return;
       }
-
-      onGoingSOSCall.value = true;
 
       loadingData.value = true;
 

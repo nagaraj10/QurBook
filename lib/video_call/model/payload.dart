@@ -7,8 +7,8 @@ class Payload {
   String patientName;
   String patientPicture;
   String userName;
-  String doctorId;
-  String doctorPicture;
+  /*String doctorId;
+  String doctorPicture;*/
   String callType;
   String isWeb;
   String patientPhoneNumber;
@@ -22,8 +22,8 @@ class Payload {
       this.patientName,
       this.patientPicture,
       this.userName,
-      this.doctorId,
-      this.doctorPicture,
+      /*this.doctorId,
+      this.doctorPicture,*/
       this.callType,
       this.isWeb,
       this.patientPhoneNumber});
@@ -38,6 +38,10 @@ class Payload {
       patientName = json['patientName'];
       patientPicture = json['patientPicture'];
       userName = json['userName'];
+      /*doctorId = json['doctorId'];
+      doctorPicture = json['doctorPicture'];*/
+      callType = json['callType'];
+      isWeb = json['isWeb'];
       patientPhoneNumber = json['patientPhoneNumber'];
     } catch (e) {
       print(e);
@@ -55,6 +59,10 @@ class Payload {
       data['patientName'] = this.patientName;
       data['patientPicture'] = this.patientPicture;
       data['userName'] = this.userName;
+      /*data['doctorId'] = this.doctorId;
+      data['doctorPicture'] = this.doctorPicture;*/
+      data['callType'] = this.callType;
+      data['isWeb'] = this.isWeb;
       data['patientPhoneNumber'] = this.patientPhoneNumber;
     } catch (e) {
       print(e);

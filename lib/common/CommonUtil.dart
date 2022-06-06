@@ -4870,7 +4870,11 @@ class VideoCallCommonUtils {
         new MessageDetails(content: _content, payload: payLoad);
 
     CallPushNSModel callModel = CallPushNSModel(
-        recipients: [(patId != null ? patId : null)],
+        recipients: [
+          (regController.careCoordinatorId.value != null
+              ? regController.careCoordinatorId.value
+              : null)
+        ],
         messageDetails: msg,
         transportMedium: [keysConstant.c_trans_medium_push],
         saveMessage: false);
@@ -5141,6 +5145,8 @@ class VideoCallCommonUtils {
             bookId: bookId,
             patName: patName,
             callStartTime: call_start_time);
+        var regController = Get.find<QurhomeRegimenController>();
+        regController.onGoingSOSCall.value = false;
         Navigator.pop(Get.context);
       }
     };
@@ -5881,15 +5887,17 @@ class VideoCallCommonUtils {
     AdditionalInfo additionalInfo =
         new AdditionalInfo(location: regController.locationModel);
 
-    CallLogModel callLogModel = CallLogModel(
+    CallEndModel callLogModel = CallEndModel(
         callerUser: regController.userId.value,
         recipientUser: regController.careCoordinatorId.value,
+        startedTime: regController.callStartTime.value,
         endTime: callEndTime,
         status: "Completed",
+        id: regController.resultId.value,
         additionalInfo: additionalInfo);
 
-    var callLogResponse = await apiResponse.callLogData(
-        request: callLogModel, isFromCreate: false);
+    var callLogResponse =
+        await apiResponse.callLogEndData(request: callLogModel);
 
     regController.onGoingSOSCall.value = false;
 
@@ -5933,8 +5941,7 @@ class VideoCallCommonUtils {
         startedTime: callStartTime,
         status: "Started",
         additionalInfo: additionalInfo);
-    var callLogResponse = await apiResponse.callLogData(
-        request: callLogModel, isFromCreate: true);
+    var callLogResponse = await apiResponse.callLogData(request: callLogModel);
   }
 
   createMissedCallNS({String docName, String patId, String bookingId}) async {

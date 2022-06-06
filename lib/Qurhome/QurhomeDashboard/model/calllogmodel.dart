@@ -41,6 +41,7 @@ class CallLogModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
+
       data['callerUser'] = this.callerUser;
       data['recipientUser'] = this.recipientUser;
       data['startedTime'] = this.startedTime;
@@ -51,6 +52,71 @@ class CallLogModel {
       if (this.additionalInfo != null) {
         data["additionalInfo"] = this.additionalInfo.toJson();
       }
+    } catch (e) {
+      print(e);
+    }
+
+    return data;
+  }
+}
+
+
+class CallEndModel {
+  String callerUser;
+  String recipientUser;
+  String startedTime;
+  String endTime;
+  String status;
+  String patientName;
+  String recipientId;
+  AdditionalInfo additionalInfo;
+  String id;
+
+  CallEndModel({
+    this.callerUser,
+    this.recipientUser,
+    this.startedTime,
+    this.endTime,
+    this.status,
+    this.patientName,
+    this.recipientId,
+    this.additionalInfo,
+    this.id,
+  });
+
+  CallEndModel.fromJson(Map<String, dynamic> json) {
+    try {
+      callerUser = json['callerUser'];
+      recipientUser = json['recipientUser'];
+      startedTime = json['startedTime'];
+      endTime = json['endTime'];
+      status = json['status'];
+      patientName = json['patientName'];
+      recipientId = json['recipientId'];
+      additionalInfo = json["additionalInfo"] != null
+          ? new AdditionalInfo.fromJson(json["additionalInfo"])
+          : null;
+      id = json['id'];
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+
+      data['callerUser'] = this.callerUser;
+      data['recipientUser'] = this.recipientUser;
+      data['startedTime'] = this.startedTime;
+      data['endTime'] = this.endTime;
+      data['status'] = this.status;
+      data['patientName'] = this.patientName;
+      data['recipientId'] = this.recipientId;
+      if (this.additionalInfo != null) {
+        data["additionalInfo"] = this.additionalInfo.toJson();
+      }
+      data['id'] = this.id;
     } catch (e) {
       print(e);
     }

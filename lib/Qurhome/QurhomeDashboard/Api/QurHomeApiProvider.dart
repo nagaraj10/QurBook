@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
@@ -167,10 +168,37 @@ class QurHomeApiProvider {
     return isCallSent;
   }*/
 
-  Future<dynamic> callLogData({CallLogModel request, bool isFromCreate}) async {
+  Future<dynamic> callLogData({CallLogModel request}) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       http.Response res = await ApiServices.post(
+        Constants.BASE_URL + qr_callLog,
+        headers: header,
+        body: convert.jsonEncode(request.toJson()),
+      );
+      if (res.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(res.body));
+        var regController = Get.find<QurhomeRegimenController>();
+        regController.resultId.value =
+            CommonUtil().validString(_response.result);
+
+        regController.callStartTime.value =
+            CommonUtil().validString(request.startedTime);
+
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {}
+  }
+
+  Future<dynamic> callLogEndData({CallEndModel request}) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      http.Response res = await ApiServices.put(
         Constants.BASE_URL + qr_callLog,
         headers: header,
         body: convert.jsonEncode(request.toJson()),
