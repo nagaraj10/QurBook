@@ -73,6 +73,18 @@ const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
 
+const String STR_KEY_HEIGHT = 'height';
+const String STR_KEY_WEIGHT = 'weight';
+const String STR_KEY_TEMP = 'temp';
+
+const String STR_VAL_HEIGHT_IND = 'f-in';
+const String STR_VAL_WEIGHT_IND = 'kg';
+const String STR_VAL_TEMP_IND = 'f';
+
+const String STR_VAL_HEIGHT_US = 'cm';
+const String STR_VAL_WEIGHT_US = 'lb';
+const String STR_VAL_TEMP_US = 'c';
+
 const String KEY_LANGUAGE = 'languageList';
 
 const String KEY_USERID_MAIN = 'mainUserUD';
@@ -682,6 +694,8 @@ const String filterTitleMonth = 'Month';
 const String filterApiDay = 'day';
 const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
+
+const String UnitPreference = 'Unit Preferences';
 
 double height = 0.0;
 double width = 0.0;
