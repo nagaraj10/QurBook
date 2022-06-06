@@ -1960,13 +1960,14 @@ class CommonDialogBox {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = commonConstants.tempUNIT;
+          postDeviceValues[parameters.strunit] =
+              tempUnit == "c" ? "Celsius" : "Farenheit";
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightMainUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =

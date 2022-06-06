@@ -149,6 +149,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   final DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
+  var unitForWeight;
+  var unitForTemp;
+
   @override
   void initState() {
     FocusManager.instance.primaryFocus.unfocus();
@@ -207,7 +210,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Future<MyProfileModel> getMyProfile() async {
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     if (userId != null && userId.isNotEmpty) {
       await addFamilyUserInfoRepository
           .getMyProfileInfoNew(userId)
@@ -815,12 +818,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       } catch (e) {
         averageForTemp = '';
       }
+      try {
+        unitForTemp =
+            deviceValues.bodyTemperature.entities[0].temperatureUnit != null
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                : '';
+      } catch (e) {
+        unitForTemp = '';
+      }
     } else {
       dateForTemp = '';
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
       timeForTemp = '';
+      unitForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues
@@ -850,12 +862,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       } catch (e) {
         averageForWeigh = '';
       }
+
+      try {
+        try {
+          unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+              ? deviceValues.bodyWeight.entities[0].weightUnit.name
+              : '';
+        } catch (e) {
+          unitForWeight = '';
+        }
+      } catch (e) {}
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
       timeForWeight = '';
+      unitForWeight = '';
     }
 
     return getDeviceData(
@@ -877,7 +900,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         devicevalue1ForOs,
         devicevalue1ForWeight,
         devicevalue1ForTemp,
-        devicevalue2ForBp);
+        devicevalue2ForBp,
+        unitForTemp,
+        unitForWeight);
   }
 
   void callBackToRefresh() {
@@ -977,7 +1002,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       value1ForOs,
       value1ForWeight,
       value1ForTemp,
-      String value2ForBp) {
+      String value2ForBp,
+      String unitForTemp,
+      String unitForWeight) {
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,
@@ -2064,7 +2091,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           value1ForTemp != '' &&
                                                                   value1ForTemp !=
                                                                       null
-                                                              ? 'F'
+                                                              ? unitForTemp !=
+                                                                      null
+                                                                  ? unitForTemp
+                                                                      .capitalizeFirstofEach
+                                                                  : ''
                                                               : '-',
                                                           style: TextStyle(
                                                             fontSize: 12.0.sp,
@@ -2757,7 +2788,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                       '' &&
                                                                   value1ForWeight !=
                                                                       null
-                                                              ? 'Kg'
+                                                              ? unitForWeight !=
+                                                                      null
+                                                                  ? unitForWeight
+                                                                      ?.capitalizeFirstofEach
+                                                                  : ''
                                                               : '',
                                                           style: TextStyle(
                                                             fontSize: 10.0.sp,
