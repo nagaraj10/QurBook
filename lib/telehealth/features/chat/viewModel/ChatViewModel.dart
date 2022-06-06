@@ -6,6 +6,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:path/path.dart';
@@ -222,4 +223,33 @@ class ChatViewModel extends ChangeNotifier {
           .update({NICK_NAME: patientName != null ? patientName : ''});
     }
   }
+
+  /*goToChatSocket(String patientId, String patientName, String patientUrl,
+      BuildContext context, bool isFromVideoCall, String groupId,
+      {HealthRecord healthRecord,
+      @required PatientInfo patientInfo,
+      @required DailyListAppointmentModel dailyListAppointmentModel}) {
+    List<String> associateRecords = new List();
+
+    if (healthRecord.associatedRecords != null &&
+        healthRecord.associatedRecords.length > 0) {
+      associateRecords.addAll(healthRecord.associatedRecords);
+    }
+
+    metaIds = associateRecords;
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChatDetail(
+                  peerId: patientId,
+                  peerAvatar: patientUrl,
+                  peerName: patientName,
+                  isFromVideoCall: isFromVideoCall,
+                  metaIds: metaIds,
+                  patientInfo: patientInfo,
+                  dailyListAppointmentModel: dailyListAppointmentModel,
+                  groupId: groupId,
+                )));
+  }*/
 }
