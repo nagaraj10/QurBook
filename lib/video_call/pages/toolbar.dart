@@ -6,7 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:myfhb/video_call/Model/videoCallStatus.dart';
+import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:intl/intl.dart';

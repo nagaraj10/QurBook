@@ -10,13 +10,13 @@ class QurHomeBpScanResult {
 
   QurHomeBpScanResult(
       {this.option,
-        this.deviceCategory,
-        this.modelName,
-        this.deviceAddress,
-        this.currentTime,
-        this.batteryLevel,
-        this.measurementRecords,
-        this.completionReason});
+      this.deviceCategory,
+      this.modelName,
+      this.deviceAddress,
+      this.currentTime,
+      this.batteryLevel,
+      this.measurementRecords,
+      this.completionReason});
 
   QurHomeBpScanResult.fromJson(Map<String, dynamic> json) {
     option = json['option'];
@@ -62,20 +62,26 @@ class MeasurementRecords {
 
   MeasurementRecords(
       {this.timeStampKey,
-        this.pulseRateKey,
-        this.systolicKey,
-        this.bloodPressureMeasurementStatusKey,
-        this.userIndexKey,
-        this.diastolicKey,
-        this.meanArterialPressureKey,
-        this.bloodPressureUnitKey});
+      this.pulseRateKey,
+      this.systolicKey,
+      this.bloodPressureMeasurementStatusKey,
+      this.userIndexKey,
+      this.diastolicKey,
+      this.meanArterialPressureKey,
+      this.bloodPressureUnitKey});
 
   MeasurementRecords.fromJson(Map<String, dynamic> json) {
     timeStampKey = json['TimeStampKey'];
     pulseRateKey = json['PulseRateKey'];
     systolicKey = json['SystolicKey'];
-    bloodPressureMeasurementStatusKey =
-    json['BloodPressureMeasurementStatusKey'];
+    if (json['BloodPressureMeasurementStatusKey'].runtimeType is String) {
+      bloodPressureMeasurementStatusKey =
+          json['BloodPressureMeasurementStatusKey'];
+    } else {
+      bloodPressureMeasurementStatusKey =
+          json['BloodPressureMeasurementStatusKey'].toString();
+    }
+
     userIndexKey = json['UserIndexKey'];
     diastolicKey = json['DiastolicKey'];
     meanArterialPressureKey = json['MeanArterialPressureKey'];

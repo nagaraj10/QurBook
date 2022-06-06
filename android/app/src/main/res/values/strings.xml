@@ -59,6 +59,7 @@
     <string name="channel_call">Incoming Call</string>
     <string name="missed_call_alert_title">Missed Call From</string>
     <string name="channel_ack">Acknowledgements</string>
+    <string name="mandatory_channel_ack">Mandatory Acknowledgements</string>
     <string name="channel_cancel_apps">Cancel Appointments</string>
     <string name="channel_miss_ns">Missed Alert</string>
     <string name="ns_act_accept">Accept</string>

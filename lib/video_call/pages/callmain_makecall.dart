@@ -15,7 +15,7 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/h
 import 'package:myfhb/video_call/pages/localpreview.dart';
 import 'package:myfhb/video_call/pages/make_call.dart';
 import 'package:myfhb/video_call/pages/toolbar.dart';
-import 'package:myfhb/video_call/Model/videoCallStatus.dart';
+import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
