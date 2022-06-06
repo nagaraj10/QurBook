@@ -11,7 +11,6 @@ import android.media.AudioAttributes
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.firestore.FirebaseFirestore
@@ -323,14 +322,24 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val USER_NAME = data[getString(R.string.username)]
             val notificationListId = data[getString(R.string.notificationListId)]
             //val PAT_NAME = data[getString(R.string.pat_name)]
-            val ack_sound: Uri =
-                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+            var ack_sound : Uri
+            var channelId="";
+            var channelName="";
+            if(data[Constants.ACTIVITY_NAME]!=null&&data[Constants.ACTIVITY_NAME].equals("Mandatory",ignoreCase = true)){
+                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
+                channelId="mandatory"+CHANNEL_ACK
+                channelName=getString(R.string.mandatory_channel_ack)
+            }else{
+                ack_sound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+                channelId=CHANNEL_ACK
+                channelName=getString(R.string.channel_ack)
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val manager = getSystemService(NotificationManager::class.java)
                 val channelAck = NotificationChannel(
-                    CHANNEL_ACK,
-                    getString(R.string.channel_ack),
+                    channelId,
+                    channelName,
                     NotificationManager.IMPORTANCE_DEFAULT
                 )
                 channelAck.description = getString(R.string.channel_ack_desc)
