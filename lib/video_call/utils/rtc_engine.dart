@@ -6,6 +6,9 @@ class RTCEngineProvider extends ChangeNotifier {
   RtcEngine _rtcEngine = null;
   bool isVideoPaused = false;
 
+  bool isCustomViewShown = false;
+  final users = <int>[];
+
   RtcEngine get rtcEngine {
     if (_rtcEngine == null) {
       startEngine();
@@ -31,5 +34,34 @@ class RTCEngineProvider extends ChangeNotifier {
   void changeLocalVideoStatus(bool value) {
     isVideoPaused = value;
     notifyListeners();
+  }
+
+  void updateCustomViewShown(bool newValue) {
+    isCustomViewShown = newValue;
+    notifyListeners();
+  }
+
+  void addUser(int user) {
+    users.add(user);
+    notifyListeners();
+  }
+
+  void clearUsers() {
+    users.clear();
+    notifyListeners();
+  }
+
+  Future<void> stopRtcEngine() async {
+    await _rtcEngine?.leaveChannel();
+    await _rtcEngine?.destroy();
+    _rtcEngine = null;
+    clearUsers();
+  }
+
+  Future<void> startRtcEngine() async {
+    if (_rtcEngine != null) {
+      _rtcEngine = null;
+    }
+    _rtcEngine = await RtcEngine.create(APP_ID);
   }
 }

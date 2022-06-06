@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -95,10 +96,12 @@ class _LandingScreenState extends State<LandingScreen> {
   bool weighScale = true;
   var userId;
 
+  final controller = Get.put(ChatUserListController());
+
   @override
   void initState() {
     super.initState();
-
+    controller.updateNewChatFloatShown(false);
     mInitialTime = DateTime.now();
     dbInitialize();
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -106,6 +109,17 @@ class _LandingScreenState extends State<LandingScreen> {
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
+    controller.getFamilyMappingList().then((familyMembersList) {
+        if(familyMembersList != null){
+          if(familyMembersList?.result != null){
+              if(familyMembersList?.result?.isNotEmpty){
+                if(familyMembersList?.result?.length>0){
+                  controller.updateNewChatFloatShown(true);
+                }
+              }
+          }
+        }
+    });
     var profilebanner =
         PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
