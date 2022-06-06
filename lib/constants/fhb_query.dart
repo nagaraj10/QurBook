@@ -350,6 +350,11 @@ const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 
 const String qr_chat_socket_history = 'chat/get-message-history';
 
+
+// family list mapping
+
+const String qr_chat_family_mapping = 'user-relationship/get-shared-caregivers-list';
+
 const String qr_chat_socket_init_chat_doc_pat =
     'chat/initiate-doctor-patient-chat';
 
