@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
+import 'package:myfhb/chat_socket/model/InitChatFamilyModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatModel.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/model/UserChatListModel.dart';
@@ -153,6 +154,17 @@ class ChatSocketViewModel extends ChangeNotifier {
 
       InitChatModel chatHistoryModel =
           await chocketService.initNewChat(userId, peerId);
+
+      return chatHistoryModel;
+    } catch (e) {}
+  }
+
+  Future<InitChatFamilyModel> initNewFamilyChat(String peerId,String familyName) async {
+    try {
+      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+
+      InitChatFamilyModel chatHistoryModel =
+      await chocketService.initNewFamilyChat(userId, peerId,familyName);
 
       return chatHistoryModel;
     } catch (e) {}
