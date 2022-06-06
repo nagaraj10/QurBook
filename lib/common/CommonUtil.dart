@@ -2,20 +2,27 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
+import 'package:myfhb/video_call/model/messagedetails.dart';
+import 'package:myfhb/video_call/model/msgcontent.dart';
+import 'package:myfhb/video_call/model/payload.dart' as vsPayLoad;
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:flutter_logs/flutter_logs.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -36,6 +43,14 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
+import 'package:myfhb/video_call/pages/calling_page.dart';
+import 'package:myfhb/video_call/pages/callmain_makecall.dart';
+import 'package:myfhb/video_call/utils/audiocall_provider.dart';
+import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:myfhb/video_call/utils/rtc_engine.dart';
+import 'package:myfhb/video_call/utils/settings.dart';
+import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/widgets/device_type.dart';
 import 'package:open_file/open_file.dart';
 import '../add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -66,7 +81,6 @@ import '../plan_dashboard/viewModel/subscribeViewModel.dart';
 import '../refer_friend/view/invite_contacts_screen.dart';
 import '../refer_friend/viewmodel/referafriend_vm.dart';
 import '../reminders/QurPlanReminders.dart';
-import 'dart:ui' as ui;
 import '../src/blocs/Authentication/LoginBloc.dart';
 import '../src/blocs/Media/MediaTypeBlock.dart';
 import '../src/blocs/User/MyProfileBloc.dart';
@@ -111,6 +125,9 @@ import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:html_unescape/html_unescape.dart';
+
+import 'keysofmodel.dart' as keysConstant;
+import 'package:agora_rtc_engine/rtc_engine.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -160,6 +177,9 @@ class CommonUtil {
       'Please note that no refund will be provided. Are you sure you want to Unsubscribe?';
 
   static bool dialogboxOpen = false;
+
+  static String bookedForId = null;
+  static bool isCallStarted = false;
 
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();
@@ -1646,8 +1666,15 @@ class CommonUtil {
     } catch (e) {}
   }
 
-  escalateNonAdherance(String careCoordinatorUserId, String patientName,
-      String careGiverName, String activityTime, String activityName,String userId,String uid,String patientPhoneNumber) async {
+  escalateNonAdherance(
+      String careCoordinatorUserId,
+      String patientName,
+      String careGiverName,
+      String activityTime,
+      String activityName,
+      String userId,
+      String uid,
+      String patientPhoneNumber) async {
     final apiBaseHelper = ApiBaseHelper();
     var params = {
       "careCoordinatorUserId": careCoordinatorUserId,
@@ -4610,6 +4637,17 @@ class CommonUtil {
     return "";
   }
 
+  Future<bool> checkInternetConnection() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return Future.value(true);
+      }
+    } on SocketException catch (_) {
+      return Future.value(false);
+    }
+  }
+
   void dialogForScanDevices(BuildContext context,
       {Function() onPressManual,
       Function() onPressCancel,
@@ -4761,4 +4799,1214 @@ extension CapExtension on String {
   String get capitalizeFirstofEach => this != null && isNotEmpty
       ? trim().toLowerCase().split(' ').map((str) => str.inCaps).join(' ')
       : '';
+}
+
+enum CallActions { CALLING, DECLINED }
+
+class VideoCallCommonUtils {
+  final myDB = FirebaseFirestore.instance;
+  static bool isMissedCallNsSent = false;
+
+  static String nonAppointmentUrl = 'call-log/non-appointment-call';
+  RtcEngineEventHandler rtcEngineEventHandler = RtcEngineEventHandler();
+  int videoPauseResumeState = 0;
+  String doctor_id, mtTitle, specialityName = null;
+
+  String userIdForNotify = '';
+  static const platform = const MethodChannel('ongoing_ns.channel');
+  static ValueNotifier callActions = ValueNotifier(CallActions.CALLING);
+
+  //static String callStartTime = '';
+  Future<bool> makeCallToPatient(
+      {BuildContext context,
+      String bookId,
+      String appointmentId,
+      String patName,
+      String patId,
+      String patChatId,
+      String patientDOB,
+      String patientPicUrl,
+      String gender,
+      bool isFromAppointment,
+      String healthOrganizationId,
+      dynamic slotDuration,
+      dynamic isCallActualTime,
+      HealthRecord healthRecord,
+      User patienInfo,
+      String patientPrescriptionId,
+      @required String callType,
+      @required String isFrom}) async {
+    //bool isCallSent = false;
+    final apiResponse = QurHomeApiProvider();
+    await PreferenceUtil.init();
+    var regController = Get.find<QurhomeRegimenController>();
+    //regController.onGoingSOSCall.value = false;
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var docName = regController.userName.value;
+    var randomMID = getMyMeetingID();
+    var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
+    vsPayLoad.Payload payLoad = vsPayLoad.Payload(
+        type: isFrom.contains("SOS") ? "sos" : keysConstant.c_ns_type_call,
+        //type: keysConstant.c_ns_type_call,
+        priority: "high",
+        userId: regController.careCoordinatorId.value,
+        meetingId: mID,
+        patientId: patChatId != null ? patChatId : '',
+        patientName: patName != null ? patName : '',
+        patientPicture: patientPicUrl != null ? patientPicUrl : '',
+        userName: regController.userName.value,
+        callType: callType,
+        isWeb: 'false', // this will be always false when sent from mobile
+        patientPhoneNumber: regController.userMobNo.value);
+
+    Content _content = Content(
+      messageTitle: docName != null ? /*jsonDecode(docName)*/ docName : null,
+      messageBody: callType == 'video'
+          ? keysConstant.c_ns_msg_video
+          : keysConstant.c_ns_msg_audio,
+    );
+
+    MessageDetails msg =
+        new MessageDetails(content: _content, payload: payLoad);
+
+    CallPushNSModel callModel = CallPushNSModel(
+        recipients: [
+          (regController.careCoordinatorId.value != null
+              ? regController.careCoordinatorId.value
+              : null)
+        ],
+        messageDetails: msg,
+        transportMedium: [keysConstant.c_trans_medium_push],
+        saveMessage: false);
+
+    authToken = authToken != null ? /*jsonDecode(authToken)*/ authToken : '';
+
+    var isCallSent = await apiResponse.callMessagingAPI(
+        token: authToken, callModel: callModel);
+
+    CallMetaData callMeta;
+    if (isCallSent) {
+      //call has been sent to patient
+      if (isFromAppointment) {
+        callMeta = CallMetaData(
+          bookId,
+          appointmentId,
+          patName,
+          patId,
+          patientDOB,
+          patientPicUrl,
+          gender,
+          docName,
+          healthRecord,
+          patientPrescriptionId,
+          slotDuration: slotDuration,
+        );
+      } else {
+        callMeta = CallMetaData(bookId, '', patName, patId, patientDOB ?? '',
+            patientPicUrl, '', docName, healthRecord, patientPrescriptionId);
+      }
+      regController.loadingData.value = false;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CallingPage(
+            id: bookId,
+            name: isFrom.contains("SOS") ? "Emergency Services" : patName,
+            callMetaData: callMeta,
+            healthOrganizationId: healthOrganizationId,
+            isCallActualTime: isCallActualTime,
+            patienInfo: patienInfo,
+            isFromAppointment: isFromAppointment,
+          ),
+        ),
+      );
+    } else {
+      // FlutterToast()
+      //     .getToast('could not start call,please try again!', Colors.red);
+    }
+
+    //return isCallSent;
+  }
+
+  String capitalizeFirstofEach(String data) {
+    return data
+        .trim()
+        .toLowerCase()
+        .split(' ')
+        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+        .join(' ');
+  }
+
+  void startTheCall(
+      {BuildContext context,
+      String bookId,
+      String appointmentId,
+      String patName,
+      String patId,
+      String patientDOB,
+      String patientPicUrl,
+      String gender,
+      String healthOrganizationId,
+      dynamic slotDuration,
+      HealthRecord healthRecord,
+      User patienInfo,
+      bool isFromAppointment,
+      String startedTime,
+      dynamic isDoctor}) async {
+    var randomMID = getMyMeetingID();
+    var age;
+    try {
+      var parsedDate = DateTime.parse(patientDOB);
+      age = calculateAge(parsedDate);
+    } catch (e) {}
+    //await handleCameraAndMic();
+
+    var channelName =
+        (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
+    Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
+        false;
+    // initialize agora sdk
+    await initialize(
+      context: context,
+      channelName: channelName,
+      patName: capitalizeFirstofEach(patName),
+      patId: patId,
+      isFromAppointment: isFromAppointment,
+      bookId: bookId,
+      appointmentId: appointmentId,
+    );
+
+    Get.off(
+      CallMainMakeCall(
+        channelName: channelName,
+        role: ClientRole.Broadcaster,
+        appointmentId: appointmentId,
+        patName: capitalizeFirstofEach(patName),
+        patId: patId,
+        bookId: bookId,
+        patDOB: isFromAppointment ? age.toString() : patientDOB,
+        patPicUrl: patientPicUrl,
+        gender: gender,
+        healthOrganizationId: healthOrganizationId,
+        slotDuration: slotDuration,
+        healthRecords: healthRecord,
+        patienInfo: patienInfo,
+        isFromAppointment: isFromAppointment,
+        startedTime: startedTime,
+        isDoctor: isDoctor,
+      ),
+    );
+  }
+
+  Future<void> initialize({
+    BuildContext context,
+    String channelName,
+    String patName,
+    String patId,
+    bool isFromAppointment,
+    String appointmentId,
+    String bookId,
+  }) async {
+    if (APP_ID.isEmpty) {
+      // setState(() {
+      //   _infoStrings.add(
+      //     'APP_ID missing, please provide your APP_ID in settings.dart',
+      //   );
+      //   _infoStrings.add('Agora Engine is not starting');
+      // });
+
+      return;
+    }
+    var rtcProvider = Provider.of<RTCEngineProvider>(context, listen: false);
+    await rtcProvider?.startRtcEngine();
+
+    /// Create agora sdk instance and initialize
+    rtcProvider?.rtcEngine?.setEventHandler(rtcEngineEventHandler);
+    _addAgoraEventHandlers(
+        patId: patId,
+        isFromAppointment: isFromAppointment,
+        patName: patName,
+        bookId: bookId,
+        appointmentId: appointmentId,
+        context: context);
+    await _initAgoraRtcEngine(rtcProvider, context: context);
+    await rtcProvider?.rtcEngine?.joinChannel(null, channelName, null, 0);
+    var regController = Get.find<QurhomeRegimenController>();
+    /*await platform.invokeMethod(
+        parameters.startOnGoingNS, {parameters.mode: parameters.start});*/
+    /*await platform.invokeMethod("startOnGoingNS", {
+      'name':
+          '${regController.onGoingSOSCall.value ? "Emergency Services" : patName}',
+      'mode': 'start'
+    });*/
+  }
+
+  Future<void> _initAgoraRtcEngine(RTCEngineProvider rtcProvider,
+      {BuildContext context}) async {
+    final audioStatus =
+        Provider.of<AudioCallProvider>(Get.context, listen: false);
+    if (!audioStatus?.isAudioCall) {
+      //* Video call
+      await rtcProvider?.rtcEngine?.enableWebSdkInteroperability(true);
+      VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
+      configuration.dimensions = VideoDimensions(width: 640, height: 360);
+      configuration.frameRate = VideoFrameRate.Fps15;
+      configuration.bitrate = 200;
+      await rtcProvider?.rtcEngine?.setVideoEncoderConfiguration(configuration);
+      await rtcProvider?.rtcEngine?.enableVideo();
+    } else {
+      //* Audio call
+      // if audio call means, diable video and put on inEar
+      //await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
+
+    }
+    await rtcProvider?.rtcEngine?.setEnableSpeakerphone(true);
+    await rtcProvider?.rtcEngine
+        ?.setChannelProfile(ChannelProfile.LiveBroadcasting);
+    await rtcProvider?.rtcEngine?.setClientRole(ClientRole.Broadcaster);
+  }
+
+  /// Add agora event handlers
+  void _addAgoraEventHandlers({
+    String patId,
+    bool isFromAppointment,
+    String appointmentId,
+    String bookId,
+    String patName,
+    BuildContext context,
+  }) {
+    var rtcProvider = Provider.of<RTCEngineProvider>(context, listen: false);
+    final audioStatus =
+        Provider.of<AudioCallProvider>(Get.context, listen: false);
+    var user_id;
+    rtcEngineEventHandler.error = (dynamic code) {
+      printError(info: code.toString());
+    };
+
+    rtcEngineEventHandler.joinChannelSuccess = (
+      String channel,
+      int uid,
+      int elapsed,
+    ) {
+      // setState(() {
+      //   final info = 'onJoinChannel: $channel, uid: $uid';
+      // });
+    };
+
+    rtcEngineEventHandler.leaveChannel = (RtcStats rtcStats) {
+      Provider.of<RTCEngineProvider>(
+        Get.context,
+        listen: false,
+      ).clearUsers();
+      // _users.clear();
+      //FlutterToast().getToast('Call Ended', Colors.red);
+    };
+
+    rtcEngineEventHandler.userJoined = (int uid, int elapsed) {
+      user_id = uid;
+      final info = 'userJoined: $uid';
+      Provider.of<RTCEngineProvider>(
+        Get.context,
+        listen: false,
+      ).addUser(uid);
+      VideoCallCommonUtils().StartTrackMyCall(appsID: appointmentId);
+    };
+
+    rtcEngineEventHandler.remoteAudioStateChanged = (int uid,
+        AudioRemoteState state, AudioRemoteStateReason reason, int elapsed) {
+      // setState(() {
+      //   //get the remote user mute status
+      // });
+    };
+
+    prepareMyData();
+    rtcEngineEventHandler.userOffline = (int uid, UserOfflineReason reason) {
+      if (reason == UserOfflineReason.Dropped) {
+        noResponseDialog(
+          Get.context,
+          'Disconnected due to Network Failure!',
+          patId: patId,
+          isFromAppointment: isFromAppointment,
+          appointmentId: appointmentId,
+          bookId: bookId,
+          patName: patName,
+        );
+        //print('user is OFFLINE');
+      } else {
+        try {
+          if (!isFromAppointment) {
+            callApiToUpdateNonAppointment(patId);
+          }
+        } catch (e) {}
+        final call_start_time =
+            DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+        VideoCallCommonUtils().terminate(
+            appsID: appointmentId,
+            bookId: bookId,
+            patName: patName,
+            callStartTime: call_start_time);
+        var regController = Get.find<QurhomeRegimenController>();
+        regController.onGoingSOSCall.value = false;
+        Navigator.pop(Get.context);
+      }
+    };
+
+    rtcEngineEventHandler.remoteVideoStateChanged = (
+      int uid,
+      VideoRemoteState videoRemoteState,
+      VideoRemoteStateReason videoRemoteStateReason,
+      int elapsed,
+    ) {
+      // setState(() {
+      //   // final info = 'firstRemoteVideo: $uid ${width}x $height';
+      //   // _infoStrings.add(info);
+      // });
+    };
+
+    rtcEngineEventHandler.localVideoStateChanged =
+        (LocalVideoStreamState localVideoStreamState,
+            LocalVideoStreamError localVideoStreamError) {
+      if (localVideoStreamState == LocalVideoStreamState.Stopped) {
+        //FlutterToast().getToast('your video has been stopped', Colors.red);
+      } else if (localVideoStreamState == LocalVideoStreamState.Failed) {
+        //FlutterToast().getToast('The local video fails to start.', Colors.red);
+      } else if (localVideoStreamState == LocalVideoStreamState.Capturing) {
+        // FlutterToast().getToast(
+        //     'The local video capturer starts successfully.', Colors.green);
+      } else if (localVideoStreamState == LocalVideoStreamState.Encoding) {
+        // FlutterToast().getToast(
+        //     'The first local video frame encodes successfully.', Colors.green);
+      }
+
+      if (localVideoStreamError == LocalVideoStreamError.OK) {
+        //FlutterToast().getToast('The local video is normal.', Colors.green);
+      } else if (localVideoStreamError ==
+          LocalVideoStreamError.CaptureFailure) {
+        // FlutterToast().getToast(
+        //     'The local video capture fails. Check whether the capturer is working properly.',
+        //     Colors.red);
+      } else if (localVideoStreamError ==
+          LocalVideoStreamError.DeviceNoPermission) {
+        // FlutterToast().getToast(
+        //     'No permission to use the local video device.', Colors.red);
+      } else if (localVideoStreamError == LocalVideoStreamError.DeviceBusy) {
+        // FlutterToast()
+        //     .getToast('The local video capturer is in use.', Colors.red);
+      } else if (localVideoStreamError == LocalVideoStreamError.EncodeFailure) {
+        //FlutterToast().getToast('The local video encoding fails.', Colors.red);
+      } else if (localVideoStreamError == LocalVideoStreamError.Failure) {
+        // FlutterToast().getToast(
+        //     'No specified reason for the local video failure.', Colors.red);
+      }
+    };
+
+    // rtcEngineEventHandler.userEnableVideo = (uid, isEnabled) async {
+    //   if (isEnabled && audioStatus?.isAudioCall) {
+    //     if (CommonUtil.isVideoRequestSent) {
+    //       CommonUtil.isVideoRequestSent = false;
+    //       Get.back();
+    //       Provider?.of<HideProvider>(Get.context, listen: false)
+    //           ?.swithToVideo();
+    //       Provider.of<AudioCallProvider>(Get.context, listen: false)
+    //           ?.disableAudioCall();
+    //       Provider?.of<VideoIconProvider>(Get.context, listen: false)
+    //           ?.turnOnVideo();
+    //       Provider.of<RTCEngineProvider>(Get.context, listen: false)
+    //           ?.changeLocalVideoStatus(false);
+    //     }
+    //   } else {
+    //     if (Get.isDialogOpen) {
+    //       Get.back();
+    //       Get.rawSnackbar(
+    //           messageText: Center(
+    //             child: Text(
+    //               'Request Canceled',
+    //               style: TextStyle(
+    //                   color: Colors.white, fontWeight: FontWeight.w500),
+    //             ),
+    //           ),
+    //           snackPosition: SnackPosition.BOTTOM,
+    //           snackStyle: SnackStyle.GROUNDED,
+    //           duration: Duration(seconds: 3),
+    //           backgroundColor: Colors.red.shade400);
+    //     }
+    //     /* if (CommonUtil.isVideoRequestSent) {
+    //       // declined
+    //       FlutterToast()
+    //           .getToast('Video call request Declined by patient', Colors.black);
+    //     }
+    //     else {
+    //       FlutterToast()
+    //           .getToast('Video call request canceled by patient', Colors.green);
+    //     } */
+
+    //     videoPauseResumeState = 0;
+    //   }
+    // };
+
+    rtcEngineEventHandler.remoteVideoStateChanged =
+        (uid, state, reason, elapsed) async {
+      if (state == VideoRemoteState.Starting ||
+          state == VideoRemoteState.Decoding) {
+        //TODO firstRemoteVideoFrame callback
+      }
+
+      //its a video call
+      if (reason == VideoRemoteStateReason.Internal) {
+        //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
+        CommonUtil.isRemoteUserOnPause = false;
+      } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
+        CommonUtil.isRemoteUserOnPause = false;
+        if (!audioStatus?.isAudioCall) {
+          FlutterToast().getToast('Patient Video is resumed', Colors.green);
+        }
+        videoPauseResumeState = 1;
+      } else if (reason == VideoRemoteStateReason.RemoteMuted) {
+        CommonUtil.isRemoteUserOnPause = true;
+
+        if (CommonUtil.isLocalUserOnPause) {
+          CommonUtil.isLocalUserOnPause = false;
+          await rtcProvider?.rtcEngine?.disableVideo();
+          await rtcProvider?.rtcEngine?.enableLocalVideo(false);
+          await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
+          Provider?.of<HideProvider>(Get.context, listen: false)
+              ?.swithToAudio();
+          Provider.of<AudioCallProvider>(Get.context, listen: false)
+              ?.enableAudioCall();
+          Provider?.of<VideoIconProvider>(Get.context, listen: false)
+              ?.turnOffVideo();
+        } else {
+          if (!(Provider?.of<AudioCallProvider>(Get.context, listen: false)
+              ?.isAudioCall)) {
+            FlutterToast().getToast('Patient Video is paused', Colors.red);
+          }
+          videoPauseResumeState = 2;
+        }
+      } else {
+        CommonUtil.isRemoteUserOnPause = false;
+      }
+    };
+
+    rtcEngineEventHandler.localAudioStateChanged = (state, error) {
+      if (state == AudioLocalState.Recording) {
+        //FlutterToast().getToast('Your on UnMute', Colors.red);
+      } else {
+        //FlutterToast().getToast('Your on Mute', Colors.green);
+      }
+    };
+
+    rtcEngineEventHandler.remoteAudioStateChanged =
+        (uid, state, reason, elapsed) {
+      var regController = Get.find<QurhomeRegimenController>();
+      String strText = "Patient";
+      if (regController.onGoingSOSCall.value) {
+        strText = "Emergency Services";
+      }
+      if (state == AudioRemoteState.Stopped) {
+        //FlutterToast().getToast('Patient is on Mute', Colors.red);
+      } else if (reason == AudioRemoteStateReason.RemoteMuted) {
+        FlutterToast().getToast('$strText is on Mute', Colors.red);
+      } else if (reason == AudioRemoteStateReason.RemoteUnmuted) {
+        FlutterToast().getToast('$strText is on UnMute', Colors.green);
+      }
+      //uid is ID of the user whose audio state changes.
+      /* if (reason == 1) {
+        //print('REMOTE_AUDIO_REASON_NETWORK_CONGESTION- Network congestion.');
+      } else if (reason == 3) {
+        FlutterToast().getToast('Your on Mute', Colors.red);
+        // print(
+        //     'REMOTE_AUDIO_REASON_LOCAL_MUTED- The local user stops receiving the remote audio stream or disables the audio module.');
+      } else if (reason == 4) {
+        FlutterToast().getToast('Your on UnMute', Colors.red);
+        // print(
+        //     'REMOTE_AUDIO_REASON_LOCAL_UNMUTED- The local user resumes receiving the remote audio stream or enables the audio module.');
+      } else if (reason == 5) {
+        FlutterToast().getToast('Patient is on Mute', Colors.red);
+
+        // print(
+        //     'REMOTE_AUDIO_REASON_REMOTE_MUTED- The remote user stops sending the audio stream or disables the audio module.');
+      } else if (reason == 6) {
+        FlutterToast().getToast('Patient is on UnMute', Colors.red);
+
+        // print(
+        //     'REMOTE_AUDIO_REASON_REMOTE_UNMUTED- The remote user resumes sending the audio stream or enables the audio module.');
+      } else if (reason == 7) {
+        print(
+            'REMOTE_AUDIO_REASON_REMOTE_OFFLINE- The remote user leaves the channel.');
+      } */
+    };
+
+    rtcEngineEventHandler.networkTypeChanged = (networkType) {
+      if (networkType == NetworkType.LAN) {
+        print('network type is LAN');
+      } else if (networkType == NetworkType.WIFI) {
+        print('network type is WIFI');
+      } else if (networkType == NetworkType.Mobile2G) {
+        print('network type is Mobile2G');
+      } else if (networkType == NetworkType.Mobile3G) {
+        print('network type is Mobile3G');
+      } else if (networkType == NetworkType.Mobile4G) {
+        print('network type is Mobile4G');
+      } else if (networkType == NetworkType.Disconnected) {
+        print('network type is Disconnected');
+      } else {
+        print('network type is Unknown');
+      }
+    };
+
+    if (user_id != null && user_id != '') {
+      Provider.of<RTCEngineProvider>(Get.context, listen: false)
+          ?.rtcEngine
+          ?.getUserInfoByUid(user_id)
+          ?.then((value) {
+        //print('connected user info ${value?.userAccount}');
+      });
+    }
+
+    rtcEngineEventHandler.rejoinChannelSuccess = (channel, uid, elapsedTime) {
+      print('After rejoining channel successfully');
+      //print('channel $channel &uid $uid &elapsedTime $elapsedTime');
+    };
+
+    //Local user call status
+    rtcEngineEventHandler.connectionStateChanged = (nwState, reason) {
+      if (nwState == ConnectionStateType.Disconnected) {
+        FlutterToast().getToast('Disconnected', Colors.red);
+        //print('call was disconnected');
+      } else if (nwState == ConnectionStateType.Connecting) {
+        FlutterToast().getToast('Connecting..', Colors.green);
+        //print('call is connecting');
+      } else if (nwState == ConnectionStateType.Connected) {
+        FlutterToast().getToast('Connected', Colors.green);
+      } else if (nwState == ConnectionStateType.Reconnecting) {
+        FlutterToast().getToast('Trying to Reconnect..', Colors.red);
+        //print('call is reconnecting');
+      } else if (nwState == ConnectionStateType.Failed) {
+        FlutterToast().getToast('Connection Failed', Colors.red);
+        //print('call is connection failed');
+      }
+    };
+
+    rtcEngineEventHandler.networkQuality = (uid, tx, rx) {
+      //uplink quality speed of local network state
+
+      if (tx == NetworkQuality.Excellent) {
+        print('The quality is excellent QUALITY_EXCELLENT');
+      } else if (tx == NetworkQuality.Good) {
+        print(
+            'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
+      } else if (tx == NetworkQuality.Poor) {
+        print(
+            'Users can feel the communication slightly impaired. QUALITY_POOR');
+      } else if (tx == NetworkQuality.Bad) {
+      } else if (tx == NetworkQuality.VBad) {
+      } else if (tx == NetworkQuality.Down) {
+      } else if (tx == NetworkQuality.Detecting) {
+        print('The SDK is detecting the network quality. QUALITY_DETECTING');
+      } else if (tx == NetworkQuality.Unknown) {
+        print('The quality is unknown. QUALITY_UNKNOWN');
+      }
+
+      //downlink quality speed of local network state
+      if (rx == NetworkQuality.Excellent) {
+        print('The quality is excellent QUALITY_EXCELLENT');
+      } else if (rx == NetworkQuality.Good) {
+        print(
+            'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
+      } else if (rx == NetworkQuality.Poor) {
+        print(
+            'Users can feel the communication slightly impaired. QUALITY_POOR');
+      } else if (tx == NetworkQuality.Bad) {
+      } else if (tx == NetworkQuality.VBad) {
+      } else if (tx == NetworkQuality.Down) {
+      } else if (rx == NetworkQuality.Detecting) {
+        print('The SDK is detecting the network quality. QUALITY_DETECTING');
+      } else if (rx == NetworkQuality.Unknown) {
+        print('The quality is unknown. QUALITY_UNKNOWN');
+      }
+    };
+
+    rtcEngineEventHandler.remoteVideoStats = (stats) {
+      if (videoPauseResumeState != 0) {
+        // dont show try to reconnect view
+      } else {
+        /* if (stats.receivedBitrate == 0 &&
+            !(Provider.of<RTCEngineProvider>(
+              Get.context,
+              listen: false,
+            ).isCustomViewShown)) {
+          Provider.of<RTCEngineProvider>(
+            Get.context,
+            listen: false,
+          ).updateCustomViewShown(true);
+        } else if (stats.receivedBitrate > 100 &&
+            (Provider.of<RTCEngineProvider>(
+              Get.context,
+              listen: false,
+            ).isCustomViewShown)) {
+          Provider.of<RTCEngineProvider>(
+            Get.context,
+            listen: false,
+          ).updateCustomViewShown(false);
+        } else {
+          //do nothing
+        } */
+      }
+    };
+  }
+
+  noResponseDialog(
+    BuildContext mContext,
+    String message, {
+    String patId,
+    bool isFromAppointment,
+    String appointmentId,
+    String bookId,
+    String patName,
+  }) {
+    return showDialog(
+      context: Get.context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                prepareMyData();
+                try {
+                  if (!isFromAppointment) {
+                    callApiToUpdateNonAppointment(patId);
+                  }
+                } catch (e) {}
+                final call_start_time =
+                    DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+                VideoCallCommonUtils().terminate(
+                    appsID: appointmentId,
+                    bookId: bookId,
+                    patName: patName,
+                    callStartTime: call_start_time);
+                // Navigator.of(mContext).pop();
+                // Navigator.of(mContext).popUntil((route) => route.isFirst);
+                if (Platform.isIOS) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pop(context);
+                }
+                /*Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomeSecreen(
+                            arguments: HomeScreenArguments(
+                                authToken: token,
+                                doctorId: doctor_id,
+                                title: mtTitle,
+                                speciality: specialityName,
+                                bookindId: '',
+                                isHighLightAppointment: false,
+                                userId: userIdForNotify,
+                                isUpdateAlertShow: false),
+                          )),
+                  (route) => false,
+                );*/
+                // setState(() {
+                //   final info = 'userOffline: $uid';
+                //   _infoStrings.add(info);
+                //   _users.remove(uid);
+                //   //_users.clear();
+
+                // });
+              },
+              child: Text(
+                'Ok',
+                style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontSize: 18.0.sp,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void prepareMyData() async {
+    PreferenceUtil prefs = new PreferenceUtil();
+
+    /*try {
+      mtTitle = await prefs.getValueBasedOnKey("display_name");
+    } catch (e) {}
+    try {
+      specialityName = await prefs.getValueBasedOnKey("speciality");
+    } catch (e) {}
+    try {
+      doctor_id = await prefs.getValueBasedOnKey("doctor_id");
+    } catch (e) {}*/
+    try {
+      final SharedPreferences sharedPrefs =
+          await SharedPreferences.getInstance();
+      userIdForNotify = await sharedPrefs.getString('userID');
+      userIdForNotify = json.decode(userIdForNotify);
+    } catch (e) {}
+  }
+
+  void callApiToUpdateNonAppointment(String patId) {
+    Map<String, dynamic> body = new Map();
+    final now = DateTime.now();
+    String endTime =
+        '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
+    String userIdForNotify;
+    PreferenceUtil prefs = new PreferenceUtil();
+
+    try {
+      /*prefs.getValueBasedOnKey(struserID).then((value) {
+        userIdForNotify = value;
+      });*/
+    } catch (e) {}
+    var startedTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+    body['startTime'] = startedTime;
+    body['endTime'] = endTime;
+    body['callerUser'] = userIdForNotify;
+    body['recipientUser'] = patId;
+
+    //TODO
+
+    /*new ApiResponse()
+        .putNonAppointmentCall(CallMain.nonAppointmentUrl, body)
+        .then((value) {
+      if (value['isSuccess'] != null && value['isSuccess']) {
+        print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
+      }
+    });*/
+  }
+
+  Future<bool> handleCameraAndMic({bool isAudioCall = false}) async {
+//    await PermissionHandler().requestPermissions(
+////      [PermissionGroup.camera, PermissionGroup.microphone],
+////    );
+
+    if (isAudioCall) {
+      PermissionStatus micStatus = await Permission.microphone.request();
+      if (micStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      PermissionStatus status;
+      status = await Permission.microphone.request();
+      PermissionStatus cameraStatus = await Permission.camera.request();
+
+      if (status == PermissionStatus.granted &&
+          cameraStatus == PermissionStatus.granted) {
+        return true;
+      } else {
+        _handleInvalidPermissions(cameraStatus, status);
+        return false;
+      }
+    }
+  }
+
+  static void _handleInvalidPermissions(
+    PermissionStatus cameraPermissionStatus,
+    PermissionStatus microphonePermissionStatus,
+  ) {
+    if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      print("Access to camera and microphone denied");
+      // throw new PlatformException(
+      //     code: "PERMISSION_DENIED",
+      //     message: "Access to camera and microphone denied",
+      //     details: null);
+    } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
+        microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
+      print("Access to camera and microphone denied permanently");
+
+      // throw new PlatformException(
+      //     code: "PERMISSION_DISABLED",
+      //     message: "Location data is not available on device",
+      //     details: null);
+    }
+  }
+
+  Future<bool> getCurrentVideoCallRelatedPermission(
+      {bool isAudioCall = false}) async {
+    if (isAudioCall) {
+      var micSts = await Permission.microphone.status;
+      if (micSts == PermissionStatus.granted) {
+        //do nothing
+        return true;
+      } else {
+        return handleCameraAndMic(isAudioCall: isAudioCall);
+      }
+    } else {
+      var cameraSts = await Permission.camera.status;
+      var micSts = await Permission.microphone.status;
+      if (cameraSts == PermissionStatus.granted &&
+          micSts == PermissionStatus.granted) {
+        //do nothing
+        return true;
+      } else {
+        return handleCameraAndMic(isAudioCall: isAudioCall);
+      }
+    }
+  }
+
+  calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age;
+  }
+
+  void callEnd(BuildContext context, dynamic id) async {
+    try {
+      Provider.of<RTCEngineProvider>(context, listen: false).stopRtcEngine();
+      await myDB
+          .collection("call_log")
+          .doc("$id")
+          .set({"call_status": "call_ended_by_user"});
+    } catch (e) {}
+    try {
+      CommonUtil.isCallStarted = false;
+      Navigator.pop(context);
+      var regController = Get.find<QurhomeRegimenController>();
+      regController.onGoingSOSCall.value = false;
+    } catch (e) {}
+  }
+
+  Future<bool> updateCallCurrentStatus(
+      {BuildContext mContext,
+      String cid,
+      CallMetaData callMetaData,
+      String healthOrganizationId,
+      AudioPlayer audioPlayer,
+      dynamic isCallActualTime,
+      HealthRecord healthRecord,
+      User patienInfo,
+      bool isFromAppointment,
+      dynamic isDoctor}) async {
+    try {
+      await myDB
+          .collection("call_log")
+          .doc("$cid")
+          .set({"call_status": "unknown"});
+      listenForReceiverActions(
+          cid: cid,
+          context: mContext,
+          callMetaData: callMetaData,
+          healthOrganizationId: healthOrganizationId,
+          audioPlayer: audioPlayer,
+          isCallActualTime: isCallActualTime,
+          healthRecord: healthRecord,
+          patienInfo: patienInfo,
+          isFromAppointment: isFromAppointment,
+          isDoctor: isDoctor);
+    } catch (e) {}
+  }
+
+  void listenForReceiverActions(
+      {BuildContext context,
+      String cid,
+      CallMetaData callMetaData,
+      String healthOrganizationId,
+      AudioPlayer audioPlayer,
+      dynamic isCallActualTime,
+      HealthRecord healthRecord,
+      User patienInfo,
+      bool isFromAppointment,
+      dynamic isDoctor}) {
+    try {
+      FlutterToast toast = new FlutterToast();
+      bool callPageShouldEndAutomatically = true;
+      Future.delayed(Duration(seconds: 30), () {
+        if (callPageShouldEndAutomatically) {
+          String appointMentId = (callMetaData?.mappointmentId != null ||
+                  callMetaData?.mappointmentId.isNotEmpty)
+              ? callMetaData?.mappointmentId
+              : '';
+          if (appointMentId == '') {
+            try {
+              clearAudioPlayer(audioPlayer);
+              Navigator.pop(context);
+            } catch (e) {
+              print(e);
+            }
+          } else {
+            if (isCallActualTime) {
+              clearAudioPlayer(audioPlayer);
+              Navigator.pop(context);
+              //TODO
+              /*new ApiResponse()
+                  .updateCallStatus((callMetaData?.mappointmentId != null ||
+                          callMetaData?.mappointmentId.isNotEmpty)
+                      ? callMetaData?.mappointmentId
+                      : '')
+                  .then((value) {
+*/ /*
+              if (value['isSuccess'] != null && value['isSuccess']) {
+*/ /*
+                clearAudioPlayer(audioPlayer);
+                Navigator.pop(context);
+                */ /* }*/ /*
+              });*/
+            } else {
+              //do nothing
+              clearAudioPlayer(audioPlayer);
+              Navigator.pop(context);
+            }
+          }
+          if (callMetaData != null && !isMissedCallNsSent) {
+            isMissedCallNsSent = true;
+            var regController = Get.find<QurhomeRegimenController>();
+            createMissedCallNS(
+                docName: /*callMetaData.docName*/ regController.userName.value,
+                patId: /*callMetaData.patId*/ regController
+                    .careCoordinatorId.value,
+                bookingId: callMetaData.bookId);
+          }
+        }
+      });
+      myDB
+          .collection('call_log')
+          .doc(cid)
+          .snapshots()
+          .listen((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+        Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
+
+        var recStatus = firestoreInfo['call_status'];
+        if (recStatus == "accept") {
+          String startedTime = '';
+          clearAudioPlayer(audioPlayer);
+          if (!isFromAppointment) {
+            Map<String, dynamic> body = new Map();
+            final now = DateTime.now();
+            startedTime =
+                '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
+            var randomMID = getMyMeetingID();
+            String userIdForNotify;
+            PreferenceUtil prefs = new PreferenceUtil();
+
+            try {
+              /*prefs.getValueBasedOnKey(struserID).then((value) {
+                userIdForNotify = value;
+              });*/
+            } catch (e) {}
+
+            body['startedTime'] = startedTime;
+            body['appointment'] = randomMID;
+            body['callerUser'] = userIdForNotify;
+            body['recipientUser'] = callMetaData.patientPrescriptionId;
+            String params = json.encode(body);
+
+            //TODO
+            /*new ApiResponse()
+                .insertCallNonAppointment(nonAppointmentUrl, params)
+                .then((value) {
+              if (value['isSuccess'] != null && value['isSuccess']) {
+                print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL');
+              }
+            });*/
+          }
+          VideoCallCommonUtils().startTheCall(
+              context: context,
+              bookId: callMetaData?.mbookId,
+              appointmentId: (callMetaData?.mappointmentId != null ||
+                      callMetaData?.mappointmentId.isNotEmpty)
+                  ? callMetaData?.mappointmentId
+                  : '',
+              healthOrganizationId: healthOrganizationId,
+              gender:
+                  callMetaData?.mgender != null ? callMetaData?.mgender : '',
+              patId: callMetaData?.patientPrescriptionId != null
+                  ? callMetaData?.patientPrescriptionId
+                  : '',
+              patName:
+                  callMetaData?.patName != null ? callMetaData?.patName : '',
+              patientDOB: callMetaData?.patientDOB != null
+                  ? callMetaData?.patientDOB
+                  : '',
+              patientPicUrl: callMetaData?.mpatientPicUrl != null
+                  ? callMetaData?.mpatientPicUrl
+                  : '',
+              slotDuration: callMetaData?.slotDuration,
+              healthRecord: healthRecord,
+              patienInfo: patienInfo,
+              isFromAppointment: isFromAppointment,
+              startedTime: startedTime,
+              isDoctor: isDoctor);
+          callPageShouldEndAutomatically = false;
+        } else if (recStatus == "decline") {
+          clearAudioPlayer(audioPlayer);
+          callPageShouldEndAutomatically = false;
+          CommonUtil.isCallStarted = false;
+          callActions.value = CallActions.DECLINED;
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.pop(context);
+          });
+        }
+      }).onError((e) {});
+    } catch (e) {}
+  }
+
+  Future<void> terminate(
+      {String appsID,
+      String bookId,
+      String patName,
+      String callStartTime}) async {
+    String callEndTime = '';
+
+    ///invoke call log api when receipent join call
+    callEndTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+    final apiResponse = QurHomeApiProvider();
+    await PreferenceUtil.init();
+    var regController = Get.find<QurhomeRegimenController>();
+    /*UpdatedInfo _updateInfo =
+        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
+    AdditionalInfo additionalInfo =
+        new AdditionalInfo(location: regController.locationModel);
+
+    CallEndModel callLogModel = CallEndModel(
+        callerUser: regController.userId.value,
+        recipientUser: regController.careCoordinatorId.value,
+        startedTime: regController.callStartTime.value,
+        endTime: callEndTime,
+        status: "Completed",
+        id: regController.resultId.value,
+        additionalInfo: additionalInfo);
+
+    var callLogResponse =
+        await apiResponse.callLogEndData(request: callLogModel);
+
+    regController.onGoingSOSCall.value = false;
+
+    //clear the call_log from firebase db
+    await FirebaseFirestore.instance
+        .collection('call_log')
+        .doc('$bookId')
+        .delete();
+
+    await Provider.of<RTCEngineProvider>(Get.context, listen: false)
+        .stopRtcEngine();
+    /*await platform.invokeMethod("startOnGoingNS", {
+      'name':
+          '${regController.onGoingSOSCall.value ? "Emergency Services" : patName}',
+      'mode': 'stop'
+    });*/
+    CommonUtil.isCallStarted = false;
+    CommonUtil.bookedForId = null;
+  }
+
+  Future<void> StartTrackMyCall({
+    String appsID,
+  }) async {
+    String callStartTime = '';
+
+    ///invoke call log api when receipent join call
+    callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+    final apiResponse = QurHomeApiProvider();
+    await PreferenceUtil.init();
+    var regController = Get.find<QurhomeRegimenController>();
+
+    /*UpdatedInfo _updateInfo =
+        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
+
+    AdditionalInfo additionalInfo =
+        new AdditionalInfo(location: regController.locationModel);
+
+    CallLogModel callLogModel = CallLogModel(
+        callerUser: regController.userId.value,
+        recipientUser: regController.careCoordinatorId.value,
+        startedTime: callStartTime,
+        status: "Started",
+        additionalInfo: additionalInfo);
+    var callLogResponse = await apiResponse.callLogData(request: callLogModel);
+  }
+
+  createMissedCallNS({String docName, String patId, String bookingId}) async {
+    try {
+      /*var body = {
+        "doctorName": docName,
+        "recipientId": patId,
+        "bookingId": bookingId
+      };*/
+      String callStartTime = '';
+      callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+      final apiResponse = QurHomeApiProvider();
+      await PreferenceUtil.init();
+      var regController = Get.find<QurhomeRegimenController>();
+
+      /*UpdatedInfo _updateInfo =
+        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
+
+      AdditionalInfo additionalInfo =
+          new AdditionalInfo(location: regController.locationModel);
+
+      CallLogModel callLogModel = CallLogModel(
+          callerUser: regController.userId.value,
+          recipientId: regController.careCoordinatorId.value,
+          startedTime: callStartTime,
+          endTime: callStartTime,
+          patientName: regController.userName.value,
+          status: "",
+          additionalInfo: additionalInfo);
+      var response =
+          await apiResponse.callMissedCallNsAlertAPI(request: callLogModel);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void clearAudioPlayer(AudioPlayer audioPlayer) async {
+    await audioPlayer.stop();
+    await audioPlayer.release();
+  }
+
+  /*List<String> getAssociateRecords(HealthRecord healthRecord) {
+    List<String> metaId = new List();
+
+    if (healthRecord.associatedRecords != null &&
+        healthRecord.associatedRecords.length > 0) {
+      metaId.addAll(healthRecord.associatedRecords);
+    }
+
+    return metaId;
+  }*/
+
+  getDob(String dob) {
+    if (dob != '' && dob != null) {
+      String currentYear = dob.split('-')[0];
+      DateFormat format = new DateFormat("yyyy");
+
+      DateTime dt = format.parse(currentYear);
+      final date2 = DateTime.now().year;
+
+      int yearDiff = date2 - dt.year;
+      //print('${date2-dt.year}');
+      return yearDiff.toString();
+    } else {
+      return '';
+    }
+  }
 }
