@@ -3452,7 +3452,7 @@ class CommonUtil {
     if ((defaultInitial ?? '').isNotEmpty) {
       defaultWidget = ClipOval(
         child: CircleAvatar(
-          radius: 32,
+          radius: 32.h,
           backgroundColor: Colors.grey[200],
           child: Center(
             child: Text(
@@ -3470,8 +3470,8 @@ class CommonUtil {
     return ClipOval(
       child: Container(
         alignment: Alignment.center,
-        height: 70,
-        width: 70,
+        height: 70.h,
+        width: 70.h,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: Colors.transparent,
@@ -3480,8 +3480,8 @@ class CommonUtil {
             ? iconApi.toString().toLowerCase()?.contains('.svg')
                 ? Center(
                     child: SizedBox(
-                      height: 50,
-                      width: 50,
+                      height: 50.h,
+                      width: 50.h,
                       child: SvgPicture.network(
                         iconApi,
                         placeholderBuilder: (context) =>
@@ -3497,12 +3497,12 @@ class CommonUtil {
                         ClipOval(
                             child: CircleAvatar(
                           backgroundImage: AssetImage(qurHealthLogo),
-                          radius: 32,
+                          radius: 32.h,
                           backgroundColor: Colors.transparent,
                         )),
                     imageBuilder: (context, imageProvider) => Container(
-                      width: 80,
-                      height: 80,
+                      width: 80.h,
+                      height: 80.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
@@ -3526,12 +3526,12 @@ class CommonUtil {
                             ClipOval(
                                 child: CircleAvatar(
                               backgroundImage: AssetImage(qurHealthLogo),
-                              radius: 32,
+                              radius: 32.h,
                               backgroundColor: Colors.transparent,
                             )),
                         imageBuilder: (context, imageProvider) => Container(
-                          width: 80,
-                          height: 80,
+                          width: 80.h,
+                          height: 80.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             image: DecorationImage(
@@ -3543,7 +3543,7 @@ class CommonUtil {
                     ClipOval(
                         child: CircleAvatar(
                       backgroundImage: AssetImage(qurHealthLogo),
-                      radius: 32,
+                      radius: 32.h,
                       backgroundColor: Colors.transparent,
                     )),
       ),
