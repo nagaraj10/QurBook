@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
@@ -77,10 +78,10 @@ class _ChatUserListState extends State<ChatUserList> {
   FamilyMembers familyData = new FamilyMembers();
 
   //List<SharedByUsers> _familyNames = new List();
-  Future<FamilyMembers> familyListModel;
+  Future<CaregiverPatientChatModel> familyListModel;
 
-  FamilyMemberListRepository _familyListRespository =
-      FamilyMemberListRepository();
+  /*FamilyMemberListRepository _familyListRespository =
+      FamilyMemberListRepository();*/
 
   FlutterToast toast = FlutterToast();
 
@@ -92,8 +93,6 @@ class _ChatUserListState extends State<ChatUserList> {
   void initState() {
     super.initState();
 
-    controller.updateNewChatFloatShown(false);
-
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
 
@@ -104,29 +103,7 @@ class _ChatUserListState extends State<ChatUserList> {
     /*_familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();*/
 
-    familyListModel = _familyListRespository.getFamilyMembersListNew();
-
-    _familyListRespository.getFamilyMembersListNew().then((familyMembersList) {
-      if (familyMembersList != null &&
-          familyMembersList?.result != null &&
-          familyMembersList?.result?.sharedByUsers?.length > 0) {
-        for (var i = 0;
-            i < familyMembersList?.result?.sharedByUsers?.length;
-            i++) {
-          if (familyMembersList?.result?.sharedByUsers[i].isCaregiver != null &&
-                  familyMembersList?.result?.sharedByUsers[i].isCaregiver ==
-                      true &&
-                  familyMembersList
-                          ?.result?.sharedByUsers[i].child?.isVirtualUser ==
-                      null ||
-              familyMembersList
-                      ?.result?.sharedByUsers[i].child?.isVirtualUser ==
-                  false) {
-            controller.updateNewChatFloatShown(true);
-          }
-        }
-      }
-    });
+    familyListModel = controller.getFamilyMappingList();
   }
 
   void initSocket(bool isLoad) {
@@ -264,7 +241,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget getFamilyListWidget() {
-    return new FutureBuilder<FamilyMembers>(
+    return new FutureBuilder<CaregiverPatientChatModel>(
       future: familyListModel,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -283,98 +260,90 @@ class _ChatUserListState extends State<ChatUserList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.sharedByUsers.length > 0) {
-            List<SharedByUsers> filteredFamilyList = [];
-            for (var i = 0;
-                i < snapshot?.data?.result?.sharedByUsers.length;
-                i++) {
-              if (snapshot?.data?.result?.sharedByUsers[i].isCaregiver !=
-                          null &&
-                      snapshot?.data?.result?.sharedByUsers[i].isCaregiver ==
-                          true &&
-                      snapshot?.data?.result?.sharedByUsers[i].child
-                              ?.isVirtualUser ==
-                          null ||
-                  snapshot?.data?.result?.sharedByUsers[i].child
-                          ?.isVirtualUser ==
-                      false) {
-                filteredFamilyList
-                    .add(snapshot?.data?.result?.sharedByUsers[i]);
-              }
-            }
-
-            return Container(
-              decoration: BoxDecoration(
-                  color: const Color(fhbColors.bgColorContainer),
-                  borderRadius: BorderRadius.circular(10)),
-              margin: EdgeInsets.all(20),
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          strNewChatLabel,
-                          style: TextStyle(
-                              fontSize: 18.0.sp, fontWeight: FontWeight.w500),
+          if (snapshot?.hasData && snapshot?.data?.result != null) {
+              if (snapshot?.data?.result?.length > 0) {
+                return Container(
+                  decoration: BoxDecoration(
+                      color: const Color(fhbColors.bgColorContainer),
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: EdgeInsets.all(20),
+                  padding: EdgeInsets.all(10),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 20, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              strNewChatLabel,
+                              style: TextStyle(
+                                  fontSize: 18.0.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.black54,
+                                size: 24.0.sp,
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            )
+                          ],
                         ),
-                        IconButton(
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.black54,
-                            size: 24.0.sp,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    ),
+                      ),
+                      Container(
+                        constraints: BoxConstraints(
+                          maxHeight: 440.0.h,
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemBuilder: (c, i) => getCardWidgetForFamilyList(
+                              snapshot?.data?.result[i]),
+                          itemCount:
+                              snapshot?.data?.result?.length ?? 0,
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    constraints: BoxConstraints(
-                      maxHeight: 440.0.h,
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (c, i) =>
-                          getCardWidgetForFamilyList(filteredFamilyList[i]),
-                      itemCount: filteredFamilyList.length,
-                    ),
-                  ),
-                ],
-              ),
-            );
+                );
+              } else {
+                controller.updateNewChatFloatShown(false);
+                getNofamilyWidget();
+              }
+
           } else {
-            return SafeArea(
-              child: SizedBox(
-                height: 1.sh / 1.3,
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Center(
-                      child: Text(strLabelNoFamily),
-                    )),
-              ),
-            );
+            controller.updateNewChatFloatShown(false);
+            getNofamilyWidget();
           }
         }
       },
     );
   }
 
-  Widget getCardWidgetForFamilyList(SharedByUsers data) {
+  Widget getNofamilyWidget() {
+    return SafeArea(
+      child: SizedBox(
+        height: 1.sh / 1.3,
+        child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Center(
+              child: Text(strLabelNoFamily),
+            )),
+      ),
+    );
+  }
+
+  Widget getCardWidgetForFamilyList(Result data) {
     var fulName = '';
     try {
-      if (data?.child?.firstName != null && data?.child?.firstName != '') {
-        fulName = data?.child?.firstName;
+      if (data?.firstName != null && data?.firstName != '') {
+        fulName = data?.firstName;
       }
-      if (data?.child?.lastName != null && data?.child?.lastName != '') {
-        fulName = fulName + ' ' + data?.child?.lastName;
+      if (data?.lastName != null && data?.lastName != '') {
+        fulName = fulName + ' ' + data?.lastName;
       }
     } catch (e) {}
 
@@ -386,8 +355,8 @@ class _ChatUserListState extends State<ChatUserList> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => ChatDetail(
-                        peerId: data?.child?.id,
-                        peerAvatar: data?.child?.profilePicThumbnailUrl,
+                        peerId: data?.id,
+                        peerAvatar: data?.profilePicThumbnailUrl,
                         peerName: getFamilyName(data),
                         patientId: '',
                         patientName: '',
@@ -415,15 +384,15 @@ class _ChatUserListState extends State<ChatUserList> {
               child: Row(
                 children: <Widget>[
                   ClipOval(
-                      child: data?.child?.profilePicThumbnailUrl == null
+                      child: data?.profilePicThumbnailUrl == null
                           ? Container(
                               width: 45.0.h,
                               height: 45.0.h,
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  data.child != null
-                                      ? data.child.firstName[0].toUpperCase()
+                                  data != null
+                                      ? data.firstName[0].toUpperCase()
                                       : '',
                                   style: TextStyle(
                                       fontSize: 22.0.sp,
@@ -433,7 +402,7 @@ class _ChatUserListState extends State<ChatUserList> {
                               ),
                             )
                           : Image.network(
-                              data.child?.profilePicThumbnailUrl,
+                              data?.profilePicThumbnailUrl,
                               fit: BoxFit.cover,
                               width: 45.0.h,
                               height: 45.0.h,
@@ -450,16 +419,16 @@ class _ChatUserListState extends State<ChatUserList> {
                                       Color(CommonUtil().getMyPrimaryColor()),
                                   child: Center(
                                       child: Text(
-                                    data.child?.firstName != null &&
-                                            data.child.lastName != null
-                                        ? data.child.firstName[0]
+                                    data?.firstName != null &&
+                                            data?.lastName != null
+                                        ? data?.firstName[0]
                                                 .toUpperCase() +
-                                            (data.child.lastName.length > 0
-                                                ? data.child.lastName[0]
+                                            (data?.lastName.length > 0
+                                                ? data?.lastName[0]
                                                     .toUpperCase()
                                                 : '')
-                                        : data.child.firstName != null
-                                            ? data.child.firstName[0]
+                                        : data?.firstName != null
+                                            ? data?.firstName[0]
                                                 .toUpperCase()
                                             : '',
                                     style: TextStyle(
@@ -495,8 +464,8 @@ class _ChatUserListState extends State<ChatUserList> {
                           height: 2.0.h,
                         ),
                         Text(
-                          data.relationship != null
-                              ? data.relationship.name ?? ''
+                          (data.relationshipName != null && data.relationshipName!='')
+                              ? data.relationshipName ?? ''
                               : '',
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
@@ -870,14 +839,14 @@ class _ChatUserListState extends State<ChatUserList> {
     return name;
   }
 
-  String getFamilyName(SharedByUsers users) {
+  String getFamilyName(Result users) {
     String name = '';
     if (users != null) {
-      if (users?.child.firstName != null && users?.child.firstName != '') {
-        if (users?.child.lastName != null && users?.child.lastName != '') {
-          name = users?.child.firstName + ' ' + users?.child.lastName ?? '';
+      if (users?.firstName != null && users?.firstName != '') {
+        if (users?.lastName != null && users?.lastName != '') {
+          name = users?.firstName + ' ' + users?.lastName ?? '';
         } else {
-          name = (users?.child?.firstName ?? '').toString();
+          name = (users?.firstName ?? '').toString();
         }
       } else {
         name = '';
