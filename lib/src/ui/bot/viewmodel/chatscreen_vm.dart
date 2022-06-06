@@ -280,6 +280,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   updateBPUserData() async {
+    movedToBackScreen = false;
     try {
       hublistController = Get.find<HubListController>();
       qurhomeController = Get.find<QurhomeDashboardController>();
