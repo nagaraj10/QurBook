@@ -820,7 +820,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
-      timeForTemp ='';
+      timeForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues

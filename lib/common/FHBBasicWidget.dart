@@ -346,8 +346,12 @@ class FHBBasicWidget {
       String error,
       String unitsTosearch,
       {String range,
-      String device}) {
+      String device,
+      bool showLabel}) {
     var errorValue = error;
+    if (showLabel == null) {
+      showLabel = true;
+    }
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -355,7 +359,7 @@ class FHBBasicWidget {
           controller: controllerValue,
           decoration: InputDecoration(
               hintText: hintTextValue,
-              suffixText: suffixTextValue,
+              suffixText: showLabel ? suffixTextValue : '',
               errorText: errorValue == '' ? null : errorValue,
               errorMaxLines: 2),
           keyboardType: TextInputType.number,
@@ -1107,7 +1111,9 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result.lastName != null) {
     return Text(
       myProfile.result.firstName[0].toUpperCase() +
-          (myProfile.result.lastName.length>0?myProfile.result.lastName[0].toUpperCase():''),
+          (myProfile.result.lastName.length > 0
+              ? myProfile.result.lastName[0].toUpperCase()
+              : ''),
       style: TextStyle(
         color: Colors.white,
         fontSize: 22.0.sp,
@@ -1142,7 +1148,9 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
       myProfile.result.lastName != null) {
     return Text(
       myProfile.result.firstName[0].toUpperCase() +
-          (myProfile.result.lastName.length>0?myProfile.result.lastName[0].toUpperCase():''),
+          (myProfile.result.lastName.length > 0
+              ? myProfile.result.lastName[0].toUpperCase()
+              : ''),
       style: TextStyle(
         color: textColor ?? Colors.white,
         fontSize: 28.0.sp,

@@ -6,6 +6,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -44,6 +46,7 @@ import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -96,6 +99,30 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   var commonConstants = CommonConstants();
+
+  String tempUnit = 'c';
+  String weightUnit = 'kg';
+
+  bool isTouched = true;
+
+  bool isPounds = false;
+  bool isKg = false;
+
+  bool isCele = false;
+  bool isFaren = false;
+
+  bool isInchFeet = false;
+  bool isCenti = false;
+
+  GetDeviceSelectionModel selectionResult;
+  PreferredMeasurement preferredMeasurement;
+  ProfileSetting profileSetting;
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+
+  Height heightObj, weightObj, tempObj;
+  String userMappingId = '';
 
   @override
   void initState() {
@@ -487,23 +514,23 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 isSelected[1] == false &&
                 isSelected[2] == false) ||
             (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == null &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == false)||
-                (isSelected[0] == null &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false)) {
+                isSelected[1] == null &&
+                isSelected[2] == null) ||
+            (isSelected[0] == null &&
+                isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == null &&
+                isSelected[2] == false) ||
+            (isSelected[0] == false &&
+                isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == false &&
+                isSelected[2] == false) ||
+            (isSelected[0] == null &&
+                isSelected[1] == null &&
+                isSelected[2] == false)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -797,6 +824,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForThermometer(String deviceName) {
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -900,14 +932,31 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       Container(
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
-                        child: Text(
-                          'F',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.0.sp,
-                              color: Color(CommonConstants.ThermoDarkColor)),
-                          softWrap: true,
-                        ),
+                        child: InkWell(
+                            child: Text(
+                              tempUnit != null ? tempUnit : 'c',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color:
+                                      Color(CommonConstants.ThermoDarkColor)),
+                              softWrap: true,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ChooseUnit(),
+                                ),
+                              ).then(
+                                (value) {
+                                  tempUnit = PreferenceUtil.getStringValue(
+                                      Constants.STR_KEY_TEMP);
+                                  setState(() {});
+                                },
+                              );
+                            }),
                       ),
                     ],
                   )
@@ -1047,6 +1096,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForWeighingScale(String deviceName) {
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "kgs";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1093,7 +1147,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Kg',
+                        'Weight',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1103,14 +1157,55 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          commonConstants.weightUNIT,
+                          weightUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName),
+                      }, errorMsg, weightUnit, deviceName, range: ""),
                     ],
                   ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50.0.w,
+                        constraints: BoxConstraints(maxWidth: 100.0.w),
+                        child: InkWell(
+                            child: Text(
+                              weightUnit != null ? weightUnit : 'kg',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color:
+                                      Color(CommonConstants.weightlightColor)),
+                              softWrap: true,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ChooseUnit(),
+                                ),
+                              ).then(
+                                (value) {
+                                  weightUnit = PreferenceUtil.getStringValue(
+                                      Constants.STR_KEY_WEIGHT);
+                                  setState(() {});
+                                },
+                              );
+                            }),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

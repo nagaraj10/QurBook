@@ -106,6 +106,8 @@ class ProfileSetting {
   String qa_subscription;
   CaregiverCommunicationSetting caregiverCommunicationSetting;
 
+  PreferredMeasurement preferredMeasurement;
+
   ProfileSetting(
       {this.bpMonitor,
       this.googleFit,
@@ -120,7 +122,8 @@ class ProfileSetting {
       this.greColor,
       this.preferred_language,
       this.qa_subscription,
-      this.caregiverCommunicationSetting});
+      this.caregiverCommunicationSetting,
+      this.preferredMeasurement});
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -144,6 +147,12 @@ class ProfileSetting {
                   json['caregiverCommunicationSetting'])
               : null;
     }
+
+    if (json.containsKey('preferred_measurement')) {
+      preferredMeasurement = json['preferred_measurement'] != null
+          ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -166,6 +175,59 @@ class ProfileSetting {
       data['caregiverCommunicationSetting'] =
           this.caregiverCommunicationSetting.toJson();
     }
+    if (this.preferredMeasurement != null) {
+      data['preferred_measurement'] = this.preferredMeasurement.toJson();
+    }
     return data;
+  }
+}
+
+class PreferredMeasurement {
+  Height height;
+  Height weight;
+  Height temperature;
+
+  PreferredMeasurement({this.height, this.weight, this.temperature});
+
+  PreferredMeasurement.fromJson(Map<String, dynamic> json) {
+    height =
+        json['height'] != null ? new Height.fromJson(json['height']) : null;
+    weight =
+        json['weight'] != null ? new Height.fromJson(json['weight']) : null;
+    temperature = json['temperature'] != null
+        ? new Height.fromJson(json['temperature'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.height != null) {
+      data['height'] = this.height.toJson();
+    }
+    if (this.weight != null) {
+      data['weight'] = this.weight.toJson();
+    }
+    if (this.temperature != null) {
+      data['temperature'] = this.temperature.toJson();
+    }
+    return data;
+  }
+}
+
+class Height {
+  String unitCode;
+  String unitName;
+
+  Height({this.unitCode, this.unitName});
+
+  Height.fromJson(Map<String, dynamic> json) {
+    unitCode = json['unitCode'];
+    unitName = json['unitName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['unitCode'] = this.unitCode;
+    data['unitName'] = this.unitName;
   }
 }

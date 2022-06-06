@@ -598,8 +598,10 @@ const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
-const String strConnectBpMeter = 'Please connect your BP device and start recording';
-const String strConnectPulseMeter = 'Please connect your pulse oximeter and start recording';
+const String strConnectBpMeter =
+    'Please connect your BP device and start recording';
+const String strConnectPulseMeter =
+    'Please connect your pulse oximeter and start recording';
 
 //introslider
 
@@ -723,6 +725,19 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
+
+//String for choose Units
+const String str_Weight = 'Weight';
+const String str_Pounds = 'Pounds';
+const String str_Kilogram = 'Kilograms';
+
+const String str_Height = 'Height';
+const String str_Feet = 'Feet/Inches';
+const String str_centi = 'Centimeters';
+
+const String str_Temp = 'Temperature';
+const String str_celesius = 'Celsius';
+const String str_far = 'Farenheit';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

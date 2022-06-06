@@ -680,6 +680,20 @@ const String filterApiDay = 'day';
 const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
 
+//for Unit Preferences
+const String UnitPreference = 'Unit Preferences';
+const String STR_KEY_HEIGHT = 'height';
+const String STR_KEY_WEIGHT = 'weight';
+const String STR_KEY_TEMP = 'temp';
+
+const String STR_VAL_HEIGHT_IND = 'f-in';
+const String STR_VAL_WEIGHT_IND = 'kg';
+const String STR_VAL_TEMP_IND = 'f';
+
+const String STR_VAL_HEIGHT_US = 'cm';
+const String STR_VAL_WEIGHT_US = 'lb';
+const String STR_VAL_TEMP_US = 'c';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;

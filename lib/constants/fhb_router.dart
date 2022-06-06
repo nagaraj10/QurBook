@@ -4,6 +4,7 @@ import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/plan_wizard/view/plan_wizard_screen.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
 import 'router_variable.dart' as router;
 import '../device_integration/viewModel/Device_model.dart';
@@ -129,6 +130,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_AddProviderPlan: (BuildContext context) => AddProviderPlan(""),
     router.rt_ClaimResult: (BuildContext context) => ClaimList(),
     router.rt_ClaimCreate: (BuildContext context) => ClaimRecordCreate(),
+    router.rt_chooseUnit: (BuildContext context) => ChooseUnit(),
   };
 
   return fhbRouter;
