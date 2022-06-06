@@ -1398,7 +1398,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void dispose() {
     try {
-      animationController.dispose();
+      if (animationController != null) {
+        animationController.dispose();
+      }
       _events.close();
       super.dispose();
     } catch (e) {
