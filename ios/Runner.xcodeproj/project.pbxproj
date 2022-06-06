@@ -12,6 +12,21 @@
 		54306596271580D00009B704 /* SheelaAIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54306594271580D00009B704 /* SheelaAIVC.swift */; };
 		54306597271580D00009B704 /* SheelaAI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54306595271580D00009B704 /* SheelaAI.storyboard */; };
 		54952BF22834E7C600F8C975 /* ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54952BF12834E7C600F8C975 /* ext.swift */; };
+		54C199542848805100BC3B10 /* OHQState.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1993D2848805100BC3B10 /* OHQState.m */; };
+		54C199552848805100BC3B10 /* OHQStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1993E2848805100BC3B10 /* OHQStateMachine.m */; };
+		54C199562848805100BC3B10 /* CBUUID+Description.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199422848805100BC3B10 /* CBUUID+Description.m */; };
+		54C199572848805100BC3B10 /* UUIDDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54C199452848805100BC3B10 /* UUIDDescriptions.plist */; };
+		54C199582848805100BC3B10 /* FormatDescriptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54C199462848805100BC3B10 /* FormatDescriptions.plist */; };
+		54C199592848805100BC3B10 /* CompanyNames.plist in Resources */ = {isa = PBXBuildFile; fileRef = 54C199472848805100BC3B10 /* CompanyNames.plist */; };
+		54C1995A2848805100BC3B10 /* OHQLogStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1994B2848805100BC3B10 /* OHQLogStore.m */; };
+		54C1995B2848805100BC3B10 /* OHQDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1994E2848805100BC3B10 /* OHQDefines.m */; };
+		54C1995C2848805100BC3B10 /* OHQLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1994F2848805100BC3B10 /* OHQLog.m */; };
+		54C1995D2848805100BC3B10 /* OHQDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199502848805100BC3B10 /* OHQDevice.m */; };
+		54C1995E2848805100BC3B10 /* OHQDeviceManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199522848805100BC3B10 /* OHQDeviceManager.m */; };
+		54C199612848882F00BC3B10 /* BSODefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199602848882F00BC3B10 /* BSODefines.m */; };
+		54C199662848883D00BC3B10 /* UIColor+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199632848883C00BC3B10 /* UIColor+BleSampleOmron.m */; };
+		54C199672848883D00BC3B10 /* NSDate+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */; };
+		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
 		80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 996E3B725118A754721F1163 /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -99,6 +114,34 @@
 		54306594271580D00009B704 /* SheelaAIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheelaAIVC.swift; sourceTree = "<group>"; };
 		54306595271580D00009B704 /* SheelaAI.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SheelaAI.storyboard; sourceTree = "<group>"; };
 		54952BF12834E7C600F8C975 /* ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ext.swift; sourceTree = "<group>"; };
+		54C1993D2848805100BC3B10 /* OHQState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQState.m; sourceTree = "<group>"; };
+		54C1993E2848805100BC3B10 /* OHQStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQStateMachine.m; sourceTree = "<group>"; };
+		54C1993F2848805100BC3B10 /* OHQState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQState.h; sourceTree = "<group>"; };
+		54C199402848805100BC3B10 /* OHQStateMachine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQStateMachine.h; sourceTree = "<group>"; };
+		54C199422848805100BC3B10 /* CBUUID+Description.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+Description.m"; sourceTree = "<group>"; };
+		54C199432848805100BC3B10 /* CBUUID+Description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBUUID+Description.h"; sourceTree = "<group>"; };
+		54C199452848805100BC3B10 /* UUIDDescriptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UUIDDescriptions.plist; sourceTree = "<group>"; };
+		54C199462848805100BC3B10 /* FormatDescriptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = FormatDescriptions.plist; sourceTree = "<group>"; };
+		54C199472848805100BC3B10 /* CompanyNames.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = CompanyNames.plist; sourceTree = "<group>"; };
+		54C199482848805100BC3B10 /* OHQReferenceCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQReferenceCode.h; sourceTree = "<group>"; };
+		54C1994A2848805100BC3B10 /* OHQLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQLog.h; sourceTree = "<group>"; };
+		54C1994B2848805100BC3B10 /* OHQLogStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQLogStore.m; sourceTree = "<group>"; };
+		54C1994C2848805100BC3B10 /* OHQDeviceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQDeviceManager.h; sourceTree = "<group>"; };
+		54C1994D2848805100BC3B10 /* OHQDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQDevice.h; sourceTree = "<group>"; };
+		54C1994E2848805100BC3B10 /* OHQDefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQDefines.m; sourceTree = "<group>"; };
+		54C1994F2848805100BC3B10 /* OHQLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQLog.m; sourceTree = "<group>"; };
+		54C199502848805100BC3B10 /* OHQDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQDevice.m; sourceTree = "<group>"; };
+		54C199512848805100BC3B10 /* OHQLogStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQLogStore.h; sourceTree = "<group>"; };
+		54C199522848805100BC3B10 /* OHQDeviceManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQDeviceManager.m; sourceTree = "<group>"; };
+		54C199532848805100BC3B10 /* OHQDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OHQDefines.h; sourceTree = "<group>"; };
+		54C1995F2848882E00BC3B10 /* BSODefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSODefines.h; sourceTree = "<group>"; };
+		54C199602848882F00BC3B10 /* BSODefines.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSODefines.m; sourceTree = "<group>"; };
+		54C199622848883C00BC3B10 /* NSDate+BleSampleOmron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+BleSampleOmron.h"; sourceTree = "<group>"; };
+		54C199632848883C00BC3B10 /* UIColor+BleSampleOmron.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+BleSampleOmron.m"; sourceTree = "<group>"; };
+		54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+BleSampleOmron.m"; sourceTree = "<group>"; };
+		54C199652848883D00BC3B10 /* UIColor+BleSampleOmron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+BleSampleOmron.h"; sourceTree = "<group>"; };
+		54C199682848885200BC3B10 /* BSOSessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSOSessionData.m; sourceTree = "<group>"; };
+		54C199692848885200BC3B10 /* BSOSessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSOSessionData.h; sourceTree = "<group>"; };
 		6E0A76D1D8ADFDBB286AD081 /* Pods-AwesomeServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		73D8D04941CB079C61DFA273 /* Pods-AwesomeServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -202,6 +245,73 @@
 			path = SheelaAI;
 			sourceTree = "<group>";
 		};
+		54C1993B2848805100BC3B10 /* OHQReferenceCode */ = {
+			isa = PBXGroup;
+			children = (
+				54C1995F2848882E00BC3B10 /* BSODefines.h */,
+				54C199602848882F00BC3B10 /* BSODefines.m */,
+				54C199622848883C00BC3B10 /* NSDate+BleSampleOmron.h */,
+				54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */,
+				54C199652848883D00BC3B10 /* UIColor+BleSampleOmron.h */,
+				54C199692848885200BC3B10 /* BSOSessionData.h */,
+				54C199682848885200BC3B10 /* BSOSessionData.m */,
+				54C199632848883C00BC3B10 /* UIColor+BleSampleOmron.m */,
+				54C1993C2848805100BC3B10 /* Design */,
+				54C199412848805100BC3B10 /* Extension */,
+				54C199442848805100BC3B10 /* Resources */,
+				54C199482848805100BC3B10 /* OHQReferenceCode.h */,
+				54C199492848805100BC3B10 /* Model */,
+			);
+			path = OHQReferenceCode;
+			sourceTree = "<group>";
+		};
+		54C1993C2848805100BC3B10 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				54C1993D2848805100BC3B10 /* OHQState.m */,
+				54C1993E2848805100BC3B10 /* OHQStateMachine.m */,
+				54C1993F2848805100BC3B10 /* OHQState.h */,
+				54C199402848805100BC3B10 /* OHQStateMachine.h */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		54C199412848805100BC3B10 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				54C199422848805100BC3B10 /* CBUUID+Description.m */,
+				54C199432848805100BC3B10 /* CBUUID+Description.h */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		54C199442848805100BC3B10 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				54C199452848805100BC3B10 /* UUIDDescriptions.plist */,
+				54C199462848805100BC3B10 /* FormatDescriptions.plist */,
+				54C199472848805100BC3B10 /* CompanyNames.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		54C199492848805100BC3B10 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				54C1994A2848805100BC3B10 /* OHQLog.h */,
+				54C1994B2848805100BC3B10 /* OHQLogStore.m */,
+				54C1994C2848805100BC3B10 /* OHQDeviceManager.h */,
+				54C1994D2848805100BC3B10 /* OHQDevice.h */,
+				54C1994E2848805100BC3B10 /* OHQDefines.m */,
+				54C1994F2848805100BC3B10 /* OHQLog.m */,
+				54C199502848805100BC3B10 /* OHQDevice.m */,
+				54C199512848805100BC3B10 /* OHQLogStore.h */,
+				54C199522848805100BC3B10 /* OHQDeviceManager.m */,
+				54C199532848805100BC3B10 /* OHQDefines.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
@@ -235,6 +345,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				54C1993B2848805100BC3B10 /* OHQReferenceCode */,
 				54306593271580D00009B704 /* SheelaAI */,
 				9C07AB2A24F393EA00DCE725 /* AppDelegate */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
@@ -452,12 +563,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54C199582848805100BC3B10 /* FormatDescriptions.plist in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
+				54C199592848805100BC3B10 /* CompanyNames.plist in Resources */,
 				9C94B21E24EEB1AA00DAF4D0 /* ringtone.aiff in Resources */,
 				9C50E05124E5381500CC5B0E /* iPHONE RINGTONE.aiff in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				9C50E05024E5381500CC5B0E /* GoogleService-Info.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+				54C199572848805100BC3B10 /* UUIDDescriptions.plist in Resources */,
 				54306597271580D00009B704 /* SheelaAI.storyboard in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
@@ -733,6 +847,7 @@
 			files = (
 				9C07AB7324F3948900DCE725 /* NVActivityIndicatorAnimationTriangleSkewSpin.swift in Sources */,
 				9C07AB8124F394B500DCE725 /* AppDelegate.swift in Sources */,
+				54C199562848805100BC3B10 /* CBUUID+Description.m in Sources */,
 				9C07AB5C24F3948900DCE725 /* NVActivityIndicatorShape.swift in Sources */,
 				9C07AB6F24F3948900DCE725 /* NVActivityIndicatorAnimationBallPulse.swift in Sources */,
 				9C07AB8C24F3954700DCE725 /* constants.swift in Sources */,
@@ -740,11 +855,14 @@
 				9C07AB6824F3948900DCE725 /* NVActivityIndicatorAnimationBallZigZag.swift in Sources */,
 				9C07AB7124F3948900DCE725 /* NVActivityIndicatorAnimationCircleStrokeSpin.swift in Sources */,
 				9C07AB7C24F3948900DCE725 /* NVActivityIndicatorAnimationLineScaleParty.swift in Sources */,
+				54C199672848883D00BC3B10 /* NSDate+BleSampleOmron.m in Sources */,
 				9C07AB5B24F3948900DCE725 /* NVActivityIndicatorViewable.swift in Sources */,
 				9C07AB7E24F3948900DCE725 /* NVActivityIndicatorAnimationBallPulseRise.swift in Sources */,
 				9C07AB6724F3948900DCE725 /* NVActivityIndicatorAnimationBallScale.swift in Sources */,
 				54306596271580D00009B704 /* SheelaAIVC.swift in Sources */,
 				9C07AB6E24F3948900DCE725 /* NVActivityIndicatorAnimationBallRotateChase.swift in Sources */,
+				54C199542848805100BC3B10 /* OHQState.m in Sources */,
+				54C1995E2848805100BC3B10 /* OHQDeviceManager.m in Sources */,
 				9C07AB7624F3948900DCE725 /* NVActivityIndicatorAnimationLineScale.swift in Sources */,
 				9C07AB7924F3948900DCE725 /* NVActivityIndicatorAnimationBallPulseSync.swift in Sources */,
 				9C07AB6524F3948900DCE725 /* NVActivityIndicatorAnimationLineSpinFadeLoader.swift in Sources */,
@@ -754,6 +872,7 @@
 				54952BF22834E7C600F8C975 /* ext.swift in Sources */,
 				9C07AB6C24F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotatePulse.swift in Sources */,
 				9C07AB7724F3948900DCE725 /* NVActivityIndicatorAnimationBallScaleRippleMultiple.swift in Sources */,
+				54C1995B2848805100BC3B10 /* OHQDefines.m in Sources */,
 				9C07AB6324F3948900DCE725 /* NVActivityIndicatorAnimationBallDoubleBounce.swift in Sources */,
 				9C07AB8524F394E600DCE725 /* Authorization.swift in Sources */,
 				9C07AB6424F3948900DCE725 /* NVActivityIndicatorAnimationLineScalePulseOut.swift in Sources */,
@@ -761,20 +880,27 @@
 				9C07AB7024F3948900DCE725 /* NVActivityIndicatorAnimationBlank.swift in Sources */,
 				9C07AB5E24F3948900DCE725 /* NVActivityIndicatorAnimationBallRotate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */,
 				9C07AB6124F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotateMultiple.swift in Sources */,
 				9C07AB5924F3948900DCE725 /* NVActivityIndicatorAnimationDelegate.swift in Sources */,
 				9C07AB5F24F3948900DCE725 /* NVActivityIndicatorAnimationBallGridPulse.swift in Sources */,
 				9C07AB7F24F3948900DCE725 /* NVActivityIndicatorAnimationOrbit.swift in Sources */,
 				9C07AB6024F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotate.swift in Sources */,
+				54C1995D2848805100BC3B10 /* OHQDevice.m in Sources */,
 				9C07AB7224F3948900DCE725 /* NVActivityIndicatorAnimationAudioEqualizer.swift in Sources */,
 				9C07AB7D24F3948900DCE725 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
 				9C07AB7424F3948900DCE725 /* NVActivityIndicatorAnimationBallGridBeat.swift in Sources */,
+				54C199552848805100BC3B10 /* OHQStateMachine.m in Sources */,
 				9C07AB5D24F3948900DCE725 /* NVActivityIndicatorView.swift in Sources */,
 				9C07AB8924F3951100DCE725 /* Loading.swift in Sources */,
+				54C1995C2848805100BC3B10 /* OHQLog.m in Sources */,
 				9C07AB6A24F3948900DCE725 /* NVActivityIndicatorAnimationSemiCircleSpin.swift in Sources */,
 				9C07AB7524F3948900DCE725 /* NVActivityIndicatorAnimationBallScaleMultiple.swift in Sources */,
+				54C199612848882F00BC3B10 /* BSODefines.m in Sources */,
 				9C07AB7B24F3948900DCE725 /* NVActivityIndicatorAnimationBallSpinFadeLoader.swift in Sources */,
+				54C199662848883D00BC3B10 /* UIColor+BleSampleOmron.m in Sources */,
 				9C07AB6D24F3948900DCE725 /* NVActivityIndicatorAnimationSquareSpin.swift in Sources */,
+				54C1995A2848805100BC3B10 /* OHQLogStore.m in Sources */,
 				9C07AB6924F3948900DCE725 /* NVActivityIndicatorAnimationBallBeat.swift in Sources */,
 				9C07AB6624F3948900DCE725 /* NVActivityIndicatorAnimationBallZigZagDeflect.swift in Sources */,
 				9C07AB8624F394E600DCE725 /* LanguageToSpeak.swift in Sources */,
