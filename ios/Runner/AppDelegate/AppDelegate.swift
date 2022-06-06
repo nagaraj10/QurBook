@@ -52,7 +52,8 @@ import CoreBluetooth
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
     var eventSink: FlutterEventSink? = nil
-    var idForBP :NSUUID = NSUUID.init(uuidString: "11298CA7-09C6-9027-95EC-60F9BE51F1D9")!
+    var idForBP :UUID?
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -636,17 +637,45 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                         advertisementData: [String : Any], rssi RSSI: NSNumber) {
         
         if let name =  advertisementData[Constants.BLENameData] as? String, name.lowercased().contains("blesmart"){
-                centralManager.stopScan()
-             let tempMacId = String(name.suffix(12))
-             print(tempMacId)
-             let macID = tempMacId.inserting(reverse: false)
-             print(macID)
-                OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) { deviceInfoKeys in
-                    OHQDeviceManager.shared().stopScan()
-                    OHQDeviceManager.shared().startSession(withDevice: deviceInfoKeys[OHQDeviceInfoKey.identifierKey] as! UUID, usingDataObserver: { dataType, data in
+            centralManager.stopScan()
+            let tempMacId = String(name.suffix(12))
+            print(tempMacId)
+            let macID = tempMacId.inserting(reverse: false)
+            print(macID)
+            OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) {[weak self] deviceInfoKeys in
+                guard let self = self else { return  }
+                OHQDeviceManager.shared().stopScan()
+                self.idForBP = deviceInfoKeys[OHQDeviceInfoKey.identifierKey] as? UUID
+                if (self.idForBP) != nil{
+                    OHQDeviceManager.shared().startSession(withDevice: self.idForBP!, usingDataObserver: { dataType, data in
                         print("---------------------------------------------------------")
                         print("received data is ", data as? NSArray ?? [])
-                        //print(data)
+                        if let ArrayData =  data as? NSArray,ArrayData.count > 0,let lastObj = ArrayData.lastObject as? NSDictionary{
+                            let lsOBj : [String:Any] = [
+                                "BloodPressureMeasurementStatusKey" : lastObj["bloodPressureMeasurementStatus"],
+                                "BloodPressureUnitKey" : lastObj["bloodPressureUnit"],
+                                "DiastolicKey" : lastObj["diastolic"],
+                                "MeanArterialPressureKey" : lastObj["meanArterialPressure"],
+                                "PulseRateKey" : lastObj["pulseRate"],
+                                "SystolicKey" : lastObj["systolic"],
+                                // "timeStamp" : lastObj["timeStamp"],
+                                "UserIndexKey" : lastObj["userIndex"]
+                            ];
+                            do {
+                                let jsonData = try JSONSerialization.data(withJSONObject: ["measurementRecords" : [lsOBj
+                                                                                                                  ]], options: JSONSerialization.WritingOptions.prettyPrinted)
+                                let jsonString = String(data: jsonData, encoding: .utf8)
+                                print("JSON String : " + (jsonString ?? ""))
+                                self.eventSink?("measurement|" + (jsonString ?? ""))
+                                if self.idForBP != nil {
+                                    OHQDeviceManager.shared().cancelSession(withDevice: self.idForBP!)
+                                    self.idForBP = nil
+                                }
+                            }
+                            catch let err {
+                                print(err)
+                            }
+                        }
                     }, connectionObserver: {[weak self] state in
                         guard let self = self else { return }
                         print("current " ,state)
@@ -656,112 +685,130 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                         }
                     }, completion: { completionReason in
                         print("completed",completionReason)
+                        if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
+                                print("restarted");
+                                self.centralManager = CBCentralManager(delegate: self, queue: nil)
+                                self.centralManager.scanForPeripherals(withServices: [])
+                            }
+                        }
+                        
                     }, options: [
                         OHQSessionOptionKey.readMeasurementRecordsKey : true,
                         OHQSessionOptionKey.connectionWaitTimeKey : 60
                     ])
-                } completion: { completionReason in
-                    print("completed",completionReason)
                 }
-                
-        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data{
-            // Able to retrive the MAC id
-            let decodedString = newdata.hexEncodedString()
-            let macID = decodedString.inserting()
-            eventSink?("macid|"+macID)
-            eventSink?("bleDeviceType|SPO2")
-            poPeripheral = peripheral
-            poPeripheral.delegate = self
-            centralManager.stopScan()
-            centralManager.connect(poPeripheral)
-        }else{
-            //failed to get the mac id
-            eventSink?("connectionfailed| connection failed")
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        eventSink?("connected|connected successfully!!!")
-        poPeripheral.discoverServices([Constants.poServiceCBUUID])
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
-        for service in services {
-            print(service)
-            peripheral.discoverCharacteristics(nil, for: service)
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            if characteristic.properties.contains(.read) {
-                print("\(characteristic.uuid): properties contains .read")
-                peripheral.readValue(for: characteristic)
-            }
-            if characteristic.properties.contains(.notify) {
-                print("\(characteristic.uuid): properties contains .notify")
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print(characteristic.uuid)
-        switch characteristic.uuid {
-        case Constants.poMeasurementCharacteristicCBUUID:
-            spoReading(from: characteristic,peripheral:peripheral)
-        default:
-            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
-        }
-    }
-    
-    func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
-        guard let characteristicData = characteristic.value else { return  }
-        var index = 0
-        let byteArray = [UInt8](characteristicData)
-        while(index<byteArray.count){
-            let fingure = byteArray[index+2] & Constants.BIT_FINGER
-            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
-            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
-            let spo = byteArray[index+4] & Constants.BIT_SPO2
-            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
-                let data : [String:Any] = [
-                    "Status" : "Measurement",
-                    "deviceType" : "SPO2",
-                    "Data" : [
-                        "SPO2" : String(describing: spo),
-                        "Pulse" : String(describing: pulse)
-                    ]
-                ]
-                if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
-                    eventSink?("measurement|"+serlized)
-                    eventSink = nil
-                    centralManager.stopScan()
-                    if( characteristic.isNotifying){
-                        peripheral.setNotifyValue(false, for: characteristic)
+            } completion: { completionReason in
+                print("completed",completionReason)
+                if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
+                        print("restarted");
+                        self.centralManager = CBCentralManager(delegate: self, queue: nil)
+                        self.centralManager.scanForPeripherals(withServices: [])
                     }
                 }
             }
-            index += 5
+        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,serviceIdArray.count > 0, let serviceId = serviceIdArray.firstObject as? CBUUID{
+            if serviceId == Constants.poServiceCBUUID{
+                let decodedString = newdata.hexEncodedString()
+                let macID = decodedString.inserting()
+                eventSink?("macid|"+macID)
+                eventSink?("bleDeviceType|SPO2")
+                poPeripheral = peripheral
+                poPeripheral.delegate = self
+                centralManager.stopScan()
+                centralManager.connect(poPeripheral)
+            
         }
     }
-    
-    func onListen(withArguments arguments: Any?,
-                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
-        self.eventSink = eventSink
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        return nil
+}
+
+func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    eventSink?("connected|connected successfully!!!")
+    poPeripheral.discoverServices([Constants.poServiceCBUUID])
+}
+
+func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+    guard let services = peripheral.services else { return }
+    for service in services {
+        print(service)
+        peripheral.discoverCharacteristics(nil, for: service)
     }
-    
-    func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        eventSink = nil
-        centralManager.stopScan()
-        return nil
+}
+
+func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    guard let characteristics = service.characteristics else { return }
+    for characteristic in characteristics {
+        if characteristic.properties.contains(.read) {
+            print("\(characteristic.uuid): properties contains .read")
+            peripheral.readValue(for: characteristic)
+        }
+        if characteristic.properties.contains(.notify) {
+            print("\(characteristic.uuid): properties contains .notify")
+            peripheral.setNotifyValue(true, for: characteristic)
+        }
     }
-    
+}
+
+func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    print(characteristic.uuid)
+    switch characteristic.uuid {
+    case Constants.poMeasurementCharacteristicCBUUID:
+        spoReading(from: characteristic,peripheral:peripheral)
+    default:
+        print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+    }
+}
+
+func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
+    guard let characteristicData = characteristic.value else { return  }
+    var index = 0
+    let byteArray = [UInt8](characteristicData)
+    while(index<byteArray.count){
+        let fingure = byteArray[index+2] & Constants.BIT_FINGER
+        var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
+        pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
+        let spo = byteArray[index+4] & Constants.BIT_SPO2
+        if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
+            let data : [String:Any] = [
+                "Status" : "Measurement",
+                "deviceType" : "SPO2",
+                "Data" : [
+                    "SPO2" : String(describing: spo),
+                    "Pulse" : String(describing: pulse)
+                ]
+            ]
+            if let serlized = data.jsonStringRepresentation{
+                print(serlized)
+                eventSink?("measurement|"+serlized)
+                eventSink = nil
+                centralManager.stopScan()
+                if( characteristic.isNotifying){
+                    peripheral.setNotifyValue(false, for: characteristic)
+                }
+            }
+        }
+        index += 5
+    }
+}
+
+func onListen(withArguments arguments: Any?,
+              eventSink: @escaping FlutterEventSink) -> FlutterError? {
+    self.eventSink = eventSink
+    centralManager = CBCentralManager(delegate: self, queue: nil)
+    return nil
+}
+
+func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    eventSink = nil
+    centralManager.stopScan()
+    if idForBP != nil {
+        OHQDeviceManager.shared().cancelSession(withDevice: idForBP!)
+        idForBP = nil
+    }
+    return nil
+}
+
 }
 //extension AppDelegate:CLLocationManagerDelegate{
 //    func setupWifiListener(messanger:FlutterBinaryMessenger){

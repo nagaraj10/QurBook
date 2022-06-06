@@ -53,5 +53,6 @@ struct Constants {
     static let BIT_SPO2:UInt8 = 0x7F // 0~100    0x7f = invalid
     static let BLEManuData = "kCBAdvDataManufacturerData";
     static let BLENameData = "kCBAdvDataLocalName";
+    static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
 
 }

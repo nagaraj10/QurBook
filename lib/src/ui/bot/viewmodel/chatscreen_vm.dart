@@ -238,7 +238,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
-       /* await Future.delayed(Duration(
+        /* await Future.delayed(Duration(
           seconds: 2,
         ));
         addToSheelaConversation(
@@ -254,13 +254,20 @@ class ChatScreenViewModel extends ChangeNotifier {
         bool response = await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
-        await Future.delayed(Duration(
-          seconds: 5,
-        ));
+        await Future.delayed(
+          Duration(
+            seconds: 5,
+          ),
+        );
         addToSheelaConversation(
           text: response
               ? "Thank you. Your SpO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse} is successfully recorded, Bye!"
               : "Failed to save the values, Please try again",
+        );
+        await Future.delayed(
+          Duration(
+            seconds: 4,
+          ),
         );
         moveToBack(showFailure: false);
       } catch (e) {
@@ -280,7 +287,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       var formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
       String actualDateTime = formatterDateTime.format(now);
       await Future.delayed(Duration(
-        seconds: 2,
+        seconds: 5,
       ));
       bool response = await BleConnectApiProvider().uploadBleBPDataReadings(
           ackLocal: actualDateTime,
