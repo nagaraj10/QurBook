@@ -125,6 +125,7 @@ dependencies:
   facebook_app_events: ^0.16.0
   flutter_mdns_plugin: ^0.0.2
   html_unescape: ^2.0.0
+  audioplayers: ^0.19.1
 
 
 
@@ -179,6 +180,7 @@ flutter:
     - assets/dashboard/
     - assets/loading_wave.json
     - assets/languages/
+    - assets/raw/dailer_tone.mp3
 
   #  - images/a_dot_ham.jpeg
 

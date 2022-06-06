@@ -9,15 +9,17 @@ class MessageDetails {
   Payload payload;
   MessageContent messageContent;
 
-  MessageDetails({this.content, this.payload, this.messageContent});
+  MessageDetails(
+      {this.content, this.payload, this.messageContent, this.rawMessage});
 
   MessageDetails.fromJson(Map<String, dynamic> json) {
     content =
-    json['content'] != null ? new Content.fromJson(json['content']) : null;
-    rawMessage =
-    json['rawMessage'] != null ? new RawMessage.fromJson(json['rawMessage']) : null;
+        json['content'] != null ? new Content.fromJson(json['content']) : null;
+    rawMessage = json['rawMessage'] != null
+        ? new RawMessage.fromJson(json['rawMessage'])
+        : null;
     payload =
-    json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
+        json['payload'] != null ? new Payload.fromJson(json['payload']) : null;
     messageContent = json['messageContent'] != null
         ? new MessageContent.fromJson(json['messageContent'])
         : null;
@@ -27,7 +29,8 @@ class MessageDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.content != null) {
       data['content'] = this.content.toJson();
-    }  if (this.rawMessage != null) {
+    }
+    if (this.rawMessage != null) {
       data['rawMessage'] = this.rawMessage.toJson();
     }
     if (this.payload != null) {
