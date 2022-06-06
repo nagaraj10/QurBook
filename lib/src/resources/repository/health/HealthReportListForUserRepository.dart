@@ -379,6 +379,58 @@ class HealthReportListForUserRepository {
     return UpdateDeviceModel.fromJson(response);
   }
 
+  Future<UpdateDeviceModel> updateUnitPreferences(
+      String userMappingId,
+      ProfileSetting profileSetting,
+      PreferredMeasurement preferredMeasurement,
+      List<Tags> tagsList) async {
+    var body = jsonEncode({
+      'id': userMappingId,
+      'profileSetting': {
+        'allowDigit': profileSetting.allowDigit,
+        'allowDevice': profileSetting.allowDevice,
+        'googleFit': profileSetting.googleFit,
+        'healthFit': profileSetting.healthFit,
+        'bpMonitor': profileSetting.bpMonitor,
+        'glucoMeter': profileSetting.glucoMeter,
+        'pulseOximeter': profileSetting.pulseOximeter,
+        'thermoMeter': profileSetting.thermoMeter,
+        'weighScale': profileSetting.weighScale,
+        "greColor": profileSetting.greColor,
+        "priColor": profileSetting.preColor,
+        'preferred_language': profileSetting.preferred_language,
+        'qa-subscription': profileSetting.qa_subscription,
+        'preferred_measurement': {
+          'height': {
+            'unitCode': preferredMeasurement.height.unitCode,
+            'unitName': preferredMeasurement.height.unitName
+          },
+          'weight': {
+            'unitCode': preferredMeasurement.weight.unitCode,
+            'unitName': preferredMeasurement.weight.unitName
+          },
+          'temperature': {
+            'unitCode': preferredMeasurement.temperature.unitCode,
+            'unitName': preferredMeasurement.temperature.unitName
+          },
+        },
+        'caregiverCommunicationSetting': {
+          "vitals":
+              profileSetting.caregiverCommunicationSetting?.vitals ?? true,
+          "symptoms":
+              profileSetting.caregiverCommunicationSetting?.symptoms ?? true,
+          "appointments":
+              profileSetting.caregiverCommunicationSetting?.appointments ?? true
+        }
+      },
+      'tags': tagsList
+    });
+
+    final response = await _helper.updateDeviceSelection(
+        query.qr_user_profile_no_slash, body);
+    return UpdateDeviceModel.fromJson(response);
+  }
+
   Future<TagsResult> getTags() async {
     TagsResult tagResult;
     var addressQuery = [query.qr_code_tags];

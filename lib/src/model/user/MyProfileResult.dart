@@ -76,7 +76,9 @@ class MyProfileResult {
       this.userRoleCollection3,
       this.userRelationshipCollection,
       this.additionalInfo,
-      this.userProfileSettingCollection3,this.membershipOfferedBy,this.isCaregiver});
+      this.userProfileSettingCollection3,
+      this.membershipOfferedBy,
+      this.isCaregiver});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -105,8 +107,8 @@ class MyProfileResult {
     // createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
-    if(json.containsKey('membershipOfferedBy'))
-    membershipOfferedBy = json['membershipOfferedBy'];
+    if (json.containsKey('membershipOfferedBy'))
+      membershipOfferedBy = json['membershipOfferedBy'];
     if (json['userAddressCollection3'] != null) {
       userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
@@ -143,9 +145,8 @@ class MyProfileResult {
         ? AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
 
-    if(json.containsKey("isCaregiver")){
+    if (json.containsKey("isCaregiver")) {
       isCaregiver = json['isCaregiver'];
-
     }
   }
 
@@ -235,10 +236,9 @@ class AdditionalInfo {
         age = json['age'];
       }
     }
-
-    height = json['height'];
-    weight = json['weight'];
     try {
+      height = json['height'];
+      weight = json['weight'];
       if (json.containsKey('language')) {
         language = json['language'].cast<String>();
       }
