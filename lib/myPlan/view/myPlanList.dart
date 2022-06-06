@@ -352,7 +352,7 @@ class _MyPlanState extends State<MyPlanList> {
                   ),
                   CircleAvatar(
                     backgroundColor: Colors.grey[200],
-                    radius: 20,
+                    radius: 20.h,
                     child: CommonUtil().customImage(
                       getImage(i, planList),
                       planInitial: planList[i]?.providerName ?? '',
