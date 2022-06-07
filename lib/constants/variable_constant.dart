@@ -320,12 +320,21 @@ const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
-String strCareGiverSettings = 'Caregiver Communication Settings';
+String strCareGiverSettings = 'Caregiver Communication';
+String strNotificationPreference = 'Notification Preferences';
+
 String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 const String strCareGiverCommunication = 'Caregiver Communication';
+
+const String strVitalsPreferences = 'Vitals Preferences';
+const String strDisplayDevices = 'Display devices';
+const String strDisplayPreferences = 'Display Preferences';
+
+const String strSkillsIntegration = 'Skills/Integration';
+const String strIntegration = 'Integration';
 
 // for my family
 
@@ -598,8 +607,10 @@ const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
-const String strConnectBpMeter = 'Please connect your BP device and start recording';
-const String strConnectPulseMeter = 'Please connect your pulse oximeter and start recording';
+const String strConnectBpMeter =
+    'Please connect your BP device and start recording';
+const String strConnectPulseMeter =
+    'Please connect your pulse oximeter and start recording';
 
 //introslider
 

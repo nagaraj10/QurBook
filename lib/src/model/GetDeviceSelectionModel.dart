@@ -120,7 +120,7 @@ class ProfileSetting {
       this.preColor,
       this.greColor,
       this.preferred_language,
-      this.qa_subscription,
+      this.qa_subscription,      
       this.preferredMeasurement,
       this.caregiverCommunicationSetting});
 

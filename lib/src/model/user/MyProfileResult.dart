@@ -250,11 +250,9 @@ class AdditionalInfo {
 
     weight = json['weight']?.toString();
 
-    try {
-      if (json.containsKey('language')) {
-        language = json['language'].cast<String>();
-      }
-    } catch (e) {}
+    if (json.containsKey('language')) {
+      language = json['language'].cast<String>();
+    }
 
     if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
     if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
