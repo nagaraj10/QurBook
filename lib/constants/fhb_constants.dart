@@ -698,7 +698,6 @@ const String filterApiDay = 'day';
 const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
 
-const String UnitPreference = 'Unit Preferences';
 
 double height = 0.0;
 double width = 0.0;
