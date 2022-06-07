@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -76,7 +77,7 @@ class QurhomeDashboardController extends GetxController {
 
   void _enableTimer(bool isFromVitalsList) {
     _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
-      int milliSeconds = 100;
+      // int milliSeconds = 100;
       print(val);
       List<String> receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
@@ -101,54 +102,78 @@ class QurhomeDashboardController extends GetxController {
             bleMacId = validString(receivedValues.last);
             hubController.bleMacId.value = bleMacId;
             break;
+          case "bleDeviceType":
+            hubController.bleDeviceType.value =
+                validString(receivedValues.last);
+            break;
           case "connected":
-            // FlutterToast()
-            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-
-            if (!isFromVitalsList) {
-              milliSeconds = 0;
-              //LoaderClass.hideLoadingDialog(Get.context);
-            }
-            foundBLE.value = true;
-            movedToNextScreen = true;
-            _disableTimer();
-            bleController.stopBleScan();
-            if (checkForParedDevice(isFromBp: false)) {
-              if (isDialogShowing.value) {
-                Get.back();
-              }
-              Future.delayed(Duration(milliseconds: milliSeconds))
-                  .then((value) {
+            if (hubController.bleDeviceType.value.toLowerCase() ==
+                "SPO2".toLowerCase()) {
+              foundBLE.value = true;
+              movedToNextScreen = true;
+              _disableTimer();
+              bleController.stopBleScan();
+              if (checkForParedDevice(isFromBp: false)) {
+                if (isDialogShowing.value) {
+                  Get.back();
+                }
                 Get.toNamed(
                   rt_Sheela,
                   arguments: SheelaArgument(
                     takeActiveDeviceReadings: true,
                   ),
                 ).then((_) {
-                  regController.getRegimenList();
+                  regController.getRegimentList();
                   if (isFromVitalsList) {
                     Get.back();
                   }
                 });
-              });
-            } else {
-              FlutterToast().getToastForLongTime(
-                'No device found',
-                Colors.red,
-              );
-              if (!isFromVitalsList) {
-                Get.toNamed(
-                  rt_Sheela,
-                  arguments: SheelaArgument(
-                    eId: hubController.eid,
-                  ),
-                ).then((_) {
-                  regController.getRegimenList();
-                });
+              } else {
+                Get.back();
+                FlutterToast().getToastForLongTime(
+                  'No device found',
+                  Colors.red,
+                );
               }
             }
             break;
-
+          case "measurement":
+            if (hubController.bleDeviceType.value.toLowerCase() ==
+                "BP".toLowerCase()) {
+              try {
+                _disableTimer();
+                var josnResult = convert.jsonDecode(receivedValues.last);
+                qurHomeBpScanResultModel =
+                    QurHomeBpScanResult.fromJson(josnResult);
+                qurHomeBpScanResultModel.deviceAddress = bleMacId;
+                qurHomeBpScanResultModel?.measurementRecords;
+                if ((qurHomeBpScanResultModel?.measurementRecords ?? [])
+                        .length >
+                    0) {
+                  if (checkForParedDevice()) {
+                    Get.back();
+                    Get.toNamed(
+                      rt_Sheela,
+                      arguments: SheelaArgument(
+                        takeActiveDeviceReadings: false,
+                        isFromBpReading: true,
+                      ),
+                    ).then((_) {
+                      regController.getRegimenList();
+                    });
+                  } else {
+                    Get.back();
+                    FlutterToast().getToastForLongTime(
+                      'No device found',
+                      Colors.red,
+                    );
+                  }
+                }
+              } catch (e) {
+                printError(info: e.toString());
+              }
+            }
+            break;
           case "disconnected":
             // FlutterToast()
             //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
@@ -179,11 +204,18 @@ class QurhomeDashboardController extends GetxController {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
       var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
+      var index = -1;
+      if (Platform.isAndroid) {
+        index = userDeviceCollection.indexWhere((element) =>
+            (validString(element.device.serialNumber) ==
+                (isFromBp ? bleBPMacId : bleMacId)) &&
+            ((element.userId ?? '') == activeUser));
+      } else {
+        index = userDeviceCollection.indexWhere((element) =>
+            (validString(element.device.serialNumber) == bleMacId) &&
+            ((element.userId ?? '') == activeUser));
+      }
 
-      final index = userDeviceCollection.indexWhere((element) =>
-          (validString(element.device.serialNumber) ==
-              (isFromBp ? bleBPMacId : bleMacId)) &&
-          ((element.userId ?? '') == activeUser));
       return index >= 0;
     } catch (e) {
       return false;
@@ -191,51 +223,61 @@ class QurhomeDashboardController extends GetxController {
   }
 
   checkForConnectedDevices(
-      bool isFromVitalsList, {
-        String eid,
-        String uid,
-      }) async {
+    bool isFromVitalsList, {
+    String eid,
+    String uid,
+  }) async {
     try {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      bool isBluetoothEnable = false;
-      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
-      if (!isBluetoothEnable) {
-        FlutterToast().getToast(
-            'Please turn on your bluetooth and try again', Colors.red);
-        return;
-      } else if (!serviceEnabled) {
-        FlutterToast().getToast(
-            'Please turn on your GPS location services and try again',
-            Colors.red);
-        return;
+      if (Platform.isAndroid) {
+        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        bool isBluetoothEnable = false;
+        const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+        isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+        if (!isBluetoothEnable) {
+          FlutterToast().getToast(
+              'Please turn on your bluetooth and try again', Colors.red);
+          return;
+        } else if (!serviceEnabled) {
+          FlutterToast().getToast(
+              'Please turn on your GPS location services and try again',
+              Colors.red);
+          return;
+        }
       }
       regController = Get.find<QurhomeRegimenController>();
       isDialogShowing.value = true;
-      CommonUtil().dialogForScanDevices(Get.context, onPressCancel: () {
-        foundBLE.value = false;
-        movedToNextScreen = false;
-        _disableTimer();
-        bleController.stopBleScan();
-        Get.back();
-        isDialogShowing.value = false;
-      }, onPressManual: () {
-        _disableTimer();
-        bleController.stopBleScan();
-        Get.back();
-        isDialogShowing.value = false;
-        if (!isFromVitalsList) {
-          //Device Not Connected
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: eid,
-            ),
-          ).then((_) {
-            regController.getRegimenList();
-          });
-        }
-      }, title: strConnectPulseMeter, isFromVital: isFromVitalsList);
+      CommonUtil().dialogForScanDevices(
+        Get.context,
+        onPressCancel: () {
+          foundBLE.value = false;
+          movedToNextScreen = false;
+          _disableTimer();
+          bleController.stopBleScan();
+          Get.back();
+          isDialogShowing.value = false;
+        },
+        onPressManual: () {
+          _disableTimer();
+          bleController.stopBleScan();
+          Get.back();
+          isDialogShowing.value = false;
+          if (!isFromVitalsList) {
+            //Device Not Connected
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                eId: eid,
+              ),
+            ).then(
+              (_) {
+                regController.getRegimenList();
+              },
+            );
+          }
+        },
+        title: strConnectPulseMeter,
+        isFromVital: isFromVitalsList,
+      );
       foundBLE.value = false;
       movedToNextScreen = false;
       _enableTimer(isFromVitalsList);
@@ -276,21 +318,31 @@ class QurhomeDashboardController extends GetxController {
   }
 
   Future<void> checkForBpConnection({bool isFromVitals}) async {
-    _getPermissionValuesNative();
-
-    CommonUtil().dialogForScanDevices(Get.context, onPressManual: () {
-      stopBpScan();
-      Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(
-          eId: hubController.eid,
-        ),
-      );
-    }, onPressCancel: () async {
-      stopBpScan();
-    }, title: strConnectBpMeter, isFromVital: isFromVitals);
-
-    callNativeBpValues();
+    if (Platform.isAndroid) {
+      _getPermissionValuesNative();
+      callNativeBpValues();
+    } else {
+      _enableTimer(isFromVitals);
+      foundBLE.value = false;
+      movedToNextScreen = false;
+    }
+    CommonUtil().dialogForScanDevices(
+      Get.context,
+      onPressManual: () {
+        stopBpScan();
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            eId: hubController.eid,
+          ),
+        );
+      },
+      onPressCancel: () async {
+        stopBpScan();
+      },
+      title: strConnectBpMeter,
+      isFromVital: isFromVitals,
+    );
   }
 
   void _getPermissionValuesNative() {
@@ -352,31 +404,40 @@ class QurhomeDashboardController extends GetxController {
   }
 
   scanBpSessionStart({bool isFromVitals}) async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    bool isBluetoothEnable = false;
-    bool isLocationGranted = false;
-    const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-    isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
-    /*var permissionStatus =
-      await CommonUtil.askPermissionForLocation(isLocation: false);*/
-    if (!isBluetoothEnable) {
-      FlutterToast()
-          .getToast('Please turn on your bluetooth and try again', Colors.red);
-      return;
-    } else if (!serviceEnabled) {
-      FlutterToast().getToast(
-          'Please turn on your GPS location services and try again',
-          Colors.red);
-      return;
-    } else {
+    if (Platform.isIOS) {
       checkForBpConnection(isFromVitals: isFromVitals);
+    } else {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      bool isBluetoothEnable = false;
+      bool isLocationGranted = false;
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      /*var permissionStatus =
+      await CommonUtil.askPermissionForLocation(isLocation: false);*/
+      if (!isBluetoothEnable) {
+        FlutterToast().getToast(
+            'Please turn on your bluetooth and try again', Colors.red);
+        return;
+      } else if (!serviceEnabled) {
+        FlutterToast().getToast(
+            'Please turn on your GPS location services and try again',
+            Colors.red);
+        return;
+      } else {
+        checkForBpConnection(isFromVitals: isFromVitals);
+      }
     }
   }
 
   stopBpScan() async {
     Get.back();
-    const platform = MethodChannel(IS_BP_SCAN_CANCEL);
-    var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
-    print("scan_cancel_result$result");
+    if (Platform.isIOS) {
+      _disableTimer();
+      //need to cancel the session
+    } else {
+      const platform = MethodChannel(IS_BP_SCAN_CANCEL);
+      var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
+      print("scan_cancel_result$result");
+    }
   }
 }

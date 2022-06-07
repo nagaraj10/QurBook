@@ -32,6 +32,9 @@ const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String ScanningForDevices = 'Scanning for devices...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
+const String CallingEmergencyServiceIn = 'Calling \n emergency service in';
+const String sec = 'Sec';
+const String callNow = 'Call now';
 const String NoDeviceFound = 'No Device Found';
 const String DeviceAlreadyMapped = 'Device Already Mapped';
 const String careGiver = 'Caregiver Communication Settings';
@@ -69,6 +72,18 @@ const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 const String KEY_MEMBERSHIP = 'membership';
 const String GOLD_MEMBERSHIP = 'CORPGOLDQURHL';
 const String KEY_DYNAMIC_URL = 'dynamicURL';
+
+const String STR_KEY_HEIGHT = 'height';
+const String STR_KEY_WEIGHT = 'weight';
+const String STR_KEY_TEMP = 'temp';
+
+const String STR_VAL_HEIGHT_IND = 'f-in';
+const String STR_VAL_WEIGHT_IND = 'kg';
+const String STR_VAL_TEMP_IND = 'f';
+
+const String STR_VAL_HEIGHT_US = 'cm';
+const String STR_VAL_WEIGHT_US = 'lb';
+const String STR_VAL_TEMP_US = 'c';
 
 const String KEY_LANGUAGE = 'languageList';
 
@@ -680,19 +695,7 @@ const String filterApiDay = 'day';
 const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
 
-//for Unit Preferences
 const String UnitPreference = 'Unit Preferences';
-const String STR_KEY_HEIGHT = 'height';
-const String STR_KEY_WEIGHT = 'weight';
-const String STR_KEY_TEMP = 'temp';
-
-const String STR_VAL_HEIGHT_IND = 'f-in';
-const String STR_VAL_WEIGHT_IND = 'kg';
-const String STR_VAL_TEMP_IND = 'f';
-
-const String STR_VAL_HEIGHT_US = 'cm';
-const String STR_VAL_WEIGHT_US = 'lb';
-const String STR_VAL_TEMP_US = 'c';
 
 double height = 0.0;
 double width = 0.0;

@@ -104,9 +104,9 @@ class ProfileSetting {
   int greColor;
   String preferred_language;
   String qa_subscription;
-  CaregiverCommunicationSetting caregiverCommunicationSetting;
-
   PreferredMeasurement preferredMeasurement;
+
+  CaregiverCommunicationSetting caregiverCommunicationSetting;
 
   ProfileSetting(
       {this.bpMonitor,
@@ -140,6 +140,9 @@ class ProfileSetting {
     greColor = json['greColor'];
     preferred_language = json['preferred_language'];
     qa_subscription = json['qa-subscription'];
+    preferredMeasurement = json['preferred_measurement'] != null
+        ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+        : null;
     if (json.containsKey('caregiverCommunicationSetting')) {
       caregiverCommunicationSetting =
           json['caregiverCommunicationSetting'] != null

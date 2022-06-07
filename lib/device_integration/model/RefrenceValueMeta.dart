@@ -23,6 +23,7 @@ class RefrenceValueMeta {
 
   factory RefrenceValueMeta.fromJson(Map<String, dynamic> json) =>
       RefrenceValueMeta(
+        id: json['id'],
         code: json['code'],
         name: json['name'],
         description: json['description'],

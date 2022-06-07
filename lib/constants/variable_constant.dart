@@ -320,12 +320,24 @@ const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
-String strCareGiverSettings = 'Caregiver Communication Settings';
+String strCareGiverSettings = 'Caregiver Communication';
+String strNotificationPreference = 'Notification Preferences';
+
 String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 const String strCareGiverCommunication = 'Caregiver Communication';
+
+const String strVitalsPreferences = 'Vitals Preferences';
+const String strDisplayDevices = 'Display devices';
+const String strDisplayPreferences ='Display Preferences';
+
+const String strSkillsIntegration ='Skills/Integration';
+const String strIntegration ='Integration';
+
+
+
 
 // for my family
 
@@ -683,6 +695,21 @@ const String renewalLimit =
 
 const String alreadySubscribed =
     'You’ve already subscribed to the plan. Selecting this now will renew the plan';
+
+    //String for choose Units
+const String str_Weight = 'Weight';
+const String str_Pounds = 'Pounds';
+const String str_Kilogram = 'Kilograms';
+
+const String str_Height = 'Height';
+const String str_Feet = 'Feet/Inches';
+const String str_centi = 'Centimeters';
+
+const String str_Temp = 'Temperature';
+const String str_celesius = 'Celsius';
+const String str_far = 'Farenheit';
+
+
 
 //Reminders
 //

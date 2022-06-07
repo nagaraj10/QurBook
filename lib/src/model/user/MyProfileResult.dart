@@ -248,6 +248,8 @@ class AdditionalInfo {
     } catch (e) {}
     weight = json['weight'];
     try {
+      height = json['height'];
+      weight = json['weight'];
       if (json.containsKey('language')) {
         language = json['language'].cast<String>();
       }

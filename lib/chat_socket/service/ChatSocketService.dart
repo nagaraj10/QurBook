@@ -1,6 +1,7 @@
 import 'dart:convert' as convert;
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatFamilyModel.dart';
@@ -60,5 +61,15 @@ class ChatSocketService {
         qr_chat_socket_get_user_id_doc + docId +
             qr_chat_socket_get_user_id_doc_include);
     return GetUserIdModel.fromJson(response);
+  }
+
+  Future<CaregiverPatientChatModel> getFamilyListMap(String userId) async {
+    var body = {
+      "id": "${userId}",
+    };
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.getChatHistory(
+        qr_chat_family_mapping, jsonString);
+    return CaregiverPatientChatModel.fromJson(response);
   }
 }
