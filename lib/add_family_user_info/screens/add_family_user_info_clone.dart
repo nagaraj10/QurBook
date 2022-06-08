@@ -103,6 +103,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final heightController = TextEditingController(text: '');
   FocusNode heightFocus = FocusNode();
+  final heightInchController = TextEditingController(text: '');
+  FocusNode heightInchFocus = FocusNode();
 
   final weightController = TextEditingController(text: '');
   FocusNode weightFocus = FocusNode();
@@ -163,6 +165,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
   MyProfileModel myProfile = MyProfileModel();
+
+  bool isFeetOrInches = true;
+  bool isKg = true;
+
   HealthReportListForUserRepository _healthReportListForUserRepository;
   List<Tags> selectedTags = [];
   List<Tags> mediaResultFiltered = [];
@@ -181,6 +187,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
       //fetchUserProfileInfo();
     });
+
+    setUnit();
 
     _healthReportListForUserRepository.getTags().then((value) {
       List<Tags> tagslist = value.result;
@@ -439,30 +447,74 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     Expanded(child: getBloodRangeDetails())
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: _showCommonEditText(
-                            heightController,
-                            heightFocus,
-                            middleNameFocus,
-                            CommonConstants.heightName,
-                            CommonConstants.heightName,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3)),
-                    Expanded(
-                        child: _showCommonEditText(
-                            weightController,
-                            weightFocus,
-                            middleNameFocus,
-                            CommonConstants.weightName,
-                            CommonConstants.weightName,
-                            true,
-                            isheightOrWeight: true,
-                            maxLength: 3))
-                  ],
-                ),
+                isFeetOrInches
+                    ? Container(
+                        child: Row(
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  heightInchFocus,
+                                  CommonConstants.heightNameFeetInd,
+                                  CommonConstants.heightNameFeetInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightInchController,
+                                  heightInchFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightNameInchInd,
+                                  CommonConstants.heightNameInchInd,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ))
+                    : Row(
+                        children: [
+                          Expanded(
+                              child: _showCommonEditText(
+                                  heightController,
+                                  heightFocus,
+                                  middleNameFocus,
+                                  CommonConstants.heightName,
+                                  CommonConstants.heightName,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3)),
+                          Expanded(
+                              child: _showCommonEditText(
+                                  weightController,
+                                  weightFocus,
+                                  middleNameFocus,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  isKg
+                                      ? CommonConstants.weightName
+                                      : CommonConstants.weightNameUS,
+                                  true,
+                                  isheightOrWeight: true,
+                                  maxLength: 3))
+                        ],
+                      ),
                 if (widget.arguments.fromClass == CommonConstants.user_update)
                   getLanguageWidget()
                 else
@@ -1481,8 +1533,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget.arguments.myProfileResult.additionalInfo != null) {
-          heightController.text =
-              widget.arguments.myProfileResult.additionalInfo.height ?? '';
+          if (isFeetOrInches) {
+            heightController.text = widget.arguments.myProfileResult
+                    .additionalInfo?.heightObj?.valueFeet ??
+                '';
+            heightInchController.text = widget.arguments.myProfileResult
+                    .additionalInfo?.heightObj?.valueInches ??
+                '';
+          } else {
+            heightController.text =
+                widget.arguments.myProfileResult.additionalInfo.height ?? '';
+          }
+
           weightController.text =
               widget.arguments.myProfileResult.additionalInfo.weight ?? '';
         }
@@ -1560,13 +1622,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = '';
         }
 
-        if (widget
-            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget
-                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
+            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget
-                  ?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget?.arguments?.sharedbyme?.membershipOfferedBy;
         }
       } else {
         if (widget
@@ -1576,13 +1635,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = widget
               ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
         }
-        if (widget
-            ?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget
-                ?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
+            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget
-                  ?.arguments?.sharedbyme?.membershipOfferedBy;
+              widget?.arguments?.sharedbyme?.membershipOfferedBy;
         }
       }
       if (widget.arguments.sharedbyme != null) {
@@ -1757,8 +1813,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (value.result.membershipOfferedBy != null &&
             value.result.membershipOfferedBy != '') {
-          cntrlr_corp_name.text =
-              value.result.membershipOfferedBy;
+          cntrlr_corp_name.text = value.result.membershipOfferedBy;
         }
       });
     }
@@ -1786,10 +1841,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var additionalInfo = AdditionalInfo();
     if (widget.arguments.myProfileResult?.additionalInfo != null) {
       additionalInfo = widget.arguments.myProfileResult.additionalInfo;
-      additionalInfo.height = heightController.text;
+      var heightObj = new HeightObj();
+      if (isFeetOrInches) {
+        heightObj.valueFeet = heightController.text;
+        heightObj.valueInches = heightInchController.text;
+        additionalInfo.heightObj = heightObj;
+      } else {
+        additionalInfo.height = heightController.text;
+      }
+
       additionalInfo.weight = weightController.text;
     } else {
-      additionalInfo.height = heightController.text;
+      var heightObj = new HeightObj();
+      if (isFeetOrInches) {
+        heightObj.valueFeet = heightController.text;
+        heightObj.valueInches = heightInchController.text;
+        additionalInfo.heightObj = heightObj;
+      } else {
+        additionalInfo.height = heightController.text;
+      }
       additionalInfo.weight = weightController.text;
       additionalInfo.age = 0;
       additionalInfo.mrdNumber = '';
@@ -1801,37 +1871,151 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     profileResult.additionalInfo = additionalInfo;
 
-    if (widget.arguments.fromClass == CommonConstants.user_update) {
-      try {
-        List<UserProfileSettingCollection3> userProfileSettingCollection = [];
+    /*if (widget.arguments.fromClass == CommonConstants.user_update ||
+        widget.arguments.fromClass == CommonConstants.my_family) {*/
+    try {
+      List<UserProfileSettingCollection3> userProfileSettingCollection = [];
+      List<UserProfileSettingCollection3> userProfileSettingCollectionClone =
+          [];
 
-        var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
-        var profileSetting = ProfileSetting();
-        userProfileSettingCollection = addFamilyUserInfoBloc
-            .myprofileObject.result.userProfileSettingCollection3;
-        if (userProfileSettingCollection.isNotEmpty) {
-          userProfileSettingCollection3Obj = addFamilyUserInfoBloc
-              .myprofileObject.result.userProfileSettingCollection3[0];
-          if (userProfileSettingCollection3Obj.profileSetting != null) {
-            profileSetting = userProfileSettingCollection3Obj.profileSetting;
-            userProfileSettingCollection3Obj.profileSetting.preferred_language =
-                selectedLanguage;
+      var userProfileSettingCollection3Obj = UserProfileSettingCollection3();
+      var profileSetting = ProfileSetting();
+      userProfileSettingCollection = addFamilyUserInfoBloc
+          .myprofileObject.result.userProfileSettingCollection3;
+      if (userProfileSettingCollection.isNotEmpty) {
+        userProfileSettingCollection3Obj = addFamilyUserInfoBloc
+            .myprofileObject.result.userProfileSettingCollection3[0];
+        if (userProfileSettingCollection3Obj.profileSetting != null) {
+          var profileSettingClone =
+              userProfileSettingCollection3Obj.profileSetting;
+          var preferredMeasuremntClone =
+              profileSettingClone.preferredMeasurement;
+
+          if (preferredMeasuremntClone != null) {
+            var heightObj = new Height(
+                unitCode: preferredMeasuremntClone.height?.unitCode,
+                unitName: preferredMeasuremntClone.height?.unitName);
+            var weightObj = new Height(
+                unitCode: preferredMeasuremntClone.weight?.unitCode,
+                unitName: preferredMeasuremntClone.weight?.unitName);
+            var tempObj = new Height(
+                unitCode: preferredMeasuremntClone.temperature?.unitCode,
+                unitName: preferredMeasuremntClone.temperature?.unitName);
+
+            var preferredMeasurementNew = new PreferredMeasurement(
+                height: heightObj, weight: weightObj, temperature: tempObj);
+
+            profileSetting.preferredMeasurement = preferredMeasurementNew;
+            profileSetting.allowDevice = profileSettingClone.allowDevice;
+            profileSetting.allowDigit = profileSettingClone.allowDigit;
+            profileSetting.bpMonitor = profileSettingClone.bpMonitor;
+            profileSetting.glucoMeter = profileSettingClone.glucoMeter;
+            profileSetting.googleFit = profileSettingClone.googleFit;
+            profileSetting.greColor = profileSettingClone.greColor;
+            profileSetting.healthFit = profileSettingClone.healthFit;
+            profileSetting.preColor = profileSettingClone.preColor;
+
+            profileSetting.qa_subscription =
+                profileSettingClone.qa_subscription;
+            profileSetting.qurhomeDefaultUI =
+                profileSettingClone.qurhomeDefaultUI;
           } else {
-            profileSetting.preferred_language = selectedLanguage;
-            userProfileSettingCollection3Obj.profileSetting = profileSetting;
+            if (CommonUtil.REGION_CODE == 'IN') {
+              var heightObj = new Height(
+                  unitCode: Constants.STR_VAL_HEIGHT_IND,
+                  unitName: 'feet/Inches');
+              var weightObj = new Height(
+                  unitCode: Constants.STR_VAL_WEIGHT_IND,
+                  unitName: 'kilograms');
+              var tempObj = new Height(
+                  unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+
+              var preferredMeasurementNew = new PreferredMeasurement(
+                  height: heightObj, weight: weightObj, temperature: tempObj);
+              profileSetting.preferredMeasurement = preferredMeasurementNew;
+            } else {
+              var heightObj = new Height(
+                  unitCode: Constants.STR_VAL_HEIGHT_US,
+                  unitName: 'centimeters');
+              var weightObj = new Height(
+                  unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+              var tempObj = new Height(
+                  unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+
+              var preferredMeasurementNew = new PreferredMeasurement(
+                  height: heightObj, weight: weightObj, temperature: tempObj);
+              profileSetting.preferredMeasurement = preferredMeasurementNew;
+            }
           }
-          userProfileSettingCollection.insert(
+
+          profileSetting.preferred_language = selectedLanguage;
+
+          userProfileSettingCollection3Obj.profileSetting = profileSetting;
+          userProfileSettingCollectionClone.insert(
               0, userProfileSettingCollection3Obj);
         } else {
+          if (CommonUtil.REGION_CODE == 'IN') {
+            var heightObj = new Height(
+                unitCode: Constants.STR_VAL_HEIGHT_IND,
+                unitName: 'feet/Inches');
+            var weightObj = new Height(
+                unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+            var tempObj = new Height(
+                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+
+            var preferredMeasurementNew = new PreferredMeasurement(
+                height: heightObj, weight: weightObj, temperature: tempObj);
+            profileSetting.preferredMeasurement = preferredMeasurementNew;
+          } else {
+            var heightObj = new Height(
+                unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'centimeters');
+            var weightObj = new Height(
+                unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+            var tempObj = new Height(
+                unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+
+            var preferredMeasurementNew = new PreferredMeasurement(
+                height: heightObj, weight: weightObj, temperature: tempObj);
+            profileSetting.preferredMeasurement = preferredMeasurementNew;
+          }
           profileSetting.preferred_language = selectedLanguage;
           userProfileSettingCollection3Obj.profileSetting = profileSetting;
-          userProfileSettingCollection.add(userProfileSettingCollection3Obj);
+          userProfileSettingCollectionClone.insert(
+              0, userProfileSettingCollection3Obj);
         }
+      } else {
+        if (CommonUtil.REGION_CODE == 'IN') {
+          var heightObj = new Height(
+              unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'feet/Inches');
+          var weightObj = new Height(
+              unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+          var tempObj = new Height(
+              unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
 
-        profileResult.userProfileSettingCollection3 =
-            userProfileSettingCollection;
-      } catch (e) {}
-    }
+          var preferredMeasurementNew = new PreferredMeasurement(
+              height: heightObj, weight: weightObj, temperature: tempObj);
+          profileSetting.preferredMeasurement = preferredMeasurementNew;
+        } else {
+          var heightObj = new Height(
+              unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'centimeters');
+          var weightObj = new Height(
+              unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+          var tempObj = new Height(
+              unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+
+          var preferredMeasurementNew = new PreferredMeasurement(
+              height: heightObj, weight: weightObj, temperature: tempObj);
+          profileSetting.preferredMeasurement = preferredMeasurementNew;
+        }
+        profileSetting.preferred_language = selectedLanguage;
+        userProfileSettingCollection3Obj.profileSetting = profileSetting;
+        userProfileSettingCollectionClone.add(userProfileSettingCollection3Obj);
+      }
+
+      profileResult.userProfileSettingCollection3 =
+          userProfileSettingCollectionClone;
+    } catch (e) {}
+    /*  }*/
 
     addFamilyUserInfoBloc.tagsList = selectedTags;
 
@@ -2108,8 +2292,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.sharedbyme.child.lastName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase() +
-                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                            .toUpperCase():'')
+                            (widget.arguments.sharedbyme.child.lastName.length >
+                                    0
+                                ? widget.arguments.sharedbyme.child.lastName[0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments.sharedbyme.child.firstName != null
                             ? widget.arguments.sharedbyme.child.firstName[0]
                                 .toUpperCase()
@@ -2129,8 +2316,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.sharedbyme.child.lastName != null
                       ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase() +
-                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                          .toUpperCase():'')
+                          (widget.arguments.sharedbyme.child.lastName.length > 0
+                              ? widget.arguments.sharedbyme.child.lastName[0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments.sharedbyme.child.firstName != null
                           ? widget.arguments.sharedbyme.child.firstName[0]
                               .toUpperCase()
@@ -2152,8 +2341,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.sharedbyme.child.lastName != null
                     ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase() +
-                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                        .toUpperCase():'')
+                        (widget.arguments.sharedbyme.child.lastName.length > 0
+                            ? widget.arguments.sharedbyme.child.lastName[0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments.sharedbyme.child.firstName != null
                         ? widget.arguments.sharedbyme.child.firstName[0]
                             .toUpperCase()
@@ -2196,8 +2387,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.myProfileResult.lastName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase() +
-                        (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                            .toUpperCase():'')
+                            (widget.arguments.sharedbyme.child.lastName.length >
+                                    0
+                                ? widget.arguments.sharedbyme.child.lastName[0]
+                                    .toUpperCase()
+                                : '')
                         : widget.arguments.myProfileResult.firstName != null
                             ? widget.arguments.myProfileResult.firstName[0]
                                 .toUpperCase()
@@ -2217,8 +2411,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                           widget.arguments.myProfileResult.lastName != null
                       ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase() +
-                      (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                          .toUpperCase():'')
+                          (widget.arguments.sharedbyme.child.lastName.length > 0
+                              ? widget.arguments.sharedbyme.child.lastName[0]
+                                  .toUpperCase()
+                              : '')
                       : widget.arguments.myProfileResult.firstName != null
                           ? widget.arguments.myProfileResult.firstName[0]
                               .toUpperCase()
@@ -2240,8 +2436,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         widget.arguments.myProfileResult.lastName != null
                     ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase() +
-                    (widget.arguments.sharedbyme.child.lastName.length>0?widget.arguments.sharedbyme.child.lastName[0]
-                        .toUpperCase():'')
+                        (widget.arguments.sharedbyme.child.lastName.length > 0
+                            ? widget.arguments.sharedbyme.child.lastName[0]
+                                .toUpperCase()
+                            : '')
                     : widget.arguments.myProfileResult.firstName != null
                         ? widget.arguments.myProfileResult.firstName[0]
                             .toUpperCase()
@@ -2602,6 +2800,53 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
 
     return condition;
+  }
+
+  void setUnit() async {
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      var profileSetting = widget.arguments?.myProfileResult
+          ?.userProfileSettingCollection3[0].profileSetting;
+      if (profileSetting != null) {
+        if (profileSetting?.preferredMeasurement != null) {
+          try {
+            String heightUnit =
+                await profileSetting?.preferredMeasurement?.height?.unitCode;
+            String weightUnit =
+                await profileSetting?.preferredMeasurement?.weight?.unitCode;
+            if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+              isFeetOrInches = true;
+            } else {
+              isFeetOrInches = false;
+            }
+
+            if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+              isKg = true;
+            } else {
+              isKg = false;
+            }
+          } catch (e) {
+            if (CommonUtil.REGION_CODE == 'IN') {
+              isFeetOrInches = true;
+              isKg = true;
+            } else {
+              isFeetOrInches = false;
+              isKg = false;
+            }
+          }
+        } else {
+          if (CommonUtil.REGION_CODE == 'IN') {
+            isFeetOrInches = true;
+            isKg = true;
+          } else {
+            isFeetOrInches = false;
+            isKg = false;
+          }
+        }
+      }
+    } else {
+      isFeetOrInches = false;
+      isKg = true;
+    }
   }
 
   Widget getDropDownWithTagsdrop() {

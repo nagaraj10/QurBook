@@ -104,6 +104,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   QurhomeDashboardController qurhomeController;
   String eId;
 
+  PreferredMeasurement preferredMeasurement;
+
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     if (disableMic) {
       isLoading = true;
@@ -1401,6 +1403,11 @@ class ChatScreenViewModel extends ChangeNotifier {
         ? getDeviceSelectionModel
             .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
+
+    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+            null
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -1426,7 +1433,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {

@@ -6,6 +6,9 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
 import '../../../common/CommonUtil.dart';
@@ -44,6 +47,7 @@ import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -97,6 +101,30 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   var commonConstants = CommonConstants();
 
+  String tempUnit = 'c';
+  String weightUnit = 'kg';
+
+  bool isTouched = true;
+
+  bool isPounds = false;
+  bool isKg = false;
+
+  bool isCele = false;
+  bool isFaren = false;
+
+  bool isInchFeet = false;
+  bool isCenti = false;
+
+  GetDeviceSelectionModel selectionResult;
+  PreferredMeasurement preferredMeasurement;
+  ProfileSetting profileSetting;
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+
+  Height heightObj, weightObj, tempObj;
+  String userMappingId = '';
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -110,7 +138,129 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
     });
+
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "kg";
+    }
+
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
+    }
   }
+   Widget getAppColorsAndDeviceValues() {
+    final _devicesmodel = Provider.of<DevicesViewModel>(context);
+
+    return profileSetting == null
+        ? FutureBuilder<GetDeviceSelectionModel>(
+            future: getProfileSetings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CommonCircularIndicator();
+              } else if (snapshot.hasError) {
+                return ErrorsWidget();
+              } else {
+                return getBody(_devicesmodel);
+              }
+            },
+          )
+        : getBody(_devicesmodel);
+  }
+
+  getBody(DevicesViewModel devicesmodel) {
+    return Column(
+      children: [
+        SizedBoxWidget(height: 5.0.h),
+        Container(child: getAddDeviceReadings()),
+        SizedBoxWidget(height: 5.0.h),
+        Expanded(
+          child: getValues(context, devicesmodel),
+        ),
+      ],
+    );
+  }
+
+  Future<GetDeviceSelectionModel> getProfileSetings() async {
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) async {
+      if (value.isSuccess) {
+        selectionResult = value;
+        if (value.result != null && value.result.length > 0) {
+          if (value.result[0] != null) {
+            profileSetting = value.result[0].profileSetting;
+            userMappingId = value.result[0].id;
+
+            if (profileSetting != null) {
+              if (profileSetting.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting.preferredMeasurement;
+                weightObj = preferredMeasurement.weight;
+
+                if (weightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      preferredMeasurement.weight?.unitCode);
+                  if (preferredMeasurement.weight?.unitCode ==
+                      Constants.STR_VAL_WEIGHT_IND) {
+                    isKg = true;
+                    isPounds = false;
+                  } else {
+                    isKg = false;
+                    isPounds = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                heightObj = preferredMeasurement.height;
+
+                if (heightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode);
+                  if (preferredMeasurement.height?.unitCode ==
+                      Constants.STR_VAL_HEIGHT_IND) {
+                    isInchFeet = true;
+                    isCenti = false;
+                  } else {
+                    isInchFeet = false;
+                    isCenti = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                tempObj = preferredMeasurement.temperature;
+                if (tempObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                      preferredMeasurement.temperature?.unitCode);
+                  if (preferredMeasurement.temperature?.unitCode ==
+                      Constants.STR_VAL_TEMP_IND) {
+                    isFaren = true;
+                    isCele = false;
+                  } else {
+                    isFaren = false;
+                    isCele = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                return selectionResult;
+              } else {
+                commonMethodToSetPreference();
+                return selectionResult;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
 
   @override
   void dispose() {
@@ -156,16 +306,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       ),
       body: Container(
         color: Colors.grey[200],
-        child: Column(
-          children: [
-            SizedBoxWidget(height: 5.0.h),
-            Container(child: getAddDeviceReadings()),
-            SizedBoxWidget(height: 5.0.h),
-            Expanded(
-              child: getValues(context, _devicesmodel),
-            ),
-          ],
-        ),
+        child: getAppColorsAndDeviceValues(),
       ),
       floatingActionButton: IconButton(
         icon: Image.asset(icon_mayaMain),
@@ -369,14 +510,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              CommonConstants.strTemperatureValue;
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -487,23 +627,23 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 isSelected[1] == false &&
                 isSelected[2] == false) ||
             (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == null &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == null) ||
-                (isSelected[0] == false &&
-                    isSelected[1] == false &&
-                    isSelected[2] == false)||
-                (isSelected[0] == null &&
-                    isSelected[1] == null &&
-                    isSelected[2] == false)) {
+                isSelected[1] == null &&
+                isSelected[2] == null) ||
+            (isSelected[0] == null &&
+                isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == null &&
+                isSelected[2] == false) ||
+            (isSelected[0] == false &&
+                isSelected[1] == false &&
+                isSelected[2] == null) ||
+            (isSelected[0] == false &&
+                isSelected[1] == false &&
+                isSelected[2] == false) ||
+            (isSelected[0] == null &&
+                isSelected[1] == null &&
+                isSelected[2] == false)) {
           validationConditon = false;
           validationMsg = CommonConstants.strSugarFasting;
         } else {
@@ -797,6 +937,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForThermometer(String deviceName) {
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -879,12 +1024,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strTemperature,
-                          'F',
+                          tempUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, 'F', deviceName, range: "", device: "Temp")
+                      }, errorMsg, tempUnit, deviceName,
+                          range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -900,14 +1046,31 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       Container(
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
-                        child: Text(
-                          'F',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.0.sp,
-                              color: Color(CommonConstants.ThermoDarkColor)),
-                          softWrap: true,
-                        ),
+                        child: InkWell(
+                            child: Text(
+                              tempUnit != null ? tempUnit : 'c',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color:
+                                      Color(CommonConstants.ThermoDarkColor)),
+                              softWrap: true,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ChooseUnit(),
+                                ),
+                              ).then(
+                                (value) {
+                                  tempUnit = PreferenceUtil.getStringValue(
+                                      Constants.STR_KEY_TEMP);
+                                  setState(() {});
+                                },
+                              );
+                            }),
                       ),
                     ],
                   )
@@ -1047,6 +1210,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget getCardForWeighingScale(String deviceName) {
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "kg";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1093,7 +1261,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Kg',
+                        'Weight',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1103,14 +1271,55 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          commonConstants.weightUNIT,
+                          weightUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName),
+                      }, errorMsg, weightUnit, deviceName, range: ""),
                     ],
                   ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14.0.sp,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50.0.w,
+                        constraints: BoxConstraints(maxWidth: 100.0.w),
+                        child: InkWell(
+                            child: Text(
+                              weightUnit != null ? weightUnit : 'kg',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14.0.sp,
+                                  color:
+                                      Color(CommonConstants.weightlightColor)),
+                              softWrap: true,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      ChooseUnit(),
+                                ),
+                              ).then(
+                                (value) {
+                                  weightUnit = PreferenceUtil.getStringValue(
+                                      Constants.STR_KEY_WEIGHT);
+                                  setState(() {});
+                                },
+                              );
+                            }),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -1580,7 +1789,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'Kg',
+                              translist[index].weightUnit,
                               translist[index].deviceId);
                         },
                       )
@@ -1655,7 +1864,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'F',
+                              translist[index].temperatureUnit,
                               translist[index].deviceId);
                         },
                       )
@@ -2430,4 +2639,53 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       );
     }
   }
+
+  void commonMethodToSetPreference() async {
+    if (CommonUtil.REGION_CODE != "IN") {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'feet/Inches');
+      weightObj =
+          new Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+      tempObj =
+          new Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+      isKg = true;
+      isPounds = false;
+
+      isInchFeet = true;
+      isCenti = false;
+
+      isFaren = true;
+      isCele = false;
+    } else {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
+      weightObj = new Height(
+          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+      tempObj = new Height(
+          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+      isKg = false;
+      isPounds = true;
+
+      isInchFeet = false;
+      isCenti = true;
+
+      isFaren = false;
+      isCele = true;
+    }
+  }
+
 }
