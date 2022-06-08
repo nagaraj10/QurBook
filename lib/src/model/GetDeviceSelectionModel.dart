@@ -232,5 +232,6 @@ class Height {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
+    return data;
   }
 }

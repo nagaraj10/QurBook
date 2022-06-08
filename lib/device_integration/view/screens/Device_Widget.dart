@@ -863,7 +863,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForWeigh = '';
       }
 
-      try {
         try {
           unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
               ? deviceValues.bodyWeight.entities[0].weightUnit.name
@@ -871,7 +870,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         } catch (e) {
           unitForWeight = '';
         }
-      } catch (e) {}
+     
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
@@ -2164,7 +2163,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                             '' &&
                                                                         averageForTemp !=
                                                                             null
-                                                                    ? 'F'
+                                                                    ? unitForTemp !=
+                                                                            null
+                                                                        ? unitForTemp
+                                                                            .capitalizeFirstofEach
+                                                                        : ''
                                                                     : '-',
                                                                 style:
                                                                     TextStyle(
@@ -2857,7 +2860,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                             '' &&
                                                                         averageForWeigh !=
                                                                             null
-                                                                    ? 'Kg'
+                                                                    ? unitForWeight !=
+                                                                            null
+                                                                        ? unitForWeight
+                                                                            ?.capitalizeFirstofEach
+                                                                        : ''
                                                                     : '',
                                                                 style:
                                                                     TextStyle(

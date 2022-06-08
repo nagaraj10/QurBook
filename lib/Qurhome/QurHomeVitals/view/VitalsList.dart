@@ -114,6 +114,9 @@ class _VitalsListState extends State<VitalsList> {
   final double circleRadius = 38;
   final double circleBorderWidth = 0;
 
+  var unitForWeight;
+  var unitForTemp;
+
   @override
   void initState() {
     try {
@@ -624,12 +627,21 @@ class _VitalsListState extends State<VitalsList> {
       } catch (e) {
         averageForTemp = '';
       }
+      try {
+        unitForTemp =
+            deviceValues.bodyTemperature.entities[0].temperatureUnit != null
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                : '';
+      } catch (e) {
+        unitForTemp = '';
+      }
     } else {
       dateForTemp = '';
       devicevalue1ForTemp = '';
       sourceForThermo = '';
       averageForTemp = '';
       timeForTemp = '';
+      unitForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight = deviceValues
@@ -659,12 +671,20 @@ class _VitalsListState extends State<VitalsList> {
       } catch (e) {
         averageForWeigh = '';
       }
+      try {
+        unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+            ? deviceValues.bodyWeight.entities[0].weightUnit.name
+            : '';
+      } catch (e) {
+        unitForWeight = '';
+      }
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
       timeForWeight = '';
+      unitForWeight = '';
     }
 
     return getDeviceData(
@@ -686,7 +706,9 @@ class _VitalsListState extends State<VitalsList> {
         devicevalue1ForOs,
         devicevalue1ForWeight,
         devicevalue1ForTemp,
-        devicevalue2ForBp);
+        devicevalue2ForBp,
+        unitForTemp,
+        unitForWeight);
   }
 
   void callBackToRefresh() {
@@ -717,7 +739,9 @@ class _VitalsListState extends State<VitalsList> {
       value1ForOs,
       value1ForWeight,
       value1ForTemp,
-      String value2ForBp) {
+      String value2ForBp,
+      String unitForTemp,
+      String unitForWeight) {
     return Container(
       //height: 1.sh,
       height: 1.sw * 2.0,
@@ -1656,7 +1680,11 @@ class _VitalsListState extends State<VitalsList> {
                                                           value1ForTemp != '' &&
                                                                   value1ForTemp !=
                                                                       null
-                                                              ? 'F'
+                                                              ? unitForTemp !=
+                                                                      null
+                                                                  ? unitForTemp
+                                                                      .capitalizeFirstofEach
+                                                                  : ''
                                                               : '-',
                                                           style: TextStyle(
                                                             fontSize: 12.0.sp,
@@ -1725,7 +1753,11 @@ class _VitalsListState extends State<VitalsList> {
                                                                             '' &&
                                                                         averageForTemp !=
                                                                             null
-                                                                    ? 'F'
+                                                                    ? unitForTemp !=
+                                                                            null
+                                                                        ? unitForTemp
+                                                                            .capitalizeFirstofEach
+                                                                        : ''
                                                                     : '-',
                                                                 style:
                                                                     TextStyle(
@@ -2338,7 +2370,11 @@ class _VitalsListState extends State<VitalsList> {
                                                                       '' &&
                                                                   value1ForWeight !=
                                                                       null
-                                                              ? 'Kg'
+                                                              ? unitForWeight !=
+                                                                      null
+                                                                  ? unitForWeight
+                                                                      ?.capitalizeFirstofEach
+                                                                  : ''
                                                               : '',
                                                           style: TextStyle(
                                                             fontSize: 10.0.sp,
@@ -2403,7 +2439,11 @@ class _VitalsListState extends State<VitalsList> {
                                                                             '' &&
                                                                         averageForWeigh !=
                                                                             null
-                                                                    ? 'Kg'
+                                                                    ? unitForWeight !=
+                                                                            null
+                                                                        ? unitForWeight
+                                                                            ?.capitalizeFirstofEach
+                                                                        : ''
                                                                     : '',
                                                                 style:
                                                                     TextStyle(
