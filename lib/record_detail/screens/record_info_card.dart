@@ -44,10 +44,10 @@ class RecordInfoCard {
               children: <Widget>[
                 ClipOval(
                     child: metaInfo.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(metaInfo
-                            .doctor
-                            .profilePicThumbnailUrl,metaInfo
-                        .doctor) //getDoctorProfileImageWidget(metaInfo)
+                        ? CommonUtil().getDoctorProfileImageWidget(
+                            metaInfo.doctor.profilePicThumbnailUrl,
+                            metaInfo
+                                .doctor) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50.0.h,
                             height: 50.0.h,
@@ -96,7 +96,8 @@ class RecordInfoCard {
                             /* toBeginningOfSentenceCase(
                                     metaInfo.hospital.healthOrganizationName) */
                             metaInfo?.hospital?.healthOrganizationName
-                                ?.capitalizeFirstofEach??"",
+                                    ?.capitalizeFirstofEach ??
+                                "",
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -713,10 +714,8 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                         deviceReadings[i].unit.toLowerCase() ==
                                 CommonConstants.strOxygenUnits.toLowerCase()
                             ? CommonConstants.strOxygenUnitsName
-                            : (deviceReadings[i].unit.toLowerCase() ==
-                                    strParamUnitFarenheit.toLowerCase()
-                                ? CommonConstants.strTemperatureValue
-                                : deviceReadings[i].unit.toString()),
+                            : getUnitForTemperature(
+                                " " + deviceReadings[i].unit),
                         style: TextStyle(
                             color: Colors.black54, fontSize: 14.0.sp)),
                   ],
@@ -842,4 +841,17 @@ getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
           ),
         ],
       ));
+}
+
+getUnitForTemperature(String unit) {
+  if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
+    return strParamUnitFarenheit;
+  } else if (unit.toLowerCase() ==
+      CommonConstants.strTemperatureValue.toLowerCase()) {
+    return strParamUnitFarenheit;
+  } else if (unit.toLowerCase() == "c".toLowerCase()) {
+    return strParamUnitCelsius;
+  } else {
+    return unit;
+  }
 }

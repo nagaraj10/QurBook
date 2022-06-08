@@ -27,24 +27,24 @@ class RefrenceValueMeta {
         code: json['code'],
         name: json['name'],
         description: json['description'],
+        /* id: json['id'],
         sortOrder: json['sortOrder'],
         isActive: json['isActive'],
         createdBy: json['createdBy'],
-        createdOn: json['createdOn'] != null
-            ? DateTime.tryParse(json['createdOn'])
-            : null,
-        lastModifiedOn: json['lastModifiedOn'],
+        createdOn: DateTime.parse(json['createdOn']),
+        lastModifiedOn: json['lastModifiedOn'],*/
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'code': code,
         'name': name,
         'description': description,
+
+        /* 'id': id,
         'sortOrder': sortOrder,
         'isActive': isActive,
         'createdBy': createdBy,
         'createdOn': createdOn.toIso8601String(),
-        'lastModifiedOn': lastModifiedOn,
+        'lastModifiedOn': lastModifiedOn,*/
       };
 }

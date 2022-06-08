@@ -348,6 +348,7 @@ class HealthReportListForUserRepository {
     bool allowAppointmentALert,
     bool allowVitalALerts,
     bool allowsymptomsAlert,
+    PreferredMeasurement preferredMeasurement,
   ) async {
     var body = jsonEncode({
       'id': userMappingId,
@@ -366,6 +367,20 @@ class HealthReportListForUserRepository {
         'preferred_language': preferred_language,
         'qa-subscription': qa_subscription,
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
+        'preferred_measurement': {
+          'height': {
+            'unitCode': preferredMeasurement.height.unitCode,
+            'unitName': preferredMeasurement.height.unitName
+          },
+          'weight': {
+            'unitCode': preferredMeasurement.weight.unitCode,
+            'unitName': preferredMeasurement.weight.unitName
+          },
+          'temperature': {
+            'unitCode': preferredMeasurement.temperature.unitCode,
+            'unitName': preferredMeasurement.temperature.unitName
+          },
+        },
         'caregiverCommunicationSetting': {
           "vitals": allowVitalALerts ?? true,
           "symptoms": allowsymptomsAlert ?? true,
