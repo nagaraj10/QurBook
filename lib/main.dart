@@ -571,18 +571,25 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
-        }else if(passedValArr[1] == 'escalateToCareCoordinatorToRegimen'){
+        } else if (passedValArr[1] == 'escalateToCareCoordinatorToRegimen') {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if (passedValArr[7] == userId) {
-            CommonUtil().escalateNonAdherance(passedValArr[2], passedValArr[3], passedValArr[4], passedValArr[5], passedValArr[6],passedValArr[7],passedValArr[8],passedValArr[9]);
+            CommonUtil().escalateNonAdherance(
+                passedValArr[2],
+                passedValArr[3],
+                passedValArr[4],
+                passedValArr[5],
+                passedValArr[6],
+                passedValArr[7],
+                passedValArr[8],
+                passedValArr[9]);
             Get.toNamed(rt_Regimen);
           } else {
             CommonUtil.showFamilyMemberPlanExpiryDialog(
               passedValArr[3],
-              redirect:"caregiver",
+              redirect: "caregiver",
             );
           }
-
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -1230,7 +1237,7 @@ class _MyFHBState extends State<MyFHB> {
                   '|' +
                   parsedData[6],
             );
-          }else if (parsedData[1] == 'escalateToCareCoordinatorToRegimen') {
+          } else if (parsedData[1] == 'escalateToCareCoordinatorToRegimen') {
             return SplashScreen(
               nsRoute: 'escalateToCareCoordinatorToRegimen',
               bundle: parsedData[2] +

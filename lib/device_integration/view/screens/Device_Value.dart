@@ -48,7 +48,6 @@ import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'dart:developer' as dev;
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -125,6 +124,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Height heightObj, weightObj, tempObj;
   String userMappingId = '';
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -138,6 +138,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     _mediaTypeBlock.getMediTypesList().then((value) {
       mediaTypesResponse = value;
     });
+
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "kg";
+    }
+
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
+    }
   }
 
   Widget getAppColorsAndDeviceValues() {
@@ -157,6 +169,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             },
           )
         : getBody(_devicesmodel);
+  }
+
+  getBody(DevicesViewModel devicesmodel) {
+    return Column(
+      children: [
+        SizedBoxWidget(height: 5.0.h),
+        Container(child: getAddDeviceReadings()),
+        SizedBoxWidget(height: 5.0.h),
+        Expanded(
+          child: getValues(context, devicesmodel),
+        ),
+      ],
+    );
   }
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
@@ -235,6 +260,25 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         }
       }
     });
+  }
+
+  Widget getAppColorsAndDeviceValues() {
+    final _devicesmodel = Provider.of<DevicesViewModel>(context);
+
+    return profileSetting == null
+        ? FutureBuilder<GetDeviceSelectionModel>(
+            future: getProfileSetings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CommonCircularIndicator();
+              } else if (snapshot.hasError) {
+                return ErrorsWidget();
+              } else {
+                return getBody(_devicesmodel);
+              }
+            },
+          )
+        : getBody(_devicesmodel);
   }
 
   @override
@@ -916,7 +960,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     } catch (e) {
       tempUnit = "F";
     }
-
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1188,9 +1231,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "kgs";
+      weightUnit = "kg";
     }
-
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -2617,19 +2659,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
     }
-  }
-
-  getBody(DevicesViewModel devicesmodel) {
-    return Column(
-      children: [
-        SizedBoxWidget(height: 5.0.h),
-        Container(child: getAddDeviceReadings()),
-        SizedBoxWidget(height: 5.0.h),
-        Expanded(
-          child: getValues(context, devicesmodel),
-        ),
-      ],
-    );
   }
 
   void commonMethodToSetPreference() async {

@@ -330,25 +330,26 @@ class HealthReportListForUserRepository {
   }
 
   Future<UpdateDeviceModel> updateDeviceModel(
-      userMappingId,
-      bool allowDigit,
-      bool allowDevice,
-      bool googleFit,
-      bool healthFit,
-      bool bpMonitor,
-      bool gluco,
-      bool pulseOximeter,
-      bool thermo,
-      bool weighScale,
-      String preferred_language,
-      String qa_subscription,
-      int priColor,
-      int greColor,
-      PreferredMeasurement preferredMeasurement,
-      List<Tags> tagsList,
-      bool allowAppointmentALert,
-      bool allowVitalALerts,
-      bool allowsymptomsAlert) async {
+    userMappingId,
+    bool allowDigit,
+    bool allowDevice,
+    bool googleFit,
+    bool healthFit,
+    bool bpMonitor,
+    bool gluco,
+    bool pulseOximeter,
+    bool thermo,
+    bool weighScale,
+    String preferred_language,
+    String qa_subscription,
+    int priColor,
+    int greColor,
+    List<Tags> tagsList,
+    bool allowAppointmentALert,
+    bool allowVitalALerts,
+    bool allowsymptomsAlert,
+    PreferredMeasurement preferredMeasurement,
+  ) async {
     var body = jsonEncode({
       'id': userMappingId,
       'profileSetting': {
@@ -367,6 +368,20 @@ class HealthReportListForUserRepository {
         'qa-subscription': qa_subscription,
         'preferred_measurement': preferredMeasurement,
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
+        'preferred_measurement': {
+          'height': {
+            'unitCode': preferredMeasurement.height.unitCode,
+            'unitName': preferredMeasurement.height.unitName
+          },
+          'weight': {
+            'unitCode': preferredMeasurement.weight.unitCode,
+            'unitName': preferredMeasurement.weight.unitName
+          },
+          'temperature': {
+            'unitCode': preferredMeasurement.temperature.unitCode,
+            'unitName': preferredMeasurement.temperature.unitName
+          },
+        },
         'caregiverCommunicationSetting': {
           "vitals": allowVitalALerts ?? true,
           "symptoms": allowsymptomsAlert ?? true,

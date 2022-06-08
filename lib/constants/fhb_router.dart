@@ -131,6 +131,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_chooseUnit: (BuildContext context) => ChooseUnit(),
     router.rt_ClaimResult: (BuildContext context) => ClaimList(),
     router.rt_ClaimCreate: (BuildContext context) => ClaimRecordCreate(),
+    router.rt_chooseUnit: (BuildContext context) => ChooseUnit(),
   };
 
   return fhbRouter;

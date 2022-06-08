@@ -210,7 +210,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Future<MyProfileModel> getMyProfile() async {
-    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     if (userId != null && userId.isNotEmpty) {
       await addFamilyUserInfoRepository
           .getMyProfileInfoNew(userId)
@@ -822,7 +822,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       } catch (e) {
         averageForTemp = '';
       }
-
       try {
         unitForTemp =
             deviceValues.bodyTemperature.entities[0].temperatureUnit != null
@@ -869,14 +868,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        try {
-          unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-              ? deviceValues.bodyWeight.entities[0].weightUnit.name
-              : '';
-        } catch (e) {
-          unitForWeight = '';
-        }
-      } catch (e) {}
+        unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+            ? deviceValues.bodyWeight.entities[0].weightUnit.name
+            : '';
+      } catch (e) {
+        unitForWeight = '';
+      }
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
@@ -2169,7 +2166,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                             '' &&
                                                                         averageForTemp !=
                                                                             null
-                                                                    ? unitForTemp
+                                                                    ? unitForTemp !=
+                                                                            null
+                                                                        ? unitForTemp
+                                                                            .capitalizeFirstofEach
+                                                                        : ''
                                                                     : '-',
                                                                 style:
                                                                     TextStyle(
@@ -2865,7 +2866,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     ? unitForWeight !=
                                                                             null
                                                                         ? unitForWeight
-                                                                            .capitalizeFirstofEach
+                                                                            ?.capitalizeFirstofEach
                                                                         : ''
                                                                     : '',
                                                                 style:

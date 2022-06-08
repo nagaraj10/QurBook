@@ -110,7 +110,7 @@ class HeaderRequest {
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersAuthAccept[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-    printWrapped(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
+    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
 
     return requestHeadersAuthAccept;
   }

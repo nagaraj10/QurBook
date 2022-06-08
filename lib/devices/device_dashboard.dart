@@ -60,7 +60,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   String deviceName = Constants.STR_WEIGHING_SCALE;
 
-  String errorMsg = '',errorMsgDia='',errorMsgSys='';
+  String errorMsg = '', errorMsgDia = '', errorMsgSys = '';
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   bool onOkClicked = false;
 
@@ -321,9 +321,10 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 deviceController, (errorValue) {
                               setState(() {
                                 errorMsgSys = errorValue;
-                                errorMsg=errorMsgSys;
+                                errorMsg = errorMsgSys;
                               });
-                            }, errorMsgSys, variable.strbpunit, deviceName,range: "Sys")
+                            }, errorMsgSys, variable.strbpunit, deviceName,
+                                range: "Sys")
                           ],
                         ),
                       )),
@@ -347,8 +348,10 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                   diaStolicPressure, (errorValue) {
                                 setState(() {
                                   errorMsgDia = errorValue;
-                                  errorMsg=errorMsgDia;                                });
-                              }, errorMsgDia, variable.strbpunit, deviceName,range:"Dia")
+                                  errorMsg = errorMsgDia;
+                                });
+                              }, errorMsgDia, variable.strbpunit, deviceName,
+                                  range: "Dia")
                             ],
                           )),
                       Expanded(
@@ -736,7 +739,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.tempUNIT, deviceName,range: "",device:"Temp")
+                      }, errorMsg, commonConstants.tempUNIT, deviceName,
+                          range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -833,7 +837,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName,range: ''),
+                      }, errorMsg, commonConstants.weightUNIT, deviceName,
+                          range: ''),
                     ],
                   ),
                 ],

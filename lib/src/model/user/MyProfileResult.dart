@@ -217,7 +217,6 @@ class AdditionalInfo {
   String visitReason;
   String patientHistory;
   HeightObj heightObj;
-
   String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfo(

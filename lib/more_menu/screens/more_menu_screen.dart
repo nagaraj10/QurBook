@@ -111,6 +111,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isIntegration = false;
   bool isColorPallete = false;
 
+  PreferredMeasurement preferredMeasurement;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -305,6 +307,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? Theme(
                 data: theme,
                 child: ExpansionTile(
+                  iconColor: Colors.black,
                   title: Text(variable.strCareGiverCommunication,
                       style: TextStyle(
                           fontWeight: FontWeight.w500, color: Colors.black)),
@@ -360,6 +363,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
           data: theme,
           child: ExpansionTile(
+              iconColor: Colors.black,
               title: Text(variable.strColorPalete,
                   style: TextStyle(
                       fontWeight: FontWeight.w500, color: Colors.black)),
@@ -583,6 +587,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ? getDeviceSelectionModel
             .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
+
+    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+            null
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -643,7 +652,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -785,6 +795,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
             data: theme,
             child: ExpansionTile(
+              iconColor: Colors.black,
               initiallyExpanded: isSkillIntegration,
               onExpansionChanged: (value) {
                 isSkillIntegration = value;
@@ -868,6 +879,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Theme(
                     data: theme,
                     child: ExpansionTile(
+                      iconColor: Colors.black,
                       initiallyExpanded: isIntegration,
                       onExpansionChanged: (value) {
                         isIntegration = value;
@@ -1009,6 +1021,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? Theme(
                 data: theme,
                 child: ExpansionTile(
+                  iconColor: Colors.black,
                   title: Text(variable.strCareGiverCommunication,
                       style: TextStyle(
                           fontWeight: FontWeight.w500, color: Colors.black)),
@@ -1062,6 +1075,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
             data: theme,
             child: ExpansionTile(
+              iconColor: Colors.black,
               initiallyExpanded: isVitalPreferences,
               title: Text(variable.strVitalsPreferences,
                   style: TextStyle(
@@ -1070,6 +1084,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Theme(
                   data: theme,
                   child: ExpansionTile(
+                    iconColor: Colors.black,
                     initiallyExpanded: isDisplayDevices,
                     onExpansionChanged: (value) {
                       isDisplayDevices = value;
@@ -1235,6 +1250,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
           data: theme,
           child: ExpansionTile(
+            iconColor: Colors.black,
             initiallyExpanded: isDisplayPreference,
             title: Text(variable.strDisplayPreferences,
                 style: TextStyle(
@@ -1276,6 +1292,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               Theme(
                 data: theme,
                 child: ExpansionTile(
+                    iconColor: Colors.black,
                     initiallyExpanded: isColorPallete,
                     onExpansionChanged: (value) {
                       isColorPallete = value;

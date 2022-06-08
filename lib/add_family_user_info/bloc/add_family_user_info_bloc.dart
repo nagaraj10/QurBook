@@ -132,11 +132,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   File profilePic, profileBanner;
   CreateDeviceSelectionModel createDeviceSelectionModel;
-  PreferredMeasurement preferredMeasurement;
-  List<Tags> tagsList = [];
+  List<Tags> tagsList = new List<Tags>();
+
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
+
+  PreferredMeasurement preferredMeasurement;
 
   @override
   void dispose() {
@@ -539,6 +541,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         ? getDeviceSelectionModel
             .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
+
+    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+            null
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -560,11 +567,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             qa_subscription,
             preColor,
             greColor,
-            preferredMeasurement,
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {

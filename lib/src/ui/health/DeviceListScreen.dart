@@ -407,12 +407,12 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   }
 
   getUnitForTemperature(String unit) {
-    if (unit.toLowerCase() == strParamUnitFarenheit.toLowerCase()) {
+    if (unit.toLowerCase().trim() == strParamUnitFarenheit.toLowerCase()) {
       return strParamUnitFarenheit;
-    } else if (unit.toLowerCase() ==
+    } else if (unit.toLowerCase().trim() ==
         CommonConstants.strTemperatureValue.toLowerCase()) {
       return strParamUnitFarenheit;
-    } else if (unit.toLowerCase() == "c".toLowerCase()) {
+    } else if (unit.toLowerCase().trim() == "c".toLowerCase()) {
       return strParamUnitCelsius;
     } else {
       return unit;

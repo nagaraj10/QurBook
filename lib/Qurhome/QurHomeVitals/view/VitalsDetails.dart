@@ -21,6 +21,7 @@ import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
@@ -45,6 +46,7 @@ import '../../../src/ui/bot/view/sheela_arguments.dart';
 import '../../../src/utils/FHBUtils.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'ButtonGroup.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 
 class VitalsDetails extends StatefulWidget {
   const VitalsDetails(
@@ -109,6 +111,9 @@ class _VitalsDetailsState extends State<VitalsDetails>
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
+  String tempUnit = 'c';
+  String weightUnit = 'kg';
+
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   @override
@@ -139,6 +144,18 @@ class _VitalsDetailsState extends State<VitalsDetails>
       });
     } catch (e) {
       print(e);
+    }
+
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "Kg";
+    }
+
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
     }
   }
 
@@ -749,14 +766,13 @@ class _VitalsDetailsState extends State<VitalsDetails>
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              CommonConstants.strTemperatureValue;
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -1177,6 +1193,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget getCardForThermometer(String deviceName) {
+    try {
+      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+    } catch (e) {
+      tempUnit = "F";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1259,12 +1280,13 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strTemperature,
-                          'F',
+                          tempUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, 'F', deviceName, range: "", device: "Temp")
+                      }, errorMsg, tempUnit, deviceName,
+                          range: "", device: "Temp")
                     ],
                   ),
                   Column(
@@ -1281,13 +1303,29 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       Container(
                         width: 50.0.w,
                         constraints: BoxConstraints(maxWidth: 100.0.w),
-                        child: Text(
-                          'F',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14.0.sp,
-                              color: Color(CommonConstants.ThermoDarkColor)),
-                          softWrap: true,
+                        child: InkWell(
+                          child: Text(
+                            tempUnit != null ? tempUnit : 'c',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.0.sp,
+                                color: Color(CommonConstants.ThermoDarkColor)),
+                            softWrap: true,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => ChooseUnit(),
+                              ),
+                            ).then(
+                              (value) {
+                                tempUnit = PreferenceUtil.getStringValue(
+                                    Constants.STR_KEY_TEMP);
+                                setState(() {});
+                              },
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -1428,6 +1466,11 @@ class _VitalsDetailsState extends State<VitalsDetails>
   }
 
   Widget getCardForWeighingScale(String deviceName) {
+    try {
+      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+    } catch (e) {
+      weightUnit = "kg";
+    }
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -1474,7 +1517,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   Column(
                     children: <Widget>[
                       Text(
-                        'Kg',
+                        weightUnit != null ? weightUnit : 'kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1484,12 +1527,12 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          commonConstants.weightUNIT,
+                          weightUnit,
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, commonConstants.weightUNIT, deviceName),
+                      }, errorMsg, weightUnit, deviceName),
                     ],
                   ),
                 ],
@@ -1988,7 +2031,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         '',
                         '',
                         getFormattedTime(translist[index].startDateTime),
-                        'F',
+                        tempUnit,
                         translist[index].deviceId);
                   },
                 )

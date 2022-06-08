@@ -59,7 +59,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
   HealthReportListForUserRepository healthReportListForUserRepository =
-  HealthReportListForUserRepository();
+      HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   UpdateDeviceModel updateDeviceModel;
@@ -69,9 +69,11 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   PreferredMeasurement preferredMeasurement;
   List<Tags> tagsList = new List<Tags>();
 
-  bool allowAppointmentNotification=true;
-  bool allowVitalNotification=true;
-  bool allowSymptomsNotification=true;
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
+
+  PreferredMeasurement preferredMeasurement;
 
   @override
   void initState() {
@@ -87,19 +89,19 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
     greColor = widget.greColor;
 
     _firstTym =
-    PreferenceUtil.getStringValue(Constants.isFirstTym) == variable.strFalse
-        ? false
-        : true;
+        PreferenceUtil.getStringValue(Constants.isFirstTym) == variable.strFalse
+            ? false
+            : true;
     _isHealthFirstTime =
-    PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
-        variable.strFalse
-        ? false
-        : true;
+        PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
+                variable.strFalse
+            ? false
+            : true;
 
     _isGFActive =
-    PreferenceUtil.getStringValue(Constants.activateGF) == variable.strFalse
-        ? false
-        : true;
+        PreferenceUtil.getStringValue(Constants.activateGF) == variable.strFalse
+            ? false
+            : true;
 
     if (_firstTym) {
       _firstTym = false;
@@ -120,14 +122,16 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Settings Screen',
       'screenSessionTime':
-      '${DateTime.now().difference(mInitialTime).inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
-    await healthReportListForUserRepository.getDeviceSelection(userIdFromBloc: userId).then((value) {
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
@@ -144,9 +148,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
-          allowAppointmentNotification=true;
-          allowSymptomsNotification=true;
-          allowVitalNotification=true;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -160,9 +164,9 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
-        allowAppointmentNotification=true;
-        allowSymptomsNotification=true;
-        allowVitalNotification=true;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
       }
     });
     return selectionResult;
@@ -172,21 +176,24 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
         .createDeviceSelection(
-        _isdigitRecognition,
-        _isdeviceRecognition,
-        _isGFActive,
-        _isHKActive,
-        _isBPActive,
-        _isGLActive,
-        _isOxyActive,
-        _isTHActive,
-        _isWSActive,
-        userId,
-        preferred_language,
-        qa_subscription,
-        priColor,
-        greColor,
-        tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            _isdigitRecognition,
+            _isdeviceRecognition,
+            _isGFActive,
+            _isHKActive,
+            _isBPActive,
+            _isGLActive,
+            _isOxyActive,
+            _isTHActive,
+            _isWSActive,
+            userId,
+            preferred_language,
+            qa_subscription,
+            priColor,
+            greColor,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification)
         .then((value) {
       Provider.of<LandingViewModel>(context, listen: false)
           .getQurPlanDashBoard();
@@ -206,21 +213,25 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   Future<UpdateDeviceModel> updateDeviceSelectionModel() async {
     await healthReportListForUserRepository
         .updateDeviceModel(
-        userMappingId,
-        _isdigitRecognition,
-        _isdeviceRecognition,
-        _isGFActive,
-        _isHKActive,
-        _isBPActive,
-        _isGLActive,
-        _isOxyActive,
-        _isTHActive,
-        _isWSActive,
-        preferred_language,
-        qa_subscription,
-        priColor,
-        greColor,preferredMeasurement,
-        tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            userMappingId,
+            _isdigitRecognition,
+            _isdeviceRecognition,
+            _isGFActive,
+            _isHKActive,
+            _isBPActive,
+            _isGLActive,
+            _isOxyActive,
+            _isTHActive,
+            _isWSActive,
+            preferred_language,
+            qa_subscription,
+            priColor,
+            greColor,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -232,22 +243,22 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Are you sure?'),
-        content: Text('Do you want to update the changes'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to update the changes'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => closeDialog(),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => createDeviceSelection(),
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          FlatButton(
-            onPressed: () => createDeviceSelection(),
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
@@ -260,17 +271,17 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
     setState(() {
       _deviceDataHelper = DeviceDataHelper();
       _isdeviceRecognition = getDeviceSelectionModel
-          .result[0].profileSetting.allowDevice !=
-          null &&
-          getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
+                      .result[0].profileSetting.allowDevice !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
           ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
           : true;
       _isdigitRecognition =
-      getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
-          getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
-          : true;
+          getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+              : true;
       /*_isGFActive =
           getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
                   getDeviceSelectionModel.result[0].profileSetting.googleFit !=
@@ -278,98 +289,111 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
               ? getDeviceSelectionModel.result[0].profileSetting.googleFit
               : false;*/
       _isHKActive =
-      getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
-          getDeviceSelectionModel.result[0].profileSetting.healthFit !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.healthFit
-          : false;
+          getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.healthFit !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+              : false;
       _isBPActive =
-      getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
-          getDeviceSelectionModel.result[0].profileSetting.bpMonitor !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
-          : true;
+          getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.bpMonitor !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+              : true;
       _isGLActive =
-      getDeviceSelectionModel.result[0].profileSetting.glucoMeter != null &&
-          getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
-          : true;
+          getDeviceSelectionModel.result[0].profileSetting.glucoMeter != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+              : true;
       _isOxyActive = getDeviceSelectionModel
-          .result[0].profileSetting.pulseOximeter !=
-          null &&
-          getDeviceSelectionModel.result[0].profileSetting.pulseOximeter !=
-              ''
+                      .result[0].profileSetting.pulseOximeter !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.pulseOximeter !=
+                  ''
           ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
           : true;
       _isWSActive =
-      getDeviceSelectionModel.result[0].profileSetting.weighScale != null &&
-          getDeviceSelectionModel.result[0].profileSetting.weighScale !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.weighScale
-          : true;
+          getDeviceSelectionModel.result[0].profileSetting.weighScale != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+              : true;
       _isTHActive = getDeviceSelectionModel
-          .result[0].profileSetting.thermoMeter !=
-          null &&
-          getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
+                      .result[0].profileSetting.thermoMeter !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
           ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
           : true;
 
       preferred_language = getDeviceSelectionModel
-          .result[0].profileSetting.preferred_language !=
-          null &&
-          getDeviceSelectionModel
-              .result[0].profileSetting.preferred_language !=
-              ''
+                      .result[0].profileSetting.preferred_language !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.preferred_language !=
+                  ''
           ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
           : 'undef';
 
       qa_subscription =
-      getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
-          null &&
-          getDeviceSelectionModel
-              .result[0].profileSetting.qa_subscription !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
-          : 'Y';
+          getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+                      null &&
+                  getDeviceSelectionModel
+                          .result[0].profileSetting.qa_subscription !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+              : 'Y';
 
       preferredMeasurement = getDeviceSelectionModel
-          .result[0].profileSetting.preferredMeasurement !=
-          null &&
-          getDeviceSelectionModel
-              .result[0].profileSetting.preferredMeasurement !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+                      .result[0].profileSetting.preferredMeasurement !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.preferredMeasurement !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.preferredMeasurement
           : null;
 
       tagsList = getDeviceSelectionModel.result[0].tags != null &&
-          getDeviceSelectionModel.result[0].tags.length > 0
+              getDeviceSelectionModel.result[0].tags.length > 0
           ? getDeviceSelectionModel.result[0].tags
           : new List();
 
-
-      allowAppointmentNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+      allowAppointmentNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel.result[0].profileSetting
+              .caregiverCommunicationSetting?.appointments
           : true;
 
-
-      allowVitalNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+      allowVitalNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.vitals
           : true;
 
-
-      allowSymptomsNotification =
-      getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-          getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-              ''
-          ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+      allowSymptomsNotification = getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  null &&
+              getDeviceSelectionModel
+                      .result[0].profileSetting.caregiverCommunicationSetting !=
+                  ''
+          ? getDeviceSelectionModel
+              .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
           : true;
+
+      preferredMeasurement =
+          getDeviceSelectionModel.result[0].profileSetting != null
+              ? getDeviceSelectionModel
+                  .result[0].profileSetting.preferredMeasurement
+              : null;
     });
   }
 
@@ -388,10 +412,13 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
         appBar: AppBar(
           centerTitle: false,
           titleSpacing: 0.0,
-          title:  Transform(
+          title: Transform(
             // you can forcefully translate values left side using Transform
-            transform:  Matrix4.translationValues(-20.0, 0.0, 0.0),
-            child: Text(Constants.careGiver,style: TextStyle(fontSize: 20.sp),),
+            transform: Matrix4.translationValues(-20.0, 0.0, 0.0),
+            child: Text(
+              Constants.careGiver,
+              style: TextStyle(fontSize: 20.sp),
+            ),
           ),
           leading: IconButton(
             icon: Icon(
@@ -414,17 +441,14 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                     color: Colors.white,
                     child: Column(
                       children: <Widget>[
-
                         ListTile(
-
                             title: Text(variable.strAllowVitals),
-
                             trailing: Transform.scale(
                               scale: 0.8,
                               child: Switch(
                                 value: allowVitalNotification,
                                 activeColor:
-                                Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
@@ -442,21 +466,17 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                           color: Colors.grey[200],
                         ),
                         ListTile(
-
                             title: Text(variable.strAllowSymptoms),
-
                             trailing: Transform.scale(
                               scale: 0.8,
                               child: Switch(
                                 value: allowSymptomsNotification,
                                 activeColor:
-                                Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
                                     allowSymptomsNotification = newValue;
-
-
                                   });
                                 },
                               ),
@@ -467,19 +487,16 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                         ),
                         ListTile(
                             title: Text(variable.strAllowAppointments),
-
                             trailing: Transform.scale(
                               scale: 0.8,
                               child: Switch(
                                 value: allowAppointmentNotification,
                                 activeColor:
-                                Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
                                     isTouched = true;
                                     allowAppointmentNotification = newValue;
-
-
                                   });
                                 },
                               ),
@@ -488,7 +505,6 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
                           height: 1,
                           color: Colors.grey[200],
                         ),
-
                       ],
                     ),
                   )
