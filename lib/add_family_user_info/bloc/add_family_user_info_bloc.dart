@@ -130,12 +130,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   File profilePic, profileBanner;
   CreateDeviceSelectionModel createDeviceSelectionModel;
-  List<Tags> tagsList =
-  new List<Tags>();
+  List<Tags> tagsList = new List<Tags>();
 
-  bool allowAppointmentNotification=true;
-  bool allowVitalNotification=true;
-  bool allowSymptomsNotification=true;
+  bool allowAppointmentNotification = true;
+  bool allowVitalNotification = true;
+  bool allowSymptomsNotification = true;
+
+  PreferredMeasurement preferredMeasurement;
 
   @override
   void dispose() {
@@ -191,7 +192,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     return myProfile;
   }
-  
 
   Future<UpdateAddFamilyInfo> updateUserProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatingProfile));
@@ -334,8 +334,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           setValues(selectionResult);
           userMappingId = selectionResult.result[0].id;
           getMyProfileInfo();
-        }
-        else {
+        } else {
           userMappingId = '';
           _isdeviceRecognition = true;
           _isHKActive = false;
@@ -346,9 +345,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           _isTHActive = true;
           _isWSActive = true;
           _isHealthFirstTime = false;
-          allowAppointmentNotification=true;
-          allowSymptomsNotification=true;
-          allowVitalNotification=true;
+          allowAppointmentNotification = true;
+          allowSymptomsNotification = true;
+          allowVitalNotification = true;
         }
       } else {
         userMappingId = '';
@@ -362,9 +361,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         _isTHActive = true;
         _isWSActive = true;
         _isHealthFirstTime = false;
-        allowAppointmentNotification=true;
-        allowSymptomsNotification=true;
-        allowVitalNotification=true;
+        allowAppointmentNotification = true;
+        allowSymptomsNotification = true;
+        allowVitalNotification = true;
 
         healthReportListForUserRepository
             .createDeviceSelection(
@@ -381,7 +380,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                 preferred_language,
                 qa_subscription,
                 preColor,
-                greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                greColor,
+                tagsList,
+                allowAppointmentNotification,
+                allowVitalNotification,
+                allowSymptomsNotification)
             .then((value) {
           createDeviceSelectionModel = value;
           if (createDeviceSelectionModel?.isSuccess ?? false) {
@@ -403,7 +406,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                     preferred_language,
                     qa_subscription,
                     preColor,
-                    greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                    greColor,
+                    tagsList,
+                    allowAppointmentNotification,
+                    allowVitalNotification,
+                    allowSymptomsNotification)
                 .then((value) {
               createDeviceSelectionModel = value;
               if (createDeviceSelectionModel.isSuccess) {
@@ -483,39 +490,51 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
         : 'Y';
 
-    tagsList=getDeviceSelectionModel
-        .result[0].tags!=null && getDeviceSelectionModel
-        .result[0].tags.length>0?getDeviceSelectionModel
-        .result[0].tags:new List();
+    tagsList = getDeviceSelectionModel.result[0].tags != null &&
+            getDeviceSelectionModel.result[0].tags.length > 0
+        ? getDeviceSelectionModel.result[0].tags
+        : new List();
 
-    if(tagsList.length>0){
-      for(Tags tags in tagsList){
-        tags.isChecked=true;
+    if (tagsList.length > 0) {
+      for (Tags tags in tagsList) {
+        tags.isChecked = true;
       }
     }
 
-    allowAppointmentNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.appointments
+    allowAppointmentNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel.result[0].profileSetting
+            .caregiverCommunicationSetting?.appointments
         : true;
 
-
-    allowVitalNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.vitals
+    allowVitalNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.vitals
         : true;
 
-
-    allowSymptomsNotification =
-    getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting != null &&
-        getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting !=
-            ''
-        ? getDeviceSelectionModel.result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+    allowSymptomsNotification = getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                null &&
+            getDeviceSelectionModel
+                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                ''
+        ? getDeviceSelectionModel
+            .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
+
+    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+            null
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel(
@@ -536,7 +555,12 @@ class AddFamilyUserInfoBloc extends BaseBloc {
             preferredLanguage ?? preferred_language,
             qa_subscription,
             preColor,
-            greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+            greColor,
+            tagsList,
+            allowAppointmentNotification,
+            allowVitalNotification,
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then(
       (value) {
         if (value?.isSuccess ?? false) {
@@ -558,7 +582,11 @@ class AddFamilyUserInfoBloc extends BaseBloc {
                   preferred_language,
                   qa_subscription,
                   preColor,
-                  greColor,tagsList,allowAppointmentNotification,allowVitalNotification,allowSymptomsNotification)
+                  greColor,
+                  tagsList,
+                  allowAppointmentNotification,
+                  allowVitalNotification,
+                  allowSymptomsNotification)
               .then((value) {
             createDeviceSelectionModel = value;
             if (createDeviceSelectionModel.isSuccess) {

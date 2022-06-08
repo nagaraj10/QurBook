@@ -753,6 +753,7 @@ const String strAlert = 'Alert';
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
 
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');

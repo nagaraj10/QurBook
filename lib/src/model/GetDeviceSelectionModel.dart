@@ -104,7 +104,7 @@ class ProfileSetting {
   int greColor;
   String preferred_language;
   String qa_subscription;
-    PreferredMeasurement preferredMeasurement;
+  PreferredMeasurement preferredMeasurement;
 
   CaregiverCommunicationSetting caregiverCommunicationSetting;
 
@@ -121,9 +121,9 @@ class ProfileSetting {
       this.preColor,
       this.greColor,
       this.preferred_language,
-      this.qa_subscription,      this.preferredMeasurement,
-
-      this.caregiverCommunicationSetting});
+      this.qa_subscription,
+      this.caregiverCommunicationSetting,
+      this.preferredMeasurement});
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -150,6 +150,12 @@ class ProfileSetting {
                   json['caregiverCommunicationSetting'])
               : null;
     }
+
+    if (json.containsKey('preferred_measurement')) {
+      preferredMeasurement = json['preferred_measurement'] != null
+          ? new PreferredMeasurement.fromJson(json['preferred_measurement'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -171,6 +177,9 @@ class ProfileSetting {
     if (this.caregiverCommunicationSetting != null) {
       data['caregiverCommunicationSetting'] =
           this.caregiverCommunicationSetting.toJson();
+    }
+    if (this.preferredMeasurement != null) {
+      data['preferred_measurement'] = this.preferredMeasurement.toJson();
     }
     return data;
   }
@@ -223,5 +232,6 @@ class Height {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['unitCode'] = this.unitCode;
     data['unitName'] = this.unitName;
+    return data;
   }
 }
