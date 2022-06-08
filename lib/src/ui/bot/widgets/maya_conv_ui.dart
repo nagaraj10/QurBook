@@ -136,7 +136,7 @@ class MayaConvUI extends StatelessWidget {
           child: Column(
             crossAxisAlignment: PreferenceUtil.getIfQurhomeisAcive()
                 ? CrossAxisAlignment.start
-                : CrossAxisAlignment.center,
+                : CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 c.text,
