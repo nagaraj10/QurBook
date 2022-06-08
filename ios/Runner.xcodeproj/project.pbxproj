@@ -12,6 +12,7 @@
 		54306596271580D00009B704 /* SheelaAIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54306594271580D00009B704 /* SheelaAIVC.swift */; };
 		54306597271580D00009B704 /* SheelaAI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 54306595271580D00009B704 /* SheelaAI.storyboard */; };
 		547B842928507FAE0077D226 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 547B842828507FAE0077D226 /* GoogleService-Info.plist */; };
+		548BF2A928508EFB0058008B /* beep_beep.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 548BF2A828508EFB0058008B /* beep_beep.aiff */; };
 		54952BF22834E7C600F8C975 /* ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54952BF12834E7C600F8C975 /* ext.swift */; };
 		54C199542848805100BC3B10 /* OHQState.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1993D2848805100BC3B10 /* OHQState.m */; };
 		54C199552848805100BC3B10 /* OHQStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C1993E2848805100BC3B10 /* OHQStateMachine.m */; };
@@ -114,6 +115,7 @@
 		54306594271580D00009B704 /* SheelaAIVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheelaAIVC.swift; sourceTree = "<group>"; };
 		54306595271580D00009B704 /* SheelaAI.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SheelaAI.storyboard; sourceTree = "<group>"; };
 		547B842828507FAE0077D226 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		548BF2A828508EFB0058008B /* beep_beep.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = beep_beep.aiff; sourceTree = "<group>"; };
 		54952BF12834E7C600F8C975 /* ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ext.swift; sourceTree = "<group>"; };
 		54C1993D2848805100BC3B10 /* OHQState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQState.m; sourceTree = "<group>"; };
 		54C1993E2848805100BC3B10 /* OHQStateMachine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OHQStateMachine.m; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 			isa = PBXGroup;
 			children = (
 				547B842828507FAE0077D226 /* GoogleService-Info.plist */,
+				548BF2A828508EFB0058008B /* beep_beep.aiff */,
 				54C1993B2848805100BC3B10 /* OHQReferenceCode */,
 				54306593271580D00009B704 /* SheelaAI */,
 				9C07AB2A24F393EA00DCE725 /* AppDelegate */,
@@ -568,6 +571,7 @@
 				54C199592848805100BC3B10 /* CompanyNames.plist in Resources */,
 				9C94B21E24EEB1AA00DAF4D0 /* ringtone.aiff in Resources */,
 				9C50E05124E5381500CC5B0E /* iPHONE RINGTONE.aiff in Resources */,
+				548BF2A928508EFB0058008B /* beep_beep.aiff in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				54C199572848805100BC3B10 /* UUIDDescriptions.plist in Resources */,

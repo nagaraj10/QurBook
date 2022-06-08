@@ -24,8 +24,8 @@ class MayaConvUI extends StatelessWidget {
 
   Widget buttonWidgets(BuildContext context) {
     if (c?.buttons != null && (c?.buttons?.length ?? 0) > 0) {
-      return Wrap(
-        spacing: 10,
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: c.buttons
             .map(
               (buttonData) => InkWell(
@@ -100,8 +100,8 @@ class MayaConvUI extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
+                      horizontal: 18,
+                      vertical: 10,
                     ),
                     child: Text(
                       buttonData.title,
