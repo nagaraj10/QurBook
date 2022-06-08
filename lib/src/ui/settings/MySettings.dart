@@ -69,6 +69,8 @@ class _MySettingsState extends State<MySettings> {
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
 
+  PreferredMeasurement preferredMeasurement;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -220,7 +222,8 @@ class _MySettingsState extends State<MySettings> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -385,6 +388,12 @@ class _MySettingsState extends State<MySettings> {
           ? getDeviceSelectionModel
               .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
           : true;
+
+      preferredMeasurement =
+          getDeviceSelectionModel.result[0].profileSetting != null
+              ? getDeviceSelectionModel
+                  .result[0].profileSetting.preferredMeasurement
+              : null;
     });
   }
 

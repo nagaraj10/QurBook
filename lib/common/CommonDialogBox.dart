@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import 'CommonConstants.dart';
 import 'CommonUtil.dart';
 import 'FHBBasicWidget.dart';
@@ -85,7 +86,7 @@ class CommonDialogBox {
   MediaResult mediaDataObj = MediaResult();
   File imageFile;
   final HealthReportListForUserBlock _healthReportListForUserBlock =
-  HealthReportListForUserBlock();
+      HealthReportListForUserBlock();
 
   List<String> imagePathMain = List();
 
@@ -125,6 +126,10 @@ class CommonDialogBox {
   bool showDoctorList = true;
   bool showHospitalList = true;
 
+  String tempUnit = "F";
+  String weightMainUnit = "Kg";
+  String heightUnit = "feet";
+
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
       TextEditingController hospitalNameClone,
@@ -145,7 +150,8 @@ class CommonDialogBox {
       containsAudioMain = containsAudio;
 
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
-      _medicalhospitalPreferenceList =_providersBloc.getMedicalPreferencesForHospital();
+      _medicalhospitalPreferenceList =
+          _providersBloc.getMedicalPreferencesForHospital();
 
       if (mediaMetaInfo != null) {
         deviceHealthResult = mediaMetaInfo;
@@ -226,35 +232,35 @@ class CommonDialogBox {
                             height: 50,
                             child: doctorsListFromProvider != null
                                 ? getDoctorDropDown(
-                              doctorsListFromProvider,
-                              doctorObj,
-                                  () {
-                                Navigator.pop(context);
-                                moveToSearchScreen(
-                                    context,
-                                    CommonConstants.keyDoctor,
-                                    doctor,
-                                    hospital,
-                                    null,
-                                    updateUI,
-                                    audioPath,
-                                    containsAudio,
-                                    setState: setState);
-                              },
-                            )
+                                    doctorsListFromProvider,
+                                    doctorObj,
+                                    () {
+                                      Navigator.pop(context);
+                                      moveToSearchScreen(
+                                          context,
+                                          CommonConstants.keyDoctor,
+                                          doctor,
+                                          hospital,
+                                          null,
+                                          updateUI,
+                                          audioPath,
+                                          containsAudio,
+                                          setState: setState);
+                                    },
+                                  )
                                 : getAllCustomRoles(doctorObj, () {
-                              Navigator.pop(context);
-                              moveToSearchScreen(
-                                  context,
-                                  CommonConstants.keyDoctor,
-                                  doctor,
-                                  hospital,
-                                  null,
-                                  updateUI,
-                                  audioPath,
-                                  containsAudio,
-                                  setState: setState);
-                            }),
+                                    Navigator.pop(context);
+                                    moveToSearchScreen(
+                                        context,
+                                        CommonConstants.keyDoctor,
+                                        doctor,
+                                        hospital,
+                                        null,
+                                        updateUI,
+                                        audioPath,
+                                        containsAudio,
+                                        setState: setState);
+                                  }),
                           )
                         else
                           Container(),
@@ -285,35 +291,35 @@ class CommonDialogBox {
                             height: 50,
                             child: hospitalListFromProvider != null
                                 ? getHospitalDropDown(
-                              hospitalListFromProvider,
-                              hospitalObj,
-                                  () {
-                                Navigator.pop(context);
-                                moveToSearchScreen(
-                                    context,
-                                    CommonConstants.keyHospital,
-                                    doctor,
-                                    hospital,
-                                    null,
-                                    updateUI,
-                                    audioPath,
-                                    containsAudio,
-                                    setState: setState);
-                              },
-                            )
+                                    hospitalListFromProvider,
+                                    hospitalObj,
+                                    () {
+                                      Navigator.pop(context);
+                                      moveToSearchScreen(
+                                          context,
+                                          CommonConstants.keyHospital,
+                                          doctor,
+                                          hospital,
+                                          null,
+                                          updateUI,
+                                          audioPath,
+                                          containsAudio,
+                                          setState: setState);
+                                    },
+                                  )
                                 : getAllHospitalRoles(hospitalObj, () {
-                              Navigator.pop(context);
-                              moveToSearchScreen(
-                                  context,
-                                  CommonConstants.keyHospital,
-                                  doctor,
-                                  hospital,
-                                  null,
-                                  updateUI,
-                                  audioPath,
-                                  containsAudio,
-                                  setState: setState);
-                            }),
+                                    Navigator.pop(context);
+                                    moveToSearchScreen(
+                                        context,
+                                        CommonConstants.keyHospital,
+                                        doctor,
+                                        hospital,
+                                        null,
+                                        updateUI,
+                                        audioPath,
+                                        containsAudio,
+                                        setState: setState);
+                                  }),
                           )
                         else
                           Container(),
@@ -359,35 +365,35 @@ class CommonDialogBox {
             else
               containsAudioMain
                   ? fhbBasicWidget.getAudioIconWithFile(
-                  audioPathMain,
-                  containsAudioMain,
+                      audioPathMain,
+                      containsAudioMain,
                       (containsAudio, audioPath) {
-                    audioPathMain = audioPath;
-                    containsAudioMain = containsAudio;
-                    updateAudioUI(containsAudioMain, audioPathMain);
-                    setState(() {});
-                  },
-                  context,
-                  imagePath,
-                      (context, imagePath) {
-                    onPostDataToServer(context, imagePath);
-                  })
-                  : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  fhbBasicWidget
-                      .getMicIcon(context, containsAudio, audioPath,
-                          (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         updateAudioUI(containsAudioMain, audioPathMain);
                         setState(() {});
-                      }),
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                ],
-              ),
+                      },
+                      context,
+                      imagePath,
+                      (context, imagePath) {
+                        onPostDataToServer(context, imagePath);
+                      })
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, imagePath);
+                        })
+                      ],
+                    ),
           ],
         ),
       );
@@ -485,16 +491,16 @@ class CommonDialogBox {
                     fhbBasicWidget
                         .getTextFieldForDialogWithControllerAndPressed(context,
                             (context, value) {
-                          moveToSearchScreen(
-                              context,
-                              CommonConstants.keyLab,
-                              doctor,
-                              null,
-                              lab,
-                              updateUI,
-                              audioPath,
-                              containsAudio);
-                        }, lab, CommonConstants.keyLab),
+                      moveToSearchScreen(
+                          context,
+                          CommonConstants.keyLab,
+                          doctor,
+                          null,
+                          lab,
+                          updateUI,
+                          audioPath,
+                          containsAudio);
+                    }, lab, CommonConstants.keyLab),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -513,35 +519,35 @@ class CommonDialogBox {
                             height: 50,
                             child: doctorsListFromProvider != null
                                 ? getDoctorDropDown(
-                              doctorsListFromProvider,
-                              doctorObj,
-                                  () {
-                                Navigator.pop(context);
-                                moveToSearchScreen(
-                                    context,
-                                    CommonConstants.keyDoctor,
-                                    doctor,
-                                    hospital,
-                                    null,
-                                    updateUI,
-                                    audioPath,
-                                    containsAudio,
-                                    setState: setState);
-                              },
-                            )
+                                    doctorsListFromProvider,
+                                    doctorObj,
+                                    () {
+                                      Navigator.pop(context);
+                                      moveToSearchScreen(
+                                          context,
+                                          CommonConstants.keyDoctor,
+                                          doctor,
+                                          hospital,
+                                          null,
+                                          updateUI,
+                                          audioPath,
+                                          containsAudio,
+                                          setState: setState);
+                                    },
+                                  )
                                 : getAllCustomRoles(doctorObj, () {
-                              Navigator.pop(context);
-                              moveToSearchScreen(
-                                  context,
-                                  CommonConstants.keyDoctor,
-                                  doctor,
-                                  hospital,
-                                  null,
-                                  updateUI,
-                                  audioPath,
-                                  containsAudio,
-                                  setState: setState);
-                            }),
+                                    Navigator.pop(context);
+                                    moveToSearchScreen(
+                                        context,
+                                        CommonConstants.keyDoctor,
+                                        doctor,
+                                        hospital,
+                                        null,
+                                        updateUI,
+                                        audioPath,
+                                        containsAudio,
+                                        setState: setState);
+                                  }),
                           )
                         else
                           Container(),
@@ -566,7 +572,8 @@ class CommonDialogBox {
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFieldWithNoCallbacks(
-                        context, memoController,isFileField:true),
+                        context, memoController,
+                        isFileField: true),
                     SizedBox(
                       height: 15.0.h,
                     ),
@@ -576,33 +583,33 @@ class CommonDialogBox {
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
-              onPostDataToServer(context, imagePath);
-            })
+                    onPostDataToServer(context, imagePath);
+                  })
                 : containsAudioMain
-                ? fhbBasicWidget
-                .getAudioIconWithFile(audioPathMain, containsAudioMain,
-                    (containsAudio, audioPath) {
-                  audioPathMain = audioPath;
-                  containsAudioMain = containsAudio;
-                  updateAudioUI(containsAudioMain, audioPathMain);
-                  setState(() {});
-                }, context, imagePath, onPostDataToServer)
-                : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                fhbBasicWidget
-                    .getMicIcon(context, containsAudio, audioPath,
-                        (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
-                      updateAudioUI(containsAudioMain, audioPathMain);
-                      setState(() {});
-                    }),
-                fhbBasicWidget.getSaveButton(() {
-                  onPostDataToServer(context, imagePath);
-                })
-              ],
-            ),
+                    ? fhbBasicWidget
+                        .getAudioIconWithFile(audioPathMain, containsAudioMain,
+                            (containsAudio, audioPath) {
+                        audioPathMain = audioPath;
+                        containsAudioMain = containsAudio;
+                        updateAudioUI(containsAudioMain, audioPathMain);
+                        setState(() {});
+                      }, context, imagePath, onPostDataToServer)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
           ],
         ),
       );
@@ -663,30 +670,31 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                if (modeOfSave)
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                else
-                  containsAudioMain
-                      ? fhbBasicWidget.getAudioIconWithFile(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            if (modeOfSave)
+              fhbBasicWidget.getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            else
+              containsAudioMain
+                  ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
-                          (containsAudio, audioPath) {
+                      (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         updateAudioUI(containsAudioMain, audioPathMain);
@@ -694,27 +702,27 @@ class CommonDialogBox {
                       },
                       context,
                       imagePath,
-                          (context, imagePath) {
+                      (context, imagePath) {
                         onPostDataToServer(context, imagePath);
                       })
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      fhbBasicWidget
-                          .getMicIcon(context, containsAudio, audioPath,
-                              (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            updateAudioUI(containsAudioMain, audioPathMain);
-                            setState(() {});
-                          }),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer(context, imagePath);
-                      })
-                    ],
-                  ),
-              ],
-            )),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, imagePath);
+                        })
+                      ],
+                    ),
+          ],
+        )),
       );
     });
 
@@ -803,97 +811,98 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                Container(
-                    width: 1.sw - 60,
-                    child: GestureDetector(
-                        onTap: () => _selectDate(context, dateOfVisit),
-                        child: TextField(
-                          readOnly: true,
-                          controller: dateOfVisit,
-                          decoration: InputDecoration(
-                              labelText: CommonConstants.exprityDate,
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.calendar_today,
-                                  size: 24.0.sp,
-                                ),
-                                onPressed: () =>
-                                    _selectDateFuture(context, dateOfVisit),
-                              )),
-                        ))),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                Center(
-                  child: DropdownButton(
-                    hint: Text('Select ID Type'),
-                    value: selectedMediaData,
-                    onChanged: (newValue) {
-                      setState(() {
-                        selectedMediaData = newValue;
-                        PreferenceUtil.saveMediaData(
-                            Constants.KEY_MEDIADATA, selectedMediaData);
-                      });
-                    },
-                    items: mediaDataAry.map((idType) {
-                      return DropdownMenuItem(
-                        value: idType,
-                        child: new Text(
-                          idType.name,
-                          style: new TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                modeOfSave
-                    ? fhbBasicWidget.getSaveButton(() {
-                  onPostDataToServer(context, imagePath);
-                })
-                    : containsAudioMain
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            Container(
+                width: 1.sw - 60,
+                child: GestureDetector(
+                    onTap: () => _selectDate(context, dateOfVisit),
+                    child: TextField(
+                      readOnly: true,
+                      controller: dateOfVisit,
+                      decoration: InputDecoration(
+                          labelText: CommonConstants.exprityDate,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.calendar_today,
+                              size: 24.0.sp,
+                            ),
+                            onPressed: () =>
+                                _selectDateFuture(context, dateOfVisit),
+                          )),
+                    ))),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            Center(
+              child: DropdownButton(
+                hint: Text('Select ID Type'),
+                value: selectedMediaData,
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedMediaData = newValue;
+                    PreferenceUtil.saveMediaData(
+                        Constants.KEY_MEDIADATA, selectedMediaData);
+                  });
+                },
+                items: mediaDataAry.map((idType) {
+                  return DropdownMenuItem(
+                    value: idType,
+                    child: new Text(
+                      idType.name,
+                      style: new TextStyle(color: Colors.black),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            modeOfSave
+                ? fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                : containsAudioMain
                     ? fhbBasicWidget
-                    .getAudioIconWithFile(audioPathMain, containsAudioMain,
-                        (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
-                      updateAudioUI(containsAudioMain, audioPathMain);
-                      setState(() {});
-                    }, context, imagePath, onPostDataToServer)
-                    : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    fhbBasicWidget
-                        .getMicIcon(context, containsAudio, audioPath,
+                        .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
-                          audioPathMain = audioPath;
-                          containsAudioMain = containsAudio;
-                          updateAudioUI(containsAudioMain, audioPathMain);
-                          setState(() {});
-                        }),
-                    fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePath);
-                    })
-                  ],
-                ),
-              ],
-            )),
+                        audioPathMain = audioPath;
+                        containsAudioMain = containsAudio;
+                        updateAudioUI(containsAudioMain, audioPathMain);
+                        setState(() {});
+                      }, context, imagePath, onPostDataToServer)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+          ],
+        )),
       );
     });
 
@@ -941,7 +950,7 @@ class CommonDialogBox {
     final dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -960,85 +969,86 @@ class CommonDialogBox {
           ),
           content: SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  fhbBasicWidget.getTextForAlertDialog(
-                      context, CommonConstants.strFileName),
-                  fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                  SizedBox(
-                    height: 15.0.h,
-                  ),
-                  fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                      context,
-                      CommonConstants.strValue,
-                      commonConstants.glucometerUNIT,
-                      deviceController, (errorValue) {
-                    setState(() {
-                      errGluco = errorValue;
-                    });
-                  }, errGluco, variable.strGlucUnit,
-                      range: isSelected[0] == true ? 'Fast' : 'PP'),
-                  SizedBox(
-                    height: 15.0.h,
-                  ),
-                  fhbBasicWidget.getTextForAlertDialog(
-                      context, CommonConstants.strMemo),
-                  fhbBasicWidget.getTextFieldWithNoCallbacks(
-                      context, memoController,isFileField:true),
-                  SizedBox(
-                    height: 15.0.h,
-                  ),
-                  fhbBasicWidget.getTextForAlertDialog(
-                      context, CommonConstants.strTimeTaken),
-                  ToggleButtons(
-                    borderColor: Colors.black,
-                    fillColor: Colors.grey[100],
-                    borderWidth: 2,
-                    selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
-                    selectedColor: Color(CommonUtil().getMyPrimaryColor()),
-                    borderRadius: BorderRadius.circular(10),
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          variable.strbfood,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                          ),
-                        ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              fhbBasicWidget.getTextForAlertDialog(
+                  context, CommonConstants.strFileName),
+              fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+              SizedBox(
+                height: 15.0.h,
+              ),
+              fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                  context,
+                  CommonConstants.strValue,
+                  commonConstants.glucometerUNIT,
+                  deviceController, (errorValue) {
+                setState(() {
+                  errGluco = errorValue;
+                });
+              }, errGluco, variable.strGlucUnit,
+                  range: isSelected[0] == true ? 'Fast' : 'PP'),
+              SizedBox(
+                height: 15.0.h,
+              ),
+              fhbBasicWidget.getTextForAlertDialog(
+                  context, CommonConstants.strMemo),
+              fhbBasicWidget.getTextFieldWithNoCallbacks(
+                  context, memoController,
+                  isFileField: true),
+              SizedBox(
+                height: 15.0.h,
+              ),
+              fhbBasicWidget.getTextForAlertDialog(
+                  context, CommonConstants.strTimeTaken),
+              ToggleButtons(
+                borderColor: Colors.black,
+                fillColor: Colors.grey[100],
+                borderWidth: 2,
+                selectedBorderColor: Color(CommonUtil().getMyPrimaryColor()),
+                selectedColor: Color(CommonUtil().getMyPrimaryColor()),
+                borderRadius: BorderRadius.circular(10),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      variable.strbfood,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          variable.strafood,
-                          style: TextStyle(
-                            fontSize: 16.0.sp,
-                          ),
-                        ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
+                      variable.strafood,
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
                       ),
-                    ],
-                    onPressed: (index) {
-                      setState(() {
-                        for (var i = 0; i < isSelected.length; i++) {
-                          isSelected[i] = i == index;
-                        }
-                      });
-                    },
-                    isSelected: isSelected,
+                    ),
                   ),
-                  SizedBox(
-                    height: 15.0.h,
-                  ),
-                  if (modeOfSave)
-                    fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePath);
-                    })
-                  else
-                    containsAudioMain
-                        ? fhbBasicWidget.getAudioIconWithFile(
+                ],
+                onPressed: (index) {
+                  setState(() {
+                    for (var i = 0; i < isSelected.length; i++) {
+                      isSelected[i] = i == index;
+                    }
+                  });
+                },
+                isSelected: isSelected,
+              ),
+              SizedBox(
+                height: 15.0.h,
+              ),
+              if (modeOfSave)
+                fhbBasicWidget.getSaveButton(() {
+                  onPostDataToServer(context, imagePath);
+                })
+              else
+                containsAudioMain
+                    ? fhbBasicWidget.getAudioIconWithFile(
                         audioPathMain,
                         containsAudioMain,
-                            (containsAudio, audioPath) {
+                        (containsAudio, audioPath) {
                           audioPathMain = audioPath;
                           containsAudioMain = containsAudio;
                           updateAudioUI(containsAudioMain, audioPathMain);
@@ -1046,27 +1056,27 @@ class CommonDialogBox {
                         },
                         context,
                         imagePath,
-                            (context, imagePath) {
+                        (context, imagePath) {
                           onPostDataToServer(context, imagePath);
                         })
-                        : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        fhbBasicWidget
-                            .getMicIcon(context, containsAudio, audioPath,
-                                (containsAudio, audioPath) {
-                              audioPathMain = audioPath;
-                              containsAudioMain = containsAudio;
-                              updateAudioUI(containsAudioMain, audioPathMain);
-                              setState(() {});
-                            }),
-                        fhbBasicWidget.getSaveButton(() {
-                          onPostDataToServer(context, imagePath);
-                        })
-                      ],
-                    ),
-                ],
-              )));
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+            ],
+          )));
     });
 
     return showDialog(
@@ -1086,13 +1096,20 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone,
+      {String tempMainUnit,
+      Function(String) updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
       if (mediaMetaInfoClone != null) {
         metaInfoId = mediaMetaInfoClone.id;
       }
+    }
+    if (tempMainUnit == null) {
+      tempMainUnit = "F";
+    } else {
+      tempUnit = tempMainUnit;
     }
     modeOfSave = modeOfSaveClone;
     setFileName(fileNameClone.text, mediaMetaInfoClone);
@@ -1128,42 +1145,73 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            Row(
               children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strTemperature,
-                    commonConstants.tempUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errTemp = errorValue;
-                  });
-                }, errTemp, commonConstants.tempUNIT, range: "", device: "Temp"),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                if (modeOfSave)
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                else
-                  containsAudioMain
-                      ? fhbBasicWidget.getAudioIconWithFile(
+                Expanded(
+                    flex: 2,
+                    child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                        context,
+                        CommonConstants.strTemperature,
+                        tempMainUnit,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errTemp = errorValue;
+                      });
+                    }, errTemp, tempMainUnit,
+                        range: "", device: "Temp", showLabel: false)),
+                SizedBox(width: 20),
+                Container(
+                    width: 50,
+                    child: GestureDetector(
+                      child: fhbBasicWidget.getTextForAlertDialog(
+                          context, tempMainUnit),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ChooseUnit(),
+                          ),
+                        ).then(
+                          (value) {
+                            tempMainUnit = PreferenceUtil.getStringValue(
+                                Constants.STR_KEY_TEMP);
+                            updateUnit(tempMainUnit);
+                            tempUnit = tempMainUnit;
+                            setState(() {});
+                          },
+                        );
+                      },
+                    ))
+              ],
+            ),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            if (modeOfSave)
+              fhbBasicWidget.getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            else
+              containsAudioMain
+                  ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
-                          (containsAudio, audioPath) {
+                      (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         updateAudioUI(containsAudioMain, audioPathMain);
@@ -1171,27 +1219,27 @@ class CommonDialogBox {
                       },
                       context,
                       imagePath,
-                          (context, imagePath) {
+                      (context, imagePath) {
                         onPostDataToServer(context, imagePath);
                       })
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      fhbBasicWidget
-                          .getMicIcon(context, containsAudio, audioPath,
-                              (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            updateAudioUI(containsAudioMain, audioPathMain);
-                            setState(() {});
-                          }),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer(context, imagePath);
-                      })
-                    ],
-                  ),
-              ],
-            )),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, imagePath);
+                        })
+                      ],
+                    ),
+          ],
+        )),
       );
     });
 
@@ -1248,7 +1296,9 @@ class CommonDialogBox {
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone,
+      {String weightUnit,
+      Function(String) updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1263,6 +1313,12 @@ class CommonDialogBox {
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
+
+    if (weightUnit == null) {
+      weightUnit = "kgs";
+    } else {
+      weightMainUnit = weightUnit;
+    }
 
     if (modeOfSave) {
       deviceHealthResult = mediaMetaInfoClone;
@@ -1291,42 +1347,72 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            Row(
               children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strWeight,
-                    commonConstants.weightUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errWeight = errorValue;
-                  });
-                }, errWeight, commonConstants.weightUNIT, range: ""),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                if (modeOfSave)
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                else
-                  containsAudioMain
-                      ? fhbBasicWidget.getAudioIconWithFile(
+                Expanded(
+                    flex: 2,
+                    child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                        context,
+                        CommonConstants.strWeight,
+                        weightUnit,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errWeight = errorValue;
+                      });
+                    }, errWeight, weightUnit, range: "", showLabel: false)),
+                SizedBox(width: 20),
+                Container(
+                    width: 50,
+                    child: GestureDetector(
+                      child: fhbBasicWidget.getTextForAlertDialog(
+                          context, weightUnit),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => ChooseUnit(),
+                          ),
+                        ).then(
+                          (value) {
+                            weightUnit = PreferenceUtil.getStringValue(
+                                Constants.STR_KEY_WEIGHT);
+                            updateUnit(weightUnit);
+                            weightMainUnit = weightUnit;
+                            setState(() {});
+                          },
+                        );
+                      },
+                    ))
+              ],
+            ),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            if (modeOfSave)
+              fhbBasicWidget.getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            else
+              containsAudioMain
+                  ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
-                          (containsAudio, audioPath) {
+                      (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         updateAudioUI(containsAudioMain, audioPathMain);
@@ -1334,27 +1420,27 @@ class CommonDialogBox {
                       },
                       context,
                       imagePath,
-                          (context, imagePath) {
+                      (context, imagePath) {
                         onPostDataToServer(context, imagePath);
                       })
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      fhbBasicWidget
-                          .getMicIcon(context, containsAudio, audioPath,
-                              (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            updateAudioUI(containsAudioMain, audioPathMain);
-                            setState(() {});
-                          }),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer(context, imagePath);
-                      })
-                    ],
-                  ),
-              ],
-            )),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, imagePath);
+                        })
+                      ],
+                    ),
+          ],
+        )),
       );
     });
 
@@ -1420,75 +1506,76 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strOxygenSaturation,
-                    commonConstants.poOxySatUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errPoOs = errorValue;
-                  });
-                }, errPoOs, variable.strpulseUnit, range: ""),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strPulse,
-                    commonConstants.poPulseUNIT,
-                    pulse, (errorValue) {
-                  setState(() {
-                    errPoPulse = errorValue;
-                  });
-                }, errPoPulse, variable.strpulse, range: ""),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                modeOfSave
-                    ? fhbBasicWidget.getSaveButton(() {
-                  onPostDataToServer(context, imagePath);
-                })
-                    : containsAudioMain
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strOxygenSaturation,
+                commonConstants.poOxySatUNIT,
+                deviceController, (errorValue) {
+              setState(() {
+                errPoOs = errorValue;
+              });
+            }, errPoOs, variable.strpulseUnit, range: ""),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strPulse,
+                commonConstants.poPulseUNIT,
+                pulse, (errorValue) {
+              setState(() {
+                errPoPulse = errorValue;
+              });
+            }, errPoPulse, variable.strpulse, range: ""),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            modeOfSave
+                ? fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                : containsAudioMain
                     ? fhbBasicWidget
-                    .getAudioIconWithFile(audioPathMain, containsAudioMain,
-                        (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
-                      updateAudioUI(containsAudioMain, audioPathMain);
-                      setState(() {});
-                    }, context, imagePath, onPostDataToServer)
-                    : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    fhbBasicWidget
-                        .getMicIcon(context, containsAudio, audioPath,
+                        .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
-                          audioPathMain = audioPath;
-                          containsAudioMain = containsAudio;
-                          updateAudioUI(containsAudioMain, audioPathMain);
-                          setState(() {});
-                        }),
-                    fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePath);
-                    })
-                  ],
-                ),
-              ],
-            )),
+                        audioPathMain = audioPath;
+                        containsAudioMain = containsAudio;
+                        updateAudioUI(containsAudioMain, audioPathMain);
+                        setState(() {});
+                      }, context, imagePath, onPostDataToServer)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+          ],
+        )),
       );
     });
 
@@ -1555,87 +1642,88 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strSystolicPressure,
-                    commonConstants.bpDPUNIT,
-                    deviceController, (errorValue) {
-                  setState(() {
-                    errForbpSp = errorValue;
-                  });
-                }, errForbpSp, variable.strbpunit, range: "Sys"),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strDiastolicPressure,
-                    commonConstants.bpDPUNIT,
-                    diaStolicPressure, (errorValue) {
-                  setState(() {
-                    errFForbpDp = errorValue;
-                  });
-                }, errFForbpDp, variable.strbpunit, range: "Dia"),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                    context,
-                    CommonConstants.strPulse,
-                    commonConstants.bpPulseUNIT,
-                    pulse, (errorValue) {
-                  setState(() {
-                    errForbpPulse = errorValue;
-                  });
-                }, errForbpPulse, variable.strpulse, range: ""),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,isFileField:true),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                modeOfSave
-                    ? fhbBasicWidget.getSaveButton(() {
-                  onPostDataToServer(context, imagePath);
-                })
-                    : containsAudioMain
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strSystolicPressure,
+                commonConstants.bpDPUNIT,
+                deviceController, (errorValue) {
+              setState(() {
+                errForbpSp = errorValue;
+              });
+            }, errForbpSp, variable.strbpunit, range: "Sys"),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strDiastolicPressure,
+                commonConstants.bpDPUNIT,
+                diaStolicPressure, (errorValue) {
+              setState(() {
+                errFForbpDp = errorValue;
+              });
+            }, errFForbpDp, variable.strbpunit, range: "Dia"),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strPulse,
+                commonConstants.bpPulseUNIT,
+                pulse, (errorValue) {
+              setState(() {
+                errForbpPulse = errorValue;
+              });
+            }, errForbpPulse, variable.strpulse, range: ""),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController,
+                isFileField: true),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            modeOfSave
+                ? fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                : containsAudioMain
                     ? fhbBasicWidget
-                    .getAudioIconWithFile(audioPathMain, containsAudioMain,
-                        (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
-                      updateAudioUI(containsAudioMain, audioPathMain);
-                      setState(() {});
-                    }, context, imagePath, onPostDataToServer)
-                    : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    fhbBasicWidget
-                        .getMicIcon(context, containsAudio, audioPath,
+                        .getAudioIconWithFile(audioPathMain, containsAudioMain,
                             (containsAudio, audioPath) {
-                          audioPathMain = audioPath;
-                          containsAudioMain = containsAudio;
-                          updateAudioUI(containsAudioMain, audioPathMain);
-                          setState(() {});
-                        }),
-                    fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePath);
-                    })
-                  ],
-                ),
-              ],
-            )),
+                        audioPathMain = audioPath;
+                        containsAudioMain = containsAudio;
+                        updateAudioUI(containsAudioMain, audioPathMain);
+                        setState(() {});
+                      }, context, imagePath, onPostDataToServer)
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+          ],
+        )),
       );
     });
 
@@ -1689,14 +1777,14 @@ class CommonDialogBox {
       {setState}) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
-        builder: (context) => SearchSpecificList(
-          arguments: SearchArguments(
-            searchWord: searchParam,
-          ),
-          toPreviousScreen: true,
-          isSkipUnknown:
-          searchParam == CommonConstants.keyDoctor ? true : false,
-        )))
+            builder: (context) => SearchSpecificList(
+                  arguments: SearchArguments(
+                    searchWord: searchParam,
+                  ),
+                  toPreviousScreen: true,
+                  isSkipUnknown:
+                      searchParam == CommonConstants.keyDoctor ? true : false,
+                )))
         .then((results) {
       if (results != null) {
         if (results.containsKey(Constants.keyDoctor)) {
@@ -1722,7 +1810,7 @@ class CommonDialogBox {
           hospitalData = json.decode(results[Constants.keyHospital]);
 
           hospitalName.text =
-          hospitalData[parameters.strHealthOrganizationName];
+              hospitalData[parameters.strHealthOrganizationName];
           hospital.text = hospitalData[parameters.strHealthOrganizationName];
         } else if (results.containsKey(Constants.keyLab)) {
           labData = json.decode(results[Constants.keyLab]);
@@ -1822,12 +1910,12 @@ class CommonDialogBox {
 
       if (categoryName != AppConstants.voiceRecords) {
         postMediaData[parameters.strhasVoiceNotes] =
-        (audioPathMain != '' && audioPathMain != null) ? true : false;
+            (audioPathMain != '' && audioPathMain != null) ? true : false;
 
         postMediaData[parameters.strdateOfVisit] = dateOfVisit.text;
       } else {
         postMediaData[parameters.strhasVoiceNotes] =
-        (audioPathMain != '' && audioPathMain != null) ? true : false;
+            (audioPathMain != '' && audioPathMain != null) ? true : false;
       }
 
       postMediaData[parameters.strisDraft] = false;
@@ -1866,19 +1954,20 @@ class CommonDialogBox {
               CommonConstants.strTimeIntake;
           postDeviceValuesExtra[parameters.strvalue] = '';
           postDeviceValuesExtra[parameters.strunit] =
-          isSelected[0] == true ? variable.strBefore : variable.strAfter;
+              isSelected[0] == true ? variable.strBefore : variable.strAfter;
           postDeviceData.add(postDeviceValuesExtra);
         } else if (deviceName == Constants.STR_THERMOMETER) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = commonConstants.tempUNIT;
+          postDeviceValues[parameters.strunit] =
+              tempUnit == "c" ? "Celsius" : "Farenheit";
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strWeightParam;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strunit] = weightMainUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -1929,19 +2018,19 @@ class CommonDialogBox {
       } else if (categoryName == Constants.STR_IDDOCS) {
         if (selectedMediaData != null) {
           postMediaData[parameters.stridType] =
-          selectedMediaData.name.split(' ')[0];
+              selectedMediaData.name.split(' ')[0];
         }
       } else if (categoryName == Constants.STR_LABREPORT) {
         postMediaData[Constants.keyDoctor] = doctorsData;
         postMediaData[Constants.keyLab] = labData;
       }
-      if(imagePath!=null && imagePath.length>0 && imagePath.length==1){
+      if (imagePath != null && imagePath.length > 0 && imagePath.length == 1) {
         final folderName = File(imagePath[0]);
         final fileNoun = folderName.path.split('/').last;
-        if(fileNoun.contains('.pdf')){
-          postMediaData[parameters.strfileName] = fileName.text+'.pdf';
+        if (fileNoun.contains('.pdf')) {
+          postMediaData[parameters.strfileName] = fileName.text + '.pdf';
         }
-      }else {
+      } else {
         postMediaData[parameters.strfileName] = fileName.text;
       }
 
@@ -1957,7 +2046,7 @@ class CommonDialogBox {
         audioPathMain = '';
         await _healthReportListForUserBlock
             .updateHealthRecords(
-            params.toString(), imagePath, audioPathMain, metaInfoId)
+                params.toString(), imagePath, audioPathMain, metaInfoId)
             .then((value) {
           if (value.isSuccess && value != null) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
@@ -1998,18 +2087,18 @@ class CommonDialogBox {
                       MaterialPageRoute(
                         builder: (context) => MyRecords(
                             argument: MyRecordsArgument(
-                              categoryPosition:
+                          categoryPosition:
                               getCategoryPosition(AppConstants.voiceRecords),
-                              allowSelect: false,
-                              isAudioSelect: true,
-                              isNotesSelect: false,
-                              selectedMedias: recordIds,
-                              isFromChat: false,
-                              showDetails: true,
-                              isAssociateOrChat: false,
-                              userID: userID,
-                              fromClass: 'audio',
-                            )),
+                          allowSelect: false,
+                          isAudioSelect: true,
+                          isNotesSelect: false,
+                          selectedMedias: recordIds,
+                          isFromChat: false,
+                          showDetails: true,
+                          isAssociateOrChat: false,
+                          userID: userID,
+                          fromClass: 'audio',
+                        )),
                       )).then((results) {});
                 } else if (fromClassNew == '') {
                   CommonUtil.audioPage = false;
@@ -2019,18 +2108,18 @@ class CommonDialogBox {
                       MaterialPageRoute(
                         builder: (context) => MyRecords(
                             argument: MyRecordsArgument(
-                              categoryPosition:
+                          categoryPosition:
                               getCategoryPosition(AppConstants.voiceRecords),
-                              allowSelect: false,
-                              isAudioSelect: true,
-                              isNotesSelect: false,
-                              selectedMedias: List(),
-                              isFromChat: false,
-                              showDetails: true,
-                              isAssociateOrChat: false,
-                              userID: userID,
-                              fromClass: fromClassNew,
-                            )),
+                          allowSelect: false,
+                          isAudioSelect: true,
+                          isNotesSelect: false,
+                          selectedMedias: List(),
+                          isFromChat: false,
+                          showDetails: true,
+                          isAssociateOrChat: false,
+                          userID: userID,
+                          fromClass: fromClassNew,
+                        )),
                       )).then((results) {});
                 } else {
                   Navigator.of(context).pop();
@@ -2059,9 +2148,9 @@ class CommonDialogBox {
       await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text(variable.strAPP_NAME),
-            content: Text(validationMsg),
-          ));
+                title: Text(variable.strAPP_NAME),
+                content: Text(validationMsg),
+              ));
     }
   }
 
@@ -2083,7 +2172,7 @@ class CommonDialogBox {
               .then((postImageResponse) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value)
+                      Constants.KEY_COMPLETE_DATA, value)
                   .then((value) {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
@@ -2337,58 +2426,58 @@ class CommonDialogBox {
             .getTextTextTitleWithPurpleColor(AppConstants.voiceRecords),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
-                    context, memoController),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                if (modeOfSave)
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, null);
-                  })
-                else
-                  containsAudioMain
-                      ? fhbBasicWidget.getAudioIconWithFile(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
+                context, memoController),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            if (modeOfSave)
+              fhbBasicWidget.getSaveButton(() {
+                onPostDataToServer(context, null);
+              })
+            else
+              containsAudioMain
+                  ? fhbBasicWidget.getAudioIconWithFile(
                       audioPath,
                       containsAudio,
-                          (containsAudio, audioPath) {
+                      (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         deleteAudioFunction(containsAudio, audioPath);
                       },
                       context,
                       null,
-                          (context, imagePath) {
+                      (context, imagePath) {
                         onPostDataToServer(context, imagePath);
                       })
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      fhbBasicWidget
-                          .getMicIcon(context, containsAudio, audioPath,
-                              (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            updateAudioUI(containsAudioMain, audioPathMain);
-                            setState(() {});
-                          }),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer(context, null);
-                      })
-                    ],
-                  ),
-              ],
-            )),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, null);
+                        })
+                      ],
+                    ),
+          ],
+        )),
       );
     });
 
@@ -2511,23 +2600,23 @@ class CommonDialogBox {
       },
       child: Container(
           child: TextField(
-            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
-            controller: dateOfVisit,
-            readOnly: true,
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.done,
-            onSubmitted: (term) {
-              dateOfBirthFocus.unfocus();
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: dateOfVisit,
+        readOnly: true,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (term) {
+          dateOfBirthFocus.unfocus();
+        },
+        decoration: InputDecoration(
+          suffixIcon: IconButton(
+            icon: Icon(Icons.calendar_today),
+            onPressed: () {
+              _selectDate(context, dateOfVisit);
             },
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(Icons.calendar_today),
-                onPressed: () {
-                  _selectDate(context, dateOfVisit);
-                },
-              ),
-            ),
-          )),
+          ),
+        ),
+      )),
     );
   }
 
@@ -2587,37 +2676,37 @@ class CommonDialogBox {
         ),
         content: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strFileName),
-                fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                fhbBasicWidget.getTextForAlertDialog(
-                    context, CommonConstants.strMemo),
-                fhbBasicWidget.getRichTextFieldWithNoCallbacks(
-                    context,
-                    memoController,
-                    Constants.STR_NOTES_HINT,
-                    500,
-                    "",
-                        (value) {},
-                    false),
-                SizedBox(
-                  height: 15.0.h,
-                ),
-                if (modeOfSave)
-                  fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath, onRefresh: refresh);
-                  })
-                else
-                  containsAudioMain
-                      ? fhbBasicWidget.getAudioIconWithFile(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
+                context,
+                memoController,
+                Constants.STR_NOTES_HINT,
+                500,
+                "",
+                (value) {},
+                false),
+            SizedBox(
+              height: 15.0.h,
+            ),
+            if (modeOfSave)
+              fhbBasicWidget.getSaveButton(() {
+                onPostDataToServer(context, imagePath, onRefresh: refresh);
+              })
+            else
+              containsAudioMain
+                  ? fhbBasicWidget.getAudioIconWithFile(
                       audioPathMain,
                       containsAudioMain,
-                          (containsAudio, audioPath) {
+                      (containsAudio, audioPath) {
                         audioPathMain = audioPath;
                         containsAudioMain = containsAudio;
                         updateAudioUI(containsAudioMain, audioPathMain);
@@ -2625,29 +2714,29 @@ class CommonDialogBox {
                       },
                       context,
                       imagePath,
-                          (context, imagePath) {
+                      (context, imagePath) {
                         onPostDataToServer(context, imagePath,
                             onRefresh: refresh);
                       })
-                      : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      fhbBasicWidget
-                          .getMicIcon(context, containsAudio, audioPath,
-                              (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            updateAudioUI(containsAudioMain, audioPathMain);
-                            setState(() {});
-                          }),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer(context, imagePath,
-                            onRefresh: refresh);
-                      })
-                    ],
-                  ),
-              ],
-            )),
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        fhbBasicWidget
+                            .getMicIcon(context, containsAudio, audioPath,
+                                (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        }),
+                        fhbBasicWidget.getSaveButton(() {
+                          onPostDataToServer(context, imagePath,
+                              onRefresh: refresh);
+                        })
+                      ],
+                    ),
+          ],
+        )),
       );
     });
 
@@ -2691,8 +2780,8 @@ class CommonDialogBox {
     List<CategoryResult> categoryDataList = [];
     categoryDataList = getCategoryList();
     for (var i = 0;
-    i < (categoryDataList == null ? 0 : categoryDataList.length);
-    i++) {
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
@@ -2730,10 +2819,10 @@ class CommonDialogBox {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ));
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
               break;
 
             case Status.ERROR:
@@ -2764,8 +2853,6 @@ class CommonDialogBox {
                     doctorsListFromProvider, null, onAdd);
               }
 
-
-
               return familyWidget;
               break;
           }
@@ -2780,6 +2867,7 @@ class CommonDialogBox {
       },
     );
   }
+
   Widget getAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
     Widget familyWidget;
 
@@ -2791,10 +2879,10 @@ class CommonDialogBox {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ));
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
               break;
 
             case Status.ERROR:
@@ -2857,48 +2945,48 @@ class CommonDialogBox {
         //padding: EdgeInsets.all(20),
         itemBuilder: (context) => (doctors != null && doctors.isNotEmpty)
             ? doctors
-            .mapIndexed((index, element) => index == doctors.length - 1
-            ? PopupMenuItem<Doctors>(
-            value: element,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: 0.5.sw,
-                  child: Text(element.user != null
-                      ? new CommonUtil().getDoctorName(element.user)
-                      : ''),
+                .mapIndexed((index, element) => index == doctors.length - 1
+                    ? PopupMenuItem<Doctors>(
+                        value: element,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              width: 0.5.sw,
+                              child: Text(element.user != null
+                                  ? new CommonUtil().getDoctorName(element.user)
+                                  : ''),
+                            ),
+                            SizedBox(height: 10),
+                            fhbBasicWidget.getSaveButton(() {
+                              onAddClick();
+                            }, text: 'Add Doctor'),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    : PopupMenuItem<Doctors>(
+                        value: element,
+                        child: Container(
+                          width: 0.5.sw,
+                          child: Text(element.user != null
+                              ? new CommonUtil().getDoctorName(element.user)
+                              : ''),
+                        ),
+                      ))
+                .toList()
+            : PopupMenuItem<Doctors>(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    fhbBasicWidget.getSaveButton(() {
+                      onAddClick();
+                    }, text: 'Add Doctor'),
+                    SizedBox(height: 10)
+                  ],
                 ),
-                SizedBox(height: 10),
-                fhbBasicWidget.getSaveButton(() {
-                  onAddClick();
-                }, text: 'Add Doctor'),
-                SizedBox(height: 10),
-              ],
-            ))
-            : PopupMenuItem<Doctors>(
-          value: element,
-          child: Container(
-            width: 0.5.sw,
-            child: Text(element.user != null
-                ? new CommonUtil().getDoctorName(element.user)
-                : ''),
-          ),
-        ))
-            .toList()
-            : PopupMenuItem<Doctors>(
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              fhbBasicWidget.getSaveButton(() {
-                onAddClick();
-              }, text: 'Add Doctor'),
-              SizedBox(height: 10)
-            ],
-          ),
-        ),
+              ),
         onSelected: (value) {
           doctorObj = value;
           setDoctorValue(value);
@@ -2926,76 +3014,76 @@ class CommonDialogBox {
 
     return (doctors != null && doctors.isNotEmpty)
         ? StatefulBuilder(builder: (context, setState) {
-      return PopupMenuButton<Doctors>(
-        offset: Offset(-100, 70),
-        //padding: EdgeInsets.all(20),
-        itemBuilder: (context) => doctors
-            .mapIndexed((index, element) => index == doctors.length - 1
-            ? PopupMenuItem<Doctors>(
-            value: element,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: 0.5.sw,
-                  child: Text(
-                    element.user.name,
-                  ),
-                ),
-                SizedBox(height: 10),
-                fhbBasicWidget.getSaveButton(() {
-                  onAddClick();
-                }, text: 'Add Doctor'),
-                SizedBox(height: 10),
-              ],
-            ))
-            : PopupMenuItem<Doctors>(
-          value: element,
-          child: Container(
-            width: 0.5.sw,
-            child: Text(
-              element.user.name,
-            ),
-          ),
-        ))
-            .toList(),
-        onSelected: (value) {
-          doctorObj = value;
-          setDoctorValue(value);
-          setState(() {
-            doctor.text = doctorObj.user.name;
-          });
-        },
-        child: child ?? getIconButton(),
-      );
-    })
+            return PopupMenuButton<Doctors>(
+              offset: Offset(-100, 70),
+              //padding: EdgeInsets.all(20),
+              itemBuilder: (context) => doctors
+                  .mapIndexed((index, element) => index == doctors.length - 1
+                      ? PopupMenuItem<Doctors>(
+                          value: element,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                width: 0.5.sw,
+                                child: Text(
+                                  element.user.name,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              fhbBasicWidget.getSaveButton(() {
+                                onAddClick();
+                              }, text: 'Add Doctor'),
+                              SizedBox(height: 10),
+                            ],
+                          ))
+                      : PopupMenuItem<Doctors>(
+                          value: element,
+                          child: Container(
+                            width: 0.5.sw,
+                            child: Text(
+                              element.user.name,
+                            ),
+                          ),
+                        ))
+                  .toList(),
+              onSelected: (value) {
+                doctorObj = value;
+                setDoctorValue(value);
+                setState(() {
+                  doctor.text = doctorObj.user.name;
+                });
+              },
+              child: child ?? getIconButton(),
+            );
+          })
         : StatefulBuilder(builder: (context, setState) {
-      return PopupMenuButton<Doctors>(
-        offset: Offset(-100, 70),
-        itemBuilder: (context) => <PopupMenuItem<Doctors>>[
-          PopupMenuItem<Doctors>(
-              child: Container(
-                width: 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    fhbBasicWidget.getSaveButton(() {
-                      onAddClick();
-                    }, text: 'Add Doctor'),
-                    SizedBox(height: 10)
-                  ],
-                ),
-              )),
-        ],
-        onSelected: (_) {},
-        child: getIconButton(),
-      );
-    });
+            return PopupMenuButton<Doctors>(
+              offset: Offset(-100, 70),
+              itemBuilder: (context) => <PopupMenuItem<Doctors>>[
+                PopupMenuItem<Doctors>(
+                    child: Container(
+                  width: 150,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      fhbBasicWidget.getSaveButton(() {
+                        onAddClick();
+                      }, text: 'Add Doctor'),
+                      SizedBox(height: 10)
+                    ],
+                  ),
+                )),
+              ],
+              onSelected: (_) {},
+              child: getIconButton(),
+            );
+          });
   }
 
-  getHospitalsDropDownWhenNoList(
-      List<Hospitals> hospitallist, Hospitals hospitalObjSample, Function onAddClick,
+  getHospitalsDropDownWhenNoList(List<Hospitals> hospitallist,
+      Hospitals hospitalObjSample, Function onAddClick,
       {Widget child}) {
     if (hospitalObjSample != null) {
       for (var hospitalObjS in hospitallist) {
@@ -3007,72 +3095,74 @@ class CommonDialogBox {
 
     return (hospitallist != null && hospitallist.isNotEmpty)
         ? StatefulBuilder(builder: (context, setState) {
-      return PopupMenuButton<Hospitals>(
-        offset: Offset(-100, 70),
-        //padding: EdgeInsets.all(20),
-        itemBuilder: (context) => hospitallist
-            .mapIndexed((index, element) => index == hospitallist.length - 1
-            ? PopupMenuItem<Hospitals>(
-            value: element,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: 0.5.sw,
-                  child: Text(
-                    element.name,
-                  ),
-                ),
-                SizedBox(height: 10),
-                fhbBasicWidget.getSaveButton(() {
-                  onAddClick();
-                }, text: 'Add Hospital'),
-                SizedBox(height: 10),
-              ],
-            ))
-            : PopupMenuItem<Hospitals>(
-          value: element,
-          child: Container(
-            width: 0.5.sw,
-            child: Text(
-              element.name,
-            ),
-          ),
-        ))
-            .toList(),
-        onSelected: (value) {
-          hospitalObj = value;
-          setHospitalValue(value);
-          setState(() {
-            hospital.text = hospitalObj.name!=null?hospitalObj.name:'';
-          });
-        },
-        child: child ?? getIconButton(),
-      );
-    })
+            return PopupMenuButton<Hospitals>(
+              offset: Offset(-100, 70),
+              //padding: EdgeInsets.all(20),
+              itemBuilder: (context) => hospitallist
+                  .mapIndexed(
+                      (index, element) => index == hospitallist.length - 1
+                          ? PopupMenuItem<Hospitals>(
+                              value: element,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    width: 0.5.sw,
+                                    child: Text(
+                                      element.name,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  fhbBasicWidget.getSaveButton(() {
+                                    onAddClick();
+                                  }, text: 'Add Hospital'),
+                                  SizedBox(height: 10),
+                                ],
+                              ))
+                          : PopupMenuItem<Hospitals>(
+                              value: element,
+                              child: Container(
+                                width: 0.5.sw,
+                                child: Text(
+                                  element.name,
+                                ),
+                              ),
+                            ))
+                  .toList(),
+              onSelected: (value) {
+                hospitalObj = value;
+                setHospitalValue(value);
+                setState(() {
+                  hospital.text =
+                      hospitalObj.name != null ? hospitalObj.name : '';
+                });
+              },
+              child: child ?? getIconButton(),
+            );
+          })
         : StatefulBuilder(builder: (context, setState) {
-      return PopupMenuButton<Hospitals>(
-        offset: Offset(-100, 70),
-        itemBuilder: (context) => <PopupMenuItem<Hospitals>>[
-          PopupMenuItem<Hospitals>(
-              child: Container(
-                width: 150,
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    fhbBasicWidget.getSaveButton(() {
-                      onAddClick();
-                    }, text: 'Add Hospital'),
-                    SizedBox(height: 10)
-                  ],
-                ),
-              )),
-        ],
-        onSelected: (_) {},
-        child: getIconButton(),
-      );
-    });
+            return PopupMenuButton<Hospitals>(
+              offset: Offset(-100, 70),
+              itemBuilder: (context) => <PopupMenuItem<Hospitals>>[
+                PopupMenuItem<Hospitals>(
+                    child: Container(
+                  width: 150,
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      fhbBasicWidget.getSaveButton(() {
+                        onAddClick();
+                      }, text: 'Add Hospital'),
+                      SizedBox(height: 10)
+                    ],
+                  ),
+                )),
+              ],
+              onSelected: (_) {},
+              child: getIconButton(),
+            );
+          });
   }
 
   void setDoctorValue(Doctors newValue) {
@@ -3092,12 +3182,15 @@ class CommonDialogBox {
 
     doctorsData = doctorNewObj;
   }
+
   void setHospitalValue(Hospitals newValue) {
     final hospitalNewObj = Hospital(
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
-      addressLine1: newValue.healthOrganizationAddressCollection[0]?.addressLine1,
-      addressLine2: newValue.healthOrganizationAddressCollection[0]?.addressLine2,
+      addressLine1:
+          newValue.healthOrganizationAddressCollection[0]?.addressLine1,
+      addressLine2:
+          newValue.healthOrganizationAddressCollection[0]?.addressLine2,
       cityName: newValue.healthOrganizationAddressCollection[0]?.city?.name,
       stateName: newValue.healthOrganizationAddressCollection[0]?.state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
@@ -3106,7 +3199,6 @@ class CommonDialogBox {
       phoneNumberTypeId: newValue.healthOrganizationContactCollection[0]?.phoneNumberType?.id,
       phoneNumberTypeName: newValue.healthOrganizationContactCollection[0]?.phoneNumberType?.name,
       pincode: newValue.healthOrganizationAddressCollection[0]?.pincode*/
-
     );
 
     hospitalData = hospitalNewObj;
@@ -3178,6 +3270,7 @@ class CommonDialogBox {
       doctorsListFromProvider = copyOfdoctorsModel;
     }
   }
+
   void filterDuplicateHospital() {
     if (hospitalListFromProvider.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
@@ -3187,8 +3280,8 @@ class CommonDialogBox {
     }
   }
 
-  getHospitalDropDown(
-      List<Hospitals> hospitallist, Hospitals hospitalObjSample, Function onAddClick,
+  getHospitalDropDown(List<Hospitals> hospitallist, Hospitals hospitalObjSample,
+      Function onAddClick,
       {Widget child}) {
     if (hospitalObjSample != null) {
       for (var hospitalObjS in hospitallist) {
@@ -3202,55 +3295,53 @@ class CommonDialogBox {
       return PopupMenuButton<Hospitals>(
         offset: Offset(-100, 70),
         //padding: EdgeInsets.all(20),
-        itemBuilder: (context) => (hospitallist != null && hospitallist.isNotEmpty)
+        itemBuilder: (context) => (hospitallist != null &&
+                hospitallist.isNotEmpty)
             ? hospitallist
-            .mapIndexed((index, element) => index == hospitallist.length - 1
-            ? PopupMenuItem<Hospitals>(
-            value: element,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: 0.5.sw,
-                  child: Text(element.name != null
-                      ? element.name
-                      : ''),
+                .mapIndexed((index, element) => index == hospitallist.length - 1
+                    ? PopupMenuItem<Hospitals>(
+                        value: element,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              width: 0.5.sw,
+                              child: Text(
+                                  element.name != null ? element.name : ''),
+                            ),
+                            SizedBox(height: 10),
+                            fhbBasicWidget.getSaveButton(() {
+                              onAddClick();
+                            }, text: 'Add Hospital'),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    : PopupMenuItem<Hospitals>(
+                        value: element,
+                        child: Container(
+                          width: 0.5.sw,
+                          child: Text(element.name != null ? element.name : ''),
+                        ),
+                      ))
+                .toList()
+            : PopupMenuItem<Hospitals>(
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    fhbBasicWidget.getSaveButton(() {
+                      onAddClick();
+                    }, text: 'Add Hospital'),
+                    SizedBox(height: 10)
+                  ],
                 ),
-                SizedBox(height: 10),
-                fhbBasicWidget.getSaveButton(() {
-                  onAddClick();
-                }, text: 'Add Hospital'),
-                SizedBox(height: 10),
-              ],
-            ))
-            : PopupMenuItem<Hospitals>(
-          value: element,
-          child: Container(
-            width: 0.5.sw,
-            child: Text(element.name != null
-                ? element.name
-                : ''),
-          ),
-        ))
-            .toList()
-            : PopupMenuItem<Hospitals>(
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              fhbBasicWidget.getSaveButton(() {
-                onAddClick();
-              }, text: 'Add Hospital'),
-              SizedBox(height: 10)
-            ],
-          ),
-        ),
+              ),
         onSelected: (value) {
           hospitalObj = value;
           setHospitalValue(value);
           setState(() {
-            hospital.text = hospitalObj.name!=null?hospitalObj.name:'';
+            hospital.text = hospitalObj.name != null ? hospitalObj.name : '';
             ;
           });
         },
@@ -3258,7 +3349,6 @@ class CommonDialogBox {
       );
     });
   }
-
 
   Widget getFutureAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
     Widget familyWidget;
@@ -3271,10 +3361,10 @@ class CommonDialogBox {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                    width: 30.0.h,
-                    height: 30.0.h,
-                    child: CommonCircularIndicator(),
-                  ));
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ));
               break;
 
             case Status.ERROR:
@@ -3319,7 +3409,6 @@ class CommonDialogBox {
       },
     );
   }
-
 }
 
 extension FicListExtension<T> on List<T> {

@@ -76,7 +76,9 @@ class MyProfileResult {
       this.userRoleCollection3,
       this.userRelationshipCollection,
       this.additionalInfo,
-      this.userProfileSettingCollection3,this.membershipOfferedBy,this.isCaregiver});
+      this.userProfileSettingCollection3,
+      this.membershipOfferedBy,
+      this.isCaregiver});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -105,8 +107,8 @@ class MyProfileResult {
     // createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
-    if(json.containsKey('membershipOfferedBy'))
-    membershipOfferedBy = json['membershipOfferedBy'];
+    if (json.containsKey('membershipOfferedBy'))
+      membershipOfferedBy = json['membershipOfferedBy'];
     if (json['userAddressCollection3'] != null) {
       userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
@@ -143,9 +145,8 @@ class MyProfileResult {
         ? AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
 
-    if(json.containsKey("isCaregiver")){
+    if (json.containsKey("isCaregiver")) {
       isCaregiver = json['isCaregiver'];
-
     }
   }
 
@@ -216,6 +217,7 @@ class AdditionalInfo {
   String visitReason;
   String patientHistory;
   String offSet = CommonUtil().setTimeZone();
+  HeightObj heightObj;
 
   AdditionalInfo(
       {this.age,
@@ -236,9 +238,18 @@ class AdditionalInfo {
       }
     }
 
-    height = json['height'];
+    try {
+      if (json['height'].runtimeType == String) {
+        height = json['height'];
+      } else {
+        heightObj =
+            json['height'] != null ? HeightObj.fromJson(json['height']) : null;
+      }
+    } catch (e) {}
     weight = json['weight'];
     try {
+      height = json['height'];
+      weight = json['weight'];
       if (json.containsKey('language')) {
         language = json['language'].cast<String>();
       }
@@ -262,6 +273,9 @@ class AdditionalInfo {
     data['uhidNumber'] = uhidNumber;
     data['visitReason'] = visitReason;
     data['patientHistory'] = patientHistory;
+    if (this.heightObj != null) {
+      data['height'] = this.heightObj.toJson();
+    }
     data[KEY_OffSet] = CommonUtil().setTimeZone();
     return data;
   }
@@ -433,6 +447,25 @@ class UserProfileSettingCollection3 {
     data['isActive'] = isActive;
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
+    return data;
+  }
+}
+
+class HeightObj {
+  String valueFeet;
+  String valueInches;
+
+  HeightObj({this.valueFeet, this.valueInches});
+
+  HeightObj.fromJson(Map<String, dynamic> json) {
+    valueFeet = json['valueFeet'];
+    valueInches = json['valueInches'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['valueFeet'] = this.valueFeet;
+    data['valueInches'] = this.valueInches;
     return data;
   }
 }

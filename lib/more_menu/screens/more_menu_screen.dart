@@ -3,10 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
+import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,6 +35,7 @@ import '../../src/ui/HomeScreen.dart';
 import '../../src/ui/settings/MySettings.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
@@ -90,6 +95,21 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool allowSymptomsNotification = true;
   bool isCareGiver = false;
 
+  List<DeviceData> selectedList;
+  bool isTouched = false;
+  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+
+  bool isSkillIntegration = false;
+  bool isCareGiverCommunication = false;
+  bool isVitalPreferences = false;
+  bool isDisplayDevices = false;
+
+  bool isDisplayPreference = false;
+  bool isIntegration = false;
+  bool isColorPallete = false;
+
+  PreferredMeasurement preferredMeasurement;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -98,6 +118,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     PackageInfo.fromPlatform().then((packageInfo) {
       version = packageInfo.version;
     });
+    selectedList = List();
+    _deviceModel = new DevicesViewModel();
   }
 
   @override
@@ -144,7 +166,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               colors: Colors.white,
               size: 24.0.sp,
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pop(context, false);
               },
             ),
             actions: <Widget>[
@@ -160,6 +182,29 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               //     })
             ]),
         body: getValuesFromSharedPrefernce());
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to update the changes'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => createAppColorSelection(preColor, greColor),
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   void openWebView(String title, String url, bool isLocal) {
@@ -254,232 +299,68 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
-        isCareGiver?Divider():Container(),
-        isCareGiver? Theme(
-          data: theme,
-          child: ExpansionTile(
-            title: Text(variable.strCareGiverCommunication,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black)),
-            children: [
-              ListTile(
-                title: Text(variable.strCareGiverSettings,
-                    style: TextStyle(fontWeight: FontWeight.w500)),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16.0.sp,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CareGiverSettings(),
-                    ),
-                  ).then((value) {
-                    if (value) {
-                      setState(() {});
-                    }
-                  });
-                  //PageNavigator.goTo(context, router.rt_AppSettings);
-                },
-              ),
-              Divider(),
-              ListTile(
-                title: Text(variable.strNonAdherenceSettings,
-                    style: TextStyle(fontWeight: FontWeight.w500)),
-                trailing: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16.0.sp,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          NonAdheranceSettingsScreen(),
-                    ),
-                  ).then((value) {
-                    if (value) {
-                      setState(() {});
-                    }
-                  });
-                  //PageNavigator.goTo(context, router.rt_AppSettings);
-                },
-              ),
-            ],
-          ),
-        ):Container(),
-        /*Divider(),
-        Theme(
-          data: theme,
-          child: ExpansionTile(
-            title: Text(variable.strHelp,
-                style: TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black)),
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  openWebView(Constants.FAQ, variable.file_faq, true);
-                },
-                child: ListTile(
-                    title: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_faq),
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 20.0.w),
-                    Text(Constants.FAQ),
-                  ],
-                )),
-              ),
-              ListTile(
-                title: InkWell(
-                    child: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_feedback),
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 20.0.w),
-                    Text(variable.strFeedBack),
-                  ],
-                )),
-                onTap: () {
-                  Navigator.pushNamed(context, router.rt_Feedbacks)
-                      .then((value) {});
-                },
-              ),
-              InkWell(
-                onTap: () {
-                  openWebView(
-                      Constants.terms_of_service, variable.file_terms, true);
-                },
-                child: ListTile(
-                    title: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_term),
-                      size: 20.0.sp,
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 20.0.w),
-                    Text(Constants.terms_of_service)
-                  ],
-                )),
-              ),
-              InkWell(
-                onTap: () {
-                  openWebView(
-                      Constants.privacy_policy, variable.file_privacy, true);
-                },
-                child: ListTile(
-                    title: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_privacy),
-                      size: 20.0.sp,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 20.0.w),
-                    Text(variable.strPrivacy),
-                  ],
-                )),
-              ),
-              InkWell(
-                onTap: () {
-                  LaunchReview.launch(
-                      androidAppId: variable.strAppPackage,
-                      iOSAppId: variable.iOSAppId);
-                },
-                child: ListTile(
-                    title: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_record_fav),
-                      size: 20.0.sp,
-                      color: Colors.black,
-                    ),
-                    SizedBox(width: 20.0.w),
-                    Text(variable.strRateus),
-                  ],
-                )),
-              ),
-              InkWell(
-                onTap: () {
-                  launchWhatsApp(
-                      phone: variable.c_qurhealth_helpline,
-                      message: variable.c_chat_with_whatsapp_begin_conv);
-                },
-                child: ListTile(
-                    title: Row(
-                  children: <Widget>[
-                    ImageIcon(
-                      AssetImage(variable.icon_whatsapp),
-                      color: Color(0XFF66AB5B),
-                      size: 22.0.sp,
-                    ),
-                    SizedBox(width: 20.0.sp),
-                    Text(variable.chatWithUs),
-                  ],
-                )),
-              )
-            ],
-          ),
-        ),*/
-        /* Divider(),
-        Theme(
-          data: theme,
-          child: ExpansionTile(
-              title: Text(variable.strMaya,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black)),
-              children: <Widget>[
-                ListTile(
-                    title: Container(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  height: 80,
-                  //width: 200,
-                  //color: Colors.green,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: variable.mayaAssets.length,
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () {
-                        PreferenceUtil.saveString(
-                            Constants.keyMayaAsset, variable.mayaAssets[index]);
-                        selectedMaya = variable.mayaAssets[index];
-                        HomeScreen.of(context).refresh();
-                        setState(() {});
-                      },
-                      child: Card(
-                        color: variable.mayaAssets[index] == selectedMaya
-                            ? Color(new CommonUtil().getMyPrimaryColor())
-                            : Colors.white,
-                        margin: EdgeInsets.all(2),
-                        child: Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Image.asset(
-                            variable.mayaAssets[index] + variable.strExtImg,
-                            height: 50,
-                            width: 50,
-                          ),
-                        ),
-                        elevation: 1,
-                        shape: CircleBorder(),
-                        clipBehavior: Clip.antiAlias,
+        isCareGiver ? Divider() : Container(),
+        isCareGiver
+            ? Theme(
+                data: theme,
+                child: ExpansionTile(
+                  iconColor: Colors.black,
+                  title: Text(variable.strCareGiverCommunication,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                  children: [
+                    ListTile(
+                      title: Text(variable.strCareGiverSettings,
+                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CareGiverSettings(),
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            setState(() {});
+                          }
+                        });
+                        //PageNavigator.goTo(context, router.rt_AppSettings);
+                      },
                     ),
-                  ),
-                ))
-              ]),
-        ), */
+                    Divider(),
+                    ListTile(
+                      title: Text(variable.strNonAdherenceSettings,
+                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NonAdheranceSettingsScreen(),
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            setState(() {});
+                          }
+                        });
+                        //PageNavigator.goTo(context, router.rt_AppSettings);
+                      },
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
         Divider(),
         Theme(
           data: theme,
           child: ExpansionTile(
+              iconColor: Colors.black,
               title: Text(variable.strColorPalete,
                   style: TextStyle(
                       fontWeight: FontWeight.w500, color: Colors.black)),
@@ -695,6 +576,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         ? getDeviceSelectionModel
             .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
         : true;
+
+    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+            null
+        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        : null;
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
@@ -754,7 +640,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,
-            allowSymptomsNotification)
+            allowSymptomsNotification,
+            preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
       if (updateDeviceModel.isSuccess) {
@@ -800,7 +687,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          return getBody();
+          return getBodyNew();
         }
       },
     );
@@ -827,5 +714,662 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     } else {
       throw 'Could not launch ${url()}';
     }
+  }
+
+  Widget getBodyNew() {
+    var theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+
+    return ListView(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(top: 20, bottom: 20),
+          child: ListTile(
+            leading: ClipOval(
+              child: profileImage != null
+                  ? Image.file(profileImage,
+                      width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
+                  : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  myProfile.result != null
+                      ? /* toBeginningOfSentenceCase(
+                              myProfile.result.firstName ?? '') +
+                          ' ' +
+                          toBeginningOfSentenceCase(
+                              myProfile.result.lastName ?? '') */
+                      myProfile?.result?.firstName?.capitalizeFirstofEach ??
+                          '' ' ' +
+                              myProfile
+                                  ?.result?.lastName?.capitalizeFirstofEach ??
+                          ''
+                      : '',
+                  style: TextStyle(fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  (myProfile.result.userContactCollection3 != null &&
+                          myProfile.result.userContactCollection3.isNotEmpty)
+                      ? myProfile
+                              .result.userContactCollection3[0].phoneNumber ??
+                          ''
+                      : '',
+                  style: TextStyle(fontSize: 14.0.sp),
+                ),
+                Text(
+                  (myProfile.result.userContactCollection3 != null &&
+                          myProfile.result.userContactCollection3.isNotEmpty)
+                      ? myProfile.result.userContactCollection3[0].email ?? ''
+                      : '',
+                  style: TextStyle(fontSize: 13.0.sp),
+                )
+              ],
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 16.0.sp,
+            ),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                router.rt_UserAccounts,
+                arguments: UserAccountsArguments(selectedIndex: 0),
+              );
+            },
+          ),
+        ),
+        Divider(),
+        Theme(
+            data: theme,
+            child: ExpansionTile(
+              iconColor: Colors.black,
+              initiallyExpanded: isSkillIntegration,
+              onExpansionChanged: (value) {
+                isSkillIntegration = value;
+              },
+              title: Text(variable.strSkillsIntegration,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Colors.black)),
+              children: [
+                ListTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.icon_digit_reco),
+                      //size: 30,
+                      color: Colors.black,
+                    ),
+                    title: Text(variable.strAllowDigit),
+                    subtitle: Text(
+                      variable.strScanDevices,
+                      style: TextStyle(fontSize: 12.0.sp),
+                    ),
+                    trailing: Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: _isdigitRecognition,
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            isSkillIntegration = true;
+                            isCareGiverCommunication = false;
+                            isVitalPreferences = false;
+                            isDisplayPreference = false;
+                            isTouched = true;
+
+                            _isdigitRecognition = newValue;
+                            createAppColorSelection(preColor, greColor);
+                            /*PreferenceUtil.saveString(
+                                        Constants.allowDigitRecognition,
+                                        _isdigitRecognition.toString());*/
+                          });
+                        },
+                      ),
+                    )),
+                Container(
+                  height: 1,
+                  color: Colors.grey[200],
+                ),
+                ListTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.icon_device_recon),
+                      //size: 30,
+                      color: Colors.black,
+                    ),
+                    title: Text(variable.strAllowDevice),
+                    subtitle: Text(
+                      variable.strScanAuto,
+                      style: TextStyle(fontSize: 12.0.sp),
+                    ),
+                    trailing: Transform.scale(
+                      scale: 0.8,
+                      child: Switch(
+                        value: _isdeviceRecognition,
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            isSkillIntegration = true;
+                            isCareGiverCommunication = false;
+                            isVitalPreferences = false;
+                            isDisplayPreference = false;
+                            isTouched = true;
+                            _isdeviceRecognition = newValue;
+                            createAppColorSelection(preColor, greColor);
+                            /*PreferenceUtil.saveString(
+                                        Constants.allowDeviceRecognition,
+                                        _isdeviceRecognition.toString());*/
+                          });
+                        },
+                      ),
+                    )),
+                Divider(),
+                Theme(
+                    data: theme,
+                    child: ExpansionTile(
+                      iconColor: Colors.black,
+                      initiallyExpanded: isIntegration,
+                      onExpansionChanged: (value) {
+                        isIntegration = value;
+                      },
+                      title: Text(variable.strIntegration,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
+                      ),
+                      children: [
+                        FutureBuilder(
+                            future: _handleGoogleFit(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListTile(
+                                  leading: ImageIcon(
+                                    AssetImage(variable.icon_digit_googleFit),
+                                    //size: 30,
+                                    color: Colors.black,
+                                  ),
+                                  title: Text(variable.strGoogleFit),
+                                  subtitle: Text(
+                                    variable.strAllowGoogle,
+                                    style: TextStyle(fontSize: 12.0.sp),
+                                  ),
+                                  trailing: Wrap(
+                                    children: <Widget>[
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: IconButton(
+                                          icon: Icon(Icons.sync),
+                                          onPressed: () {
+                                            _deviceDataHelper.syncGoogleFit();
+                                          },
+                                        ),
+                                      ),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          value: _isGFActive,
+                                          activeColor: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          onChanged: (bool newValue) {
+                                            setState(() {
+                                              //isTouched = true;
+                                              _isGFActive = newValue;
+                                              isIntegration = true;
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                        (Platform.isIOS)
+                            ? ListTile(
+                                leading: Icon(
+                                  Icons.favorite,
+                                  color: Colors.pink,
+                                ),
+                                title: Text(variable.strHealthKit),
+                                subtitle: Text(
+                                  variable.strAllowHealth,
+                                  style: TextStyle(fontSize: 12.0.sp),
+                                ),
+                                trailing: Wrap(
+                                  children: <Widget>[
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: IconButton(
+                                        icon: Icon(Icons.sync),
+                                        onPressed: () {
+                                          _deviceDataHelper.syncHealthKit();
+                                        },
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: Switch(
+                                        value: _isHKActive,
+                                        activeColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        onChanged: (bool newValue) {
+                                          isTouched = true;
+                                          if (_isHealthFirstTime) {
+                                            _isHealthFirstTime = false;
+                                            PreferenceUtil.saveString(
+                                                Constants.isHealthFirstTime,
+                                                _isHealthFirstTime.toString());
+
+                                            newValue == true
+                                                ? _deviceDataHelper
+                                                    .activateHealthKit()
+                                                : _deviceDataHelper
+                                                    .deactivateHealthKit();
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HealthApp()),
+                                            );
+                                          }
+                                          setState(() {
+                                            _isHKActive = newValue;
+                                            isIntegration = true;
+
+                                            /*PreferenceUtil.saveString(
+                                                Constants.activateHK,
+                                                _isHKActive.toString());*/
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ))
+                            : SizedBox.shrink(),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                      ],
+                    )),
+              ],
+            )),
+        isCareGiver ? Divider() : Container(),
+        isCareGiver
+            ? Theme(
+                data: theme,
+                child: ExpansionTile(
+                  iconColor: Colors.black,
+                  title: Text(variable.strCareGiverCommunication,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                  children: [
+                    ListTile(
+                      title: Text(variable.strNotificationPreference,
+                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CareGiverSettings(),
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            setState(() {});
+                          }
+                        });
+                        //PageNavigator.goTo(context, router.rt_AppSettings);
+                      },
+                    ),
+                    Divider(),
+                    ListTile(
+                      title: Text(variable.strNonAdherenceSettings,
+                          style: TextStyle(fontWeight: FontWeight.w500)),
+                      trailing: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16.0.sp,
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NonAdheranceSettingsScreen(),
+                          ),
+                        ).then((value) {
+                          if (value) {
+                            setState(() {});
+                          }
+                        });
+                        //PageNavigator.goTo(context, router.rt_AppSettings);
+                      },
+                    ),
+                  ],
+                ))
+            : Container(),
+        Theme(
+            data: theme,
+            child: ExpansionTile(
+              iconColor: Colors.black,
+              initiallyExpanded: isVitalPreferences,
+              title: Text(variable.strVitalsPreferences,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500, color: Colors.black)),
+              children: [
+                Theme(
+                  data: theme,
+                  child: ExpansionTile(
+                    iconColor: Colors.black,
+                    initiallyExpanded: isDisplayDevices,
+                    onExpansionChanged: (value) {
+                      isDisplayDevices = value;
+                    },
+                    title: Text(variable.strDisplayDevices,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.black)),
+                    trailing: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16.0.sp,
+                    ),
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          children: [
+                            Text(
+                              variable.strAddDevice,
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 14.0.sp),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            FutureBuilder<List<DeviceData>>(
+                              future: _deviceModel.getDevices(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  for (int i = 0;
+                                      i <= snapshot.data.length;
+                                      i++) {
+                                    switch (i) {
+                                      case 0:
+                                        snapshot.data[i].isSelected =
+                                            _isBPActive;
+                                        break;
+                                      case 1:
+                                        snapshot.data[i].isSelected =
+                                            _isGLActive;
+                                        break;
+                                      case 2:
+                                        snapshot.data[i].isSelected =
+                                            _isOxyActive;
+                                        break;
+                                      case 3:
+                                        snapshot.data[i].isSelected =
+                                            _isTHActive;
+                                        break;
+                                      case 4:
+                                        snapshot.data[i].isSelected =
+                                            _isWSActive;
+                                        break;
+
+                                      default:
+                                    }
+                                  }
+                                }
+                                return snapshot.hasData
+                                    ? Container(
+                                        height: 75,
+                                        color: Colors.white,
+                                        child: new ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder: (context, i) {
+                                            return DeviceCard(
+                                                deviceData: snapshot.data[i],
+                                                isSelected: (bool value) {
+                                                  isTouched = true;
+                                                  switch (i) {
+                                                    case 0:
+                                                      _isBPActive = value;
+                                                      /* PreferenceUtil.saveString(
+                                                  Constants.bpMon,
+                                                  _isBPActive.toString());*/
+                                                      break;
+                                                    case 1:
+                                                      _isGLActive = value;
+                                                      /*PreferenceUtil.saveString(
+                                                  Constants.glMon,
+                                                  _isGLActive.toString());*/
+
+                                                      break;
+                                                    case 2:
+                                                      _isOxyActive = value;
+                                                      /*PreferenceUtil.saveString(
+                                                  Constants.oxyMon,
+                                                  _isOxyActive.toString());*/
+                                                      break;
+                                                    case 3:
+                                                      _isTHActive = value;
+                                                      /*PreferenceUtil.saveString(
+                                                  Constants.thMon,
+                                                  _isTHActive.toString());*/
+                                                      break;
+                                                    case 4:
+                                                      _isWSActive = value;
+                                                      /*PreferenceUtil.saveString(
+                                                  Constants.wsMon,
+                                                  _isWSActive.toString());*/
+                                                      break;
+                                                    default:
+                                                  }
+                                                  setState(() {
+                                                    if (value) {
+                                                      selectedList.add(
+                                                          snapshot.data[i]);
+                                                    } else {
+                                                      selectedList.remove(
+                                                          snapshot.data[i]);
+                                                    }
+                                                  });
+
+                                                  isSkillIntegration = false;
+                                                  isCareGiverCommunication =
+                                                      false;
+                                                  isVitalPreferences = true;
+                                                  isDisplayDevices = true;
+                                                  isDisplayPreference = false;
+
+                                                  createAppColorSelection(
+                                                      preColor, greColor);
+                                                },
+                                                key: Key(snapshot.data[i].status
+                                                    .toString()));
+                                          },
+                                        ),
+                                      )
+                                    : CommonCircularIndicator();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  title: Text('Unit Preferences',
+                      style: TextStyle(fontWeight: FontWeight.w500)),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16.0.sp,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChooseUnit(),
+                      ),
+                    ).then((value) {
+                      if (value) {
+                        setState(() {});
+                      }
+                    });
+                    //PageNavigator.goTo(context, router.rt_AppSettings);
+                  },
+                ),
+              ],
+            )),
+        Theme(
+          data: theme,
+          child: ExpansionTile(
+            iconColor: Colors.black,
+            initiallyExpanded: isDisplayPreference,
+            title: Text(variable.strDisplayPreferences,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, color: Colors.black)),
+            children: [
+              ListTile(
+                leading: CommonUtil().qurHomeMainIcon(),
+                title: Text(variable.strQurHome),
+                subtitle: Text(
+                  variable.strDefaultUI,
+                  style: TextStyle(fontSize: 12.0.sp),
+                ),
+                trailing: Transform.scale(
+                  scale: 0.8,
+                  child: Switch(
+                    value: PreferenceUtil.getIfQurhomeisDefaultUI(),
+                    activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                    onChanged: (bool newValue) {
+                      setState(
+                        () {
+                          PreferenceUtil.saveQurhomeAsDefaultUI(
+                            qurhomeStatus: newValue,
+                          );
+                          isSkillIntegration = false;
+                          isCareGiverCommunication = false;
+                          isVitalPreferences = false;
+                          isDisplayPreference = true;
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Container(
+                height: 1,
+                color: Colors.grey[200],
+              ),
+              Divider(),
+              Theme(
+                data: theme,
+                child: ExpansionTile(
+                    iconColor: Colors.black,
+                    initiallyExpanded: isColorPallete,
+                    onExpansionChanged: (value) {
+                      isColorPallete = value;
+                      isDisplayPreference = true;
+                    },
+                    title: Text(variable.strColorPalete,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.black)),
+                    children: <Widget>[
+                      ListTile(
+                          title: Container(
+                              height: 60.0.h,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: variable.myThemes.length,
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                  onTap: () {
+                                    PreferenceUtil.saveTheme(
+                                        Constants.keyPriColor,
+                                        variable.myThemes[index]);
+                                    PreferenceUtil.saveTheme(
+                                        Constants.keyGreyColor,
+                                        variable.myGradient[index]);
+                                    selectedPrimaryColor =
+                                        variable.myThemes[index];
+
+                                    createAppColorSelection(
+                                        variable.myThemes[index],
+                                        variable.myGradient[index]);
+
+                                    HomeScreen.of(context)?.refresh();
+                                    LandingScreen.of(context)?.refresh();
+                                    if (widget.refresh != null) {
+                                      widget.refresh(false);
+                                    }
+
+                                    setState(() {});
+                                  },
+                                  child: Padding(
+                                      padding: EdgeInsets.all(5),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            gradient: LinearGradient(colors: [
+                                              Color(variable.myThemes[index]),
+                                              Color(variable.myGradient[index])
+                                            ])),
+                                        height: 50.0.h,
+                                        width: 50.0.h,
+                                        child: variable.myThemes[index] ==
+                                                selectedPrimaryColor
+                                            ? Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                                size: 24.0.sp,
+                                              )
+                                            : SizedBox(),
+                                      )),
+                                ),
+                              ))),
+                    ]),
+              ),
+            ],
+          ),
+        ),
+        Divider(),
+        Center(
+            child: Text(
+          version != null ? 'v' + version : '',
+          style: TextStyle(color: Colors.grey),
+        )),
+      ],
+    );
+  }
+
+  Future<bool> _handleGoogleFit() async {
+    bool ret = false;
+    bool _isSignedIn = await _deviceDataHelper.isGoogleFitSignedIn();
+    if (_isGFActive == _isSignedIn) {
+      ret = _isGFActive;
+    } else {
+      if (_isGFActive) {
+        _isGFActive = await _deviceDataHelper.activateGoogleFit();
+      } else {
+        _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
+      }
+    }
+    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    return ret;
   }
 }

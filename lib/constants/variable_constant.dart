@@ -320,12 +320,24 @@ const String strRateus = 'Rate us';
 const String strMaya = 'Sheela';
 const String strMAYA = 'SHEELA';
 const String strMyClaims = 'My Claims';
-String strCareGiverSettings = 'Caregiver Communication Settings';
+String strCareGiverSettings = 'Caregiver Communication';
+String strNotificationPreference = 'Notification Preferences';
+
 String strNonAdherenceSettings = 'Activity Non-adherence Reminder';
 const String strMsgFromProvider = 'Message from provider';
 
 const String strColorPalete = 'Color palette';
 const String strCareGiverCommunication = 'Caregiver Communication';
+
+const String strVitalsPreferences = 'Vitals Preferences';
+const String strDisplayDevices = 'Display devices';
+const String strDisplayPreferences ='Display Preferences';
+
+const String strSkillsIntegration ='Skills/Integration';
+const String strIntegration ='Integration';
+
+
+
 
 // for my family
 
@@ -598,8 +610,10 @@ const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
-const String strConnectBpMeter = 'Please connect your BP device and start recording';
-const String strConnectPulseMeter = 'Please connect your pulse oximeter and start recording';
+const String strConnectBpMeter =
+    'Please connect your BP device and start recording';
+const String strConnectPulseMeter =
+    'Please connect your pulse oximeter and start recording';
 
 //introslider
 
@@ -682,6 +696,21 @@ const String renewalLimit =
 const String alreadySubscribed =
     'You’ve already subscribed to the plan. Selecting this now will renew the plan';
 
+    //String for choose Units
+const String str_Weight = 'Weight';
+const String str_Pounds = 'Pounds';
+const String str_Kilogram = 'Kilograms';
+
+const String str_Height = 'Height';
+const String str_Feet = 'Feet/Inches';
+const String str_centi = 'Centimeters';
+
+const String str_Temp = 'Temperature';
+const String str_celesius = 'Celsius';
+const String str_far = 'Farenheit';
+
+
+
 //Reminders
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
@@ -723,6 +752,7 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
+
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

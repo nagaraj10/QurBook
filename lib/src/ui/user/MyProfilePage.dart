@@ -57,6 +57,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var heightController = TextEditingController();
   var weightController = TextEditingController();
+  var heightInchController = TextEditingController();
 
   var firstName = TextEditingController();
   var middleName = TextEditingController();
@@ -70,13 +71,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var cntrlr_corp_name = TextEditingController(text: '');
 
-
   LanguageModel languageModelList;
   LanguageRepository languageBlock = new LanguageRepository();
 
   bool _isEditable = false;
   double sliverBarHeight = 220;
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+
+  bool isFeetOrInches = true;
+  bool isKg = true;
 
   MediaTypeBlock _mediaTypeBlock;
   HealthReportListForUserRepository _healthReportListForUserRepository;
@@ -90,10 +93,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
     super.initState();
     languageBlock = new LanguageRepository();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
-    _healthReportListForUserRepository= new HealthReportListForUserRepository();
-    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
-
-    });
+    _healthReportListForUserRepository =
+        new HealthReportListForUserRepository();
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = MediaTypeBlock();
@@ -245,10 +247,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget getProfileWidget(MyProfileModel myProfile, MyProfileResult data,
       {String errorMsg}) {
-    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {
-
-    });
+    addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     if (data != null) {
+      setUnit(data);
+
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
           mobile.text = data.userContactCollection3[0].phoneNumber;
@@ -267,9 +269,17 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
 
       if (data.additionalInfo != null) {
-        heightController.text = data.additionalInfo.height != null
-            ? data.additionalInfo.height
-            : '';
+        if (isFeetOrInches) {
+          heightController.text =
+              data.additionalInfo?.heightObj?.valueFeet ?? '';
+          heightInchController.text =
+              data.additionalInfo?.heightObj?.valueInches ?? '';
+        } else {
+          heightController.text = data.additionalInfo.height != null
+              ? data.additionalInfo.height
+              : '';
+        }
+
         weightController.text = data.additionalInfo.weight != null
             ? data.additionalInfo.weight
             : '';
@@ -311,10 +321,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       }
 
-      if(data.membershipOfferedBy!=null && data.membershipOfferedBy!=''){
-        cntrlr_corp_name.text=data.membershipOfferedBy;
+      if (data.membershipOfferedBy != null && data.membershipOfferedBy != '') {
+        cntrlr_corp_name.text = data.membershipOfferedBy;
       }
-
     }
     try {
       try {
@@ -536,40 +545,102 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         )),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Container(
-                          width: 1.sw / 2 - 40,
-                          child: TextField(
-                            style: TextStyle(fontSize: 16.0.sp),
-                            controller: heightController,
-                            enabled: false,
-                            decoration: InputDecoration(
-                                hintText: CommonConstants.height,
-                                hintStyle: TextStyle(fontSize: 16.0.sp),
-                                labelText: CommonConstants.height),
-                          ),
-                        )),
-                    Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Container(
-                          width: 1.sw / 2 - 40,
-                          child: TextField(
-                            style: TextStyle(fontSize: 16.0.sp),
-                            controller: weightController,
-                            enabled: false,
-                            decoration: InputDecoration(
-                                hintText: CommonConstants.weight,
-                                hintStyle: TextStyle(fontSize: 16.0.sp),
-                                labelText: CommonConstants.weight),
-                          ),
-                        )),
-                  ],
-                ),
+                isFeetOrInches
+                    ? Row(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                width: 0.5.sw / 2 - 20,
+                                child: TextField(
+                                  style: TextStyle(fontSize: 16.0.sp),
+                                  controller: heightController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          CommonConstants.heightNameFeetInd,
+                                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                                      labelText:
+                                          CommonConstants.heightNameFeetInd),
+                                ),
+                              )),
+                          Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Container(
+                                width: 0.5.sw / 2 - 20,
+                                child: TextField(
+                                  style: TextStyle(fontSize: 16.0.sp),
+                                  controller: heightInchController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText:
+                                          CommonConstants.heightNameInchInd,
+                                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                                      labelText:
+                                          CommonConstants.heightNameInchInd),
+                                ),
+                              )),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                width: 1.sw / 2 - 40,
+                                child: TextField(
+                                  style: TextStyle(fontSize: 16.0.sp),
+                                  controller: weightController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText: isKg
+                                          ? CommonConstants.weightName
+                                          : CommonConstants.weightNameUS,
+                                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                                      labelText: isKg
+                                          ? CommonConstants.weightName
+                                          : CommonConstants.weightNameUS),
+                                ),
+                              )),
+                        ],
+                      )
+                    : Row(
+                        children: <Widget>[
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                width: 1.sw / 2 - 40,
+                                child: TextField(
+                                  style: TextStyle(fontSize: 16.0.sp),
+                                  controller: heightController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText: CommonConstants.height,
+                                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                                      labelText: CommonConstants.height),
+                                ),
+                              )),
+                          Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Container(
+                                width: 1.sw / 2 - 40,
+                                child: TextField(
+                                  style: TextStyle(fontSize: 16.0.sp),
+                                  controller: weightController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                      hintText: isKg
+                                          ? CommonConstants.weightName
+                                          : CommonConstants.weightNameUS,
+                                      hintStyle: TextStyle(fontSize: 16.0.sp),
+                                      labelText: isKg
+                                          ? CommonConstants.weightName
+                                          : CommonConstants.weightNameUS),
+                                ),
+                              )),
+                        ],
+                      ),
+
                 getLanguageWidget(myProfile),
-                addFamilyUserInfoBloc.tagsList.length>0?getDropDownWithTagsdrop():SizedBox(),
+                addFamilyUserInfoBloc.tagsList.length > 0
+                    ? getDropDownWithTagsdrop()
+                    : SizedBox(),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -582,18 +653,20 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         labelText: CommonConstants.year_of_birth_with_star),
                   ),
                 ),
-                cntrlr_corp_name.text!=''?Padding(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    style: TextStyle(fontSize: 16.0.sp),
-                    controller: cntrlr_corp_name,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(fontSize: 16.0.sp),
-                      labelText: CommonConstants.corpname,
-                    ),
-                  ),
-                ):SizedBox(),
+                cntrlr_corp_name.text != ''
+                    ? Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextField(
+                          style: TextStyle(fontSize: 16.0.sp),
+                          controller: cntrlr_corp_name,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintStyle: TextStyle(fontSize: 16.0.sp),
+                            labelText: CommonConstants.corpname,
+                          ),
+                        ),
+                      )
+                    : SizedBox(),
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -732,6 +805,47 @@ class _MyProfilePageState extends State<MyProfilePage> {
         });
   }
 
+  void setUnit(MyProfileResult data) {
+    var profileSetting = data.userProfileSettingCollection3[0].profileSetting;
+    if (profileSetting != null) {
+      if (profileSetting?.preferredMeasurement != null) {
+        try {
+          String heightUnit =
+              profileSetting?.preferredMeasurement?.height?.unitCode;
+          String weightUnit =
+              profileSetting?.preferredMeasurement?.weight?.unitCode;
+          if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
+            isFeetOrInches = true;
+          } else {
+            isFeetOrInches = false;
+          }
+
+          if (weightUnit == Constants.STR_VAL_WEIGHT_IND) {
+            isKg = true;
+          } else {
+            isKg = false;
+          }
+        } catch (e) {
+          if (CommonUtil.REGION_CODE == 'IND') {
+            isFeetOrInches = true;
+            isKg = true;
+          } else {
+            isFeetOrInches = false;
+            isKg = false;
+          }
+        }
+      }
+    } else {
+      if (CommonUtil.REGION_CODE == 'IND') {
+        isFeetOrInches = true;
+        isKg = true;
+      } else {
+        isFeetOrInches = false;
+        isKg = false;
+      }
+    }
+  }
+
   Widget getDropDownWithTagsdrop() {
     return FutureBuilder(
         future: _healthReportListForUserRepository.getTags(),
@@ -741,7 +855,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           }
           final List<Tags> tagslist = snapshot.data.result;
 
-        //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
+          //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
 
           setTheValuesForDropdown(tagslist);
           return Taglist(
@@ -773,6 +887,4 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
     }
   }
-
-
 }

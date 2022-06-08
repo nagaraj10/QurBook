@@ -223,6 +223,11 @@ class CommonConstants {
   static String exprityDate = 'Expiry Date*';
   static String heightName = 'Height(Cm)';
   static String weightName = 'Weight(Kg)';
+
+  static String heightNameFeetInd = 'Height(Feet)';
+  static String heightNameInchInd = 'Height(Inches)';
+  static String weightNameUS = 'Weight(lbs)';
+
   static String preferredLanguage = 'Preferred Language';
   static String tags = 'Tags';
 
