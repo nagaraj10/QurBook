@@ -372,7 +372,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             )
 
 
-            var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
+            var notification = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setLargeIcon(
                     BitmapFactory.decodeResource(
