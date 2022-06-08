@@ -109,17 +109,7 @@ class _LandingScreenState extends State<LandingScreen> {
     QurPlanReminders.getTheRemindersFromAPI();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
     callImportantsMethod();
-    controller.getFamilyMappingList().then((familyMembersList) {
-        if(familyMembersList != null){
-          if(familyMembersList?.result != null){
-              if(familyMembersList?.result?.isNotEmpty){
-                if(familyMembersList?.result?.length>0){
-                  controller.updateNewChatFloatShown(true);
-                }
-              }
-          }
-        }
-    });
+    callGetFamiltMappingCaregiver();
     var profilebanner =
         PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {
@@ -932,6 +922,28 @@ class _LandingScreenState extends State<LandingScreen> {
         isUserMainId = false;
       } else {
         isUserMainId = true;
+      }
+    });
+  }
+
+  void callGetFamiltMappingCaregiver(){
+    controller.getFamilyMappingList().then((familyMembersList) {
+      if(familyMembersList != null){
+        if(familyMembersList?.result != null){
+          if(familyMembersList?.result?.isNotEmpty){
+            if(familyMembersList?.result?.length>0){
+              controller.updateNewChatFloatShown(true);
+            }else{
+              controller.updateNewChatFloatShown(false);
+            }
+          }else{
+            controller.updateNewChatFloatShown(false);
+          }
+        }else{
+          controller.updateNewChatFloatShown(false);
+        }
+      }else{
+        controller.updateNewChatFloatShown(false);
       }
     });
   }

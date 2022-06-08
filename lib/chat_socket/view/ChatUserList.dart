@@ -71,17 +71,13 @@ class _ChatUserListState extends State<ChatUserList> {
 
   ChatSocketService chocketService = new ChatSocketService();
 
-  //FamilyListBloc _familyListBloc;
   FamilyMembers familyMembersModel = new FamilyMembers();
   List<SharedByUsers> sharedbyme = new List();
 
   FamilyMembers familyData = new FamilyMembers();
 
-  //List<SharedByUsers> _familyNames = new List();
-  Future<CaregiverPatientChatModel> familyListModel;
+  CaregiverPatientChatModel familyListModel;
 
-  /*FamilyMemberListRepository _familyListRespository =
-      FamilyMemberListRepository();*/
 
   FlutterToast toast = FlutterToast();
 
@@ -90,7 +86,7 @@ class _ChatUserListState extends State<ChatUserList> {
   final controller = Get.put(ChatUserListController());
 
   @override
-  void initState() {
+  Future<void> initState() {
     super.initState();
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
@@ -100,10 +96,27 @@ class _ChatUserListState extends State<ChatUserList> {
 
     mInitialTime = DateTime.now();
 
-    /*_familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();*/
 
-    familyListModel = controller.getFamilyMappingList();
+    getFamilyListMap();
+  }
+
+  void getFamilyListMap() async {
+    familyListModel = await controller.getFamilyMappingList();
+    if(familyListModel != null){
+      if(familyListModel?.result != null){
+        if(familyListModel?.result?.isNotEmpty){
+          if(familyListModel?.result?.length>0){
+            controller.updateNewChatFloatShown(true);
+          }else{
+            controller.updateNewChatFloatShown(false);
+          }
+        }else{
+          controller.updateNewChatFloatShown(false);
+        }
+      }else{
+        controller.updateNewChatFloatShown(false);
+      }
+    }
   }
 
   void initSocket(bool isLoad) {
@@ -211,7 +224,7 @@ class _ChatUserListState extends State<ChatUserList> {
               ),
         floatingActionButton: (widget?.careGiversList?.length ?? 0) > 0
             ? null
-            : Obx(() => controller.shownNewChatFloat.isTrue
+            : Obx(() => controller.shownNewChatFloat.isTrue && controller.isSelfUser()
                 ? FloatingActionButton(
                     backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                     child: Icon(
@@ -219,7 +232,9 @@ class _ChatUserListState extends State<ChatUserList> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      showDialogForFamilyMembers();
+                      if((familyListModel?.result?.length??0)>0){
+                        showDialogForFamilyMembers();
+                      }
                     },
                   )
                 : SizedBox.shrink()));
@@ -241,86 +256,63 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget getFamilyListWidget() {
-    return new FutureBuilder<CaregiverPatientChatModel>(
-      future: familyListModel,
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SafeArea(
-            child: SizedBox(
-              height: 1.sh / 4.5,
-              child: new Center(
-                child: SizedBox(
-                  width: 30.0.h,
-                  height: 30.0.h,
-                  child: CommonCircularIndicator(),
-                ),
-              ),
-            ),
-          );
-        } else if (snapshot.hasError) {
-          return ErrorsWidget();
-        } else {
-          if (snapshot?.hasData && snapshot?.data?.result != null) {
-              if (snapshot?.data?.result?.length > 0) {
-                return Container(
-                  decoration: BoxDecoration(
-                      color: const Color(fhbColors.bgColorContainer),
-                      borderRadius: BorderRadius.circular(10)),
-                  margin: EdgeInsets.all(20),
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(left: 20, right: 20),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              strNewChatLabel,
-                              style: TextStyle(
-                                  fontSize: 18.0.sp,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.black54,
-                                size: 24.0.sp,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            )
-                          ],
-                        ),
+    if (familyListModel != null) {
+      if (familyListModel?.result != null) {
+        if (familyListModel?.result?.length > 0) {
+          return Container(
+            decoration: BoxDecoration(
+                color: const Color(fhbColors.bgColorContainer),
+                borderRadius: BorderRadius.circular(10)),
+            margin: EdgeInsets.all(20),
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        strNewChatLabel,
+                        style: TextStyle(
+                            fontSize: 18.0.sp, fontWeight: FontWeight.w500),
                       ),
-                      Container(
-                        constraints: BoxConstraints(
-                          maxHeight: 440.0.h,
+                      IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.black54,
+                          size: 24.0.sp,
                         ),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (c, i) => getCardWidgetForFamilyList(
-                              snapshot?.data?.result[i]),
-                          itemCount:
-                              snapshot?.data?.result?.length ?? 0,
-                        ),
-                      ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
                     ],
                   ),
-                );
-              } else {
-                controller.updateNewChatFloatShown(false);
-                getNofamilyWidget();
-              }
-
-          } else {
-            controller.updateNewChatFloatShown(false);
-            getNofamilyWidget();
-          }
+                ),
+                Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 440.0.h,
+                  ),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemBuilder: (c, i) =>
+                        getCardWidgetForFamilyList(familyListModel?.result[i]),
+                    itemCount: familyListModel?.result?.length ?? 0,
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          controller.updateNewChatFloatShown(false);
+          getNofamilyWidget();
         }
-      },
-    );
+      }
+    } else {
+      controller.updateNewChatFloatShown(false);
+      getNofamilyWidget();
+    }
   }
 
   Widget getNofamilyWidget() {
@@ -421,15 +413,13 @@ class _ChatUserListState extends State<ChatUserList> {
                                       child: Text(
                                     data?.firstName != null &&
                                             data?.lastName != null
-                                        ? data?.firstName[0]
-                                                .toUpperCase() +
+                                        ? data?.firstName[0].toUpperCase() +
                                             (data?.lastName.length > 0
                                                 ? data?.lastName[0]
                                                     .toUpperCase()
                                                 : '')
                                         : data?.firstName != null
-                                            ? data?.firstName[0]
-                                                .toUpperCase()
+                                            ? data?.firstName[0].toUpperCase()
                                             : '',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -464,7 +454,8 @@ class _ChatUserListState extends State<ChatUserList> {
                           height: 2.0.h,
                         ),
                         Text(
-                          (data.relationshipName != null && data.relationshipName!='')
+                          (data.relationshipName != null &&
+                                  data.relationshipName != '')
                               ? data.relationshipName ?? ''
                               : '',
                           overflow: TextOverflow.ellipsis,
