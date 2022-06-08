@@ -4840,7 +4840,6 @@ class VideoCallCommonUtils {
     final apiResponse = QurHomeApiProvider();
     await PreferenceUtil.init();
     var regController = Get.find<QurhomeRegimenController>();
-    //regController.onGoingSOSCall.value = false;
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var docName = regController.userName.value;
     var randomMID = getMyMeetingID();
@@ -4911,7 +4910,7 @@ class VideoCallCommonUtils {
         MaterialPageRoute(
           builder: (context) => CallingPage(
             id: bookId,
-            name: isFrom.contains("SOS") ? "Emergency Services" : patName,
+            name: isFrom.contains("SOS") ? emergencyServices : patName,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
             isCallActualTime: isCallActualTime,
@@ -5300,7 +5299,7 @@ class VideoCallCommonUtils {
       var regController = Get.find<QurhomeRegimenController>();
       String strText = "Patient";
       if (regController.onGoingSOSCall.value) {
-        strText = "Emergency Services";
+        strText = emergencyServices;
       }
       if (state == AudioRemoteState.Stopped) {
         //FlutterToast().getToast('Patient is on Mute', Colors.red);
@@ -5780,10 +5779,10 @@ class VideoCallCommonUtils {
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
             var regController = Get.find<QurhomeRegimenController>();
+            regController.onGoingSOSCall.value = false;
             createMissedCallNS(
-                docName: /*callMetaData.docName*/ regController.userName.value,
-                patId: /*callMetaData.patId*/ regController
-                    .careCoordinatorId.value,
+                docName: regController.userName.value,
+                patId: regController.careCoordinatorId.value,
                 bookingId: callMetaData.bookId);
           }
         }
