@@ -93,7 +93,6 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   bool get getIsButtonResponse => isButtonResponse && !enableMic;
   CreateDeviceSelectionModel createDeviceSelectionModel;
-  PreferredMeasurement preferredMeasurement;
 
   List<Tags> tagsList = new List<Tags>();
   static const stream = EventChannel('QurbookBLE/stream');
@@ -1440,7 +1439,6 @@ class ChatScreenViewModel extends ChangeNotifier {
             qa_subscription,
             preColor,
             greColor,
-            preferredMeasurement,
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,

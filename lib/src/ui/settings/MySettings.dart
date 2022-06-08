@@ -64,7 +64,6 @@ class _MySettingsState extends State<MySettings> {
   var userMappingId = '';
   bool isTouched = false;
 
-  PreferredMeasurement preferredMeasurement;
   List<Tags> tagsList = [];
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
@@ -220,7 +219,6 @@ class _MySettingsState extends State<MySettings> {
             qa_subscription,
             priColor,
             greColor,
-            preferredMeasurement,
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,

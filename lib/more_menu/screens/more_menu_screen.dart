@@ -90,7 +90,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
-  PreferredMeasurement preferredMeasurement;
   List<Tags> tagsList = [];
 
   bool allowAppointmentNotification = true;
@@ -648,7 +647,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             qa_subscription,
             priColor,
             greColor,
-            preferredMeasurement,
             tagsList,
             allowAppointmentNotification,
             allowVitalNotification,

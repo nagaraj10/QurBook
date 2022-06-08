@@ -1512,8 +1512,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
-      addFamilyUserInfoBloc.userId = widget
-          .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.id; //widget.arguments.addFamilyUserInfo.id;
 
       relationShipResponseList = widget.arguments?.defaultrelationShips;
 

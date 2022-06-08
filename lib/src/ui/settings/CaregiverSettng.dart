@@ -66,7 +66,6 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   var userMappingId = '';
   bool isTouched = false;
-  PreferredMeasurement preferredMeasurement;
   List<Tags> tagsList = new List<Tags>();
 
   bool allowAppointmentNotification = true;
