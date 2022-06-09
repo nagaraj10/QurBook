@@ -245,14 +245,16 @@ class AdditionalInfo {
         heightObj =
             json['height'] != null ? HeightObj.fromJson(json['height']) : null;
       }
+          weight = json['weight']?.toString();
+
     } catch (e) {}
 
-    weight = json['weight']?.toString();
 
-    if (json.containsKey('language')) {
-      language = json['language'].cast<String>();
-    }
-
+    try {
+      if (json.containsKey('language')) {
+        language = json['language'].cast<String>();
+      }
+    } catch (e) {}
     if (json.containsKey('mrdNumber')) mrdNumber = json['mrdNumber'];
     if (json.containsKey('uhidNumber')) uhidNumber = json['uhidNumber'];
     if (json.containsKey('visitReason')) visitReason = json['visitReason'];
