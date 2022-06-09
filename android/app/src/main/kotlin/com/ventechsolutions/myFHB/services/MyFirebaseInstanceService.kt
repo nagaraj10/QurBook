@@ -317,6 +317,17 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
         else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+//            if (nsManager != null) {
+//                val channelList: List<NotificationChannel> =
+//                    nsManager.getNotificationChannels()
+//                var i = 0
+//                while (channelList != null && i < channelList.size) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        nsManager.deleteNotificationChannel(channelList[i].id)
+//                    }
+//                    i++
+//                }
+//            }
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
             val USER_NAME = data[getString(R.string.username)]
@@ -326,8 +337,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             var channelId="";
             var channelName="";
             if(data[Constants.ACTIVITY_NAME]!=null&&data[Constants.ACTIVITY_NAME].equals("Mandatory",ignoreCase = true)){
-                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
-                channelId="mandatory"+CHANNEL_ACK
+//                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
+                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
+                channelId="mandatory_a_"+CHANNEL_ACK
                 channelName=getString(R.string.mandatory_channel_ack)
             }else{
                 ack_sound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
@@ -340,7 +352,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 val channelAck = NotificationChannel(
                     channelId,
                     channelName,
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    NotificationManager.IMPORTANCE_HIGH
                 )
                 channelAck.description = getString(R.string.channel_ack_desc)
                 val attributes = AudioAttributes.Builder()
