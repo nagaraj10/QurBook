@@ -190,15 +190,13 @@ class _CallingPageState extends State<CallingPage> {
                           try {
                             clearAudioPlayer();
                             regController.onGoingSOSCall.value = false;
-                            /*if (widget.callMetaData != null) {
+                            if (widget.callMetaData != null) {
                               VideoCallCommonUtils.isMissedCallNsSent = true;
                               VideoCallCommonUtils().createMissedCallNS(
-                                  docName: */ /*widget.callMetaData.docName*/ /* regController
-                                      .userName.value,
-                                  patId: */ /*widget.callMetaData.patId*/ /* regController
-                                      .careCoordinatorId.value,
+                                  docName: regController.userName.value,
+                                  patId: regController.careCoordinatorId.value,
                                   bookingId: widget.callMetaData.bookId);
-                            }*/
+                            }
                             VideoCallCommonUtils().callEnd(context, widget.id);
                           } catch (e) {
                             print(e);

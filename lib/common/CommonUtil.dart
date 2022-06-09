@@ -4888,7 +4888,7 @@ class VideoCallCommonUtils {
       //call has been sent to patient
       if (isFromAppointment) {
         callMeta = CallMetaData(
-          bookId,
+          mID,
           appointmentId,
           patName,
           patId,
@@ -4901,7 +4901,7 @@ class VideoCallCommonUtils {
           slotDuration: slotDuration,
         );
       } else {
-        callMeta = CallMetaData(bookId, '', patName, patId, patientDOB ?? '',
+        callMeta = CallMetaData(mID, '', patName, patId, patientDOB ?? '',
             patientPicUrl, '', docName, healthRecord, patientPrescriptionId);
       }
       regController.loadingData.value = false;
@@ -4909,7 +4909,7 @@ class VideoCallCommonUtils {
         context,
         MaterialPageRoute(
           builder: (context) => CallingPage(
-            id: bookId,
+            id: mID,
             name: isFrom.contains("SOS") ? emergencyServices : patName,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
@@ -5748,6 +5748,14 @@ class VideoCallCommonUtils {
           if (appointMentId == '') {
             try {
               clearAudioPlayer(audioPlayer);
+              try {
+                Provider.of<RTCEngineProvider>(context, listen: false)
+                    .stopRtcEngine();
+                myDB
+                    .collection("call_log")
+                    .doc("$cid")
+                    .set({"call_status": "call_ended_by_user"});
+              } catch (e) {}
               Navigator.pop(context);
             } catch (e) {
               print(e);
@@ -5861,6 +5869,8 @@ class VideoCallCommonUtils {
           callPageShouldEndAutomatically = false;
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
+          var regController = Get.find<QurhomeRegimenController>();
+          regController.onGoingSOSCall.value = false;
           Future.delayed(Duration(seconds: 2), () {
             Navigator.pop(context);
           });
