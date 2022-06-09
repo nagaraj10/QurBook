@@ -244,11 +244,10 @@ class QurhomeRegimenController extends GetxController {
 
       final status = await VideoCallCommonUtils()
           .getCurrentVideoCallRelatedPermission(isAudioCall: true);
-      var bookinId = getMyMeetingID().toString();
-      print("bookinId $bookinId");
 
       if (status) {
-        var _bookinId = getMyMeetingID().toString();
+        var bookinId = getMyMeetingID().toString();
+        print("bookinId $bookinId");
 
         Provider.of<AudioCallProvider>(Get.context, listen: false)
             .enableAudioCall();
@@ -256,7 +255,7 @@ class QurhomeRegimenController extends GetxController {
         VideoCallCommonUtils()
             .makeCallToPatient(
                 context: Get.context,
-                bookId: _bookinId,
+                bookId: bookinId,
                 appointmentId: '',
                 patName: userName.value,
                 patientDOB: userDOB.value,
