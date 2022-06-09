@@ -1125,6 +1125,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       closeDialog();
       if (!controller.onGoingSOSCall.value) {
+        VideoCallCommonUtils.callActions.value = CallActions.CALLING;
         controller.callSOSEmergencyServices();
       }
     } catch (e) {
