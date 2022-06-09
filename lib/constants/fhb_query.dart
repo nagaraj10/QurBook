@@ -40,6 +40,14 @@ const String qr_messaging = 'messaging';
 const String qr_triggerMissedCallNotification =
     'messaging/sos-missed-call-notification';
 const String qr_callLog = 'call-log/sos';
+const String qr_startRecordCallLog = 'sos/call/record/start';
+const String qr_stopRecordCallLog = 'sos/call/record/stop';
+const String qr_meetingId = 'meetingId';
+const String qr_UID = 'uid';
+const String qr_resourceId = 'resourceId';
+const String qr_sid = 'sid';
+const String qr_callLogId = 'callLogId';
+const String qr_joinedUid = 'joinedUid';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
@@ -350,10 +358,10 @@ const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 
 const String qr_chat_socket_history = 'chat/get-message-history';
 
-
 // family list mapping
 
-const String qr_chat_family_mapping = 'user-relationship/get-shared-caregivers-list';
+const String qr_chat_family_mapping =
+    'user-relationship/get-shared-caregivers-list';
 
 const String qr_chat_socket_init_chat_doc_pat =
     'chat/initiate-doctor-patient-chat';

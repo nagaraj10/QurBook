@@ -41,7 +41,6 @@ class CallLogModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
-
       data['callerUser'] = this.callerUser;
       data['recipientUser'] = this.recipientUser;
       data['startedTime'] = this.startedTime;
@@ -59,7 +58,6 @@ class CallLogModel {
     return data;
   }
 }
-
 
 class CallEndModel {
   String callerUser;
@@ -105,7 +103,6 @@ class CallEndModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
-
       data['callerUser'] = this.callerUser;
       data['recipientUser'] = this.recipientUser;
       data['startedTime'] = this.startedTime;
@@ -158,19 +155,82 @@ class CallLogResponseModel {
   String message;
   String result;
 
-  CallLogResponseModel({this.isSuccess, this.message, this.result});
+  CallLogResponseModel(
+      {this.isSuccess, this.message, this.result});
 
   CallLogResponseModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    message = json['message'];
-    result = json['result'];
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'];
+    } catch (e) {
+      print(e);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    data['message'] = this.message;
-    data['result'] = this.result;
+    try {
+      data['isSuccess'] = this.isSuccess;
+      data['message'] = this.message;
+      data['result'] = this.result;
+    } catch (e) {
+      print(e);
+    }
+
+    return data;
+  }
+}
+
+class CallRecordModel {
+  bool isSuccess;
+  Result result;
+
+  CallRecordModel({this.isSuccess, this.result});
+
+  CallRecordModel.fromJson(Map<String, dynamic> json) {
+    try {
+      isSuccess = json['isSuccess'];
+      result =
+      json['result'] != null ? new Result.fromJson(json['result']) : null;
+    } catch (e) {
+      print(e);
+    }
+
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['isSuccess'] = this.isSuccess;
+      if (this.result != null) {
+        data['result'] = this.result.toJson();
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return data;
+  }
+}
+
+
+
+class Result {
+  String resourceId;
+  String sid;
+
+  Result({this.resourceId, this.sid});
+
+  Result.fromJson(Map<String, dynamic> json) {
+    resourceId = json['resourceId'];
+    sid = json['sid'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['resourceId'] = this.resourceId;
+    data['sid'] = this.sid;
     return data;
   }
 }

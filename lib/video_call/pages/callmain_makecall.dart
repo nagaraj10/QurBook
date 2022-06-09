@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/keysofmodel.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/video_call/pages/localpreview.dart';
@@ -109,7 +110,7 @@ class CallMainMakeCall extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        '${regController.onGoingSOSCall.value ? "Emergency Services" : patName} requesting to switch to video call',
+                        '${regController.onGoingSOSCall.value ? emergencyServices : patName} requesting to switch to video call',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20.0.sp,
@@ -321,16 +322,18 @@ class CallMainMakeCall extends StatelessWidget {
       onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 regController.onGoingSOSCall.value
-                    ? "Emergency Services"
+                    ? emergencyServices
                     : patName,
                 style: TextStyle(
-                  fontSize: 16.0.sp,
+                  color: Colors.red,
+                  fontSize: 18.0.sp,
                 ),
               ),
               /*Text(
@@ -340,17 +343,30 @@ class CallMainMakeCall extends StatelessWidget {
                   color: Colors.white70,
                 ),
               )*/
-              CustomTimer(
-                backgroundColor: Colors.transparent,
-                initialDate: DateTime.now(),
-                running: _isTimerRun,
-                width: 50.0.w,
-                timerTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14.0.sp,
-                ),
-                isRaised: false,
-                tracetime: (time) {},
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.radio_button_on_outlined,
+                    size: 22.0.sp,
+                    color: Colors.red,
+                  ),
+                  SizedBox(
+                    width: 2.0.w,
+                  ),
+                  CustomTimer(
+                    backgroundColor: Colors.transparent,
+                    initialDate: DateTime.now(),
+                    running: _isTimerRun,
+                    width: 50.0.w,
+                    timerTextStyle: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15.0.sp,
+                    ),
+                    isRaised: false,
+                    tracetime: (time) {},
+                  ),
+                ],
               ),
               SizedBox(
                 height: 10,

@@ -8,7 +8,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -338,15 +337,81 @@ class _MakeCallPageState extends State<MakeCallPage> {
             ? tryingToConnect()
             : Consumer<AudioCallProvider>(builder: (context, status, child) {
                 if (status.isAudioCall) {
-                  return InkWell(
-                    child: AudioCallScreen(
-                      patName: regController.onGoingSOSCall.value
-                          ? "Emergency Services"
-                          : widget.patName,
-                    ),
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.red,
+                        height: 30.00,
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 20.0.sp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 3.0.w,
+                              ),
+                              Text(
+                                yourCallIsBeingRecorded,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          child: AudioCallScreen(
+                            patName: regController.onGoingSOSCall.value
+                                ? emergencyServices
+                                : widget.patName,
+                          ),
+                        ),
+                      ),
+                    ],
                   );
                 } else {
-                  return _viewRows();
+                  return Column(
+                    children: [
+                      Container(
+                        color: Colors.red,
+                        height: 30.00,
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                size: 20.0.sp,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 3.0.w,
+                              ),
+                              Text(
+                                yourCallIsBeingRecorded,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14.0.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(child: _viewRows()),
+                    ],
+                  );
                 }
               });
       },

@@ -4888,7 +4888,7 @@ class VideoCallCommonUtils {
       //call has been sent to patient
       if (isFromAppointment) {
         callMeta = CallMetaData(
-          bookId,
+          mID,
           appointmentId,
           patName,
           patId,
@@ -4901,15 +4901,16 @@ class VideoCallCommonUtils {
           slotDuration: slotDuration,
         );
       } else {
-        callMeta = CallMetaData(bookId, '', patName, patId, patientDOB ?? '',
+        callMeta = CallMetaData(mID, '', patName, patId, patientDOB ?? '',
             patientPicUrl, '', docName, healthRecord, patientPrescriptionId);
       }
       regController.loadingData.value = false;
+      regController.meetingId.value = mID;
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CallingPage(
-            id: bookId,
+            id: mID,
             name: isFrom.contains("SOS") ? emergencyServices : patName,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
@@ -5087,6 +5088,10 @@ class VideoCallCommonUtils {
       int uid,
       int elapsed,
     ) {
+      /*print(
+          "rtcEngineEventHandler.joinChannelSuccess channel $channel uid $uid elapsed $elapsed");*/
+      var regController = Get.find<QurhomeRegimenController>();
+      regController.joinedUid.value = CommonUtil().validString(uid.toString());
       // setState(() {
       //   final info = 'onJoinChannel: $channel, uid: $uid';
       // });
@@ -5102,8 +5107,11 @@ class VideoCallCommonUtils {
     };
 
     rtcEngineEventHandler.userJoined = (int uid, int elapsed) {
+      print("rtcEngineEventHandler.userJoinedl uid $uid elapsed $elapsed");
       user_id = uid;
       final info = 'userJoined: $uid';
+      var regController = Get.find<QurhomeRegimenController>();
+      regController.UID.value = CommonUtil().validString(uid.toString());
       Provider.of<RTCEngineProvider>(
         Get.context,
         listen: false,
@@ -5747,6 +5755,14 @@ class VideoCallCommonUtils {
               : '';
           if (appointMentId == '') {
             try {
+              try {
+                FirebaseFirestore.instance
+                    .collection('call_log')
+                    .doc('$id')
+                    .delete();
+                Provider.of<RTCEngineProvider>(Get.context, listen: false)
+                    .stopRtcEngine();
+              } catch (e) {}
               clearAudioPlayer(audioPlayer);
               Navigator.pop(context);
             } catch (e) {
@@ -5861,6 +5877,7 @@ class VideoCallCommonUtils {
           callPageShouldEndAutomatically = false;
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
+          //TODO
           Future.delayed(Duration(seconds: 2), () {
             Navigator.pop(context);
           });
@@ -5897,6 +5914,7 @@ class VideoCallCommonUtils {
 
     var callLogResponse =
         await apiResponse.callLogEndData(request: callLogModel);
+    var stopCallRecordResponse = await apiResponse.stopRecordSOSCall();
 
     regController.onGoingSOSCall.value = false;
 
@@ -5941,6 +5959,7 @@ class VideoCallCommonUtils {
         status: "Started",
         additionalInfo: additionalInfo);
     var callLogResponse = await apiResponse.callLogData(request: callLogModel);
+    var startRecordCallResponse = await apiResponse.startRecordSOSCall();
   }
 
   createMissedCallNS({String docName, String patId, String bookingId}) async {
