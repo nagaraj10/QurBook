@@ -145,7 +145,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         position = i;
       }
     }
-    print("position--->"+position.toString());
     if(widget.arguments.currentPage==null){
       _currentPage = position;
     }
