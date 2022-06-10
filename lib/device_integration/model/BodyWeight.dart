@@ -46,7 +46,7 @@ class BodyWeightEntity {
           //id: json["id"],
           startDateTime: DateTime.parse(json[param.strsyncStartDate]),
           endDateTime: DateTime.parse(json[param.strsyncEndDate]),
-          weight: json[param.strParamWeight],
+          weight: json[param.strParamWeight].toString(),
           weightUnit: json[param.strParamWeightUnit] != null
               ? RefrenceValueMeta.fromJson(json[param.strParamWeightUnit])
               : null,

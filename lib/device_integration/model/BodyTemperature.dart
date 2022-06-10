@@ -47,7 +47,7 @@ class BodyTemperatureEntity {
         // id: json["id"],
         startDateTime: DateTime.parse(json[param.strsyncStartDate]),
         endDateTime: DateTime.parse(json[param.strsyncEndDate]),
-        temperature: json[param.strParamTemp],
+        temperature: json[param.strParamTemp].toString(),
         temperatureUnit:
             RefrenceValueMeta.fromJson(json[param.strParamTempUnit]),
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null

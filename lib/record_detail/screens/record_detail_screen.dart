@@ -1249,14 +1249,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             String pulse = '';*/
             final String systolicPressure =
                 widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[0].value
+                    ? widget.data.metadata.deviceReadings[0].value.toString()
                     : '';
             final String diastolicPressure =
                 widget.data.metadata.deviceReadings != null
-                    ? widget.data.metadata.deviceReadings[1].value
+                    ? widget.data.metadata.deviceReadings[1].value.toString()
                     : '';
             final String pulse = widget.data.metadata.deviceReadings != null
-                ? widget.data.metadata.deviceReadings[2].value
+                ? widget.data.metadata.deviceReadings[2].value.toString()
                 : '';
             var fileName = widget.data.metadata.fileName;
 

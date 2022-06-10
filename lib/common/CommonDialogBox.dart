@@ -1318,7 +1318,7 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
 
     if (weightUnit == null) {
-      weightUnit = "kgs";
+      weightUnit = "Kg";
     } else {
       weightMainUnit = weightUnit;
     }
@@ -2031,6 +2031,8 @@ class CommonDialogBox {
         final fileNoun = folderName.path.split('/').last;
         if (fileNoun.contains('.pdf')) {
           postMediaData[parameters.strfileName] = fileName.text + '.pdf';
+        } else {
+          postMediaData[parameters.strfileName] = fileName.text;
         }
       } else {
         postMediaData[parameters.strfileName] = fileName.text;

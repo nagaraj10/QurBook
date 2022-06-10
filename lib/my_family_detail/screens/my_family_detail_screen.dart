@@ -204,6 +204,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
+                    if (widget.arguments.profilesSharedByMe != null &&
+                        widget.arguments.profilesSharedByMe.length > 1) {
+                      _currentPage = _currentPage + 1;
+                    }
                     Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                             arguments: AddFamilyUserInfoArguments(
                                 //TODO we need to pass the logged in user id

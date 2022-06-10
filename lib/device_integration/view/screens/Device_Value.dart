@@ -102,7 +102,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   var commonConstants = CommonConstants();
 
   String tempUnit = 'c';
-  String weightUnit = 'kg';
+  String weightUnit = 'Kg';
 
   bool isTouched = true;
 
@@ -142,7 +142,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "kg";
+      weightUnit = "Kg";
     }
 
     try {
@@ -152,7 +152,25 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
   }
 
-  
+  Widget getAppColorsAndDeviceValues() {
+    final _devicesmodel = Provider.of<DevicesViewModel>(context);
+
+    return profileSetting == null
+        ? FutureBuilder<GetDeviceSelectionModel>(
+            future: getProfileSetings(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CommonCircularIndicator();
+              } else if (snapshot.hasError) {
+                return ErrorsWidget();
+              } else {
+                return getBody(_devicesmodel);
+              }
+            },
+          )
+        : getBody(_devicesmodel);
+  }
+
   getBody(DevicesViewModel devicesmodel) {
     return Column(
       children: [
@@ -242,25 +260,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         }
       }
     });
-  }
-
-  Widget getAppColorsAndDeviceValues() {
-    final _devicesmodel = Provider.of<DevicesViewModel>(context);
-
-    return profileSetting == null
-        ? FutureBuilder<GetDeviceSelectionModel>(
-            future: getProfileSetings(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CommonCircularIndicator();
-              } else if (snapshot.hasError) {
-                return ErrorsWidget();
-              } else {
-                return getBody(_devicesmodel);
-              }
-            },
-          )
-        : getBody(_devicesmodel);
   }
 
   @override
@@ -1213,7 +1212,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "kg";
+      weightUnit = "Kg";
     }
     return Container(
         //height: 70.0.h,
@@ -1294,7 +1293,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                             child: Text(
-                              weightUnit != null ? weightUnit : 'kg',
+                              weightUnit != null ? weightUnit : 'Kg',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0.sp,
