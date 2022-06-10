@@ -249,8 +249,7 @@ class QurHomeApiProvider {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       var data = {
         qr_meetingId: CommonUtil().validString(regController.meetingId.value),
-        qr_UID: CommonUtil().validString(regController.UID.value),
-        qr_joinedUid: CommonUtil().validString(regController.joinedUid.value)
+        qr_UID: CommonUtil().validString(regController.UID.value)
       };
       http.Response res = await ApiServices.post(
         Constants.BASE_URL + qr_startRecordCallLog,
@@ -285,7 +284,7 @@ class QurHomeApiProvider {
         qr_UID: CommonUtil().validString(regController.UID.value),
         qr_resourceId: CommonUtil().validString(regController.resourceId.value),
         qr_sid: CommonUtil().validString(regController.sid.value),
-        qr_callLogId: CommonUtil().validString(regController.resultId.value)
+        qr_callLogId: CommonUtil().validString(regController.resultId.value),
       };
       http.Response res = await ApiServices.post(
         Constants.BASE_URL + qr_stopRecordCallLog,

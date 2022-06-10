@@ -46,7 +46,6 @@ class QurhomeRegimenController extends GetxController {
   var UID = "".obs;
   var resourceId = "".obs;
   var sid = "".obs;
-  var joinedUid = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
