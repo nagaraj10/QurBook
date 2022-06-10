@@ -695,7 +695,37 @@ class _LandingScreenState extends State<LandingScreen> {
         MyProfileModel value =
             await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
         myProfile = value;
-      } catch (e) {}
+
+        if (value != null) {
+          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+            var profileSetting =
+                value?.result?.userProfileSettingCollection3[0].profileSetting;
+            if (profileSetting?.preferredMeasurement != null) {
+              PreferredMeasurement preferredMeasurement =
+                  profileSetting?.preferredMeasurement;
+              await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                        preferredMeasurement.weight?.unitCode)
+                    .then((value) {
+                  PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                          preferredMeasurement.temperature?.unitCode)
+                      .then((value) {});
+                });
+              });
+            } else {
+              saveUnitSystemToPreference();
+            }
+          } else {
+            saveUnitSystemToPreference();
+          }
+        } else {
+          saveUnitSystemToPreference();
+        }
+      } catch (e) {
+        saveUnitSystemToPreference();
+      }
     } else {
       CommonUtil().logout(moveToLoginPage);
     }
@@ -923,25 +953,49 @@ class _LandingScreenState extends State<LandingScreen> {
     });
   }
 
-  void callGetFamiltMappingCaregiver(){
+  void callGetFamiltMappingCaregiver() {
     controller.getFamilyMappingList().then((familyMembersList) {
-      if(familyMembersList != null){
-        if(familyMembersList?.result != null){
-          if(familyMembersList?.result?.isNotEmpty){
-            if(familyMembersList?.result?.length>0){
+      if (familyMembersList != null) {
+        if (familyMembersList?.result != null) {
+          if (familyMembersList?.result?.isNotEmpty) {
+            if (familyMembersList?.result?.length > 0) {
               controller.updateNewChatFloatShown(true);
-            }else{
+            } else {
               controller.updateNewChatFloatShown(false);
             }
-          }else{
+          } else {
             controller.updateNewChatFloatShown(false);
           }
-        }else{
+        } else {
           controller.updateNewChatFloatShown(false);
         }
-      }else{
+      } else {
         controller.updateNewChatFloatShown(false);
       }
     });
+  }
+
+  void saveUnitSystemToPreference() async {
+    if (CommonUtil.REGION_CODE != "IN") {
+      await PreferenceUtil.saveString(
+              Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_US)
+          .then((value) {
+        PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_US)
+            .then((value) {
+          PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_US)
+              .then((value) {});
+        });
+      });
+    } else {
+      await PreferenceUtil.saveString(
+              Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_IND)
+          .then((value) {
+        PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_IND)
+            .then((value) {
+          PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_IND)
+              .then((value) {});
+        });
+      });
+    }
   }
 }

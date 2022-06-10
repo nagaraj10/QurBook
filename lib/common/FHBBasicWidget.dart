@@ -352,6 +352,8 @@ class FHBBasicWidget {
     if (showLabel == null) {
       showLabel = true;
     }
+    setValues(unitsTosearch, range ?? '');
+
     return Container(
         width: 1.sw - 60,
         child: TextField(

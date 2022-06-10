@@ -112,7 +112,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   Timer _timer;
 
   String tempUnit = 'c';
-  String weightUnit = 'kg';
+  String weightUnit = 'Kg';
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
@@ -1469,7 +1469,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "kg";
+      weightUnit = "Kg";
     }
     return Container(
         //height: 70.0.h,
@@ -1517,7 +1517,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   Column(
                     children: <Widget>[
                       Text(
-                        weightUnit != null ? weightUnit : 'kg',
+                        weightUnit != null ? weightUnit : 'Kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1966,7 +1966,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         '',
                         '',
                         getFormattedTime(translist[index].startDateTime),
-                        'Kg',
+                        weightUnit,
                         translist[index].deviceId);
                   },
                 )
