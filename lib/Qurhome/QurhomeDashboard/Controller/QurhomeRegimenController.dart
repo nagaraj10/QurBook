@@ -33,6 +33,7 @@ class QurhomeRegimenController extends GetxController {
   Position currentPosition;
 
   var careCoordinatorId = "".obs;
+  var careCoordinatorIdEmptyMsg = "".obs;
   var userName = "".obs;
   var userId = "".obs;
   var userProfilePic = "".obs;
@@ -41,6 +42,10 @@ class QurhomeRegimenController extends GetxController {
   var onGoingSOSCall = false.obs;
   var resultId = "".obs;
   var callStartTime = "".obs;
+  var meetingId = "".obs;
+  var UID = "".obs;
+  var resourceId = "".obs;
+  var sid = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
@@ -203,7 +208,7 @@ class QurhomeRegimenController extends GetxController {
       userId = "".obs;
       http.Response response = await _apiProvider.getCareCoordinatorId();
       if (response == null) {
-        // failed to get the data, we are showing the error on UI
+        careCoordinatorId.value = "";
       } else {
         CareCoordinatorData careCoordinatorData =
             CareCoordinatorData.fromJson(json.decode(response.body));
@@ -219,8 +224,9 @@ class QurhomeRegimenController extends GetxController {
                   .toLowerCase()
                   .contains(activeUser)));
           if (index >= 0) {
-            careCoordinatorId.value = CommonUtil()
-                .validString(careCoordinatorData.result[index].userId);
+            /*careCoordinatorId.value = CommonUtil()
+                .validString(careCoordinatorData.result[index].userId);*/
+            careCoordinatorId.value = "bd076e6b-67b1-46ac-be41-420ef94816f8";
             userId.value = CommonUtil()
                 .validString(careCoordinatorData.result[index].patientId);
           }
@@ -237,6 +243,13 @@ class QurhomeRegimenController extends GetxController {
       if (!isInternetOn) {
         FlutterToast()
             .getToast('Please turn on your internet and try again', Colors.red);
+        return;
+      }
+
+      if (CommonUtil().validString(careCoordinatorId.value).trim().isEmpty) {
+        FlutterToast().getToast(
+            '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
+            Colors.red);
         return;
       }
 
@@ -270,7 +283,7 @@ class QurhomeRegimenController extends GetxController {
                 callType: 'audio',
                 isFrom: "SOS")
             .then((value) {
-          onGoingSOSCall.value = true;
+          //onGoingSOSCall.value = true;
         });
       } else {
         FlutterToast().getToast(

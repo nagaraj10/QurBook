@@ -85,7 +85,8 @@ class QurHomeApiProvider {
     }
   }
 
-  Future<dynamic> getCareCoordinatorId() async {
+  getCareCoordinatorId() async {
+    var regController = Get.find<QurhomeRegimenController>();
     http.Response responseJson;
     await PreferenceUtil.init();
     var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
@@ -98,11 +99,17 @@ class QurHomeApiProvider {
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
+        regController.careCoordinatorIdEmptyMsg.value =
+            CommonUtil().validString(json.decode(responseJson.body));
         return null;
       }
     } on SocketException {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(strNoInternet);
       throw FetchDataException(strNoInternet);
     } catch (e) {
+      regController.careCoordinatorIdEmptyMsg.value =
+          CommonUtil().validString(e.toString());
       return null;
     }
   }
@@ -124,7 +131,6 @@ class QurHomeApiProvider {
           isCallSent = true;
         }
       } else {
-        LoaderClass.hideLoadingDialog(Get.context);
         CallMessagingErrorResponse err =
             CallMessagingErrorResponse.fromJson(json.decode(res.body));
         if (err.isSuccess == false && err.diagnostics?.message != null) {
@@ -170,6 +176,7 @@ class QurHomeApiProvider {
 
   Future<dynamic> callLogData({CallLogModel request}) async {
     try {
+      var regController = Get.find<QurhomeRegimenController>();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       http.Response res = await ApiServices.post(
         Constants.BASE_URL + qr_callLog,
@@ -179,7 +186,6 @@ class QurHomeApiProvider {
       if (res.statusCode == 200) {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
-        var regController = Get.find<QurhomeRegimenController>();
         regController.resultId.value =
             CommonUtil().validString(_response.result);
 
@@ -228,6 +234,66 @@ class QurHomeApiProvider {
         CallLogResponseModel _response =
             CallLogResponseModel.fromJson(convert.json.decode(res.body));
 
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {}
+  }
+
+  Future<dynamic> startRecordSOSCall() async {
+    try {
+      var regController = Get.find<QurhomeRegimenController>();
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var data = {
+        qr_meetingId: CommonUtil().validString(regController.meetingId.value),
+        qr_UID: CommonUtil().validString(regController.UID.value)
+      };
+      http.Response res = await ApiServices.post(
+        Constants.BASE_URL + qr_startRecordCallLog,
+        headers: header,
+        body: json.encode(data),
+      );
+      if (res.statusCode == 200) {
+        CallRecordModel _response =
+            CallRecordModel.fromJson(convert.json.decode(res.body));
+
+        regController.resourceId.value =
+            CommonUtil().validString(_response.result.resourceId);
+
+        regController.sid.value =
+            CommonUtil().validString(_response.result.sid);
+
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {}
+  }
+
+  Future<dynamic> stopRecordSOSCall() async {
+    try {
+      var regController = Get.find<QurhomeRegimenController>();
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var data = {
+        qr_meetingId: CommonUtil().validString(regController.meetingId.value),
+        qr_UID: CommonUtil().validString(regController.UID.value),
+        qr_resourceId: CommonUtil().validString(regController.resourceId.value),
+        qr_sid: CommonUtil().validString(regController.sid.value),
+        qr_callLogId: CommonUtil().validString(regController.resultId.value),
+      };
+      http.Response res = await ApiServices.post(
+        Constants.BASE_URL + qr_stopRecordCallLog,
+        headers: header,
+        body: json.encode(data),
+      );
+      if (res.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(res.body));
         return _response.isSuccess;
       } else {
         CallLogErrorResponseModel error =
