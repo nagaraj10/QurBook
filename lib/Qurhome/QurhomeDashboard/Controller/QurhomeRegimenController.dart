@@ -33,6 +33,7 @@ class QurhomeRegimenController extends GetxController {
   Position currentPosition;
 
   var careCoordinatorId = "".obs;
+  var careCoordinatorIdEmptyMsg = "".obs;
   var userName = "".obs;
   var userId = "".obs;
   var userProfilePic = "".obs;
@@ -41,6 +42,10 @@ class QurhomeRegimenController extends GetxController {
   var onGoingSOSCall = false.obs;
   var resultId = "".obs;
   var callStartTime = "".obs;
+  var meetingId = "".obs;
+  var UID = "".obs;
+  var resourceId = "".obs;
+  var sid = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
@@ -203,7 +208,7 @@ class QurhomeRegimenController extends GetxController {
       userId = "".obs;
       http.Response response = await _apiProvider.getCareCoordinatorId();
       if (response == null) {
-        // failed to get the data, we are showing the error on UI
+        careCoordinatorId.value = "";
       } else {
         CareCoordinatorData careCoordinatorData =
             CareCoordinatorData.fromJson(json.decode(response.body));
@@ -240,15 +245,21 @@ class QurhomeRegimenController extends GetxController {
         return;
       }
 
+      if (CommonUtil().validString(careCoordinatorId.value).trim().isEmpty) {
+        FlutterToast().getToast(
+            '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
+            Colors.red);
+        return;
+      }
+
       loadingData.value = true;
 
       final status = await VideoCallCommonUtils()
           .getCurrentVideoCallRelatedPermission(isAudioCall: true);
-      var bookinId = getMyMeetingID().toString();
-      print("bookinId $bookinId");
 
       if (status) {
-        var _bookinId = getMyMeetingID().toString();
+        var bookinId = getMyMeetingID().toString();
+        print("bookinId $bookinId");
 
         Provider.of<AudioCallProvider>(Get.context, listen: false)
             .enableAudioCall();
@@ -256,7 +267,7 @@ class QurhomeRegimenController extends GetxController {
         VideoCallCommonUtils()
             .makeCallToPatient(
                 context: Get.context,
-                bookId: _bookinId,
+                bookId: bookinId,
                 appointmentId: '',
                 patName: userName.value,
                 patientDOB: userDOB.value,
@@ -271,7 +282,7 @@ class QurhomeRegimenController extends GetxController {
                 callType: 'audio',
                 isFrom: "SOS")
             .then((value) {
-          onGoingSOSCall.value = true;
+          //onGoingSOSCall.value = true;
         });
       } else {
         FlutterToast().getToast(

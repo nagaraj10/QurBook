@@ -30,7 +30,8 @@ class AudioCallScreen extends StatelessWidget {
               height: 120,
               width: 120,
               decoration: BoxDecoration(
-                color: Color(CommonUtil.secondaryGrey),
+                //color: Color(CommonUtil.secondaryGrey),
+                color: Colors.red,
                 borderRadius: BorderRadius.all(
                   Radius.circular(100),
                 ),
