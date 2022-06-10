@@ -224,9 +224,8 @@ class QurhomeRegimenController extends GetxController {
                   .toLowerCase()
                   .contains(activeUser)));
           if (index >= 0) {
-            /*careCoordinatorId.value = CommonUtil()
-                .validString(careCoordinatorData.result[index].userId);*/
-            careCoordinatorId.value = "bd076e6b-67b1-46ac-be41-420ef94816f8";
+            careCoordinatorId.value = CommonUtil()
+                .validString(careCoordinatorData.result[index].userId);
             userId.value = CommonUtil()
                 .validString(careCoordinatorData.result[index].patientId);
           }
