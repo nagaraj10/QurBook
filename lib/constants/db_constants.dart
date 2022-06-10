@@ -10,7 +10,8 @@ const String DB_NAME = 'main.db';
 const String UT_NAME = 'UnitsTable';
 const String CM_NAME = 'CountryMetrics';
 const String UT_QUERY = 'SELECT * FROM UnitsTable';
-const String UT_QUERY_BY_UN = 'SELECT * FROM UnitsTable WHERE units=? and range=?';
+const String UT_QUERY_BY_UN =
+    'SELECT * FROM UnitsTable WHERE units=? and range=?';
 const String CM_QUERY = 'SELECT * FROM CountryMetrics';
 const String CM_QUERY_BY_CC =
     'SELECT * FROM CountryMetrics WHERE countryCode = ';
@@ -33,7 +34,7 @@ const String PRO_MGDL = 'mg/dL';
 const String PRO_SPO2 = '%';
 const String PRO_PRBPM = 'PR bpm';
 const String PRO_F = 'F';
-const String PRO_KG = 'kgs';
+const String PRO_KG = 'Kg';
 const String CC_WHR_CALUSE = 'countryCode = ?';
 const String CT_APPOINTMENTS =
     'CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, apptime TEXT, reason TEXT)';
@@ -54,4 +55,4 @@ const String PRO_DATE = 'date';
 const String PRO_TIME = 'time';
 const String PRO_INTERVAL = 'interval';
 const String PRO_PATTERN = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-const String appName='Qurbook';
+const String appName = 'Qurbook';

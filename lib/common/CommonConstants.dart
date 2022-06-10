@@ -100,9 +100,9 @@ class CommonConstants {
   static String strTempParams = 'temperature';
 
   static String strWeight = 'Weight';
-  static String strWeightValue = 'kg';
+  static String strWeightValue = 'Kg';
   static String strWeightParam = 'weight';
-  static String strWeightUnit = 'kgs';
+  static String strWeightUnit = 'Kg';
 
   static String strOxygenSaturation = 'Spo2';
   static String strOxygenValue = '%spo2';
