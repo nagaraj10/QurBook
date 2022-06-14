@@ -675,9 +675,9 @@ const String strNoReports =
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
 
-const String EMAIL_REGEXP =
-//r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+// const String EMAIL_REGEXP =
+// //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+//     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
 const String c_chat_with_whatsapp_begin_conv = 'Hi';
 const String c_qurhealth_helpline = '919566200555';
@@ -747,7 +747,6 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
-
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
