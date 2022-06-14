@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -1376,7 +1377,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     final emailValid = '@'.allMatches(emailController.text.trim()).length > 1
         ? false
-        : RegExp(variable.EMAIL_REGEXP).hasMatch(emailController.text);
+        : RegExp(patternEmail).hasMatch(emailController.text);
 
     if (firstNameController.text == '') {
       isValid = false;
