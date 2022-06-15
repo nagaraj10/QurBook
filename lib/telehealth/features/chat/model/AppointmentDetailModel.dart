@@ -26,6 +26,7 @@ class AppointmentResult {
   Past past;
   DeviceToken deviceToken;
   bool isCaregiver;
+  bool isPatient;
   ChatList chatList;
 
   AppointmentResult(
@@ -40,6 +41,7 @@ class AppointmentResult {
         ? new DeviceToken.fromJson(json['deviceToken'])
         : null;
     isCaregiver = json['isCaregiver'];
+    isPatient = json['isPatient'];
     chatList = json['chatList'] != null
         ? new ChatList.fromJson(json['chatList'])
         : null;
@@ -57,6 +59,7 @@ class AppointmentResult {
       data['deviceToken'] = this.deviceToken.toJson();
     }
     data['isCaregiver'] = this.isCaregiver;
+    data['isPatient'] = this.isPatient;
 
     if (this.chatList != null) {
       data['chatList'] = this.chatList.toJson();
