@@ -839,16 +839,21 @@ class FHBBasicWidget {
         width: 50.0.w,
         child: TextField(
           textAlign: TextAlign.center,
-          maxLength: deviceName == Constants.STR_THERMOMETER ? 4 : 3,
+          maxLength: deviceName == Constants.STR_THERMOMETER
+              ? 4
+              : deviceName == Constants.STR_WEIGHING_SCALE
+                  ? 6
+                  : 3,
           style: TextStyle(
               fontSize: 15.0.sp,
               fontWeight: FontWeight.w500,
               color: getColorBasedOnDevice(
-                  deviceName, unitsTosearch, controllerValue.text)),
+                  deviceName, unitsTosearch, controllerValue.text.toString())),
           onTap: () {},
           controller: controllerValue,
           onEditingComplete: () {
-            if (checkifValueisInRange(controllerValue.text, deviceName)) {
+            if (checkifValueisInRange(
+                controllerValue.text.toString(), device)) {
               Alert.displayConfirmProceed(context,
                   title: 'Confirmation',
                   content: CommonConstants.strErrorStringForDevices +
@@ -879,8 +884,9 @@ class FHBBasicWidget {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0.sp),
               contentPadding: EdgeInsets.zero),
           cursorColor: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
-          inputFormatters: [DecimalTextInputFormatter(decimalRange: 1)],
-          keyboardType: deviceName == Constants.STR_THERMOMETER
+          inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+          keyboardType: (deviceName == Constants.STR_THERMOMETER ||
+                  deviceName == Constants.STR_WEIGHING_SCALE)
               ? TextInputType.numberWithOptions(decimal: true)
               : TextInputType.number,
           cursorWidth: 0.5.w,
@@ -894,50 +900,76 @@ class FHBBasicWidget {
               if (value.length < 4) {
                 valueEnterd = value;
                 var number;
-                if (device == "Temp") {
+                if (device == "Temp" ||
+                    deviceName == Constants.STR_WEIGHING_SCALE) {
                   number = double.parse(value);
                 } else {
                   number = int.parse(value);
                 }
-                if (number < unitsMesurements.minValue ||
-                    number > unitsMesurements.maxValue) {
-                  errorValue = CommonConstants.strErrorStringForDevices +
-                      ' ' +
-                      unitsMesurements.minValue.toString() +
-                      variable.strAnd +
-                      unitsMesurements.maxValue.toString();
+                if (number is int) {
+                  if (number < unitsMesurements.minValue ||
+                      number > unitsMesurements.maxValue) {
+                    errorValue = CommonConstants.strErrorStringForDevices +
+                        ' ' +
+                        unitsMesurements.minValue.toString() +
+                        variable.strAnd +
+                        unitsMesurements.maxValue.toString();
 
-                  onTextChanged(errorValue);
-                } else {
-                  onTextChanged('');
-                  if (deviceName != Constants.STR_WEIGHING_SCALE) {
-                    node.nextFocus();
+                    onTextChanged(errorValue);
+                  }
+                } else if (number is double) {
+                  if (number < ((unitsMesurements.minValue).toDouble()) ||
+                      number > ((unitsMesurements.maxValue).toDouble())) {
+                    errorValue = CommonConstants.strErrorStringForDevices +
+                        ' ' +
+                        unitsMesurements.minValue.toString() +
+                        variable.strAnd +
+                        unitsMesurements.maxValue.toString();
+
+                    onTextChanged(errorValue);
                   }
                 }
-              } else if (deviceName == Constants.STR_THERMOMETER &&
+              } else if ((deviceName == Constants.STR_THERMOMETER ||
+                      deviceName == Constants.STR_WEIGHING_SCALE) &&
                   value.length < 5) {
                 valueEnterd = value;
                 var number;
-                if (device == "Temp") {
+                if (device == "Temp" ||
+                    deviceName == Constants.STR_WEIGHING_SCALE) {
                   number = double.parse(value);
                 } else {
                   number = int.parse(value);
                 }
-                if (number < unitsMesurements.minValue ||
-                    number > unitsMesurements.maxValue) {
-                  errorValue = CommonConstants.strErrorStringForDevices +
-                      ' ' +
-                      unitsMesurements.minValue.toString() +
-                      variable.strAnd +
-                      unitsMesurements.maxValue.toString();
+                try {
+                  if (number is int) {
+                    if (number < unitsMesurements.minValue ||
+                        number > unitsMesurements.maxValue) {
+                      errorValue = CommonConstants.strErrorStringForDevices +
+                          ' ' +
+                          unitsMesurements.minValue.toString() +
+                          variable.strAnd +
+                          unitsMesurements.maxValue.toString();
 
-                  onTextChanged(errorValue);
-                } else {
+                      onTextChanged(errorValue);
+                    }
+                  } else if (number is double) {
+                    if (number < ((unitsMesurements.minValue).toDouble()) ||
+                        number > ((unitsMesurements.maxValue).toDouble())) {
+                      errorValue = CommonConstants.strErrorStringForDevices +
+                          ' ' +
+                          unitsMesurements.minValue.toString() +
+                          variable.strAnd +
+                          unitsMesurements.maxValue.toString();
+
+                      onTextChanged(errorValue);
+                    }
+                  }
+                } catch (e) {
                   onTextChanged('');
-                  node.nextFocus();
                 }
               } else {
-                if (checkifValueisInRange(controllerValue.text, device ?? "")) {
+                if (checkifValueisInRange(
+                    controllerValue.text.toString(), deviceName ?? "")) {
                   Alert.displayConfirmProceed(context,
                       title: 'Confirmation',
                       content: CommonConstants.strErrorStringForDevices +
@@ -993,12 +1025,21 @@ class FHBBasicWidget {
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (text != null && text != '') {
-          final number = int.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
-            return Colors.red;
-          } else {
-            return Color(CommonConstants.weightDarkColor);
+          final number = double.parse(text);
+          if (number is int) {
+            if (number < unitsMesurements.minValue ||
+                number > unitsMesurements.maxValue) {
+              return Colors.red;
+            } else {
+              return Color(CommonConstants.weightDarkColor);
+            }
+          } else if (number is double) {
+            if (number < (unitsMesurements.minValue).toDouble() ||
+                number > (unitsMesurements.maxValue).toDouble()) {
+              return Colors.red;
+            } else {
+              return Color(CommonConstants.weightDarkColor);
+            }
           }
         } else {
           return Color(CommonConstants.weightDarkColor);
@@ -1049,20 +1090,33 @@ class FHBBasicWidget {
   }
 
   bool checkifValueisInRange(String text, String device) {
-    if (text != null && text != '') {
-      var number;
-      if (device == "Temp") {
-        number = double.parse(text);
-      } else {
-        number = int.parse(text);
-      }
-      if (number < unitsMesurements.minValue ||
-          number > unitsMesurements.maxValue) {
-        return true;
+    try {
+      if (text != null && text != '') {
+        var number;
+        if (device == "Temp" || device == Constants.STR_WEIGHING_SCALE) {
+          number = double.parse(text);
+        } else {
+          number = int.parse(text);
+        }
+        if (number is int) {
+          if (number < unitsMesurements.minValue ||
+              number > unitsMesurements.maxValue) {
+            return true;
+          } else {
+            return false;
+          }
+        } else if (number is double) {
+          if (number < (unitsMesurements.minValue).toDouble() ||
+              number > (unitsMesurements.maxValue).toDouble()) {
+            return true;
+          } else {
+            return false;
+          }
+        }
       } else {
         return false;
       }
-    } else {
+    } catch (e) {
       return false;
     }
   }
