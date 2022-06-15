@@ -171,6 +171,8 @@ class ChatState extends State<ChatDetail> {
 
   bool isCareGiverApi = true;
 
+  bool isFamilyPatientApi = true;
+
   bool isChatDisable = true;
 
   bool isCallBackDisable = false;
@@ -381,6 +383,7 @@ class ChatState extends State<ChatDetail> {
       if (appointmentResult != null) {
         setState(() {
           isCareGiverApi = appointmentResult?.isCaregiver ?? false;
+          isFamilyPatientApi = appointmentResult?.isPatient ?? false;
           isChatDisable = appointmentResult?.chatList?.isDisable ?? false;
           isCallBackDisable = isChatDisable;
 
@@ -961,7 +964,7 @@ class ChatState extends State<ChatDetail> {
                             fontSize: 16.0.sp,
                             color: Colors.white)),
                     !isCareGiverApi
-                        ? !isFromFamilyListChat
+                        ? !isFamilyPatientApi
                             ? Container(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
