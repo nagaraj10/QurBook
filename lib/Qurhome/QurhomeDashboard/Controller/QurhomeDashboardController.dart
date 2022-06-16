@@ -219,17 +219,22 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
-      var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
+      //var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
       var index = -1;
       if (Platform.isAndroid) {
-        index = userDeviceCollection.indexWhere((element) =>
-            (validString(element.device.serialNumber) ==
-                (isFromBp ? bleBPMacId : bleMacId)) &&
-            ((element.userId ?? '') == activeUser));
+        index = userDeviceCollection.indexWhere(
+            (element) => (validString(element.device.serialNumber) ==
+                (isFromBp
+                    ? bleBPMacId
+                    : bleMacId)) /*&&
+            ((element.userId ?? '') == activeUser)*/
+            );
       } else {
-        index = userDeviceCollection.indexWhere((element) =>
-            (validString(element.device.serialNumber) == bleMacId) &&
-            ((element.userId ?? '') == activeUser));
+        index = userDeviceCollection.indexWhere(
+            (element) => (validString(element.device.serialNumber) ==
+                bleMacId) /*&&
+            ((element.userId ?? '') == activeUser)*/
+            );
       }
 
       return index >= 0;
