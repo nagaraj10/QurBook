@@ -88,4 +88,5 @@ object Constants {
     val BP_LOCATION_CHECK ="bp_location_check"
     val BLE_SCAN_CANCEL ="bleScanCancel"
     val UID ="uid"
+    val GET_CURRENT_LOCATION ="getCurrentLocation"
 }

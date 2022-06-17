@@ -80,7 +80,7 @@ const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
 const String STR_VAL_HEIGHT_IND = 'f-in';
-const String STR_VAL_WEIGHT_IND = 'kg';
+const String STR_VAL_WEIGHT_IND = 'Kg';
 const String STR_VAL_TEMP_IND = 'f';
 
 const String STR_VAL_HEIGHT_US = 'cm';
@@ -687,6 +687,8 @@ const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
 const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
 const String BP_LOCATION_CHECK = 'bp_location_check';
+const String GET_CURRENT_LOCATION = 'getCurrentLocation';
+const String GET_LOCATION_URL = 'http://ip-api.com/json';
 
 //Qurhome vitals
 const String filterTitleDay = 'Day';

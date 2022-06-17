@@ -154,7 +154,8 @@ class _CallingPageState extends State<CallingPage> {
                       style: TextStyle(
                         fontSize: 30.0.sp,
                         fontWeight: FontWeight.w600,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        /*color: Color(CommonUtil().getMyPrimaryColor()),*/
+                        color: Colors.red,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -178,12 +179,12 @@ class _CallingPageState extends State<CallingPage> {
                       margin: EdgeInsets.only(
                         bottom: 50.0.h,
                       ),
-                      height: 50.0.h,
-                      width: 50.0.h,
+                      height: 60.0.h,
+                      width: 60.0.h,
                       child: IconButton(
                         icon: Icon(
                           Icons.call_end,
-                          size: 24.0.sp,
+                          size: 26.0.sp,
                           color: Colors.white,
                         ),
                         onPressed: () {

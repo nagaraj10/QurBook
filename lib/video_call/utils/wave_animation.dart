@@ -76,8 +76,9 @@ class _WaveAnimationState extends State<WaveAnimation>
       height: radius,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Color(CommonUtil().getMyPrimaryColor())
-            .withOpacity(1 - _controller.value),
+        color: Colors.red.withOpacity(1 - _controller.value),
+        /*color: Color(CommonUtil().getMyPrimaryColor())
+            .withOpacity(1 - _controller.value),*/
       ),
     );
   }

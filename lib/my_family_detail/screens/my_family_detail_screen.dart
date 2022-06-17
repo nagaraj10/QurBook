@@ -145,7 +145,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         position = i;
       }
     }
-    _currentPage = position;
+    if (widget.arguments.currentPage == null) {
+      _currentPage = position;
+    }
     setState(() {});
   }
 
@@ -205,13 +207,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                             arguments: AddFamilyUserInfoArguments(
                                 //TODO we need to pass the logged in user id
-                                id: widget
-                                    .arguments
-                                    .profilesSharedByMe[_currentPage + 1]
-                                    .child
-                                    .id,
-                                sharedbyme: widget.arguments
-                                    .profilesSharedByMe[_currentPage + 1],
+                                id: widget.arguments
+                                    .profilesSharedByMe[_currentPage].child.id,
+                                sharedbyme: widget
+                                    .arguments.profilesSharedByMe[_currentPage],
                                 fromClass: CommonConstants.my_family,
                                 defaultrelationShips:
                                     relationShipResponseList?.result?.isNotEmpty

@@ -11,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
+import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
@@ -122,10 +123,16 @@ class QurhomeDashboardController extends GetxController {
                   arguments: SheelaArgument(
                     takeActiveDeviceReadings: true,
                   ),
-                ).then((_) {
-                  regController.getRegimentList();
+                ).then((_) async {
                   if (isFromVitalsList) {
-                    Get.back();
+                    await Future.delayed(Duration(seconds: 2));
+                    VitalDetailController vitalController = Get.find();
+                    vitalController.fetchOXYDetailsQurHome(
+                      filter: filterApiDay,
+                      isLoading: true,
+                    );
+                  } else {
+                    regController.getRegimenList();
                   }
                 });
               } else {
@@ -158,8 +165,17 @@ class QurhomeDashboardController extends GetxController {
                         takeActiveDeviceReadings: false,
                         isFromBpReading: true,
                       ),
-                    ).then((_) {
-                      regController.getRegimenList();
+                    ).then((_) async {
+                      if (isFromVitalsList) {
+                        await Future.delayed(Duration(seconds: 2));
+                        VitalDetailController vitalController = Get.find();
+                        vitalController.fetchBPDetailsQurHome(
+                          filter: filterApiDay,
+                          isLoading: true,
+                        );
+                      } else {
+                        regController.getRegimenList();
+                      }
                     });
                   } else {
                     Get.back();
@@ -203,17 +219,22 @@ class QurhomeDashboardController extends GetxController {
     try {
       var userDeviceCollection =
           hubController.hubListResponse.result.userDeviceCollection;
-      var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
+      //var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
       var index = -1;
       if (Platform.isAndroid) {
-        index = userDeviceCollection.indexWhere((element) =>
-            (validString(element.device.serialNumber) ==
-                (isFromBp ? bleBPMacId : bleMacId)) &&
-            ((element.userId ?? '') == activeUser));
+        index = userDeviceCollection.indexWhere(
+            (element) => (validString(element.device.serialNumber) ==
+                (isFromBp
+                    ? bleBPMacId
+                    : bleMacId)) /*&&
+            ((element.userId ?? '') == activeUser)*/
+            );
       } else {
-        index = userDeviceCollection.indexWhere((element) =>
-            (validString(element.device.serialNumber) == bleMacId) &&
-            ((element.userId ?? '') == activeUser));
+        index = userDeviceCollection.indexWhere(
+            (element) => (validString(element.device.serialNumber) ==
+                bleMacId) /*&&
+            ((element.userId ?? '') == activeUser)*/
+            );
       }
 
       return index >= 0;
@@ -269,8 +290,17 @@ class QurhomeDashboardController extends GetxController {
                 eId: eid,
               ),
             ).then(
-              (_) {
-                regController.getRegimenList();
+              (_) async {
+                if (isFromVitalsList) {
+                  await Future.delayed(Duration(seconds: 2));
+                  VitalDetailController vitalController = Get.find();
+                  vitalController.fetchOXYDetailsQurHome(
+                    filter: filterApiDay,
+                    isLoading: true,
+                  );
+                } else {
+                  regController.getRegimenList();
+                }
               },
             );
           }
@@ -320,7 +350,7 @@ class QurhomeDashboardController extends GetxController {
   Future<void> checkForBpConnection({bool isFromVitals}) async {
     if (Platform.isAndroid) {
       _getPermissionValuesNative();
-      callNativeBpValues();
+      callNativeBpValues(isFromVitals: isFromVitals);
     } else {
       _enableTimer(isFromVitals);
       foundBLE.value = false;
@@ -335,7 +365,18 @@ class QurhomeDashboardController extends GetxController {
           arguments: SheelaArgument(
             eId: hubController.eid,
           ),
-        );
+        ).then((_) async {
+          if (isFromVitals) {
+            await Future.delayed(Duration(seconds: 2));
+            VitalDetailController vitalController = Get.find();
+            vitalController.fetchBPDetailsQurHome(
+              filter: filterApiDay,
+              isLoading: true,
+            );
+          } else {
+            regController.getRegimenList();
+          }
+        });
       },
       onPressCancel: () async {
         stopBpScan();
@@ -367,7 +408,7 @@ class QurhomeDashboardController extends GetxController {
     });
   }
 
-  callNativeBpValues() async {
+  callNativeBpValues({bool isFromVitals}) async {
     try {
       const platform = MethodChannel(ISBPCONNECT);
       var result = await platform.invokeMethod(ISBPCONNECT);
@@ -384,9 +425,20 @@ class QurhomeDashboardController extends GetxController {
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
-                    takeActiveDeviceReadings: false, isFromBpReading: true),
-              ).then((_) {
-                regController.getRegimenList();
+                  takeActiveDeviceReadings: false,
+                  isFromBpReading: true,
+                ),
+              ).then((_) async {
+                if (isFromVitals) {
+                  await Future.delayed(Duration(seconds: 2));
+                  VitalDetailController vitalController = Get.find();
+                  vitalController.fetchBPDetailsQurHome(
+                    filter: filterApiDay,
+                    isLoading: true,
+                  );
+                } else {
+                  regController.getRegimenList();
+                }
               });
             } else {
               Get.back();

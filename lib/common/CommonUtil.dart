@@ -4637,17 +4637,6 @@ class CommonUtil {
     return "";
   }
 
-  Future<bool> checkInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return Future.value(true);
-      }
-    } on SocketException catch (_) {
-      return Future.value(false);
-    }
-  }
-
   void dialogForScanDevices(BuildContext context,
       {Function() onPressManual,
       Function() onPressCancel,
@@ -4905,6 +4894,7 @@ class VideoCallCommonUtils {
             patientPicUrl, '', docName, healthRecord, patientPrescriptionId);
       }
       regController.loadingData.value = false;
+      regController.meetingId.value = CommonUtil().validString(mID.toString());
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -5104,6 +5094,8 @@ class VideoCallCommonUtils {
     rtcEngineEventHandler.userJoined = (int uid, int elapsed) {
       user_id = uid;
       final info = 'userJoined: $uid';
+      var regController = Get.find<QurhomeRegimenController>();
+      regController.UID.value = CommonUtil().validString(uid.toString());
       Provider.of<RTCEngineProvider>(
         Get.context,
         listen: false,
@@ -5908,6 +5900,8 @@ class VideoCallCommonUtils {
     var callLogResponse =
         await apiResponse.callLogEndData(request: callLogModel);
 
+    var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
+
     regController.onGoingSOSCall.value = false;
 
     //clear the call_log from firebase db
@@ -5951,6 +5945,7 @@ class VideoCallCommonUtils {
         status: "Started",
         additionalInfo: additionalInfo);
     var callLogResponse = await apiResponse.callLogData(request: callLogModel);
+    var callRecordLogResponse = await apiResponse.startRecordSOSCall();
   }
 
   createMissedCallNS({String docName, String patId, String bookingId}) async {
