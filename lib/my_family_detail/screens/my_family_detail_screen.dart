@@ -204,9 +204,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    if(widget.arguments.currentPage==null){
-
-                    }
                     if (widget.arguments.profilesSharedByMe != null &&
                         widget.arguments.profilesSharedByMe.length > 1) {
                       _currentPage = _currentPage + 1;
