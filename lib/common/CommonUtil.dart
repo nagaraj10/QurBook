@@ -4637,17 +4637,6 @@ class CommonUtil {
     return "";
   }
 
-  Future<bool> checkInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('example.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return Future.value(true);
-      }
-    } on SocketException catch (_) {
-      return Future.value(false);
-    }
-  }
-
   void dialogForScanDevices(BuildContext context,
       {Function() onPressManual,
       Function() onPressCancel,

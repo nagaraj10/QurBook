@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -10,6 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -29,8 +32,6 @@ class QurhomeRegimenController extends GetxController {
 
   var timerProgress = 1.0.obs;
   var isShowTimerDialog = true.obs;
-
-  Position currentPosition;
 
   var careCoordinatorId = "".obs;
   var careCoordinatorIdEmptyMsg = "".obs;
@@ -125,35 +126,48 @@ class QurhomeRegimenController extends GetxController {
 
   getCurrentLocation() async {
     try {
-      Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.best,
-              forceAndroidLocationManager: true)
-          .then((Position position) {
-        currentPosition = position;
-        getAddressFromLatLng();
-      }).catchError((e) {
-        print(e);
-      });
+      if (locationModel == null) {
+        if (Platform.isAndroid) {
+          const platform = MethodChannel(GET_CURRENT_LOCATION);
+          var result = await platform.invokeMethod(GET_CURRENT_LOCATION);
+          result = CommonUtil().validString(result.toString());
+          if (result.trim().isNotEmpty) {
+            List<String> receivedValues = result.split('|');
+            getAddressFromLatLng(double.parse("${receivedValues.first}"),
+                double.parse("${receivedValues.last}"));
+          } else {
+            getNetworkBasedLocation();
+          }
+        } else {
+          Geolocator.getCurrentPosition(
+                  desiredAccuracy: LocationAccuracy.best,
+                  forceAndroidLocationManager: true)
+              .then((Position position) {
+            getAddressFromLatLng(position.latitude, position.longitude);
+          }).catchError((e) {
+            getNetworkBasedLocation();
+            print(e);
+          });
+        }
+      }
     } catch (e) {
+      getNetworkBasedLocation();
       print(e);
     }
   }
 
-  getAddressFromLatLng() async {
+  getAddressFromLatLng(double latitude, double longitude) async {
     try {
-      if (currentPosition != null) {
-        var coordinates =
-            Coordinates(currentPosition.latitude, currentPosition.longitude);
+      if (latitude != null && longitude != null) {
+        var coordinates = Coordinates(latitude, longitude);
         final addresses =
             await Geocoder.local.findAddressesFromCoordinates(coordinates);
         Address address = addresses.first;
 
         if (address != null) {
           locationModel = Location(
-              latitude:
-                  CommonUtil().validString(currentPosition.latitude.toString()),
-              longitude: CommonUtil()
-                  .validString(currentPosition.longitude.toString()),
+              latitude: CommonUtil().validString(latitude.toString()),
+              longitude: CommonUtil().validString(longitude.toString()),
               addressLine: CommonUtil().validString(address.addressLine),
               countryName: CommonUtil().validString(address.countryName),
               countryCode: CommonUtil().validString(address.countryCode),
@@ -179,7 +193,7 @@ class QurhomeRegimenController extends GetxController {
 
   getNetworkBasedLocation() async {
     try {
-      http.Response data = await http.get(Uri.parse('http://ip-api.com/json'));
+      http.Response data = await http.get(Uri.parse(GET_LOCATION_URL));
       LocationDataModel locationDataModel =
           LocationDataModel.fromJson(jsonDecode(data.body));
       locationModel = Location(
@@ -238,13 +252,6 @@ class QurhomeRegimenController extends GetxController {
 
   callSOSEmergencyServices() async {
     try {
-      bool isInternetOn = await CommonUtil().checkInternetConnection();
-      if (!isInternetOn) {
-        FlutterToast()
-            .getToast('Please turn on your internet and try again', Colors.red);
-        return;
-      }
-
       if (CommonUtil().validString(careCoordinatorId.value).trim().isEmpty) {
         FlutterToast().getToast(
             '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
