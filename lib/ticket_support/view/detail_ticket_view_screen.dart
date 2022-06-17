@@ -251,7 +251,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   Widget _tabWidget(BuildContext context, Ticket ticketList) {
     for (var historyData in ticketList.history) {
-      fullName = historyData.owner.fullname;
+      fullName = ticketList.assignee?.fullname ?? "N/A";
       date = historyData.date.toString();
       print('History fullname : $fullName & $date');
     }
