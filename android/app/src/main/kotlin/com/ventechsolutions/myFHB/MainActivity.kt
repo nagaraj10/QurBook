@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.*
 import android.net.wifi.WifiConfiguration
@@ -2273,7 +2274,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
             val builder: NotificationCompat.Builder
             if (isButtonShown) {
-                builder = NotificationCompat.Builder(context, "schedule")
+                builder = NotificationCompat.Builder(context, "schedule_v2")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
@@ -2292,7 +2293,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     .setSound(_sound)
                     .setOnlyAlertOnce(false)
             } else {
-                builder = NotificationCompat.Builder(context, "schedule")
+                builder = NotificationCompat.Builder(context, "schedule_v2")
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
@@ -2341,9 +2342,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             val name = "Reminder Channel"
             val descriptionText = "Scheduled Notification"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("schedule", name, importance).apply {
-                description = descriptionText
-            }
+            var channel = NotificationChannel("schedule_v2", name, importance)
+            channel.description = descriptionText
+
+            var ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channel.setSound(ack_sound, attributes)
             // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
