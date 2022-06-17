@@ -98,6 +98,7 @@ const String strLanguage = 'lang';
 const String strtimezone = 'timezone';
 const String KIOSK_data = 'kiosk_data';
 const String KIOSK_task = 'task';
+const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
 const String KIOSK_eid = 'eid';
 const String strSearchUrl = 'searchURL';

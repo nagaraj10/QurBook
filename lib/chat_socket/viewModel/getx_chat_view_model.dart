@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
+import 'package:myfhb/chat_socket/model/GetUnreadCountFamily.dart';
 import 'package:myfhb/chat_socket/service/ChatSocketService.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -33,6 +34,18 @@ class ChatUserListController extends GetxController {
           await chocketService.getFamilyListMap(userId);
 
       return familyList;
+    } catch (e) {}
+  }
+
+  Future<GetUnreadCountFamily> getUnreadCountFamily() async {
+    try {
+
+      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+
+      GetUnreadCountFamily getUserIdModel =
+      await chocketService.getUnreadCountFamily(userId);
+
+      return getUserIdModel;
     } catch (e) {}
   }
 }
