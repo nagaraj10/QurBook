@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Location
 import android.location.LocationManager
 import android.media.AudioManager
 import android.net.*
@@ -113,6 +114,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
+    private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -226,6 +228,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val USER_INDEX_UNREGISTERED_USER = 0xFF
 
     private val mDiscoveredDevices = LinkedHashMap<String, DiscoveredDevice>()
+    var mLocationManager: LocationManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1368,6 +1371,41 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            GET_CURRENT_LOCATION
+        ).setMethodCallHandler { call, result ->
+            if (call.method == GET_CURRENT_LOCATION) {
+                Log.d("GET_CURRENT_LOCATION", "GET_CURRENT_LOCATION")
+                try {
+                    val myLocation = getLastKnownLocation()
+                    if(myLocation!=null)
+                    {
+                        result.success("${myLocation.latitude}|${myLocation.longitude}")
+                    }else{
+                        result.success("")
+                    }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun getLastKnownLocation(): Location? {
+        mLocationManager = applicationContext.getSystemService(LOCATION_SERVICE) as LocationManager
+        val providers = mLocationManager!!.getProviders(true)
+        var bestLocation: Location? = null
+        for (provider in providers) {
+            val location = mLocationManager!!.getLastKnownLocation(provider) ?: continue
+            if (bestLocation == null || location.accuracy < bestLocation.accuracy) {
+                // Found best last known location: %s", l);
+                bestLocation = location
+            }
+        }
+        return bestLocation
     }
 
     private fun startBpScan() {
