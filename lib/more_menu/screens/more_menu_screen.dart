@@ -36,6 +36,7 @@ import '../../src/ui/settings/MySettings.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class MoreMenuScreen extends StatefulWidget {
   final Function(bool userChanged) refresh;
@@ -783,6 +784,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         Theme(
             data: theme,
             child: ExpansionTile(
+              backgroundColor: const Color(fhbColors.bgColorContainer),
               iconColor: Colors.black,
               initiallyExpanded: isSkillIntegration,
               onExpansionChanged: (value) {
@@ -826,10 +828,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         },
                       ),
                     )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ),
+                Divider(),
                 ListTile(
                     leading: ImageIcon(
                       AssetImage(variable.icon_device_recon),
@@ -1009,12 +1008,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ? Theme(
                 data: theme,
                 child: ExpansionTile(
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
                   iconColor: Colors.black,
                   title: Text(variable.strCareGiverCommunication,
                       style: TextStyle(
                           fontWeight: FontWeight.w500, color: Colors.black)),
                   children: [
                     ListTile(
+                      leading: ImageIcon(
+                        AssetImage(variable.notification_preference),
+                        //size: 30,
+                      ),
                       title: Text(variable.strNotificationPreference,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
@@ -1037,6 +1041,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ),
                     Divider(),
                     ListTile(
+                      leading: ImageIcon(
+                        AssetImage(variable.activity_non_adherance),
+                        //size: 30,
+                      ),
                       title: Text(variable.strNonAdherenceSettings,
                           style: TextStyle(fontWeight: FontWeight.w500)),
                       trailing: Icon(
@@ -1060,10 +1068,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   ],
                 ))
             : Container(),
+        isCareGiver ? Divider() : Container(),
         Theme(
             data: theme,
             child: ExpansionTile(
               iconColor: Colors.black,
+              backgroundColor: const Color(fhbColors.bgColorContainer),
               initiallyExpanded: isVitalPreferences,
               title: Text(variable.strVitalsPreferences,
                   style: TextStyle(
@@ -1072,6 +1082,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 Theme(
                   data: theme,
                   child: ExpansionTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.display_devices),
+                      //size: 30,
+                    ),
                     iconColor: Colors.black,
                     initiallyExpanded: isDisplayDevices,
                     onExpansionChanged: (value) {
@@ -1213,6 +1227,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ),
                 Divider(),
                 ListTile(
+                  leading: ImageIcon(
+                    AssetImage(variable.unit_preference),
+                    //size: 30,
+                  ),
                   title: Text('Unit Preferences',
                       style: TextStyle(fontWeight: FontWeight.w500)),
                   trailing: Icon(
@@ -1235,9 +1253,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 ),
               ],
             )),
+        Divider(),
         Theme(
           data: theme,
           child: ExpansionTile(
+            backgroundColor: const Color(fhbColors.bgColorContainer),
             iconColor: Colors.black,
             initiallyExpanded: isDisplayPreference,
             title: Text(variable.strDisplayPreferences,
@@ -1271,10 +1291,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     },
                   ),
                 ),
-              ),
-              Container(
-                height: 1,
-                color: Colors.grey[200],
               ),
               Divider(),
               Theme(
