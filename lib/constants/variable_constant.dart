@@ -274,6 +274,14 @@ const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
 
+//new icons for menu
+const String activity_non_adherance =
+    'assets/settings/activity_non_adherance.png';
+const String notification_preference =
+    'assets/settings/notification_preference.png';
+const String display_devices = 'assets/settings/display_devices.png';
+const String unit_preference = 'assets/settings/unit_preference.png';
+
 //for audioWidget
 
 List<String> assetSample = [
@@ -330,7 +338,7 @@ const String strColorPalete = 'Color palette';
 const String strCareGiverCommunication = 'Caregiver Communication';
 
 const String strVitalsPreferences = 'Vitals Preferences';
-const String strDisplayDevices = 'Display devices';
+const String strDisplayDevices = 'Choose Vitals';
 const String strDisplayPreferences = 'Display Preferences';
 
 const String strSkillsIntegration = 'Skills/Integration';
