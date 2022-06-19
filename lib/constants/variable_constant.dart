@@ -274,6 +274,14 @@ const String strBackOnline = 'back to online';
 const String strNoConnection = 'no connection';
 const String strve = 've';
 
+//new icons for menu
+const String activity_non_adherance =
+    'assets/settings/activity_non_adherance.png';
+const String notification_preference =
+    'assets/settings/notification_preference.png';
+const String display_devices = 'assets/settings/display_devices.png';
+const String unit_preference = 'assets/settings/unit_preference.png';
+
 //for audioWidget
 
 List<String> assetSample = [
@@ -330,14 +338,11 @@ const String strColorPalete = 'Color palette';
 const String strCareGiverCommunication = 'Caregiver Communication';
 
 const String strVitalsPreferences = 'Vitals Preferences';
-const String strDisplayDevices = 'Display devices';
-const String strDisplayPreferences ='Display Preferences';
+const String strDisplayDevices = 'Choose Vitals';
+const String strDisplayPreferences = 'Display Preferences';
 
-const String strSkillsIntegration ='Skills/Integration';
-const String strIntegration ='Integration';
-
-
-
+const String strSkillsIntegration = 'Skills/Integration';
+const String strIntegration = 'Integration';
 
 // for my family
 
@@ -678,9 +683,9 @@ const String strNoReports =
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
 
-const String EMAIL_REGEXP =
-//r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+// const String EMAIL_REGEXP =
+// //r"^[a-zA-Z0-9.a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+//     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
 const String c_chat_with_whatsapp_begin_conv = 'Hi';
 const String c_qurhealth_helpline = '919566200555';
@@ -696,7 +701,7 @@ const String renewalLimit =
 const String alreadySubscribed =
     'You’ve already subscribed to the plan. Selecting this now will renew the plan';
 
-    //String for choose Units
+//String for choose Units
 const String str_Weight = 'Weight';
 const String str_Pounds = 'Pounds';
 const String str_Kilogram = 'Kilograms';
@@ -708,8 +713,6 @@ const String str_centi = 'Centimeters';
 const String str_Temp = 'Temperature';
 const String str_celesius = 'Celsius';
 const String str_far = 'Farenheit';
-
-
 
 //Reminders
 //
@@ -752,7 +755,6 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
-
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

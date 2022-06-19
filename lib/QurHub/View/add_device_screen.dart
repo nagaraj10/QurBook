@@ -41,7 +41,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
   void initState() {
     try {
       selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      controller.getFamilyMembers();
+      //controller.getFamilyMembers();
       if (hubListController.isFromQurHomeinQurBook.value) {
         deviceIdController.text = hubListController.bleMacId.value;
       }
@@ -90,7 +90,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : controller.familyMembers.isSuccess
+            : /*controller.familyMembers.isSuccess
                 ? Stack(
                     children: [
                       Container(
@@ -111,21 +111,22 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
                       ),
                     ],
                   )
-                : Stack(
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            getView(),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            getButton(),
-                          ],
+                : */
+            Stack(
+                children: [
+                  Container(
+                    child: Column(
+                      children: [
+                        getView(),
+                        SizedBox(
+                          height: 15,
                         ),
-                      ),
-                    ],
-                  );
+                        getButton(),
+                      ],
+                    ),
+                  ),
+                ],
+              );
       }),
     );
   }

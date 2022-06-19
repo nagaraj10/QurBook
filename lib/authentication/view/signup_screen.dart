@@ -244,9 +244,10 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 validator: (value) {
                                   return AuthenticationValidator()
                                       .emailValidation(
-                                          value,
-                                          patternEmailAdress,
-                                          strEmailValidText);
+                                    value,
+                                    patternEmail,
+                                    strEmailValidText,
+                                  );
                                 },
                                 onSaved: (value) {},
                               ),
