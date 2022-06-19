@@ -113,6 +113,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val SHEELA_CHANNEL = Constants.SHEELA_CHANNEL
     private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val STREAM = Constants.CN_EVE_STREAM
+    private val SPEECH_TO_TEXT_STREAM = Constants.SPEECH_TO_TEXT_STREAM
     private val WIFICONNECT = Constants.WIFI_WORKS
     private val BLECONNECT = Constants.BLE_CONNECT
     private val BPCONNECT = Constants.BP_CONNECT
@@ -129,6 +130,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel: EventSink
+    private lateinit var mSpeechToTextEventChannel: EventSink
     private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
@@ -1148,6 +1150,17 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         }
 
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, SPEECH_TO_TEXT_STREAM).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    mSpeechToTextEventChannel = events!!
+                }
+
+                override fun onCancel(arguments: Any?) {
+                }
+            }
+        )
+
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
@@ -1443,7 +1456,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
                     override fun onResult(hypothesis: String?) {
                         if (hypothesis!!.indexOf("sheila") != -1) {
-
+                            if (::mSpeechToTextEventChannel.isInitialized) {
+                                mSpeechToTextEventChannel.success("call");
+                            }
                         }
                     }
 

@@ -4785,7 +4785,8 @@ class CommonUtil {
       isTablet = false;
       isPhone = true;
     }*/
-
+    print("<<<<<<");
+    print(Device.get().isTablet);
     return Device.get().isTablet;
   }
 }

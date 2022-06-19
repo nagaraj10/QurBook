@@ -23,6 +23,7 @@ object Constants {
     val SHEELA_CHANNEL = "sheela.channel"
     val CN_ONG_NS = "ongoing_ns.channel"
     val CN_EVE_STREAM = "com.example.agoraflutterquickstart/stream"
+    val SPEECH_TO_TEXT_STREAM = "speechToText/stream"
     val Bluetooth_EVE_STREAM = "QurbookBLE/stream"
 
     val FROM_LANG = "com.example.agoraflutterquickstart/stream"
