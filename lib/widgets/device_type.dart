@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:math' as Math;
 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 class Device {
   static double devicePixelRatio = ui.window.devicePixelRatio;
   static ui.Size size = ui.window.physicalSize;
@@ -47,7 +49,6 @@ class Device {
     bool isAndroid = Platform.isAndroid;
     bool isIphoneX = false;
     bool hasNotch = false;
-
     if (devicePixelRatio < 2 && (width >= 1000 || height >= 1000)) {
       isTablet = true;
       isPhone = false;
@@ -66,8 +67,8 @@ class Device {
       final diagonalSizeInches = (Math.sqrt(
               Math.pow(adjustedWidth, 2) + Math.pow(adjustedHeight, 2))) /
           _ppi;
-      //print("Dialog size inches is $diagonalSizeInches");
-      if (diagonalSizeInches >= 7) {
+      // print("Dialog size inches is $diagonalSizeInches");
+      if (diagonalSizeInches >= 6.5) {
         isTablet = true;
         isPhone = false;
       } else {
