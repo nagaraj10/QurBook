@@ -172,6 +172,7 @@ Future<void> main() async {
   var reminderMethodChannelAndroid =
       const MethodChannel('android/notification');
 
+
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
@@ -428,6 +429,7 @@ class MyFHB extends StatefulWidget {
 }
 
 class _MyFHBState extends State<MyFHB> {
+  var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   int myPrimaryColor = CommonUtil().getMyPrimaryColor();
   static const platform = variable.version_platform;
   String _responseFromNative = variable.strWaitLoading;
@@ -445,6 +447,8 @@ class _MyFHBState extends State<MyFHB> {
   static const stream =
       EventChannel('com.example.agoraflutterquickstart/stream');
   StreamSubscription _timerSubscription;
+  static const speechToText = EventChannel('speechToText/stream');
+  StreamSubscription speechToTextSubscription;
   final String _msg = 'waiting for message';
   final ValueNotifier<String> _msgListener = ValueNotifier('');
 
@@ -469,6 +473,13 @@ class _MyFHBState extends State<MyFHB> {
     });
     getMyRoute();
     _enableTimer();
+
+    if(CommonUtil().isTablet){
+      final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      if (userId != null && userId.isNotEmpty) {
+        _listenSpeechToText();
+      }
+    }
 
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
@@ -502,6 +513,7 @@ class _MyFHBState extends State<MyFHB> {
   @override
   void dispose() {
     _disableTimer();
+    _disableSpeechToText();
     super.dispose();
   }
 
@@ -509,11 +521,34 @@ class _MyFHBState extends State<MyFHB> {
     _timerSubscription ??= stream.receiveBroadcastStream().listen(_updateTimer);
   }
 
+  void _listenSpeechToText() {
+    sheelaMethodChannelAndroid.invokeMethod('startSheelaListening');
+    speechToTextSubscription ??= speechToText.receiveBroadcastStream().listen(getSpeechToText);
+  }
+
   void _disableTimer() {
     if (_timerSubscription != null) {
       _timerSubscription.cancel();
       _timerSubscription = null;
     }
+  }
+
+  void _disableSpeechToText() {
+    if (speechToTextSubscription != null) {
+      speechToTextSubscription.cancel();
+      speechToTextSubscription = null;
+    }
+  }
+
+  getSpeechToText(message){
+    String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(
+        isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
+        langCode: (sheela_lang ?? ''),
+      ),
+    );
   }
 
   void _updateTimer(msg) {
