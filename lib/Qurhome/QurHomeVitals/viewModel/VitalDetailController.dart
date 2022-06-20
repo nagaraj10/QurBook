@@ -42,12 +42,12 @@ class VitalDetailController extends GetxController {
       var resp = await _helper.getBPData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
-        return [];
+        return bpList.value=[];
       }
       var response = json.decode(resp.toString())[is_Success];
       if (!(response ?? false)) {
         loadingData.value = false;
-        return [];
+        return bpList.value=[];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
@@ -58,7 +58,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodPressureCollection.isEmpty) {
           loadingData.value = false;
-          return [];
+          return bpList.value=[];
         }
         dataElement.bloodPressureCollection.forEach((bpElement) {
           var bpList = BPResult(
@@ -111,12 +111,12 @@ class VitalDetailController extends GetxController {
       var resp = await _helper.getBloodGlucoseData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
-        return [];
+        return gulList.value = [];
       }
       var response = json.decode(resp.toString())[is_Success];
       if (!(response ?? false)) {
         loadingData.value = false;
-        return [];
+        return gulList.value = [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
@@ -126,7 +126,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodGlucoseCollection.isEmpty) {
           loadingData.value = false;
-          return [];
+          return gulList.value = [];
         }
         dataElement.bloodGlucoseCollection.forEach((bgValue) {
           var bgList = GVResult(
@@ -247,12 +247,12 @@ class VitalDetailController extends GetxController {
       var resp = await _helper.getBodyTemperatureData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
-        return [];
+        return tempList.value = [];
       }
       var response = json.decode(resp.toString())[is_Success];
       if (!(response ?? false)) {
         loadingData.value = false;
-        return [];
+        return tempList.value = [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
@@ -262,7 +262,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bodyTemperatureCollection.isEmpty) {
           loadingData.value = false;
-          return [];
+          return tempList.value = [];
         }
         dataElement.bodyTemperatureCollection.forEach((tempValue) {
           var tempList = TMPResult(
@@ -307,12 +307,12 @@ class VitalDetailController extends GetxController {
       var resp = await _helper.getWeightData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
-        return [];
+        return weightList.value = [];
       }
       var response = json.decode(resp.toString())[is_Success];
       if (!(response ?? false)) {
         loadingData.value = false;
-        return [];
+        return weightList.value = [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
@@ -322,7 +322,7 @@ class VitalDetailController extends GetxController {
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bodyWeightCollection.isEmpty) {
           loadingData.value = false;
-          return [];
+          return weightList.value = [];
         }
         dataElement.bodyWeightCollection.forEach((weightValue) {
           var weightList = WVResult(
