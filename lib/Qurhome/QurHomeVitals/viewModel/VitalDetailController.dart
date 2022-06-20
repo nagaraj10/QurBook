@@ -176,12 +176,12 @@ class VitalDetailController extends GetxController {
       var resp = await _helper.getOxygenSaturationData(filter: filter);
       if (resp == null) {
         loadingData.value = false;
-        return [];
+        return oxyList.value = [];
       }
       var response = json.decode(resp.toString())[is_Success];
       if (!(response ?? false)) {
         loadingData.value = false;
-        return [];
+        return oxyList.value = [];
       }
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       var deviceIntervalData =
@@ -193,7 +193,7 @@ class VitalDetailController extends GetxController {
         if (dataElement.oxygenSaturationCollection.isEmpty &&
             dataElement.heartRateCollection.isEmpty) {
           loadingData.value = false;
-          return [];
+          return oxyList.value = [];
         }
         dataElement.oxygenSaturationCollection.forEach((oxyValue) {
           var oxyList = OxyResult(
