@@ -22,6 +22,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'dart:convert' as convert;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -80,6 +81,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       });
       initSocketCountUnread();
+      initGeoLocation();
       super.initState();
     } catch (e) {
       print(e);
@@ -118,7 +120,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           GestureDetector(
             onTap: () {
               try {
-                initSOSCall();
+                FHBUtils().check().then((intenet) {
+                  if (intenet != null && intenet) {
+                    initSOSCall();
+                  } else {
+                    FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+                  }
+                });
               } catch (e) {
                 print(e);
               }
@@ -1073,13 +1081,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       LocationPermission permission;
       bool serviceEnabled = false;
-      bool isInternetOn = await CommonUtil().checkInternetConnection();
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!isInternetOn) {
-        FlutterToast()
-            .getToast('Please turn on your internet and try again', Colors.red);
-        return;
-      }
       if (!serviceEnabled) {
         FlutterToast().getToast(
             'Please turn on your GPS location services and try again',
@@ -1099,6 +1101,27 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
       initSOSTimer();
+      controller.getCurrentLocation();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  initGeoLocation() async {
+    try {
+      LocationPermission permission;
+      permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission != LocationPermission.whileInUse &&
+            permission != LocationPermission.always) {
+          FlutterToast().getToast(
+              "Location permissions are denied (actual value: $permission).",
+              Colors.red);
+          return;
+        }
+      }
       controller.getCurrentLocation();
     } catch (e) {
       print(e);
@@ -1166,8 +1189,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       closeDialog();
       if (!controller.onGoingSOSCall.value) {
-        VideoCallCommonUtils.callActions.value = CallActions.CALLING;
-        controller.callSOSEmergencyServices();
+        FHBUtils().check().then((intenet) {
+          if (intenet != null && intenet) {
+            VideoCallCommonUtils.callActions.value = CallActions.CALLING;
+            controller.callSOSEmergencyServices();
+          } else {
+            FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+          }
+        });
       }
     } catch (e) {
       print(e);
