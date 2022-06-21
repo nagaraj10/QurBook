@@ -17,7 +17,7 @@ class Reminder {
   String providername;
   bool alreadyScheduled = false;
   bool evDisabled;
-
+  int importance;
   Reminder({
     this.eid,
     this.title,
@@ -34,6 +34,7 @@ class Reminder {
     this.remindbefore,
     this.remindbefore_type,
     this.evDisabled = false,
+    this.importance = 0,
   });
 
   Reminder copyWith({
@@ -52,6 +53,7 @@ class Reminder {
     String providerid,
     String providername,
     bool evDisabled,
+    int importance,
   }) {
     return Reminder(
       eid: eid ?? this.eid,
@@ -69,6 +71,7 @@ class Reminder {
       evDisabled: evDisabled ?? this.evDisabled,
       remindbefore: remindbefore ?? this.remindbefore,
       remindbefore_type: remindbefore_type ?? this.remindbefore_type,
+      importance: importance ?? this.importance,
     );
   }
 
@@ -90,6 +93,7 @@ class Reminder {
       'providername': providername,
       'alreadyScheduled': alreadyScheduled,
       'ev_disabled': evDisabled,
+      'importance': importance,
     };
   }
 
@@ -109,6 +113,7 @@ class Reminder {
       remindbefore_type: map['remindbefore_type'],
       providerid: map['providerid'],
       providername: map['providername'],
+      importance: map['importance'],
       evDisabled: (map['ev_disabled'] ?? '0') == '1',
     );
   }
@@ -142,7 +147,8 @@ class Reminder {
         other.remindbefore_type == remindbefore_type &&
         other.providerid == providerid &&
         other.providername == providername &&
-        other.evDisabled == evDisabled;
+        other.evDisabled == evDisabled &&
+        other.importance == importance;
   }
 
   @override
@@ -158,7 +164,8 @@ class Reminder {
         remindin.hashCode ^
         remindin_type.hashCode ^
         providerid.hashCode ^
-        providername.hashCode;
+        providername.hashCode^
+        importance.hashCode;
     evDisabled.hashCode;
   }
 }
