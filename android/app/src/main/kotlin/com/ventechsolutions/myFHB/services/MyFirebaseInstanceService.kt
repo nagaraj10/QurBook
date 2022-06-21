@@ -314,6 +314,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4Chat(data)
         }else if (data[Constants.PROP_REDIRECT_TO] == "escalateToCareCoordinatorToRegimen") {
             createNotificationEscalate(data)
+        }else if (data[Constants.PROP_REDIRECT_TO] == "appointmentPayment") {
+            createNotificationForAppointmentPayment(data)
         }
         else {
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
@@ -687,6 +689,73 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID, notification)
     }
+
+     private fun createNotificationForAppointmentPayment(data: Map<String, String> = HashMap()) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                CHANNEL_CANCEL_APP,
+                getString(R.string.channel_cancel_apps),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+
+        val acceptCareGiverIntent = Intent(applicationContext, AppointmentPaymentNotification::class.java)
+        acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
+        acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT,"ack")
+        acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        acceptCareGiverIntent.putExtra(Constants.APPOINTMENT_DATE, data[Constants.APPOINTMENT_DATE])
+        acceptCareGiverIntent.putExtra(Constants.BOOKINGID, data[Constants.BOOKINGID])
+        acceptCareGiverIntent.putExtra(Constants.MEETINGID, data[Constants.MEETINGID])
+        acceptCareGiverIntent.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
+       
+
+
+        val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            acceptCareGiverIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setWhen(0)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(
+                R.drawable.ic_reschedule,
+                getString(R.string.ns_pay),
+                acceptCareGiverPendingIntent
+            )
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID, notification)
+    }
+
 
     private fun createNotificationCancelAppointment(data: Map<String, String> = HashMap()) {
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)

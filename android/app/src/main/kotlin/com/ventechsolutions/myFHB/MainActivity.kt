@@ -1746,6 +1746,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         var userId = intent.getStringExtra(Constants.PROB_USER_ID)
         var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
+        val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
+
         if (sharedValue != null && sharedValue == "chat") {
             sharedValue =
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
@@ -1757,7 +1759,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if(redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true){
 
             sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
-        }else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
+        }else if(redirect_to?.contains("appointmentPayment") == true){
+
+            sharedValue = "ack&${redirect_to}&${appointmentID}"
+        }
+        else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"

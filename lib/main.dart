@@ -15,6 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -172,7 +173,6 @@ var routes;
 Future<void> main() async {
   var reminderMethodChannelAndroid =
       const MethodChannel('android/notification');
-
 
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
@@ -475,7 +475,7 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    if(CommonUtil().isTablet){
+    if (CommonUtil().isTablet) {
       final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       if (userId != null && userId.isNotEmpty) {
         _listenSpeechToText();
@@ -524,7 +524,8 @@ class _MyFHBState extends State<MyFHB> {
 
   void _listenSpeechToText() {
     sheelaMethodChannelAndroid.invokeMethod('startSheelaListening');
-    speechToTextSubscription ??= speechToText.receiveBroadcastStream().listen(getSpeechToText);
+    speechToTextSubscription ??=
+        speechToText.receiveBroadcastStream().listen(getSpeechToText);
   }
 
   void _disableTimer() {
@@ -541,7 +542,7 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getSpeechToText(message){
+  getSpeechToText(message) {
     String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
     Get.toNamed(
       rt_Sheela,
@@ -626,6 +627,9 @@ class _MyFHBState extends State<MyFHB> {
               redirect: "caregiver",
             );
           }
+        } else if (passedValArr[1] == 'appointmentPayment') {
+          Get.to(BookingConfirmation(
+              isFromPaymentNotification: true, appointmentId: passedValArr[2]));
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -1228,6 +1232,7 @@ class _MyFHBState extends State<MyFHB> {
     } else {
       try {
         final parsedData = navRoute.split('&');
+
         if (navRoute == 'FETCH_LOG') {
           CommonUtil.sendLogToServer();
           return SplashScreen(
@@ -1286,6 +1291,10 @@ class _MyFHBState extends State<MyFHB> {
                   '|' +
                   parsedData[6],
             );
+          } else if (parsedData[1] == 'appointmentPayment') {
+            return SplashScreen(
+                nsRoute: 'appointmentPayment',
+                bundle: parsedData[1] + '&' + parsedData[2]);
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
             return SplashScreen(
