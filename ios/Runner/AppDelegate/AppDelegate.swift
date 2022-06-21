@@ -359,6 +359,8 @@ import CoreBluetooth
     func scheduleNotification(message: NSDictionary,snooze:Bool = false) {
         var before :Int = 0
         var after : Int = 0
+        var importantNotification : Int = 0
+
         if let _id =  message["eid"] as? String {
             id = _id
         }else{
@@ -368,6 +370,7 @@ import CoreBluetooth
         if let _des = message[Constants.description] as? String {des = _des}
         if let _before = message[Constants.before] as? String ,let beforeInt = Int(_before){before = beforeInt}
         if let _after = message[Constants.after] as? String,let afterInt = Int(_after) {after = afterInt}
+        if let importants = message[Constants.importance] as? Int {importantNotification = importants}
         if !snooze{
             if let dateNotifiation = message["estart"] as? String{
                 let dateFormatter = DateFormatter()
@@ -438,6 +441,9 @@ import CoreBluetooth
         content.title = title
         content.body = des
         let identifier = id
+        if(importantNotification == 2){
+            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: Constants.beepSound))
+        }
         if snooze,let snoozcount = message["snoozeCount"] as? Int{
             if (snoozcount > 1){
                 content.categoryIdentifier = showSingleButtonCat
@@ -471,6 +477,9 @@ import CoreBluetooth
             content.title = title
             content.body = des
             let identifier = id + "11111"
+            if(importantNotification == 2){
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: Constants.beepSound))
+            }
             content.userInfo = message as! [AnyHashable : Any]
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentAfter, repeats: false)
             let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
@@ -485,6 +494,9 @@ import CoreBluetooth
             content.title = title
             content.body = des
             let identifier = id + "00000"
+            if(importantNotification == 2){
+                content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: Constants.beepSound))
+            }
             content.userInfo = message as! [AnyHashable : Any]
             let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
             let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
