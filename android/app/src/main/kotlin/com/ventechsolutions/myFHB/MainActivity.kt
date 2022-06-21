@@ -2269,7 +2269,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val eDateTime: String = data["estart"] as String  //2021-04-20 06:10:00
         val remindin: String = data["remindin"] as String
         val remindBefore: String = data["remindbefore"] as String
-        val importance: Int = data["importance"] as Int
+        val importance: String = data["importance"] as String
         val date: String = eDateTime.split(" ")[0]
         val time: String = eDateTime.split(" ")[1]
         val alarmHour = time.split(":")[0].toInt()
@@ -2284,8 +2284,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         reminderBroadcaster.putExtra("isCancel", false)
         createNotificationChannel(importance)
         var channelId=""
-        if(importance==2){
-            channelId="schedule_v2"
+        if(importance=="2"){
+            channelId="schedule_v3"
         }else{
             channelId="schedule"
         }
@@ -2490,7 +2490,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
     }
 
-    private fun createNotificationChannel(importanceChannel : Int) {
+    private fun createNotificationChannel(importanceChannel : String) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -2499,8 +2499,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             val importance = NotificationManager.IMPORTANCE_HIGH
             var channelId=""
             var ack_sound: Uri? =null
-            if(importanceChannel==2){
-                channelId="schedule_v2"
+            if(importanceChannel=="2"){
+                channelId="schedule_v3"
                 ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
             }else{
                 channelId="schedule"
