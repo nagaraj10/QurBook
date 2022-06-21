@@ -370,7 +370,7 @@ import CoreBluetooth
         if let _des = message[Constants.description] as? String {des = _des}
         if let _before = message[Constants.before] as? String ,let beforeInt = Int(_before){before = beforeInt}
         if let _after = message[Constants.after] as? String,let afterInt = Int(_after) {after = afterInt}
-        if let importants = message[Constants.importance] as? Int {importantNotification = importants}
+        if let _importants = message[Constants.importance] as? String,let importants = Int(_importants) {importantNotification = importants}
         if !snooze{
             if let dateNotifiation = message["estart"] as? String{
                 let dateFormatter = DateFormatter()

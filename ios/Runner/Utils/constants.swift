@@ -39,7 +39,7 @@ struct Constants {
     static let notification = "notification";
     static let after = "remindin";
     static let importance = "importance";
-    static let beepSound = "beep_beep.aiff";
+    static let beepSound = "beep_beep.mp3";
     static let before = "remindbefore";
     struct paramaters {
         static let message = "message"
