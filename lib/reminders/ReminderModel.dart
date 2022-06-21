@@ -17,7 +17,7 @@ class Reminder {
   String providername;
   bool alreadyScheduled = false;
   bool evDisabled;
-  int importance;
+  String importance;
   Reminder({
     this.eid,
     this.title,
@@ -34,7 +34,7 @@ class Reminder {
     this.remindbefore,
     this.remindbefore_type,
     this.evDisabled = false,
-    this.importance = 0,
+    this.importance = "0",
   });
 
   Reminder copyWith({
