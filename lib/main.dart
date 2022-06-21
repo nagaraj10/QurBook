@@ -178,7 +178,9 @@ Future<void> main() async {
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    await Wakelock.enable();
+    if(CommonUtil().isTablet){
+      await Wakelock.enable();
+    }
     var cameras = await availableCameras();
     listOfCameras = cameras;
     reminderMethodChannelAndroid.invokeMethod('testingNotification');
