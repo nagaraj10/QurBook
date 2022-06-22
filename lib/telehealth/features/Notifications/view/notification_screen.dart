@@ -10,6 +10,8 @@ import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
@@ -39,7 +41,7 @@ import '../model/notification_model.dart';
 import '../viewModel/fetchNotificationViewModel.dart';
 import '../../appointments/model/cancelAppointments/cancelModel.dart';
 import '../../appointments/model/fetchAppointments/city.dart';
-import '../../appointments/model/fetchAppointments/doctor.dart';
+import '../../appointments/model/fetchAppointments/doctor.dart' as doctorObj;
 import '../../appointments/model/fetchAppointments/past.dart';
 import '../../appointments/view/appointmentsMain.dart';
 import '../../appointments/view/resheduleMain.dart';
@@ -61,6 +63,7 @@ import '../../../../src/ui/MyRecordsArguments.dart';
 import '../../../../src/model/Category/catergory_result.dart';
 import '../../../../constants/fhb_constants.dart' as Constants;
 import '../../../../constants/router_variable.dart' as routervariable;
+import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -453,7 +456,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
-                          }else if (payload?.redirectTo == 'escalateToCareCoordinatorToRegimen') {
+                          } else if (payload?.redirectTo ==
+                              'escalateToCareCoordinatorToRegimen') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
+                          } else if (payload?.redirectTo ==
+                              'appointmentPayment') {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
@@ -960,6 +970,11 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
+      case "appointmentPayment":
+        Get.to(BookingConfirmation(
+            isFromPaymentNotification: true,
+            appointmentId: result?.messageDetails?.payload?.appointmentId));
+        break;
       case "PaymentConfirmation":
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
@@ -1001,7 +1016,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         } else {
           CommonUtil.showFamilyMemberPlanExpiryDialog(
             result?.messageDetails?.payload?.patientName,
-            redirect:"caregiver",
+            redirect: "caregiver",
           );
         }
         break;
@@ -1220,7 +1235,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     closePage: (value) {},
                                     isReshedule: true,
                                     doc: Past(
-                                        doctor: Doctor(
+                                        doctor: doctorObj.Doctor(
                                             id: notification.messageDetails
                                                 .payload.doctorId),
                                         doctorSessionId: notification
@@ -1528,16 +1543,16 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  if ((notification?.messageDetails?.payload
-                      ?.caregiverRequestor ??
-                      '')
-                      .isNotEmpty ) {
+                  if ((notification
+                              ?.messageDetails?.payload?.caregiverRequestor ??
+                          '')
+                      .isNotEmpty) {
                     Navigator.pushNamed(
                       context,
                       router.rt_FamilyDetailScreen,
                       arguments: MyFamilyDetailArguments(
-                          caregiverRequestor: notification?.messageDetails?.payload
-                              ?.caregiverRequestor ??
+                          caregiverRequestor: notification?.messageDetails
+                                  ?.payload?.caregiverRequestor ??
                               ''),
                     );
                   }
@@ -1563,8 +1578,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          CareGiverSettings(),
+                      builder: (context) => CareGiverSettings(),
                     ),
                   );
                 },
@@ -1587,9 +1601,74 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
         break;
+      case parameters.strCaregiverAppointmentPayment:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  checkIfPaymentLinkIsExpired(
+                          notification?.messageDetails?.payload?.appointmentId)
+                      .then((value) {
+                    if (value) {
+                      Get.to(BookingConfirmation(
+                          isFromPaymentNotification: true,
+                          appointmentId: notification
+                              ?.messageDetails?.payload?.appointmentId));
+                    } else {
+                      toast.getToast('Payment Link Expired', Colors.red);
+                    }
+                  });
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: 'PAY',
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+            ],
+          ),
+        );
+        break;
+
       default:
         return Container();
         break;
     }
+  }
+
+  Future<bool> checkIfPaymentLinkIsExpired(String appointmentId) async {
+    bool paymentStatus = false;
+    CreateAppointMentViewModel createAppointMentViewModel =
+        new CreateAppointMentViewModel();
+    AppointmentNotificationPayment appointmentNotificationPayment =
+        await createAppointMentViewModel
+            .getAppointmentDetailsUsingId(appointmentId);
+    if (appointmentNotificationPayment != null) {
+      if (appointmentNotificationPayment?.result?.appointment?.status != null) {
+        if (appointmentNotificationPayment?.result?.appointment?.status.code ==
+            "BOOKIP") {
+          paymentStatus = true;
+        } else {
+          paymentStatus = false;
+        }
+      } else {
+        paymentStatus = false;
+      }
+    } else {
+      paymentStatus = false;
+    }
+    return paymentStatus;
   }
 }

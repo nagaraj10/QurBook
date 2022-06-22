@@ -1,6 +1,7 @@
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentNotificationPayment.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'dart:convert' as convert;
@@ -56,5 +57,12 @@ class CreateAppointmentService {
         await _helper.bookAppointment(qr_bookAppointment, jsonString);
     print(response);
     return CreateAppointmentModel.fromJson(response);
+  }
+
+  Future<AppointmentNotificationPayment> getAppointmentDetailsUsingId(String id)async{
+       final response =
+        await _helper.getAppointmentDetailUsingId(appointmentUsingId+qr_id+id);
+    print(response);
+    return AppointmentNotificationPayment.fromJson(response);
   }
 }
