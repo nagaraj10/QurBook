@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/widgets/landing_card.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
@@ -37,23 +39,23 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          elevation: 0,
-          leading: IconWidget(
-            icon: Icons.arrow_back_ios,
-            colors: Colors.white,
-            size: 24.0.sp,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(constants.strMyTickets),
+      appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 0,
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 24.0.sp,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body:  Container(
-          child: getTicketTypes(),
-        ),
+        title: Text(constants.strMyTickets),
+      ),
+      body: Container(
+        child: getTicketTypes(),
+      ),
     );
   }
 
@@ -82,8 +84,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
               snapshot?.data?.ticketTypeResults != null &&
               snapshot?.data?.ticketTypeResults.isNotEmpty) {
             return Container(
-                child:
-                    ticketTypesList(snapshot.data.ticketTypeResults));
+                child: ticketTypesList(snapshot.data.ticketTypeResults));
           } else {
             return SafeArea(
               child: SizedBox(
@@ -118,8 +119,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             child: Container(
               child: GridView.builder(
                 gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: (itemWidth / itemHeight),),
+                  crossAxisCount: 2,
+                  childAspectRatio: (itemWidth / itemHeight),
+                ),
                 shrinkWrap: true,
                 padding: EdgeInsets.only(
                   bottom: 8.0.h,
@@ -151,11 +153,30 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           padding: EdgeInsets.all(8.0.sp),
           child: InkWell(
             onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CreateTicketScreen(ticketList[i])),
-              );
+              try {
+                var createTicketController = Get.put(CreateTicketController());
+                if (CommonUtil()
+                    .validString(ticketList[i].name)
+                    .toLowerCase()
+                    .contains("lab appointment")) {
+                  createTicketController.labBookAppointment.value = true;
+                  createTicketController.selPrefLab.value =
+                      CommonUtil().validString("Select");
+                  createTicketController.selPrefLabId.value =
+                      CommonUtil().validString("");
+                  createTicketController.getLabList();
+                } else {
+                  createTicketController.labBookAppointment.value = false;
+                  createTicketController.labsList = [];
+                }
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreateTicketScreen(ticketList[i])),
+                );
+              } catch (e) {
+                print(e);
+              }
             },
             child: Container(
               height: 150.h,
