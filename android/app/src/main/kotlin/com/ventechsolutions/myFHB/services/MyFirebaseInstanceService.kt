@@ -336,16 +336,16 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             var ack_sound : Uri
             var channelId="";
             var channelName="";
-            if(data[Constants.ACTIVITY_NAME]!=null&&data[Constants.ACTIVITY_NAME].equals("Mandatory",ignoreCase = true)){
-//                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
-                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
-                channelId="mandatory_a_"+CHANNEL_ACK
-                channelName=getString(R.string.mandatory_channel_ack)
-            }else{
+//            if(data[Constants.ACTIVITY_NAME]!=null&&data[Constants.ACTIVITY_NAME].equals("Mandatory",ignoreCase = true)){
+////                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
+//                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
+//                channelId="mandatory_a_"+CHANNEL_ACK
+//                channelName=getString(R.string.mandatory_channel_ack)
+//            }else{
                 ack_sound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
                 channelId=CHANNEL_ACK
                 channelName=getString(R.string.channel_ack)
-            }
+//            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val manager = getSystemService(NotificationManager::class.java)
