@@ -54,7 +54,8 @@ class RegimentDataModel {
       this.isModifiedToday = false,
       this.healthOrgName,
       this.activityOrgin,
-      this.duration});
+      this.duration,
+      this.seq});
 
   final dynamic eid;
   final dynamic providerid;
@@ -106,6 +107,7 @@ class RegimentDataModel {
   final dynamic healthOrgName;
   final dynamic activityOrgin;
   final int duration;
+  String seq;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -172,6 +174,7 @@ class RegimentDataModel {
         healthOrgName: json['healthorganizationname'],
         activityOrgin: json['activityname_orig'],
         duration: json['duration'],
+        seq: json['seq'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -217,7 +220,8 @@ class RegimentDataModel {
         'saytext_dyn': sayTextDynamic,
         'healthorganizationname': healthOrgName,
         'activityname_orig': activityOrgin,
-        'duration': duration
+        'duration': duration,
+        'seq': seq
       };
 }
 

@@ -302,7 +302,6 @@ class RegimentViewModel extends ChangeNotifier {
         isIndianTime: true,
       ),
       isSymptoms: regimentMode == RegimentMode.Symptoms ? 1 : 0,
-
     );
     updateRegimentStatus(RegimentStatus.Loaded);
     regimentsData?.regimentsList?.forEach((event) {
@@ -314,6 +313,23 @@ class RegimentViewModel extends ChangeNotifier {
         }
       }
     });
+    List<RegimentDataModel> tempRegimentsList = regimentsSymptomsList;
+
+    if (tempRegimentsList != null && tempRegimentsList.length > 0) {
+      var val = tempRegimentsList.firstWhere(
+          (item) => CommonUtil().validString(item.seq) != "0",
+          orElse: () => null);
+      if (val != null) {
+        if (tempRegimentsList.length > 10) {
+          regimentsSymptomsList = tempRegimentsList.take(10).toList();
+        } else {
+          regimentsSymptomsList = regimentsSymptomsList;
+        }
+      } else {
+        regimentsSymptomsList = regimentsSymptomsList;
+      }
+    }
+
     if (setIndex) {
       updateInitialShowIndex();
     }
@@ -367,22 +383,21 @@ class RegimentViewModel extends ChangeNotifier {
     }
   }
 
-  Future<SaveResponseModel> saveFormData({
-    String eid,
-    String events,
-    bool isFollowEvent,
-    String followEventContext,
-    DateTime selectedDate,
-    TimeOfDay selectedTime
-  }) async {
+  Future<SaveResponseModel> saveFormData(
+      {String eid,
+      String events,
+      bool isFollowEvent,
+      String followEventContext,
+      DateTime selectedDate,
+      TimeOfDay selectedTime}) async {
     updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
       eid: eid,
       events: events,
       isFollowEvent: isFollowEvent,
       followEventContext: followEventContext,
-      selectedDate: selectedDate??DateTime.now(),
-      selectedTime: selectedTime??TimeOfDay.now(),
+      selectedDate: selectedDate ?? DateTime.now(),
+      selectedTime: selectedTime ?? TimeOfDay.now(),
     );
   }
 
@@ -418,16 +433,17 @@ class RegimentViewModel extends ChangeNotifier {
   }
 
   Future<GetEventIdModel> getEventId({
-    dynamic uid, dynamic aid,
-    dynamic formId, dynamic formName,
+    dynamic uid,
+    dynamic aid,
+    dynamic formId,
+    dynamic formName,
   }) async {
     LoaderClass.showLoadingDialog(
       Get.context,
       canDismiss: false,
     );
     var response = await RegimentService.getEventId(
-      uid: uid,aid: aid,formId: formId,formName: formName
-    );
+        uid: uid, aid: aid, formId: formId, formName: formName);
     LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
@@ -507,13 +523,12 @@ class RegimentViewModel extends ChangeNotifier {
       updateActivityStatus(ActivityStatus.Loading, isInitial: isInitial);
     }
     activitiesData = await RegimentService.getRegimentData(
-      dateSelected: CommonUtil.dateConversionToApiFormat(
-        selectedActivityDate,
-        isIndianTime: true,
-      ),
-      isSymptoms: 0,
-      isForMasterData: false
-    );
+        dateSelected: CommonUtil.dateConversionToApiFormat(
+          selectedActivityDate,
+          isIndianTime: true,
+        ),
+        isSymptoms: 0,
+        isForMasterData: false);
     updateActivityStatus(ActivityStatus.Loaded);
     activitiesData?.regimentsList?.forEach((event) {
       if (event?.scheduled ?? false) {
@@ -581,5 +596,4 @@ class RegimentViewModel extends ChangeNotifier {
     LoaderClass.hideLoadingDialog(Get.context);
     return response;
   }
-
 }
