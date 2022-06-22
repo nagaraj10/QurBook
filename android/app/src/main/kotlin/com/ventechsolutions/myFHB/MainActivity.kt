@@ -14,6 +14,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.Location
 import android.location.LocationManager
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.net.*
 import android.net.wifi.WifiConfiguration
@@ -2290,6 +2291,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val eDateTime: String = data["estart"] as String  //2021-04-20 06:10:00
         val remindin: String = data["remindin"] as String
         val remindBefore: String = data["remindbefore"] as String
+        val importance: String = data["importance"] as String
         val date: String = eDateTime.split(" ")[0]
         val time: String = eDateTime.split(" ")[1]
         val alarmHour = time.split(":")[0].toInt()
@@ -2302,8 +2304,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         reminderBroadcaster.putExtra("body", body)
         /*reminderBroadcaster.putExtra("nsid", nsId.toInt())*/
         reminderBroadcaster.putExtra("isCancel", false)
-        createNotificationChannel()
-
+        createNotificationChannel(importance)
+        var channelId=""
+        if(importance=="2"){
+            channelId="schedule_v3"
+        }else{
+            channelId="schedule"
+        }
         if (remindBefore.toInt() > 0) {
             // Set the alarm to start for specific time
             val calendar: Calendar = Calendar.getInstance().apply {
@@ -2330,7 +2337,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
-                    false
+                    false,
+                    channelId
                 )
             }
         }
@@ -2357,7 +2365,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 notificationAndAlarmId,
                 calendar.timeInMillis,
                 false,
-                true
+                true,
+                channelId
             )
         }
 
@@ -2387,7 +2396,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
-                    false
+                    false,
+                    channelId
                 )
             }
         }
@@ -2453,6 +2463,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         currentMillis: Long,
         isCancel: Boolean,
         isButtonShown: Boolean,
+        channelId : String
     ) {
         try {
             val _sound: Uri =
@@ -2491,7 +2502,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
             val builder: NotificationCompat.Builder
             if (isButtonShown) {
-                builder = NotificationCompat.Builder(context, "schedule")
+                builder = NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
@@ -2507,10 +2518,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     .addAction(R.drawable.ic_close, "Dismiss", dismissPendingIntent)
                     .addAction(R.drawable.ic_snooze, "Snooze", snoozePendingIntent)
                     .setAutoCancel(true)
-                    .setSound(_sound)
                     .setOnlyAlertOnce(false)
             } else {
-                builder = NotificationCompat.Builder(context, "schedule")
+                builder = NotificationCompat.Builder(context, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setLargeIcon(
                         BitmapFactory.decodeResource(
@@ -2552,16 +2562,29 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
     }
 
-    private fun createNotificationChannel() {
+    private fun createNotificationChannel(importanceChannel : String) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Reminder Channel"
             val descriptionText = "Scheduled Notification"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel("schedule", name, importance).apply {
-                description = descriptionText
+            var channelId=""
+            var ack_sound: Uri? =null
+            if(importanceChannel=="2"){
+                channelId="schedule_v3"
+                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
+            }else{
+                channelId="schedule"
+                ack_sound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
             }
+            var channel = NotificationChannel(channelId, name, importance)
+            channel.description = descriptionText
+
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channel.setSound(ack_sound, attributes)
             // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
