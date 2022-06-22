@@ -92,4 +92,10 @@ object Constants {
     val BLE_SCAN_CANCEL ="bleScanCancel"
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
+
+    val APPOINTMENT_DATE="appointmentDate";
+    val BOOKINGID="bookingId";
+    val APPOINTMENTID="appointmentId";
+    val MEETINGID="meetingId";
+
 }

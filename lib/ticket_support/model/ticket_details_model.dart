@@ -66,6 +66,7 @@ class Ticket {
   List<History> history;
   int uid;
   int iV;
+  String preferredLabName;
 
   Ticket(
       {this.deleted,
@@ -87,7 +88,8 @@ class Ticket {
       this.attachments,
       this.history,
       this.uid,
-      this.iV});
+      this.iV,
+      this.preferredLabName});
 
   Ticket.fromJson(Map<String, dynamic> json) {
     deleted = json['deleted'];
@@ -145,6 +147,7 @@ class Ticket {
     }
     uid = json['uid'];
     iV = json['__v'];
+    preferredLabName = json['preferredLabName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -191,6 +194,7 @@ class Ticket {
     }
     data['uid'] = this.uid;
     data['__v'] = this.iV;
+    data['preferredLabName'] = this.preferredLabName;
     return data;
   }
 }
