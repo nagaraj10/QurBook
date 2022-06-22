@@ -16,6 +16,7 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'package:wakelock/wakelock.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -46,7 +47,6 @@ import 'widgets/checkout_page.dart';
 //import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
-import 'regiment/view_model/regiment_view_model.dart';
 import 'constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -177,6 +177,9 @@ Future<void> main() async {
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    if (CommonUtil().isTablet) {
+      await Wakelock.enable();
+    }
     var cameras = await availableCameras();
     listOfCameras = cameras;
     reminderMethodChannelAndroid.invokeMethod('testingNotification');
