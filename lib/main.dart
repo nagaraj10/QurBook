@@ -14,6 +14,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:wakelock/wakelock.dart';
+
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
@@ -172,10 +174,12 @@ Future<void> main() async {
   var reminderMethodChannelAndroid =
       const MethodChannel('android/notification');
 
-
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    if (CommonUtil().isTablet) {
+      await Wakelock.enable();
+    }
     var cameras = await availableCameras();
     listOfCameras = cameras;
     reminderMethodChannelAndroid.invokeMethod('testingNotification');
@@ -474,7 +478,7 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    if(CommonUtil().isTablet){
+    if (CommonUtil().isTablet) {
       final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       if (userId != null && userId.isNotEmpty) {
         _listenSpeechToText();
@@ -523,7 +527,8 @@ class _MyFHBState extends State<MyFHB> {
 
   void _listenSpeechToText() {
     sheelaMethodChannelAndroid.invokeMethod('startSheelaListening');
-    speechToTextSubscription ??= speechToText.receiveBroadcastStream().listen(getSpeechToText);
+    speechToTextSubscription ??=
+        speechToText.receiveBroadcastStream().listen(getSpeechToText);
   }
 
   void _disableTimer() {
@@ -540,7 +545,7 @@ class _MyFHBState extends State<MyFHB> {
     }
   }
 
-  getSpeechToText(message){
+  getSpeechToText(message) {
     String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
     Get.toNamed(
       rt_Sheela,
