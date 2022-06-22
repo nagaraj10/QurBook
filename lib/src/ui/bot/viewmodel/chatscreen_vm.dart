@@ -104,6 +104,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   QurhomeDashboardController qurhomeController;
   String eId;
 
+  bool scheduleAppointment = false;
+
   PreferredMeasurement preferredMeasurement;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
@@ -725,6 +727,11 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.KIOSK_eid: eId
       };
       eId = null;
+    }else if(scheduleAppointment){
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.KIOSK_appointment_avail,
+      };
+      scheduleAppointment = false;
     }
     screenValue = screen;
     isLoading = true;

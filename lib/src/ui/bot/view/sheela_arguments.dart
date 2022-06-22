@@ -5,6 +5,7 @@ class SheelaArgument {
   final String rawMessage;
   final bool takeActiveDeviceReadings;
   final bool isFromBpReading;
+  final bool scheduleAppointment;
   final eId;
 
   SheelaArgument({
@@ -14,6 +15,7 @@ class SheelaArgument {
     this.rawMessage,
     this.takeActiveDeviceReadings = false,
     this.isFromBpReading = false,
+    this.scheduleAppointment = false,
     this.eId,
   });
 }

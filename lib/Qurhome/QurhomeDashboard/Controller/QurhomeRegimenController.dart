@@ -22,6 +22,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
+import 'QurhomeDashboardController.dart';
 
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
@@ -55,6 +56,8 @@ class QurhomeRegimenController extends GetxController {
 
   Location locationModel;
 
+  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+
   getRegimenList() async {
     try {
       loadingData.value = true;
@@ -62,23 +65,22 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       qurHomeRegimenResponseModel.regimentsList
           .removeWhere((element) => element?.isEventDisabled);
-
       for (int i = 0;
           i < qurHomeRegimenResponseModel.regimentsList.length;
           i++) {
-        /*if (qurHomeRegimenResponseModel.regimentsList[i].activityOrgin ==
-                  'Appointment') {*/
-        if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
-            qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
-          if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
-              qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
-            var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
-            const platform = MethodChannel(APPOINTMENT_DETAILS);
-            await platform.invokeMethod(APPOINTMENT_DETAILS, {'data': jsonEncode(apiReminder.toJson())});
+        if (qurHomeRegimenResponseModel.regimentsList[i].activityOrgin ==
+            'Appointment') {
+          if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
+              qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
+            if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
+                qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
+              var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
+              const platform = MethodChannel(APPOINTMENT_DETAILS);
+              await platform.invokeMethod(APPOINTMENT_DETAILS,
+                  {'data': jsonEncode(apiReminder.toJson())});
+            }
           }
         }
-
-        //}
 
         if (DateTime.now()
             .isBefore(qurHomeRegimenResponseModel.regimentsList[i].estart)) {
@@ -97,6 +99,9 @@ class QurhomeRegimenController extends GetxController {
           break;
         }
       }
+
+      qurhomeDashboardController.getValuesNativeAppointment();
+
       update(["newUpdate"]);
       getUserDetails();
       getCareCoordinatorId();
