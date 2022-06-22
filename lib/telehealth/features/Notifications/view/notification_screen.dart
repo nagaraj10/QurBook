@@ -974,6 +974,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         Get.to(BookingConfirmation(
             isFromPaymentNotification: true,
             appointmentId: result?.messageDetails?.payload?.appointmentId));
+        readUnreadAction(result);
+
         break;
       case "PaymentConfirmation":
         Get.to(TelehealthProviders(
@@ -1135,7 +1137,12 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         break;
       case "mycart":
-        Get.to(CheckoutPage(isFromNotification: true)).then(
+        Get.to(CheckoutPage(
+          isFromNotification: true,
+          bookingId: result?.messageDetails?.payload?.bookingId,
+          cartUserId: result?.messageDetails?.payload?.userId,
+          notificationListId: result?.messageDetails?.payload?.createdBy,
+        )).then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
@@ -1616,6 +1623,53 @@ class _NotificationScreen extends State<NotificationScreen> {
                           isFromPaymentNotification: true,
                           appointmentId: notification
                               ?.messageDetails?.payload?.appointmentId));
+                    } else {
+                      toast.getToast('Payment Link Expired', Colors.red);
+                    }
+                  });
+                },
+                borderSide: BorderSide(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                child: TextWidget(
+                  text: 'PAY',
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+            ],
+          ),
+        );
+        break;
+
+      case parameters.strCaregiverNotifyPlanSubscription:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  checkIfPaymentLinkIsExpired(
+                          notification?.messageDetails?.payload?.bookingId)
+                      .then((value) {
+                    if (value) {
+                      Get.to(CheckoutPage(
+                        isFromNotification: true,
+                        bookingId:
+                            notification?.messageDetails?.payload?.bookingId,
+                        cartUserId:
+                            notification?.messageDetails?.payload?.userId,
+                        notificationListId:
+                            notification?.messageDetails?.payload?.createdBy,
+                      )).then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
                     } else {
                       toast.getToast('Payment Link Expired', Colors.red);
                     }

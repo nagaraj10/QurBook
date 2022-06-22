@@ -44,9 +44,15 @@ class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
   final String cartUserId;
   final bool isFromNotification;
+  final String bookingId;
+  final String notificationListId;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
-  CheckoutPage({this.cartUserId, this.isFromNotification = false});
+  CheckoutPage(
+      {this.cartUserId,
+      this.isFromNotification = false,
+      this.bookingId = "",
+      this.notificationListId = ""});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -62,15 +68,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
     mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
     //     widget?.cartType;
-    Provider.of<CheckoutPageProvider>(context, listen: false)
-        .fetchCartItems(isNeedRelod: true, cartUserId: widget?.cartUserId);
+    Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
+        isNeedRelod: true,
+        cartUserId: widget?.cartUserId,
+        notificationListId: widget?.notificationListId);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
 
-    var firebase=FirebaseAnalyticsService();
-    firebase.trackCurrentScreen("checkoutPage","");
+    var firebase = FirebaseAnalyticsService();
+    firebase.trackCurrentScreen("checkoutPage", "");
   }
 
   @override
@@ -622,13 +630,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value?.totalProductCount ?? 0;
-    var firebase=FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked",
-        {
-          "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-          "total" : mCartTotal
-        }
-    );
+    var firebase = FirebaseAnalyticsService();
+    firebase.trackEvent("on_pay_clicked", {
+      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+      "total": mCartTotal
+    });
     var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};
     print("bodybodybody" + body.toString());
     if (mCartTotal > 0) {
@@ -671,30 +677,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
       }
     }
     return Container(
-      padding: EdgeInsets.only(top:10),
+      padding: EdgeInsets.only(top: 10),
       child: Column(
         children: [
-          item?.additionalInfo?.isMembershipAvail??false?Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+          item?.additionalInfo?.isMembershipAvail ?? false
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Container(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        padding: EdgeInsets.all(5.0),
+                        child: Text("Membership Applied",
+                            style: TextStyle(
+                                color: Colors.white70,
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 9)),
+                      ),
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Container(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  padding: EdgeInsets.all(5.0),
-                  child: Text("Membership Applied",
-                      style: TextStyle(
-                          color: Colors.white70,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 9)),
-                ),
-              ),
-            ],
-          ):SizedBox(),
+                  ],
+                )
+              : SizedBox(),
           Row(
             children: [
               //plan details and all

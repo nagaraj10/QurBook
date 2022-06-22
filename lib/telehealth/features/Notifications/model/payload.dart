@@ -25,7 +25,8 @@ class Payload {
       this.verificationCode,
       this.caregiverRequestor,
       this.caregiverReceiver,
-      this.appointmentId});
+      this.appointmentId,
+      this.createdBy});
 
   String type;
   String meetingId;
@@ -51,12 +52,15 @@ class Payload {
   String caregiverRequestor;
   String caregiverReceiver;
   String appointmentId;
+  String createdBy;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
     meetingId = json["meetingId"] == null ? null : json["meetingId"];
     appointmentId =
         json["appointmentId"] == null ? null : json["appointmentId"];
+        createdBy =
+        json["createdBy"] == null ? null : json["createdBy"];
 
     priority = json["priority"] == null ? null : json["priority"];
     appointmentDate =
@@ -116,6 +120,7 @@ class Payload {
     data['healthRecordMetaIds'] = this.healthRecordMetaIds;
     data['planId'] = this.planId;
     data['appointmentId'] = this.appointmentId;
+    data['createdBy'] = this.createdBy;
 
     return data;
   }

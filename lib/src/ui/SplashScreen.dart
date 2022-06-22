@@ -304,31 +304,34 @@ class _SplashScreenState extends State<SplashScreen> {
                         );
                       }
                       PageNavigator.goToPermanent(context, router.rt_Landing);
-                    }else if (widget.nsRoute ==
+                    } else if (widget.nsRoute ==
                         'escalateToCareCoordinatorToRegimen') {
                       final temp = widget.bundle.split('|');
                       final userId = PreferenceUtil.getStringValue(KEY_USERID);
                       if (temp[5] == userId) {
-                        CommonUtil().escalateNonAdherance(temp[0],temp[1], temp[2], temp[3], temp[4],temp[5],temp[6],temp[7]);
+                        CommonUtil().escalateNonAdherance(
+                            temp[0],
+                            temp[1],
+                            temp[2],
+                            temp[3],
+                            temp[4],
+                            temp[5],
+                            temp[6],
+                            temp[7]);
                         Get.toNamed(rt_Regimen);
                       } else {
                         CommonUtil.showFamilyMemberPlanExpiryDialog(
                           temp[1],
-                          redirect:"caregiver",
+                          redirect: "caregiver",
                         );
                       }
-
                     } else if (widget.nsRoute == 'appointmentPayment') {
                       var passedValArr = widget.bundle?.split('&');
-                      print("widget.nsRoute "+widget.nsRoute );
-                      print("widget.nsRoute "+passedValArr[1] );
-                      print("widget.nsRoute "+passedValArr[0] );
 
                       Get.to(BookingConfirmation(
                           isFromPaymentNotification: true,
-                          appointmentId: passedValArr[1]??""));
-                    }
-                    else if (widget.nsRoute == 'profile_page' ||
+                          appointmentId: passedValArr[1] ?? ""));
+                    } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -506,10 +509,15 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'my cart',
                         'navigationPage': 'My Cart',
                       });
+                      var passedValArr = widget.bundle?.split('&');
+
                       Get.to(CheckoutPage(
-                        isFromNotification: true,
-                      )).then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
+                              isFromNotification: true,
+                              cartUserId: passedValArr[2],
+                              bookingId: passedValArr[4],
+                              notificationListId: passedValArr[3]))
+                          .then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
                     } else if (widget.nsRoute == 'Renew' ||
                         widget.nsRoute == 'Callback' ||
                         widget.nsRoute == 'myplandetails') {

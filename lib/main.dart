@@ -505,7 +505,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   setAlwaysOnMode() async {
-    if(Platform.isAndroid&&CommonUtil().isTablet){
+    if (Platform.isAndroid && CommonUtil().isTablet) {
       await Wakelock.enable();
     }
   }
@@ -889,8 +889,13 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'my cart',
             'navigationPage': 'My Cart',
           });
-          Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          Get.to(CheckoutPage(
+                  isFromNotification: true,
+                  cartUserId: passedValArr[2],
+                  bookingId: passedValArr[4],
+                  notificationListId: passedValArr[3]))
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
