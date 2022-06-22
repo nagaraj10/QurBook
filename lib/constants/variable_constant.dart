@@ -99,6 +99,7 @@ const String Set_as_Preferred = 'Set as Preferred';
 const String Add = 'Add';
 const String Update = 'Update';
 const String Cancel = 'Cancel';
+const String bookAnAppointment = 'Book an appointment';
 const String add_providers = 'add_providers';
 const String choose_address = 'Please choose the address';
 const String cancer_speciality = 'Cancer Speciality Hospital';

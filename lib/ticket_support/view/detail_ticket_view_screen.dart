@@ -228,6 +228,38 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               maxLines: 2,
                             )
                           : SizedBox(),
+                      CommonUtil()
+                              .validString(ticket.preferredLabName)
+                              .trim()
+                              .isNotEmpty
+                          ? Row(
+                              children: [
+                                Text(
+                                  'Preferred Lab Name : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w100,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    CommonUtil().parseHtmlString(
+                                        ticket.preferredLabName),
+                                    style: TextStyle(
+                                        fontSize: 16.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black),
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : SizedBox.shrink(),
                       Row(
                         children: [
                           Spacer(
