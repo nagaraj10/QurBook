@@ -178,9 +178,6 @@ Future<void> main() async {
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    if(CommonUtil().isTablet){
-      await Wakelock.enable();
-    }
     var cameras = await availableCameras();
     listOfCameras = cameras;
     reminderMethodChannelAndroid.invokeMethod('testingNotification');
@@ -486,6 +483,7 @@ class _MyFHBState extends State<MyFHB> {
       }
     }
 
+
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -505,6 +503,12 @@ class _MyFHBState extends State<MyFHB> {
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  setAlwaysOnMode() async {
+    if(Platform.isAndroid&&CommonUtil().isTablet){
+      await Wakelock.enable();
+    }
   }
 
   CheckForShowingTheIntroScreens() async {
