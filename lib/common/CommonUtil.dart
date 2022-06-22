@@ -1408,11 +1408,11 @@ class CommonUtil {
     return removedString;
   }
 
-  static String getDateStringFromDateTime(String string) {
+  static String getDateStringFromDateTime(String string,{bool forNotification=false}) {
     try {
       var dateTime = DateTime.tryParse(string);
       if (dateTime != null) {
-        return dateConversionToApiFormat(dateTime, MMM: true);
+        return dateConversionToApiFormat(dateTime, MMM: true,forAppointmentNotification:forNotification);
       } else {
         DateFormat format = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
@@ -4403,13 +4403,16 @@ class CommonUtil {
     return '${hour.toString().padLeft(2, "0")}:${minutes.toString().padLeft(2, "0")}';
   }
 
-  static String dateConversionToApiFormat(
-    DateTime dateTime, {
-    bool isIndianTime = false,
-    bool MMM = false,
-  }) {
+  static String dateConversionToApiFormat(DateTime dateTime,
+      {bool isIndianTime = false,
+      bool MMM = false,
+      bool forAppointmentNotification = false}) {
     final newFormat = REGION_CODE == 'IN' || isIndianTime
-        ? DateFormat(MMM ? 'yyyy-MMM-dd' : 'yyyy-MM-dd')
+        ? DateFormat(MMM
+            ? forAppointmentNotification
+                ? 'dd MMMM,yyyy HH:mm'
+                : 'yyyy-MMM-dd'
+            : 'yyyy-MM-dd')
         : DateFormat(MMM ? 'MMM-dd-yyyy' : 'MM-dd-yyyy');
 
     var updatedDate = newFormat.format(dateTime);

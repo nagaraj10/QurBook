@@ -180,6 +180,7 @@ class GetTimeSlots extends StatelessWidget {
             healthOrganizationResult: healthOrganizationResult,
             resultFromHospitalList: resultFromHospitalList,
             doctorListPos: doctorListPos,
+            isFromPaymentNotification: false,
             closePage: (value) {
               closePage(value);
             },
@@ -345,16 +346,16 @@ class GetTimeSlots extends StatelessWidget {
                             }
                           } else {
                             //toast.getToast(noAddress, Colors.red);
-                            CommonUtil().mSnackbar(
-                                context, noZipcode, 'Go To Profile');
+                            CommonUtil()
+                                .mSnackbar(context, noZipcode, 'Go To Profile');
                             //CommonUtil().mSnackbar(context, noAddress, 'Add');
                           }
                         } else {
                           if (myProfile.result.userAddressCollection3[0]
-                              .pincode ==
-                              null ||
-                              myProfile.result.userAddressCollection3[0]
-                                  .pincode.isEmpty) {
+                                      .pincode ==
+                                  null ||
+                              myProfile.result.userAddressCollection3[0].pincode
+                                  .isEmpty) {
                             CommonUtil().mSnackbar(
                                 context, no_addr1_zip, 'Go To Profile');
                           } else {
