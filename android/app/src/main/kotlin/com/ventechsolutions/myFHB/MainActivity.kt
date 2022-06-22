@@ -122,6 +122,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
+    private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -1436,6 +1437,27 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            APPOINTMENT_TIME
+        ).setMethodCallHandler { call, result ->
+            if (call.method == APPOINTMENT_TIME) {
+                Log.d("APPOINTMENT_TIME", "APPOINTMENT_TIME")
+                try {
+                    val data = call.argument<String>("data")
+                    val retMap: Map<String, Any> = Gson().fromJson(
+                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+                    )
+
+                    scheduleAppointment(retMap)
+                    result.success("success")
+
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -2368,6 +2390,56 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     false
                 )
             }
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun scheduleAppointment(data: Map<String, Any>) {
+
+        val remindBefore = "5"
+        val title: String = data["title"] as String
+        val body: String = data["description"] as String
+        val nsId = data["eid"] as String
+        val eDateTime: String = data["estart"] as String
+        val date: String = eDateTime.split(" ")[0]
+        val time: String = eDateTime.split(" ")[1]
+        val alarmHour = time.split(":")[0].toInt()
+        val alarmMin = time.split(":")[1].toInt()
+        val alarmDate = date.split("-")[2].toInt()
+        val alarmMonth = date.split("-")[1].toInt()
+        val alarmYear = date.split("-")[0].toInt()
+        val reminderBroadcaster = Intent(this, ReminderBroadcaster::class.java)
+        createNotificationChannel()
+
+
+        // Set the alarm to start for specific time
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.YEAR, alarmYear)
+            set(Calendar.MONTH, alarmMonth - 1)
+            set(Calendar.DAY_OF_MONTH, alarmDate)
+            set(Calendar.HOUR_OF_DAY, alarmHour)
+            set(Calendar.MINUTE, alarmMin)
+            set(Calendar.SECOND, 0)
+        }
+
+        calendar.add(Calendar.MINUTE, -remindBefore.toInt())
+
+        //check the reminder time with current time if its true allow user to create alaram
+        if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+            val eIdAppend = "${nsId}${"000"}"
+            val notificationAndAlarmId = NotificationID.currentMillis
+            SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
+            createNotifiationBuilder(
+                title,
+                body,
+                eIdAppend,
+                notificationAndAlarmId,
+                calendar.timeInMillis,
+                false,
+                false
+            )
         }
 
     }

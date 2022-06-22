@@ -13,6 +13,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -25,6 +26,7 @@ import '../../../../constants/fhb_constants.dart' as constants;
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
   var loadingData = false.obs;
+
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel qurHomeRegimenResponseModel;
   int nextRegimenPosition = 0;
@@ -56,14 +58,28 @@ class QurhomeRegimenController extends GetxController {
   getRegimenList() async {
     try {
       loadingData.value = true;
-
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
       loadingData.value = false;
       qurHomeRegimenResponseModel.regimentsList
           .removeWhere((element) => element?.isEventDisabled);
+
       for (int i = 0;
           i < qurHomeRegimenResponseModel.regimentsList.length;
           i++) {
+        /*if (qurHomeRegimenResponseModel.regimentsList[i].activityOrgin ==
+                  'Appointment') {*/
+        if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
+            qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
+          if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
+              qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
+            var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
+            const platform = MethodChannel(APPOINTMENT_DETAILS);
+            await platform.invokeMethod(APPOINTMENT_DETAILS, {'data': jsonEncode(apiReminder.toJson())});
+          }
+        }
+
+        //}
+
         if (DateTime.now()
             .isBefore(qurHomeRegimenResponseModel.regimentsList[i].estart)) {
           if (qurHomeRegimenResponseModel.regimentsList[i].ack_local != null) {
