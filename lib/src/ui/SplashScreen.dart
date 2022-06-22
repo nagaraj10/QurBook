@@ -32,6 +32,7 @@ import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
@@ -317,7 +318,17 @@ class _SplashScreenState extends State<SplashScreen> {
                         );
                       }
 
-                    } else if (widget.nsRoute == 'profile_page' ||
+                    } else if (widget.nsRoute == 'appointmentPayment') {
+                      var passedValArr = widget.bundle?.split('&');
+                      print("widget.nsRoute "+widget.nsRoute );
+                      print("widget.nsRoute "+passedValArr[1] );
+                      print("widget.nsRoute "+passedValArr[0] );
+
+                      Get.to(BookingConfirmation(
+                          isFromPaymentNotification: true,
+                          appointmentId: passedValArr[1]??""));
+                    }
+                    else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

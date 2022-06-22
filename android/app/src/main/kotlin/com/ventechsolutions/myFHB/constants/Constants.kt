@@ -93,4 +93,10 @@ object Constants {
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
     val APPOINTMENT_DETAILS ="appointmentDetails"
+
+    val APPOINTMENT_DATE="appointmentDate";
+    val BOOKINGID="bookingId";
+    val APPOINTMENTID="appointmentId";
+    val MEETINGID="meetingId";
+
 }
