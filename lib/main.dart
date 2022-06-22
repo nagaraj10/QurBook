@@ -481,6 +481,7 @@ class _MyFHBState extends State<MyFHB> {
         _listenSpeechToText();
       }
     }
+    setAlwaysOnMode();
 
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
