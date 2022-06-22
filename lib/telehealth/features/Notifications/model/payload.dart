@@ -1,31 +1,31 @@
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
-  Payload({
-    this.type,
-    this.meetingId,
-    this.priority,
-    this.appointmentDate,
-    this.userName,
-    this.doctorId,
-    this.payloadMeetingId,
-    this.templateName,
-    this.providerRequestId,
-    this.doctorSessionId,
-    this.bookingId,
-    this.healthOrganizationId,
-    this.plannedStartDateTime,
-    this.redirectTo,
-    this.healthRecordMetaIds,
-    this.planId,
-    this.userId,
-    this.patientName,
-    this.claimId,
-    this.patientPhoneNumber,
-    this.verificationCode,
-    this.caregiverRequestor,
-    this.caregiverReceiver,
-  });
+  Payload(
+      {this.type,
+      this.meetingId,
+      this.priority,
+      this.appointmentDate,
+      this.userName,
+      this.doctorId,
+      this.payloadMeetingId,
+      this.templateName,
+      this.providerRequestId,
+      this.doctorSessionId,
+      this.bookingId,
+      this.healthOrganizationId,
+      this.plannedStartDateTime,
+      this.redirectTo,
+      this.healthRecordMetaIds,
+      this.planId,
+      this.userId,
+      this.patientName,
+      this.claimId,
+      this.patientPhoneNumber,
+      this.verificationCode,
+      this.caregiverRequestor,
+      this.caregiverReceiver,
+      this.appointmentId});
 
   String type;
   String meetingId;
@@ -50,10 +50,14 @@ class Payload {
   String verificationCode;
   String caregiverRequestor;
   String caregiverReceiver;
+  String appointmentId;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
     meetingId = json["meetingId"] == null ? null : json["meetingId"];
+    appointmentId =
+        json["appointmentId"] == null ? null : json["appointmentId"];
+
     priority = json["priority"] == null ? null : json["priority"];
     appointmentDate =
         json["appointmentDate"] == null ? null : json["appointmentDate"];
@@ -111,6 +115,8 @@ class Payload {
     data['redirectTo'] = this.redirectTo;
     data['healthRecordMetaIds'] = this.healthRecordMetaIds;
     data['planId'] = this.planId;
+    data['appointmentId'] = this.appointmentId;
+
     return data;
   }
 }
