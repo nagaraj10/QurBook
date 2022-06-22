@@ -75,6 +75,7 @@ class _ChatScreenState extends State<ChatScreen>
               animationController.forward();
             }
           });
+    getMyViewModel().uuid = Uuid().v1();
 
     getMyViewModel().clearMyConversation();
     if (widget?.arguments?.takeActiveDeviceReadings &&
@@ -98,6 +99,7 @@ class _ChatScreenState extends State<ChatScreen>
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
       getMyViewModel().uuid = Uuid().v1();
     }else {
+    } else {
       if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
         getMyViewModel(
           sheelaInputs: widget?.arguments?.sheelaInputs,
