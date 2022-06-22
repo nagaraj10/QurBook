@@ -29,7 +29,6 @@
 		54C199662848883D00BC3B10 /* UIColor+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199632848883C00BC3B10 /* UIColor+BleSampleOmron.m */; };
 		54C199672848883D00BC3B10 /* NSDate+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */; };
 		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
-		54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 54DE86992861E78A0005B940 /* beep_beep.mp3 */; };
 		80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 996E3B725118A754721F1163 /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -587,7 +586,6 @@
 				54C199572848805100BC3B10 /* UUIDDescriptions.plist in Resources */,
 				547B842928507FAE0077D226 /* GoogleService-Info.plist in Resources */,
 				54306597271580D00009B704 /* SheelaAI.storyboard in Resources */,
-				54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */,
 				546AA45428634DD400D8EC20 /* beep_beep.mp3 in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
