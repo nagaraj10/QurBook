@@ -2,10 +2,15 @@ import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:get/get.dart';
+import 'package:myfhb/add_providers/controller/add_providers_controller.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
+import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
+import 'package:myfhb/ticket_support/view/create_ticket_screen.dart';
 
 import '../widgets/dropdown_with_categories.dart';
-import '../widgets/sample_dropdown.dart';
 import '../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../src/model/Media/media_data_list.dart';
 import '../../src/model/Media/media_result.dart';
@@ -17,13 +22,8 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import '../../add_address/models/AddAddressArguments.dart';
 import '../bloc/add_providers_bloc.dart';
 import '../bloc/update_providers_bloc.dart';
-import '../models/add_doctors_providers_id.dart';
-import '../models/add_hospitals_providers_id.dart';
-import '../models/add_labs_providers_id.dart';
 import '../models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -33,14 +33,11 @@ import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/router_variable.dart' as router;
 import '../../constants/variable_constant.dart' as variable;
 import '../../my_family/bloc/FamilyListBloc.dart';
-import '../../my_family/models/FamilyData.dart';
 import '../../my_family/models/FamilyMembersRes.dart';
 import '../../my_family/screens/FamilyListView.dart';
-import '../../my_providers/models/DoctorModel.dart';
 import '../../my_providers/models/Doctors.dart';
 import '../../my_providers/models/HospitalModel.dart';
 import '../../my_providers/models/LaborartoryModel.dart';
-import '../../my_providers/models/MyProviderResponseNew.dart';
 import '../../search_providers/bloc/doctors_list_block.dart';
 import '../../search_providers/bloc/hospital_list_block.dart';
 import '../../search_providers/bloc/labs_list_block.dart';
@@ -49,7 +46,6 @@ import '../../search_providers/models/hospital_data.dart';
 import '../../search_providers/models/lab_data.dart';
 import '../../src/blocs/User/MyProfileBloc.dart';
 import '../../src/model/user/MyProfileModel.dart';
-import '../../src/model/user/ProfilePicThumbnail.dart';
 import '../../src/resources/network/ApiResponse.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -146,42 +142,54 @@ class AddProvidersState extends State<AddProviders> {
 
   List<String> selectedCategories = [];
 
+  bool labBookAppointmentBtnShown = false;
+  final controller = Get.put(AddProvidersController());
+
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
+    try {
+      mInitialTime = DateTime.now();
+      super.initState();
 
-    addProvidersBloc = AddProvidersBloc();
-    updateProvidersBloc = UpdateProvidersBloc();
+      addProvidersBloc = AddProvidersBloc();
+      updateProvidersBloc = UpdateProvidersBloc();
 
-    _familyListBloc = FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();
+      _familyListBloc = FamilyListBloc();
+      _familyListBloc.getFamilyMembersListNew();
 
-    _myProfileBloc = MyProfileBloc();
-    _doctorsListBlock = DoctorsListBlock();
-    _hospitalListBlock = HospitalListBlock();
-    _labsListBlock = LabsListBlock();
-    providerViewModel = MyProviderViewModel();
-    if (widget?.arguments?.data?.isTelehealthEnabled != null) {
-      teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
+      _myProfileBloc = MyProfileBloc();
+      _doctorsListBlock = DoctorsListBlock();
+      _hospitalListBlock = HospitalListBlock();
+      _labsListBlock = LabsListBlock();
+      providerViewModel = MyProviderViewModel();
+      if (widget?.arguments?.data?.isTelehealthEnabled != null) {
+        teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
+      }
+
+      if (_mediaTypeBlock == null) {
+        _mediaTypeBlock = MediaTypeBlock();
+        _mediaTypeBlock.getMediTypesList();
+      }
+
+      if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+        selectedCategories = widget?.arguments?.doctorsModel?.sharedCategories;
+      }
+      if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
+        selectedCategories =
+            widget?.arguments?.hospitalsModel?.sharedCategories;
+      }
+      if (widget.arguments.searchKeyWord == CommonConstants.labs) {
+        selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
+        if (widget.arguments.fromClass == router.rt_myprovider) {
+          controller.getTicketTypesList();
+          labBookAppointmentBtnShown = true;
+        }
+      }
+
+      buildUI();
+    } catch (e) {
+      print(e);
     }
-
-    if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
-    }
-
-    if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-      selectedCategories = widget?.arguments?.doctorsModel?.sharedCategories;
-    }
-    if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-      selectedCategories = widget?.arguments?.hospitalsModel?.sharedCategories;
-    }
-    if (widget.arguments.searchKeyWord == CommonConstants.labs) {
-      selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
-    }
-
-    buildUI();
   }
 
   @override
@@ -223,109 +231,133 @@ class AddProvidersState extends State<AddProviders> {
           ),
         ),
       ),
-      body: Container(
-        constraints: BoxConstraints.expand(),
-        child: SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Container(
-                padding: EdgeInsets.only(left: 20, top: 20, right: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Visibility(
-                        visible:
-                            widget.arguments.hasData == false ? true : false,
-                        child: Text(
-                          widget.arguments.hasData == false
-                              ? (widget.arguments.fromClass ==
-                                          router.rt_myprovider
-                                      ? variable.Update
-                                      : variable.Add) +
-                                  ' ' +
-                                  widget.arguments.searchKeyWord
-                              : '',
-                          style: TextStyle(
-                              fontSize: 18.0.sp,
-                              fontWeight: FontWeight.w500,
-                              color: ColorUtils.blackcolor),
-                        )),
-                    _ShowDoctorTextField(),
-                    SizedBox(height: 10.0.h),
-                    Text(
-                      variable.strAssociateMember,
-                      style: TextStyle(
-                          fontSize: 16.0.sp,
-                          fontWeight: FontWeight.w400,
-                          color: ColorUtils.greycolor1),
-                    ),
-                    SizedBox(height: 10.0.h),
-                    _showUser(),
-                    SizedBox(height: 10.0.h),
-                    InkWell(
-                      child: Text(
-                        variable.Switch_User,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          fontWeight: FontWeight.w400,
-                          //color: Color(new CommonUtil().getMyPrimaryColor())
+      body: Obx(
+        () {
+          return controller.isLoadingProgress.value
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container(
+                  constraints: BoxConstraints.expand(),
+                  child: SingleChildScrollView(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SingleChildScrollView(
+                        child: Container(
+                          padding:
+                              EdgeInsets.only(left: 20, top: 20, right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Visibility(
+                                  visible: widget.arguments.hasData == false
+                                      ? true
+                                      : false,
+                                  child: Text(
+                                    widget.arguments.hasData == false
+                                        ? (widget.arguments.fromClass ==
+                                                    router.rt_myprovider
+                                                ? variable.Update
+                                                : variable.Add) +
+                                            ' ' +
+                                            widget.arguments.searchKeyWord
+                                        : '',
+                                    style: TextStyle(
+                                        fontSize: 18.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: ColorUtils.blackcolor),
+                                  )),
+                              _ShowDoctorTextField(),
+                              SizedBox(height: 10.0.h),
+                              Text(
+                                variable.strAssociateMember,
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    color: ColorUtils.greycolor1),
+                              ),
+                              SizedBox(height: 10.0.h),
+                              _showUser(),
+                              SizedBox(height: 10.0.h),
+                              InkWell(
+                                child: Text(
+                                  variable.Switch_User,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w400,
+                                    //color: Color(new CommonUtil().getMyPrimaryColor())
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10.0.h),
+                              Row(
+                                children: <Widget>[
+                                  IgnorePointer(
+                                      ignoring: false,
+                                      child: Switch(
+                                        value: isPreferred,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            isPreferred = value;
+                                          });
+                                        },
+                                        activeTrackColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                        activeColor: Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                      )),
+                                  Text(
+                                    variable.Set_as_Preferred,
+                                    style: TextStyle(
+                                        fontSize: 16.0.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorUtils.blackcolor),
+                                  ),
+                                ],
+                              ),
+                              if (isPreferred)
+                                (widget.arguments.searchKeyWord ==
+                                        CommonConstants.labs)
+                                    ? Container()
+                                    : getDropDownWithCategoriesdrop()
+                              else
+                                Container(),
+                              Visibility(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    _showCancelButton(),
+                                    _showAddButton()
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                  height: labBookAppointmentBtnShown
+                                      ? 90.0.h
+                                      : 20.0.h),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 10.0.h),
-                    Row(
-                      children: <Widget>[
-                        IgnorePointer(
-                            ignoring: false,
-                            child: Switch(
-                              value: isPreferred,
-                              onChanged: (value) {
-                                setState(() {
-                                  isPreferred = value;
-                                });
-                              },
-                              activeTrackColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              activeColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                            )),
-                        Text(
-                          variable.Set_as_Preferred,
-                          style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w400,
-                              color: ColorUtils.blackcolor),
-                        ),
-                      ],
-                    ),
-                    if (isPreferred)
-                      (widget.arguments.searchKeyWord == CommonConstants.labs)
-                          ? Container()
-                          : getDropDownWithCategoriesdrop()
-                    else
-                      Container(),
-                    Visibility(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          _showCancelButton(),
-                          _showAddButton()
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20.0.h),
-                  ],
-                ),
-              ),
-            ),
-            callAddDoctorProvidersStreamBuilder(addProvidersBloc),
-            callAddHospitalProvidersStreamBuilder(addProvidersBloc),
-            callAddLabProvidersStreamBuilder(addProvidersBloc),
-          ],
-        )),
+                      callAddDoctorProvidersStreamBuilder(addProvidersBloc),
+                      callAddHospitalProvidersStreamBuilder(addProvidersBloc),
+                      callAddLabProvidersStreamBuilder(addProvidersBloc),
+                    ],
+                  )),
+                );
+        },
+      ),
+      bottomSheet: Obx(
+        () {
+          return controller.isLoadingProgress.value
+              ? SizedBox.shrink()
+              : Visibility(
+                  visible: labBookAppointmentBtnShown,
+                  child: showLabBookAppointmentButton());
+        },
       ),
     );
   }
@@ -352,13 +384,10 @@ class AddProvidersState extends State<AddProviders> {
           isPreferred = false;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
-          doctorController.text = widget
-                      .arguments.hospitalData.name !=
-                  null
+          doctorController.text = widget.arguments.hospitalData.name != null
               ? widget?.arguments?.hospitalData?.name
                   ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
-              : widget
-              .arguments.hospitalData.healthOrganizationName;
+              : widget.arguments.hospitalData.healthOrganizationName;
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
           // latitude = widget.arguments.hospitalData.latitude == null
@@ -604,7 +633,8 @@ class AddProvidersState extends State<AddProviders> {
                             )
                       : myProfile != null
                           ? myProfile?.result != null
-                              ? myProfile?.result?.profilePicThumbnailUrl != null
+                              ? myProfile?.result?.profilePicThumbnailUrl !=
+                                      null
                                   ? getProfilePicWidget(
                                       myProfile.result.profilePicThumbnailUrl)
                                   : Center(
@@ -649,7 +679,8 @@ class AddProvidersState extends State<AddProviders> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? myProfile?.result?.id == primaryUserProfile?.result?.id
+                        ? myProfile?.result?.id ==
+                                primaryUserProfile?.result?.id
                             ? variable.Self
                             : myProfile?.result?.firstName
                         : selectedFamilyMemberName
@@ -776,6 +807,73 @@ class AddProvidersState extends State<AddProviders> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 30),
         child: loginButtonWithGesture);
+  }
+
+  Widget showLabBookAppointmentButton() {
+    final labBookAppointmentWithGesture = InkWell(
+      onTap: () {
+        try {
+          labBookAppointmentBtnTapped();
+        } catch (e) {
+          print(e);
+        }
+      },
+      child: Container(
+        //width: 100.0.w,
+        height: 45.0.h,
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            variable.bookAnAppointment,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18.0.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return Padding(
+        padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+        child: labBookAppointmentWithGesture);
+  }
+
+  labBookAppointmentBtnTapped() {
+    try {
+      var createTicketController = Get.put(CreateTicketController());
+      createTicketController.labBookAppointment.value = true;
+      createTicketController.selPrefLab.value =
+          CommonUtil().validString(widget.arguments.labsModel.name);
+      createTicketController.selPrefLabId.value =
+          CommonUtil().validString(widget.arguments.labsModel.id);
+      createTicketController.getLabList();
+      if (controller.labTicketTypesResult != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  CreateTicketScreen(controller.labTicketTypesResult)),
+        );
+      } else {
+        FlutterToast().getToast(
+            '${CommonUtil().validString(strNoTicketTypesAvaliable)}',
+            Colors.red);
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   Widget callAddDoctorProvidersStreamBuilder(AddProvidersBloc bloc) {

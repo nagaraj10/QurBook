@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/landing/view/widgets/landing_card.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/src/utils/alert.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
-import 'package:myfhb/ticket_support/view/ticket_types_screen.dart';
-import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
-import 'package:myfhb/colors/fhb_colors.dart' as colors;
 import '../../widgets/GradientAppBar.dart';
-import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
-    as constants;
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_tickets_screen.dart';
 import '../../src/utils/FHBUtils.dart';
@@ -28,7 +23,7 @@ import '../../constants/variable_constant.dart' as variable;
 class CreateTicketScreen extends StatefulWidget {
   CreateTicketScreen(this.ticketList);
 
-  final ticketList;
+  final TicketTypesResult ticketList;
 
   @override
   State createState() {
@@ -47,6 +42,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   FocusNode preferredDateFocus = FocusNode();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
+  final controller = Get.put(CreateTicketController());
+  Hospitals selectedLab;
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -68,8 +65,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   @override
   void initState() {
-    super.initState();
-    _getInitialDate(context);
+    try {
+      super.initState();
+      _getInitialDate(context);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -89,206 +90,286 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         ),
         title: Text(tckConstants.strAddMyTicket),
       ),
-      body: ListView(
-        shrinkWrap: true,
-        addAutomaticKeepAlives: true,
-        children: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: Obx(
+        () {
+          return controller.isCTLoading.value
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView(
+                  shrinkWrap: true,
+                  addAutomaticKeepAlives: true,
                   children: [
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Text(tckConstants.strTicketTitle,
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    TextField(
-                      autofocus: false,
-                      controller: titleController,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          borderSide: BorderSide(width: 0, color: Colors.white),
-                        ),
-                        enabledBorder: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(8.0),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(8.0),
-                          borderSide: BorderSide(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Text(tckConstants.strTicketDesc,
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    TextField(
-                      keyboardType: TextInputType.multiline,
-                      autofocus: false,
-                      maxLines: 10,
-                      controller: descController,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                          borderSide: BorderSide(width: 0, color: Colors.white),
-                        ),
-                        enabledBorder: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(8.0),
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: new OutlineInputBorder(
-                          borderRadius: new BorderRadius.circular(8.0),
-                          borderSide: BorderSide(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Text(tckConstants.strTicketPreferredDate,
-                            style: TextStyle(
-                                fontSize: 18.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                    SizedBox(height: 10.h),
-                    Container(
-                      child: TextFormField(
-                        autofocus: false,
-                        enableInteractiveSelection: false,
-                        readOnly: true,
-                        controller: preferredDateController,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              _selectDate(context);
-                            },
-                            iconSize: 15,
-                            icon: ShaderMask(
-                              blendMode: BlendMode.srcATop,
-                              shaderCallback: (bounds) {
-                                return LinearGradient(
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      Color(
-                                          new CommonUtil().getMyGredientColor())
-                                    ]).createShader(bounds);
-                              },
-                              child: Image.asset(
-                                'assets/icons/05.png',
-                                // color: Color(CommonUtil().getMyPrimaryColor())
-                              ),
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(8.0)),
-                            borderSide:
-                                BorderSide(width: 0, color: Colors.white),
-                          ),
-                          enabledBorder: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(8.0),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          focusedBorder: new OutlineInputBorder(
-                            borderRadius: new BorderRadius.circular(8.0),
-                            borderSide:
-                                BorderSide(color: getColorFromHex('#fffff')),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 25.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            FHBUtils().check().then((internet) {
-                              if (internet != null && internet) {
-                                _validateAndCreateTicket(
-                                    context, widget.ticketList);
-                              } else {
-                                FHBBasicWidget().showInSnackBar(
-                                    tckConstants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.85,
-                            padding: EdgeInsets.all(15.0),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      color: Colors.grey.shade200,
-                                      offset: Offset(2, 4),
-                                      blurRadius: 5,
-                                      spreadRadius: 2)
+                    SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SizedBox(height: 20.h),
+                              Row(
+                                children: [
+                                  Text(tckConstants.strTicketTitle,
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400)),
                                 ],
-                                gradient: LinearGradient(
+                              ),
+                              SizedBox(height: 10.h),
+                              TextField(
+                                autofocus: false,
+                                controller: titleController,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(
+                                        width: 0, color: Colors.white),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
+                              Row(
+                                children: [
+                                  Text(tckConstants.strTicketDesc,
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400)),
+                                ],
+                              ),
+                              SizedBox(height: 10.h),
+                              TextField(
+                                keyboardType: TextInputType.multiline,
+                                autofocus: false,
+                                maxLines: 10,
+                                controller: descController,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8.0)),
+                                    borderSide: BorderSide(
+                                        width: 0, color: Colors.white),
+                                  ),
+                                  enabledBorder: new OutlineInputBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(color: Colors.white),
+                                  ),
+                                  focusedBorder: new OutlineInputBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(8.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 20.h),
 
-                                    // end: Alignment.topCenter,
-                                    stops: [0.3, 1.0],
-                                    begin: Alignment.centerLeft,
-                                    end: Alignment.centerRight,
-                                    colors: [
-                                      Color(CommonUtil().getMyPrimaryColor()),
-                                      Color(CommonUtil().getMyGredientColor()),
-                                    ])),
-                            child: Text(
-                              tckConstants.strSubmitNewTicket,
-                              style: TextStyle(
-                                  fontSize: 16.0.sp,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
+                              //Lab Appointment
+                              controller.labBookAppointment.value
+                                  ? Row(
+                                      children: [
+                                        Text(tckConstants.strPreferredLab,
+                                            style: TextStyle(
+                                                fontSize: 18.sp,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w400)),
+                                      ],
+                                    )
+                                  : SizedBox.shrink(),
+
+                              controller.labBookAppointment.value
+                                  ? SizedBox(height: 10.h)
+                                  : SizedBox.shrink(),
+
+                              controller.labBookAppointment.value
+                                  ? dropDownButton(
+                                      controller.labsList != null &&
+                                              controller.labsList.length > 0
+                                          ? controller.labsList
+                                          : [])
+                                  : SizedBox.shrink(),
+
+                              controller.labBookAppointment.value &&
+                                      controller.isPreferredLabDisable.value
+                                  ? SizedBox(height: 5.h)
+                                  : SizedBox.shrink(),
+
+                              controller.labBookAppointment.value &&
+                                      controller.isPreferredLabDisable.value
+                                  ? RichText(
+                                      text: TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 16.sp),
+                                          children: [
+                                            TextSpan(
+                                                text: tckConstants
+                                                    .strThereAreNoPreferredLabsInYourProfile,
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16.sp)),
+                                          ]),
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                    )
+                                  : SizedBox.shrink(),
+
+                              controller.labBookAppointment.value
+                                  ? SizedBox(height: 20.h)
+                                  : SizedBox.shrink(),
+
+                              Row(
+                                children: [
+                                  Text(tckConstants.strTicketPreferredDate,
+                                      style: TextStyle(
+                                          fontSize: 18.sp,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w400)),
+                                ],
+                              ),
+                              SizedBox(height: 10.h),
+                              Container(
+                                child: TextFormField(
+                                  autofocus: false,
+                                  enableInteractiveSelection: false,
+                                  readOnly: true,
+                                  controller: preferredDateController,
+                                  decoration: InputDecoration(
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        _selectDate(context);
+                                      },
+                                      iconSize: 15,
+                                      icon: ShaderMask(
+                                        blendMode: BlendMode.srcATop,
+                                        shaderCallback: (bounds) {
+                                          return LinearGradient(
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              colors: [
+                                                Color(new CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                                Color(new CommonUtil()
+                                                    .getMyGredientColor())
+                                              ]).createShader(bounds);
+                                        },
+                                        child: Image.asset(
+                                          'assets/icons/05.png',
+                                          // color: Color(CommonUtil().getMyPrimaryColor())
+                                        ),
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                      borderSide: BorderSide(
+                                          width: 0, color: Colors.white),
+                                    ),
+                                    enabledBorder: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(8.0),
+                                      borderSide:
+                                          BorderSide(color: Colors.white),
+                                    ),
+                                    focusedBorder: new OutlineInputBorder(
+                                      borderRadius:
+                                          new BorderRadius.circular(8.0),
+                                      borderSide: BorderSide(
+                                          color: getColorFromHex('#fffff')),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 25.h),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      FHBUtils().check().then((internet) {
+                                        if (internet != null && internet) {
+                                          _validateAndCreateTicket(
+                                              context, widget.ticketList);
+                                        } else {
+                                          FHBBasicWidget().showInSnackBar(
+                                              tckConstants.STR_NO_CONNECTIVITY,
+                                              scaffold_state);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.85,
+                                      padding: EdgeInsets.all(15.0),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          boxShadow: <BoxShadow>[
+                                            BoxShadow(
+                                                color: Colors.grey.shade200,
+                                                offset: Offset(2, 4),
+                                                blurRadius: 5,
+                                                spreadRadius: 2)
+                                          ],
+                                          gradient: LinearGradient(
+
+                                              // end: Alignment.topCenter,
+                                              stops: [0.3, 1.0],
+                                              begin: Alignment.centerLeft,
+                                              end: Alignment.centerRight,
+                                              colors: [
+                                                Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                                Color(CommonUtil()
+                                                    .getMyGredientColor()),
+                                              ])),
+                                      child: Text(
+                                        tckConstants.strSubmitNewTicket,
+                                        style: TextStyle(
+                                            fontSize: 16.0.sp,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
                         ),
-                      ],
-                    )
+                      ),
+                    ),
                   ],
-                ),
-              ),
-            ),
-          ),
-        ],
+                );
+        },
       ),
     );
   }
@@ -304,6 +385,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         tckConstants.tckPrefDate = preferredDateController.text.toString();
         tckConstants.ticketType = ticketListData.id;
         tckConstants.tckPriority = ticketListData.id;
+        if (controller.labBookAppointment.value &&
+            controller.selPrefLab.value != "Select") {
+          tckConstants.tckPrefLab = controller.selPrefLab.value;
+          tckConstants.tckPrefLabId = controller.selPrefLabId.value;
+        } else {
+          tckConstants.tckPrefLab = "";
+          tckConstants.tckPrefLabId = "";
+        }
 
         ticketViewModel.createTicket().then((value) {
           if (value != null) {
@@ -337,5 +426,74 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void _getInitialDate(BuildContext context) {
     preferredDateStr = FHBUtils().getPreferredDateString(dateTime.toString());
     preferredDateController.text = preferredDateStr;
+  }
+
+  Widget dropDownButton(List<Hospitals> labsList) {
+    try {
+      if (labsList.length > 0) {
+        for (Hospitals selHospitals in labsList) {
+          if (selHospitals.name == controller.selPrefLab.value) {
+            selectedLab = selHospitals;
+            controller.selPrefLabId.value =
+                CommonUtil().validString(selHospitals.id);
+          }
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    return SizedBoxWithChild(
+      height: 50,
+      width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white,
+          border: Border.all(
+              color: Colors.grey, style: BorderStyle.solid, width: 0.80),
+        ),
+        child: IgnorePointer(
+          ignoring: controller.isPreferredLabDisable.value,
+          child: DropdownButton<Hospitals>(
+            value: selectedLab,
+            underline: SizedBox(),
+            isExpanded: true,
+            hint: Row(
+              children: <Widget>[
+                SizedBoxWidget(width: 20),
+                Text(CommonUtil().validString(selectedLab.name),
+                    style: TextStyle(
+                      fontSize: 14.0.sp,
+                    )),
+              ],
+            ),
+            items: labsList
+                .map((Hospitals currLab) => DropdownMenuItem(
+                      child: Row(
+                        children: <Widget>[
+                          SizedBoxWidget(width: 20),
+                          Text(CommonUtil().validString(currLab.name),
+                              style: TextStyle(
+                                fontSize: 14.0.sp,
+                              )),
+                        ],
+                      ),
+                      value: currLab,
+                    ))
+                .toList(),
+            onChanged: (Hospitals currLab) {
+              try {
+                selectedLab = currLab;
+                controller.selPrefLab.value =
+                    CommonUtil().validString(currLab.name);
+                controller.selPrefLabId.value =
+                    CommonUtil().validString(currLab.id);
+                setState(() {});
+              } catch (e) {}
+            },
+          ),
+        ),
+      ),
+    );
   }
 }
