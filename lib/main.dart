@@ -14,6 +14,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:wakelock/wakelock.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -47,7 +48,6 @@ import 'widgets/checkout_page.dart';
 //import 'QurPlan/WelcomeScreens/qurplan_welcome_screen.dart';
 // import 'package:awesome_notifications/awesome_notifications.dart';
 import 'regiment/view/manage_activities/manage_activities_screen.dart';
-import 'regiment/view_model/regiment_view_model.dart';
 import 'constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -630,6 +630,9 @@ class _MyFHBState extends State<MyFHB> {
               redirect: "caregiver",
             );
           }
+        } else if (passedValArr[1] == 'appointmentPayment') {
+          Get.to(BookingConfirmation(
+              isFromPaymentNotification: true, appointmentId: passedValArr[2]));
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -1232,6 +1235,7 @@ class _MyFHBState extends State<MyFHB> {
     } else {
       try {
         final parsedData = navRoute.split('&');
+
         if (navRoute == 'FETCH_LOG') {
           CommonUtil.sendLogToServer();
           return SplashScreen(
@@ -1290,6 +1294,10 @@ class _MyFHBState extends State<MyFHB> {
                   '|' +
                   parsedData[6],
             );
+          } else if (parsedData[1] == 'appointmentPayment') {
+            return SplashScreen(
+                nsRoute: 'appointmentPayment',
+                bundle: parsedData[1] + '&' + parsedData[2]);
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
             return SplashScreen(

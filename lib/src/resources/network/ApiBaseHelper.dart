@@ -2548,6 +2548,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getAppointmentDetailUsingId(String url) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final header = await headerRequest.getRequestHeader();
+    var responseJson;
+    try {
+      var response =
+      await ApiServices.get(_baseUrl + url, headers: header);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 /*
   Future<dynamic> getMemberShipDetails(String url) async {
     MemberShipDetails responseJson;

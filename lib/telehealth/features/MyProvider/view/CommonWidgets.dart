@@ -108,7 +108,7 @@ class CommonWidgets {
   }
 
   Widget getDoctoSpecialistOnlyForHos(DoctorFromHos eachDoctorModel) {
-    return Text(
+    return getDoctorSpecialityText(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
               eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
           ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
@@ -117,6 +117,12 @@ class CommonWidgets {
                   .doctorProfessionalDetailCollection[0].specialty.name)
               : ''
           : '',
+    );
+  }
+
+  Widget getDoctorSpecialityText(String speciality) {
+    return Text(
+      speciality,
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
       softWrap: false,
@@ -473,27 +479,23 @@ class CommonWidgets {
 
   Widget getProfilePic(String url) {
     return url != null
-        ? Image.network(
-            url,
-            height: 40.0.h,
-            width: 40.0.h,
-            fit: BoxFit.cover,
-            /*errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Container(
-            height: 50.0.h,
-            width: 50.0.h,
-            color: Colors.grey[200],
-            child: Center(
-              child: Container(),
-            ),
-          );
-        }*/
-          )
+        ? Image.network(url, height: 40.0.h, width: 40.0.h, fit: BoxFit.cover,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: Container(),
+              ),
+            );
+          })
         : Container(
             color: Color(fhbColors.bgColorContainer),
             height: 40.0.h,
             width: 40.0.h,
+            child: Text(''),
           );
   }
 
@@ -739,7 +741,8 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidgetNewForHos(DoctorFromHos docs, int position) {
+  Widget getDoctorStatusWidgetNewForHos(DoctorFromHos docs, int position,
+      {String status}) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -747,7 +750,8 @@ class CommonWidgets {
         height: 10.0.h,
         decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getDoctorStatus('${docs.isActive}', position)
+            color: getDoctorStatus(
+                docs != null ? '${docs.isActive}' : status, position)
             //color: getDoctorStatus('5'),
             ),
       ),
@@ -1343,7 +1347,7 @@ class CommonWidgets {
   }
 
   Widget setDoctornameForHos(UserResponse user) {
-    return Text(
+    return getWidgetWithDoctorName(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
               ? user.name.capitalizeFirstofEach
@@ -1352,6 +1356,12 @@ class CommonWidgets {
                       user.lastName.capitalizeFirstofEach)
                   : '')
           : '',
+    );
+  }
+
+  Widget getWidgetWithDoctorName(String doctorName) {
+    return Text(
+      doctorName,
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
       softWrap: true,
