@@ -117,12 +117,11 @@ class CommonWidgets {
                   .doctorProfessionalDetailCollection[0].specialty.name)
               : ''
           : '',
-      
     );
   }
 
-  Widget getDoctorSpecialityText(String speciality){
-     return Text(
+  Widget getDoctorSpecialityText(String speciality) {
+    return Text(
       speciality,
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
@@ -480,23 +479,18 @@ class CommonWidgets {
 
   Widget getProfilePic(String url) {
     return url != null
-        ? Image.network(
-            url,
-            height: 40.0.h,
-            width: 40.0.h,
-            fit: BoxFit.cover,
-            /*errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
-          return Container(
-            height: 50.0.h,
-            width: 50.0.h,
-            color: Colors.grey[200],
-            child: Center(
-              child: Container(),
-            ),
-          );
-        }*/
-          )
+        ? Image.network(url, height: 40.0.h, width: 40.0.h, fit: BoxFit.cover,
+            errorBuilder: (BuildContext context, Object exception,
+                StackTrace stackTrace) {
+            return Container(
+              height: 50.0.h,
+              width: 50.0.h,
+              color: Colors.grey[200],
+              child: Center(
+                child: Container(),
+              ),
+            );
+          })
         : Container(
             color: Color(fhbColors.bgColorContainer),
             height: 40.0.h,

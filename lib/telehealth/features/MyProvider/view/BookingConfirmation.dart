@@ -13,6 +13,7 @@ import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/language/language_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -299,13 +300,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       profilePicThumbnailUrl = appointmentNotificationPayment
           .result?.doctor?.user?.profilePicThumbnailUrl;
       doctorFromNotification = appointmentNotificationPayment.result?.doctor;
-      status = appointmentNotificationPayment.result?.doctor?.user?.isActive;
+      status = appointmentNotificationPayment.result?.doctor?.user?.isActive ??
+          strFalse;
       speciality =
-          appointmentNotificationPayment.result?.doctor?.specialization;
+          appointmentNotificationPayment.result?.doctor?.specialization ?? '';
       if (appointmentNotificationPayment.result?.payment != null) {
-        INR_Price = appointmentNotificationPayment.result?.payment.amount;
-        shortURL = appointmentNotificationPayment.result?.payment?.longUrl;
-        paymentID = appointmentNotificationPayment.result?.payment?.id;
+        INR_Price =
+            appointmentNotificationPayment.result?.payment?.amount ?? '';
+        shortURL =
+            appointmentNotificationPayment.result?.payment?.longUrl ?? '';
+        paymentID = appointmentNotificationPayment.result?.payment?.id ?? '';
       }
       selectedId =
           appointmentNotificationPayment.result?.appointment?.bookedFor != null
@@ -351,9 +355,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           : '';
 
       isFamilyChanged = true;
+      return getBodyMain();
     }
-
-    return getBodyMain();
+    return ErrorsWidget();
   }
 
   Widget getDropdown() {
@@ -651,7 +655,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return WillPopScope(
       onWillPop: () {
         Navigator.pop(context);
-        widget.refresh();
+        if (widget.isFromPaymentNotification == false) widget.refresh();
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -659,7 +663,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () {
-              widget.refresh();
+              if (widget.isFromPaymentNotification == false) widget.refresh();
               Navigator.pop(context);
             },
             child: Icon(
@@ -1348,7 +1352,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   )),
                   widget.isFromPaymentNotification
                       ? commonWidgets.getMCVerified(
-                          doctorFromNotification.isMciVerified, 'Verified')
+                          doctorFromNotification?.isMciVerified ?? false,
+                          'Verified')
                       : widget.isFromHospital
                           ? widget
                                   .resultFromHospitalList[

@@ -9,7 +9,7 @@ class AppointmentNotificationPayment {
   AppointmentNotificationPayment.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +27,6 @@ class Result {
   Doctor doctor;
   Payment payment;
 
-
   Result({this.appointment, this.doctor});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -35,12 +34,12 @@ class Result {
         ? new Appointment.fromJson(json['appointment'])
         : null;
     doctor =
-    json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
-    if(json.containsKey('payment')) {
-      payment =
-      json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+        json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+    if (json.containsKey('payment')) {
+      payment = json['payment'] != null
+          ? new Payment.fromJson(json['payment'])
+          : null;
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -82,25 +81,25 @@ class Appointment {
 
   Appointment(
       {this.id,
-        this.bookingId,
-        this.doctorSessionId,
-        this.plannedStartDateTime,
-        this.plannedEndDateTime,
-        this.actualStartDateTime,
-        this.actualEndDateTime,
-        this.slotNumber,
-        this.isHealthRecordShared,
-        this.plannedFollowupDate,
-        this.isRefunded,
-        this.isFollowupFee,
-        this.isFollowup,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.isBookedByProvider,
-        this.isCallDenied,
-        this.status,
-        this.bookedFor});
+      this.bookingId,
+      this.doctorSessionId,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.slotNumber,
+      this.isHealthRecordShared,
+      this.plannedFollowupDate,
+      this.isRefunded,
+      this.isFollowupFee,
+      this.isFollowup,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.isBookedByProvider,
+      this.isCallDenied,
+      this.status,
+      this.bookedFor});
 
   Appointment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -121,8 +120,9 @@ class Appointment {
     lastModifiedOn = json['lastModifiedOn'];
     isBookedByProvider = json['isBookedByProvider'];
     isCallDenied = json['isCallDenied'];
-    status =
-    json['status'] != null ? new AppointmentStatus.fromJson(json['status']) : null;
+    status = json['status'] != null
+        ? new AppointmentStatus.fromJson(json['status'])
+        : null;
     bookedFor = json['bookedFor'] != null
         ? new BookedFor.fromJson(json['bookedFor'])
         : null;
@@ -171,14 +171,14 @@ class AppointmentStatus {
 
   AppointmentStatus(
       {this.id,
-        this.code,
-        this.name,
-        this.description,
-        this.sortOrder,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedOn});
+      this.code,
+      this.name,
+      this.description,
+      this.sortOrder,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn});
 
   AppointmentStatus.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -240,34 +240,34 @@ class BookedFor {
 
   BookedFor(
       {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicUrl,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.providerId,
-        this.additionalInfo});
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicUrl,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.providerId,
+      this.additionalInfo});
 
   BookedFor.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -345,7 +345,7 @@ class AdditionalInfo {
   String height;
   String offset;
   String weight;
-  List<String>  language;
+  String language;
   String mrdNumber;
   String uhidNumber;
   String visitReason;
@@ -353,20 +353,20 @@ class AdditionalInfo {
 
   AdditionalInfo(
       {this.age,
-        this.height,
-        this.offset,
-        this.weight,
-        this.language,
-        this.mrdNumber,
-        this.uhidNumber,
-        this.visitReason,
-        this.patientHistory});
+      this.height,
+      this.offset,
+      this.weight,
+      this.language,
+      this.mrdNumber,
+      this.uhidNumber,
+      this.visitReason,
+      this.patientHistory});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     age = json['age'];
-    height = json['height'];
+    height = json['height'].toString();
     offset = json['offset'];
-    weight = json['weight'];
+    weight = json['weight'].toString();
     language = json['language'];
     mrdNumber = json['mrdNumber'];
     uhidNumber = json['uhidNumber'];
@@ -381,8 +381,10 @@ class AdditionalInfo {
     data['offset'] = this.offset;
     data['weight'] = this.weight;
     if (data.containsKey('language')) {
-      language = data['language'].cast<String>();
-    }    data['mrdNumber'] = this.mrdNumber;
+          data['language'] = this.language;
+
+    }
+    data['mrdNumber'] = this.mrdNumber;
     data['uhidNumber'] = this.uhidNumber;
     data['visitReason'] = this.visitReason;
     data['patientHistory'] = this.patientHistory;
@@ -400,23 +402,23 @@ class Doctor {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
-  String isResident;
+  bool isResident;
   BusinessDetail businessDetail;
   User user;
 
   Doctor(
       {this.id,
-        this.specialization,
-        this.isTelehealthEnabled,
-        this.isMciVerified,
-        this.isActive,
-        this.isWelcomeMailSent,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.isResident,
-        this.businessDetail,
-        this.user});
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.isWelcomeMailSent,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.isResident,
+      this.businessDetail,
+      this.user});
 
   Doctor.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -471,8 +473,6 @@ class BusinessDetail {
     data['experience'] = this.experience;
     return data;
   }
-
-
 }
 
 class Payment {
@@ -496,4 +496,3 @@ class Payment {
     return data;
   }
 }
-
