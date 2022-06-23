@@ -1375,9 +1375,16 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'mycart') {
             //this need to be navigte to My Plans screen
             return SplashScreen(
-              nsRoute: 'mycart',
-              bundle: parsedData[2],
-            );
+                nsRoute: 'mycart',
+                bundle: parsedData[0] +
+                    '&' +
+                    parsedData[1] +
+                    '&' +
+                    parsedData[2] +
+                    '&' +
+                    parsedData[3] +
+                    '&' +
+                    parsedData[4]);
           } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',

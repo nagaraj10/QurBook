@@ -1656,24 +1656,14 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  checkIfPaymentLinkIsExpired(
-                          notification?.messageDetails?.payload?.bookingId)
-                      .then((value) {
-                    if (value) {
-                      Get.to(CheckoutPage(
-                        isFromNotification: true,
-                        bookingId:
-                            notification?.messageDetails?.payload?.bookingId,
-                        cartUserId:
-                            notification?.messageDetails?.payload?.userId,
-                        notificationListId:
-                            notification?.messageDetails?.payload?.createdBy,
-                      )).then((value) => PageNavigator.goToPermanent(
-                          context, router.rt_Landing));
-                    } else {
-                      toast.getToast('Payment Link Expired', Colors.red);
-                    }
-                  });
+                  Get.to(CheckoutPage(
+                    isFromNotification: true,
+                    bookingId: notification?.messageDetails?.payload?.bookingId,
+                    cartUserId: notification?.messageDetails?.payload?.userId,
+                    notificationListId:
+                        notification?.messageDetails?.payload?.createdBy,
+                  )).then((value) =>
+                      PageNavigator.goToPermanent(context, router.rt_Landing));
                 },
                 borderSide: BorderSide(
                   color: Color(
