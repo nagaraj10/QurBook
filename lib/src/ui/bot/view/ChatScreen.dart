@@ -93,6 +93,11 @@ class _ChatScreenState extends State<ChatScreen>
     } else if ((widget?.arguments?.eId ?? '').isNotEmpty) {
       getMyViewModel().eId = widget?.arguments?.eId;
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
+      getMyViewModel().uuid = Uuid().v1();
+    } else if (widget?.arguments?.showUnreadMessage ?? false) {
+      getMyViewModel().showUnreadMessage = true;
+      getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
+      getMyViewModel().uuid = Uuid().v1();
     } else {
       if ((widget?.arguments?.sheelaInputs ?? '').isNotEmpty) {
         getMyViewModel(

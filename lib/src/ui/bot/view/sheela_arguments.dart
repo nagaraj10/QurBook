@@ -6,6 +6,7 @@ class SheelaArgument {
   final bool takeActiveDeviceReadings;
   final bool isFromBpReading;
   final eId;
+  final bool showUnreadMessage;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -15,5 +16,6 @@ class SheelaArgument {
     this.takeActiveDeviceReadings = false,
     this.isFromBpReading = false,
     this.eId,
+    this.showUnreadMessage = false,
   });
 }

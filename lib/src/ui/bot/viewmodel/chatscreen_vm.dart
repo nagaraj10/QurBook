@@ -104,6 +104,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   HubListController hublistController;
   QurhomeDashboardController qurhomeController;
   String eId;
+  bool showUnreadMessage = false;
 
   PreferredMeasurement preferredMeasurement;
 
@@ -726,6 +727,11 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.KIOSK_eid: eId
       };
       eId = null;
+    }else if(showUnreadMessage){
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.KIOSK_messages,
+      };
+      showUnreadMessage = false;
     }
     screenValue = screen;
     isLoading = true;

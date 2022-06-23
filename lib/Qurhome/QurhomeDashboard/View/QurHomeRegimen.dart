@@ -13,14 +13,19 @@ import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/chat_socket/constants/const_socket.dart';
+import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-
+import 'dart:convert' as convert;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
@@ -51,6 +56,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   var hubController = Get.find<HubListController>();
   var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  var chatGetXController = Get.find<ChatUserListController>();
 
   AnimationController animationController;
 
@@ -62,11 +68,53 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void initState() {
     try {
       controller.getRegimenList();
+      chatGetXController.getUnreadCountFamily().then((value) {
+        if (value != null) {
+          if (value?.isSuccess) {
+            if (value?.result != null) {
+              if (value?.result[0]?.count != null) {
+                if (int.parse(value?.result[0]?.count ?? 0) > 0) {
+                  if(PreferenceUtil.getIfQurhomeisAcive()){
+                    redirectToSheelaUnreadMessage();
+                  }
+
+                }
+              }
+            }
+          }
+        }
+      });
+      initSocketCountUnread();
       initGeoLocation();
       super.initState();
     } catch (e) {
       print(e);
     }
+  }
+
+  initSocketCountUnread() {
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .off(notifyQurhomeUser);
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .on(notifyQurhomeUser, (data) {
+      if (data != null) {
+        UnreadChatSocketNotify unreadCountNotify =
+            UnreadChatSocketNotify.fromJson(data);
+        if (unreadCountNotify != null) {
+          if (unreadCountNotify?.result != null) {
+            if (unreadCountNotify?.result?.isSuccess) {
+              if(PreferenceUtil.getIfQurhomeisAcive()){
+                redirectToSheelaUnreadMessage();
+              }
+
+            }
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -1436,5 +1484,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     } catch (e) {
       print(e);
     }
+  }
+
+  void redirectToSheelaUnreadMessage() {
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(showUnreadMessage: true),
+    ).then((value) {
+      initSocketCountUnread();
+    });
   }
 }
