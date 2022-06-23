@@ -18,6 +18,7 @@ import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
@@ -72,8 +73,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           if (value?.isSuccess) {
             if (value?.result != null) {
               if (value?.result[0]?.count != null) {
-                if (int.parse(value?.result[0].count ?? 0) > 0) {
-                  redirectToSheelaUnreadMessage();
+                if (int.parse(value?.result[0]?.count ?? 0) > 0) {
+                  if(PreferenceUtil.getIfQurhomeisAcive()){
+                    redirectToSheelaUnreadMessage();
+                  }
+
                 }
               }
             }
@@ -102,7 +106,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (unreadCountNotify != null) {
           if (unreadCountNotify?.result != null) {
             if (unreadCountNotify?.result?.isSuccess) {
-              redirectToSheelaUnreadMessage();
+              if(PreferenceUtil.getIfQurhomeisAcive()){
+                redirectToSheelaUnreadMessage();
+              }
+
             }
           }
         }
