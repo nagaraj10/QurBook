@@ -1634,7 +1634,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   ),
                 ),
                 child: TextWidget(
-                  text: 'PAY',
+                  text: 'Pay Now',
                   colors: Color(CommonUtil().getMyPrimaryColor()),
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
@@ -1671,7 +1671,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   ),
                 ),
                 child: TextWidget(
-                  text: 'PAY',
+                  text: 'Pay Now',
                   colors: Color(CommonUtil().getMyPrimaryColor()),
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,

@@ -23,7 +23,10 @@ class AppointmentPaymentNotification:BroadcastReceiver() {
        
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
-//        p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))
+        p0.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+
+//        p0.sendBroadcast(Intent(p0.getString(R.string.ns_pay))
 //                .putExtra(p0.getString(R.string.meetid),meeting_id)
 //                .putExtra(p0.getString(R.string.username),username)
 //        )
