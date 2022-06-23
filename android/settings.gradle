@@ -16,4 +16,3 @@ plugins.each { name, path ->
 include ':ohq-reference-code'
 include ':android-core-bluetooth'
 include ':utility'
-include ':models'

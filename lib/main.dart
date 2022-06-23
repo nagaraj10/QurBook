@@ -16,7 +16,6 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'package:wakelock/wakelock.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -448,8 +447,6 @@ class _MyFHBState extends State<MyFHB> {
   static const stream =
       EventChannel('com.example.agoraflutterquickstart/stream');
   StreamSubscription _timerSubscription;
-  static const speechToText = EventChannel('speechToText/stream');
-  StreamSubscription speechToTextSubscription;
   final String _msg = 'waiting for message';
   final ValueNotifier<String> _msgListener = ValueNotifier('');
 
@@ -474,14 +471,6 @@ class _MyFHBState extends State<MyFHB> {
     });
     getMyRoute();
     _enableTimer();
-
-    // if (CommonUtil().isTablet) {
-    //   final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    //   if (userId != null && userId.isNotEmpty) {
-    //     _listenSpeechToText();
-    //   }
-    // }
-
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
@@ -515,7 +504,6 @@ class _MyFHBState extends State<MyFHB> {
   @override
   void dispose() {
     _disableTimer();
-    _disableSpeechToText();
     super.dispose();
   }
 
@@ -523,23 +511,10 @@ class _MyFHBState extends State<MyFHB> {
     _timerSubscription ??= stream.receiveBroadcastStream().listen(_updateTimer);
   }
 
-  void _listenSpeechToText() {
-    sheelaMethodChannelAndroid.invokeMethod('startSheelaListening');
-    speechToTextSubscription ??=
-        speechToText.receiveBroadcastStream().listen(getSpeechToText);
-  }
-
   void _disableTimer() {
     if (_timerSubscription != null) {
       _timerSubscription.cancel();
       _timerSubscription = null;
-    }
-  }
-
-  void _disableSpeechToText() {
-    if (speechToTextSubscription != null) {
-      speechToTextSubscription.cancel();
-      speechToTextSubscription = null;
     }
   }
 
