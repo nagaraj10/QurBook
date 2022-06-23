@@ -163,7 +163,11 @@
         <receiver android:name=".services.ViewMemberReceiver" />
         <receiver android:name=".services.CommunicationSettingReceiver" />
         <receiver
-            android:name=".services.ReminderBroadcaster"
+        android:name=".services.ReminderBroadcaster"
+        android:process=":remote" />
+
+        <receiver
+            android:name=".services.ScheduleAppointment"
             android:process=":remote" />
 
         <service

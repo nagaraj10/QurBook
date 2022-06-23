@@ -123,6 +123,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
+    private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -133,6 +134,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel: EventSink
+    private lateinit var scheduleAppointmentChannel: EventSink
     private lateinit var mSpeechToTextEventChannel: EventSink
     private lateinit var BLEEventChannel: EventSink
     private val REQ_CODE = 112
@@ -251,6 +253,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
+        registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
@@ -357,6 +360,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         mSessionController = SessionController(this, null)
 
 
+    }
+
+    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.e("mainActivitycalled", "mainActivitycalled")
+            if (::scheduleAppointmentChannel.isInitialized) {
+                scheduleAppointmentChannel.success("scheduleAppointment|success")
+            }
+        }
     }
 
 
@@ -627,7 +639,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             autoRepeatScan = 0
             scanningBleTimer.cancel()
             Handler().postDelayed({
-                if(BleManager.getInstance()!=null) {
+                if (BleManager.getInstance() != null) {
                     BleManager.getInstance().cancelScan()
                 }
             }, 1000)
@@ -1154,7 +1166,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         }
 
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, SPEECH_TO_TEXT_STREAM).setStreamHandler(
+        EventChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            SPEECH_TO_TEXT_STREAM
+        ).setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     mSpeechToTextEventChannel = events!!
@@ -1188,6 +1203,21 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 }
             }
         )
+
+        EventChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            Constants.Appointment_EVE_STREAM
+        ).setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventSink?) {
+                    scheduleAppointmentChannel = events!!
+                }
+
+                override fun onCancel(arguments: Any?) {
+                }
+            }
+        )
+
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -1425,12 +1455,32 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 Log.d("GET_CURRENT_LOCATION", "GET_CURRENT_LOCATION")
                 try {
                     val myLocation = getLastKnownLocation()
-                    if(myLocation!=null)
-                    {
+                    if (myLocation != null) {
                         result.success("${myLocation.latitude}|${myLocation.longitude}")
-                    }else{
+                    } else {
                         result.success("")
                     }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            APPOINTMENT_TIME
+        ).setMethodCallHandler { call, result ->
+            if (call.method == APPOINTMENT_TIME) {
+                Log.d("APPOINTMENT_TIME", "APPOINTMENT_TIME")
+                try {
+                    val data = call.argument<String>("data")
+                    val retMap: Map<String, Any> = Gson().fromJson(
+                        data, object : TypeToken<HashMap<String?, Any?>?>() {}.type
+                    )
+
+                    scheduleAppointment(retMap)
+                    result.success("success")
+
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
@@ -1478,7 +1528,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 recognizeMicrophone()
 //                setUiState(org.vosk.demo.VoskActivity.STATE_READY)
             }
-        ) { exception -> Log.e("error",exception.message.toString()) }
+        ) { exception -> Log.e("error", exception.message.toString()) }
     }
 
     private fun recognizeMicrophone() {
@@ -1759,12 +1809,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
-        } else if(redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true){
+        } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
 
-            sharedValue = "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
-        }else if(redirect_to?.contains("appointmentPayment") == true){
+            sharedValue =
+                "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
+        } else if (redirect_to?.contains("appointmentPayment") == true) {
 
             sharedValue = "ack&${redirect_to}&${appointmentID}"
+        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
         }
         else if(redirect_to?.contains("mycart") == true){
 
@@ -1861,6 +1913,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(broadcastReceiver);
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
         speechRecognizer!!.destroy()
@@ -2295,11 +2348,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         /*reminderBroadcaster.putExtra("nsid", nsId.toInt())*/
         reminderBroadcaster.putExtra("isCancel", false)
         createNotificationChannel(importance)
-        var channelId=""
-        if(importance=="2"){
-            channelId="schedule_v3"
-        }else{
-            channelId="schedule"
+        var channelId = ""
+        if (importance == "2") {
+            channelId = "schedule_v3"
+        } else {
+            channelId = "schedule"
         }
         if (remindBefore.toInt() > 0) {
             // Set the alarm to start for specific time
@@ -2394,6 +2447,47 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun scheduleAppointment(data: Map<String, Any>) {
+
+        val remindBefore = "5"
+        val nsId = data["eid"] as String
+        val eDateTime: String = data["estart"] as String
+        val eDateReplace: String = eDateTime.replace("T", " ")
+        val date: String = eDateReplace.split(" ")[0]
+        val time: String = eDateReplace.split(" ")[1]
+        val alarmHour = time.split(":")[0].toInt()
+        val alarmMin = time.split(":")[1].toInt()
+        val alarmDate = date.split("-")[2].toInt()
+        val alarmMonth = date.split("-")[1].toInt()
+        val alarmYear = date.split("-")[0].toInt()
+
+        // Set the alarm to start for specific time
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.YEAR, alarmYear)
+            set(Calendar.MONTH, alarmMonth - 1)
+            set(Calendar.DAY_OF_MONTH, alarmDate)
+            set(Calendar.HOUR_OF_DAY, alarmHour)
+            set(Calendar.MINUTE, alarmMin)
+            set(Calendar.SECOND, 0)
+        }
+
+        calendar.add(Calendar.MINUTE, -remindBefore.toInt())
+
+        //check the reminder time with current time if its true allow user to create alaram
+        if (calendar.timeInMillis > Calendar.getInstance().timeInMillis) {
+            val eIdAppend = "${nsId}${"000"}"
+            val notificationAndAlarmId = NotificationID.currentMillis
+            SharedPrefUtils().saveAlarmId(this, eIdAppend, notificationAndAlarmId)
+            createScheduleAppointment(
+                notificationAndAlarmId,
+                calendar.timeInMillis,
+            )
+        }
+
+    }
+
     @SuppressLint("LaunchActivityFromNotification")
     private fun createNotifiationBuilder(
         title: String,
@@ -2403,7 +2497,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         currentMillis: Long,
         isCancel: Boolean,
         isButtonShown: Boolean,
-        channelId : String
+        channelId: String
     ) {
         try {
             val _sound: Uri =
@@ -2502,21 +2596,55 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
     }
 
-    private fun createNotificationChannel(importanceChannel : String) {
+    @SuppressLint("LaunchActivityFromNotification")
+    private fun createScheduleAppointment(
+        nsId: Int,
+        currentMillis: Long,
+    ) {
+        try {
+
+            val notificationIntent = Intent(this, ScheduleAppointment::class.java)
+            notificationIntent.putExtra(ScheduleAppointment.NOTIFICATION_ID, nsId)
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                this,
+                nsId,
+                notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+            val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    currentMillis,
+                    pendingIntent
+                )
+            } else {
+                alarmManager.set(AlarmManager.RTC_WAKEUP, currentMillis, pendingIntent)
+            }
+
+        } catch (e: Exception) {
+            Log.e("crash", e.message.toString())
+        }
+    }
+
+    private fun createNotificationChannel(importanceChannel: String) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Reminder Channel"
             val descriptionText = "Scheduled Notification"
             val importance = NotificationManager.IMPORTANCE_HIGH
-            var channelId=""
-            var ack_sound: Uri? =null
-            if(importanceChannel=="2"){
-                channelId="schedule_v3"
-                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
-            }else{
-                channelId="schedule"
-                ack_sound= Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+            var channelId = ""
+            var ack_sound: Uri? = null
+            if (importanceChannel == "2") {
+                channelId = "schedule_v3"
+                ack_sound =
+                    Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
+            } else {
+                channelId = "schedule"
+                ack_sound =
+                    Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
             }
             var channel = NotificationChannel(channelId, name, importance)
             channel.description = descriptionText
@@ -2652,7 +2780,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         mSessionData.setCompletionReason(sessionData.completionReason)
         mSessionData.deviceAddress = mAddress
         Log.e("outputNative", "" + mSessionData.toString());
-        if(mSessionData!=null && mSessionData.measurementRecords!=null && mSessionData.measurementRecords!!.size>0){
+        if (mSessionData != null && mSessionData.measurementRecords != null && mSessionData.measurementRecords!!.size > 0) {
             _resultBp.success(mSessionData.toString())
             return
         }

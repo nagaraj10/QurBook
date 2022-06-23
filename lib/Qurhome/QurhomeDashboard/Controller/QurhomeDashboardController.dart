@@ -27,8 +27,10 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   static const stream = EventChannel('QurbookBLE/stream');
+  static const streamAppointment = EventChannel('ScheduleAppointment/stream');
   static const streamBp = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
+  StreamSubscription _appointmentSubscription;
   StreamSubscription _bpPressureSubscription;
   var foundBLE = false.obs;
   var movedToNextScreen = false;
@@ -73,6 +75,10 @@ class QurhomeDashboardController extends GetxController {
     if (_bpPressureSubscription != null) {
       _bpPressureSubscription.cancel();
       _bpPressureSubscription = null;
+    }
+    if (_appointmentSubscription != null) {
+      _appointmentSubscription.cancel();
+      _appointmentSubscription = null;
     }
   }
 
@@ -408,6 +414,22 @@ class QurhomeDashboardController extends GetxController {
     });
   }
 
+  void getValuesNativeAppointment() {
+    _appointmentSubscription ??= streamAppointment.receiveBroadcastStream().listen((val) {
+      print(val);
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "scheduleAppointment":
+            if(PreferenceUtil.getIfQurhomeisAcive()){
+              redirectToSheelaScheduleAppointment();
+            }
+            break;
+        }
+      }
+    });
+  }
+
   callNativeBpValues({bool isFromVitals}) async {
     try {
       const platform = MethodChannel(ISBPCONNECT);
@@ -491,5 +513,12 @@ class QurhomeDashboardController extends GetxController {
       var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
       print("scan_cancel_result$result");
     }
+  }
+
+  void redirectToSheelaScheduleAppointment() {
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(scheduleAppointment: true),
+    );
   }
 }
