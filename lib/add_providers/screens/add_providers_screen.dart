@@ -181,7 +181,7 @@ class AddProvidersState extends State<AddProviders> {
       if (widget.arguments.searchKeyWord == CommonConstants.labs) {
         selectedCategories = widget?.arguments?.labsModel?.sharedCategories;
         if (widget.arguments.fromClass == router.rt_myprovider) {
-          controller.getTicketTypesList();
+          getTicketList();
           labBookAppointmentBtnShown = true;
         }
       }
@@ -190,6 +190,11 @@ class AddProvidersState extends State<AddProviders> {
     } catch (e) {
       print(e);
     }
+  }
+
+  getTicketList()async{
+         await     controller.getTicketTypesList();
+
   }
 
   @override
@@ -850,7 +855,7 @@ class AddProvidersState extends State<AddProviders> {
         child: labBookAppointmentWithGesture);
   }
 
-  labBookAppointmentBtnTapped() {
+  labBookAppointmentBtnTapped() async{
     try {
       var createTicketController = Get.put(CreateTicketController());
       createTicketController.labBookAppointment.value = true;
@@ -858,7 +863,14 @@ class AddProvidersState extends State<AddProviders> {
           CommonUtil().validString(widget.arguments.labsModel.name);
       createTicketController.selPrefLabId.value =
           CommonUtil().validString(widget.arguments.labsModel.id);
-      createTicketController.getLabList();
+          createTicketController.labsList=widget.arguments.labsDataList;
+          if(createTicketController.labsList?.length>0){
+      await createTicketController.getLabList(updateLab:true);
+          }else{
+                  await createTicketController.getLabList(updateLab:false);
+
+          }
+        
       if (controller.labTicketTypesResult != null) {
         Navigator.push(
           context,

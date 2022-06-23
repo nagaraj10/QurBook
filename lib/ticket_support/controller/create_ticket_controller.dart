@@ -31,11 +31,12 @@ class CreateTicketController extends GetxController {
     }
   }
 
-  getLabList() {
+  getLabList({bool updateLab=false}) {
     try {
-      labsList = [];
-      isCTLoading.value = true;
+      if(!updateLab){
       _providersBloc = ProvidersBloc();
+      isCTLoading.value = true;
+
       _providersBloc.getMedicalPreferencesForHospital().then((value) {
         isCTLoading.value = false;
         if (value != null &&
@@ -56,6 +57,9 @@ class CreateTicketController extends GetxController {
           isPreferredLabDisable.value = true;
         }
       });
+      }else{
+
+      }
     } catch (e) {
       labsList = [];
       labsList.insert(0, new Hospitals(name: 'Select'));
