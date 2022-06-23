@@ -512,7 +512,8 @@ class ChatState extends State<ChatDetail> {
           "isread": false,
           'content': content,
           'chatMessageId': chatMessageId,
-          'isUpload': isNotUpload
+          'isUpload': isNotUpload,
+          'isPatient': isFamilyPatientApi
         };
 
         try {

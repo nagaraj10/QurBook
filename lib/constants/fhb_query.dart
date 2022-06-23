@@ -364,6 +364,9 @@ const String qr_chat_socket_history = 'chat/get-message-history';
 const String qr_chat_family_mapping =
     'user-relationship/get-shared-caregivers-list';
 
+const String qr_unread_family_chat =
+    'chat/get-unread-notification-count-by-user';
+
 const String qr_chat_socket_init_chat_doc_pat =
     'chat/initiate-doctor-patient-chat';
 

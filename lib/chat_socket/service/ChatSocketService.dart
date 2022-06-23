@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
+import 'package:myfhb/chat_socket/model/GetUnreadCountFamily.dart';
 import 'package:myfhb/chat_socket/model/GetUserIdModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatFamilyModel.dart';
 import 'package:myfhb/chat_socket/model/InitChatModel.dart';
@@ -71,5 +72,15 @@ class ChatSocketService {
     final response = await _helper.getChatHistory(
         qr_chat_family_mapping, jsonString);
     return CaregiverPatientChatModel.fromJson(response);
+  }
+
+  Future<GetUnreadCountFamily> getUnreadCountFamily(String userId) async {
+    var body = {
+      "userId": "${userId}",
+    };
+    var jsonString = convert.jsonEncode(body);
+    final response = await _helper.getChatHistory(
+        qr_unread_family_chat, jsonString);
+    return GetUnreadCountFamily.fromJson(response);
   }
 }
