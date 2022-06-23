@@ -25,6 +25,7 @@ object Constants {
     val CN_EVE_STREAM = "com.example.agoraflutterquickstart/stream"
     val SPEECH_TO_TEXT_STREAM = "speechToText/stream"
     val Bluetooth_EVE_STREAM = "QurbookBLE/stream"
+    val Appointment_EVE_STREAM = "ScheduleAppointment/stream"
 
     val FROM_LANG = "com.example.agoraflutterquickstart/stream"
     val TO_LANG = "com.example.agoraflutterquickstart/stream"
@@ -92,6 +93,7 @@ object Constants {
     val BLE_SCAN_CANCEL ="bleScanCancel"
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
+    val APPOINTMENT_DETAILS ="appointmentDetails"
 
     val APPOINTMENT_DATE="appointmentDate";
     val BOOKINGID="bookingId";

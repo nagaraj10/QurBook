@@ -106,6 +106,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   String eId;
   bool showUnreadMessage = false;
 
+  bool scheduleAppointment = false;
+
   PreferredMeasurement preferredMeasurement;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
@@ -727,6 +729,11 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.KIOSK_eid: eId
       };
       eId = null;
+    }else if(scheduleAppointment){
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.KIOSK_appointment_avail,
+      };
+      scheduleAppointment = false;
     }else if(showUnreadMessage){
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.KIOSK_messages,
