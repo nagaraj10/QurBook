@@ -22,6 +22,7 @@ class AddProvidersArguments {
   Place place;
   String confirmAddressDescription;
   Function isRefresh;
+  List<Hospitals> labsDataList;
 
   AddProvidersArguments({
     this.data,
@@ -37,6 +38,6 @@ class AddProvidersArguments {
     this.placeDetail,
     this.place,
     this.confirmAddressDescription,
-    this.isRefresh
+    this.isRefresh,this.labsDataList
   });
 }
