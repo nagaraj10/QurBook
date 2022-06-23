@@ -2029,7 +2029,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId}) async {
+  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId,String notificationListId}) async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
@@ -2041,7 +2041,7 @@ class ApiBaseHelper {
         Map<String, String> jsobBodyMap = new Map();
         jsobBodyMap['userId'] =
             ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
-        jsobBodyMap['createdBy'] = createBy;
+        jsobBodyMap['createdBy'] =((notificationListId ?? '').isNotEmpty) ? notificationListId:  createBy;
         try {
           final response = await ApiServices.post(
               _baseUrl + "cart/getAllItems?isCount=false",

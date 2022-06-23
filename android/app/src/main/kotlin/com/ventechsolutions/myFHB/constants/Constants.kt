@@ -100,4 +100,6 @@ object Constants {
     val APPOINTMENTID="appointmentId";
     val MEETINGID="meetingId";
 
+    val CREATEDBY="createdBy";
+
 }

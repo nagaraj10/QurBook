@@ -44,9 +44,15 @@ class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
   final String cartUserId;
   final bool isFromNotification;
+  final String bookingId;
+  final String notificationListId;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
-  CheckoutPage({this.cartUserId, this.isFromNotification = false});
+  CheckoutPage(
+      {this.cartUserId,
+      this.isFromNotification = false,
+      this.bookingId = "",
+      this.notificationListId = ""});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -62,15 +68,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
     mInitialTime = DateTime.now();
     // Provider.of<CheckoutPageProvider>(context, listen: false).cartType =
     //     widget?.cartType;
-    Provider.of<CheckoutPageProvider>(context, listen: false)
-        .fetchCartItems(isNeedRelod: true, cartUserId: widget?.cartUserId);
+    Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
+        isNeedRelod: true,
+        cartUserId: widget?.cartUserId,
+        notificationListId: widget?.notificationListId);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
     //});
 
-    var firebase=FirebaseAnalyticsService();
-    firebase.trackCurrentScreen("checkoutPage","");
+    var firebase = FirebaseAnalyticsService();
+    firebase.trackCurrentScreen("checkoutPage", "");
   }
 
   @override
@@ -138,7 +146,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           ),
         ),
         body: Consumer<CheckoutPageProvider>(
-          builder: (context, value, widget) {
+          builder: (context, value, widgetObj) {
             if (value?.cartStatus == CartStatus.LOADING) {
               return SafeArea(
                 child: SizedBox(
@@ -183,16 +191,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           ),
                           FlatButton(
                             onPressed: () {
-                              Provider.of<PlanWizardViewModel>(context,
-                                      listen: false)
-                                  ?.changeCurrentPage(0);
-                              if (Provider.of<PlanWizardViewModel>(context,
-                                          listen: false)
-                                      ?.isPlanWizardActive ??
-                                  false) {
-                                Get.back();
-                              } else {
-                                Get.offAndToNamed(router.rt_PlanWizard);
+                              if (widget.isFromNotification == false) {
+                                Provider.of<PlanWizardViewModel>(context,
+                                        listen: false)
+                                    ?.changeCurrentPage(0);
+                                if (Provider.of<PlanWizardViewModel>(context,
+                                            listen: false)
+                                        ?.isPlanWizardActive ??
+                                    false) {
+                                  Get.back();
+                                } else {
+                                  Get.offAndToNamed(router.rt_PlanWizard);
+                                }
                               }
                             },
                             child: Text(
@@ -244,108 +254,114 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             Spacer(),
                                             FlatButton(
                                                 onPressed: () {
-                                                  showDialog(
-                                                      barrierDismissible: false,
-                                                      context: Get.context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          insetPadding:
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          8),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                          content: Container(
-                                                            width: double
-                                                                .maxFinite,
-                                                            height: 250.0,
-                                                            child: Column(
-                                                              children: <
-                                                                  Widget>[
-                                                                Column(
-                                                                  children: <
-                                                                      Widget>[
-                                                                    Card(
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(4.0),
-                                                                      ),
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            160,
-                                                                        padding:
-                                                                            EdgeInsets.all(8.0),
+                                                  if (widget
+                                                          .isFromNotification ==
+                                                      false) {
+                                                    showDialog(
+                                                        barrierDismissible:
+                                                            false,
+                                                        context: Get.context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            insetPadding:
+                                                                EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            8),
+                                                            backgroundColor:
+                                                                Colors
+                                                                    .transparent,
+                                                            content: Container(
+                                                              width: double
+                                                                  .maxFinite,
+                                                              height: 250.0,
+                                                              child: Column(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Column(
+                                                                    children: <
+                                                                        Widget>[
+                                                                      Card(
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(4.0),
+                                                                        ),
                                                                         child:
-                                                                            Column(
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.spaceEvenly,
-                                                                          children: <
-                                                                              Widget>[
-                                                                            Center(
-                                                                              child: Text(
-                                                                                CLEAR_CART_MSG,
-                                                                                style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
-                                                                                textAlign: TextAlign.center,
+                                                                            Container(
+                                                                          height:
+                                                                              160,
+                                                                          padding:
+                                                                              EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              Column(
+                                                                            mainAxisAlignment:
+                                                                                MainAxisAlignment.spaceEvenly,
+                                                                            children: <Widget>[
+                                                                              Center(
+                                                                                child: Text(
+                                                                                  CLEAR_CART_MSG,
+                                                                                  style: TextStyle(fontSize: 16.0.sp, fontWeight: FontWeight.w500),
+                                                                                  textAlign: TextAlign.center,
+                                                                                ),
                                                                               ),
-                                                                            ),
-                                                                            SizedBoxWidget(
-                                                                              height: 10,
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                              children: <Widget>[
-                                                                                SizedBoxWithChild(
-                                                                                  width: 90,
-                                                                                  height: 40,
-                                                                                  child: FlatButton(
-                                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
-                                                                                    color: Colors.transparent,
-                                                                                    textColor: Color(CommonUtil().getMyPrimaryColor()),
-                                                                                    padding: EdgeInsets.all(8.0),
-                                                                                    onPressed: () {
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: TextWidget(
-                                                                                      text: 'Cancel',
-                                                                                      fontsize: 14.0.sp,
+                                                                              SizedBoxWidget(
+                                                                                height: 10,
+                                                                              ),
+                                                                              Row(
+                                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                children: <Widget>[
+                                                                                  SizedBoxWithChild(
+                                                                                    width: 90,
+                                                                                    height: 40,
+                                                                                    child: FlatButton(
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                                                                                      color: Colors.transparent,
+                                                                                      textColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      padding: EdgeInsets.all(8.0),
+                                                                                      onPressed: () {
+                                                                                        Navigator.pop(context);
+                                                                                      },
+                                                                                      child: TextWidget(
+                                                                                        text: 'Cancel',
+                                                                                        fontsize: 14.0.sp,
+                                                                                      ),
                                                                                     ),
                                                                                   ),
-                                                                                ),
-                                                                                SizedBoxWithChild(
-                                                                                  width: 90,
-                                                                                  height: 40,
-                                                                                  child: FlatButton(
-                                                                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
-                                                                                    color: Colors.transparent,
-                                                                                    textColor: Color(CommonUtil().getMyPrimaryColor()),
-                                                                                    padding: EdgeInsets.all(8.0),
-                                                                                    onPressed: () {
-                                                                                      Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: TextWidget(
-                                                                                      text: ok,
-                                                                                      fontsize: 14.0.sp,
+                                                                                  SizedBoxWithChild(
+                                                                                    width: 90,
+                                                                                    height: 40,
+                                                                                    child: FlatButton(
+                                                                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
+                                                                                      color: Colors.transparent,
+                                                                                      textColor: Color(CommonUtil().getMyPrimaryColor()),
+                                                                                      padding: EdgeInsets.all(8.0),
+                                                                                      onPressed: () {
+                                                                                        if (widget.isFromNotification == false) {
+                                                                                          Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
+                                                                                          Navigator.pop(context);
+                                                                                        }
+                                                                                      },
+                                                                                      child: TextWidget(
+                                                                                        text: ok,
+                                                                                        fontsize: 14.0.sp,
+                                                                                      ),
                                                                                     ),
                                                                                   ),
-                                                                                ),
-                                                                              ],
-                                                                            )
-                                                                          ],
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                  ],
-                                                                )
-                                                              ],
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        );
-                                                      });
+                                                          );
+                                                        });
+                                                  }
                                                 },
                                                 child: Text(
                                                   'Clear cart',
@@ -622,13 +638,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
         Provider.of<PlanWizardViewModel>(context, listen: false)
             .checkCartForBundle();
     var mCartTotal = value?.totalProductCount ?? 0;
-    var firebase=FirebaseAnalyticsService();
-    firebase.trackEvent("on_pay_clicked",
-        {
-          "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-          "total" : mCartTotal
-        }
-    );
+    var firebase = FirebaseAnalyticsService();
+    firebase.trackEvent("on_pay_clicked", {
+      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+      "total": mCartTotal
+    });
     var body = {"cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}"};
     print("bodybodybody" + body.toString());
     if (mCartTotal > 0) {
@@ -671,30 +685,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
       }
     }
     return Container(
-      padding: EdgeInsets.only(top:10),
+      padding: EdgeInsets.only(top: 10),
       child: Column(
         children: [
-          item?.additionalInfo?.isMembershipAvail??false?Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
+          item?.additionalInfo?.isMembershipAvail ?? false
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Container(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        padding: EdgeInsets.all(5.0),
+                        child: Text("Membership Applied",
+                            style: TextStyle(
+                                color: Colors.white70,
+                                // fontWeight: FontWeight.bold,
+                                fontSize: 9)),
+                      ),
                     ),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                child: Container(
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  padding: EdgeInsets.all(5.0),
-                  child: Text("Membership Applied",
-                      style: TextStyle(
-                          color: Colors.white70,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 9)),
-                ),
-              ),
-            ],
-          ):SizedBox(),
+                  ],
+                )
+              : SizedBox(),
           Row(
             children: [
               //plan details and all
@@ -762,196 +778,205 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         height: 20.0.sp,
                       ),
                       onPressed: () {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: Get.context,
-                            builder: (context) => AlertDialog(
-                                  insetPadding:
-                                      EdgeInsets.symmetric(horizontal: 8),
-                                  backgroundColor: Colors.transparent,
-                                  content: Container(
-                                    width: double.maxFinite,
-                                    height: 250.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Column(
-                                          children: <Widget>[
-                                            Card(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(4.0),
-                                              ),
-                                              child: Container(
-                                                height: 160,
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceEvenly,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      margin:
-                                                          EdgeInsets.symmetric(
-                                                        vertical: 5,
-                                                      ),
-                                                      child: RichText(
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        text: TextSpan(
-                                                          text: 'Remove ',
-                                                          style: TextStyle(
-                                                            fontSize: 16.0.sp,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: Colors.black,
+                        if (widget.isFromNotification == false) {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: Get.context,
+                              builder: (context) => AlertDialog(
+                                    insetPadding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    backgroundColor: Colors.transparent,
+                                    content: Container(
+                                      width: double.maxFinite,
+                                      height: 250.0,
+                                      child: Column(
+                                        children: <Widget>[
+                                          Column(
+                                            children: <Widget>[
+                                              Card(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.0),
+                                                ),
+                                                child: Container(
+                                                  height: 160,
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          vertical: 5,
+                                                        ),
+                                                        child: RichText(
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          text: TextSpan(
+                                                            text: 'Remove ',
+                                                            style: TextStyle(
+                                                              fontSize: 16.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            children: <
+                                                                TextSpan>[
+                                                              TextSpan(
+                                                                text:
+                                                                    '${(item?.productDetail?.planName).toLowerCase()}',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      16.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  // fontStyle:
+                                                                  //     FontStyle
+                                                                  //         .italic,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              TextSpan(
+                                                                text:
+                                                                    ' from cart?',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      16.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              )
+                                                            ],
                                                           ),
-                                                          children: <TextSpan>[
-                                                            TextSpan(
-                                                              text:
-                                                                  '${(item?.productDetail?.planName).toLowerCase()}',
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    16.0.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                // fontStyle:
-                                                                //     FontStyle
-                                                                //         .italic,
-                                                                color: Colors
-                                                                    .black,
+                                                        ),
+                                                      ),
+                                                      SizedBoxWidget(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceEvenly,
+                                                        children: <Widget>[
+                                                          SizedBoxWithChild(
+                                                            width: 90,
+                                                            height: 40,
+                                                            child: FlatButton(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12.0),
+                                                                  side: BorderSide(
+                                                                      color: Color(
+                                                                          CommonUtil()
+                                                                              .getMyPrimaryColor()))),
+                                                              color: Colors
+                                                                  .transparent,
+                                                              textColor: Color(
+                                                                  CommonUtil()
+                                                                      .getMyPrimaryColor()),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: TextWidget(
+                                                                text: 'Cancel',
+                                                                fontsize:
+                                                                    14.0.sp,
                                                               ),
                                                             ),
-                                                            TextSpan(
-                                                              text:
-                                                                  ' from cart?',
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    16.0.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                color: Colors
-                                                                    .black,
+                                                          ),
+                                                          SizedBoxWithChild(
+                                                            width: 90,
+                                                            height: 40,
+                                                            child: FlatButton(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12.0),
+                                                                  side: BorderSide(
+                                                                      color: Color(
+                                                                          CommonUtil()
+                                                                              .getMyPrimaryColor()))),
+                                                              color: Colors
+                                                                  .transparent,
+                                                              textColor: Color(
+                                                                  CommonUtil()
+                                                                      .getMyPrimaryColor()),
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              onPressed:
+                                                                  () async {
+                                                                await Provider.of<
+                                                                            CheckoutPageProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .fetchCartItem();
+
+                                                                ProductList productList = Provider.of<
+                                                                            CheckoutPageProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    ?.getProductListUsingPackageId(
+                                                                        '${item?.productDetail?.id}');
+                                                                await Provider.of<
+                                                                            CheckoutPageProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .removeCartItem(
+                                                                        productId:
+                                                                            '${item?.productDetail?.id}',
+                                                                        isNeedRelod:
+                                                                            true,
+                                                                        productList:
+                                                                            productList,
+                                                                        isFrom:
+                                                                            "Cart");
+
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                              child: TextWidget(
+                                                                text: ok,
+                                                                fontsize:
+                                                                    14.0.sp,
                                                               ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBoxWidget(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: <Widget>[
-                                                        SizedBoxWithChild(
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: FlatButton(
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12.0),
-                                                                side: BorderSide(
-                                                                    color: Color(
-                                                                        CommonUtil()
-                                                                            .getMyPrimaryColor()))),
-                                                            color: Colors
-                                                                .transparent,
-                                                            textColor: Color(
-                                                                CommonUtil()
-                                                                    .getMyPrimaryColor()),
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            onPressed: () {
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: TextWidget(
-                                                              text: 'Cancel',
-                                                              fontsize: 14.0.sp,
                                                             ),
                                                           ),
-                                                        ),
-                                                        SizedBoxWithChild(
-                                                          width: 90,
-                                                          height: 40,
-                                                          child: FlatButton(
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            12.0),
-                                                                side: BorderSide(
-                                                                    color: Color(
-                                                                        CommonUtil()
-                                                                            .getMyPrimaryColor()))),
-                                                            color: Colors
-                                                                .transparent,
-                                                            textColor: Color(
-                                                                CommonUtil()
-                                                                    .getMyPrimaryColor()),
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    8.0),
-                                                            onPressed:
-                                                                () async {
-                                                              await Provider.of<
-                                                                          CheckoutPageProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .fetchCartItem();
-
-                                                              ProductList
-                                                                  productList =
-                                                                  Provider.of<CheckoutPageProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      ?.getProductListUsingPackageId(
-                                                                          '${item?.productDetail?.id}');
-                                                              await Provider.of<
-                                                                          CheckoutPageProvider>(
-                                                                      context,
-                                                                      listen:
-                                                                          false)
-                                                                  .removeCartItem(
-                                                                      productId:
-                                                                          '${item?.productDetail?.id}',
-                                                                      isNeedRelod:
-                                                                          true,
-                                                                      productList:
-                                                                          productList,
-                                                                      isFrom:
-                                                                          "Cart");
-
-                                                              Navigator.pop(
-                                                                  context);
-                                                            },
-                                                            child: TextWidget(
-                                                              text: ok,
-                                                              fontsize: 14.0.sp,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  ],
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ));
+                                  ));
+                        }
                       },
                     ),
                     Spacer(),
