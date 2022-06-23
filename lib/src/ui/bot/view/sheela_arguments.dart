@@ -7,6 +7,7 @@ class SheelaArgument {
   final bool isFromBpReading;
   final bool scheduleAppointment;
   final eId;
+  final bool showUnreadMessage;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -17,5 +18,6 @@ class SheelaArgument {
     this.isFromBpReading = false,
     this.scheduleAppointment = false,
     this.eId,
+    this.showUnreadMessage = false,
   });
 }
