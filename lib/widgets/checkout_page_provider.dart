@@ -82,10 +82,10 @@ class CheckoutPageProvider extends ChangeNotifier {
   }
 
   Future<FetchingCartItemsModel> fetchCartItems(
-      {bool isNeedRelod = false, String cartUserId}) async {
+      {bool isNeedRelod = false, String cartUserId,String notificationListId}) async {
     changeCartStatus(CartStatus.LOADING, isNeedRelod: false);
     fetchingCartItemsModel =
-        await helper.fetchCartItems(cartUserId: cartUserId);
+        await helper.fetchCartItems(cartUserId: cartUserId,notificationListId:notificationListId);
     changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
 
     updateCartCount(fetchingCartItemsModel?.result?.productsCount ?? 0,

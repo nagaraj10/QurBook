@@ -10,11 +10,15 @@ class FetchingCartItemsModel {
   FetchingCartItemsModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result =
-        json['result'] != null ? new Result.fromJson(json['result']) : null;
-    diagnostics = json['diagnostics'] != null
-        ? new Diagnostics.fromJson(json['diagnostics'])
-        : null;
+    if (json.containsKey('result')) {
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    }
+    if (json.containsKey('diagnostics')) {
+      diagnostics = json['diagnostics'] != null
+          ? new Diagnostics.fromJson(json['diagnostics'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +104,8 @@ class ProductList {
       this.isActive,
       this.createdOn,
       this.lastModifiedOn,
-      this.additionalInfo,this.paidAmount});
+      this.additionalInfo,
+      this.paidAmount});
 
   ProductList.fromJson(Map<String, dynamic> json) {
     productDetail = json['productDetail'] != null
@@ -112,8 +117,8 @@ class ProductList {
     additionalInfo = json['additionalInfo'] != null
         ? new AdditionalInfo.fromJson(json['additionalInfo'])
         : null;
-    if(json.containsKey("paidAmount")){
-      paidAmount=json["paidAmount"];
+    if (json.containsKey("paidAmount")) {
+      paidAmount = json["paidAmount"];
     }
   }
 
@@ -141,7 +146,11 @@ class ProductDetail {
   String healthOrganizationName;
 
   ProductDetail(
-      {this.id, this.planName, this.planSubscriptionFee, this.packageDuration,this.healthOrganizationName});
+      {this.id,
+      this.planName,
+      this.planSubscriptionFee,
+      this.packageDuration,
+      this.healthOrganizationName});
 
   ProductDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -215,11 +224,11 @@ class AdditionalInfo {
   AdditionalInfo({this.isRenewal, this.tag});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    tag = json['tag'];
-    isRenewal = json['isRenewal'];
+    if (json.containsKey("tag")) tag = json['tag'];
+    if (json.containsKey("isRenewal")) isRenewal = json['isRenewal'];
     if (json.containsKey("remarks")) remarks = json['remarks'];
     if (json.containsKey("PlanType")) planType = json['PlanType'];
-    if (json.containsKey("actualFee")) actualFee = json['actualFee'];
+    if (json.containsKey("actualFee")) actualFee = json['actualFee'].toString();
     if (json.containsKey("isMembershipAvail"))
       isMembershipAvail = json['isMembershipAvail'];
   }

@@ -505,7 +505,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   setAlwaysOnMode() async {
-    if(Platform.isAndroid&&CommonUtil().isTablet){
+    if (Platform.isAndroid && CommonUtil().isTablet) {
       await Wakelock.enable();
     }
   }
@@ -889,8 +889,13 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'my cart',
             'navigationPage': 'My Cart',
           });
-          Get.to(CheckoutPage(isFromNotification: true)).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          Get.to(CheckoutPage(
+                  isFromNotification: true,
+                  cartUserId: passedValArr[2],
+                  bookingId: passedValArr[4],
+                  notificationListId: passedValArr[3]))
+              .then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1370,9 +1375,16 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'mycart') {
             //this need to be navigte to My Plans screen
             return SplashScreen(
-              nsRoute: 'mycart',
-              bundle: parsedData[2],
-            );
+                nsRoute: 'mycart',
+                bundle: parsedData[0] +
+                    '&' +
+                    parsedData[1] +
+                    '&' +
+                    parsedData[2] +
+                    '&' +
+                    parsedData[3] +
+                    '&' +
+                    parsedData[4]);
           } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',

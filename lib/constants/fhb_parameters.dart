@@ -671,6 +671,8 @@ const String familyMemberCaregiverRequest = 'familyMemberCaregiverRequest';
 const String associationNotificationToCaregiver =
     'associationNotificationToCaregiver';
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
+const String strCaregiverNotifyPlanSubscription = 'caregiverNotifyPlanSubscription';
+
 
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String uid = 'uid';
