@@ -126,7 +126,6 @@ dependencies:
   flutter_mdns_plugin: ^0.0.2
   html_unescape: ^2.0.0
   audioplayers: ^0.19.1
-  wakelock: any
 
 
 

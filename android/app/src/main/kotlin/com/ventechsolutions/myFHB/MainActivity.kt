@@ -90,10 +90,6 @@ import jp.co.ohq.ble.enumerate.OHQDeviceInfoKey
 import jp.co.ohq.ble.enumerate.OHQSessionOptionKey
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
-import org.vosk.Model
-import org.vosk.Recognizer
-import org.vosk.android.SpeechService
-import org.vosk.android.StorageService
 import java.io.IOException
 import java.security.SecureRandom
 import java.util.*
@@ -155,8 +151,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val STATE_FILE = 3
     private val STATE_MIC = 4
 
-    private var model: Model? = null
-    private var speechService: SpeechService? = null
 
     private lateinit var _result: MethodChannel.Result
     private lateinit var _securityResult: MethodChannel.Result
@@ -1120,22 +1114,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         }
 
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            SHEELA_CHANNEL
-        ).setMethodCallHandler { call, result ->
-            try {
-                if (call.method!!.contentEquals(Constants.START_SHEELA_LISTENING)) {
-                    callSheelaListener()
-                    result.success("")
-                } else {
-                    result.notImplemented()
-                }
-            } catch (e: Exception) {
-                print(e.printStackTrace())
-            }
-
-        }
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -1452,68 +1430,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
         return bestLocation
-    }
-
-    private fun callSheelaListener() {
-
-        // Check if user has given permission to record audio, init the model after permission is granted
-        val permissionCheck = ContextCompat.checkSelfPermission(
-            applicationContext, Manifest.permission.RECORD_AUDIO
-        )
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                1
-            )
-        } else {
-            initModel()
-        }
-    }
-
-    private fun initModel() {
-        StorageService.unpack(this, "model-en-us", "model",
-            { model ->
-                this.model = model
-                recognizeMicrophone()
-//                setUiState(org.vosk.demo.VoskActivity.STATE_READY)
-            }
-        ) { exception -> Log.e("error",exception.message.toString()) }
-    }
-
-    private fun recognizeMicrophone() {
-        if (speechService != null) {
-            speechService?.stop()
-            speechService = null
-        } else {
-            try {
-                val rec = Recognizer(model, 16000.0f)
-                speechService = SpeechService(rec, 16000.0f)
-                speechService?.startListening(object : org.vosk.android.RecognitionListener {
-                    override fun onPartialResult(hypothesis: String?) {
-                    }
-
-                    override fun onResult(hypothesis: String?) {
-                        if (hypothesis!!.indexOf("sheila") != -1) {
-                            if (::mSpeechToTextEventChannel.isInitialized) {
-                                mSpeechToTextEventChannel.success("call");
-                            }
-                        }
-                    }
-
-                    override fun onFinalResult(hypothesis: String?) {
-                    }
-
-                    override fun onError(exception: java.lang.Exception?) {
-                    }
-
-                    override fun onTimeout() {
-                    }
-                })
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
-        }
     }
 
 
