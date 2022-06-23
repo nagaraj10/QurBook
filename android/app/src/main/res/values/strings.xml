@@ -135,7 +135,7 @@
     <string name="fb_login_protocol_scheme">fb1234</string>
     <string name="facebook_client_token">926a9953b0147966a48ae98ae9ecac99</string>
 
-    <string name="ns_pay">Pay</string>
+    <string name="ns_pay">Pay Now</string>
 
 
 </resources>
