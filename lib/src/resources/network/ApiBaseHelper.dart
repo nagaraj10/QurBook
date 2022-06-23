@@ -500,7 +500,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveOrEditNonAdherance(String url,dynamic data) async {
+  Future<dynamic> saveOrEditNonAdherance(String url, dynamic data) async {
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     print(authToken);
     var responseJson;
@@ -509,7 +509,7 @@ class ApiBaseHelper {
     try {
       var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersWithoutOffset(),
-          body :body);
+          body: body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -526,7 +526,7 @@ class ApiBaseHelper {
     try {
       var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersWithoutOffset(),
-      body :'["ACTREMSETTYPE"]');
+          body: '["ACTREMSETTYPE"]');
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -1870,7 +1870,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveRegimentMedia(
-      String url, String imagePaths, String userId,String providerId) async {
+      String url, String imagePaths, String userId, String providerId) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1887,7 +1887,7 @@ class ApiBaseHelper {
           'folderName': 'event',
           'userId': userId,
           'userLinkId': userId,
-          'providerLinkId':providerId
+          'providerLinkId': providerId
         });
 
         var fileName = File(imagePaths);
@@ -2029,7 +2029,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId}) async {
+  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId,String notificationListId}) async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
@@ -2041,7 +2041,7 @@ class ApiBaseHelper {
         Map<String, String> jsobBodyMap = new Map();
         jsobBodyMap['userId'] =
             ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
-        jsobBodyMap['createdBy'] = createBy;
+        jsobBodyMap['createdBy'] =((notificationListId ?? '').isNotEmpty) ? notificationListId:  createBy;
         try {
           final response = await ApiServices.post(
               _baseUrl + "cart/getAllItems?isCount=false",
@@ -2287,7 +2287,15 @@ class ApiBaseHelper {
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
         'preferredDate': Constants.tckPrefDate,
-        'patientUserId': userid
+        'patientUserId': userid,
+        'additionalInfo': {
+          'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
+              ? Constants.tckPrefLab
+              : "",
+          'preferredLabId': Constants.tckPrefLabId.trim().isNotEmpty
+              ? Constants.tckPrefLabId
+              : ""
+        },
       };
       var response = await ApiServices.post(_baseUrl + url,
           body: json.encode(bodyData),
@@ -2553,8 +2561,7 @@ class ApiBaseHelper {
     final header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      var response =
-      await ApiServices.get(_baseUrl + url, headers: header);
+      var response = await ApiServices.get(_baseUrl + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

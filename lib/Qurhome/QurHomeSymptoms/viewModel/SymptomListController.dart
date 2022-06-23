@@ -7,6 +7,7 @@ import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -21,7 +22,6 @@ class SymptomListController extends GetxController {
   var loadingData = false.obs;
   RegimentResponseModel symtomListModel;
   var symptomList = [].obs;
-
 
   getSymptomList({bool isLoading}) async {
     try {
@@ -40,7 +40,23 @@ class SymptomListController extends GetxController {
           symtomListModel =
               RegimentResponseModel.fromJson(json.decode(response.body));
 
-          symptomList.value = symtomListModel.regimentsList;
+          List<RegimentDataModel> tempRegimentsList =
+              symtomListModel.regimentsList;
+
+          if (tempRegimentsList != null && tempRegimentsList.length > 0) {
+            var val = tempRegimentsList.firstWhere(
+                (item) => CommonUtil().validString(item.seq) != "0",
+                orElse: () => null);
+            if (val != null) {
+              if (tempRegimentsList.length > 10) {
+                symptomList.value = tempRegimentsList.take(10).toList();
+              } else {
+                symptomList.value = symtomListModel.regimentsList;
+              }
+            } else {
+              symptomList.value = symtomListModel.regimentsList;
+            }
+          }
         } on PlatformException {
           symptomList.value = [];
         }
@@ -50,7 +66,6 @@ class SymptomListController extends GetxController {
       loadingData.value = false;
     }
   }
-
 
   void startSymptomTTS(int index, {String staticText, String dynamicText}) {
     stopSymptomTTS();
@@ -88,17 +103,17 @@ class SymptomListController extends GetxController {
 
   static Future<SaveResponseModel> saveFormData(
       {String eid,
-        String events,
-        bool isFollowEvent,
-        String followEventContext,
-        DateTime selectedDate,
-        TimeOfDay selectedTime}) async {
+      String events,
+      bool isFollowEvent,
+      String followEventContext,
+      DateTime selectedDate,
+      TimeOfDay selectedTime}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     var localTime;
     try {
       if (Provider.of<RegimentViewModel>(Get.context, listen: false)
-          .regimentFilter ==
+              .regimentFilter ==
           RegimentFilter.AsNeeded) {
         localTime = CommonUtil.dateFormatterWithdatetimeseconds(
           DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
@@ -116,7 +131,7 @@ class SymptomListController extends GetxController {
       var followEventParams = '';
       if (isFollowEvent ?? false) {
         followEventParams =
-        '&followevent=1&context=${followEventContext ?? ''}';
+            '&followevent=1&context=${followEventContext ?? ''}';
       }
       var response = await ApiServices.post(
         urlForRegiment,
@@ -125,7 +140,7 @@ class SymptomListController extends GetxController {
           {
             'method': 'post',
             'data':
-            "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURHOME",
+                "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURHOME",
           },
         ),
       );
@@ -143,5 +158,4 @@ class SymptomListController extends GetxController {
       throw Exception('$e was thrown');
     }
   }
-
 }
