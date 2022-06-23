@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -17,6 +20,7 @@ import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:intl/intl.dart';
+import 'package:wakelock/wakelock.dart';
 
 class QurhomeDashboard extends StatefulWidget {
   @override
@@ -25,7 +29,9 @@ class QurhomeDashboard extends StatefulWidget {
 
 class _QurhomeDashboardState extends State<QurhomeDashboard> {
   final controller = Get.put(QurhomeDashboardController());
-
+  var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
+  static const speechToText = EventChannel('speechToText/stream');
+  StreamSubscription speechToTextSubscription;
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
@@ -33,6 +39,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   void initState() {
     try {
+      if (CommonUtil().isTablet) {
+          _listenSpeechToText();
+      }
       super.initState();
       CommonUtil().requestQurhomeDialog();
       if (CommonUtil().isTablet) {
@@ -44,6 +53,30 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     } catch (e) {
       print(e);
     }
+    setAlwaysOnMode();
+
+  }
+  setAlwaysOnMode() async {
+    if(Platform.isAndroid&&CommonUtil().isTablet){
+      await Wakelock.enable();
+    }
+  }
+
+  void _listenSpeechToText() {
+    sheelaMethodChannelAndroid.invokeMethod('startSheelaListening');
+    speechToTextSubscription ??=
+        speechToText.receiveBroadcastStream().listen(getSpeechToText);
+  }
+
+  getSpeechToText(message) {
+    String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+    Get.toNamed(
+      rt_Sheela,
+      arguments: SheelaArgument(
+        isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
+        langCode: (sheela_lang ?? ''),
+      ),
+    );
   }
 
   BorderSide getBorder() {

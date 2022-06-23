@@ -475,13 +475,12 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    if (CommonUtil().isTablet) {
-      final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-      if (userId != null && userId.isNotEmpty) {
-        _listenSpeechToText();
-      }
-    }
-    setAlwaysOnMode();
+    // if (CommonUtil().isTablet) {
+    //   final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    //   if (userId != null && userId.isNotEmpty) {
+    //     _listenSpeechToText();
+    //   }
+    // }
 
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
@@ -504,11 +503,6 @@ class _MyFHBState extends State<MyFHB> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-  setAlwaysOnMode() async {
-    if (Platform.isAndroid && CommonUtil().isTablet) {
-      await Wakelock.enable();
-    }
-  }
 
   CheckForShowingTheIntroScreens() async {
     try {
