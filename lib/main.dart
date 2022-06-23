@@ -16,7 +16,6 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
-import 'package:wakelock/wakelock.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -475,13 +474,12 @@ class _MyFHBState extends State<MyFHB> {
     getMyRoute();
     _enableTimer();
 
-    if (CommonUtil().isTablet) {
-      final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-      if (userId != null && userId.isNotEmpty) {
-        _listenSpeechToText();
-      }
-    }
-    setAlwaysOnMode();
+    // if (CommonUtil().isTablet) {
+    //   final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    //   if (userId != null && userId.isNotEmpty) {
+    //     _listenSpeechToText();
+    //   }
+    // }
 
     var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
@@ -504,11 +502,6 @@ class _MyFHBState extends State<MyFHB> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-  setAlwaysOnMode() async {
-    if(Platform.isAndroid&&CommonUtil().isTablet){
-      await Wakelock.enable();
-    }
-  }
 
   CheckForShowingTheIntroScreens() async {
     try {
