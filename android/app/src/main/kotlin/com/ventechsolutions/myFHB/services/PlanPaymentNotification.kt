@@ -19,6 +19,9 @@ class PlanPaymentNotification:BroadcastReceiver() {
         val userId = p1?.getStringExtra(Constants.PROB_USER_ID)
         val createdBy = p1?.getStringExtra(Constants.CREATEDBY)
         val bookingId = p1?.getStringExtra(Constants.BOOKINGID)
+        val paymentLinkViaPush = p1?.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val cartId = p1?.getStringExtra(Constants.BOOKINGID)
+
        
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
@@ -37,6 +40,10 @@ class PlanPaymentNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROB_USER_ID,userId)
         launchIntent?.putExtra(Constants.BOOKINGID,bookingId)
         launchIntent?.putExtra(Constants.CREATEDBY,createdBy)
+        launchIntent?.putExtra(Constants.PAYMENTLINKVIAPUSH,paymentLinkViaPush)
+        launchIntent?.putExtra(Constants.CARTID,cartId)
+
+
         launchIntent?.putExtra("type", type)
         p0.startActivity(launchIntent)
     }

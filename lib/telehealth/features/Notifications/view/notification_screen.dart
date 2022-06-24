@@ -1142,6 +1142,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           bookingId: result?.messageDetails?.payload?.bookingId,
           cartUserId: result?.messageDetails?.payload?.userId,
           notificationListId: result?.messageDetails?.payload?.createdBy,
+          cartId: result?.messageDetails?.payload?.bookingId,
         )).then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
@@ -1662,6 +1663,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     cartUserId: notification?.messageDetails?.payload?.userId,
                     notificationListId:
                         notification?.messageDetails?.payload?.createdBy,
+                    cartId: notification?.messageDetails?.payload?.bookingId,
                   )).then((value) =>
                       PageNavigator.goToPermanent(context, router.rt_Landing));
                 },

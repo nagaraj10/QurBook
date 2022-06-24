@@ -785,6 +785,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
         acceptCareGiverIntent.putExtra(Constants.BOOKINGID, data[Constants.BOOKINGID])
         acceptCareGiverIntent.putExtra(Constants.CREATEDBY, data[Constants.CREATEDBY])
+        acceptCareGiverIntent.putExtra(Constants.PAYMENTLINKVIAPUSH, data[Constants.PAYMENTLINKVIAPUSH])
+        acceptCareGiverIntent.putExtra(Constants.CARTID, data[Constants.BOOKINGID])
+
        
 
 

@@ -2029,7 +2029,11 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<FetchingCartItemsModel> fetchCartItems({String cartUserId,String notificationListId}) async {
+  Future<FetchingCartItemsModel> fetchCartItems(
+      {String cartUserId,
+      String notificationListId,
+      bool isPaymentLinkViaPush = false,
+      String cartId = ""}) async {
     try {
       String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String createBy =
@@ -2038,10 +2042,16 @@ class ApiBaseHelper {
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, String> jsobBodyMap = new Map();
+        Map<String, dynamic> jsobBodyMap = new Map();
         jsobBodyMap['userId'] =
             ((cartUserId ?? '').isNotEmpty) ? cartUserId : userID;
-        jsobBodyMap['createdBy'] =((notificationListId ?? '').isNotEmpty) ? notificationListId:  createBy;
+        jsobBodyMap['createdBy'] = ((notificationListId ?? '').isNotEmpty)
+            ? notificationListId
+            : createBy;
+        if (isPaymentLinkViaPush) {
+          jsobBodyMap['paymentLinkViaPush'] = isPaymentLinkViaPush ?? false;
+          jsobBodyMap['cartId'] = cartId ?? '';
+        }
         try {
           final response = await ApiServices.post(
               _baseUrl + "cart/getAllItems?isCount=false",
