@@ -99,6 +99,8 @@ object Constants {
     val BOOKINGID="bookingId";
     val APPOINTMENTID="appointmentId";
     val MEETINGID="meetingId";
+    val PAYMENTLINKVIAPUSH="paymentLinkViaPush";
+    val CARTID="cartId";
 
     val CREATEDBY="createdBy";
 
