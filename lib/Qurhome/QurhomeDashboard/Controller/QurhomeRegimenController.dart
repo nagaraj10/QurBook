@@ -66,26 +66,12 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel.regimentsList
           .removeWhere((element) => element?.isEventDisabled);
       for (int i = 0;
-          i < qurHomeRegimenResponseModel.regimentsList.length;
+          i < qurHomeRegimenResponseModel?.regimentsList?.length??0;
           i++) {
-        if (qurHomeRegimenResponseModel.regimentsList[i].activityOrgin ==
-            'Appointment') {
-          if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
-              qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
-            if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
-                qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
-              var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
-              const platform = MethodChannel(APPOINTMENT_DETAILS);
-              await platform.invokeMethod(APPOINTMENT_DETAILS,
-                  {'data': jsonEncode(apiReminder.toJson())});
-            }
-          }
-        }
-
         if (DateTime.now()
-            .isBefore(qurHomeRegimenResponseModel.regimentsList[i].estart)) {
-          if (qurHomeRegimenResponseModel.regimentsList[i].ack_local != null) {
-            if (qurHomeRegimenResponseModel.regimentsList.length > (i + 1)) {
+            .isBefore(qurHomeRegimenResponseModel?.regimentsList[i]?.estart)) {
+          if (qurHomeRegimenResponseModel?.regimentsList[i]?.ack_local != null) {
+            if (qurHomeRegimenResponseModel?.regimentsList?.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
             } else {
@@ -99,6 +85,26 @@ class QurhomeRegimenController extends GetxController {
           break;
         }
       }
+      for (int i = 0;
+      i < qurHomeRegimenResponseModel?.regimentsList?.length??0;
+      i++) {
+        if(qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin!=null){
+          if (qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin ==
+              'Appointment') {
+            if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
+                qurHomeRegimenResponseModel?.regimentsList[i]?.estart != '') {
+              if (qurHomeRegimenResponseModel?.regimentsList[i]?.eid != null &&
+                  qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
+                var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
+                const platform = MethodChannel(APPOINTMENT_DETAILS);
+                await platform.invokeMethod(APPOINTMENT_DETAILS,
+                    {'data': jsonEncode(apiReminder.toJson())});
+              }
+            }
+          }
+        }
+      }
+
 
       qurhomeDashboardController.getValuesNativeAppointment();
 
