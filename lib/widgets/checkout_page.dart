@@ -46,13 +46,15 @@ class CheckoutPage extends StatefulWidget {
   final bool isFromNotification;
   final String bookingId;
   final String notificationListId;
+  final String cartId;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
   CheckoutPage(
       {this.cartUserId,
       this.isFromNotification = false,
       this.bookingId = "",
-      this.notificationListId = ""});
+      this.notificationListId = "",
+      this.cartId = ""});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -71,7 +73,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     Provider.of<CheckoutPageProvider>(context, listen: false).fetchCartItems(
         isNeedRelod: true,
         cartUserId: widget?.cartUserId,
-        notificationListId: widget?.notificationListId);
+        notificationListId: widget?.notificationListId,
+        isPaymentLinkViaPush: widget.isFromNotification,
+        cartId: widget.cartId);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
@@ -170,54 +174,63 @@ class _CheckoutPageState extends State<CheckoutPage> {
               //value?.updateCartCount(cartCount,isNeedRelod: true);
               return (!(value?.fetchingCartItemsModel?.isSuccess ?? false) ||
                       cartCount == 0)
-                  ? Container(
-                      alignment: Alignment.center,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            ic_empty_cart,
-                            width: 70.0.sp,
-                            height: 70.0.sp,
-                          ),
-                          Text(
-                            'Your cart is empty',
+                  ? widget.isFromNotification
+                      ? Container(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Payment Link Expired',
                             style: TextStyle(fontSize: 15),
                           ),
-                          Text(
-                            'Looks like you haven\'t added any plan to the cart yet.',
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              if (widget.isFromNotification == false) {
-                                Provider.of<PlanWizardViewModel>(context,
-                                        listen: false)
-                                    ?.changeCurrentPage(0);
-                                if (Provider.of<PlanWizardViewModel>(context,
+                        )
+                      : Container(
+                          alignment: Alignment.center,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                ic_empty_cart,
+                                width: 70.0.sp,
+                                height: 70.0.sp,
+                              ),
+                              Text(
+                                'Your cart is empty',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                              Text(
+                                'Looks like you haven\'t added any plan to the cart yet.',
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  if (widget.isFromNotification == false) {
+                                    Provider.of<PlanWizardViewModel>(context,
                                             listen: false)
-                                        ?.isPlanWizardActive ??
-                                    false) {
-                                  Get.back();
-                                } else {
-                                  Get.offAndToNamed(router.rt_PlanWizard);
-                                }
-                              }
-                            },
-                            child: Text(
-                              'Choose Plan',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color(
-                                  CommonUtil().getMyPrimaryColor(),
+                                        ?.changeCurrentPage(0);
+                                    if (Provider.of<PlanWizardViewModel>(
+                                                context,
+                                                listen: false)
+                                            ?.isPlanWizardActive ??
+                                        false) {
+                                      Get.back();
+                                    } else {
+                                      Get.offAndToNamed(router.rt_PlanWizard);
+                                    }
+                                  }
+                                },
+                                child: Text(
+                                  'Choose Plan',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Color(
+                                      CommonUtil().getMyPrimaryColor(),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
+                        )
                   : Stack(
                       children: [
                         Container(

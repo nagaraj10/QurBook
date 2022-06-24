@@ -1714,7 +1714,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         var isWeb = intent.getStringExtra(getString(R.string.web))
         var appLog = intent.getStringExtra(getString(R.string.ns_type_applog))
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
-                val createdBy = intent.getStringExtra(Constants.CREATEDBY)
+        val createdBy = intent.getStringExtra(Constants.CREATEDBY)
+        val cartId = intent.getStringExtra(Constants.BOOKINGID)
+        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+
 
 
         if (sharedValue != null && sharedValue == "chat") {
@@ -1736,7 +1739,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
         else if(redirect_to?.contains("mycart") == true){
 
-            sharedValue = "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}"
+            sharedValue = "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
         }
         else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 

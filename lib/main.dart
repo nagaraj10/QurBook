@@ -492,7 +492,6 @@ class _MyFHBState extends State<MyFHB> {
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
-
   CheckForShowingTheIntroScreens() async {
     try {
       isFirstTime = PreferenceUtil.isKeyValid(Constants.KeyShowIntroScreens);
@@ -859,12 +858,13 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'My Cart',
           });
           Get.to(CheckoutPage(
-                  isFromNotification: true,
-                  cartUserId: passedValArr[2],
-                  bookingId: passedValArr[4],
-                  notificationListId: passedValArr[3]))
-              .then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+            isFromNotification: true,
+            cartUserId: passedValArr[2],
+            bookingId: passedValArr[4],
+            notificationListId: passedValArr[3],
+            cartId: passedValArr[4],
+          )).then((value) =>
+              PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1353,7 +1353,11 @@ class _MyFHBState extends State<MyFHB> {
                     '&' +
                     parsedData[3] +
                     '&' +
-                    parsedData[4]);
+                    parsedData[4] +
+                    '&' +
+                    parsedData[5] +
+                    '&' +
+                    parsedData[6]);
           } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',

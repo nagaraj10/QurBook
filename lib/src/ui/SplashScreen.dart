@@ -512,12 +512,13 @@ class _SplashScreenState extends State<SplashScreen> {
                       var passedValArr = widget.bundle?.split('&');
 
                       Get.to(CheckoutPage(
-                              isFromNotification: true,
-                              cartUserId: passedValArr[2],
-                              bookingId: passedValArr[4],
-                              notificationListId: passedValArr[3]))
-                          .then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
+                        isFromNotification: true,
+                        cartUserId: passedValArr[2],
+                        bookingId: passedValArr[4],
+                        notificationListId: passedValArr[3],
+                        cartId: passedValArr[4],
+                      )).then((value) => PageNavigator.goToPermanent(
+                          context, router.rt_Landing));
                     } else if (widget.nsRoute == 'Renew' ||
                         widget.nsRoute == 'Callback' ||
                         widget.nsRoute == 'myplandetails') {

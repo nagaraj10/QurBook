@@ -1,32 +1,33 @@
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
-  Payload(
-      {this.type,
-      this.meetingId,
-      this.priority,
-      this.appointmentDate,
-      this.userName,
-      this.doctorId,
-      this.payloadMeetingId,
-      this.templateName,
-      this.providerRequestId,
-      this.doctorSessionId,
-      this.bookingId,
-      this.healthOrganizationId,
-      this.plannedStartDateTime,
-      this.redirectTo,
-      this.healthRecordMetaIds,
-      this.planId,
-      this.userId,
-      this.patientName,
-      this.claimId,
-      this.patientPhoneNumber,
-      this.verificationCode,
-      this.caregiverRequestor,
-      this.caregiverReceiver,
-      this.appointmentId,
-      this.createdBy});
+  Payload({
+    this.type,
+    this.meetingId,
+    this.priority,
+    this.appointmentDate,
+    this.userName,
+    this.doctorId,
+    this.payloadMeetingId,
+    this.templateName,
+    this.providerRequestId,
+    this.doctorSessionId,
+    this.bookingId,
+    this.healthOrganizationId,
+    this.plannedStartDateTime,
+    this.redirectTo,
+    this.healthRecordMetaIds,
+    this.planId,
+    this.userId,
+    this.patientName,
+    this.claimId,
+    this.patientPhoneNumber,
+    this.verificationCode,
+    this.caregiverRequestor,
+    this.caregiverReceiver,
+    this.appointmentId,
+    this.createdBy,
+  });
 
   String type;
   String meetingId;
@@ -59,8 +60,7 @@ class Payload {
     meetingId = json["meetingId"] == null ? null : json["meetingId"];
     appointmentId =
         json["appointmentId"] == null ? null : json["appointmentId"];
-        createdBy =
-        json["createdBy"] == null ? null : json["createdBy"];
+    createdBy = json["createdBy"] == null ? null : json["createdBy"];
 
     priority = json["priority"] == null ? null : json["priority"];
     appointmentDate =
@@ -72,6 +72,7 @@ class Payload {
     providerRequestId =
         json["providerRequestId"] == null ? null : json["providerRequestId"];
     bookingId = json['bookingId'] != null ? json['bookingId'] : null;
+
     doctorSessionId =
         json['doctorSessionId'] != null ? json['doctorSessionId'] : null;
     providerRequestId =
