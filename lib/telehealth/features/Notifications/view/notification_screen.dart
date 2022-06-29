@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -971,11 +972,6 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case "PaymentReceipt":
       case "appointmentPayment":
-        Get.to(BookingConfirmation(
-            isFromPaymentNotification: true,
-            appointmentId: result?.messageDetails?.payload?.appointmentId));
-        readUnreadAction(result);
-
         break;
       case "PaymentConfirmation":
         Get.to(TelehealthProviders(
@@ -1137,7 +1133,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         }
         break;
       case "mycart":
-        Get.to(CheckoutPage(
+        /* Get.to(CheckoutPage(
           isFromNotification: true,
           bookingId: result?.messageDetails?.payload?.bookingId,
           cartUserId: result?.messageDetails?.payload?.userId,
@@ -1145,7 +1141,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           cartId: result?.messageDetails?.payload?.bookingId,
         )).then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
-        readUnreadAction(result);
+        readUnreadAction(result);*/
         break;
       case "devices_tab":
         getProfileData();
@@ -1197,16 +1193,19 @@ class _NotificationScreen extends State<NotificationScreen> {
     }
   }
 
-  void readUnreadAction(NotificationResult result) {
+  void readUnreadAction(NotificationResult result, {bool isRead = false}) {
     NotificationOntapRequest req = NotificationOntapRequest();
     req.logIds = [result?.id];
     final body = req.toJson();
     FetchNotificationService().updateNsOnTapAction(body).then((data) {
       if (data != null && data['isSuccess']) {
       } else {}
-      // Provider.of<FetchNotificationViewModel>(context, listen: false)
-      //   //..clearNotifications()
-      //   ..fetchNotifications();
+
+      if (isRead) {
+        Provider.of<FetchNotificationViewModel>(context, listen: false)
+          //..clearNotifications()
+          ..fetchNotifications();
+      }
     });
   }
 
@@ -1616,6 +1615,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
+                  await readUnreadAction(notification, isRead: true);
+
                   checkIfPaymentLinkIsExpired(
                           notification?.messageDetails?.payload?.appointmentId)
                       .then((value) {
@@ -1657,6 +1658,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
+                  await readUnreadAction(notification, isRead: true);
+
                   Get.to(CheckoutPage(
                     isFromNotification: true,
                     bookingId: notification?.messageDetails?.payload?.bookingId,
@@ -1664,8 +1667,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                     notificationListId:
                         notification?.messageDetails?.payload?.createdBy,
                     cartId: notification?.messageDetails?.payload?.bookingId,
-                  )).then((value) =>
-                      PageNavigator.goToPermanent(context, router.rt_Landing));
+                  )).then((value) {
+                    PageNavigator.goToPermanent(context, router.rt_Landing);
+                  });
                 },
                 borderSide: BorderSide(
                   color: Color(
