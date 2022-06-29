@@ -1664,8 +1664,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     notificationListId:
                         notification?.messageDetails?.payload?.createdBy,
                     cartId: notification?.messageDetails?.payload?.bookingId,
-                  )).then((value) =>
-                      PageNavigator.goToPermanent(context, router.rt_Landing));
+                  )).then((value) {});
                 },
                 borderSide: BorderSide(
                   color: Color(

@@ -2212,7 +2212,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     textColor: Color(new CommonUtil().getMyPrimaryColor()),
                     padding: EdgeInsets.all(8.0),
                     onPressed: () {
-                      widget.refresh();
+                      if (widget.isFromPaymentNotification == false)
+                        widget.refresh();
                       Navigator.pop(context);
                     },
                     child: TextWidget(
