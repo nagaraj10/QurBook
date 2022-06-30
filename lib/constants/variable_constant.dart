@@ -203,6 +203,7 @@ const String icon_how_to_use = 'assets/dashboard/how-to-use.svg';
 const String icon_true_desk = 'assets/dashboard/truedesk_icon.svg';
 const String icon_my_family = 'assets/dashboard/my-family.svg';
 const String icon_qurhub = 'assets/dashboard/qurhub.svg';
+const String icon_connected_device = 'assets/dashboard/connected_device.svg';
 const String icon_qr_code = 'assets/icons/qr_code.png';
 const String icon_my_family_menu = 'assets/dashboard/my-family-old.svg';
 const String icon_my_health_regimen = 'assets/dashboard/my-health-regimen.svg';
@@ -601,7 +602,7 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
-const String strQurHub = 'QurHub';
+const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
 const String strQurHubIoTdevice = 'QurHub IoT device';

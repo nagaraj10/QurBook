@@ -168,9 +168,9 @@ class NavigationDrawer extends StatelessWidget {
                       ),
                       //QurHub
                       DrawerTile(
-                        title: variable.strQurHub,
+                        title: variable.strConnectedDevices,
                         iconWidget: SvgPicture.asset(
-                          variable.icon_qurhub,
+                          variable.icon_connected_device,
                           color: Colors.black54,
                         ),
                         onPressed: () async {
@@ -185,7 +185,7 @@ class NavigationDrawer extends StatelessWidget {
                             } else {
                               Navigator.pop(context);
                               Get.to(
-                                QurHubHomeScreen(),
+                                HubListScreen(),
                               );
                             }
                           } catch (e) {
