@@ -30,6 +30,7 @@ class PaymentGatwayPage extends StatefulWidget {
   Function(String) closePage;
   bool isFromSubscribe;
   bool isFromRazor;
+  bool isPaymentFromNotification;
 
   PaymentGatwayPage(
       {Key key,
@@ -37,6 +38,7 @@ class PaymentGatwayPage extends StatefulWidget {
       @required this.paymentId,
       @required this.isFromSubscribe,
       @required this.isFromRazor,
+      this.isPaymentFromNotification = false,
       this.closePage})
       : super(key: key);
 
@@ -332,6 +334,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             paymentRetryUrl: PAYMENT_URL,
             paymentId: widget.paymentId,
             isFromRazor: isFromRazor,
+            isPaymentFromNotification: widget?.isPaymentFromNotification,
           ),
         ));
   }

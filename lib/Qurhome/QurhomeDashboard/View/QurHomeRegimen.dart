@@ -280,7 +280,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
     return InkWell(
       onTap: () {
-        showRegimenDialog(regimen, itemIndex);
+        if (regimen?.activityOrgin !=
+            strAppointmentRegimen) {
+          showRegimenDialog(regimen, itemIndex);
+        }
       },
       child: Transform.scale(
         scale: getCurrentRatio(itemIndex),

@@ -21,6 +21,7 @@ import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 
 class PaymentResultPage extends StatefulWidget {
   final bool status;
@@ -33,20 +34,22 @@ class PaymentResultPage extends StatefulWidget {
   final String paymentRetryUrl;
   final String paymentId;
   final bool isFromRazor;
+  final bool isPaymentFromNotification;
 
-  PaymentResultPage({
-    Key key,
-    @required this.status,
-    this.refNo,
-    this.closePage,
-    this.isFromSubscribe,
-    this.isFreePlan = false,
-    this.isPaymentFails = false,
-    this.cartUserId = null,
-    this.paymentRetryUrl,
-    this.paymentId,
-    this.isFromRazor,
-  }) : super(key: key);
+  PaymentResultPage(
+      {Key key,
+      @required this.status,
+      this.refNo,
+      this.closePage,
+      this.isFromSubscribe,
+      this.isFreePlan = false,
+      this.isPaymentFails = false,
+      this.cartUserId = null,
+      this.paymentRetryUrl,
+      this.paymentId,
+      this.isFromRazor,
+      this.isPaymentFromNotification = false})
+      : super(key: key);
 
   @override
   _ResultPage createState() => _ResultPage();
@@ -129,7 +132,9 @@ class _ResultPage extends State<PaymentResultPage> {
                       SizedBox(height: 15.0.h),
                       (widget?.isFreePlan ?? false)
                           ? Text(
-                          status ? 'Plan Subscription/Renewal Successful' : 'Plan Subscription/Renewal Failed',
+                              status
+                                  ? 'Plan Subscription/Renewal Successful'
+                                  : 'Plan Subscription/Renewal Failed',
                               // TODO this need to confirm with bussinees
                               style: TextStyle(
                                   fontSize: 18.0.sp,
@@ -159,18 +164,26 @@ class _ResultPage extends State<PaymentResultPage> {
                               Provider.of<CheckoutPageProvider>(context,
                                       listen: false)
                                   .loader(false, isNeedRelod: true);
-                              var firebase=FirebaseAnalyticsService();
-                              firebase.trackEvent("on_payment_done",
-                                  {
-                                    "user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN),
-                                    "status" : status
-                                  }
-                              );
+                              var firebase = FirebaseAnalyticsService();
+                              firebase.trackEvent("on_payment_done", {
+                                "user_id": PreferenceUtil.getStringValue(
+                                    KEY_USERID_MAIN),
+                                "status": status
+                              });
                               if (status) {
                                 //widget.closePage(STR_SUCCESS);
                                 SchedulerBinding.instance
                                     .addPostFrameCallback((_) async {
-                                  Get.offAllNamed(router.rt_MyPlans);
+                                  if (widget.isPaymentFromNotification) {
+                                    Get.offAllNamed(
+                                      router.rt_Landing,
+                                      arguments: LandingArguments(
+                                        needFreshLoad: false,
+                                      ),
+                                    );
+                                  } else {
+                                    Get.offAllNamed(router.rt_MyPlans);
+                                  }
                                 });
                               } else {
                                 if (widget?.isFreePlan ?? false) {
@@ -178,12 +191,16 @@ class _ResultPage extends State<PaymentResultPage> {
                                 } else {
                                   SchedulerBinding.instance
                                       .addPostFrameCallback((_) async {
-                                    Get.offAllNamed(
-                                      router.rt_Landing,
-                                      arguments: LandingArguments(
-                                        needFreshLoad: false,
-                                      ),
-                                    );
+                                    if (widget.isPaymentFromNotification) {
+                                      Get.offAll(NotificationMain());
+                                    } else {
+                                      Get.offAllNamed(
+                                        router.rt_Landing,
+                                        arguments: LandingArguments(
+                                          needFreshLoad: false,
+                                        ),
+                                      );
+                                    }
                                   });
                                 }
                               }
@@ -215,21 +232,30 @@ class _ResultPage extends State<PaymentResultPage> {
                                 textColor: Colors.white,
                                 padding: EdgeInsets.all(12.0),
                                 onPressed: () async {
-                                  Provider.of<CheckoutPageProvider>(context,
-                                          listen: false)
-                                      .loader(false, isNeedRelod: true);
-                                  Provider.of<RegimentViewModel>(
-                                    Get.context,
-                                    listen: false,
-                                  ).regimentMode = RegimentMode.Schedule;
-                                  Provider.of<RegimentViewModel>(
-                                    Get.context,
-                                    listen: false,
-                                  ).regimentFilter = RegimentFilter.Scheduled;
-                                  SchedulerBinding.instance
-                                      .addPostFrameCallback((_) async {
-                                    await Get.offAllNamed(router.rt_Regimen);
-                                  });
+                                  if (widget.isPaymentFromNotification) {
+                                    Get.offAllNamed(
+                                      router.rt_Landing,
+                                      arguments: LandingArguments(
+                                        needFreshLoad: false,
+                                      ),
+                                    );
+                                  } else {
+                                    Provider.of<CheckoutPageProvider>(context,
+                                            listen: false)
+                                        .loader(false, isNeedRelod: true);
+                                    Provider.of<RegimentViewModel>(
+                                      Get.context,
+                                      listen: false,
+                                    ).regimentMode = RegimentMode.Schedule;
+                                    Provider.of<RegimentViewModel>(
+                                      Get.context,
+                                      listen: false,
+                                    ).regimentFilter = RegimentFilter.Scheduled;
+                                    SchedulerBinding.instance
+                                        .addPostFrameCallback((_) async {
+                                      await Get.offAllNamed(router.rt_Regimen);
+                                    });
+                                  }
                                 },
                                 child: Text(
                                   STR_REGIMENT.toUpperCase(),
@@ -251,14 +277,23 @@ class _ResultPage extends State<PaymentResultPage> {
                               textColor: Colors.white,
                               padding: EdgeInsets.all(12.0),
                               onPressed: () {
-                                Provider.of<CheckoutPageProvider>(context,
-                                        listen: false)
-                                    .loader(false, isNeedRelod: true);
+                                if (widget.isPaymentFromNotification) {
+                                  Get.offAllNamed(
+                                    router.rt_Landing,
+                                    arguments: LandingArguments(
+                                      needFreshLoad: false,
+                                    ),
+                                  );
+                                } else {
+                                  Provider.of<CheckoutPageProvider>(context,
+                                          listen: false)
+                                      .loader(false, isNeedRelod: true);
 
-                                Get.offAll(CheckoutPage(
-                                  //cartType: CartType.RETRY_CART,
-                                  cartUserId: widget?.cartUserId,
-                                ));
+                                  Get.offAll(CheckoutPage(
+                                    //cartType: CartType.RETRY_CART,
+                                    cartUserId: widget?.cartUserId,
+                                  ));
+                                }
                               },
                               child: Text(
                                 'Retry Payment'.toUpperCase(),

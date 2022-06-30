@@ -23,6 +23,7 @@ import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
 import 'package:myfhb/widgets/dotted_line.dart';
@@ -74,7 +75,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         isNeedRelod: true,
         cartUserId: widget?.cartUserId,
         notificationListId: widget?.notificationListId,
-        isPaymentLinkViaPush: widget.isFromNotification,
+        isPaymentLinkViaPush: widget?.isFromNotification,
         cartId: widget.cartId);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
@@ -104,12 +105,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     // Navigator.of(context).pop(true);
 
     if (widget?.isFromNotification) {
-      Get.offAllNamed(
-        router.rt_Landing,
-        arguments: LandingArguments(
-          needFreshLoad: false,
-        ),
-      );
+      Get.offAll(NotificationMain());
     } else if (Navigator.canPop(context)) {
       Get.back();
     } else {
@@ -660,7 +656,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
     print("bodybodybody" + body.toString());
     if (mCartTotal > 0) {
       CheckoutPageWidgets().showPaymentConfirmationDialog(
-          body: body, totalCartAmount: mCartTotal);
+          body: body,
+          totalCartAmount: mCartTotal,
+          isPaymentNotification: widget?.isFromNotification);
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
@@ -670,6 +668,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 refNo: value?.result?.orderId,
                 status: value?.isSuccess,
                 isFreePlan: true,
+                isPaymentFromNotification: widget.isFromNotification,
               ),
             );
           } else {

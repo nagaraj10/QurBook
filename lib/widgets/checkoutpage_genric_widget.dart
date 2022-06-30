@@ -33,7 +33,10 @@ class CheckoutPageWidgets {
   CommonUtil commonUtil = CommonUtil();
 
   Future<dynamic> showPaymentConfirmationDialog(
-      {dynamic body, dynamic totalCartAmount, Function(String) closePage}) {
+      {dynamic body,
+      dynamic totalCartAmount,
+      Function(String) closePage,
+      bool isPaymentNotification = false}) {
     return showDialog(
         context: Get.context,
         builder: (context) {
@@ -191,6 +194,8 @@ class CheckoutPageWidgets {
                                                                           context);
                                                                     }
                                                                   },
+                                                                  isPaymentFromNotification:
+                                                                      isPaymentNotification,
                                                                 ),
                                                               ),
                                                             );
@@ -239,6 +244,8 @@ class CheckoutPageWidgets {
                                                                           context);
                                                                     }
                                                                   },
+                                                                  isPaymentFromNotification:
+                                                                      isPaymentNotification,
                                                                 ),
                                                               ),
                                                             );
@@ -674,11 +681,11 @@ class CheckoutPageWidgets {
                     //     .updateProfileVaildationStatus(true);
 
                     isAccpted = true;
-                    if(feeZero){
+                    if (feeZero) {
                       CommonUtil.showLoadingDialog(
-                          context, _keyLoader, variable.Please_Wait,isAutoDismiss: true);
+                          context, _keyLoader, variable.Please_Wait,
+                          isAutoDismiss: true);
                     }
-
                   },
                   borderSide: BorderSide(
                     color: Color(
