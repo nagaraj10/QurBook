@@ -107,10 +107,12 @@ class _NotificationScreen extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     notificationData = Provider.of<FetchNotificationViewModel>(context);
-    return Scaffold(
-      appBar: notificationAppBar(context),
-      body: notificationBodyView(),
-    );
+    return WillPopScope(
+        onWillPop: () => onBackPressed(context),
+        child: Scaffold(
+          appBar: notificationAppBar(context),
+          body: notificationBodyView(),
+        ));
   }
 
   showDeleteAlert(BuildContext context) {
@@ -165,9 +167,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         icon: Icons.arrow_back_ios,
         colors: Colors.white,
         size: 24.0.sp,
-        onTap: () {
-          Navigator.pop(context);
-        },
+        onTap: () => onBackPressed(context),
       ),
       title: TextWidget(
         text: constants.lblNotifications,
@@ -222,6 +222,15 @@ class _NotificationScreen extends State<NotificationScreen> {
       //         )
       //       ]
       //     : [],
+    );
+  }
+
+  Future<bool> onBackPressed(BuildContext context) async {
+    Get.offAllNamed(
+      router.rt_Landing,
+      arguments: LandingArguments(
+        needFreshLoad: false,
+      ),
     );
   }
 
@@ -1667,9 +1676,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     notificationListId:
                         notification?.messageDetails?.payload?.createdBy,
                     cartId: notification?.messageDetails?.payload?.bookingId,
-                  )).then((value) {
-                    PageNavigator.goToPermanent(context, router.rt_Landing);
-                  });
+                  )).then((value) {});
                 },
                 borderSide: BorderSide(
                   color: Color(

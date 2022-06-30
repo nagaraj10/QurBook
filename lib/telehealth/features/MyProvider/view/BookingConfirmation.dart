@@ -57,6 +57,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 
 import 'TelehealthProviders.dart';
 import '../../../../common/errors_widget.dart';
+import '../../../../landing/view/landing_arguments.dart';
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -807,7 +808,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        if (widget.isFromPaymentNotification) {
+                                          Get.off(NotificationMain());
+                                        } else {
+                                          Navigator.pop(context);
+                                        }
                                       },
                                       child: TextWidget(
                                         text: 'Cancel',
@@ -1127,15 +1132,28 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   appointmentId: appointmentId,
                   isFromSubscribe: false,
                   isFromRazor: isRazor,
+                  isPaymentFromNotification: widget.isFromPaymentNotification,
                   closePage: (value) {
                     if (value == 'success') {
-                      if (widget.isFromPaymentNotification == false)
+                      if (widget.isFromPaymentNotification == false) {
                         widget.closePage(value);
-                      Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        
+                        Get.offAllNamed(
+                          router.rt_Landing,
+                          arguments: LandingArguments(
+                            needFreshLoad: false,
+                          ),
+                        );
+                      }
                     } else {
-                      if (widget.isFromPaymentNotification == false)
+                      if (widget.isFromPaymentNotification == false) {
                         widget.refresh();
-                      Navigator.pop(context);
+                        Navigator.pop(context);
+                      } else {
+                        Get.off(NotificationMain());
+                      }
                     }
                   },
                 )));
@@ -2212,7 +2230,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     textColor: Color(new CommonUtil().getMyPrimaryColor()),
                     padding: EdgeInsets.all(8.0),
                     onPressed: () {
-                      widget.refresh();
+                      if (widget.isFromPaymentNotification == false)
+                        widget.refresh();
                       Navigator.pop(context);
                     },
                     child: TextWidget(
