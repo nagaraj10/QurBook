@@ -39,7 +39,7 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
             Get.back();
           },
         ),
-        title: Text('Connected Hub'),
+        title: Text(/*'Connected Hub'*/variable.strConnectedDevices),
         centerTitle: false,
         elevation: 0,
       ),
