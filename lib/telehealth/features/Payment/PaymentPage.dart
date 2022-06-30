@@ -26,6 +26,7 @@ class PaymentPage extends StatefulWidget {
   Function(String) closePage;
   bool isFromSubscribe;
   bool isFromRazor;
+  bool isPaymentFromNotification;
 
   PaymentPage(
       {Key key,
@@ -34,6 +35,7 @@ class PaymentPage extends StatefulWidget {
       @required this.appointmentId,
       @required this.isFromSubscribe,
       @required this.isFromRazor,
+      this.isPaymentFromNotification = false,
       this.closePage})
       : super(key: key);
 
@@ -101,7 +103,11 @@ class _WebViewExampleState extends State<PaymentPage> {
             NavigationControls(_controller.future),
           ],
         ),
-        body: isFromRazor?iosWebview():Platform.isAndroid ? androidWebview() : iosWebview(),
+        body: isFromRazor
+            ? iosWebview()
+            : Platform.isAndroid
+                ? androidWebview()
+                : iosWebview(),
       ),
     );
   }
@@ -358,13 +364,17 @@ class _WebViewExampleState extends State<PaymentPage> {
                   refNo: refNo,
                   isFromSubscribe: isFromSubscribe,
                   closePage: (value) {
-                    widget.closePage(value);
-                    Navigator.pop(context);
+                    if (widget.isPaymentFromNotification == false) {
+                      widget.closePage(value);
+                      Navigator.pop(context);
+                    }
                   },
-              isFromRazor: isFromRazor,
-              paymentRetryUrl: PAYMENT_URL,
-              paymentId: paymentId,
-              appointmentId: appointmentId)));
+                  isFromRazor: isFromRazor,
+                  paymentRetryUrl: PAYMENT_URL,
+                  paymentId: paymentId,
+                  appointmentId: appointmentId,
+                  isPaymentFromNotification: widget?.isPaymentFromNotification,
+                )));
   }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {

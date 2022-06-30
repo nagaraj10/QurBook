@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -13,6 +14,8 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import '../../../../landing/view/landing_arguments.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 
 import 'PaymentPage.dart';
 
@@ -25,16 +28,19 @@ class ResultPage extends StatefulWidget {
   final String paymentId;
   final String appointmentId;
   final bool isFromRazor;
+  final bool isPaymentFromNotification;
 
-  ResultPage({Key key,
-    @required this.status,
-    this.refNo,
-    this.closePage,
-    this.isFromSubscribe,
-    this.paymentRetryUrl,
-    this.paymentId,
-    this.appointmentId,
-    this.isFromRazor})
+  ResultPage(
+      {Key key,
+      @required this.status,
+      this.refNo,
+      this.closePage,
+      this.isFromSubscribe,
+      this.paymentRetryUrl,
+      this.paymentId,
+      this.appointmentId,
+      this.isFromRazor,
+      this.isPaymentFromNotification = false})
       : super(key: key);
 
   @override
@@ -70,13 +76,16 @@ class _ResultPage extends State<ResultPage> {
           }
         });
       } else {
-        goToSlotPage();
+        if (widget?.isPaymentFromNotification) {
+          FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+        } else {
+          goToSlotPage();
+        }
       }
     }
 
     super.initState();
   }
-
 
   callRefreshButtonState(bool condition) {
     setState(() {
@@ -91,10 +100,7 @@ class _ResultPage extends State<ResultPage> {
       'eventTime': '${DateTime.now()}',
       'pageName': 'Payment Done Screen',
       'screenSessionTime':
-      '${DateTime
-          .now()
-          .difference(mInitialTime)
-          .inSeconds} secs'
+          '${DateTime.now().difference(mInitialTime).inSeconds} secs'
     });
   }
 
@@ -127,8 +133,8 @@ class _ResultPage extends State<ResultPage> {
                         isFromSubscribe
                             ? PLAN_CONFIRM
                             : status
-                            ? APPOINTMENT_CONFIRM
-                            : PAYMENT_FAILURE_CONTENT,
+                                ? APPOINTMENT_CONFIRM
+                                : PAYMENT_FAILURE_CONTENT,
                         style: TextStyle(
                             fontSize: 12.0.sp,
                             color: Colors.white,
@@ -138,13 +144,13 @@ class _ResultPage extends State<ResultPage> {
                     ),
                     status
                         ? Text(
-                        widget.refNo != null
-                            ? 'Ref.no: ' + widget.refNo
-                            : '',
-                        style: TextStyle(
-                            fontSize: 16.0.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold))
+                            widget.refNo != null
+                                ? 'Ref.no: ' + widget.refNo
+                                : '',
+                            style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))
                         : SizedBox(),
                     SizedBox(height: 30.0.h),
                     Row(
@@ -161,16 +167,27 @@ class _ResultPage extends State<ResultPage> {
                             status
                                 ? widget.closePage(STR_SUCCESS)
                                 : widget.closePage(STR_FAILED);
-                            status && !isFromSubscribe
-                                ? Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        TelehealthProviders(
-                                          arguments: HomeScreenArguments(
-                                              selectedIndex: 0),
-                                        )))
-                                : Navigator.pop(context);
+                            if (widget.isPaymentFromNotification) {
+                              status && !isFromSubscribe
+                                  ? Get.offAllNamed(
+                                      router.rt_Landing,
+                                      arguments: LandingArguments(
+                                        needFreshLoad: false,
+                                      ),
+                                    )
+                                  : Get.off(NotificationMain());
+                            } else {
+                              status && !isFromSubscribe
+                                  ? Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TelehealthProviders(
+                                                arguments: HomeScreenArguments(
+                                                    selectedIndex: 0),
+                                              )))
+                                  : Navigator.pop(context);
+                            }
                           },
                           child: Text(
                             STR_DONE.toUpperCase(),
@@ -207,12 +224,20 @@ class _ResultPage extends State<ResultPage> {
                 if (value?.isSuccess) {
                   goToPaymentPage();
                 } else {
-                  goToSlotPage();
+                  if (widget?.isPaymentFromNotification) {
+                    FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+                  } else {
+                    goToSlotPage();
+                  }
                 }
               }
             });
           } else {
-            goToSlotPage();
+            if (widget?.isPaymentFromNotification) {
+              FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+            } else {
+              goToSlotPage();
+            }
           }
         },
         child: Text(
@@ -232,21 +257,20 @@ class _ResultPage extends State<ResultPage> {
     Navigator.pushReplacement(
       Get.context,
       MaterialPageRoute(
-        builder: (context) =>
-            PaymentPage(
-              redirectUrl: widget.paymentRetryUrl,
-              paymentId: widget.paymentId,
-              appointmentId: widget.appointmentId,
-              isFromSubscribe: false,
-              isFromRazor: widget.isFromRazor,
-              closePage: (value) {
-                if (value == 'success') {
-                  Get.back();
-                } else {
-                  Navigator.pop(context);
-                }
-              },
-            ),
+        builder: (context) => PaymentPage(
+          redirectUrl: widget.paymentRetryUrl,
+          paymentId: widget.paymentId,
+          appointmentId: widget.appointmentId,
+          isFromSubscribe: false,
+          isFromRazor: widget.isFromRazor,
+          closePage: (value) {
+            if (value == 'success') {
+              Get.back();
+            } else {
+              Navigator.pop(context);
+            }
+          },
+        ),
       ),
     );
   }
@@ -258,7 +282,7 @@ class _ResultPage extends State<ResultPage> {
 
   Future<PaymentFailureRetryModel> checkSlotsRetry(String appointmentId) async {
     PaymentFailureRetryModel paymentRetry =
-    await updatePaymentViewModel.checkSlotsRetry(appointmentId);
+        await updatePaymentViewModel.checkSlotsRetry(appointmentId);
 
     return paymentRetry;
   }

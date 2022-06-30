@@ -96,7 +96,10 @@ class CheckoutPageProvider extends ChangeNotifier {
           cartId: cartId);
     } else {
       fetchingCartItemsModel = await helper.fetchCartItems(
-          cartUserId: cartUserId, notificationListId: notificationListId);
+        cartUserId: cartUserId,
+        notificationListId: notificationListId,
+        isPaymentLinkViaPush: isPaymentLinkViaPush,
+      );
     }
     changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
 
