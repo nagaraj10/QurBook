@@ -375,8 +375,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                 child: Text(
                                                   'Clear cart',
                                                   style: TextStyle(
-                                                      color: Colors
-                                                          .redAccent[700]),
+                                                      color: widget
+                                                              ?.isFromNotification
+                                                          ? Colors.grey
+                                                          : Colors
+                                                              .redAccent[700]),
                                                 ))
                                           ],
                                         ),
@@ -788,6 +791,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         ic_cart_delete,
                         width: 20.0.sp,
                         height: 20.0.sp,
+                        color: widget?.isFromNotification ? Colors.grey : null,
                       ),
                       onPressed: () {
                         if (widget.isFromNotification == false) {
