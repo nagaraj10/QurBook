@@ -316,23 +316,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           appointmentNotificationPayment.result?.appointment?.bookedFor != null
               ? appointmentNotificationPayment.result?.appointment?.bookedFor.id
               : "";
-      patientName = appointmentNotificationPayment
-                  .result?.appointment?.bookedFor !=
-              null
-          ? appointmentNotificationPayment
-                      .result?.appointment?.bookedFor?.firstName !=
-                  null
-              ? appointmentNotificationPayment
-                  .result?.appointment?.bookedFor?.firstName
-              : "" +
-                          " " +
-                          appointmentNotificationPayment
-                              .result?.appointment?.bookedFor?.lastName !=
-                      null
-                  ? appointmentNotificationPayment
-                      .result?.appointment?.bookedFor?.lastName
-                  : ""
-          : "";
+      try {
+        var firstName = appointmentNotificationPayment
+                    .result?.appointment?.bookedFor?.firstName !=
+                null
+            ? appointmentNotificationPayment
+                .result?.appointment?.bookedFor?.firstName
+            : "";
+        var lastName = appointmentNotificationPayment
+                    .result?.appointment?.bookedFor?.lastName !=
+                null
+            ? appointmentNotificationPayment
+                .result?.appointment?.bookedFor?.lastName
+            : "";
+        patientName =
+            appointmentNotificationPayment.result?.appointment?.bookedFor !=
+                    null
+                ? firstName + " " + lastName
+                : "";
+      } catch (e) {
+        patientName = "";
+      }
 
       doctorName = appointmentNotificationPayment.result?.doctor?.user != null
           ? toBeginningOfSentenceCase((appointmentNotificationPayment
@@ -1139,7 +1143,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         widget.closePage(value);
                         Navigator.pop(context);
                       } else {
-                        
                         Get.offAllNamed(
                           router.rt_Landing,
                           arguments: LandingArguments(
