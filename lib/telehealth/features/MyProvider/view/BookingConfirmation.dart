@@ -1139,6 +1139,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         widget.closePage(value);
                         Navigator.pop(context);
                       } else {
+                        
                         Get.offAllNamed(
                           router.rt_Landing,
                           arguments: LandingArguments(

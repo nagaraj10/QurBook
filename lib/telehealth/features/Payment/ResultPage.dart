@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -75,7 +76,11 @@ class _ResultPage extends State<ResultPage> {
           }
         });
       } else {
-        goToSlotPage();
+        if (widget?.isPaymentFromNotification) {
+          FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+        } else {
+          goToSlotPage();
+        }
       }
     }
 
@@ -219,12 +224,20 @@ class _ResultPage extends State<ResultPage> {
                 if (value?.isSuccess) {
                   goToPaymentPage();
                 } else {
-                  goToSlotPage();
+                  if (widget?.isPaymentFromNotification) {
+                    FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+                  } else {
+                    goToSlotPage();
+                  }
                 }
               }
             });
           } else {
-            goToSlotPage();
+            if (widget?.isPaymentFromNotification) {
+              FlutterToast().getToast(slotsAreNotAvailable, Colors.red);
+            } else {
+              goToSlotPage();
+            }
           }
         },
         child: Text(

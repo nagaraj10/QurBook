@@ -360,17 +360,21 @@ class _WebViewExampleState extends State<PaymentPage> {
         context,
         MaterialPageRoute(
             builder: (context) => ResultPage(
-                status: status,
-                refNo: refNo,
-                isFromSubscribe: isFromSubscribe,
-                closePage: (value) {
-                  widget.closePage(value);
-                  Navigator.pop(context);
-                },
-                isFromRazor: isFromRazor,
-                paymentRetryUrl: PAYMENT_URL,
-                paymentId: paymentId,
-                appointmentId: appointmentId)));
+                  status: status,
+                  refNo: refNo,
+                  isFromSubscribe: isFromSubscribe,
+                  closePage: (value) {
+                    if (widget.isPaymentFromNotification == false) {
+                      widget.closePage(value);
+                      Navigator.pop(context);
+                    }
+                  },
+                  isFromRazor: isFromRazor,
+                  paymentRetryUrl: PAYMENT_URL,
+                  paymentId: paymentId,
+                  appointmentId: appointmentId,
+                  isPaymentFromNotification: widget?.isPaymentFromNotification,
+                )));
   }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
