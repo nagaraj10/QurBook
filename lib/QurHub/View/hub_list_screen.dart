@@ -51,7 +51,7 @@ class _HubListScreenState extends State<HubListScreen> {
               Get.back();
             },
           ),
-          title: Text('Connected Hub'),
+          title: Text(/*'Connected Hub'*/variable.strConnectedDevices),
           centerTitle: false,
           elevation: 0,
         ),
@@ -313,7 +313,7 @@ class _HubListScreenState extends State<HubListScreen> {
         ),
         child: Center(
           child: Text(
-            variable.strCreateNewVirtualHub,
+            variable.strQurHomeinQurBook,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
