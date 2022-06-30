@@ -313,7 +313,7 @@ class RegimentViewModel extends ChangeNotifier {
         }
       }
     });
-    List<RegimentDataModel> tempRegimentsList = regimentsSymptomsList;
+    /*List<RegimentDataModel> tempRegimentsList = regimentsSymptomsList;
 
     if (tempRegimentsList != null && tempRegimentsList.length > 0) {
       var val = tempRegimentsList.firstWhere(
@@ -328,6 +328,34 @@ class RegimentViewModel extends ChangeNotifier {
       } else {
         regimentsSymptomsList = regimentsSymptomsList;
       }
+    }*/
+
+    List<RegimentDataModel> tempRegimentsList =
+        regimentsSymptomsList;
+
+    //print("tempRegimentsList length ${tempRegimentsList.length}");
+
+    List<RegimentDataModel> recentRegimentsList = [];
+    List<RegimentDataModel> seqRegimentsList = [];
+    List<RegimentDataModel> otherRegimentsList = [];
+
+    //finalSortList
+    List<RegimentDataModel> finalRegimentsList = [];
+
+    if (tempRegimentsList != null && tempRegimentsList.length > 0)
+    {
+      recentRegimentsList = tempRegimentsList.where((item) => item?.ack_local!=null).toList();
+      seqRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) !=null&&CommonUtil().validString(item?.seq) != "0"&&CommonUtil().validString(item?.seq).trim().isNotEmpty).toList();
+      seqRegimentsList.sort((b,a) => int.parse(CommonUtil().validString(a?.seq)).compareTo(int.parse(CommonUtil().validString(b?.seq))));
+      otherRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) == "0"||CommonUtil().validString(item?.seq).trim().isEmpty).toList();
+
+      finalRegimentsList = recentRegimentsList+seqRegimentsList+otherRegimentsList;
+      finalRegimentsList = finalRegimentsList.toSet().toList();
+
+      //print("finalRegimentsList length ${finalRegimentsList.length}");
+
+      regimentsSymptomsList = finalRegimentsList;
+
     }
 
     if (setIndex) {

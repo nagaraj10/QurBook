@@ -43,19 +43,31 @@ class SymptomListController extends GetxController {
           List<RegimentDataModel> tempRegimentsList =
               symtomListModel.regimentsList;
 
-          if (tempRegimentsList != null && tempRegimentsList.length > 0) {
-            var val = tempRegimentsList.firstWhere(
-                (item) => CommonUtil().validString(item.seq) != "0",
-                orElse: () => null);
-            if (val != null) {
-              if (tempRegimentsList.length > 10) {
-                symptomList.value = tempRegimentsList.take(10).toList();
-              } else {
-                symptomList.value = symtomListModel.regimentsList;
-              }
-            } else {
-              symptomList.value = symtomListModel.regimentsList;
-            }
+          //print("tempRegimentsList length ${tempRegimentsList.length}");
+
+          List<RegimentDataModel> recentRegimentsList = [];
+          List<RegimentDataModel> seqRegimentsList = [];
+          List<RegimentDataModel> otherRegimentsList = [];
+
+          //finalSortList
+          List<RegimentDataModel> finalRegimentsList = [];
+
+          if (tempRegimentsList != null && tempRegimentsList.length > 0)
+          {
+            recentRegimentsList = tempRegimentsList.where((item) => item?.ack_local!=null).toList();
+            seqRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) !=null&&CommonUtil().validString(item?.seq) != "0"&&CommonUtil().validString(item?.seq).trim().isNotEmpty).toList();
+            seqRegimentsList.sort((b,a) => int.parse(CommonUtil().validString(a?.seq)).compareTo(int.parse(CommonUtil().validString(b?.seq))));
+            otherRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) == "0"||CommonUtil().validString(item?.seq).trim().isEmpty).toList();
+
+            finalRegimentsList = recentRegimentsList+seqRegimentsList+otherRegimentsList;
+            finalRegimentsList = finalRegimentsList.toSet().toList();
+
+            //print("finalRegimentsList length ${finalRegimentsList.length}");
+
+            symptomList.value = finalRegimentsList;
+
+          }else{
+            symptomList.value = symtomListModel.regimentsList;
           }
         } on PlatformException {
           symptomList.value = [];
