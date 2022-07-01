@@ -28,7 +28,7 @@ class HubListController extends GetxController {
   HubListResponse hubListResponse;
   FeedbackCategoryModel selectedType;
   var catSelected = false.obs;
-  var isFromQurHomeinQurBook = false.obs;
+  var isFromQurHomeinQurBook = true.obs;
   FlutterToast toast = FlutterToast();
   static const stream = EventChannel('QurbookBLE/stream');
   StreamSubscription _timerSubscription;
