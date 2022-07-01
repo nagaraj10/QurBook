@@ -91,7 +91,7 @@ class FormDataDialogState extends State<FormDataDialog> {
   @override
   void initState() {
     super.initState();
-
+    widget.fieldsData.sort((a,b)=>a.seq.compareTo(b.seq));
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
