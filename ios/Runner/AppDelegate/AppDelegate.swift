@@ -143,7 +143,18 @@ import CoreBluetooth
                                               binaryMessenger: controller.binaryMessenger)
         let evChannel =  FlutterEventChannel(name: Constants.devicesEventChannel, binaryMessenger: controller.binaryMessenger)
         evChannel.setStreamHandler(self)
-        
+        let appointmentDetailsChannel =  FlutterMethodChannel(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
+        appointmentDetailsChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == Constants.appointmentDetailsMethodAndChannel{
+                if let notifiationToShow = call.arguments as? NSDictionary{
+                    self.scheduleAppointmentReminder(message: notifiationToShow)
+                }
+            }
+        }
         sttChannel.setMethodCallHandler({
             [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
             // Note: this method is invoked on the UI thread.
@@ -349,6 +360,59 @@ import CoreBluetooth
         }
     }
     
+    
+    func scheduleAppointmentReminder(message: NSDictionary)  {
+        print(message)
+        if let _id =  message["eid"] as? String {
+            id = _id
+        }else{
+            return
+        }
+        if let dateNotifiation = message["estart"] as? String{
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+            let dateFromString = dateFormatter.date(from: dateNotifiation)?.toLocalTime()
+            var dateFromStringBefore:Date?
+            if let dateToBeTriggered = dateFromString{
+                dateFromStringBefore = Calendar.current.date(byAdding: .minute, value: -5, to: dateToBeTriggered) ?? dateToBeTriggered
+                
+            }
+            
+            if let dateForSchedule = dateFromStringBefore{
+                let strOfDateAndTime = "\(dateForSchedule)"
+                print(dateForSchedule)
+                print("----------------------------")
+                let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+                let strDates = strSplitDateTime[0].components(separatedBy: "-")
+                let strTime = strSplitDateTime[1].components(separatedBy: ":")
+                if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                    dateComponentBefore.year = year
+                    dateComponentBefore.month = month
+                    dateComponentBefore.day = day
+                    dateComponentBefore.hour = hour
+                    dateComponentBefore.minute = min
+                    dateComponentBefore.second = sec
+                }
+            }
+        }else{
+            return
+        }
+        
+        let content = UNMutableNotificationContent()
+        content.title = "Appointment confirmation"
+        content.body = "Appointment confirmation"
+        let identifier = id + "0000"
+        content.userInfo = message as! [AnyHashable : Any]
+        
+        let dateTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponentBefore, repeats: false)
+        let  request = UNNotificationRequest(identifier: identifier, content: content, trigger: dateTrigger)
+        notificationCenter.add(request) { (error) in
+            if let error = error {
+                print("Error \(error.localizedDescription)")
+            }
+        }
+    }
+    
     var id = "";
     var title = "";
     var des = "";
@@ -360,7 +424,7 @@ import CoreBluetooth
         var before :Int = 0
         var after : Int = 0
         var importantNotification : Int = 0
-
+        
         if let _id =  message["eid"] as? String {
             id = _id
         }else{
@@ -527,7 +591,16 @@ import CoreBluetooth
                                          willPresent notification: UNNotification,
                                          withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         checkForCallListener(notification: notification)
-        completionHandler([.alert, .sound])
+        if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["activityname_orig"] as? String,type.lowercased() == "appointment",let controller = navigationController?.children.first as? FlutterViewController{
+            print("Inside the notification")
+            let notificationChannel = FlutterMethodChannel.init(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
+            notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: Constants.appointmentDetailsMethodAndChannel)
+            completionHandler([])
+            
+        }else{
+            completionHandler([.alert, .sound])
+            
+        }
     }
     
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -730,135 +803,97 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                 poPeripheral.delegate = self
                 centralManager.stopScan()
                 centralManager.connect(poPeripheral)
-            
-        }
-    }
-}
-
-func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-    eventSink?("connected|connected successfully!!!")
-    poPeripheral.discoverServices([Constants.poServiceCBUUID])
-}
-
-func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-    guard let services = peripheral.services else { return }
-    for service in services {
-        print(service)
-        peripheral.discoverCharacteristics(nil, for: service)
-    }
-}
-
-func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-    guard let characteristics = service.characteristics else { return }
-    for characteristic in characteristics {
-        if characteristic.properties.contains(.read) {
-            print("\(characteristic.uuid): properties contains .read")
-            peripheral.readValue(for: characteristic)
-        }
-        if characteristic.properties.contains(.notify) {
-            print("\(characteristic.uuid): properties contains .notify")
-            peripheral.setNotifyValue(true, for: characteristic)
-        }
-    }
-}
-
-func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-    print(characteristic.uuid)
-    switch characteristic.uuid {
-    case Constants.poMeasurementCharacteristicCBUUID:
-        spoReading(from: characteristic,peripheral:peripheral)
-    default:
-        print("Unhandled Characteristic UUID: \(characteristic.uuid)")
-    }
-}
-
-func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
-    guard let characteristicData = characteristic.value else { return  }
-    var index = 0
-    let byteArray = [UInt8](characteristicData)
-    while(index<byteArray.count){
-        let fingure = byteArray[index+2] & Constants.BIT_FINGER
-        var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
-        pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
-        let spo = byteArray[index+4] & Constants.BIT_SPO2
-        if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
-            let data : [String:Any] = [
-                "Status" : "Measurement",
-                "deviceType" : "SPO2",
-                "Data" : [
-                    "SPO2" : String(describing: spo),
-                    "Pulse" : String(describing: pulse)
-                ]
-            ]
-            if let serlized = data.jsonStringRepresentation{
-                print(serlized)
-                eventSink?("measurement|"+serlized)
-                eventSink = nil
-                centralManager.stopScan()
-                if( characteristic.isNotifying){
-                    peripheral.setNotifyValue(false, for: characteristic)
-                }
+                
             }
         }
-        index += 5
     }
-}
-
-func onListen(withArguments arguments: Any?,
-              eventSink: @escaping FlutterEventSink) -> FlutterError? {
-    self.eventSink = eventSink
-    centralManager = CBCentralManager(delegate: self, queue: nil)
-    return nil
-}
-
-func onCancel(withArguments arguments: Any?) -> FlutterError? {
-    eventSink = nil
-    centralManager.stopScan()
-    if idForBP != nil {
-        OHQDeviceManager.shared().cancelSession(withDevice: idForBP!)
-        idForBP = nil
+    
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        eventSink?("connected|connected successfully!!!")
+        poPeripheral.discoverServices([Constants.poServiceCBUUID])
     }
-    return nil
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else { return }
+        for service in services {
+            print(service)
+            peripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else { return }
+        for characteristic in characteristics {
+            if characteristic.properties.contains(.read) {
+                print("\(characteristic.uuid): properties contains .read")
+                peripheral.readValue(for: characteristic)
+            }
+            if characteristic.properties.contains(.notify) {
+                print("\(characteristic.uuid): properties contains .notify")
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        print(characteristic.uuid)
+        switch characteristic.uuid {
+        case Constants.poMeasurementCharacteristicCBUUID:
+            spoReading(from: characteristic,peripheral:peripheral)
+        default:
+            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
+        }
+    }
+    
+    func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
+        guard let characteristicData = characteristic.value else { return  }
+        var index = 0
+        let byteArray = [UInt8](characteristicData)
+        while(index<byteArray.count){
+            let fingure = byteArray[index+2] & Constants.BIT_FINGER
+            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
+            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
+            let spo = byteArray[index+4] & Constants.BIT_SPO2
+            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
+                let data : [String:Any] = [
+                    "Status" : "Measurement",
+                    "deviceType" : "SPO2",
+                    "Data" : [
+                        "SPO2" : String(describing: spo),
+                        "Pulse" : String(describing: pulse)
+                    ]
+                ]
+                if let serlized = data.jsonStringRepresentation{
+                    print(serlized)
+                    eventSink?("measurement|"+serlized)
+                    eventSink = nil
+                    centralManager.stopScan()
+                    if( characteristic.isNotifying){
+                        peripheral.setNotifyValue(false, for: characteristic)
+                    }
+                }
+            }
+            index += 5
+        }
+    }
+    
+    func onListen(withArguments arguments: Any?,
+                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
+        self.eventSink = eventSink
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        return nil
+    }
+    
+    func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        eventSink = nil
+        centralManager.stopScan()
+        if idForBP != nil {
+            OHQDeviceManager.shared().cancelSession(withDevice: idForBP!)
+            idForBP = nil
+        }
+        return nil
+    }
+    
 }
 
-}
-//extension AppDelegate:CLLocationManagerDelegate{
-//    func setupWifiListener(messanger:FlutterBinaryMessenger){
-//        let iOSChannel = FlutterMethodChannel(name: Constants.iOSMethodChannel, binaryMessenger: messanger)
-//        iOSChannel.setMethodCallHandler {[weak self] (call, result) in
-//            guard self != nil else{
-//                result(FlutterMethodNotImplemented)
-//                return
-//            }
-//            if call.method == Constants.getWifiDetailsMethod{
-//                result(getCurrentWifiDetails())
-//                return
-//            }else{
-//                result(FlutterMethodNotImplemented)
-//                return
-//            }
-//        }
-//    }
-//
-//}
-//func getCurrentWifiDetails() -> Any{
-//
-//    let status = CLLocationManager.authorizationStatus()
-//    if (status == .notDetermined){
-//        return "location"
-//    }
-//    if let interfaces = CNCopySupportedInterfaces() as NSArray? {
-//        for interface in interfaces {
-//            if let interfaceInfo = CNCopyCurrentNetworkInfo(interface as! CFString) as NSDictionary? {
-//                let ssid = interfaceInfo[kCNNetworkInfoKeySSID as String] as? String ?? ""
-//                let bssid = interfaceInfo[kCNNetworkInfoKeyBSSID as String] as? String ?? ""
-//                print(ssid)
-//                print(bssid)
-//                let data = [ "SSID": ssid,"BSSID" : bssid]
-//                return data
-//            }
-//        }
-//    }
-//    return ""
-//}
 
