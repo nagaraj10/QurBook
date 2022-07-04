@@ -66,11 +66,12 @@ class QurhomeRegimenController extends GetxController {
       qurHomeRegimenResponseModel.regimentsList
           .removeWhere((element) => element?.isEventDisabled);
       for (int i = 0;
-          i < qurHomeRegimenResponseModel?.regimentsList?.length??0;
+          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
           i++) {
         if (DateTime.now()
             .isBefore(qurHomeRegimenResponseModel?.regimentsList[i]?.estart)) {
-          if (qurHomeRegimenResponseModel?.regimentsList[i]?.ack_local != null) {
+          if (qurHomeRegimenResponseModel?.regimentsList[i]?.ack_local !=
+              null) {
             if (qurHomeRegimenResponseModel?.regimentsList?.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
@@ -86,9 +87,10 @@ class QurhomeRegimenController extends GetxController {
         }
       }
       for (int i = 0;
-      i < qurHomeRegimenResponseModel?.regimentsList?.length??0;
-      i++) {
-        if(qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin!=null){
+          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
+          i++) {
+        if (qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin !=
+            null) {
           if (qurHomeRegimenResponseModel?.regimentsList[i]?.activityOrgin ==
               'Appointment') {
             if (qurHomeRegimenResponseModel?.regimentsList[i]?.estart != null &&
@@ -97,14 +99,18 @@ class QurhomeRegimenController extends GetxController {
                   qurHomeRegimenResponseModel?.regimentsList[i]?.eid != '') {
                 var apiReminder = qurHomeRegimenResponseModel.regimentsList[i];
                 const platform = MethodChannel(APPOINTMENT_DETAILS);
-                await platform.invokeMethod(APPOINTMENT_DETAILS,
-                    {'data': jsonEncode(apiReminder.toJson())});
+                if (Platform.isIOS) {
+                  platform.invokeMethod(
+                      APPOINTMENT_DETAILS, apiReminder.toJson());
+                } else {
+                  await platform.invokeMethod(APPOINTMENT_DETAILS,
+                      {'data': jsonEncode(apiReminder.toJson())});
+                }
               }
             }
           }
         }
       }
-
 
       qurhomeDashboardController.getValuesNativeAppointment();
 
