@@ -415,19 +415,30 @@ class QurhomeDashboardController extends GetxController {
   }
 
   void getValuesNativeAppointment() {
-    _appointmentSubscription ??= streamAppointment.receiveBroadcastStream().listen((val) {
+    _appointmentSubscription ??=
+        streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
       List<String> receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
         switch ((receivedValues.first ?? "")) {
           case "scheduleAppointment":
-            if(PreferenceUtil.getIfQurhomeisAcive()){
+            if (PreferenceUtil.getIfQurhomeisAcive()) {
               redirectToSheelaScheduleAppointment();
             }
             break;
         }
       }
     });
+    if (Platform.isIOS) {
+      const platform = MethodChannel(APPOINTMENT_DETAILS);
+      platform.setMethodCallHandler((call) {
+        if (call.method == APPOINTMENT_DETAILS) {
+          if (PreferenceUtil.getIfQurhomeisAcive()) {
+            redirectToSheelaScheduleAppointment();
+          }
+        }
+      });
+    }
   }
 
   callNativeBpValues({bool isFromVitals}) async {
