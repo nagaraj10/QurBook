@@ -334,6 +334,7 @@ class _ResultPage extends State<PaymentResultPage> {
                 paymentId: widget.paymentId,
                 isFromSubscribe: true,
                 isFromRazor: widget.isFromRazor,
+                isPaymentFromNotification: widget.isPaymentFromNotification,
                 closePage: (value) {
                   if (value == 'success') {
                     Get.back();
