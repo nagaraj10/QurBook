@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -50,6 +51,10 @@ class QurhomeRegimenController extends GetxController {
   var UID = "".obs;
   var resourceId = "".obs;
   var sid = "".obs;
+  var isSIMInserted = false.obs;
+  var isSOSAgentCallDialogOpen = false.obs;
+  var SOSAgentNumber = "".obs;
+  var SOSAgentNumberEmptyMsg = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
@@ -354,5 +359,44 @@ class QurhomeRegimenController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  getSOSAgentNumber(bool isLoading) async {
+    try {
+      if(isLoading)
+      {
+        loadingData.value = true;
+      }
+      SOSAgentNumber = "".obs;
+      http.Response response = await _apiProvider.getSOSAgentNumber();
+      if(isLoading)
+      {
+        loadingData.value = false;
+      }
+      if (response == null)
+      {
+        SOSAgentNumber.value = "";
+      } else {
+        SOSCallAgentNumberData sosCallAgentNumberData =
+        SOSCallAgentNumberData.fromJson(json.decode(response.body));
+        if (sosCallAgentNumberData.result != null &&
+            sosCallAgentNumberData.isSuccess) {
+          SOSAgentNumber.value = CommonUtil()
+              .validString(sosCallAgentNumberData.result.exoPhoneNumber);
+
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void updateSOSAgentCallDialogStatus(bool newStatus) {
+    try {
+      isSOSAgentCallDialogOpen.value = newStatus;
+    } catch (e) {
+      print(e);
+    }
+
   }
 }
