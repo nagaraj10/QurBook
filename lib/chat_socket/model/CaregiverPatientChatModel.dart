@@ -31,6 +31,11 @@ class Result {
   String lastName;
   String profilePicThumbnailUrl;
   String relationshipName;
+  bool isCarecoordinator;
+  String carecoordinatorfirstName;
+  String carecoordinatorLastName;
+  String carecoordinatorProfilePicThumbnailUrl;
+  String carecoordinatorId;
   ChatListItem chatListItem;
 
   Result(
@@ -40,6 +45,11 @@ class Result {
         this.lastName,
         this.profilePicThumbnailUrl,
         this.relationshipName,
+        this.isCarecoordinator,
+        this.carecoordinatorfirstName,
+        this.carecoordinatorLastName,
+        this.carecoordinatorProfilePicThumbnailUrl,
+        this.carecoordinatorId,
         this.chatListItem});
 
   Result.fromJson(Map<String, dynamic> json) {
@@ -49,6 +59,11 @@ class Result {
     lastName = json['lastName'];
     profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
     relationshipName = json['relationshipName'];
+    isCarecoordinator = json['isCarecoordinator'];
+    carecoordinatorfirstName = json['carecoordinatorfirstName'];
+    carecoordinatorLastName = json['carecoordinatorLastName'];
+    carecoordinatorProfilePicThumbnailUrl = json['carecoordinatorProfilePicThumbnailUrl'];
+    carecoordinatorId = json['carecoordinatorId'];
     chatListItem = json['chatListItem'] != null
         ? new ChatListItem.fromJson(json['chatListItem'])
         : null;
@@ -62,6 +77,11 @@ class Result {
     data['lastName'] = this.lastName;
     data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
     data['relationshipName'] = this.relationshipName;
+    data['isCarecoordinator'] = this.isCarecoordinator;
+    data['carecoordinatorfirstName'] = this.carecoordinatorfirstName;
+    data['carecoordinatorLastName'] = this.carecoordinatorLastName;
+    data['carecoordinatorProfilePicThumbnailUrl'] = this.carecoordinatorProfilePicThumbnailUrl;
+    data['carecoordinatorId'] = this.carecoordinatorId;
     if (this.chatListItem != null) {
       data['chatListItem'] = this.chatListItem.toJson();
     }

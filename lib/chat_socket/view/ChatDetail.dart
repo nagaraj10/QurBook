@@ -55,11 +55,14 @@ class ChatDetail extends StatefulWidget {
   final String peerName;
   final String peerAvatar;
 
+  final String carecoordinatorId;
+
   final bool isFromVideoCall;
   final String message;
   final bool isCareGiver;
   final bool isForGetUserId;
   final bool isFromFamilyListChat;
+  final bool isFromCareCoordinator;
 
   final String lastDate;
 
@@ -77,8 +80,10 @@ class ChatDetail extends StatefulWidget {
       @required this.groupId,
       this.message,
       this.isCareGiver,
+      this.carecoordinatorId,
       this.isForGetUserId = false,
       this.isFromFamilyListChat = false,
+      this.isFromCareCoordinator = false,
       this.lastDate})
       : super(key: key);
 
@@ -149,9 +154,13 @@ class ChatState extends State<ChatDetail> {
   String patientDeviceToken = '';
   String currentPlayedVoiceURL = '';
 
+  String carecoordinatorId = '';
+
   String textValue = '';
 
   String groupId = '';
+
+  String careCoordinatorName = '';
 
   bool isLoading = false;
 
@@ -179,6 +188,8 @@ class ChatState extends State<ChatDetail> {
 
   bool isFromFamilyListChat = false;
 
+  bool isFromCareCoordinator = false;
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
@@ -202,7 +213,9 @@ class ChatState extends State<ChatDetail> {
 
     isCareGiver = widget.isCareGiver;
     isForGetUserId = widget.isForGetUserId;
+    carecoordinatorId = widget.carecoordinatorId;
     isFromFamilyListChat = widget.isFromFamilyListChat;
+    isFromCareCoordinator = widget.isFromCareCoordinator;
     isFromVideoCall = widget.isFromVideoCall;
 
     groupId = widget.groupId;
@@ -263,7 +276,8 @@ class ChatState extends State<ChatDetail> {
     if (groupId == '' || groupId == null) {
       if (isFromFamilyListChat) {
         Provider.of<ChatSocketViewModel>(context, listen: false)
-            .initNewFamilyChat(chatPeerId, peerName)
+            .initNewFamilyChat(
+                chatPeerId, peerName, isFromCareCoordinator, carecoordinatorId)
             .then((value) {
           if (value != null) {
             if (value?.result != null) {
@@ -429,6 +443,31 @@ class ChatState extends State<ChatDetail> {
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
+            }
+          }
+
+          if (appointmentResult?.doctorOrCarecoordinatorInfo != null) {
+            if (appointmentResult?.doctorOrCarecoordinatorInfo
+                        ?.carecoordinatorfirstName !=
+                    null &&
+                appointmentResult?.doctorOrCarecoordinatorInfo
+                        ?.carecoordinatorfirstName !=
+                    '') {
+              careCoordinatorName = appointmentResult
+                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorfirstName ??
+                  '';
+            }
+
+            if (appointmentResult?.doctorOrCarecoordinatorInfo
+                        ?.carecoordinatorLastName !=
+                    null &&
+                appointmentResult?.doctorOrCarecoordinatorInfo
+                        ?.carecoordinatorLastName !=
+                    '') {
+              careCoordinatorName = careCoordinatorName +
+                  ' ' +
+                  appointmentResult
+                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorLastName;
             }
           }
         });
@@ -955,8 +994,11 @@ class ChatState extends State<ChatDetail> {
                   children: <Widget>[
                     Text(
                         widget.peerName != null && widget.peerName != ''
-                            ? widget.peerName?.capitalizeFirstofEach
-                            : '' /* toBeginningOfSentenceCase(widget.peerName) */,
+                            ? isFromCareCoordinator
+                                ? widget.peerName?.capitalizeFirstofEach +
+                                    '(CC)'
+                                : ''
+                            : widget.peerName?.capitalizeFirstofEach,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -1004,7 +1046,16 @@ class ChatState extends State<ChatDetail> {
                                   ],
                                 ),
                               )
-                            : SizedBox.shrink()
+                            : isFromCareCoordinator
+                                ? Text('CC: ' + careCoordinatorName,
+                                    textAlign: TextAlign.left,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontFamily: font_poppins,
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white))
+                                : SizedBox.shrink()
                         : SizedBox.shrink(),
                     widget.lastDate != null
                         ? Text(

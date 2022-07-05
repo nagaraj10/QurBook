@@ -19,37 +19,32 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:provider/provider.dart';
 
-
 class ChatSocketService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<ChatHistoryModel> getChatHistory(String userId, String peerId) async {
-    var body = {
-      "userId": "${userId}",
-      "peerId": "${peerId}"
-    };
+    var body = {"userId": "${userId}", "peerId": "${peerId}"};
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.getChatHistory(
-        qr_chat_socket_history, jsonString);
+    final response =
+        await _helper.getChatHistory(qr_chat_socket_history, jsonString);
     return ChatHistoryModel.fromJson(response);
   }
 
   Future<InitChatModel> initNewChat(String userId, String peerId) async {
-    var body = {
-      "doctorId": "${peerId}",
-      "userId": "${userId}"
-    };
+    var body = {"doctorId": "${peerId}", "userId": "${userId}"};
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.initNewChat(
-        qr_chat_socket_init_chat_pat_doc, jsonString);
+    final response =
+        await _helper.initNewChat(qr_chat_socket_init_chat_pat_doc, jsonString);
     return InitChatModel.fromJson(response);
   }
 
-  Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,String familyName) async {
+  Future<InitChatFamilyModel> initNewFamilyChat(String userId, String peerId,
+      String familyName, bool isCareCoordinator, String careCooId) async {
     var body = {
       "caregiverId": "${userId}",
       "caregiverName": "${familyName}",
-      "userId": "${peerId}"
+      "userId": isCareCoordinator ? careCooId : peerId,
+      "familyUserId": isCareCoordinator ? peerId : ''
     };
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.initNewChat(
@@ -59,7 +54,8 @@ class ChatSocketService {
 
   Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
     final response = await _helper.getUserIdFromDocId(
-        qr_chat_socket_get_user_id_doc + docId +
+        qr_chat_socket_get_user_id_doc +
+            docId +
             qr_chat_socket_get_user_id_doc_include);
     return GetUserIdModel.fromJson(response);
   }
@@ -69,8 +65,8 @@ class ChatSocketService {
       "id": "${userId}",
     };
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.getChatHistory(
-        qr_chat_family_mapping, jsonString);
+    final response =
+        await _helper.getChatHistory(qr_chat_family_mapping, jsonString);
     return CaregiverPatientChatModel.fromJson(response);
   }
 
@@ -79,8 +75,8 @@ class ChatSocketService {
       "userId": "${userId}",
     };
     var jsonString = convert.jsonEncode(body);
-    final response = await _helper.getChatHistory(
-        qr_unread_family_chat, jsonString);
+    final response =
+        await _helper.getChatHistory(qr_unread_family_chat, jsonString);
     return GetUnreadCountFamily.fromJson(response);
   }
 }

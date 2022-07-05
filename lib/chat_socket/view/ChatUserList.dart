@@ -78,7 +78,6 @@ class _ChatUserListState extends State<ChatUserList> {
 
   CaregiverPatientChatModel familyListModel;
 
-
   FlutterToast toast = FlutterToast();
 
   bool isShowNewChat = false;
@@ -96,24 +95,23 @@ class _ChatUserListState extends State<ChatUserList> {
 
     mInitialTime = DateTime.now();
 
-
     getFamilyListMap();
   }
 
   void getFamilyListMap() async {
     familyListModel = await controller.getFamilyMappingList();
-    if(familyListModel != null){
-      if(familyListModel?.result != null){
-        if(familyListModel?.result?.isNotEmpty){
-          if(familyListModel?.result?.length>0){
+    if (familyListModel != null) {
+      if (familyListModel?.result != null) {
+        if (familyListModel?.result?.isNotEmpty) {
+          if (familyListModel?.result?.length > 0) {
             controller.updateNewChatFloatShown(true);
-          }else{
+          } else {
             controller.updateNewChatFloatShown(false);
           }
-        }else{
+        } else {
           controller.updateNewChatFloatShown(false);
         }
-      }else{
+      } else {
         controller.updateNewChatFloatShown(false);
       }
     }
@@ -224,7 +222,8 @@ class _ChatUserListState extends State<ChatUserList> {
               ),
         floatingActionButton: (widget?.careGiversList?.length ?? 0) > 0
             ? null
-            : Obx(() => controller.shownNewChatFloat.isTrue && controller.isSelfUser()
+            : Obx(() => controller.shownNewChatFloat.isTrue &&
+                    controller.isSelfUser()
                 ? FloatingActionButton(
                     backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                     child: Icon(
@@ -232,7 +231,7 @@ class _ChatUserListState extends State<ChatUserList> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      if((familyListModel?.result?.length??0)>0){
+                      if ((familyListModel?.result?.length ?? 0) > 0) {
                         showDialogForFamilyMembers();
                       }
                     },
@@ -330,6 +329,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
   Widget getCardWidgetForFamilyList(Result data) {
     var fulName = '';
+    var ccName = '';
     try {
       if (data?.firstName != null && data?.firstName != '') {
         fulName = data?.firstName;
@@ -338,6 +338,19 @@ class _ChatUserListState extends State<ChatUserList> {
         fulName = fulName + ' ' + data?.lastName;
       }
     } catch (e) {}
+
+    if (data?.isCarecoordinator) {
+      try {
+        if (data?.carecoordinatorfirstName != null &&
+            data?.carecoordinatorfirstName != '') {
+          ccName = data?.carecoordinatorfirstName;
+        }
+        if (data?.carecoordinatorLastName != null &&
+            data?.carecoordinatorLastName != '') {
+          ccName = ccName + ' ' + data?.carecoordinatorLastName;
+        }
+      } catch (e) {}
+    }
 
     return Card(
       child: InkWell(
@@ -355,6 +368,8 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientPicture: '',
                         isFromVideoCall: false,
                         isFromFamilyListChat: true,
+                        isFromCareCoordinator: data?.isCarecoordinator,
+                        carecoordinatorId: data?.carecoordinatorId,
                         isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
                             ? true
                             : false,
@@ -439,32 +454,63 @@ class _ChatUserListState extends State<ChatUserList> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          fulName != null
-                              ? CommonUtil().titleCase(fulName.toLowerCase())
-                              : '',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16.0.sp,
-                          ),
-                          softWrap: false,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            Text(
+                              fulName != null
+                                  ? CommonUtil()
+                                      .titleCase(fulName.toLowerCase())
+                                  : '',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16.0.sp,
+                              ),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            data?.isCarecoordinator
+                                ? Text(
+                                    ' (CC)',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16.0.sp,
+                                    ),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : SizedBox.shrink(),
+                          ],
                         ),
                         SizedBox(
                           height: 2.0.h,
                         ),
-                        Text(
-                          (data.relationshipName != null &&
-                                  data.relationshipName != '')
-                              ? data.relationshipName ?? ''
-                              : '',
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.0.sp,
-                              color: Color(CommonUtil().getMyPrimaryColor())),
-                        ),
+                        data?.isCarecoordinator
+                            ? Text(
+                                ccName != null
+                                    ? 'CC: ' +
+                                        CommonUtil()
+                                            .titleCase(ccName.toLowerCase())
+                                    : '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16.0.sp,
+                                ),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : Text(
+                                (data?.relationshipName != null &&
+                                        data?.relationshipName != '')
+                                    ? data?.relationshipName ?? ''
+                                    : '',
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: false,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              )
                       ],
                     ),
                   )

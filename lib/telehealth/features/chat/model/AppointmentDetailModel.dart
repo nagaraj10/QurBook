@@ -28,9 +28,14 @@ class AppointmentResult {
   bool isCaregiver;
   bool isPatient;
   ChatList chatList;
+  DoctorOrCarecoordinatorInfo doctorOrCarecoordinatorInfo;
 
   AppointmentResult(
-      {this.upcoming, this.past, this.deviceToken, this.isCaregiver, this.chatList});
+      {this.upcoming,
+      this.past,
+      this.deviceToken,
+      this.isCaregiver,
+      this.chatList});
 
   AppointmentResult.fromJson(Map<String, dynamic> json) {
     upcoming = json['upcoming'] != null
@@ -44,6 +49,10 @@ class AppointmentResult {
     isPatient = json['isPatient'];
     chatList = json['chatList'] != null
         ? new ChatList.fromJson(json['chatList'])
+        : null;
+    doctorOrCarecoordinatorInfo = json['doctorOrCarecoordinatorInfo'] != null
+        ? new DoctorOrCarecoordinatorInfo.fromJson(
+            json['doctorOrCarecoordinatorInfo'])
         : null;
   }
 
@@ -89,24 +98,25 @@ class Upcoming {
 
   //Null sharedHealthRecordMetadata;
 
-  Upcoming({this.id,
-    this.bookingId,
-    this.doctorSessionId,
-    this.plannedStartDateTime,
-    this.plannedEndDateTime,
-    this.actualStartDateTime,
-    this.actualEndDateTime,
-    this.slotNumber,
-    this.isHealthRecordShared,
-    this.plannedFollowupDate,
-    this.isRefunded,
-    this.isFollowupFee,
-    this.isFollowup,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn
-    //this.sharedHealthRecordMetadata
-  });
+  Upcoming(
+      {this.id,
+      this.bookingId,
+      this.doctorSessionId,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.slotNumber,
+      this.isHealthRecordShared,
+      this.plannedFollowupDate,
+      this.isRefunded,
+      this.isFollowupFee,
+      this.isFollowup,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn
+      //this.sharedHealthRecordMetadata
+      });
 
   Upcoming.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -171,24 +181,25 @@ class Past {
 
   //SharedHealthRecordMetadata sharedHealthRecordMetadata;
 
-  Past({this.id,
-    this.bookingId,
-    this.doctorSessionId,
-    this.plannedStartDateTime,
-    this.plannedEndDateTime,
-    this.actualStartDateTime,
-    this.actualEndDateTime,
-    this.slotNumber,
-    this.isHealthRecordShared,
-    this.plannedFollowupDate,
-    this.isRefunded,
-    this.isFollowupFee,
-    this.isFollowup,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn
-    //this.sharedHealthRecordMetadata
-  });
+  Past(
+      {this.id,
+      this.bookingId,
+      this.doctorSessionId,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.slotNumber,
+      this.isHealthRecordShared,
+      this.plannedFollowupDate,
+      this.isRefunded,
+      this.isFollowupFee,
+      this.isFollowup,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn
+      //this.sharedHealthRecordMetadata
+      });
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -252,17 +263,18 @@ class SharedHealthRecordMetadata {
   String createdOn;
   String lastModifiedOn;
 
-  SharedHealthRecordMetadata({this.id,
-    this.metadata,
-    this.isBookmarked,
-    this.isCompleted,
-    this.isDraft,
-    this.isVisible,
-    this.isClaimed,
-    this.isClaimRecord,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn});
+  SharedHealthRecordMetadata(
+      {this.id,
+      this.metadata,
+      this.isBookmarked,
+      this.isCompleted,
+      this.isDraft,
+      this.isVisible,
+      this.isClaimed,
+      this.isClaimRecord,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
 
   SharedHealthRecordMetadata.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -341,15 +353,16 @@ class MediaTypeInfo {
   String createdOn;
   String lastModifiedOn;
 
-  MediaTypeInfo({this.id,
-    this.name,
-    this.description,
-    this.logo,
-    this.isDisplay,
-    this.isAiTranscription,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn});
+  MediaTypeInfo(
+      {this.id,
+      this.name,
+      this.description,
+      this.logo,
+      this.isDisplay,
+      this.isAiTranscription,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
 
   MediaTypeInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -388,14 +401,15 @@ class CategoryInfo {
   String createdOn;
   String lastModifiedOn;
 
-  CategoryInfo({this.id,
-    this.categoryName,
-    this.categoryDescription,
-    this.logo,
-    this.isDisplay,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn});
+  CategoryInfo(
+      {this.id,
+      this.categoryName,
+      this.categoryDescription,
+      this.logo,
+      this.isDisplay,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
 
   CategoryInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -431,9 +445,9 @@ class DeviceToken {
 
   DeviceToken.fromJson(Map<String, dynamic> json) {
     doctor =
-    json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+        json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
     patient =
-    json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
+        json['patient'] != null ? new Doctor.fromJson(json['patient']) : null;
     parentMember = json['parentMember'] != null
         ? new Doctor.fromJson(json['parentMember'])
         : null;
@@ -488,12 +502,13 @@ class Payload {
   String createdOn;
   String lastModifiedOn;
 
-  Payload({this.id,
-    this.deviceTokenId,
-    this.platformTypeCode,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn});
+  Payload(
+      {this.id,
+      this.deviceTokenId,
+      this.platformTypeCode,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
 
   Payload.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -517,7 +532,6 @@ class Payload {
 }
 
 class ChatList {
-
   /* String chatListId;
 
   String peerId;
@@ -534,8 +548,8 @@ class ChatList {
 
   //var isMuted;
 
-
-  ChatList({ /*this.chatListId,
+  ChatList({
+    /*this.chatListId,
 
       this.peerId,
 
@@ -552,9 +566,7 @@ class ChatList {
     /*this.isMuted*/
   });
 
-
   ChatList.fromJson(Map<String, dynamic> json) {
-
     /*chatListId = json['chatListId'];
 
     peerId = json['peerId'];
@@ -570,9 +582,7 @@ class ChatList {
     isDisable = json['isDisable'] != null ? json['isDisable'] : false;
 
     //isMuted = json['isMuted'];
-
   }
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -595,5 +605,35 @@ class ChatList {
 
     return data;
   }
+}
 
+class DoctorOrCarecoordinatorInfo {
+  String carecoordinatorfirstName;
+  String carecoordinatorMiddleName;
+  String carecoordinatorLastName;
+  String carecoordinatorProfilePicThumbnailUrl;
+
+  DoctorOrCarecoordinatorInfo(
+      {this.carecoordinatorfirstName,
+      this.carecoordinatorMiddleName,
+      this.carecoordinatorLastName,
+      this.carecoordinatorProfilePicThumbnailUrl});
+
+  DoctorOrCarecoordinatorInfo.fromJson(Map<String, dynamic> json) {
+    carecoordinatorfirstName = json['carecoordinatorfirstName'];
+    carecoordinatorMiddleName = json['carecoordinatorMiddleName'];
+    carecoordinatorLastName = json['carecoordinatorLastName'];
+    carecoordinatorProfilePicThumbnailUrl =
+        json['carecoordinatorProfilePicThumbnailUrl'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['carecoordinatorfirstName'] = this.carecoordinatorfirstName;
+    data['carecoordinatorMiddleName'] = this.carecoordinatorMiddleName;
+    data['carecoordinatorLastName'] = this.carecoordinatorLastName;
+    data['carecoordinatorProfilePicThumbnailUrl'] =
+        this.carecoordinatorProfilePicThumbnailUrl;
+    return data;
+  }
 }
