@@ -327,6 +327,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == 'appointmentPayment') {
                       var passedValArr = widget.bundle?.split('&');
+                      var body = {};
+                      body['templateName'] =
+                          parameters.strCaregiverAppointmentPayment;
+                      body['contextId'] = passedValArr[2];
+                      FetchNotificationService()
+                          .updateNsActionStatus(body)
+                          .then((data) {
+                        FetchNotificationService().updateNsOnTapAction(body);
+                      });
 
                       Get.to(BookingConfirmation(
                           isFromPaymentNotification: true,
@@ -511,6 +520,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       var passedValArr = widget.bundle?.split('&');
 
+                      var body = {};
+                      body['templateName'] =
+                          parameters.strCaregiverNotifyPlanSubscription;
+                      body['contextId'] = passedValArr[4];
+                      FetchNotificationService()
+                          .updateNsActionStatus(body)
+                          .then((data) {
+                        FetchNotificationService().updateNsOnTapAction(body);
+                      });
                       Get.to(CheckoutPage(
                         isFromNotification: true,
                         cartUserId: passedValArr[2],
