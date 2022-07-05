@@ -180,6 +180,8 @@ const String strOrText = 'OR';
 const String strOtpNotReceived = 'Didn\'t receive the OTP ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
+const String strSOSCallDirect =
+    'Please call the below number';
 const String primaryNumber = 'Primary Number';
 const String alternateNumber = 'Alternate Number';
 

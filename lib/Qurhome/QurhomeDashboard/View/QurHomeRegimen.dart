@@ -5,7 +5,6 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -14,6 +13,7 @@ import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/call_dial_widget.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -26,7 +26,6 @@ import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'dart:convert' as convert;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
@@ -35,10 +34,10 @@ import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/video_call/pages/calling_page.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../../constants/variable_constant.dart' as variable;
+
 
 class QurHomeRegimenScreen extends StatefulWidget {
   const QurHomeRegimenScreen({Key key}) : super(key: key);
@@ -48,7 +47,7 @@ class QurHomeRegimenScreen extends StatefulWidget {
 }
 
 class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   final controller = Get.put(QurhomeRegimenController());
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
@@ -64,6 +63,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   int _counter = 0;
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
+  bool appIsInBackground = false;
 
   @override
   void initState() {
@@ -87,7 +87,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       });
       initSocketCountUnread();
       initGeoLocation();
+      checkMobileOrTablet();
+      WidgetsBinding.instance.addObserver(this);
       super.initState();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void checkMobileOrTablet() async {
+    try {
+      if(CommonUtil().isTablet)
+      {
+        controller.isSIMInserted.value = false;
+      }else{
+        controller.isSIMInserted.value = true;
+        FHBUtils().check().then((intenet) {
+          if (intenet != null && intenet) {
+            controller.getSOSAgentNumber(false);
+          } else {
+            //FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+          }
+        });
+      }
     } catch (e) {
       print(e);
     }
@@ -117,6 +139,24 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       }
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        if (appIsInBackground && controller.isSOSAgentCallDialogOpen.value) {
+          appIsInBackground = false;
+          controller.updateSOSAgentCallDialogStatus(false);
+          Get.back();
+        }
+        break;
+      case AppLifecycleState.paused:
+        appIsInBackground = true;
+        break;
+      default:
+    }
+    //print("the current state of the app is ${state.toString()}");
   }
 
   @override
@@ -1197,18 +1237,55 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  void callNowSOS() {
+  callNowSOS() async {
     try {
       closeDialog();
-      if (!controller.onGoingSOSCall.value) {
-        FHBUtils().check().then((intenet) {
-          if (intenet != null && intenet) {
-            VideoCallCommonUtils.callActions.value = CallActions.CALLING;
-            controller.callSOSEmergencyServices();
-          } else {
-            FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
-          }
-        });
+      if(!controller.isSIMInserted.value)
+      {
+        if (!controller.onGoingSOSCall.value) {
+          FHBUtils().check().then((intenet) {
+            if (intenet != null && intenet) {
+              VideoCallCommonUtils.callActions.value = CallActions.CALLING;
+              controller.callSOSEmergencyServices();
+            } else {
+              FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+            }
+          });
+        }
+      }else{
+        String strSOSAgentNumber = CommonUtil()
+            .validString(controller.SOSAgentNumber.value);
+        if(strSOSAgentNumber.trim().isNotEmpty)
+        {
+          controller.updateSOSAgentCallDialogStatus(true);
+          await Get.dialog(
+            SOSAgentCallWidget(
+              SOSAgentNumber: strSOSAgentNumber,
+            ),
+          );
+        }else{
+          FHBUtils().check().then((intenet) async {
+            if (intenet != null && intenet) {
+              await controller.getSOSAgentNumber(true);
+              String strSOSAgentNumber = CommonUtil()
+                  .validString(controller.SOSAgentNumber.value);
+              if(strSOSAgentNumber.trim().isNotEmpty)
+              {
+                controller.updateSOSAgentCallDialogStatus(true);
+                await Get.dialog(
+                  SOSAgentCallWidget(
+                    SOSAgentNumber: strSOSAgentNumber,
+                  ),
+                );
+              }else{
+                FlutterToast().getToast(CommonUtil()
+                    .validString(controller.SOSAgentNumberEmptyMsg.value), Colors.red);
+              }
+            } else {
+              FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+            }
+          });
+        }
       }
     } catch (e) {
       print(e);
@@ -1485,6 +1562,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         animationController.dispose();
       }
       _events.close();
+      WidgetsBinding.instance.removeObserver(this);
       super.dispose();
     } catch (e) {
       print(e);
@@ -1499,4 +1577,66 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       initSocketCountUnread();
     });
   }
+}
+
+
+class SOSAgentCallWidget extends StatelessWidget
+{
+  SOSAgentCallWidget({
+    @required this.SOSAgentNumber,
+  });
+
+  String SOSAgentNumber;
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () {
+        var regController = Get.find<QurhomeRegimenController>();
+        regController.updateSOSAgentCallDialogStatus(false);
+        return Future.value(true);
+      },
+      child: SimpleDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0.sp),
+        ),
+        contentPadding: EdgeInsets.zero,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+              top: 20.0.h,
+              right: 20.0.w,
+              left: 20.0.w,
+            ),
+            child: Text(
+              strSOSCallDirect,
+              style: TextStyle(
+                fontSize: 15.0.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            width: 0.5.sw,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.0.w,
+              vertical: 10.0.h,
+            ),
+            child: Center(
+              child: CallDialWidget(
+                phoneNumber: SOSAgentNumber ?? '',
+                phoneNumberName:
+                SOSAgentNumber ?? '',
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 }
