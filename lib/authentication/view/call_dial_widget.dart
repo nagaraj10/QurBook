@@ -27,8 +27,12 @@ class CallDialWidget extends StatelessWidget {
         ]),
         width: 220.0.w,
         onPressed: () async {
-          if (await canLaunch('tel:$phoneNumber')) {
-            await launch('tel:$phoneNumber');
+          try {
+            if (await canLaunch('tel:$phoneNumber')) {
+              await launch('tel:$phoneNumber');
+            }
+          } catch (e) {
+            print(e);
           }
         },
         child: Row(

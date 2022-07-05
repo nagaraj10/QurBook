@@ -36,6 +36,7 @@ const String qr_BLEDataUpload = 'device-data/kiosk/send-device-data';
 const String qr_sendVerificationMail = '/sendVerificationMail';
 const String qr_sortByQ = '?sortBy=';
 const String qr_getCareCoordinatorId = 'qurplan-node-mysql/get-patient-carers/';
+const String qr_getSOSAgentNumber = 'user/fetch-sos-exophone-info';
 const String qr_messaging = 'messaging';
 const String qr_triggerMissedCallNotification =
     'messaging/sos-missed-call-notification';
