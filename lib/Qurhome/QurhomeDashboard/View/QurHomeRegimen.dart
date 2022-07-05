@@ -13,7 +13,6 @@ import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/view/call_dial_widget.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/UnreadChatSocketNotify.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -36,6 +35,7 @@ import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 
@@ -1619,18 +1619,109 @@ class SOSAgentCallWidget extends StatelessWidget
             ),
           ),
           Container(
-            width: 0.5.sw,
-            alignment: Alignment.center,
             padding: EdgeInsets.symmetric(
-              horizontal: 20.0.w,
-              vertical: 10.0.h,
+              horizontal: 15.0.w,
+              vertical: 15.0.h,
             ),
-            child: Center(
-              child: CallDialWidget(
-                phoneNumber: SOSAgentNumber ?? '',
-                phoneNumberName:
-                SOSAgentNumber ?? '',
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    try {
+                      var regController = Get.find<QurhomeRegimenController>();
+                      regController.updateSOSAgentCallDialogStatus(false);
+                      Get.back();
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  child: Card(
+                    shape:
+                    RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius
+                          .circular(
+                          15.0),
+                    ),
+                    color: Colors.red,
+                    child: Padding(
+                      padding:
+                      EdgeInsets
+                          .only(
+                          top:15.0,
+                          left:20.0,
+                          right:20.0,
+                          bottom:15.0,
+                      ),
+                      child: Text(
+                        dismiss,
+                        style:
+                        TextStyle(
+                          color: Colors
+                              .white,
+                          fontWeight:
+                          FontWeight
+                              .w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () async {
+                    try {
+                      if (await canLaunch('tel:$SOSAgentNumber'))
+                      {
+                        await launch('tel:$SOSAgentNumber');
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  child: Card(
+                    shape:
+                    RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius
+                          .circular(
+                          15.0),
+                    ),
+                    color: Colors.green,
+                    child: Padding(
+                      padding:
+                      EdgeInsets
+                          .only(
+                        top:15.0,
+                        left:20.0,
+                        right:20.0,
+                        bottom:15.0,
+                      ),
+                      child: Text(
+                        accept,
+                        style:
+                        TextStyle(
+                          color: Colors
+                              .white,
+                          fontWeight:
+                          FontWeight
+                              .w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                /*Center(
+                  child: CallDialWidget(
+                    phoneNumber: SOSAgentNumber ?? '',
+                    phoneNumberName:
+                    SOSAgentNumber ?? '',
+                  ),
+                ),*/
+              ],
             ),
           ),
         ],
