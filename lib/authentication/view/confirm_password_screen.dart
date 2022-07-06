@@ -280,8 +280,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     ),
                     SizedBox(height: 10.0.h),
                     Visibility(
-                      visible: otpViewModel.timerSeconds == 0 &&
-                          CommonUtil.REGION_CODE == 'IN',
+                      visible: otpViewModel.timerSeconds == 0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
