@@ -1262,6 +1262,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             SOSAgentCallWidget(
               SOSAgentNumber: strSOSAgentNumber,
             ),
+            barrierDismissible: false,
           );
         }else{
           FHBUtils().check().then((intenet) async {
@@ -1276,6 +1277,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                   SOSAgentCallWidget(
                     SOSAgentNumber: strSOSAgentNumber,
                   ),
+                  barrierDismissible: false,
                 );
               }else{
                 FlutterToast().getToast(CommonUtil()
@@ -1592,9 +1594,9 @@ class SOSAgentCallWidget extends StatelessWidget
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        var regController = Get.find<QurhomeRegimenController>();
-        regController.updateSOSAgentCallDialogStatus(false);
-        return Future.value(true);
+        /*var regController = Get.find<QurhomeRegimenController>();
+        regController.updateSOSAgentCallDialogStatus(false);*/
+        return Future.value(false);
       },
       child: SimpleDialog(
         shape: RoundedRectangleBorder(
