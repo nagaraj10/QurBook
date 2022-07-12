@@ -26,6 +26,7 @@ import 'chat_socket/view/ChatUserList.dart';
 import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/firebase_analytics_service.dart';
+import 'constants/fhb_parameters.dart';
 import 'constants/router_variable.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
@@ -603,8 +604,15 @@ class _MyFHBState extends State<MyFHB> {
             );
           }
         } else if (passedValArr[1] == 'appointmentPayment') {
-          Get.to(BookingConfirmation(
-              isFromPaymentNotification: true, appointmentId: passedValArr[2]));
+          var nsBody = {};
+          nsBody['templateName'] = strCaregiverAppointmentPayment;
+          nsBody['contextId'] = passedValArr[3];
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody).then(
+                (value) => Get.to(BookingConfirmation(
+                    isFromPaymentNotification: true,
+                    appointmentId: passedValArr[2])));
+          });
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -857,14 +865,20 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'my cart',
             'navigationPage': 'My Cart',
           });
-          Get.to(CheckoutPage(
-            isFromNotification: true,
-            cartUserId: passedValArr[2],
-            bookingId: passedValArr[4],
-            notificationListId: passedValArr[3],
-            cartId: passedValArr[4],
-          )).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          var nsBody = {};
+          nsBody['templateName'] = strCaregiverNotifyPlanSubscription;
+          nsBody['contextId'] = passedValArr[4];
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody).then(
+                (value) => Get.to(CheckoutPage(
+                      isFromNotification: true,
+                      cartUserId: passedValArr[2],
+                      bookingId: passedValArr[4],
+                      notificationListId: passedValArr[3],
+                      cartId: passedValArr[4],
+                    )).then((value) => PageNavigator.goToPermanent(
+                        context, router.rt_Landing)));
+          });
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1275,7 +1289,8 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'appointmentPayment') {
             return SplashScreen(
                 nsRoute: 'appointmentPayment',
-                bundle: parsedData[1] + '&' + parsedData[2]);
+                bundle:
+                    parsedData[1] + '&' + parsedData[2] + '&' + parsedData[3]);
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
             return SplashScreen(

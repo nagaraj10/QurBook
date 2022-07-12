@@ -1734,7 +1734,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 "ack&${redirect_to}&${careCoordinatorUserId}&${patientName}&${careGiverName}&${activityTime}&${activityName}&${userId}&${uid}&${patientPhoneNumber}"
         } else if (redirect_to?.contains("appointmentPayment") == true) {
 
-            sharedValue = "ack&${redirect_to}&${appointmentID}"
+            sharedValue = "ack&${redirect_to}&${appointmentID}&${cartId}"
         } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
         }
         else if(redirect_to?.contains("mycart") == true){

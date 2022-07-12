@@ -659,8 +659,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     return WillPopScope(
       onWillPop: () {
-        Navigator.pop(context);
-        if (widget.isFromPaymentNotification == false) widget.refresh();
+        if (widget?.isFromPaymentNotification) {
+          Get.offAll(NotificationMain());
+        } else {
+          Navigator.pop(context);
+          if (widget.isFromPaymentNotification == false) widget.refresh();
+        }
       },
       child: Scaffold(
         key: _scaffoldKey,
@@ -668,8 +672,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           flexibleSpace: GradientAppBar(),
           leading: GestureDetector(
             onTap: () {
-              if (widget.isFromPaymentNotification == false) widget.refresh();
-              Navigator.pop(context);
+              if (widget?.isFromPaymentNotification) {
+                Get.offAll(NotificationMain());
+              } else {
+                if (widget.isFromPaymentNotification == false) widget.refresh();
+                Navigator.pop(context);
+              }
             },
             child: Icon(
               Icons.arrow_back_ios, // add custom icons also

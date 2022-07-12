@@ -1624,8 +1624,20 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  await readUnreadAction(notification, isRead: true);
+                  //await readUnreadAction(notification, isRead: true);
 
+                  var nsBody = {};
+                  nsBody['templateName'] =
+                      parameters.strCaregiverAppointmentPayment;
+                  nsBody['contextId'] =
+                      notification?.messageDetails?.payload?.bookingId;
+                  FetchNotificationService()
+                      .updateNsActionStatus(nsBody)
+                      .then((data) {
+                    FetchNotificationService()
+                        .updateNsOnTapAction(nsBody)
+                        .then((value) => {});
+                  });
                   checkIfPaymentLinkIsExpired(
                           notification?.messageDetails?.payload?.appointmentId)
                       .then((value) {
@@ -1639,14 +1651,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                     }
                   });
                 },
-                borderSide: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 14.0.sp,
@@ -1667,8 +1679,20 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  await readUnreadAction(notification, isRead: true);
+                  //await readUnreadAction(notification, isRead: true);
 
+                  var nsBody = {};
+                  nsBody['templateName'] =
+                      parameters.strCaregiverNotifyPlanSubscription;
+                  nsBody['contextId'] =
+                      notification?.messageDetails?.payload?.bookingId;
+                  FetchNotificationService()
+                      .updateNsActionStatus(nsBody)
+                      .then((data) {
+                    FetchNotificationService()
+                        .updateNsOnTapAction(nsBody)
+                        .then((value) => {});
+                  });
                   Get.to(CheckoutPage(
                     isFromNotification: true,
                     bookingId: notification?.messageDetails?.payload?.bookingId,
@@ -1678,14 +1702,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                     cartId: notification?.messageDetails?.payload?.bookingId,
                   )).then((value) {});
                 },
-                borderSide: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 14.0.sp,
