@@ -67,6 +67,7 @@ class ChatDetail extends StatefulWidget {
   final String lastDate;
 
   final String groupId;
+  final String familyUserId;
 
   const ChatDetail(
       {Key key,
@@ -81,6 +82,7 @@ class ChatDetail extends StatefulWidget {
       this.message,
       this.isCareGiver,
       this.carecoordinatorId,
+      this.familyUserId,
       this.isForGetUserId = false,
       this.isFromFamilyListChat = false,
       this.isFromCareCoordinator = false,
@@ -160,6 +162,8 @@ class ChatState extends State<ChatDetail> {
 
   String groupId = '';
 
+  String familyUserId = '';
+
   String careCoordinatorName = '';
 
   bool isLoading = false;
@@ -220,6 +224,8 @@ class ChatState extends State<ChatDetail> {
 
     groupId = widget.groupId;
 
+    familyUserId = widget.familyUserId;
+
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
 
@@ -269,7 +275,8 @@ class ChatState extends State<ChatDetail> {
 
   void getChatHistory() {
     chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
-        .getChatHistory(chatPeerId);
+        .getChatHistory(chatPeerId, familyUserId, isFromCareCoordinator,
+            carecoordinatorId, isFromFamilyListChat);
   }
 
   void getGroupId() {
@@ -790,7 +797,12 @@ class ChatState extends State<ChatDetail> {
                                           Provider.of<ChatSocketViewModel>(
                                                   context,
                                                   listen: false)
-                                              .getChatHistory(chatPeerId);
+                                              .getChatHistory(
+                                                  chatPeerId,
+                                                  familyUserId,
+                                                  isFromCareCoordinator,
+                                                  carecoordinatorId,
+                                                  isFromFamilyListChat);
                                       setState(() {});
                                     });
                                   },
@@ -996,9 +1008,9 @@ class ChatState extends State<ChatDetail> {
                         widget.peerName != null && widget.peerName != ''
                             ? isFromCareCoordinator
                                 ? widget.peerName?.capitalizeFirstofEach +
-                                    '(CC)'
-                                : ''
-                            : widget.peerName?.capitalizeFirstofEach,
+                                    ' (CC)'
+                                : widget.peerName?.capitalizeFirstofEach
+                            : '',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

@@ -492,9 +492,10 @@ class _ChatUserListState extends State<ChatUserList> {
                                             .titleCase(ccName.toLowerCase())
                                     : '',
                                 style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16.0.sp,
-                                ),
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 16.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                               )
@@ -580,6 +581,19 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget buildItem(BuildContext context, PayloadChat userChatList) {
+    var ccName = '';
+    if (userChatList?.isFamilyUserCareCoordinator) {
+      try {
+        if (userChatList?.familyUserFirstName != null &&
+            userChatList?.familyUserFirstName != '') {
+          ccName = userChatList?.familyUserFirstName;
+        }
+        if (userChatList?.familyUserLastName != null &&
+            userChatList?.familyUserLastName != '') {
+          ccName = ccName + ' ' + userChatList?.familyUserLastName;
+        }
+      } catch (e) {}
+    }
     return Column(
       children: <Widget>[
         InkWell(
@@ -595,6 +609,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientName: '',
                         patientPicture: '',
                         isFromVideoCall: false,
+                        familyUserId: userChatList?.familyUserId,
                         isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
                             ? true
                             : false,
@@ -677,17 +692,47 @@ class _ChatUserListState extends State<ChatUserList> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            CommonUtil().capitalizeFirstofEach(
-                                getDocName(userChatList)),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 15.0.sp,
-                                fontFamily: variable.font_poppins),
+                          child: Row(
+                            children: [
+                              Text(
+                                CommonUtil().capitalizeFirstofEach(
+                                    getDocName(userChatList)),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 15.0.sp,
+                                    fontFamily: variable.font_poppins),
+                              ),
+                              userChatList?.isFamilyUserCareCoordinator
+                                  ? Text(
+                                      ' (CC)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.0.sp,
+                                      ),
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
                           ),
                         ),
+                        userChatList?.isFamilyUserCareCoordinator
+                            ? Text(
+                                ccName != null
+                                    ? 'CC: ' +
+                                        CommonUtil()
+                                            .titleCase(ccName.toLowerCase())
+                                    : '',
+                                style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                                softWrap: false,
+                                overflow: TextOverflow.ellipsis,
+                              )
+                            : SizedBox.shrink(),
                         SizedBox(
                           height: 1,
                         ),

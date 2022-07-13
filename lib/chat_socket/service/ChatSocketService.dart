@@ -22,8 +22,29 @@ import 'package:provider/provider.dart';
 class ChatSocketService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<ChatHistoryModel> getChatHistory(String userId, String peerId) async {
-    var body = {"userId": "${userId}", "peerId": "${peerId}"};
+  Future<ChatHistoryModel> getChatHistory(
+      String userId,
+      String peerId,
+      String familyUserId,
+      bool isCareCoordinator,
+      String careCoordiantorId,
+      bool isFromFamilyList) async {
+    var body;
+    if (isFromFamilyList) {
+      body = {
+        "userId": "${userId}",
+        "peerId": isCareCoordinator ? careCoordiantorId : peerId,
+        "familyUserId": isCareCoordinator ? peerId : null
+      };
+    } else {
+      body = {
+        "userId": "${userId}",
+        "peerId": peerId,
+        "familyUserId":
+            (familyUserId != null && familyUserId != '') ? familyUserId : null
+      };
+    }
+
     var jsonString = convert.jsonEncode(body);
     final response =
         await _helper.getChatHistory(qr_chat_socket_history, jsonString);
@@ -44,7 +65,7 @@ class ChatSocketService {
       "caregiverId": "${userId}",
       "caregiverName": "${familyName}",
       "userId": isCareCoordinator ? careCooId : peerId,
-      "familyUserId": isCareCoordinator ? peerId : ''
+      "familyUserId": isCareCoordinator ? peerId : null
     };
     var jsonString = convert.jsonEncode(body);
     final response = await _helper.initNewChat(

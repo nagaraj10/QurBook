@@ -136,12 +136,22 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ChatHistoryModel> getChatHistory(String peerId) async {
+  Future<ChatHistoryModel> getChatHistory(
+      String peerId,
+      String familyUserId,
+      bool isCareCoordinator,
+      String careCoordiantorId,
+      bool isFromFamilyList) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
-      ChatHistoryModel chatHistoryModel =
-          await chocketService.getChatHistory(userId, peerId);
+      ChatHistoryModel chatHistoryModel = await chocketService.getChatHistory(
+          userId,
+          peerId,
+          familyUserId,
+          isCareCoordinator,
+          careCoordiantorId,
+          isFromFamilyList);
 
       return chatHistoryModel;
     } catch (e) {}
