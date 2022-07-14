@@ -2292,11 +2292,12 @@ class ApiBaseHelper {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       var bodyData = {
-        'subject': Constants.tckTitle,
-        'issue': Constants.tckDesc,
+        'subject': Constants.tckTitle != 'title' ? Constants.tckTitle : '',
+        'issue': Constants.tckDesc != 'desc' ? Constants.tckDesc : '',
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
-        'preferredDate': Constants.tckPrefDate,
+        'preferredDate':
+            Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
         'patientUserId': userid,
         'additionalInfo': {
           'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
@@ -2304,7 +2305,13 @@ class ApiBaseHelper {
               : "",
           'preferredLabId': Constants.tckPrefLabId.trim().isNotEmpty
               ? Constants.tckPrefLabId
-              : ""
+              : "",
+          "choose_doctor": Constants.tckSelectedDoctor != 'Doctor'
+              ? Constants.tckSelectedDoctor
+              : '',
+          "choose_hospital": Constants.tckSelectedHospital != 'Hospital'
+              ? Constants.tckSelectedHospital
+              : '',
         },
       };
       var response = await ApiServices.post(_baseUrl + url,

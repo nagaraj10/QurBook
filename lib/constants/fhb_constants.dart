@@ -661,6 +661,8 @@ const String strDetailsButton = 'Details';
 const String strThereAreNoPreferredLabsInYourProfile =
     'There are no preferred labs in your profile';
 
+const String strPreferredDoctors = 'Preferred Doctors';
+
 var tckTitle = 'title';
 var tckDesc = 'desc';
 var tckPrefDate = 'pref_date';
@@ -670,6 +672,13 @@ var ticketType = 'ticket type';
 var tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
+var tckSelectedDoctor = 'Doctor';
+var tckSelectedHospital = 'Hospital';
+
+var tckTypeTitle = 'text';
+var tckTypeDescription = 'text_area';
+var tckTypeDropdown = 'dropdown';
+var tckTypeDate = 'date';
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
