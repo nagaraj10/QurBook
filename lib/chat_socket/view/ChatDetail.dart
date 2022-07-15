@@ -376,10 +376,18 @@ class ChatState extends State<ChatDetail> {
         //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
         if (emitAckResponse != null) {
-          if (chatPeerId == emitAckResponse.messages.idFrom) {
-            Provider.of<ChatSocketViewModel>(Get.context, listen: false)
-                ?.onReceiveMessage(emitAckResponse);
-            updateReadCount();
+          if (isFromCareCoordinator) {
+            if (carecoordinatorId == emitAckResponse.messages.idFrom) {
+              Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+                  ?.onReceiveMessage(emitAckResponse);
+              updateReadCount();
+            }
+          } else {
+            if (chatPeerId == emitAckResponse.messages.idFrom) {
+              Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+                  ?.onReceiveMessage(emitAckResponse);
+              updateReadCount();
+            }
           }
         }
       }
@@ -398,7 +406,7 @@ class ChatState extends State<ChatDetail> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, userId)
+        .fetchAppointmentDetail(widget.peerId, userId, carecoordinatorId)
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -475,6 +483,8 @@ class ChatState extends State<ChatDetail> {
                   ' ' +
                   appointmentResult
                       ?.doctorOrCarecoordinatorInfo?.carecoordinatorLastName;
+              isFromCareCoordinator = appointmentResult
+                  ?.doctorOrCarecoordinatorInfo?.isCareCoordinator;
             }
           }
         });
@@ -553,7 +563,7 @@ class ChatState extends State<ChatDetail> {
         var data = {
           "id": groupId,
           'idFrom': userId,
-          'idTo': chatPeerId,
+          'idTo': isFromCareCoordinator ? carecoordinatorId : chatPeerId,
           "type": type,
           "isread": false,
           'content': content,
@@ -1018,57 +1028,7 @@ class ChatState extends State<ChatDetail> {
                             fontFamily: font_poppins,
                             fontSize: 16.0.sp,
                             color: Colors.white)),
-                    !isCareGiverApi
-                        ? !isFamilyPatientApi
-                            ? Container(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Booking Id: ' + bookingId,
-                                        textAlign: TextAlign.left,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontFamily: font_poppins,
-                                            fontSize: 12.0.sp,
-                                            color: Colors.white)),
-                                    Text(
-                                        'Next Appointment: ' +
-                                            getFormattedDateTimeAppbar(
-                                                nextAppointmentDate),
-                                        textAlign: TextAlign.left,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontFamily: font_poppins,
-                                            fontSize: 12.0.sp,
-                                            color: Colors.white)),
-                                    Text(
-                                        toBeginningOfSentenceCase(
-                                            'Last Appointment: ' +
-                                                getFormattedDateTimeAppbar(
-                                                    lastAppointmentDate)),
-                                        textAlign: TextAlign.left,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                            fontFamily: font_poppins,
-                                            fontSize: 12.0.sp,
-                                            color: Colors.white)),
-                                  ],
-                                ),
-                              )
-                            : isFromCareCoordinator
-                                ? Text('CC: ' + careCoordinatorName,
-                                    textAlign: TextAlign.left,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontFamily: font_poppins,
-                                        fontSize: 12.0.sp,
-                                        color: Colors.white))
-                                : SizedBox.shrink()
-                        : SizedBox.shrink(),
+                    getTopBookingDetail(),
                     widget.lastDate != null
                         ? Text(
                             LAST_RECEIVED + widget.lastDate,
@@ -1089,6 +1049,63 @@ class ChatState extends State<ChatDetail> {
       }
     });
     return resultWidget;
+  }
+
+  Widget getTopBookingDetail() {
+    if (isFromCareCoordinator) {
+      return Text('CC: ' + careCoordinatorName,
+          textAlign: TextAlign.left,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+          style: TextStyle(
+              fontFamily: font_poppins,
+              fontSize: 12.0.sp,
+              color: Colors.white));
+    } else {
+      if (!isCareGiverApi) {
+        if (!isFromFamilyListChat) {
+          return Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Booking Id: ' + bookingId,
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontFamily: font_poppins,
+                        fontSize: 12.0.sp,
+                        color: Colors.white)),
+                Text(
+                    'Next Appointment: ' +
+                        getFormattedDateTimeAppbar(nextAppointmentDate),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontFamily: font_poppins,
+                        fontSize: 12.0.sp,
+                        color: Colors.white)),
+                Text(
+                    toBeginningOfSentenceCase('Last Appointment: ' +
+                        getFormattedDateTimeAppbar(lastAppointmentDate)),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontFamily: font_poppins,
+                        fontSize: 12.0.sp,
+                        color: Colors.white)),
+              ],
+            ),
+          );
+        } else {
+          return SizedBox.shrink();
+        }
+      } else {
+        return SizedBox.shrink();
+      }
+    }
   }
 
   Widget buildListMessage() {

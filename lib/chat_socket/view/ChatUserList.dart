@@ -367,6 +367,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientName: '',
                         patientPicture: '',
                         isFromVideoCall: false,
+                        familyUserId: data?.id,
                         isFromFamilyListChat: true,
                         isFromCareCoordinator: data?.isCarecoordinator,
                         carecoordinatorId: data?.carecoordinatorId,
@@ -493,7 +494,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                     : '',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w400,
-                                    fontSize: 16.0.sp,
+                                    fontSize: 14.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                                 softWrap: false,
@@ -609,7 +610,9 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientName: '',
                         patientPicture: '',
                         isFromVideoCall: false,
+                        carecoordinatorId: userChatList?.isFamilyUserCareCoordinator?userChatList?.peerId:'',
                         familyUserId: userChatList?.familyUserId,
+                        isFromCareCoordinator: userChatList?.isFamilyUserCareCoordinator,
                         isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
                             ? true
                             : false,

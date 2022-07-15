@@ -612,12 +612,14 @@ class DoctorOrCarecoordinatorInfo {
   String carecoordinatorMiddleName;
   String carecoordinatorLastName;
   String carecoordinatorProfilePicThumbnailUrl;
+  bool isCareCoordinator;
 
   DoctorOrCarecoordinatorInfo(
       {this.carecoordinatorfirstName,
       this.carecoordinatorMiddleName,
       this.carecoordinatorLastName,
-      this.carecoordinatorProfilePicThumbnailUrl});
+      this.carecoordinatorProfilePicThumbnailUrl,
+      this.isCareCoordinator});
 
   DoctorOrCarecoordinatorInfo.fromJson(Map<String, dynamic> json) {
     carecoordinatorfirstName = json['carecoordinatorfirstName'];
@@ -625,6 +627,8 @@ class DoctorOrCarecoordinatorInfo {
     carecoordinatorLastName = json['carecoordinatorLastName'];
     carecoordinatorProfilePicThumbnailUrl =
         json['carecoordinatorProfilePicThumbnailUrl'];
+    isCareCoordinator =
+        json['isCareCoordinator'] != null ? json['isCareCoordinator'] : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -634,6 +638,7 @@ class DoctorOrCarecoordinatorInfo {
     data['carecoordinatorLastName'] = this.carecoordinatorLastName;
     data['carecoordinatorProfilePicThumbnailUrl'] =
         this.carecoordinatorProfilePicThumbnailUrl;
+    data['isCareCoordinator'] = this.isCareCoordinator;
     return data;
   }
 }
