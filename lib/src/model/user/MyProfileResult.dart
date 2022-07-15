@@ -231,7 +231,7 @@ class AdditionalInfo {
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('age')) {
-      if (json.containsKey('age') is String) {
+      if (json['age'] is String) {
         age = 0;
       } else {
         age = json['age'];
