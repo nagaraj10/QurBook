@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:get/get.dart';
@@ -37,21 +38,21 @@ class BleConnectController extends GetxController {
         printInfo(info: "Result from $result");
         isBleScanning.value = false;
         if (result != null &&
-            validString(result.toString().toLowerCase())
+            CommonUtil().validString(result.toString().toLowerCase())
                 .contains("measurement")) {
           loadingData.value = false;
           bleDataModel = BleDataModel.fromJson(jsonDecode(result));
-          strBleData.value += "Status ${validString(bleDataModel.status.toString())}\n" +
-              "HubId ${validString(bleDataModel.hubId.toString())}\n" +
-              "DeviceId ${validString(bleDataModel.deviceId.toString())}\n" +
-              "DeviceType ${validString(bleDataModel.deviceType.toString())}\n" +
-              "SPO2 Value${validString(bleDataModel.data.sPO2.toString())}\n" +
-              "Pulse Value ${validString(bleDataModel.data.pulse.toString())}\n";
+          strBleData.value += "Status ${CommonUtil().validString(bleDataModel.status.toString())}\n" +
+              "HubId ${CommonUtil().validString(bleDataModel.hubId.toString())}\n" +
+              "DeviceId ${CommonUtil().validString(bleDataModel.deviceId.toString())}\n" +
+              "DeviceType ${CommonUtil().validString(bleDataModel.deviceType.toString())}\n" +
+              "SPO2 Value${CommonUtil().validString(bleDataModel.data.sPO2.toString())}\n" +
+              "Pulse Value ${CommonUtil().validString(bleDataModel.data.pulse.toString())}\n";
           print("BLE RESULT ${bleDataModel}");
           uploadBleData();
           stopBleScan();
         } else if (result != null &&
-            validString(result.toString().toLowerCase())
+            CommonUtil().validString(result.toString().toLowerCase())
                 .contains("connected")) {
           //toast.getToast(validString(result.toString()), Colors.green);
         } else {
@@ -73,17 +74,7 @@ class BleConnectController extends GetxController {
     } catch (e) {}
   }
 
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
-  }
+
 
   uploadBleData() async {
     // try {

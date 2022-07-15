@@ -11,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/QurHub/ApiProvider/hub_api_provider.dart';
 import 'package:myfhb/QurHub/Models/add_network_model.dart';
 import 'package:myfhb/QurHub/View/hubid_config_view.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,7 @@ class AddNetworkController extends GetxController {
           WiFiForIoTPlugin.isConnected().then((val) {
             qurHubWifiRouter = WifiNetwork.fromJson({});
             WiFiForIoTPlugin.getSSID().then((val) {
-              if (validString(val).toLowerCase().contains("unknown ssid")) {
+              if (CommonUtil().validString(val).toLowerCase().contains("unknown ssid")) {
                 getWifiList();
               } else {
                 qurHubWifiRouter.ssid = val;
@@ -140,7 +141,7 @@ class AddNetworkController extends GetxController {
       if (responseCallHubId != null) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(responseCallHubId.body));
-        strHubId.value = validString(addNetworkModel.hubId);
+        strHubId.value = CommonUtil().validString(addNetworkModel.hubId);
         final http.Response response =
             await _apiProvider.callConnectWifi(wifiName, password);
         isBtnLoading.value = false;
@@ -149,11 +150,11 @@ class AddNetworkController extends GetxController {
                 () => HubIdConfigView(),
               )
             : toast.getToast(
-                validString(json.decode(response.body)), Colors.red);
+            CommonUtil().validString(json.decode(response.body)), Colors.red);
       } else {
         isBtnLoading.value = false;
         toast.getToast(
-            validString(json.decode(responseCallHubId.body)), Colors.red);
+            CommonUtil().validString(json.decode(responseCallHubId.body)), Colors.red);
       }
     } catch (e) {
       isBtnLoading.value = false;
@@ -172,17 +173,7 @@ class AddNetworkController extends GetxController {
     } catch (e) {}
   }
 
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
-  }
+
 
   callSaveHubIdConfig(
       String hubId, String nickName, BuildContext context) async {
@@ -195,20 +186,20 @@ class AddNetworkController extends GetxController {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(response.body));
         if (addNetworkModel.isSuccess) {
-          toast.getToast(validString(addNetworkModel.message), Colors.green);
+          toast.getToast(CommonUtil().validString(addNetworkModel.message), Colors.green);
           hubListController.getHubList();
           int times = 2;
           Get.close(times);
         } else {
-          toast.getToast(validString(addNetworkModel.message), Colors.red);
+          toast.getToast(CommonUtil().validString(addNetworkModel.message), Colors.red);
         }
       } else {
         isSaveBtnLoading.value = false;
-        toast.getToast(validString(response.body), Colors.red);
+        toast.getToast(CommonUtil().validString(response.body), Colors.red);
       }
     } catch (e) {
       isSaveBtnLoading.value = false;
-      toast.getToast(validString(e.toString()), Colors.red);
+      toast.getToast(CommonUtil().validString(e.toString()), Colors.red);
     }
   }
 
@@ -245,10 +236,10 @@ class AddNetworkController extends GetxController {
         },
         onResolved: (ServiceInfo info) {
           //TODO
-          if (validString(info.name)
+          if (CommonUtil().validString(info.name)
               .toLowerCase()
               .contains(strName.toLowerCase())) {
-            strIpAddress.value = validString(info.address);
+            strIpAddress.value = CommonUtil().validString(info.address);
             if (strIpAddress.value.trim().isNotEmpty) {
               getHubId();
             }
@@ -271,9 +262,9 @@ class AddNetworkController extends GetxController {
       if (responseCallHubId != null) {
         AddNetworkModel addNetworkModel =
             AddNetworkModel.fromJson(json.decode(responseCallHubId.body));
-        strHubId.value = validString(addNetworkModel.hubId);
+        strHubId.value = CommonUtil().validString(addNetworkModel.hubId);
         toast.getToast(
-            "Your HubId is " + validString(strHubId.value), Colors.green);
+            "Your HubId is " + CommonUtil().validString(strHubId.value), Colors.green);
         await 1.delay();
         isBtnLoading.value = false;
         Get.to(
@@ -282,11 +273,11 @@ class AddNetworkController extends GetxController {
       } else {
         isBtnLoading.value = false;
         toast.getToast(
-            validString(json.decode(responseCallHubId.body)), Colors.red);
+            CommonUtil().validString(json.decode(responseCallHubId.body)), Colors.red);
       }
     } catch (e) {
       isBtnLoading.value = false;
-      toast.getToast(validString(e.toString()), Colors.red);
+      toast.getToast(CommonUtil().validString(e.toString()), Colors.red);
     }
   }
 
