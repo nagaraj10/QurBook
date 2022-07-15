@@ -74,7 +74,7 @@ class _WifiListViewState extends State<WifiListView> {
         onTap: () {
           try {
             controller.selectedWifiName(
-                validString(controller.ssidList.value[index].ssid));
+                CommonUtil().validString(controller.ssidList.value[index].ssid));
             Get.back();
           } catch (e) {}
         },
@@ -91,7 +91,7 @@ class _WifiListViewState extends State<WifiListView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                  '${validString(controller.ssidList.value[index].ssid)[0].toUpperCase()}',
+                  '${CommonUtil().validString(controller.ssidList.value[index].ssid)[0].toUpperCase()}',
                   style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 17,
@@ -100,7 +100,7 @@ class _WifiListViewState extends State<WifiListView> {
           ),
         ),
         title: Text(
-          validString(controller.ssidList.value[index].ssid),
+          CommonUtil().validString(controller.ssidList.value[index].ssid),
           style: TextStyle(
             color: Colors.black87,
             fontSize: 16.0,
@@ -112,15 +112,5 @@ class _WifiListViewState extends State<WifiListView> {
     ]);
   }
 
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
-  }
+
 }
