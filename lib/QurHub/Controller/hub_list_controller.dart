@@ -8,12 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import '../../constants/fhb_constants.dart';
 import '../../feedback/Model/FeedbackCategoriesTypeModel.dart';
 import '../../feedback/Model/FeedbackTypeModel.dart';
-import '../../feedback/Provider/FeedbackApiProvider.dart';
 import '../ApiProvider/hub_api_provider.dart';
 import '../Models/add_network_model.dart';
 import '../Models/hub_list_response.dart';
@@ -39,11 +39,14 @@ class HubListController extends GetxController {
   var virtualHubId = "";
   var eid;
   var uid;
+  var searchingBleDeviceMsg = "".obs;
   BleConnectController bleController = Get.put(BleConnectController());
 
-  getHubList() async {
+  getHubList({bool isShowProgress = true}) async {
     try {
-      loadingData.value = true;
+      if(isShowProgress) {
+        loadingData.value = true;
+      }
       http.Response response = await _apiProvider.getHubList();
       if (response == null) {
         // failed to get the data, we are showing the error on UI
@@ -51,11 +54,14 @@ class HubListController extends GetxController {
         hubListResponse = HubListResponse.fromJson(json.decode(response.body));
         if (hubListResponse.result != null &&
             hubListResponse.result.hub != null) {
-          virtualHubId = validString(hubListResponse.result.hub.serialNumber);
+          virtualHubId = CommonUtil().validString(hubListResponse.result.hub.serialNumber);
         }
       }
-      loadingData.value = false;
-      update(["newUpdate"]);
+      if(isShowProgress)
+      {
+        loadingData.value = false;
+        update(["newUpdate"]);
+      }
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
@@ -105,40 +111,35 @@ class HubListController extends GetxController {
     catSelected.value = false;
   }
 
-  callCreateVirtualHub(BuildContext context) async {
+  Future<bool> callCreateVirtualHub() async {
     try {
-      loadingData.value = true;
+      //loadingData.value = true;
       http.Response response = await _apiProvider.callCreateVirtualHub();
       if (response.statusCode == 200) {
-        loadingData.value = false;
+        //loadingData.value = false;
         AddNetworkModel addNetworkModel =
-            AddNetworkModel.fromJson(json.decode(response.body));
+        AddNetworkModel.fromJson(json.decode(response.body));
         if (addNetworkModel.isSuccess) {
           //toast.getToast(validString(addNetworkModel.message), Colors.green);
-          getHubList();
+          getHubList(isShowProgress: false);
+          return true;
         } else {
-          toast.getToast(validString(addNetworkModel.message), Colors.red);
+          toast.getToast(CommonUtil().validString(addNetworkModel.message), Colors.red);
+          searchingBleDevice.value = false;
+          return false;
         }
       } else {
-        loadingData.value = false;
-        toast.getToast(validString(response.body), Colors.red);
+        //loadingData.value = false;
+        toast.getToast(CommonUtil().validString(response.body), Colors.red);
+        searchingBleDevice.value = false;
+        return false;
       }
     } catch (e) {
-      loadingData.value = false;
-      toast.getToast(validString(e.toString()), Colors.red);
+      //loadingData.value = false;
+      toast.getToast(CommonUtil().validString(e.toString()), Colors.red);
+      searchingBleDevice.value = false;
+      return false;
     }
-  }
-
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
   }
 
   navigateToHubListScreen(bool isFromQurHomeInQurBook) async {
@@ -161,8 +162,9 @@ class HubListController extends GetxController {
     } catch (e) {}
   }
 
-  checkForConnectedDevices() async {
+  checkForConnectedDevices({bool isHaveVirtualHub = true}) async {
     try {
+      foundBLE.value = false;
       if (Platform.isAndroid) {
         bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
         bool isBluetoothEnable = false;
@@ -180,6 +182,23 @@ class HubListController extends GetxController {
         }
       }
       searchingBleDevice.value = true;
+      if(!isHaveVirtualHub)
+      {
+        searchingBleDeviceMsg.value = SettingUpTheDevice;
+        var response = await callCreateVirtualHub();
+        if (response)
+        {
+          hubId
+              .value =
+              CommonUtil().validString(hubListResponse
+                  .result!=null?hubListResponse
+                  .result
+                  .id:"");
+        }else{
+          return;
+        }
+      }
+      searchingBleDeviceMsg.value = ScanningForDevices;
       _enableTimer();
       bleController.getBleConnectData(Get.context);
       Future.delayed(Duration(seconds: 25)).then((value) {
@@ -223,18 +242,18 @@ class HubListController extends GetxController {
                   receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "scanstarted":
-              // FlutterToast().getToast(
-              //     receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast().getToast(
+            //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "connectionfailed":
               FlutterToast().getToast(
                   receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
             case "macid":
-              bleMacId.value = validString(receivedValues.last);
+              bleMacId.value = CommonUtil().validString(receivedValues.last);
               break;
             case "bleDeviceType":
-              bleDeviceType.value = validString(receivedValues.last);
+              bleDeviceType.value = CommonUtil().validString(receivedValues.last);
               foundBLE.value = true;
               disableTimer();
               bleController.stopBleScan();
@@ -245,7 +264,7 @@ class HubListController extends GetxController {
                 userDeviceCollection =
                     hubListResponse.result.userDeviceCollection;
                 final index = userDeviceCollection.indexWhere((element) =>
-                    validString(element.device.serialNumber) == bleMacId.value);
+                CommonUtil().validString(element.device.serialNumber) == bleMacId.value);
                 if (index >= 0) {
                   toast.getToast(DeviceAlreadyMapped, Colors.red);
                 } else {
@@ -257,8 +276,8 @@ class HubListController extends GetxController {
               break;
 
             case "disconnected":
-              // FlutterToast().getToast(
-              //     receivedValues.last ?? 'Request Timeout', Colors.red);
+            // FlutterToast().getToast(
+            //     receivedValues.last ?? 'Request Timeout', Colors.red);
               break;
 
             default:

@@ -605,6 +605,7 @@ const String strMyFamily = 'My Family';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
+const String strAddNewDevice = 'Add New Device';
 const String strQurHubIoTdevice = 'QurHub IoT device';
 const String strCreateNewVirtualHub = 'Create New Virtual Hub';
 const String strMyProvider = 'My Provider';
