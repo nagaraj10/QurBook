@@ -31,6 +31,7 @@ const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String ScanningForDevices = 'Scanning for devices...';
+const String SettingUpTheDevice = 'Setting up the Device...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
 const String CallingEmergencyServiceIn = 'Calling \n emergency service in';
 const String sec = 'Sec';

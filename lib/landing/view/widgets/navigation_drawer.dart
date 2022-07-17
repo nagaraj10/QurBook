@@ -175,19 +175,10 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () async {
                           try {
-                            bool serviceEnabled =
-                                await Geolocator.isLocationServiceEnabled();
-                            if (!serviceEnabled) {
-                              FlutterToast().getToast(
-                                  'Please turn on your location services and re-try again',
-                                  Colors.red);
-                              return;
-                            } else {
-                              Navigator.pop(context);
-                              Get.to(
-                                HubListScreen(),
-                              );
-                            }
+                            Navigator.pop(context);
+                            Get.to(
+                              HubListScreen(),
+                            );
                           } catch (e) {
                             print(e);
                           }

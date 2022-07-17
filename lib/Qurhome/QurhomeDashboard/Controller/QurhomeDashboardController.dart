@@ -106,12 +106,12 @@ class QurhomeDashboardController extends GetxController {
                 .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
             break;
           case "macid":
-            bleMacId = validString(receivedValues.last);
+            bleMacId = CommonUtil().validString(receivedValues.last);
             hubController.bleMacId.value = bleMacId;
             break;
           case "bleDeviceType":
             hubController.bleDeviceType.value =
-                validString(receivedValues.last);
+                CommonUtil().validString(receivedValues.last);
             break;
           case "connected":
             if (hubController.bleDeviceType.value.toLowerCase() ==
@@ -209,17 +209,7 @@ class QurhomeDashboardController extends GetxController {
     });
   }
 
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
-  }
+
 
   bool checkForParedDevice({bool isFromBp, String bleBPMacId}) {
     try {
@@ -229,7 +219,7 @@ class QurhomeDashboardController extends GetxController {
       var index = -1;
       if (Platform.isAndroid) {
         index = userDeviceCollection.indexWhere(
-            (element) => (validString(element.device.serialNumber) ==
+            (element) => (CommonUtil().validString(element.device.serialNumber) ==
                 (isFromBp
                     ? bleBPMacId
                     : bleMacId)) /*&&
@@ -237,7 +227,7 @@ class QurhomeDashboardController extends GetxController {
             );
       } else {
         index = userDeviceCollection.indexWhere(
-            (element) => (validString(element.device.serialNumber) ==
+            (element) => (CommonUtil().validString(element.device.serialNumber) ==
                 bleMacId) /*&&
             ((element.userId ?? '') == activeUser)*/
             );

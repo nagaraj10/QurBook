@@ -40,195 +40,195 @@ class _HubListScreenState extends State<HubListScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 24.0.sp,
-            ),
-            onPressed: () {
-              Get.back();
-            },
-          ),
-          title: Text(/*'Connected Hub'*/variable.strConnectedDevices),
-          centerTitle: false,
-          elevation: 0,
+    appBar: AppBar(
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back_ios,
+          size: 24.0.sp,
         ),
-        body: Obx(() => controller.loadingData.isTrue
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : GetBuilder<HubListController>(
-                id: "newUpdate",
-                builder: (val) {
-                  return val.hubListResponse == null
-                      ? const Center(
-                          child: Text(
-                            'Please re-try after some time',
+        onPressed: () {
+          Get.back();
+        },
+      ),
+      title: Text(/*'Connected Hub'*/variable.strConnectedDevices),
+      centerTitle: false,
+      elevation: 0,
+    ),
+    body: Obx(() => controller.loadingData.isTrue
+        ? const Center(
+      child: CircularProgressIndicator(),
+    )
+        : GetBuilder<HubListController>(
+        id: "newUpdate",
+        builder: (val) {
+          return val.hubListResponse == null
+              ? const Center(
+            child: Text(
+              'Please re-try after some time',
+            ),
+          )
+              : !controller.isFromQurHomeinQurBook.value
+              ? Container(
+            child: val.hubListResponse.isSuccess
+                ? val.hubListResponse.result != null &&
+                val.hubListResponse.result.hub
+                    .additionalDetails !=
+                    null &&
+                !val.hubListResponse.result.hub
+                    .additionalDetails.isVirtualHub
+                ? Stack(children: [
+              SingleChildScrollView(
+                child: listContent(
+                    val.hubListResponse.result),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: 20.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AddDeviceScreen(
+                                    hubId: val
+                                        .hubListResponse
+                                        .result
+                                        .id)),
+                      ).then((value) => {
+                        controller.getHubList()
+                      });
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.circular(
+                            15.0),
+                      ),
+                      color: Color(CommonUtil()
+                          .getMyPrimaryColor()),
+                      child: Padding(
+                        padding:
+                        const EdgeInsets.all(
+                            10.0),
+                        child: Text(
+                          variable.strAddNewDevice,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight:
+                            FontWeight.w500,
                           ),
-                        )
-                      : !controller.isFromQurHomeinQurBook.value
-                          ? Container(
-                              child: val.hubListResponse.isSuccess
-                                  ? val.hubListResponse.result != null &&
-                                          val.hubListResponse.result.hub
-                                                  .additionalDetails !=
-                                              null &&
-                                          !val.hubListResponse.result.hub
-                                              .additionalDetails.isVirtualHub
-                                      ? Stack(children: [
-                                          SingleChildScrollView(
-                                            child: listContent(
-                                                val.hubListResponse.result),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 20.0),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            AddDeviceScreen(
-                                                                hubId: val
-                                                                    .hubListResponse
-                                                                    .result
-                                                                    .id)),
-                                                  ).then((value) => {
-                                                        controller.getHubList()
-                                                      });
-                                                },
-                                                child: Card(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15.0),
-                                                  ),
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    child: Text(
-                                                      'Add New Device',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ])
-                                      : pairNewDeviveBtn()
-                                  : pairNewDeviveBtn(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            ])
+                : pairNewDeviveBtn()
+                : pairNewDeviveBtn(),
+          )
+              : Container(
+            child: val.hubListResponse.isSuccess
+                ? val.hubListResponse.result != null &&
+                val.hubListResponse.result.hub
+                    .additionalDetails !=
+                    null &&val.hubListResponse.result.userDeviceCollection!=null&&val.hubListResponse.result.userDeviceCollection.length>0
+            /*val.hubListResponse.result.hub
+                                              .additionalDetails.isVirtualHub*/
+                ? Stack(children: [
+              SingleChildScrollView(
+                child: listContent(
+                    val.hubListResponse.result),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding:
+                  EdgeInsets.only(bottom: 20.0),
+                  child: Obx(
+                        () => Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+                      children: <Widget>[
+                        controller
+                            .searchingBleDevice
+                            .isTrue
+                            ? Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment
+                              .spaceAround,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            FittedBox(
+                              child: Text(
+                                ScanningForDevices,
+                              ),
                             )
-                          : Container(
-                              child: val.hubListResponse.isSuccess
-                                  ? val.hubListResponse.result != null &&
-                                          val.hubListResponse.result.hub
-                                                  .additionalDetails !=
-                                              null &&
-                                          val.hubListResponse.result.hub
-                                              .additionalDetails.isVirtualHub
-                                      ? Stack(children: [
-                                          SingleChildScrollView(
-                                            child: listContent(
-                                                val.hubListResponse.result),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Padding(
-                                              padding:
-                                                  EdgeInsets.only(bottom: 20.0),
-                                              child: Obx(
-                                                () => Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    controller
-                                                            .searchingBleDevice
-                                                            .isTrue
-                                                        ? Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceAround,
-                                                            children: [
-                                                              CircularProgressIndicator(),
-                                                              SizedBox(
-                                                                width: 8,
-                                                              ),
-                                                              FittedBox(
-                                                                child: Text(
-                                                                  ScanningForDevices,
-                                                                ),
-                                                              )
-                                                            ],
-                                                          )
-                                                        : InkWell(
-                                                            onTap: () async {
-                                                              try {
-                                                                controller.hubId
-                                                                        .value =
-                                                                    val
-                                                                        .hubListResponse
-                                                                        .result
-                                                                        .id;
-                                                                controller
-                                                                    .checkForConnectedDevices();
-                                                              } catch (e) {
-                                                                print(e);
-                                                              }
-                                                            },
-                                                            child: Card(
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15.0),
-                                                              ),
-                                                              color: Color(
-                                                                  CommonUtil()
-                                                                      .getMyPrimaryColor()),
-                                                              child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .all(
-                                                                        10.0),
-                                                                child: Text(
-                                                                  'Add New Device',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                        ])
-                                      : pairNewVirtualHubBtn()
-                                  : pairNewVirtualHubBtn(),
-                            );
-                })),
-      );
+                          ],
+                        )
+                            : InkWell(
+                          onTap: () async {
+                            try {
+                              controller.hubId
+                                  .value =
+                                  val
+                                      .hubListResponse
+                                      .result
+                                      .id;
+                              controller
+                                  .checkForConnectedDevices();
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          child: Card(
+                            shape:
+                            RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius
+                                  .circular(
+                                  15.0),
+                            ),
+                            color: Color(
+                                CommonUtil()
+                                    .getMyPrimaryColor()),
+                            child: Padding(
+                              padding:
+                              const EdgeInsets
+                                  .all(
+                                  10.0),
+                              child: Text(
+                                variable.strAddNewDevice,
+                                style:
+                                TextStyle(
+                                  color: Colors
+                                      .white,
+                                  fontWeight:
+                                  FontWeight
+                                      .w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ])
+                : pairNewVirtualHubBtn()
+                : pairNewVirtualHubBtn(),
+          );
+        })),
+  );
 
   Widget pairNewDeviveBtn() {
     final pairNewDeviveWithGesture = InkWell(
@@ -236,7 +236,7 @@ class _HubListScreenState extends State<HubListScreen> {
         try {
           if (Platform.isIOS) {
             Get.to(
-              () => AddNetWorkView(),
+                  () => AddNetWorkView(),
             );
           } else {
             bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -249,7 +249,7 @@ class _HubListScreenState extends State<HubListScreen> {
               return;
             } else {
               Get.to(
-                () => AddNetWorkView(),
+                    () => AddNetWorkView(),
               );
             }
           }
@@ -290,9 +290,27 @@ class _HubListScreenState extends State<HubListScreen> {
 
   Widget pairNewVirtualHubBtn() {
     final pairNewVirtualHubWithGesture = InkWell(
-      onTap: () async {
+      onTap: () async
+      {
         try {
-          controller.callCreateVirtualHub(context);
+          if(controller.hubListResponse.result != null &&
+              controller.hubListResponse.result.hub
+                  .additionalDetails !=
+                  null&&controller.hubListResponse.result.hub
+              .additionalDetails.isVirtualHub)
+          {
+            controller.hubId
+                .value =
+                controller
+                    .hubListResponse
+                    .result
+                    .id;
+            controller
+                .checkForConnectedDevices();
+          }else{
+            controller
+                .checkForConnectedDevices(isHaveVirtualHub: false);
+          }
         } catch (e) {
           print(e);
         }
@@ -313,7 +331,7 @@ class _HubListScreenState extends State<HubListScreen> {
         ),
         child: Center(
           child: Text(
-            variable.strQurHomeinQurBook,
+            variable.strAddNewDevice,
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0.sp,
@@ -324,14 +342,34 @@ class _HubListScreenState extends State<HubListScreen> {
       ),
     );
     return Center(
-      child: pairNewVirtualHubWithGesture,
-    );
+        child: Obx(() =>controller
+            .searchingBleDevice
+            .isTrue
+            ? Row(
+          mainAxisAlignment:
+          MainAxisAlignment
+              .center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(
+              width: 20,
+            ),
+            FittedBox(
+              child: Text(
+                controller.searchingBleDeviceMsg
+                    .value,
+              ),
+            )
+          ],
+        )
+            :pairNewVirtualHubWithGesture,
+        ));
   }
 
   Widget listContent(Result result) {
     return Column(
       children: [
-        Padding(
+        /*Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
             child: Padding(
@@ -439,11 +477,11 @@ class _HubListScreenState extends State<HubListScreen> {
               ),
             ),
           ),
-        ),
+        ),*/
         result.userDeviceCollection.length != 0
             ? Column(
-                children: [
-                  Padding(
+          children: [
+            /*Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'Connected Devices',
@@ -451,127 +489,127 @@ class _HubListScreenState extends State<HubListScreen> {
                           color: Color(CommonUtil().getMyPrimaryColor()),
                           fontSize: 16),
                     ),
-                  ),
-                  ListView.builder(
-                      itemCount: result.userDeviceCollection.length,
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                children: [
-                                  ClipOval(
-                                      child: result.userDeviceCollection[
-                                                  index] !=
-                                              null
-                                          ? getProfilePicWidget(
-                                              validString(result
-                                                  .userDeviceCollection[index]
-                                                  .user
-                                                  .profilePicThumbnailUrl),
-                                              validString(result
-                                                  .userDeviceCollection[index]
-                                                  .user
-                                                  .firstName),
-                                              validString(result
-                                                  .userDeviceCollection[index]
-                                                  .user
-                                                  .lastName),
-                                              Color(CommonUtil()
-                                                  .getMyPrimaryColor()))
-                                          : Container(
-                                              width: 50.0.h,
-                                              height: 50.0.h,
-                                              padding: EdgeInsets.all(12),
-                                              color: Color(
-                                                  fhbColors.bgColorContainer))),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  getDeviceImage(result
-                                      .userDeviceCollection[index]
-                                      .device
-                                      .deviceType
-                                      .code),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                      child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        result.userDeviceCollection[index].user
-                                                .firstName ??
-                                            '',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'Device Id ',
-                                            style: TextStyle(
-                                                color: Colors.grey[600],
-                                                fontSize: 12),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              validString(result
-                                                  .userDeviceCollection[index]
-                                                  .device
-                                                  .serialNumber),
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                  color: Colors.grey[700],
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        'Connected ${changeDateFormat(validString(result.userDeviceCollection[index].createdOn))}',
-                                        style: TextStyle(
-                                            color: Colors.grey[600],
-                                            fontSize: 12),
-                                      )
-                                    ],
-                                  )),
-                                  InkWell(
-                                    onTap: () {
-                                      unPairDialog(
-                                          type: 'device',
-                                          deviceId: result
-                                              .userDeviceCollection[index].id,
-                                          idName: "Device");
-                                    },
-                                    child: Card(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor()),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Text(
-                                          'Unpair',
+                  ),*/
+            ListView.builder(
+                itemCount: result.userDeviceCollection.length,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            ClipOval(
+                                child: result.userDeviceCollection[
+                                index] !=
+                                    null
+                                    ? getProfilePicWidget(
+                                    CommonUtil().validString(result
+                                        .userDeviceCollection[index]
+                                        .user
+                                        .profilePicThumbnailUrl),
+                                    CommonUtil().validString(result
+                                        .userDeviceCollection[index]
+                                        .user
+                                        .firstName),
+                                    CommonUtil().validString(result
+                                        .userDeviceCollection[index]
+                                        .user
+                                        .lastName),
+                                    Color(CommonUtil()
+                                        .getMyPrimaryColor()))
+                                    : Container(
+                                    width: 50.0.h,
+                                    height: 50.0.h,
+                                    padding: EdgeInsets.all(12),
+                                    color: Color(
+                                        fhbColors.bgColorContainer))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            getDeviceImage(result
+                                .userDeviceCollection[index]
+                                .device
+                                .deviceType
+                                .code),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      result.userDeviceCollection[index].user
+                                          .firstName ??
+                                          '',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Device Id ',
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey[600],
                                               fontSize: 12),
                                         ),
-                                      ),
+                                        Expanded(
+                                          child: Text(
+                                            CommonUtil().validString(result
+                                                .userDeviceCollection[index]
+                                                .device
+                                                .serialNumber),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.grey[700],
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  )
-                                ],
+                                    Text(
+                                      'Connected ${changeDateFormat(CommonUtil().validString(result.userDeviceCollection[index].createdOn))}',
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 12),
+                                    )
+                                  ],
+                                )),
+                            InkWell(
+                              onTap: () {
+                                unPairDialog(
+                                    type: 'device',
+                                    deviceId: result
+                                        .userDeviceCollection[index].id,
+                                    idName: "Device");
+                              },
+                              child: Card(
+                                color: Color(
+                                    CommonUtil().getMyPrimaryColor()),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Text(
+                                    'Unpair',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      }),
-                ],
-              )
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+          ],
+        )
             : Container()
       ],
     );
@@ -618,7 +656,7 @@ class _HubListScreenState extends State<HubListScreen> {
   }
 
   Future<Widget> unPairDialog(
-          {String type, String deviceId, String hubId, String idName}) =>
+      {String type, String deviceId, String hubId, String idName}) =>
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -629,88 +667,77 @@ class _HubListScreenState extends State<HubListScreen> {
                   children: [
                     Container(
                         child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            Image.asset('assets/warning_icon.png',
-                                height: 30, width: 30),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Text(
-                                '${type == 'hub' ? 'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?' : 'Are you sure you want to unpair this device from the hub?'}'),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      if (type == 'hub') {
-                                        controller.unPairHub(hubId);
-                                        Navigator.pop(context);
-                                      } else {
-                                        controller.unPairDevice(deviceId);
-                                        Navigator.pop(context);
-                                      }
-                                    },
-                                    child: Card(
-                                        color: Colors.red,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 5.0,
-                                              bottom: 5.0,
-                                              left: 20.0,
-                                              right: 20.0),
-                                          child: Text(
-                                            'Yes',
-                                            style:
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Image.asset('assets/warning_icon.png',
+                                    height: 30, width: 30),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                    '${type == 'hub' ? 'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?' : 'Are you sure you want to unpair this device from the hub?'}'),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (type == 'hub') {
+                                            controller.unPairHub(hubId);
+                                            Navigator.pop(context);
+                                          } else {
+                                            controller.unPairDevice(deviceId);
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                        child: Card(
+                                            color: Colors.red,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0,
+                                                  bottom: 5.0,
+                                                  left: 20.0,
+                                                  right: 20.0),
+                                              child: Text(
+                                                'Yes',
+                                                style:
                                                 TextStyle(color: Colors.white),
-                                          ),
-                                        )),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Card(
-                                        color: Colors.green,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 5.0,
-                                              bottom: 5.0,
-                                              left: 20.0,
-                                              right: 20.0),
-                                          child: Text(
-                                            'No',
-                                            style:
+                                              ),
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width: 20,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Card(
+                                            color: Colors.green,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 5.0,
+                                                  bottom: 5.0,
+                                                  left: 20.0,
+                                                  right: 20.0),
+                                              child: Text(
+                                                'No',
+                                                style:
                                                 TextStyle(color: Colors.white),
-                                          ),
-                                        )),
-                                  )
-                                ])
-                          ],
-                        ),
-                      ),
-                    ))
+                                              ),
+                                            )),
+                                      )
+                                    ])
+                              ],
+                            ),
+                          ),
+                        ))
                   ],
                 ));
           });
 
-  String validString(String strText) {
-    try {
-      if (strText == null)
-        return "";
-      else if (strText.trim().isEmpty)
-        return "";
-      else
-        return strText.trim();
-    } catch (e) {}
-    return "";
-  }
 }
