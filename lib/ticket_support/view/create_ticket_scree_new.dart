@@ -261,7 +261,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     getWidgetForTitleValue()
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           field.type == tckConstants.tckTypeDescription
               ? widgetForColumn.add(Column(
@@ -272,7 +272,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     getWidgetForTitleDescriptionValue(),
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
               ? widgetForColumn.add(Row(
@@ -343,7 +343,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     ),
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeDate)
               ? widgetForColumn.add(Column(
@@ -354,7 +354,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     SizedBox(height: 25.h),
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           field.type == tckConstants.tckTypeFile
               ? widgetForColumn.add(Column(
@@ -365,7 +365,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     imagePaths.length > 0 ? buildGridView() : SizedBox()
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeTitle &&
                   field.name == tckConstants.tckPackageTitle)
@@ -377,7 +377,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     getTitleForPlanPackage()
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeDropdown && field.isCategory)
               ? widgetForColumn.add(Column(
@@ -399,7 +399,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     )
                   ],
                 ))
-              : SizedBox();
+              : SizedBox.shrink();
 
           isFirstTym = false;
         }
@@ -1552,7 +1552,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           ApiBaseHelper apiBaseHelper = ApiBaseHelper();
           List resposnes = await apiBaseHelper
               .uploadAttachmentForTicket(
-                  "https://trudesk-dev.vsolgmi.com/api/v2/tickets/uploadattachment",
+                  CommonUtil.TRUE_DESK_URL + "tickets/uploadattachment",
                   value?.result?.ticket?.id,
                   imagePaths)
               .then((values) {
@@ -1742,7 +1742,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                           height: 150,
                                         )))
                                 : imagePaths[index].isdownloaded
-                                    ? imagePaths[index].fileType == '.pdf'
+                                    ? imagePaths[index].fileType.trim() ==
+                                            ".pdf"
                                         ? Material(
                                             child: Container(
                                             color: Colors.black,
@@ -1906,15 +1907,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   // Down Arrow Icon
                   icon: const Icon(Icons.keyboard_arrow_down),
                   hint: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      SizedBoxWidget(width: 20),
-                      Text(
-                          CommonUtil().validString(
-                              dropdownValue?.title ?? 'Select Category'),
-                          style: TextStyle(
-                            fontSize: 14.0.sp,
-                          )),
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                            CommonUtil().validString(
+                                dropdownValue?.title ?? 'Select Category'),
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                            )),
+                      ),
                     ],
                   ),
 

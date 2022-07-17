@@ -1071,7 +1071,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text(
+        Expanded(
+            child: Text(
           header,
           style: TextStyle(
             fontSize: 16.0.sp,
@@ -1080,11 +1081,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           textAlign: TextAlign.start,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
-        ),
-        SizedBox(
-          width: 20,
-        ),
+        )),
         Expanded(
+          flex: 1,
           child: Text(
             CommonUtil().capitalizeFirstofEach(value),
             style: TextStyle(

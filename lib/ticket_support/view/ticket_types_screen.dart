@@ -156,7 +156,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             onTap: () {
               try {
                 var createTicketController = Get.put(CreateTicketController());
-                                  createTicketController.isCTLoading?.value=false;
+                createTicketController.isCTLoading?.value = false;
 
                 if (CommonUtil()
                     .validString(ticketList[i].name)
@@ -187,13 +187,11 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.doctorBookAppointment.value = false;
                   createTicketController.doctorsList = [];
                 }
-                
-                
+
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          CreateTicketScreenNew(ticketList[i])),
+                      builder: (context) => CreateTicketScreen(ticketList[i])),
                 );
               } catch (e) {
                 print(e);

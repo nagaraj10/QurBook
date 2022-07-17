@@ -2613,6 +2613,12 @@ class ApiBaseHelper {
         var fileNoun = fileName.path.contains(".")
             ? fileName.path.split('/').last
             : image.fileType;
+
+        print("-----------------------");
+        print(fileName);
+        print("-----------------------");
+        print(fileNoun);
+
         newFormData = FormData.fromMap({
           'userId': userId,
           'attachment':
