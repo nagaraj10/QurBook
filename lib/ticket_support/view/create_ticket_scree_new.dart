@@ -1,27 +1,48 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/User.dart';
+import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
+import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
+import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
+import 'package:myfhb/record_detail/services/downloadmultipleimages.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import 'package:open_file/open_file.dart';
+import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
 import '../../widgets/GradientAppBar.dart';
@@ -32,6 +53,11 @@ import '../../constants/variable_constant.dart' as variable;
 import 'dart:convert';
 import '../../../my_providers/models/UserAddressCollection.dart' as address;
 import '../../constants/fhb_parameters.dart' as parameters;
+import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import '../../common/PreferenceUtil.dart';
+import '../../constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/resources/network/api_services.dart';
 
 class CreateTicketScreenNew extends StatefulWidget {
   CreateTicketScreenNew(this.ticketList);
@@ -55,7 +81,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   FocusNode preferredDateFocus = FocusNode();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
-  final controller = Get.put(CreateTicketController());
+  var controller = Get.put(CreateTicketController());
   Hospitals selectedLab;
   Doctors selectedDoctor;
 
@@ -85,6 +111,20 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       isFileUpload = false;
 
   bool isFirstTym = true;
+
+  List<ImagesModel> imagePaths = [];
+  List<Asset> images = <Asset>[];
+  List<String> recordIds = [];
+  var healthRecordList;
+  String authToken;
+  MenuItem dropdownValue;
+  Future<Map<String, List<MenuItem>>> healthConditions;
+  Map<String, List<MenuItem>> healthConditionsResult;
+  var packageName;
+  var package_title_ctrl = TextEditingController(text: '');
+  PlanListResult planListModel;
+  List<PlanListResult> planListModelList = List();
+
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
         initialDatePickerMode: DatePickerMode.day,
@@ -108,14 +148,31 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     try {
       super.initState();
       _getInitialDate(context);
+      setAuthToken();
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
           _providersBloc.getMedicalPreferencesForHospital();
+      healthConditions =
+          Provider.of<PlanWizardViewModel>(context, listen: false)
+              .getHealthConditions();
     } catch (e) {
       print(e);
     }
 
     setBooleanValues();
+  }
+
+  @override
+  void dispose() {
+    controller = null;
+
+    controller.dispose();
+
+    super.dispose();
+  }
+
+  void setAuthToken() async {
+    authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 
   setBooleanValues() {
@@ -137,6 +194,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           if (field.type == tckConstants.tckTypeDate) {
             isPreferredDate = true;
           }
+          if (field.type == tckConstants.tckTypeFile) {
+            isFileUpload = true;
+          }
         }
     }
   }
@@ -144,176 +204,209 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        elevation: 0,
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 24.0.sp,
-          onTap: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          elevation: 0,
+          leading: IconWidget(
+            icon: Icons.arrow_back_ios,
+            colors: Colors.white,
+            size: 24.0.sp,
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Text(tckConstants.strAddMyTicket),
         ),
-        title: Text(tckConstants.strAddMyTicket),
-      ),
-      body: Obx(
-        () {
-          return isFirstTym && controller.isCTLoading.value
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : ListView(
-                  shrinkWrap: true,
-                  addAutomaticKeepAlives: true,
-                  children: [
-                    SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              /* SizedBox(height: 20.h),
-                              getWidgetForTitleText(),
-                              SizedBox(height: 10.h),
-                              getWidgetForTitleValue(),
-                              SizedBox(height: 20.h),
-                              getWidgetForTitleDescription(),
-                              SizedBox(height: 10.h),
-                              getWidgetForTitleDescriptionValue(),
-                              SizedBox(height: 20.h),
-                              getWidgetForLab(),
-                              getWidgetForPreferredDate(),
-                              SizedBox(height: 10.h),
-                              getWidgetForPreferredDateValue(),*/
-                              getColumnBody(widget.ticketList),
-                              SizedBox(height: 25.h),
-                              getWidgetForCreateButton()
-                            ],
-                          ),
+        body: Obx(() => isFirstTym && controller.isCTLoading?.value ?? false
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView(
+                shrinkWrap: true,
+                addAutomaticKeepAlives: true,
+                children: [
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            getColumnBody(widget.ticketList),
+                            SizedBox(height: 25.h),
+                            getWidgetForCreateButton()
+                          ],
                         ),
                       ),
                     ),
-                  ],
-                );
-        },
-      ),
-    );
+                  ),
+                ],
+              )));
   }
 
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
     List<Widget> widgetForColumn = List();
-    if (ticketTypesResult.additionalInfo != null)
-      for (Field field in ticketTypesResult.additionalInfo?.field) {
-        field.type == tckConstants.tckTypeTitle
-            ? widgetForColumn.add(Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  getWidgetForTitleText(),
-                  SizedBox(height: 10.h),
-                  getWidgetForTitleValue()
-                ],
-              ))
-            : SizedBox();
+    try {
+      if (ticketTypesResult.additionalInfo != null) {
+        for (Field field in ticketTypesResult.additionalInfo?.field) {
+          (field.type == tckConstants.tckTypeTitle &&
+                  field.name != tckConstants.tckPackageTitle)
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getWidgetForTitleText(),
+                    SizedBox(height: 10.h),
+                    getWidgetForTitleValue()
+                  ],
+                ))
+              : SizedBox();
 
-        field.type == tckConstants.tckTypeDescription
-            ? widgetForColumn.add(Column(
-                children: [
-                  SizedBox(height: 20.h),
-                  getWidgetForTitleDescription(),
-                  SizedBox(height: 10.h),
-                  getWidgetForTitleDescriptionValue(),
-                ],
-              ))
-            : SizedBox();
+          field.type == tckConstants.tckTypeDescription
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getWidgetForTitleDescription(),
+                    SizedBox(height: 10.h),
+                    getWidgetForTitleDescriptionValue(),
+                  ],
+                ))
+              : SizedBox();
 
-        (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
-            ? widgetForColumn.add(Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: fhbBasicWidget.getTextFiledWithHint(
-                        context, 'Choose Doctor', doctor,
-                        enabled: false),
-                  ),
-                  Container(
-                    height: 50,
-                    child: doctorsListFromProvider != null
-                        ? getDoctorDropDown(
-                            doctorsListFromProvider,
-                            doctorObj,
-                            () {
+          (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
+              ? widgetForColumn.add(Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: fhbBasicWidget.getTextFiledWithHint(
+                          context, 'Choose Doctor', doctor,
+                          enabled: false),
+                    ),
+                    Container(
+                      height: 50,
+                      child: doctorsListFromProvider != null
+                          ? getDoctorDropDown(
+                              doctorsListFromProvider,
+                              doctorObj,
+                              () {
+                                Navigator.pop(context);
+                                moveToSearchScreen(
+                                    context, CommonConstants.keyDoctor,
+                                    setState: setState);
+                              },
+                            )
+                          : getAllCustomRoles(doctorObj, () {
                               Navigator.pop(context);
                               moveToSearchScreen(
                                   context, CommonConstants.keyDoctor,
                                   setState: setState);
-                            },
-                          )
-                        : getAllCustomRoles(doctorObj, () {
-                            Navigator.pop(context);
-                            moveToSearchScreen(
-                                context, CommonConstants.keyDoctor,
-                                setState: setState);
-                          }),
-                  ),
-                ],
-              ))
-            //widgetForColumn.add(getWidgetForDoctors())
-            : SizedBox();
-        widgetForColumn.add(SizedBox(
-          height: 20,
-        ));
-        (field.type == tckConstants.tckTypeDropdown && field.isHospital)
-            ? widgetForColumn.add(Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: fhbBasicWidget.getTextFiledWithHint(
-                        context, 'Choose Hospital', hospital,
-                        enabled: false),
-                  ),
-                  Container(
-                    height: 50,
-                    child: hospitalListFromProvider != null
-                        ? getHospitalDropDown(
-                            hospitalListFromProvider,
-                            hospitalObj,
-                            () {
+                            }),
+                    ),
+                  ],
+                ))
+              //widgetForColumn.add(getWidgetForDoctors())
+              : SizedBox();
+          widgetForColumn.add(SizedBox(
+            height: 20,
+          ));
+          (field.type == tckConstants.tckTypeDropdown && field.isHospital)
+              ? widgetForColumn.add(Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: fhbBasicWidget.getTextFiledWithHint(
+                          context, 'Choose Hospital', hospital,
+                          enabled: false),
+                    ),
+                    Container(
+                      height: 50,
+                      child: hospitalListFromProvider != null
+                          ? getHospitalDropDown(
+                              hospitalListFromProvider,
+                              hospitalObj,
+                              () {
+                                Navigator.pop(context);
+                                moveToSearchScreen(
+                                    context, CommonConstants.keyDoctor,
+                                    setState: setState);
+                              },
+                            )
+                          : getAllHospitalRoles(hospitalObj, () {
                               Navigator.pop(context);
                               moveToSearchScreen(
                                   context, CommonConstants.keyDoctor,
                                   setState: setState);
-                            },
-                          )
-                        : getAllHospitalRoles(hospitalObj, () {
-                            Navigator.pop(context);
-                            moveToSearchScreen(
-                                context, CommonConstants.keyDoctor,
-                                setState: setState);
-                          }),
-                  ),
-                ],
-              ))
-            : SizedBox();
+                            }),
+                    ),
+                  ],
+                ))
+              : SizedBox();
 
-        (field.type == tckConstants.tckTypeDate)
-            ? widgetForColumn.add(Column(
-                children: [
-                  getWidgetForPreferredDate(),
-                  SizedBox(height: 10.h),
-                  getWidgetForPreferredDateValue(),
-                  SizedBox(height: 25.h),
-                ],
-              ))
-            : SizedBox();
+          (field.type == tckConstants.tckTypeDate)
+              ? widgetForColumn.add(Column(
+                  children: [
+                    getWidgetForPreferredDate(),
+                    SizedBox(height: 10.h),
+                    getWidgetForPreferredDateValue(),
+                    SizedBox(height: 25.h),
+                  ],
+                ))
+              : SizedBox();
 
-        isFirstTym = false;
+          field.type == tckConstants.tckTypeFile
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getWidgetForFileText(),
+                    imagePaths.length > 0 ? SizedBox(height: 20.h) : SizedBox(),
+                    imagePaths.length > 0 ? buildGridView() : SizedBox()
+                  ],
+                ))
+              : SizedBox();
+
+          (field.type == tckConstants.tckTypeTitle &&
+                  field.name == tckConstants.tckPackageTitle)
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getWidgetForTitleText(title: "Package Name"),
+                    SizedBox(height: 10.h),
+                    getTitleForPlanPackage()
+                  ],
+                ))
+              : SizedBox();
+
+          (field.type == tckConstants.tckTypeDropdown && field.isCategory)
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 20.h),
+                    getWidgetForTitleText(title: "Category"),
+                    SizedBox(height: 10.h),
+                    Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                            child: Container(
+                                height: 50,
+                                child: healthConditionsResult != null
+                                    ? getDropDownForPlanCategory(
+                                        healthConditionsResult) //getDropDownForPlanCategory(healthConditionsResult)
+                                    : getExpandedDropdownForCategory())),
+                      ],
+                    )
+                  ],
+                ))
+              : SizedBox();
+
+          isFirstTym = false;
+        }
       }
+    } catch (e) {
+      print(e.toString());
+    }
     return Column(children: widgetForColumn);
   }
 
@@ -541,10 +634,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     );
   }
 
-  Widget getWidgetForTitleText() {
+  Widget getWidgetForTitleText({String title}) {
     return Row(
       children: [
-        Text(tckConstants.strTicketTitle,
+        Text(title ?? tckConstants.strTicketTitle,
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -635,14 +728,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     preferredDateController.text.toString();
                 commonMethodToCreateTicket(ticketListData);
               } else {
-                showAlertMsg();
+                showAlertMsg(CommonConstants.ticketDate);
               }
             } else {
-              showAlertMsg();
+              showAlertMsg(CommonConstants.ticketDesc);
             }
           }
         } else {
-          showAlertMsg();
+          showAlertMsg(CommonConstants.ticketDoctor);
         }
       } else if (CommonUtil()
           .validString(ticketListData.name)
@@ -657,13 +750,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   preferredDateController.text.toString();
               commonMethodToCreateTicket(ticketListData);
             } else {
-              showAlertMsg();
+              showAlertMsg(CommonConstants.ticketDate);
             }
           } else {
-            showAlertMsg();
+            showAlertMsg(CommonConstants.ticketDesc);
           }
         } else {
-          showAlertMsg();
+          showAlertMsg(CommonConstants.ticketTitle);
         }
       } else if (CommonUtil()
           .validString(ticketListData.name)
@@ -676,28 +769,55 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
             commonMethodToCreateTicket(ticketListData);
           } else {
-            showAlertMsg();
+            showAlertMsg(CommonConstants.ticketDesc);
           }
         } else {
-          showAlertMsg();
+          showAlertMsg(CommonConstants.ticketTitle);
         }
       } else if (CommonUtil()
           .validString(ticketListData.name)
           .toLowerCase()
-          .contains("order presecription")) {
+          .contains("order prescription")) {
+        if (imagePaths.length > 0) {
+          if (isDescription && descController.text.isNotEmpty) {
+            tckConstants.tckDesc = descController.text.toString();
+            commonMethodToCreateTicket(ticketListData);
+          } else {
+            showAlertMsg(CommonConstants.ticketDesc);
+          }
+        } else {
+          showAlertMsg(CommonConstants.ticketFile);
+        }
       } else if (CommonUtil()
           .validString(ticketListData.name)
           .toLowerCase()
-          .contains("care/diet plan")) {}
+          .contains("care/diet plan")) {
+        if (dropdownValue != null) {
+          tckConstants.tckSelectedCategory = dropdownValue.title;
+          if (package_title_ctrl.text != null &&
+              package_title_ctrl.text != "") {
+            Constants.tckPackageName = package_title_ctrl.text;
+            if (isDescription && descController.text.isNotEmpty) {
+              tckConstants.tckDesc = descController.text.toString();
+              commonMethodToCreateTicket(ticketListData);
+            } else {
+              showAlertMsg(CommonConstants.ticketDesc);
+            }
+          } else {
+            showAlertMsg(CommonConstants.ticketPackage);
+          }
+        } else {
+          showAlertMsg(CommonConstants.ticketCategory);
+        }
+      }
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
       print('Catch Error Occured : $error');
     }
   }
 
-  void showAlertMsg() {
-    Alert.displayAlert(context,
-        title: variable.Error, content: CommonConstants.all_fields);
+  void showAlertMsg(String msg) {
+    Alert.displayAlert(context, title: variable.Error, content: msg);
   }
 
   void _getInitialDate(BuildContext context) {
@@ -730,7 +850,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller.isPreferredLabDisable.value,
+          ignoring: controller.isPreferredLabDisable.value ?? false,
           child: DropdownButton<Hospitals>(
             value: selectedLab,
             underline: SizedBox(),
@@ -799,7 +919,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller.isPreferredLabDisable.value,
+          ignoring: controller.isPreferredLabDisable.value ?? false,
           child: DropdownButton<Doctors>(
             value: selectedDoctor,
             underline: SizedBox(),
@@ -1422,17 +1542,39 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     }
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-    ticketViewModel.createTicket().then((value) {
+    ticketViewModel.createTicket().then((value) async {
       if (value != null) {
-        FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
-
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
-        print('Hitting API .. : ${value.toJson()}');
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
-        );
+        if (CommonUtil()
+                .validString(ticketListData.name)
+                .toLowerCase()
+                .contains("order prescription") &&
+            imagePaths.length > 0) {
+          ApiBaseHelper apiBaseHelper = ApiBaseHelper();
+          List resposnes = await apiBaseHelper
+              .uploadAttachmentForTicket(
+                  "https://trudesk-dev.vsolgmi.com/api/v2/tickets/uploadattachment",
+                  value?.result?.ticket?.id,
+                  imagePaths)
+              .then((values) {
+            FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            print('Hitting API .. : ${value.toJson()}');
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
+            );
+          });
+        } else {
+          FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          print('Hitting API .. : ${value.toJson()}');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
+          );
+        }
       } else {
         Navigator.of(context, rootNavigator: true).pop();
       }
@@ -1440,6 +1582,470 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       Navigator.of(context, rootNavigator: true).pop();
       print('API Error Occured : $error');
     });
+  }
+
+  Widget getWidgetForFileText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+          child: Text("Attach File",
+              style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400)),
+        ),
+        Center(
+            child: Visibility(
+                child: IconButton(
+          icon: Icon(
+            Icons.photo_library,
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+            size: 32.0.sp,
+          ),
+          onPressed: () async {
+            await loadAssets();
+          },
+        ))),
+        Center(
+            child: Visibility(
+                child: IconButton(
+          icon: new ImageIcon(
+            AssetImage(variable.icon_attach),
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+            size: 32.0.sp,
+          ),
+          onPressed: () async {
+            loadImagesFromRecords();
+          },
+        )))
+      ],
+    );
+  }
+
+  void loadImagesFromRecords() async {
+    await Navigator.of(context)
+        .push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+          argument: MyRecordsArgument(
+              categoryPosition: 0,
+              allowSelect: true,
+              isAudioSelect: true,
+              isNotesSelect: false,
+              selectedMedias: recordIds,
+              showDetails: false,
+              isFromChat: true,
+              isAssociateOrChat: true,
+              fromClass: 'chats')),
+    ))
+        .then((results) {
+      if (results != null) {
+        if (results.containsKey(STR_META_ID)) {
+          healthRecordList = results[STR_META_ID] as List;
+          if (healthRecordList != null) {
+            getMediaURL(healthRecordList);
+          }
+        }
+      }
+    });
+  }
+
+  getMediaURL(List<HealthRecordCollection> healthRecordCollection) async {
+    for (int i = 0; i < healthRecordCollection.length; i++) {
+      String fileType = healthRecordCollection[i].fileType;
+      String fileURL = healthRecordCollection[i].healthRecordUrl;
+      if ((fileType == STR_JPG) ||
+          (fileType == STR_PNG) ||
+          (fileType == STR_JPEG)) {
+        imagePaths.add(ImagesModel(
+            file: fileURL,
+            isFromFile: false,
+            isdownloaded: false,
+            fileType: fileType));
+      } else if ((fileType == STR_PDF)) {
+        imagePaths.add(ImagesModel(
+            file: fileURL,
+            isFromFile: false,
+            isdownloaded: false,
+            fileType: fileType));
+        //getAlertForFileSend(fileURL, 2);
+      } else if ((fileType == STR_AAC)) {
+        //getAlertForFileSend(fileURL, 3);
+      }
+    }
+
+    await _download(healthRecordCollection);
+
+    setState(() {});
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = <Asset>[];
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
+        materialOptions: MaterialOptions(
+          actionBarColor: fhbColors.actionColor,
+          useDetailsView: false,
+          selectCircleStrokeColor: fhbColors.colorBlack,
+        ),
+      );
+    } on FetchException catch (e) {}
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+    for (Asset asset in resultList) {
+      String filePath =
+          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.add(ImagesModel(
+          isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
+    }
+    setState(() {
+      images = resultList;
+    });
+  }
+
+  Widget buildGridView() {
+    return imagePaths.isNotEmpty
+        ? GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: 1,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              var asset =
+                  imagePaths[index].isFromFile ? imagePaths[index].asset : "";
+              return Expanded(
+                child: InkWell(
+                  onTap: () {},
+                  child: Container(
+                      color: Colors.white,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        fit: StackFit.expand,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(2),
+                            child: imagePaths[index].isFromFile
+                                ? Material(
+                                    child: Container(
+                                        height: double.infinity,
+                                        child: AssetThumb(
+                                          asset: asset,
+                                          width: 150,
+                                          height: 150,
+                                        )))
+                                : imagePaths[index].isdownloaded
+                                    ? imagePaths[index].fileType == '.pdf'
+                                        ? Material(
+                                            child: Container(
+                                            color: Colors.black,
+                                            child: IconButton(
+                                              tooltip: 'View PDF',
+                                              icon: ImageIcon(
+                                                  AssetImage(
+                                                      variable.icon_attach),
+                                                  color: Colors.white),
+                                              onPressed: () async {
+                                                await OpenFile.open(
+                                                  imagePaths[index].file,
+                                                );
+                                              },
+                                            ),
+                                          ))
+                                        : Material(
+                                            child: Container(
+                                                height: double.infinity,
+                                                child: Image.file(
+                                                  File(imagePaths[index].file),
+                                                  width: 150,
+                                                  fit: BoxFit.fill,
+                                                  height: 150,
+                                                )),
+                                          )
+                                    : Material(
+                                        child: Container(
+                                            height: double.infinity,
+                                            child: Image.network(
+                                              imagePaths[index].file,
+                                              width: 150,
+                                              fit: BoxFit.fill,
+                                              height: 150,
+                                              headers: {
+                                                HttpHeaders.authorizationHeader:
+                                                    authToken
+                                              },
+                                            )),
+                                      ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                imagePaths.removeAt(index);
+                                print('delete image from List');
+                                setState(() {
+                                  print('set new state of images');
+                                });
+                              },
+                              child: Icon(
+                                Icons.close_sharp,
+                                color: Color(CommonUtil().getMyPrimaryColor()),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                ),
+              );
+            },
+            itemCount: imagePaths.length,
+          )
+        : SizedBox(height: 0.0.h);
+  }
+
+  Widget getTitleForPlanPackage() {
+    return TypeAheadFormField<PlanListResult>(
+      textFieldConfiguration: TextFieldConfiguration(
+          controller: package_title_ctrl,
+          onChanged: (value) {
+            planListModel = null;
+          },
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintStyle: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          )),
+      suggestionsCallback: (pattern) async {
+        if (pattern.length >= 3) {
+          return await getPackageNameBasedOnSearch(pattern, '');
+        }
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(
+            suggestion.title,
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, suggestionsBox, controller) {
+        return suggestionsBox;
+      },
+      errorBuilder: (context, suggestion) {
+        return ListTile(
+          title: Text(
+            'Oops. We could not find the package you typed.',
+            style: TextStyle(
+              fontSize: 16.0.sp,
+            ),
+          ),
+        );
+      },
+      onSuggestionSelected: (suggestion) {
+        package_title_ctrl.text = suggestion.title;
+        //stateVal = suggestion.state;
+      },
+      validator: (value) {
+        return null;
+      },
+      onSaved: (value) => packageName = value,
+    );
+  }
+
+  getPackageNameBasedOnSearch(String pattern, String s) {
+    fetchData();
+    return planListModelList;
+  }
+
+  fetchData() async {
+    var responses = await Future.wait([
+      Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getCarePlanList(''),
+      Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getCarePlanList(strFreeCare),
+      Provider.of<PlanWizardViewModel>(context, listen: false)
+          .getDietPlanListNew(isFrom: strProviderDiet),
+      Provider.of<PlanWizardViewModel>(context, listen: false).getDietPlanListNew(
+          isFrom:
+              strFreeDiet) // make sure return type of these functions as Future.
+    ]);
+    planListModelList.addAll(responses[0]?.result);
+    planListModelList.addAll(responses[1]?.result);
+    planListModelList.addAll(responses[2]?.result);
+    planListModelList.addAll(responses[3]?.result);
+  }
+
+  Widget getDropDownForPlanCategory(
+      Map<String, List<MenuItem>> healthConditionsList) {
+    List<MenuItem> menuItems = List();
+    healthConditionsList.values.map((element) {
+      menuItems.addAll(element);
+    }).toList();
+    return SizedBoxWithChild(
+        height: 50,
+        child: IgnorePointer(
+            ignoring: controller.isPreferredDoctorDisable.value,
+            child: Expanded(
+                flex: 1,
+                child: DropdownButton<MenuItem>(
+                  // Initial Value
+                  value: dropdownValue,
+                  isExpanded: true,
+
+                  // Down Arrow Icon
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  hint: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      SizedBoxWidget(width: 20),
+                      Text(
+                          CommonUtil().validString(
+                              dropdownValue?.title ?? 'Select Category'),
+                          style: TextStyle(
+                            fontSize: 14.0.sp,
+                          )),
+                    ],
+                  ),
+
+                  // Array list of items
+                  items: menuItems.map((MenuItem items) {
+                    return DropdownMenuItem(
+                      value: items,
+                      child: Text(items.title),
+                    );
+                  }).toList(),
+                  // After selecting the desired option,it will
+                  // change button value to selected value
+                  onChanged: (MenuItem newValue) {
+                    setState(() {
+                      dropdownValue = newValue;
+                    });
+                  },
+                ))));
+  }
+
+  Widget getExpandedDropdownForCategory() {
+    return FutureBuilder<Map<String, List<MenuItem>>>(
+      future: healthConditions,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SafeArea(
+            child: SizedBox(
+              height: 1.sh / 4.5,
+              child: Center(
+                child: SizedBox(
+                  width: 30.0.h,
+                  height: 30.0.h,
+                  child: CommonCircularIndicator(),
+                ),
+              ),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          var healthConditionsList =
+              (Provider.of<PlanWizardViewModel>(context)?.isHealthSearch ??
+                      false)
+                  ? (Provider.of<PlanWizardViewModel>(context, listen: false)
+                          ?.filteredHealthConditions ??
+                      {})
+                  : (Provider.of<PlanWizardViewModel>(context, listen: false)
+                          ?.healthConditions ??
+                      {});
+          if ((healthConditionsList?.length ?? 0) > 0) {
+            healthConditionsResult = healthConditionsList;
+            return getDropDownForPlanCategory(healthConditionsResult);
+          } else {
+            return SafeArea(
+              child: SizedBox(
+                height: 1.sh / 1.3,
+                child: Container(
+                  child: Center(
+                    child: Text(strNoHealthConditions),
+                  ),
+                ),
+              ),
+            );
+          }
+        }
+      },
+    );
+  }
+
+  Future<void> _download(List<HealthRecordCollection> imagesPathMain) async {
+    if (imagesPathMain.length >= 1) {
+      downloadFilesFromServer(context, imagesPathMain);
+    }
+  }
+
+  void downloadFilesFromServer(
+      BuildContext contxt, List<HealthRecordCollection> imagesPathMain) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    List<String> filePathist = new List();
+    for (final _currentImage in imagesPathMain) {
+      try {
+        await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
+                _currentImage.healthRecordUrl.split('/').last)
+            .then((filePath) async {
+          var file;
+          if (_currentImage.fileType == '.pdf') {
+            file = File('$filePath');
+          } else {
+            file = File('$filePath');
+          }
+          final request = await ApiServices.get(
+            _currentImage.healthRecordUrl,
+            headers: {
+              HttpHeaders.authorizationHeader: authToken,
+              Constants.KEY_OffSet: CommonUtil().setTimeZone()
+            },
+          );
+          final bytes = request.bodyBytes; //close();
+          await file.writeAsBytes(bytes);
+
+          print("file.path" + file.path);
+          filePathist.add(file.path);
+        });
+      } catch (e) {
+        //print('$e exception thrown');
+      }
+    }
+    if (filePathist.length == imagesPathMain.length) {
+      for (int i = 0; i < imagePaths.length; i++) {
+        if (!imagePaths[i].isdownloaded) {
+          for (int j = 0; j < imagesPathMain.length; j++) {
+            if (imagePaths[i].file == imagesPathMain[j].healthRecordUrl) {
+              imagePaths[i].file = filePathist[j];
+              imagePaths[i].isdownloaded = true;
+            }
+          }
+        }
+      }
+    } else {
+      Scaffold.of(contxt).showSnackBar(SnackBar(
+        content: Text(
+          variable.strFileDownloadeding,
+          style: TextStyle(
+            fontSize: 16.0.sp,
+          ),
+        ),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      ));
+    }
   }
 }
 

@@ -156,6 +156,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             onTap: () {
               try {
                 var createTicketController = Get.put(CreateTicketController());
+                                  createTicketController.isCTLoading?.value=false;
+
                 if (CommonUtil()
                     .validString(ticketList[i].name)
                     .toLowerCase()
@@ -185,6 +187,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.doctorBookAppointment.value = false;
                   createTicketController.doctorsList = [];
                 }
+                
+                
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

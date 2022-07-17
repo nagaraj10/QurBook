@@ -161,7 +161,7 @@ class Field {
       this.field,
       this.isDoctor = false,
       this.isHospital = false,
-      this.isCategory});
+      this.isCategory = false});
 
   Field.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -169,7 +169,7 @@ class Field {
     field = json['field'];
     isDoctor = json['isDoctor'] ?? false;
     isHospital = json['isHospital'] ?? false;
-    isCategory = json['isCategory'];
+    isCategory = json['isCategory'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

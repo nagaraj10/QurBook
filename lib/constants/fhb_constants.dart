@@ -674,11 +674,17 @@ var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
 var tckSelectedDoctor = 'Doctor';
 var tckSelectedHospital = 'Hospital';
+var tckSelectedCategory = 'Category';
+var tckPackageName = 'Package Name';
+
+
 
 var tckTypeTitle = 'text';
 var tckTypeDescription = 'text_area';
 var tckTypeDropdown = 'dropdown';
 var tckTypeDate = 'date';
+var tckTypeFile = "file";
+var tckPackageTitle="package_title";
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';

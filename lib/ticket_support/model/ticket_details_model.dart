@@ -1,3 +1,5 @@
+import 'package:myfhb/ticket_support/model/ticket_list_model/AdditionalInfo.dart';
+
 class TicketDetailResponseModel {
   bool isSuccess;
   String message;
@@ -67,6 +69,7 @@ class Ticket {
   int uid;
   int iV;
   String preferredLabName;
+  AdditionalInfo additionalInfo;
 
   Ticket(
       {this.deleted,
@@ -89,7 +92,8 @@ class Ticket {
       this.history,
       this.uid,
       this.iV,
-      this.preferredLabName});
+      this.preferredLabName,
+      this.additionalInfo});
 
   Ticket.fromJson(Map<String, dynamic> json) {
     deleted = json['deleted'];
@@ -145,6 +149,9 @@ class Ticket {
         history.add(new History.fromJson(v));
       });
     }
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
     uid = json['uid'];
     iV = json['__v'];
     preferredLabName = json['preferredLabName'];
@@ -191,6 +198,9 @@ class Ticket {
     }
     if (this.history != null) {
       data['history'] = this.history.map((v) => v.toJson()).toList();
+    }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
     }
     data['uid'] = this.uid;
     data['__v'] = this.iV;

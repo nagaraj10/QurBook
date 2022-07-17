@@ -8,6 +8,7 @@ import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:myfhb/widgets/make_payment_response.dart';
@@ -2292,7 +2293,7 @@ class ApiBaseHelper {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       var bodyData = {
-        'subject': Constants.tckTitle != 'title' ? Constants.tckTitle : '',
+        'subject': Constants.tckTitle != 'title' ? Constants.tckTitle : 'Hi',
         'issue': Constants.tckDesc != 'desc' ? Constants.tckDesc : '',
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
@@ -2311,6 +2312,12 @@ class ApiBaseHelper {
               : '',
           "choose_hospital": Constants.tckSelectedHospital != 'Hospital'
               ? Constants.tckSelectedHospital
+              : '',
+          "choose_category": Constants.tckSelectedCategory != 'Category'
+              ? Constants.tckSelectedHospital
+              : '',
+          "package_name": Constants.tckPackageName != 'Package Name'
+              ? Constants.tckPackageName
               : '',
         },
       };
@@ -2584,6 +2591,62 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> uploadAttachmentForTicket(
+      String url, String ticketId, List<ImagesModel> imagePaths) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final dio = Dio();
+    dio.options.headers['accept'] = '*/*';
+
+    dio.options.headers['authorization'] = authToken;
+
+    List<FormData> formData = List();
+
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      for (ImagesModel image in imagePaths) {
+        FormData newFormData;
+
+        var fileName = File(image.file);
+        var fileNoun = fileName.path.contains(".")
+            ? fileName.path.split('/').last
+            : image.fileType;
+        newFormData = FormData.fromMap({
+          'userId': userId,
+          'attachment':
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun),
+          'ticketId': ticketId
+        });
+
+        formData.add(newFormData);
+      }
+    }
+    var response;
+    List responses = List();
+
+    formData.forEach((element) async {
+      if (responses.length != formData.length) {
+        try {
+          response = await dio.post(url, data: element);
+
+          if (response.statusCode == 200) {
+            print(response.data.toString());
+            responses.add(response);
+          } else {
+            responses.add(response);
+          }
+        } on DioError catch (e) {
+          print(e.toString());
+          print(e);
+          responses.add(response);
+        }
+      }
+      if (responses.length == formData.length) {
+        return responses;
+      }
+    });
   }
 
 /*

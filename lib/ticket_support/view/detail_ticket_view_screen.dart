@@ -206,7 +206,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        ticket.subject.toString().capitalizeFirstofEach,
+                        ticket?.subject?.toString().capitalizeFirstofEach,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                           fontWeight: FontWeight.w600,
@@ -229,7 +229,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             )
                           : SizedBox(),
                       CommonUtil()
-                              .validString(ticket.preferredLabName)
+                              .validString(ticket?.preferredLabName ?? '')
                               .trim()
                               .isNotEmpty
                           ? Row(
@@ -247,7 +247,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 Expanded(
                                   child: Text(
                                     CommonUtil().parseHtmlString(
-                                        ticket.preferredLabName),
+                                        ticket.preferredLabName ?? ''),
                                     style: TextStyle(
                                         fontSize: 16.0.sp,
                                         fontWeight: FontWeight.w400,
@@ -259,6 +259,26 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 ),
                               ],
                             )
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseCategory != null &&
+                              ticket?.additionalInfo?.chooseCategory != "")
+                          ? commonWidgetForDropDownValue("Category Name",
+                              ticket?.additionalInfo?.chooseCategory ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.packageName != null &&
+                              ticket?.additionalInfo?.packageName != "")
+                          ? commonWidgetForDropDownValue("Package Name",
+                              ticket?.additionalInfo?.packageName ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseDoctor != null &&
+                              ticket?.additionalInfo?.chooseDoctor != "")
+                          ? commonWidgetForDropDownValue("Selected Doctor",
+                              ticket?.additionalInfo?.chooseDoctor ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseHospital != null &&
+                              ticket?.additionalInfo?.chooseHospital != "")
+                          ? commonWidgetForDropDownValue("Selected Hospital",
+                              ticket?.additionalInfo?.chooseHospital)
                           : SizedBox.shrink(),
                       Row(
                         children: [
@@ -1045,6 +1065,39 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     final bytes = request.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
+  }
+
+  commonWidgetForDropDownValue(String header, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          header,
+          style: TextStyle(
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w100,
+          ),
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Expanded(
+          child: Text(
+            CommonUtil().capitalizeFirstofEach(value),
+            style: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w400,
+                color: Colors.black),
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+        ),
+      ],
+    );
   }
 }
 
