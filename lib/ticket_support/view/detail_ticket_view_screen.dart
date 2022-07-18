@@ -26,6 +26,7 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import 'package:path/path.dart' as p;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
@@ -35,6 +36,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
 import 'package:myfhb/common/CommonUtil.dart' as commonUtils;
+import '../../constants/variable_constant.dart' as variable;
 
 var fullName, date, isUser;
 
@@ -272,12 +274,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           : SizedBox.shrink(),
                       (ticket?.additionalInfo?.chooseDoctor != null &&
                               ticket?.additionalInfo?.chooseDoctor != "")
-                          ? commonWidgetForDropDownValue("Selected Doctor",
+                          ? commonWidgetForDropDownValue(
+                              "Preferred Doctor Name :",
                               ticket?.additionalInfo?.chooseDoctor ?? '')
                           : SizedBox.shrink(),
                       (ticket?.additionalInfo?.chooseHospital != null &&
                               ticket?.additionalInfo?.chooseHospital != "")
-                          ? commonWidgetForDropDownValue("Selected Hospital",
+                          ? commonWidgetForDropDownValue(
+                              "Preferred Hospital Name :",
                               ticket?.additionalInfo?.chooseHospital)
                           : SizedBox.shrink(),
                       Row(
@@ -701,10 +705,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                       ),
                                                     ),
                                                     onTap: () {
-                                                      openIntent(ticketList
-                                                          .attachments[index]
-                                                          .path
-                                                          .toString());
+                                                      openIntent(
+                                                          ticketList
+                                                                  .attachments[
+                                                              index],
+                                                          widget.ticket.uid
+                                                              .toString());
                                                     });
                                               },
                                             ),
@@ -1027,14 +1033,18 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     selectedTab = _controller.index;
   }
 
-  Future<void> openIntent(String string) async {
+  Future<void> openIntent(Attachments attachments, String ticketUid) async {
     FlutterToast().getToast('Please wait', Colors.grey);
-    String path = await downloadFile(string);
+    String path = await downloadFileOpen(attachments, ticketUid);
+    print("----------------------------");
+
     print(path);
-    if (string.split('.').last == 'pdf') {
+    if (attachments.path.split('.').last == 'pdf') {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
-          type: PDFLocation.Path, path: path, title: string.split('/').last);
+          type: PDFLocation.Path,
+          path: path,
+          title: attachments.path.split('/').last);
       controller.data = data;
       Get.to(() => PDFView());
     } else {
@@ -1059,6 +1069,29 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       body: {"fileUrl": fileUrl},
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer ' + authToken,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+    );
+    final bytes = request.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    return file.path.toString();
+  }
+
+  Future<String> downloadFileOpen(
+      Attachments attachments, String ticketUId) async {
+    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
+    String filePath = await FHBUtils.createFolderInAppDocDirClone(
+        variable.stAudioPath, attachments.name);
+    var file = File('$filePath' /*+ fileType*/);
+    final request = await ApiServices.post(
+      CommonUtil.TRUE_DESK_URL + 'tickets/${ticketUId}/attachments/open',
+      body: {
+        "fileKey": attachments.fileKey,
+        "fileName": attachments.name,
+        "fileType": attachments.type
+      },
+      headers: {
+        HttpHeaders.authorizationHeader: authToken,
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );

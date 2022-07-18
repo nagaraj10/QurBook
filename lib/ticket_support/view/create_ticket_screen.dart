@@ -148,6 +148,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       super.initState();
       _getInitialDate(context);
+      tckConstants.tckTitleOpt = widget.ticketList.name;
       setAuthToken();
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
@@ -405,12 +406,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
+          (field.type == tckConstants.tckTypeDropdown && field.isLab)
+              ? widgetForColumn.add(getWidgetForLab())
+              : SizedBox.shrink();
+
           isFirstTym = false;
         }
       }
     } catch (e) {
       print(e.toString());
     }
+    // widgetForColumn.add(getWidgetForLab());
+
     return Column(children: widgetForColumn);
   }
 
@@ -1774,20 +1781,39 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                                   height: 150,
                                                 )),
                                           )
-                                    : Material(
-                                        child: Container(
-                                            height: double.infinity,
-                                            child: Image.network(
-                                              imagePaths[index].file,
-                                              width: 150,
-                                              fit: BoxFit.fill,
-                                              height: 150,
-                                              headers: {
-                                                HttpHeaders.authorizationHeader:
-                                                    authToken
+                                    : imagePaths[index].fileType.trim() ==
+                                            ".pdf"
+                                        ? Material(
+                                            child: Container(
+                                            color: Colors.black,
+                                            child: IconButton(
+                                              tooltip: 'View PDF',
+                                              icon: ImageIcon(
+                                                  AssetImage(
+                                                      variable.icon_attach),
+                                                  color: Colors.white),
+                                              onPressed: () async {
+                                                await OpenFile.open(
+                                                  imagePaths[index].file,
+                                                );
                                               },
-                                            )),
-                                      ),
+                                            ),
+                                          ))
+                                        : Material(
+                                            child: Container(
+                                                height: double.infinity,
+                                                child: Image.network(
+                                                  imagePaths[index].file,
+                                                  width: 150,
+                                                  fit: BoxFit.fill,
+                                                  height: 150,
+                                                  headers: {
+                                                    HttpHeaders
+                                                            .authorizationHeader:
+                                                        authToken
+                                                  },
+                                                )),
+                                          ),
                           ),
                           Positioned(
                             top: 0,

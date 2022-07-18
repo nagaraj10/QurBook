@@ -43,6 +43,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:async';
 import '../../../constants/fhb_query.dart';
 import 'AppException.dart';
+import 'package:mime_type/mime_type.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -2293,7 +2294,9 @@ class ApiBaseHelper {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       var bodyData = {
-        'subject': Constants.tckTitle != 'title' ? Constants.tckTitle : 'Hi',
+        'subject': Constants.tckTitle != 'title'
+            ? Constants.tckTitle
+            : Constants.tckTitleOpt,
         'issue': Constants.tckDesc != 'desc' ? Constants.tckDesc : '',
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
@@ -2610,10 +2613,17 @@ class ApiBaseHelper {
         FormData newFormData;
 
         var fileName = File(image.file);
-        var fileNoun = fileName.path.contains(".")
-            ? fileName.path.split('/').last
-            : image.fileType;
+        var fileNoun, filePathForUrl;
+        if (!image.isFromFile) {
+          filePathForUrl = fileName.path + image.fileType;
+        }
+        fileNoun =
+            image.isFromFile ? fileName.path.split('/').last : filePathForUrl;
 
+        String mimeType =
+            mime(image.isFromFile ? fileName.path : image.fileType);
+        String mimee = mimeType.split('/')[0];
+        String type = mimeType.split('/')[1];
         print("-----------------------");
         print(fileName);
         print("-----------------------");
@@ -2621,8 +2631,8 @@ class ApiBaseHelper {
 
         newFormData = FormData.fromMap({
           'userId': userId,
-          'attachment':
-              await MultipartFile.fromFile(fileName.path, filename: fileNoun),
+          'attachment': await MultipartFile.fromFile(fileName.path,
+              filename: fileNoun, contentType: MediaType(mimee, type)),
           'ticketId': ticketId
         });
 

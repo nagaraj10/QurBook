@@ -652,8 +652,8 @@ const String Rmarks_HINT = "Remarks";
 
 // True desk
 const String strMyTickets = 'Tickets';
-const String strAddMyTicket = 'Add New Ticket';
-const String strSubmitNewTicket = 'SUBMIT TICKET';
+const String strAddMyTicket = 'Create Ticket';
+const String strSubmitNewTicket = 'SUBMIT';
 const String strTicketTitle = 'Title';
 const String strPreferredLab = 'Preferred Lab';
 const String strTicketDesc = 'Description';
@@ -665,6 +665,7 @@ const String strThereAreNoPreferredLabsInYourProfile =
 const String strPreferredDoctors = 'Preferred Doctors';
 
 var tckTitle = 'title';
+var tckTitleOpt = '';
 var tckDesc = 'desc';
 var tckPrefDate = 'pref_date';
 var tckPrefLab = 'pref_lab';
@@ -678,14 +679,12 @@ var tckSelectedHospital = 'Hospital';
 var tckSelectedCategory = 'Category';
 var tckPackageName = 'Package Name';
 
-
-
 var tckTypeTitle = 'text';
 var tckTypeDescription = 'text_area';
 var tckTypeDropdown = 'dropdown';
 var tckTypeDate = 'date';
 var tckTypeFile = "file";
-var tckPackageTitle="package_title";
+var tckPackageTitle = "package_title";
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';

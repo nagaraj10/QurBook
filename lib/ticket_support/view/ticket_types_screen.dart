@@ -188,11 +188,14 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.doctorsList = [];
                 }
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateTicketScreen(ticketList[i])),
-                );
+                ticketList[i].additionalInfo != null
+                    ? Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CreateTicketScreen(ticketList[i])),
+                      )
+                    : null;
               } catch (e) {
                 print(e);
               }

@@ -216,9 +216,16 @@ class Attachments {
   String path;
   String type;
   String date;
+  String fileKey;
 
   Attachments(
-      {this.sId, this.owner, this.name, this.path, this.type, this.date});
+      {this.sId,
+      this.owner,
+      this.name,
+      this.path,
+      this.type,
+      this.date,
+      this.fileKey});
 
   Attachments.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -227,6 +234,7 @@ class Attachments {
     path = json['path'];
     type = json['type'];
     date = json['date'];
+    fileKey = json['fileKey'];
   }
 
   Map<String, dynamic> toJson() {
@@ -237,6 +245,7 @@ class Attachments {
     data['path'] = this.path;
     data['type'] = this.type;
     data['date'] = this.date;
+    data['fileKey'] = this.fileKey;
     return data;
   }
 }
