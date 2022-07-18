@@ -40,6 +40,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
@@ -90,7 +91,6 @@ import jp.co.ohq.ble.enumerate.OHQDeviceInfoKey
 import jp.co.ohq.ble.enumerate.OHQSessionOptionKey
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
-import java.io.IOException
 import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -100,6 +100,8 @@ import kotlin.system.exitProcess
 
 class MainActivity : FlutterActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
+
+    private var enableBackgroundNotification=false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
@@ -118,6 +120,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
+    private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
@@ -355,6 +358,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 
     }
+
+
 
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -1424,6 +1429,18 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 }
             }
         }
+MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+    ENABLE_BACKGROUND_NOTIFICATION
+        ).setMethodCallHandler { call, result ->
+            if (call.method == ENABLE_BACKGROUND_NOTIFICATION) {
+                try {
+                   enableBackgroundNotification=true;
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -1830,7 +1847,89 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
     }
 
+    override fun onPause() {
+        if(enableBackgroundNotification) {
+            openBackgroundAppFromNotification(true)
+        }
+        super.onPause()
+    }
+
+    private fun openBackgroundAppFromNotification(setOngoing: Boolean) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                "backgroundapp",
+                getString(R.string.channel_cancel_apps),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+//        val onTapNS = Intent(applicationContext, OnTapNotificationBackground::class.java)
+//        val onTapPendingIntent = PendingIntent.getBroadcast(
+//            applicationContext,
+//            2022,
+//            onTapNS,
+//            PendingIntent.FLAG_CANCEL_CURRENT
+//        )
+
+        val notificationIntent = Intent(context, MainActivity::class.java)
+
+        notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
+                or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+        val onTapPendingIntent = PendingIntent.getActivity(
+            context, 0,
+            notificationIntent, 0
+        )
+
+        var notification = NotificationCompat.Builder(this, "backgroundapp")
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle("Critical App Stopped")
+            .setContentText("The app must be running in the background to receive alerts. Tap to re-open the app")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_SYSTEM)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText("app running in background")
+            )
+            .setSound(ack_sound)
+            .setVibrate(longArrayOf(1000, 1000))
+            .setOngoing(true)
+            .setContentIntent(onTapPendingIntent)
+            .build()
+        notification.flags=Notification.FLAG_NO_CLEAR
+        nsManager.notify(2022, notification)
+
+
+    }
+
+    override fun onResume() {
+        Log.e("Myapp", "onResume: "+" onResume" )
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        nsManager.cancel(2022)
+        super.onResume()
+    }
+
+
     override fun onDestroy() {
+        Log.e("Myapp", "onDestroy: "+" onDestroy" )
+        if(enableBackgroundNotification){
+            openBackgroundAppFromNotification(false)
+        }
         super.onDestroy()
         unregisterReceiver(broadcastReceiver);
         val serviceIntent = Intent(this, AVServices::class.java)
