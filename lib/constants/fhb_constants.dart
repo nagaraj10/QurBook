@@ -693,6 +693,7 @@ const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
 const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
 const String ENABLE_BACKGROUND_NOTIFICATION = 'enablebackgroundnotification';
+const String DISABLE_BACKGROUND_NOTIFICATION = 'disablebackgroundnotification';
 const String APPOINTMENT_DETAILS = 'appointmentDetails';
 const String BP_LOCATION_CHECK = 'bp_location_check';
 const String GET_CURRENT_LOCATION = 'getCurrentLocation';

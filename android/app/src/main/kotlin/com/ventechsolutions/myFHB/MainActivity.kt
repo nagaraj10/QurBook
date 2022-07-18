@@ -101,7 +101,7 @@ import kotlin.system.exitProcess
 class MainActivity : FlutterActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
 
-    private var enableBackgroundNotification=false
+    private var enableBackgroundNotification = false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
@@ -121,6 +121,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
+    private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
@@ -358,7 +359,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 
     }
-
 
 
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -1429,13 +1429,26 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 }
             }
         }
-MethodChannel(
+        MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-    ENABLE_BACKGROUND_NOTIFICATION
+            ENABLE_BACKGROUND_NOTIFICATION
         ).setMethodCallHandler { call, result ->
             if (call.method == ENABLE_BACKGROUND_NOTIFICATION) {
                 try {
-                   enableBackgroundNotification=true;
+                    enableBackgroundNotification = true;
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DISABLE_BACKGROUND_NOTIFICATION
+        ).setMethodCallHandler { call, result ->
+            if (call.method == DISABLE_BACKGROUND_NOTIFICATION) {
+                try {
+                    enableBackgroundNotification = false;
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
@@ -1733,7 +1746,7 @@ MethodChannel(
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
-        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH, false)
 
 
 
@@ -1753,12 +1766,11 @@ MethodChannel(
 
             sharedValue = "ack&${redirect_to}&${appointmentID}&${cartId}"
         } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
-        }
-        else if(redirect_to?.contains("mycart") == true){
+        } else if (redirect_to?.contains("mycart") == true) {
 
-            sharedValue = "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
-        }
-        else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
+            sharedValue =
+                "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
+        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
@@ -1848,7 +1860,7 @@ MethodChannel(
     }
 
     override fun onPause() {
-        if(enableBackgroundNotification) {
+        if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(true)
         }
         super.onPause()
@@ -1899,26 +1911,26 @@ MethodChannel(
                     R.mipmap.ic_launcher
                 )
             )
-            .setContentTitle("Critical App Stopped")
-            .setContentText("The app must be running in the background to receive alerts. Tap to re-open the app")
+            .setContentTitle(Constants.CRITICAL_APP_STOPPED)
+            .setContentText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_SYSTEM)
             .setStyle(
-                NotificationCompat.BigTextStyle().bigText("app running in background")
+                NotificationCompat.BigTextStyle().bigText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
             )
             .setSound(ack_sound)
             .setVibrate(longArrayOf(1000, 1000))
             .setOngoing(true)
             .setContentIntent(onTapPendingIntent)
             .build()
-        notification.flags=Notification.FLAG_NO_CLEAR
+        notification.flags = Notification.FLAG_NO_CLEAR
         nsManager.notify(2022, notification)
 
 
     }
 
     override fun onResume() {
-        Log.e("Myapp", "onResume: "+" onResume" )
+        Log.e("Myapp", "onResume: " + " onResume")
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
         super.onResume()
@@ -1926,8 +1938,8 @@ MethodChannel(
 
 
     override fun onDestroy() {
-        Log.e("Myapp", "onDestroy: "+" onDestroy" )
-        if(enableBackgroundNotification){
+        Log.e("Myapp", "onDestroy: " + " onDestroy")
+        if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(false)
         }
         super.onDestroy()

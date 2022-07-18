@@ -40,7 +40,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
         textFontSize = 26;
-        enableBackgroundNotification();
       }
 
       controller.updateTabIndex(0);
@@ -405,8 +404,5 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     return DateFormat('dd MMM yyyy').format(now);
   }
 
-  void enableBackgroundNotification() {
-    const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
-    platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-  }
+
 }
