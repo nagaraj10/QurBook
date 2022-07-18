@@ -39,8 +39,13 @@ class PayloadChat {
   String unReadCount;
   bool isDisable;
   String deliveredTimeStamp;
+  String familyUserId;
+  String familyUserFirstName;
+  String familyUserLastName;
+  bool isFamilyUserCareCoordinator;
 
-  PayloadChat({this.id,
+  PayloadChat({
+    this.id,
     this.peerId,
     this.firstName,
     this.lastName,
@@ -52,7 +57,12 @@ class PayloadChat {
     this.messages,
     this.documentId,
     this.unReadCount,
-    this.deliveredTimeStamp});
+    this.deliveredTimeStamp,
+    this.familyUserId,
+    this.familyUserFirstName,
+    this.familyUserLastName,
+    this.isFamilyUserCareCoordinator,
+  });
 
   PayloadChat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -71,6 +81,12 @@ class PayloadChat {
     unReadCount = json['unReadCount'];
     isDisable = json['isDisable'] != null ? json['isDisable'] : false;
     deliveredTimeStamp = json['deliveredTimeStamp'];
+    familyUserId = json['familyUserId'];
+    familyUserFirstName = json['familyUserFirstName'];
+    familyUserLastName = json['familyUserLastName'];
+    isFamilyUserCareCoordinator = json['isFamilyUserCareCoordinator'] != null
+        ? json['isFamilyUserCareCoordinator']
+        : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -91,6 +107,10 @@ class PayloadChat {
     data['unReadCount'] = this.unReadCount;
     data['isDisable'] = this.isDisable;
     data['deliveredTimeStamp'] = this.deliveredTimeStamp;
+    data['familyUserId'] = this.familyUserId;
+    data['familyUserFirstName'] = this.familyUserFirstName;
+    data['familyUserLastName'] = this.familyUserLastName;
+    data['isFamilyUserCareCoordinator'] = this.isFamilyUserCareCoordinator;
     return data;
   }
 }
@@ -104,13 +124,14 @@ class Messages {
   String content;
   Timestamp timestamp;
 
-  Messages({this.id,
-    this.idTo,
-    this.type,
-    this.idFrom,
-    this.isread,
-    this.content,
-    this.timestamp});
+  Messages(
+      {this.id,
+      this.idTo,
+      this.type,
+      this.idFrom,
+      this.isread,
+      this.content,
+      this.timestamp});
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];

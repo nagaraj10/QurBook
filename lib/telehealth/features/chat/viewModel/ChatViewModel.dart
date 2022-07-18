@@ -199,10 +199,10 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   Future<AppointmentResult> fetchAppointmentDetail(
-      String doctorId, String patientId) async {
+      String doctorId, String patientId, String careCoorId) async {
     try {
       AppointmentDetailModel appointmentModel = await _providersListRepository
-          .getAppointmentDetail(doctorId, patientId);
+          .getAppointmentDetail(doctorId, patientId, careCoorId);
       appointments = appointmentModel.result;
       return appointments;
     } catch (e) {}
@@ -224,7 +224,7 @@ class ChatViewModel extends ChangeNotifier {
     }
   }
 
-  /*goToChatSocket(String patientId, String patientName, String patientUrl,
+/*goToChatSocket(String patientId, String patientName, String patientUrl,
       BuildContext context, bool isFromVideoCall, String groupId,
       {HealthRecord healthRecord,
       @required PatientInfo patientInfo,
