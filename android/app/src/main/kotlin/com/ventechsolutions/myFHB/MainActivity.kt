@@ -118,6 +118,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
+    private val LOCATION_SERVICE_CHECK = Constants.LOCATION_SERVICE_CHECK
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
@@ -523,8 +524,22 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     private fun checkGPSIsOpen(): Boolean {
-        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (locationManager == null) {
+            Log.d("GTAG", "LOCATION_SERVICE Missing in the device.")
+            return false
+        }
+
+        Log.d("GTAG", "providers Available.")
+
+        val providerList = locationManager.allProviders
+        for (i in providerList.indices) {
+            Log.d("GTAG", providerList[i])
+        }
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
 
@@ -1459,6 +1474,25 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     scheduleAppointment(retMap)
                     result.success("success")
 
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            LOCATION_SERVICE_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == LOCATION_SERVICE_CHECK) {
+                Log.d("LOCATION_SERVICE_CHECK", "LOCATION_SERVICE_CHECK")
+                try {
+                    val isLocationServiceEnabled = checkGPSIsOpen()
+                    if (!isLocationServiceEnabled) {
+                        result.success(false)
+                    } else {
+                        result.success(true)
+                    }
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }

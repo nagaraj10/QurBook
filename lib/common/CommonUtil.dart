@@ -4753,6 +4753,34 @@ class CommonUtil {
     }
   }
 
+  Future<bool> checkGPSIsOn() async
+  {
+    try {
+      bool serviceEnabled = false;
+      if (Platform.isAndroid)
+      {
+        const platform = MethodChannel(IS_LOCATION_SERVICE_CHECK);
+        serviceEnabled = await platform.invokeMethod(IS_LOCATION_SERVICE_CHECK);
+      }
+      else{
+        serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      }
+      return serviceEnabled;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> checkBluetoothIsOn() async {
+    try {
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      bool isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      return isBluetoothEnable;
+    } catch (e) {
+      return false;
+    }
+  }
+
   String get _getDeviceType {
     final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     return data.size.shortestSide < 550 ? 'phone' : 'tablet';

@@ -51,7 +51,7 @@ class QurhomeRegimenController extends GetxController {
   var UID = "".obs;
   var resourceId = "".obs;
   var sid = "".obs;
-  var isSIMInserted = false.obs;
+  //var isSIMInserted = false.obs;
   var isSOSAgentCallDialogOpen = false.obs;
   var SOSAgentNumber = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;

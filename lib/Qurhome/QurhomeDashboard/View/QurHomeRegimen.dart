@@ -86,8 +86,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         }
       });
       initSocketCountUnread();
-      initGeoLocation();
-      checkMobileOrTablet();
+      //initGeoLocation();
+      //checkMobileOrTablet();
       WidgetsBinding.instance.addObserver(this);
       super.initState();
     } catch (e) {
@@ -95,7 +95,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
-  void checkMobileOrTablet() async {
+  /*void checkMobileOrTablet() async {
     try {
       if(CommonUtil().isTablet)
       {
@@ -113,7 +113,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     } catch (e) {
       print(e);
     }
-  }
+  }*/
 
 
   initSocketCountUnread() {
@@ -1131,16 +1131,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   initSOSCall() async {
     try {
-      LocationPermission permission;
-      bool serviceEnabled = false;
-      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      //LocationPermission permission;
+      bool serviceEnabled = await CommonUtil().checkGPSIsOn();
       if (!serviceEnabled) {
         FlutterToast().getToast(
             'Please turn on your GPS location services and try again',
             Colors.red);
         return;
       }
-      permission = await Geolocator.checkPermission();
+      controller.getCurrentLocation();
+      /*permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.deniedForever ||
           permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -1151,15 +1151,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               Colors.red);
           return;
         }
-      }
+      }*/
       initSOSTimer();
-      controller.getCurrentLocation();
     } catch (e) {
       print(e);
     }
   }
 
-  initGeoLocation() async {
+  /*initGeoLocation() async {
     try {
       LocationPermission permission;
       permission = await Geolocator.checkPermission();
@@ -1178,7 +1177,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     } catch (e) {
       print(e);
     }
-  }
+  }*/
 
   void initSOSTimer() async {
     try {
@@ -1240,7 +1239,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   callNowSOS() async {
     try {
       closeDialog();
-      if(!controller.isSIMInserted.value)
+      if(CommonUtil().isTablet)
       {
         if (!controller.onGoingSOSCall.value) {
           FHBUtils().check().then((intenet) {
@@ -1253,41 +1252,28 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           });
         }
       }else{
-        String strSOSAgentNumber = CommonUtil()
-            .validString(controller.SOSAgentNumber.value);
-        if(strSOSAgentNumber.trim().isNotEmpty)
-        {
-          controller.updateSOSAgentCallDialogStatus(true);
-          await Get.dialog(
-            SOSAgentCallWidget(
-              SOSAgentNumber: strSOSAgentNumber,
-            ),
-            barrierDismissible: false,
-          );
-        }else{
-          FHBUtils().check().then((intenet) async {
-            if (intenet != null && intenet) {
-              await controller.getSOSAgentNumber(true);
-              String strSOSAgentNumber = CommonUtil()
-                  .validString(controller.SOSAgentNumber.value);
-              if(strSOSAgentNumber.trim().isNotEmpty)
-              {
-                controller.updateSOSAgentCallDialogStatus(true);
-                await Get.dialog(
-                  SOSAgentCallWidget(
-                    SOSAgentNumber: strSOSAgentNumber,
-                  ),
-                  barrierDismissible: false,
-                );
-              }else{
-                FlutterToast().getToast(CommonUtil()
-                    .validString(controller.SOSAgentNumberEmptyMsg.value), Colors.red);
-              }
-            } else {
-              FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+        FHBUtils().check().then((intenet) async {
+          if (intenet != null && intenet) {
+            await controller.getSOSAgentNumber(true);
+            String strSOSAgentNumber = CommonUtil()
+                .validString(controller.SOSAgentNumber.value);
+            if(strSOSAgentNumber.trim().isNotEmpty)
+            {
+              controller.updateSOSAgentCallDialogStatus(true);
+              await Get.dialog(
+                SOSAgentCallWidget(
+                  SOSAgentNumber: strSOSAgentNumber,
+                ),
+                barrierDismissible: false,
+              );
+            }else{
+              FlutterToast().getToast(CommonUtil()
+                  .validString(controller.SOSAgentNumberEmptyMsg.value), Colors.red);
             }
-          });
-        }
+          } else {
+            FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+          }
+        });
       }
     } catch (e) {
       print(e);
