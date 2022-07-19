@@ -234,6 +234,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            Row(
+                              children: [
+                                getWidgetForTitleText(
+                                    title: "Category : ", isbold: false),
+                                getWidgetForTitleText(
+                                    title: tckConstants.tckTitleOpt,
+                                    isbold: true)
+                              ],
+                            ),
+                            SizedBox(height: 25.h),
                             getColumnBody(widget.ticketList),
                             SizedBox(height: 25.h),
                             getWidgetForCreateButton()
@@ -645,14 +655,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTitleText({String title}) {
+  Widget getWidgetForTitleText({String title, bool isbold = false}) {
     return Row(
       children: [
         Text(title ?? tckConstants.strTicketTitle,
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
-                fontWeight: FontWeight.w400)),
+                fontWeight: isbold ? FontWeight.bold : FontWeight.w400)),
       ],
     );
   }

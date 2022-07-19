@@ -1036,9 +1036,6 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   Future<void> openIntent(Attachments attachments, String ticketUid) async {
     FlutterToast().getToast('Please wait', Colors.grey);
     String path = await downloadFileOpen(attachments, ticketUid);
-    print("----------------------------");
-
-    print(path);
     if (attachments.path.split('.').last == 'pdf') {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
