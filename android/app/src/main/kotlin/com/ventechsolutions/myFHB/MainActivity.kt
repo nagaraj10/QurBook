@@ -40,6 +40,7 @@ import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
@@ -90,7 +91,6 @@ import jp.co.ohq.ble.enumerate.OHQDeviceInfoKey
 import jp.co.ohq.ble.enumerate.OHQSessionOptionKey
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
-import java.io.IOException
 import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -100,6 +100,8 @@ import kotlin.system.exitProcess
 
 class MainActivity : FlutterActivity(), SessionController.Listener,
     BluetoothPowerController.Listener {
+
+    private var enableBackgroundNotification = false
 
     //    private lateinit var bluetoothFlutterResult: MethodChannel.Result
     private val VERSION_CODES_CHANNEL = Constants.CN_VC
@@ -119,6 +121,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
     private val LOCATION_SERVICE_CHECK = Constants.LOCATION_SERVICE_CHECK
+    private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
+    private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
     private var sharedValue: String? = null
@@ -357,6 +361,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     }
 
+
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             Log.e("mainActivitycalled", "mainActivitycalled")
@@ -524,22 +529,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     private fun checkGPSIsOpen(): Boolean {
-        val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        if (locationManager == null) {
-            Log.d("GTAG", "LOCATION_SERVICE Missing in the device.")
-            return false
-        }
-
-        Log.d("GTAG", "providers Available.")
-
-        val providerList = locationManager.allProviders
-        for (i in providerList.indices) {
-            Log.d("GTAG", providerList[i])
-        }
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
 
@@ -1439,6 +1430,31 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 }
             }
         }
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            ENABLE_BACKGROUND_NOTIFICATION
+        ).setMethodCallHandler { call, result ->
+            if (call.method == ENABLE_BACKGROUND_NOTIFICATION) {
+                try {
+                    enableBackgroundNotification = true;
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DISABLE_BACKGROUND_NOTIFICATION
+        ).setMethodCallHandler { call, result ->
+            if (call.method == DISABLE_BACKGROUND_NOTIFICATION) {
+                try {
+                    enableBackgroundNotification = false;
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
@@ -1474,25 +1490,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     scheduleAppointment(retMap)
                     result.success("success")
 
-                } catch (e: Exception) {
-                    Log.d("Catch", "" + e.toString())
-                }
-            }
-        }
-
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            LOCATION_SERVICE_CHECK
-        ).setMethodCallHandler { call, result ->
-            if (call.method == LOCATION_SERVICE_CHECK) {
-                Log.d("LOCATION_SERVICE_CHECK", "LOCATION_SERVICE_CHECK")
-                try {
-                    val isLocationServiceEnabled = checkGPSIsOpen()
-                    if (!isLocationServiceEnabled) {
-                        result.success(false)
-                    } else {
-                        result.success(true)
-                    }
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
@@ -1750,7 +1747,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
-        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH, false)
 
 
 
@@ -1770,12 +1767,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
             sharedValue = "ack&${redirect_to}&${appointmentID}&${cartId}"
         } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
-        }
-        else if(redirect_to?.contains("mycart") == true){
+        } else if (redirect_to?.contains("mycart") == true) {
 
-            sharedValue = "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
-        }
-        else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
+            sharedValue =
+                "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
+        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"
@@ -1864,7 +1860,89 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         }
     }
 
+    override fun onPause() {
+        if (enableBackgroundNotification) {
+            openBackgroundAppFromNotification(true)
+        }
+        super.onPause()
+    }
+
+    private fun openBackgroundAppFromNotification(setOngoing: Boolean) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                "backgroundapp",
+                getString(R.string.channel_cancel_apps),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+//        val onTapNS = Intent(applicationContext, OnTapNotificationBackground::class.java)
+//        val onTapPendingIntent = PendingIntent.getBroadcast(
+//            applicationContext,
+//            2022,
+//            onTapNS,
+//            PendingIntent.FLAG_CANCEL_CURRENT
+//        )
+
+        val notificationIntent = Intent(context, MainActivity::class.java)
+
+        notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
+                or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+
+        val onTapPendingIntent = PendingIntent.getActivity(
+            context, 0,
+            notificationIntent, 0
+        )
+
+        var notification = NotificationCompat.Builder(this, "backgroundapp")
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(Constants.CRITICAL_APP_STOPPED)
+            .setContentText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_SYSTEM)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
+            )
+            .setSound(ack_sound)
+            .setVibrate(longArrayOf(1000, 1000))
+            .setOngoing(true)
+            .setContentIntent(onTapPendingIntent)
+            .build()
+        notification.flags = Notification.FLAG_NO_CLEAR
+        nsManager.notify(2022, notification)
+
+
+    }
+
+    override fun onResume() {
+        Log.e("Myapp", "onResume: " + " onResume")
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        nsManager.cancel(2022)
+        super.onResume()
+    }
+
+
     override fun onDestroy() {
+        Log.e("Myapp", "onDestroy: " + " onDestroy")
+        if (enableBackgroundNotification) {
+            openBackgroundAppFromNotification(false)
+        }
         super.onDestroy()
         unregisterReceiver(broadcastReceiver);
         val serviceIntent = Intent(this, AVServices::class.java)

@@ -90,6 +90,9 @@ object Constants {
     val BP_SCAN_CANCEL ="bpscancancel"
     val BP_ENABLE_CHECK ="bluetooth_enable_check"
     val LOCATION_SERVICE_CHECK ="location_service_check"
+    val ENABLE_BACKGROUND_NOTIFICATION ="enablebackgroundnotification"
+    val DISABLE_BACKGROUND_NOTIFICATION ="disablebackgroundnotification"
+    val BP_LOCATION_CHECK ="bp_location_check"
     val BLE_SCAN_CANCEL ="bleScanCancel"
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
@@ -103,5 +106,7 @@ object Constants {
     val CARTID="cartId";
 
     val CREATEDBY="createdBy";
+    val CRITICAL_APP_STOPPED="CRITICAL - App Stopped";
+    val CRITICAL_APP_STOPPED_DESCRIPTION="The app must be running in the background to receive alerts. Tap to re-open the app";
 
 }

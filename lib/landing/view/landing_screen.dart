@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
@@ -764,6 +765,7 @@ class _LandingScreenState extends State<LandingScreen> {
             qurhomeStatus: true,
           );
         }
+        enableBackgroundNotification();
         Get.to(
           () => QurhomeDashboard(),
           binding: BindingsBuilder(
@@ -778,11 +780,22 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         );
       } else if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
+        disableBackgroundNotification();
         PreferenceUtil.saveQurhomeAsDefaultUI(
           qurhomeStatus: false,
         );
       }
     }
+  }
+
+  void enableBackgroundNotification() {
+    const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
+    platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
+  }
+
+  void disableBackgroundNotification() {
+    const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
+    platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
   }
 
   void dbInitialize() {
