@@ -584,6 +584,30 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        }else if(passedValArr[1] == 'notifyCaregiverForMedicalRecord'){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatDetail(
+                      peerId:passedValArr[2],
+                      peerAvatar: '',
+                      peerName: passedValArr[3],
+                      patientId: '',
+                      patientName: '',
+                      patientPicture: '',
+                      isFromVideoCall: false,
+                      isFromFamilyListChat: true,
+                      isFromCareCoordinator: passedValArr[7] as bool,
+                      carecoordinatorId:passedValArr[4],
+                      isCareGiver: passedValArr[5] as bool,
+                      groupId: '',
+                      lastDate: passedValArr[6]
+                  )
+              )
+          ).then(
+                  (value) {
+
+              });
         } else if (passedValArr[1] == 'escalateToCareCoordinatorToRegimen') {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if (passedValArr[7] == userId) {

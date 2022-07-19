@@ -1691,6 +1691,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
         val careGiverMemberId = intent.getStringExtra(Constants.PROP_CAREGIVER_REQUESTOR)
         val careCoordinatorUserId = intent.getStringExtra(Constants.CARE_COORDINATOR_USER_ID)
+        val isCareGiver = intent.getStringExtra(Constants.IS_CARE_GIVER)
+        val deliveredDateTime = intent.getStringExtra(Constants.DELIVERED_DATE_TIME)
+        val isFromCareCoordinator = intent.getStringExtra(Constants.IS_FROM_CARE_COORDINATOR)
         val careGiverName = intent.getStringExtra(Constants.CARE_GIVER_NAME)
         val activityTime = intent.getStringExtra(Constants.ACTIVITY_TIME)
         val activityName = intent.getStringExtra(Constants.ACTIVITY_NAME)
@@ -1728,6 +1731,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
+        }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
+
+            sharedValue = "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}"
         } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
 
             sharedValue =
