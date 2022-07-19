@@ -59,8 +59,8 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/resources/network/api_services.dart';
 
-class CreateTicketScreen extends StatefulWidget {
-  CreateTicketScreen(this.ticketList);
+class CreateTicketScreenNew extends StatefulWidget {
+  CreateTicketScreenNew(this.ticketList);
 
   final TicketTypesResult ticketList;
 
@@ -70,7 +70,7 @@ class CreateTicketScreen extends StatefulWidget {
   }
 }
 
-class _CreateTicketScreenState extends State<CreateTicketScreen> {
+class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   TicketViewModel ticketViewModel = TicketViewModel();
   DateTime dateTime = DateTime.now();
   var preferredDateStr;
@@ -147,10 +147,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void initState() {
     try {
       super.initState();
-
-      setDefaultValues();
       _getInitialDate(context);
-      tckConstants.tckTitleOpt = widget.ticketList.name;
       setAuthToken();
       _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
@@ -231,21 +228,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 children: [
                   SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(15.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Container(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
-                              children: [
-                                getWidgetForTitleText(
-                                    title: "Category : ", isbold: false),
-                                getWidgetForTitleText(
-                                    title: tckConstants.tckTitleOpt,
-                                    isbold: true)
-                              ],
-                            ),
-                            SizedBox(height: 25.h),
                             getColumnBody(widget.ticketList),
                             SizedBox(height: 25.h),
                             getWidgetForCreateButton()
@@ -267,7 +255,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   field.name != tckConstants.tckPackageTitle)
               ? widgetForColumn.add(Column(
                   children: [
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 20.h),
                     getWidgetForTitleText(),
                     SizedBox(height: 10.h),
                     getWidgetForTitleValue()
@@ -278,7 +266,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           field.type == tckConstants.tckTypeDescription
               ? widgetForColumn.add(Column(
                   children: [
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 20.h),
                     getWidgetForTitleDescription(),
                     SizedBox(height: 10.h),
                     getWidgetForTitleDescriptionValue(),
@@ -291,9 +279,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 5,
-                    ),
                     Expanded(
                       flex: 2,
                       child: fhbBasicWidget.getTextFiledWithHint(
@@ -325,14 +310,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               //widgetForColumn.add(getWidgetForDoctors())
               : SizedBox();
           widgetForColumn.add(SizedBox(
-            height: 10,
+            height: 20,
           ));
           (field.type == tckConstants.tckTypeDropdown && field.isHospital)
               ? widgetForColumn.add(Row(
                   children: [
-                    SizedBox(
-                      width: 5,
-                    ),
                     Expanded(
                       flex: 2,
                       child: fhbBasicWidget.getTextFiledWithHint(
@@ -348,14 +330,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               () {
                                 Navigator.pop(context);
                                 moveToSearchScreen(
-                                    context, CommonConstants.keyHospital,
+                                    context, CommonConstants.keyDoctor,
                                     setState: setState);
                               },
                             )
                           : getAllHospitalRoles(hospitalObj, () {
                               Navigator.pop(context);
                               moveToSearchScreen(
-                                  context, CommonConstants.keyHospital,
+                                  context, CommonConstants.keyDoctor,
                                   setState: setState);
                             }),
                     ),
@@ -377,7 +359,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           field.type == tckConstants.tckTypeFile
               ? widgetForColumn.add(Column(
                   children: [
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 20.h),
                     getWidgetForFileText(),
                     imagePaths.length > 0 ? SizedBox(height: 20.h) : SizedBox(),
                     imagePaths.length > 0 ? buildGridView() : SizedBox()
@@ -389,7 +371,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   field.name == tckConstants.tckPackageTitle)
               ? widgetForColumn.add(Column(
                   children: [
-                    SizedBox(height: 10.h),
+                    SizedBox(height: 20.h),
                     getWidgetForTitleText(title: "Package Name"),
                     SizedBox(height: 10.h),
                     getTitleForPlanPackage()
@@ -400,6 +382,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeDropdown && field.isCategory)
               ? widgetForColumn.add(Column(
                   children: [
+                    SizedBox(height: 20.h),
                     getWidgetForTitleText(title: "Category"),
                     SizedBox(height: 10.h),
                     Row(
@@ -418,18 +401,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
-          (field.type == tckConstants.tckTypeDropdown && field.isLab)
-              ? widgetForColumn.add(getWidgetForLab())
-              : SizedBox.shrink();
-
           isFirstTym = false;
         }
       }
     } catch (e) {
       print(e.toString());
     }
-    // widgetForColumn.add(getWidgetForLab());
-
     return Column(children: widgetForColumn);
   }
 
@@ -449,11 +426,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (results != null) {
         if (results.containsKey(tckConstants.keyDoctor)) {
           doctorsData = json.decode(results[tckConstants.keyDoctor]);
-          doctor.text = doctorsData[parameters.strName];
+          try {
+            setValueToDoctorDropdown(doctorsData, setState);
+          } catch (e) {}
         } else if (results.containsKey(tckConstants.keyHospital)) {
           hospitalData = json.decode(results[tckConstants.keyHospital]);
-
-          hospital.text = hospitalData[parameters.strHealthOrganizationName];
         } else if (results.containsKey(tckConstants.keyLab)) {
           labData = json.decode(results[tckConstants.keyLab]);
         }
@@ -657,14 +634,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTitleText({String title, bool isbold = false}) {
+  Widget getWidgetForTitleText({String title}) {
     return Row(
       children: [
         Text(title ?? tckConstants.strTicketTitle,
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
-                fontWeight: isbold ? FontWeight.bold : FontWeight.w400)),
+                fontWeight: FontWeight.w400)),
       ],
     );
   }
@@ -1163,7 +1140,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
     return StatefulBuilder(builder: (context, setState) {
       return PopupMenuButton<Hospitals>(
-        offset: Offset(-100, 60),
+        offset: Offset(-100, 70),
         //padding: EdgeInsets.all(20),
 
         itemBuilder: (context) => (hospitallist != null &&
@@ -1793,39 +1770,20 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                                   height: 150,
                                                 )),
                                           )
-                                    : imagePaths[index].fileType.trim() ==
-                                            ".pdf"
-                                        ? Material(
-                                            child: Container(
-                                            color: Colors.black,
-                                            child: IconButton(
-                                              tooltip: 'View PDF',
-                                              icon: ImageIcon(
-                                                  AssetImage(
-                                                      variable.icon_attach),
-                                                  color: Colors.white),
-                                              onPressed: () async {
-                                                await OpenFile.open(
-                                                  imagePaths[index].file,
-                                                );
+                                    : Material(
+                                        child: Container(
+                                            height: double.infinity,
+                                            child: Image.network(
+                                              imagePaths[index].file,
+                                              width: 150,
+                                              fit: BoxFit.fill,
+                                              height: 150,
+                                              headers: {
+                                                HttpHeaders.authorizationHeader:
+                                                    authToken
                                               },
-                                            ),
-                                          ))
-                                        : Material(
-                                            child: Container(
-                                                height: double.infinity,
-                                                child: Image.network(
-                                                  imagePaths[index].file,
-                                                  width: 150,
-                                                  fit: BoxFit.fill,
-                                                  height: 150,
-                                                  headers: {
-                                                    HttpHeaders
-                                                            .authorizationHeader:
-                                                        authToken
-                                                  },
-                                                )),
-                                          ),
+                                            )),
+                                      ),
                           ),
                           Positioned(
                             top: 0,
@@ -1833,7 +1791,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 imagePaths.removeAt(index);
-
+                                print('delete image from List');
                                 setState(() {
                                   print('set new state of images');
                                 });
@@ -1862,8 +1820,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             planListModel = null;
           },
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            focusColor: Color(CommonUtil().getMyPrimaryColor()),
+            border: InputBorder.none,
             hintStyle: TextStyle(
               fontSize: 16.0.sp,
             ),
@@ -2092,22 +2049,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       ));
     }
-  }
-
-  void setDefaultValues() {
-    Constants.tckTitle = 'title';
-    Constants.tckDesc = 'desc';
-    Constants.tckPrefDate = 'pref_date';
-    Constants.tckPrefLab = 'pref_lab';
-    Constants.tckPrefLabId = 'pref_lab_id';
-    Constants.ticketType = 'ticket type';
-    Constants.tckPriority = 'ticket priority';
-    Constants.tckID = 'ticket_id';
-    Constants.tckComment = 'ticket_comment';
-    Constants.tckSelectedDoctor = 'Doctor';
-    Constants.tckSelectedHospital = 'Hospital';
-    Constants.tckSelectedCategory = 'Category';
-    Constants.tckPackageName = 'Package Name';
   }
 }
 

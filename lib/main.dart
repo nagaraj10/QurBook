@@ -411,6 +411,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.CURRENCY = (CommonUtil.REGION_CODE == 'IN') ? INR : USD;
   CommonUtil.POWER_BI_URL = values[11];
   CommonUtil.BASE_URL_QURHUB = values[12];
+  CommonUtil.TRUE_DESK_URL = values[13];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {

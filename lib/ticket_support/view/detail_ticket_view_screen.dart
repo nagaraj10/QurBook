@@ -26,6 +26,7 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
+import 'package:path/path.dart' as p;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
@@ -35,6 +36,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
 import 'package:myfhb/common/CommonUtil.dart' as commonUtils;
+import '../../constants/variable_constant.dart' as variable;
 
 var fullName, date, isUser;
 
@@ -206,7 +208,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        ticket.subject.toString().capitalizeFirstofEach,
+                        ticket?.subject?.toString().capitalizeFirstofEach,
                         style: TextStyle(
                           fontSize: 16.0.sp,
                           fontWeight: FontWeight.w600,
@@ -229,7 +231,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             )
                           : SizedBox(),
                       CommonUtil()
-                              .validString(ticket.preferredLabName)
+                              .validString(ticket?.preferredLabName ?? '')
                               .trim()
                               .isNotEmpty
                           ? Row(
@@ -247,7 +249,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 Expanded(
                                   child: Text(
                                     CommonUtil().parseHtmlString(
-                                        ticket.preferredLabName),
+                                        ticket.preferredLabName ?? ''),
                                     style: TextStyle(
                                         fontSize: 16.0.sp,
                                         fontWeight: FontWeight.w400,
@@ -259,6 +261,28 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 ),
                               ],
                             )
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseCategory != null &&
+                              ticket?.additionalInfo?.chooseCategory != "")
+                          ? commonWidgetForDropDownValue("Category Name",
+                              ticket?.additionalInfo?.chooseCategory ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.packageName != null &&
+                              ticket?.additionalInfo?.packageName != "")
+                          ? commonWidgetForDropDownValue("Package Name",
+                              ticket?.additionalInfo?.packageName ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseDoctor != null &&
+                              ticket?.additionalInfo?.chooseDoctor != "")
+                          ? commonWidgetForDropDownValue(
+                              "Preferred Doctor Name :",
+                              ticket?.additionalInfo?.chooseDoctor ?? '')
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.chooseHospital != null &&
+                              ticket?.additionalInfo?.chooseHospital != "")
+                          ? commonWidgetForDropDownValue(
+                              "Preferred Hospital Name :",
+                              ticket?.additionalInfo?.chooseHospital)
                           : SizedBox.shrink(),
                       Row(
                         children: [
@@ -681,10 +705,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                       ),
                                                     ),
                                                     onTap: () {
-                                                      openIntent(ticketList
-                                                          .attachments[index]
-                                                          .path
-                                                          .toString());
+                                                      openIntent(
+                                                          ticketList
+                                                                  .attachments[
+                                                              index],
+                                                          widget.ticket.uid
+                                                              .toString());
                                                     });
                                               },
                                             ),
@@ -1007,14 +1033,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     selectedTab = _controller.index;
   }
 
-  Future<void> openIntent(String string) async {
+  Future<void> openIntent(Attachments attachments, String ticketUid) async {
     FlutterToast().getToast('Please wait', Colors.grey);
-    String path = await downloadFile(string);
-    print(path);
-    if (string.split('.').last == 'pdf') {
+    String path = await downloadFileOpen(attachments, ticketUid);
+    if (attachments.path.split('.').last == 'pdf') {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
-          type: PDFLocation.Path, path: path, title: string.split('/').last);
+          type: PDFLocation.Path,
+          path: path,
+          title: attachments.path.split('/').last);
       controller.data = data;
       Get.to(() => PDFView());
     } else {
@@ -1045,6 +1072,61 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     final bytes = request.bodyBytes; //close();
     await file.writeAsBytes(bytes);
     return file.path.toString();
+  }
+
+  Future<String> downloadFileOpen(
+      Attachments attachments, String ticketUId) async {
+    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
+    String filePath = await FHBUtils.createFolderInAppDocDirClone(
+        variable.stAudioPath, attachments.name);
+    var file = File('$filePath' /*+ fileType*/);
+    final request = await ApiServices.post(
+      CommonUtil.TRUE_DESK_URL + 'tickets/${ticketUId}/attachments/open',
+      body: {
+        "fileKey": attachments.fileKey,
+        "fileName": attachments.name,
+        "fileType": attachments.type
+      },
+      headers: {
+        HttpHeaders.authorizationHeader: authToken,
+        KEY_OffSet: CommonUtil().setTimeZone()
+      },
+    );
+    final bytes = request.bodyBytes; //close();
+    await file.writeAsBytes(bytes);
+    return file.path.toString();
+  }
+
+  commonWidgetForDropDownValue(String header, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Expanded(
+            child: Text(
+          header,
+          style: TextStyle(
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w100,
+          ),
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
+        )),
+        Expanded(
+          flex: 1,
+          child: Text(
+            CommonUtil().capitalizeFirstofEach(value),
+            style: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w400,
+                color: Colors.black),
+            textAlign: TextAlign.start,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+        ),
+      ],
+    );
   }
 }
 

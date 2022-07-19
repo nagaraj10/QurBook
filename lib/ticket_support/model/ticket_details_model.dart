@@ -1,3 +1,5 @@
+import 'package:myfhb/ticket_support/model/ticket_list_model/AdditionalInfo.dart';
+
 class TicketDetailResponseModel {
   bool isSuccess;
   String message;
@@ -67,6 +69,7 @@ class Ticket {
   int uid;
   int iV;
   String preferredLabName;
+  AdditionalInfo additionalInfo;
 
   Ticket(
       {this.deleted,
@@ -89,7 +92,8 @@ class Ticket {
       this.history,
       this.uid,
       this.iV,
-      this.preferredLabName});
+      this.preferredLabName,
+      this.additionalInfo});
 
   Ticket.fromJson(Map<String, dynamic> json) {
     deleted = json['deleted'];
@@ -145,6 +149,9 @@ class Ticket {
         history.add(new History.fromJson(v));
       });
     }
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
     uid = json['uid'];
     iV = json['__v'];
     preferredLabName = json['preferredLabName'];
@@ -192,6 +199,9 @@ class Ticket {
     if (this.history != null) {
       data['history'] = this.history.map((v) => v.toJson()).toList();
     }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
     data['uid'] = this.uid;
     data['__v'] = this.iV;
     data['preferredLabName'] = this.preferredLabName;
@@ -206,9 +216,16 @@ class Attachments {
   String path;
   String type;
   String date;
+  String fileKey;
 
   Attachments(
-      {this.sId, this.owner, this.name, this.path, this.type, this.date});
+      {this.sId,
+      this.owner,
+      this.name,
+      this.path,
+      this.type,
+      this.date,
+      this.fileKey});
 
   Attachments.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -217,6 +234,7 @@ class Attachments {
     path = json['path'];
     type = json['type'];
     date = json['date'];
+    fileKey = json['fileKey'];
   }
 
   Map<String, dynamic> toJson() {
@@ -227,6 +245,7 @@ class Attachments {
     data['path'] = this.path;
     data['type'] = this.type;
     data['date'] = this.date;
+    data['fileKey'] = this.fileKey;
     return data;
   }
 }
