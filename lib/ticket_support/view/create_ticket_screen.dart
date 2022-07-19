@@ -147,6 +147,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void initState() {
     try {
       super.initState();
+
+      setDefaultValues();
       _getInitialDate(context);
       tckConstants.tckTitleOpt = widget.ticketList.name;
       setAuthToken();
@@ -1831,7 +1833,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 imagePaths.removeAt(index);
-                                print('delete image from List');
+
                                 setState(() {
                                   print('set new state of images');
                                 });
@@ -2090,6 +2092,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       ));
     }
+  }
+
+  void setDefaultValues() {
+    Constants.tckTitle = 'title';
+    Constants.tckDesc = 'desc';
+    Constants.tckPrefDate = 'pref_date';
+    Constants.tckPrefLab = 'pref_lab';
+    Constants.tckPrefLabId = 'pref_lab_id';
+    Constants.ticketType = 'ticket type';
+    Constants.tckPriority = 'ticket priority';
+    Constants.tckID = 'ticket_id';
+    Constants.tckComment = 'ticket_comment';
+    Constants.tckSelectedDoctor = 'Doctor';
+    Constants.tckSelectedHospital = 'Hospital';
+    Constants.tckSelectedCategory = 'Category';
+    Constants.tckPackageName = 'Package Name';
   }
 }
 
