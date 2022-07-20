@@ -1730,6 +1730,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed:() {
+                  readUnreadAction(notification);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1752,10 +1753,14 @@ class _NotificationScreen extends State<NotificationScreen> {
 
                   });
                 },
-                borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                borderSide: notification?.isUnread
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.chatwithcc,
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: notification?.isUnread
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 15.0.sp,
@@ -1766,6 +1771,8 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               OutlineButton(
                 onPressed: () {
+                  readUnreadAction(notification);
+
                   var body = {};
                   body['templateName'] = payload?.templateName;
                   final split = payload?.redirectTo?.split('|');
@@ -1791,10 +1798,14 @@ class _NotificationScreen extends State<NotificationScreen> {
 
 
                 },
-                borderSide:BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                borderSide: notification?.isUnread
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.viewrecord,
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: notification?.isUnread
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 15.0.sp,
