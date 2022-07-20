@@ -22,6 +22,7 @@ class ChatwithCC:BroadcastReceiver() {
         val isCareGiver = p1?.getStringExtra(Constants.IS_CARE_GIVER)
         val deliveredDateTime = p1?.getStringExtra(Constants.DELIVERED_DATE_TIME)
         val isFromCareCoordinator = p1?.getStringExtra(Constants.IS_FROM_CARE_COORDINATOR)
+        val senderProfilePic = p1?.getStringExtra(Constants.SENDER_PROFILE_PIC)
 
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
@@ -37,6 +38,7 @@ class ChatwithCC:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROB_USER_ID,userId)
         launchIntent?.putExtra(Constants.DELIVERED_DATE_TIME,deliveredDateTime)
         launchIntent?.putExtra(Constants.IS_FROM_CARE_COORDINATOR,isFromCareCoordinator)
+        launchIntent?.putExtra(Constants.SENDER_PROFILE_PIC,senderProfilePic)
         launchIntent?.putExtra("type", type)
         p0.startActivity(launchIntent)
     }

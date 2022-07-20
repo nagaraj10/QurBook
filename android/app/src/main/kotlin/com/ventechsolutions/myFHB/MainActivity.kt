@@ -1719,6 +1719,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
+        val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
         val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
 
 
@@ -1733,7 +1734,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
 
-            sharedValue = "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}"
+            sharedValue = "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}&${senderProfilePic}"
         } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
 
             sharedValue =

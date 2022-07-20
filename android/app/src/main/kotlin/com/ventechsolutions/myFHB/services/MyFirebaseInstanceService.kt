@@ -723,6 +723,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         chatWithCcIntent.putExtra(Constants.IS_CARE_GIVER, data[Constants.IS_CARE_GIVER])
         chatWithCcIntent.putExtra(Constants.DELIVERED_DATE_TIME, data[Constants.DELIVERED_DATE_TIME])
         chatWithCcIntent.putExtra(Constants.IS_FROM_CARE_COORDINATOR, data[Constants.IS_FROM_CARE_COORDINATOR])
+        chatWithCcIntent.putExtra(Constants.SENDER_PROFILE_PIC, data[Constants.SENDER_PROFILE_PIC])
 
 
         val onTapNS = Intent(this, OnTapNotification::class.java)

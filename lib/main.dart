@@ -590,7 +590,7 @@ class _MyFHBState extends State<MyFHB> {
               MaterialPageRoute(
                   builder: (context) => ChatDetail(
                       peerId:passedValArr[2],
-                      peerAvatar: '',
+                      peerAvatar: passedValArr[8],
                       peerName: passedValArr[3],
                       patientId: '',
                       patientName: '',
@@ -1270,7 +1270,12 @@ class _MyFHBState extends State<MyFHB> {
               templateName: parsedData[1],
               bundle: parsedData[2],
             );
-          } else if (parsedData[1] == 'sheela') {
+          }else if(parsedData[1] == 'notifyCaregiverForMedicalRecord'){
+            return SplashScreen(
+              nsRoute: 'notifyCaregiverForMedicalRecord',
+              bundle: parsedData[2] + '|' + parsedData[3]+ '|' + parsedData[4]+ '|' + parsedData[5]+ '|' + parsedData[6]+ '|' + parsedData[7]+ '|' + parsedData[8],
+            );
+          }else if (parsedData[1] == 'sheela') {
             return SplashScreen(
               nsRoute: 'sheela',
               bundle: parsedData[2] + '|' + parsedData[3],

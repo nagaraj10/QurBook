@@ -417,6 +417,32 @@ class _SplashScreenState extends State<SplashScreen> {
                               .navigateToMyRecordsCategory(temp[1], null, true);
                         }
                       }
+                    }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'){
+                      final passedValArr = widget.templateName.split('|');
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatDetail(
+                                  peerId:passedValArr[0],
+                                  peerAvatar: passedValArr[6],
+                                  peerName: passedValArr[1],
+                                  patientId: '',
+                                  patientName: '',
+                                  patientPicture: '',
+                                  isFromVideoCall: false,
+                                  isFromFamilyListChat: true,
+                                  isFromCareCoordinator: passedValArr[5] as bool,
+                                  carecoordinatorId:passedValArr[2],
+                                  isCareGiver: passedValArr[3] as bool,
+                                  groupId: '',
+                                  lastDate: passedValArr[4]
+                              )
+                          )
+                      ).then(
+                              (value) {
+
+                          });
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
