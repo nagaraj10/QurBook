@@ -206,7 +206,7 @@ const String strFreeDiet = 'FreeDiet';
 
 const String strAddPlan = 'Add Plan';
 
-const String strNewChatLabel = 'My Family';
+const String strNewChatLabel = 'New Chat';
 
 const String strLabelNoFamily = 'No data available';
 

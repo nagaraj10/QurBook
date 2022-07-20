@@ -470,15 +470,17 @@ class _ChatUserListState extends State<ChatUserList> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             data?.isCarecoordinator
-                                ? Text(
-                                    ' (CC)',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16.0.sp,
+                                ? Expanded(
+                                  child: Text(
+                                      ' (Care Coordinator)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16.0.sp,
+                                      ),
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
+                                )
                                 : SizedBox.shrink(),
                           ],
                         ),
@@ -488,7 +490,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         data?.isCarecoordinator
                             ? Text(
                                 ccName != null
-                                    ? 'CC: ' +
+                                    ? 'Name: ' +
                                         CommonUtil()
                                             .titleCase(ccName.toLowerCase())
                                     : '',
@@ -585,13 +587,13 @@ class _ChatUserListState extends State<ChatUserList> {
     var ccName = '';
     if (userChatList?.isFamilyUserCareCoordinator) {
       try {
-        if (userChatList?.familyUserFirstName != null &&
-            userChatList?.familyUserFirstName != '') {
-          ccName = userChatList?.familyUserFirstName;
+        if (userChatList?.firstName != null &&
+            userChatList?.firstName != '') {
+          ccName = userChatList?.firstName;
         }
-        if (userChatList?.familyUserLastName != null &&
-            userChatList?.familyUserLastName != '') {
-          ccName = ccName + ' ' + userChatList?.familyUserLastName;
+        if (userChatList?.lastName != null &&
+            userChatList?.lastName != '') {
+          ccName = ccName + ' ' + userChatList?.lastName;
         }
       } catch (e) {}
     }
@@ -708,15 +710,17 @@ class _ChatUserListState extends State<ChatUserList> {
                                     fontFamily: variable.font_poppins),
                               ),
                               userChatList?.isFamilyUserCareCoordinator
-                                  ? Text(
-                                      ' (CC)',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0.sp,
+                                  ? Expanded(
+                                    child: Text(
+                                        ' (Care Coordiantor)',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16.0.sp,
+                                        ),
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
+                                  )
                                   : SizedBox.shrink(),
                             ],
                           ),
@@ -724,7 +728,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         userChatList?.isFamilyUserCareCoordinator
                             ? Text(
                                 ccName != null
-                                    ? 'CC: ' +
+                                    ? 'Name: ' +
                                         CommonUtil()
                                             .titleCase(ccName.toLowerCase())
                                     : '',
@@ -908,18 +912,36 @@ class _ChatUserListState extends State<ChatUserList> {
   String getDocName(PayloadChat userChatList) {
     String name = '';
     if (userChatList != null) {
-      if (userChatList?.firstName != null && userChatList?.firstName != '') {
-        if (userChatList?.lastName != null && userChatList?.lastName != '') {
-          name = userChatList.firstName + ' ' + userChatList.lastName ?? '';
+      if(userChatList?.isFamilyUserCareCoordinator){
+        if (userChatList?.familyUserFirstName != null && userChatList?.familyUserFirstName != '') {
+          if (userChatList?.familyUserLastName != null && userChatList?.familyUserLastName != '') {
+            name = userChatList?.familyUserFirstName + ' ' + userChatList?.familyUserLastName ?? '';
+          } else {
+            name = (userChatList?.familyUserFirstName ?? '').toString();
+          }
         } else {
-          name = (userChatList?.firstName ?? '').toString();
+          name = '';
         }
-      } else {
-        name = '';
+      }else{
+        if (userChatList != null) {
+          if (userChatList?.firstName != null && userChatList?.firstName != '') {
+            if (userChatList?.lastName != null && userChatList?.lastName != '') {
+              name = userChatList.firstName + ' ' + userChatList.lastName ?? '';
+            } else {
+              name = (userChatList?.firstName ?? '').toString();
+            }
+          } else {
+            name = '';
+          }
+        } else {
+          name = '';
+        }
       }
+
     } else {
       name = '';
     }
+
 
     return name;
   }

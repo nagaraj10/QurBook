@@ -1018,7 +1018,7 @@ class ChatState extends State<ChatDetail> {
                         widget.peerName != null && widget.peerName != ''
                             ? isFromCareCoordinator
                                 ? widget.peerName?.capitalizeFirstofEach +
-                                    ' (CC)'
+                                    ' (Care Coordinator)'
                                 : widget.peerName?.capitalizeFirstofEach
                             : '',
                         textAlign: TextAlign.left,
@@ -1053,7 +1053,7 @@ class ChatState extends State<ChatDetail> {
 
   Widget getTopBookingDetail() {
     if (isFromCareCoordinator) {
-      return Text('CC: ' + careCoordinatorName,
+      return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
