@@ -2,9 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+import 'package:myfhb/my_family/screens/FamilyListView.dart';
+import 'package:myfhb/my_providers/models/GetDoctorsByIdModel.dart';
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -93,18 +100,35 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
+  MyProfileModel myProfile;
+  final doctorController = TextEditingController();
+  FamilyListBloc _familyListBloc;
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  String updatedProfilePic;
+  String selectedFamilyMemberName, switchedUserId;
+  String USERID;
+  FlutterToast toast = FlutterToast();
+  UpdateProvidersBloc updateProvidersBloc;
+  bool teleHealthAlertShown = false;
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-
+    USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    switchedUserId = USERID;
     _doctorsListBlock = DoctorsListBlock();
     _hospitalListBlock = HospitalListBlock();
     _labsListBlock = LabsListBlock();
 
+    updateProvidersBloc = UpdateProvidersBloc();
+
     _healthReportListForUserBlock = HealthReportListForUserBlock();
 
     value = _textFieldController.text.toString();
+
+    _familyListBloc = FamilyListBloc();
+    _familyListBloc.getFamilyMembersListNew();
 
     if (value != '') {
       _doctorsListBlock.getDoctorsListNew(
@@ -854,7 +878,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         myProfile.lastName != null) {
       return Text(
         myProfile.firstName[0].toUpperCase() +
-            (myProfile.lastName.length>0?myProfile.lastName[0].toUpperCase():''),
+            (myProfile.lastName.length > 0
+                ? myProfile.lastName[0].toUpperCase()
+                : ''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -889,21 +915,26 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       HospitalsListResult hospitalData,
       LabListResult labData) {
     if (widget.arguments.searchWord == CommonConstants.doctors) {
-      Navigator.pushNamed(
-        context,
-        router.rt_AddProvider,
-        arguments: AddProvidersArguments(
-            data: data,
-            searchKeyWord: CommonConstants.doctors,
-            fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                ? widget.arguments.fromClass
-                : router.rt_TelehealthProvider,
-            hasData: true),
-      ).then((value) {
-        if (value == 1) {
-          Navigator.pop(context);
-        }
-      });
+      if (data.patientAssociationRequest) {
+        selectedFamilyMemberName = null;
+        showDialogBoxToAddDoctorWhenPermissionRequired(context, data);
+      } else {
+        Navigator.pushNamed(
+          context,
+          router.rt_AddProvider,
+          arguments: AddProvidersArguments(
+              data: data,
+              searchKeyWord: CommonConstants.doctors,
+              fromClass: widget.arguments.fromClass == router.cn_AddProvider
+                  ? widget.arguments.fromClass
+                  : router.rt_TelehealthProvider,
+              hasData: true),
+        ).then((value) {
+          if (value == 1) {
+            Navigator.pop(context);
+          }
+        });
+      }
     } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
       Navigator.pushNamed(
         context,
@@ -1543,5 +1574,476 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 content: Text('Enter hospital Name'),
               ));
     }
+  }
+
+  showDialogBoxToAddDoctorWhenPermissionRequired(
+      BuildContext context, DoctorsListResult data) {
+    if (data?.isTelehealthEnabled != null) {
+      teleHealthAlertShown = data.isTelehealthEnabled;
+    }
+    var dialog = StatefulBuilder(builder: (context, setState) {
+      return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(1)),
+          title: Container(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                ' Add ' + widget.arguments.searchWord,
+                style: TextStyle(
+                    fontSize: 18.0.sp,
+                    fontWeight: FontWeight.w500,
+                    color: ColorUtils.blackcolor),
+              ),
+              IconButton(
+                  icon: Icon(
+                    Icons.close,
+                    size: 24.0.sp,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  }),
+            ],
+          )),
+          content: Container(
+              width: 1.sw,
+              height: 1.sh / 2.5,
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _ShowDoctorTextField(data.name != null
+                          ? data?.name
+                              ?.capitalizeFirstofEach //toBeginningOfSentenceCase(widget.arguments.data.name)
+                          : ''),
+                      SizedBox(height: 10.0.h),
+                      Text(
+                        variable.strAssociateMember,
+                        style: TextStyle(
+                            fontSize: 16.0.sp,
+                            fontWeight: FontWeight.w400,
+                            color: ColorUtils.greycolor1),
+                      ),
+                      SizedBox(height: 10.0.h),
+                      _showUser(setState),
+                      SizedBox(height: 20.0.h),
+                      Text(
+                        variable.strApprovAdd,
+                        style: TextStyle(
+                            fontSize: 16.0.sp,
+                            fontWeight: FontWeight.w400,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          _showCancelButton(),
+                          _showAddButtonForProvider(data),
+                        ],
+                      ),
+                    ],
+                  )),
+                )
+              ])));
+    });
+
+    return showDialog(
+        context: context,
+        builder: (context) => dialog,
+        barrierDismissible: false);
+  }
+
+  _addBtnTappedProvider(DoctorsListResult doctorModel) {
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
+
+    updateProvidersBloc.isPreferred = false;
+
+    if (widget.arguments.searchWord == CommonConstants.doctors) {
+      if (teleHealthAlertShown) {
+        if (switchedUserId != USERID) {
+          updateProvidersBloc.userId = switchedUserId;
+          updateProvidersBloc.providerId = doctorModel.doctorId;
+          updateProvidersBloc.providerReferenceId = null;
+        } else {
+          updateProvidersBloc.userId = USERID;
+
+          updateProvidersBloc.providerId = doctorModel.doctorId;
+          updateProvidersBloc.providerReferenceId =
+              doctorModel.doctorReferenceId;
+        }
+        updateProvidersBloc.selectedCategories = [];
+
+        updateDoctorsIdWithUserDetails();
+      } else {
+        showDialogForDoctor(doctorModel);
+      }
+    }
+  }
+
+  void showDialogForDoctor(DoctorsListResult data) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(variable.strDisableTeleconsulting),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    teleHealthAlertShown = true;
+                    _addBtnTappedProvider(data);
+                  },
+                  child: Text('Ok'))
+            ],
+          );
+        });
+  }
+
+  updateDoctorsIdWithUserDetails() {
+    updateProvidersBloc
+        .updateDoctorsIdWithUserDetails(isPAR: true)
+        .then((value) async {
+      if (value.success) {
+        // set up the button
+        Navigator.pop(context);
+        Widget okButton = TextButton(
+          child: Text("OK"),
+          onPressed: () {
+            var routeClassName = '';
+
+            if (widget.arguments.fromClass == router.cn_AddProvider ||
+                widget.arguments.fromClass == router.rt_myprovider) {
+              routeClassName = router.rt_UserAccounts;
+            } else if (widget.arguments.fromClass ==
+                router.rt_TelehealthProvider) {
+              routeClassName = router.rt_TelehealthProvider;
+            }
+
+            Navigator.popUntil(context, (route) {
+              var shouldPop = false;
+              if (route.settings.name == routeClassName ||
+                  route.settings == null) {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
+          },
+        );
+
+        showAlertDialog(context, okButton, "Request sent successfully");
+      } else {
+        Navigator.pop(context);
+
+        Widget okButton = TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.pop(context);
+            });
+
+        showAlertDialog(context, okButton, value.message);
+      }
+    });
+  }
+
+  showAlertDialog(BuildContext context, Widget widget, String msg) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(variable.strAPP_NAME),
+      content: Text(msg),
+      actions: [
+        widget,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  Widget _showAddButtonForProvider(DoctorsListResult doctor) {
+    var addButtonWithGesture = GestureDetector(
+      onTap: () {
+        _addBtnTappedProvider(doctor);
+      },
+      child: Container(
+        height: 40.0.h,
+        padding: EdgeInsets.only(left: 3, right: 3, top: 5, bottom: 5),
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()),
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Color.fromARGB(15, 0, 0, 0),
+              offset: Offset(0, 2),
+              blurRadius: 5,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            "Send Request",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return addButtonWithGesture;
+  }
+
+  Widget _ShowDoctorTextField(String doctorName) {
+    doctorController.text = doctorName;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: TextField(
+        cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+        controller: doctorController,
+        keyboardType: TextInputType.emailAddress,
+        //focusNode: _doctorFocus,
+        textInputAction: TextInputAction.done,
+        //autofocus: true,
+        enabled: false,
+        //widget.arguments.fromClass == router.rt_myprovider ? false : true,
+        onSubmitted: (term) {
+          //_doctorFocus.unfocus();
+        },
+        style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16.0.sp,
+            color: Color(CommonUtil().getMyPrimaryColor())),
+        decoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+              borderSide:
+                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+            labelText: widget.arguments.searchWord,
+            labelStyle: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w400,
+                color: ColorUtils.greycolor1),
+            hintStyle: TextStyle(
+              color: ColorUtils.greycolor1,
+            ),
+            border: UnderlineInputBorder(borderSide: BorderSide.none)),
+      ),
+    );
+  }
+
+  Widget _showUser(StateSetter setState) {
+    MyProfileModel primaryUserProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      primaryUserProfile =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    } catch (e) {}
+    return InkWell(
+        onTap: () {
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait);
+
+          if (_familyListBloc != null) {
+            _familyListBloc = null;
+            _familyListBloc = FamilyListBloc();
+          }
+          _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
+            // Hide Loading
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            if (familyMembersList != null &&
+                familyMembersList.result != null &&
+                familyMembersList.result?.sharedByUsers?.length > 0) {
+              selectedFamilyMemberName = null;
+              getDialogBoxWithFamilyMemberScrap(
+                  familyMembersList.result, setState);
+            } else {
+              toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
+            }
+          });
+        },
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: UnconstrainedBox(
+              child: Container(
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 246, 246, 246),
+              border: Border.all(
+                width: 0.7356,
+                color: Color.fromARGB(255, 239, 239, 239),
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
+            child: Row(
+              children: [
+                ClipOval(
+                    child: Container(
+                  height: 30.0.h,
+                  width: 30.0.h,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.white,
+                  ),
+                  child: updatedProfilePic != null
+                      ? updatedProfilePic.length > 5
+                          ? getProfilePicWidget(updatedProfilePic)
+                          : Center(
+                              child: Text(
+                                selectedFamilyMemberName == null
+                                    ? myProfile.result?.lastName.toUpperCase()
+                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            )
+                      : myProfile != null
+                          ? myProfile?.result != null
+                              ? myProfile?.result?.profilePicThumbnailUrl !=
+                                      null
+                                  ? getProfilePicWidget(
+                                      myProfile.result.profilePicThumbnailUrl)
+                                  : Center(
+                                      child: Text(
+                                        selectedFamilyMemberName == null
+                                            ? myProfile?.result?.lastName
+                                                .toUpperCase()
+                                            : selectedFamilyMemberName[0]
+                                                .toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 16.0.sp,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    )
+                              : Center(
+                                  child: Text(
+                                    selectedFamilyMemberName == null
+                                        ? myProfile?.result != null
+                                            ? myProfile?.result.lastName ?? ''
+                                            : ''
+                                        : selectedFamilyMemberName[0]
+                                            .toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 16.0.sp,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                )
+                          : Center(
+                              child: Text(
+                                '',
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                )),
+                SizedBox(width: 10.0.w),
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Text(
+                    selectedFamilyMemberName == null
+                        ? myProfile?.result?.id ==
+                                primaryUserProfile?.result?.id
+                            ? variable.Self
+                            : myProfile?.result?.firstName
+                        : selectedFamilyMemberName
+                            .capitalizeFirstofEach, //toBeginningOfSentenceCase(selectedFamilyMemberName),
+                    softWrap: true,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 85, 92, 89),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ));
+  }
+
+  Future<Widget> getDialogBoxWithFamilyMemberScrap(
+      FamilyMemberResult familyData, StateSetter setState) {
+    return FamilyListView(familyData)
+        .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
+            (context, userId, userName, profilePic) {
+      switchedUserId = userId;
+      selectedFamilyMemberName = userName;
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      updatedProfilePic = profilePic;
+      Navigator.pop(context);
+      setState(() {});
+    });
+  }
+
+  Widget getProfilePicWidget(String profilePicThumbnail) {
+    return profilePicThumbnail != null
+        ? Image.network(
+            profilePicThumbnail,
+            height: 30.0.h,
+            width: 30.0.h,
+            fit: BoxFit.cover,
+          )
+        : Container(
+            color: Color(fhbColors.bgColorContainer),
+            height: 30.0.h,
+            width: 30.0.h,
+          );
+  }
+
+  void _cancelBtnTapped() async {
+    Navigator.pop(context);
+  }
+
+  Widget _showCancelButton() {
+    final loginButtonWithGesture = GestureDetector(
+      onTap: _cancelBtnTapped,
+      child: Container(
+        width: 100.0.w,
+        height: 40.0.h,
+        decoration: BoxDecoration(
+          color: ColorUtils.greycolor,
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: ColorUtils.greycolor.withOpacity(0.2),
+              blurRadius: 100,
+              offset: Offset(0, 100),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            variable.Cancel,
+            style: TextStyle(
+              color: ColorUtils.blackcolor,
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    return loginButtonWithGesture;
   }
 }

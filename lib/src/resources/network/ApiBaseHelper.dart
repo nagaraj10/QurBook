@@ -247,15 +247,16 @@ class ApiBaseHelper {
     return true;
   }
 
-  Future<dynamic> updateTeleHealthProvidersNew(
-      String url, String jsonString) async {
+  Future<dynamic> updateTeleHealthProvidersNew(String url, String jsonString,
+      {bool isPAR}) async {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-    final response = await dio.put(_baseUrl + url, data: jsonString);
+    final response = await dio
+        .put(_baseUrl + url + "&associationRequest=${isPAR}", data: jsonString);
     print(response.data);
 
     return response.data;

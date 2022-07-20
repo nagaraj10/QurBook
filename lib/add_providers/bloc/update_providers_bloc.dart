@@ -102,7 +102,7 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 1
   // Doctors
-  Future<UpdateProvidersId> updateDoctorsIdWithUserDetails() async {
+  Future<UpdateProvidersId> updateDoctorsIdWithUserDetails({bool isPAR}) async {
     doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
     UpdateProvidersId updateProvidersId;
     try {
@@ -112,7 +112,8 @@ class UpdateProvidersBloc implements BaseBloc {
               isPreferred,
               providerReferenceId,
               userId,
-              selectedCategories);
+              selectedCategories,
+              isPAR: isPAR);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
@@ -164,16 +165,12 @@ class UpdateProvidersBloc implements BaseBloc {
   }
 
   //providerMapping after subscribe
-  Future<UpdateProvidersId> mappingHealthOrg(String providerId,String userId) async {
+  Future<UpdateProvidersId> mappingHealthOrg(
+      String providerId, String userId) async {
     UpdateProvidersId updateProvidersId;
     try {
-      updateProvidersId =
-      await updateProvidersRepository.updateHospitalsIdWithUserDetails(
-          providerId,
-          false,
-          '',
-          userId,
-          []);
+      updateProvidersId = await updateProvidersRepository
+          .updateHospitalsIdWithUserDetails(providerId, false, '', userId, []);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
