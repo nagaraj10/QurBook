@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
@@ -1717,6 +1718,87 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               SizedBox(
                 width: 15.0.w,
+              ),
+            ],
+          ),
+        );
+        break;
+      case parameters.notifyCaregiverForMedicalRecord:
+        return Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed:() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                            peerId:payload.userId,
+                            peerAvatar: payload.senderProfilePic,
+                            peerName: payload.patientName,
+                            patientId: '',
+                            patientName: '',
+                            patientPicture: '',
+                            isFromVideoCall: false,
+                            isFromFamilyListChat: true,
+                            isFromCareCoordinator: payload.isFromCareCoordinator.toLowerCase()=='true',
+                            carecoordinatorId:payload.careCoordinatorUserId,
+                            isCareGiver: payload.isCareGiver.toLowerCase()=='true',
+                            groupId: '',
+                            lastDate: payload.deliveredDateTime
+                        )),
+                  ).then((value) {
+
+                  });
+                },
+                borderSide: BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                child: TextWidget(
+                  text: TranslationConstants.chatwithcc,
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () {
+                  var body = {};
+                  body['templateName'] = payload?.templateName;
+                  final split = payload?.redirectTo?.split('|');
+                  var redirectData = {
+                    for (int i = 0; i < split.length; i++)
+                      i: split[i]
+                  };
+                  var id = redirectData[2];
+                  if (id.runtimeType == String &&
+                      (id ?? '').isNotEmpty) {
+                    final userId =
+                    PreferenceUtil.getStringValue(KEY_USERID);
+                    if ((payload?.userId ?? '') == userId) {
+                      CommonUtil()
+                          .navigateToRecordDetailsScreen(id);
+                    } else {
+                      CommonUtil.showFamilyMemberPlanExpiryDialog(
+                        (payload?.patientName ?? ''),
+                        redirect: (payload?.redirectTo ?? ''),
+                      );
+                    }
+                  }
+
+
+                },
+                borderSide:BorderSide(color: Color(CommonUtil().getMyPrimaryColor())),
+                child: TextWidget(
+                  text: TranslationConstants.viewrecord,
+                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
               ),
             ],
           ),

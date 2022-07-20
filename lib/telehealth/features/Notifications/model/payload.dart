@@ -54,10 +54,19 @@ class Payload {
   String caregiverReceiver;
   String appointmentId;
   String createdBy;
+  String careCoordinatorUserId;
+  String isFromCareCoordinator;
+  String isCareGiver;
+  String deliveredDateTime;
+  String senderProfilePic;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
+    isFromCareCoordinator = json["isFromCareCoordinator"].toString().toLowerCase();
+    isCareGiver = json["isCareGiver"].toString().toLowerCase();
     meetingId = json["meetingId"] == null ? null : json["meetingId"];
+    senderProfilePic = json["senderProfilePic"] == null ? null : json["senderProfilePic"];
+    deliveredDateTime = json["deliveredDateTime"] == null ? null : json["deliveredDateTime"];
     appointmentId =
         json["appointmentId"] == null ? null : json["appointmentId"];
     createdBy = json["createdBy"] == null ? null : json["createdBy"];
@@ -90,6 +99,7 @@ class Payload {
     patientName = json["patientName"] == null ? null : json["patientName"];
     userId = json["userId"] == null ? null : json["userId"];
     claimId = json["claimId"] == null ? null : json["claimId"];
+    careCoordinatorUserId = json["careCoordinatorUserId"] == null ? null : json["careCoordinatorUserId"];
     patientPhoneNumber = json[parameters.patientPhoneNumber] == null
         ? null
         : json[parameters.patientPhoneNumber];

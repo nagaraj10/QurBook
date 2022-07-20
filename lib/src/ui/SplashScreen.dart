@@ -417,9 +417,10 @@ class _SplashScreenState extends State<SplashScreen> {
                               .navigateToMyRecordsCategory(temp[1], null, true);
                         }
                       }
-                    }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'){
+                    }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'&&
+                        (widget.templateName != null &&
+                            widget.templateName != '')){
                       final passedValArr = widget.templateName.split('|');
-
                       Navigator.push(
                           context,
                           MaterialPageRoute(
