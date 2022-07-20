@@ -420,7 +420,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'&&
                         (widget.templateName != null &&
                             widget.templateName != '')){
-                      final passedValArr = widget.templateName.split('|');
+                      final passedValArr = widget.bundle.split('|');
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -433,9 +433,9 @@ class _SplashScreenState extends State<SplashScreen> {
                                   patientPicture: '',
                                   isFromVideoCall: false,
                                   isFromFamilyListChat: true,
-                                  isFromCareCoordinator: passedValArr[5] as bool,
+                                  isFromCareCoordinator: passedValArr[5].toString().toLowerCase()=='true',
                                   carecoordinatorId:passedValArr[2],
-                                  isCareGiver: passedValArr[3] as bool,
+                                  isCareGiver: passedValArr[3].toString().toLowerCase()=='true',
                                   groupId: '',
                                   lastDate: passedValArr[4]
                               )

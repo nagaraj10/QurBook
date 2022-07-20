@@ -1266,6 +1266,7 @@ class _MyFHBState extends State<MyFHB> {
           }else if(parsedData[1] == 'notifyCaregiverForMedicalRecord'){
             return SplashScreen(
               nsRoute: 'notifyCaregiverForMedicalRecord',
+              templateName: parsedData[1],
               bundle: parsedData[2] + '|' + parsedData[3]+ '|' + parsedData[4]+ '|' + parsedData[5]+ '|' + parsedData[6]+ '|' + parsedData[7]+ '|' + parsedData[8],
             );
           }else if (parsedData[1] == 'sheela') {
