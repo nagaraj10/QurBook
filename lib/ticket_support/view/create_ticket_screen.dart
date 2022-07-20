@@ -239,7 +239,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                             Row(
                               children: [
                                 getWidgetForTitleText(
-                                    title: "Category : ", isbold: false),
+                                    title: "Ticket Type : ", isbold: false),
                                 getWidgetForTitleText(
                                     title: tckConstants.tckTitleOpt,
                                     isbold: true)
@@ -402,18 +402,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   children: [
                     getWidgetForTitleText(title: "Category"),
                     SizedBox(height: 10.h),
-                    Row(
-                      children: [
-                        Expanded(
-                            flex: 2,
-                            child: Container(
-                                height: 50,
-                                child: healthConditionsResult != null
-                                    ? getDropDownForPlanCategory(
-                                        healthConditionsResult) //getDropDownForPlanCategory(healthConditionsResult)
-                                    : getExpandedDropdownForCategory())),
-                      ],
-                    )
+                    healthConditionsResult != null
+                        ? getDropDownForPlanCategory(
+                            healthConditionsResult) //getDropDownForPlanCategory(healthConditionsResult)
+                        : getExpandedDropdownForCategory(),
                   ],
                 ))
               : SizedBox.shrink();
@@ -1744,109 +1736,105 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             itemBuilder: (context, index) {
               var asset =
                   imagePaths[index].isFromFile ? imagePaths[index].asset : "";
-              return Expanded(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                      color: Colors.white,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.all(2),
-                            child: imagePaths[index].isFromFile
-                                ? Material(
-                                    child: Container(
-                                        height: double.infinity,
-                                        child: AssetThumb(
-                                          asset: asset,
-                                          width: 150,
-                                          height: 150,
-                                        )))
-                                : imagePaths[index].isdownloaded
-                                    ? imagePaths[index].fileType.trim() ==
-                                            ".pdf"
-                                        ? Material(
-                                            child: Container(
-                                            color: Colors.black,
-                                            child: IconButton(
-                                              tooltip: 'View PDF',
-                                              icon: ImageIcon(
-                                                  AssetImage(
-                                                      variable.icon_attach),
-                                                  color: Colors.white),
-                                              onPressed: () async {
-                                                await OpenFile.open(
-                                                  imagePaths[index].file,
-                                                );
-                                              },
-                                            ),
-                                          ))
-                                        : Material(
-                                            child: Container(
-                                                height: double.infinity,
-                                                child: Image.file(
-                                                  File(imagePaths[index].file),
-                                                  width: 150,
-                                                  fit: BoxFit.fill,
-                                                  height: 150,
-                                                )),
-                                          )
-                                    : imagePaths[index].fileType.trim() ==
-                                            ".pdf"
-                                        ? Material(
-                                            child: Container(
-                                            color: Colors.black,
-                                            child: IconButton(
-                                              tooltip: 'View PDF',
-                                              icon: ImageIcon(
-                                                  AssetImage(
-                                                      variable.icon_attach),
-                                                  color: Colors.white),
-                                              onPressed: () async {
-                                                await OpenFile.open(
-                                                  imagePaths[index].file,
-                                                );
-                                              },
-                                            ),
-                                          ))
-                                        : Material(
-                                            child: Container(
-                                                height: double.infinity,
-                                                child: Image.network(
-                                                  imagePaths[index].file,
-                                                  width: 150,
-                                                  fit: BoxFit.fill,
-                                                  height: 150,
-                                                  headers: {
-                                                    HttpHeaders
-                                                            .authorizationHeader:
-                                                        authToken
-                                                  },
-                                                )),
+              return InkWell(
+                onTap: () {},
+                child: Container(
+                    color: Colors.white,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      fit: StackFit.expand,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(2),
+                          child: imagePaths[index].isFromFile
+                              ? Material(
+                                  child: Container(
+                                      height: double.infinity,
+                                      child: AssetThumb(
+                                        asset: asset,
+                                        width: 150,
+                                        height: 150,
+                                      )))
+                              : imagePaths[index].isdownloaded
+                                  ? imagePaths[index].fileType.trim() == ".pdf"
+                                      ? Material(
+                                          child: Container(
+                                          color: Colors.black,
+                                          child: IconButton(
+                                            tooltip: 'View PDF',
+                                            icon: ImageIcon(
+                                                AssetImage(
+                                                    variable.icon_attach),
+                                                color: Colors.white),
+                                            onPressed: () async {
+                                              await OpenFile.open(
+                                                imagePaths[index].file,
+                                              );
+                                            },
                                           ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                imagePaths.removeAt(index);
+                                        ))
+                                      : Material(
+                                          child: Container(
+                                              height: double.infinity,
+                                              child: Image.file(
+                                                File(imagePaths[index].file),
+                                                width: 150,
+                                                fit: BoxFit.fill,
+                                                height: 150,
+                                              )),
+                                        )
+                                  : imagePaths[index].fileType.trim() == ".pdf"
+                                      ? Material(
+                                          child: Container(
+                                          color: Colors.black,
+                                          child: IconButton(
+                                            tooltip: 'View PDF',
+                                            icon: ImageIcon(
+                                                AssetImage(
+                                                    variable.icon_attach),
+                                                color: Colors.white),
+                                            onPressed: () async {
+                                              await OpenFile.open(
+                                                imagePaths[index].file,
+                                              );
+                                            },
+                                          ),
+                                        ))
+                                      : Material(
+                                          child: Container(
+                                              height: double.infinity,
+                                              child: Image.network(
+                                                imagePaths[index].file,
+                                                width: 150,
+                                                fit: BoxFit.fill,
+                                                height: 150,
+                                                headers: {
+                                                  HttpHeaders
+                                                          .authorizationHeader:
+                                                      authToken
+                                                },
+                                              )),
+                                        ),
+                        ),
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: GestureDetector(
+                            onTap: () {
+                              imagePaths.removeAt(index);
 
-                                setState(() {
-                                  print('set new state of images');
-                                });
-                              },
-                              child: Icon(
-                                Icons.close_sharp,
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                              ),
+                              setState(() {
+                                print('set new state of images');
+                              });
+                            },
+                            child: Icon(
+                              Icons.close_sharp,
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                             ),
                           ),
-                        ],
-                      )),
-                ),
+                        ),
+                      ],
+                    )),
               );
             },
             itemCount: imagePaths.length,
@@ -1901,6 +1889,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         //stateVal = suggestion.state;
       },
       validator: (value) {
+        if (value != null && value.length > 0) {
+          package_title_ctrl.text = value;
+        }
+
         return null;
       },
       onSaved: (value) => packageName = value,
@@ -1938,47 +1930,57 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }).toList();
     return SizedBoxWithChild(
         height: 50,
-        child: IgnorePointer(
-            ignoring: controller.isPreferredDoctorDisable.value,
-            child: Expanded(
-                flex: 1,
-                child: DropdownButton<MenuItem>(
-                  // Initial Value
-                  value: dropdownValue,
-                  isExpanded: true,
+        width: double.infinity,
+        child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: Colors.white,
+              border: Border.all(
+                  color: Colors.grey, style: BorderStyle.solid, width: 0.80),
+            ),
+            child: IgnorePointer(
+              ignoring: controller.isPreferredDoctorDisable.value,
+              child: DropdownButton<MenuItem>(
+                // Initial Value
+                value: dropdownValue,
+                isExpanded: true,
+                underline: SizedBox(),
+                hint: Row(
+                  children: <Widget>[
+                    SizedBoxWidget(width: 20),
+                    Text(
+                        CommonUtil().validString(
+                            dropdownValue?.title ?? 'Select category'),
+                        style: TextStyle(
+                          fontSize: 14.0.sp,
+                        )),
+                  ],
+                ),
 
-                  // Down Arrow Icon
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  hint: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                            CommonUtil().validString(
-                                dropdownValue?.title ?? 'Select Category'),
-                            style: TextStyle(
-                              fontSize: 14.0.sp,
-                            )),
-                      ),
-                    ],
-                  ),
-
-                  // Array list of items
-                  items: menuItems.map((MenuItem items) {
-                    return DropdownMenuItem(
-                      value: items,
-                      child: Text(items.title),
-                    );
-                  }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
-                  onChanged: (MenuItem newValue) {
-                    setState(() {
-                      dropdownValue = newValue;
-                    });
-                  },
-                ))));
+                // Array list of items
+                items: menuItems
+                    .map((MenuItem items) => DropdownMenuItem(
+                          child: Row(
+                            children: <Widget>[
+                              SizedBoxWidget(width: 20),
+                              Text(CommonUtil().validString(items.title),
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                  )),
+                            ],
+                          ),
+                          value: items,
+                        ))
+                    .toList(),
+                // After selecting the desired option,it will
+                // change button value to selected value
+                onChanged: (MenuItem newValue) {
+                  setState(() {
+                    dropdownValue = newValue;
+                  });
+                },
+              ),
+            )));
   }
 
   Widget getExpandedDropdownForCategory() {
@@ -2095,8 +2097,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   void setDefaultValues() {
-    Constants.tckTitle = 'title';
-    Constants.tckDesc = 'desc';
+    Constants.tckTitle = '';
+    Constants.tckDesc = '';
     Constants.tckPrefDate = 'pref_date';
     Constants.tckPrefLab = 'pref_lab';
     Constants.tckPrefLabId = 'pref_lab_id';

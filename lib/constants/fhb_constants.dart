@@ -667,9 +667,9 @@ const String strThereAreNoPreferredLabsInYourProfile =
 
 const String strPreferredDoctors = 'Preferred Doctors';
 
-var tckTitle = 'title';
+var tckTitle = '';
 var tckTitleOpt = '';
-var tckDesc = 'desc';
+var tckDesc = '';
 var tckPrefDate = 'pref_date';
 var tckPrefLab = 'pref_lab';
 var tckPrefLabId = 'pref_lab_id';
@@ -680,7 +680,7 @@ var tckComment = 'ticket_comment';
 var tckSelectedDoctor = 'Doctor';
 var tckSelectedHospital = 'Hospital';
 var tckSelectedCategory = 'Category';
-var tckPackageName = 'Package Name';
+var tckPackageName = '';
 
 var tckTypeTitle = 'text';
 var tckTypeDescription = 'text_area';
