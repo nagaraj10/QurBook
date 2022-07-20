@@ -2294,10 +2294,12 @@ class ApiBaseHelper {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       var bodyData = {
-        'subject': Constants.tckTitle != 'title'
+        'subject': (Constants.tckTitle != '' && Constants.tckTitle != null)
             ? Constants.tckTitle
             : Constants.tckTitleOpt,
-        'issue': Constants.tckDesc != 'desc' ? Constants.tckDesc : '',
+        'issue': (Constants.tckDesc != '' && Constants.tckDesc != null)
+            ? Constants.tckDesc
+            : 'desc',
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
         'preferredDate':

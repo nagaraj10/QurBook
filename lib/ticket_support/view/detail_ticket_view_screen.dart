@@ -234,33 +234,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               .validString(ticket?.preferredLabName ?? '')
                               .trim()
                               .isNotEmpty
-                          ? Row(
-                              children: [
-                                Text(
-                                  'Preferred Lab Name : ',
-                                  style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    fontWeight: FontWeight.w100,
-                                  ),
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    CommonUtil().parseHtmlString(
-                                        ticket.preferredLabName ?? ''),
-                                    style: TextStyle(
-                                        fontSize: 16.0.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                  ),
-                                ),
-                              ],
-                            )
+                          ? commonWidgetForDropDownValue(
+                              "Preferred Lab Name",
+                              CommonUtil().parseHtmlString(
+                                  ticket.preferredLabName ?? ''))
                           : SizedBox.shrink(),
                       (ticket?.additionalInfo?.chooseCategory != null &&
                               ticket?.additionalInfo?.chooseCategory != "")
@@ -275,13 +252,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       (ticket?.additionalInfo?.chooseDoctor != null &&
                               ticket?.additionalInfo?.chooseDoctor != "")
                           ? commonWidgetForDropDownValue(
-                              "Preferred Doctor Name :",
+                              "Preferred Doctor Name",
                               ticket?.additionalInfo?.chooseDoctor ?? '')
                           : SizedBox.shrink(),
                       (ticket?.additionalInfo?.chooseHospital != null &&
                               ticket?.additionalInfo?.chooseHospital != "")
                           ? commonWidgetForDropDownValue(
-                              "Preferred Hospital Name :",
+                              "Preferred Hospital Name",
                               ticket?.additionalInfo?.chooseHospital)
                           : SizedBox.shrink(),
                       Row(
@@ -1100,18 +1077,18 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   commonWidgetForDropDownValue(String header, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
+            flex: 1,
             child: Text(
-          header,
-          style: TextStyle(
-            fontSize: 16.0.sp,
-            fontWeight: FontWeight.w100,
-          ),
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        )),
+              header,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+                fontWeight: FontWeight.w100,
+              ),
+              textAlign: TextAlign.start,
+            )),
         Expanded(
           flex: 1,
           child: Text(
@@ -1121,8 +1098,6 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                 fontWeight: FontWeight.w400,
                 color: Colors.black),
             textAlign: TextAlign.start,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
           ),
         ),
       ],
