@@ -1889,6 +1889,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         //stateVal = suggestion.state;
       },
       validator: (value) {
+        if (value != null && value.length > 0) {
+          package_title_ctrl.text = value;
+        }
+
         return null;
       },
       onSaved: (value) => packageName = value,
@@ -2093,8 +2097,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   void setDefaultValues() {
-    Constants.tckTitle = 'title';
-    Constants.tckDesc = 'desc';
+    Constants.tckTitle = '';
+    Constants.tckDesc = '';
     Constants.tckPrefDate = 'pref_date';
     Constants.tckPrefLab = 'pref_lab';
     Constants.tckPrefLabId = 'pref_lab_id';
