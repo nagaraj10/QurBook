@@ -97,6 +97,10 @@ object Constants {
     val UID ="uid"
     val GET_CURRENT_LOCATION ="getCurrentLocation"
     val APPOINTMENT_DETAILS ="appointmentDetails"
+    val IS_CARE_GIVER ="isCareGiver"
+    val DELIVERED_DATE_TIME ="deliveredDateTime"
+    val IS_FROM_CARE_COORDINATOR ="isFromCareCoordinator"
+    val SENDER_PROFILE_PIC ="senderProfilePic"
 
     val APPOINTMENT_DATE="appointmentDate";
     val BOOKINGID="bookingId";

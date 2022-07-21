@@ -45,6 +45,7 @@ import CoreBluetooth
     let escalateToCareCoordinatorButtons = "escalateToCareCoordinatorButtons"
     
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
+    let ChatCCAndViewrecordButtons = "showChatCCAndViewrecordButtons"
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
     var poPeripheral: CBPeripheral!
@@ -109,6 +110,8 @@ import CoreBluetooth
         let callBackNowAction = UNNotificationAction(identifier: "Callback", title: "Call back", options: [.foreground])
         let rejectAction = UNNotificationAction(identifier: "Reject", title: "Reject", options: [.destructive])
         let acceptAction = UNNotificationAction(identifier: "Accept", title: "Accept", options: [.foreground])
+        let chatwithCCAction = UNNotificationAction(identifier: "chatwithcc", title: "Chat with cc", options: [.foreground])
+        let viewRecordAction = UNNotificationAction(identifier: "viewrecord", title: "View Record", options: [.foreground])
         let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
         
@@ -136,7 +139,11 @@ import CoreBluetooth
                                                                         actions:  [acceptAction,rejectAction],
                                                                         intentIdentifiers: [],
                                                                         options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory,esclateButtonscategory])
+        let chatCCAndViewrecordButtonsCategory = UNNotificationCategory(identifier: ChatCCAndViewrecordButtons,
+                                                                        actions:  [chatwithCCAction,viewRecordAction],
+                                                                        intentIdentifiers: [],
+                                                                        options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory,esclateButtonscategory,chatCCAndViewrecordButtonsCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -645,6 +652,11 @@ import CoreBluetooth
                         "data" : data
                     ]
                 }else if (response.actionIdentifier == "Reject" || response.actionIdentifier == "Accept"){
+                    newData  = [
+                        "action" : response.actionIdentifier,
+                        "data" : data
+                    ]
+                }else if (response.actionIdentifier == "chatwithcc" || response.actionIdentifier == "viewrecord"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data
