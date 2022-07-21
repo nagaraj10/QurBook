@@ -1992,7 +1992,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       updatedProfilePic = profilePic;
       Navigator.pop(context);
       setState(() {});
-    });
+    }, removeDuplicate: true);
   }
 
   Widget getProfilePicWidget(String profilePicThumbnail) {
