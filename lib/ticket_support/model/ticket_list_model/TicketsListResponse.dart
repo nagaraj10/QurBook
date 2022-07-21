@@ -3,6 +3,7 @@ import 'SendMailTo.dart';
 import 'attachments.dart';
 import 'comments.dart';
 import 'notes.dart';
+import 'AdditionalInfo.dart';
 
 class TicketsListResponse {
   bool success;
@@ -70,6 +71,8 @@ class Tickets {
   List<Comments> comments;
   List<Notes> notes;
   List<Attachments> attachments;
+  AdditionalInfo additionalInfo;
+
   List<History> history;
   int uid;
   int iV;
@@ -94,7 +97,8 @@ class Tickets {
       this.attachments,
       this.history,
       this.uid,
-      this.iV});
+      this.iV,
+      this.additionalInfo});
 
   Tickets.fromJson(Map<String, dynamic> json) {
     deleted = json['deleted'];
@@ -144,6 +148,11 @@ class Tickets {
         attachments.add(new Attachments.fromJson(v));
       });
     }
+
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
+
     if (json['history'] != null) {
       history = new List<History>();
       json['history'].forEach((v) {
@@ -195,6 +204,9 @@ class Tickets {
     }
     if (this.history != null) {
       data['history'] = this.history.map((v) => v.toJson()).toList();
+    }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
     }
     data['uid'] = this.uid;
     data['__v'] = this.iV;

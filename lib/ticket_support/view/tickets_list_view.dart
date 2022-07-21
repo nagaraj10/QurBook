@@ -179,30 +179,25 @@ class _TicketsList extends State<TicketsList> {
                         children: [
                           SizedBox(height: 8.0.h),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Status : ',
+                                ticketList[i]
+                                    .type
+                                    .name
+                                    .toString()
+                                    .capitalizeFirstofEach,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  fontWeight: FontWeight.w100,
+                                  fontWeight: FontWeight.w600,
                                 ),
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,
                               ),
-                              Text(
-                                ticketList[i].status == 0 ? 'Open' : 'Closed',
-                                style: TextStyle(
-                                    fontSize: 16.0.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.orangeAccent[100]),
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                              Spacer(flex: 1),
                               Flexible(
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
                                       'Ticket ID :',
@@ -230,19 +225,46 @@ class _TicketsList extends State<TicketsList> {
                             ],
                           ),
                           SizedBox(height: 8.0.h),
-                          Text(
-                            ticketList[i]
-                                .subject
-                                .toString()
-                                .capitalizeFirstofEach,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
+                          Row(
+                            children: [
+                              Text(
+                                'Status : ',
+                                style: TextStyle(
+                                  fontSize: 16.0.sp,
+                                  fontWeight: FontWeight.w100,
+                                ),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                              Text(
+                                ticketList[i].status == 0 ? 'Open' : 'Closed',
+                                style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.orangeAccent[100]),
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ],
                           ),
+                          (ticketList[i].subject.toString() !=
+                                  ticketList[i].type.name)
+                              ? Text(
+                                  ticketList[i]
+                                      .subject
+                                      .toString()
+                                      .capitalizeFirstofEach,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                )
+                              : SizedBox(),
                           ticketList[i].preferredDate != null
                               ? Text(
                                   constants.notificationDate(ticketList[i]

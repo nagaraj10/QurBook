@@ -284,6 +284,8 @@ const String notification_preference =
 const String display_devices = 'assets/settings/display_devices.png';
 const String unit_preference = 'assets/settings/unit_preference.png';
 
+const String strApprovAdd = 'This provider addition needs approval';
+
 //for audioWidget
 
 List<String> assetSample = [

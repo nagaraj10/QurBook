@@ -18,23 +18,24 @@ class Doctors {
   String providerPatientMappingId;
   List<String> sharedCategories;
   bool isResident = false;
-  Doctors({
-    this.id,
-    this.specialization,
-    this.isTelehealthEnabled,
-    this.isMciVerified,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedBy,
-    this.lastModifiedOn,
-    this.user,
-    this.doctorProfessionalDetailCollection,
-    this.doctorLanguageCollection,
-    this.isDefault,
-    this.providerPatientMappingId,
-    this.sharedCategories,
-    this.isResident,
-  });
+  bool isPatientAssociatedRequest = false;
+  Doctors(
+      {this.id,
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.user,
+      this.doctorProfessionalDetailCollection,
+      this.doctorLanguageCollection,
+      this.isDefault,
+      this.providerPatientMappingId,
+      this.sharedCategories,
+      this.isResident,
+      this.isPatientAssociatedRequest});
 
   Doctors.fromJson(Map<String, dynamic> json) {
     id = json['id'];

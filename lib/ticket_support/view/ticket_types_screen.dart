@@ -10,6 +10,7 @@ import 'package:myfhb/landing/view/widgets/landing_card.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
+import 'package:myfhb/ticket_support/view/create_ticket_scree_new.dart';
 import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import '../../common/CommonUtil.dart';
@@ -155,6 +156,8 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
             onTap: () {
               try {
                 var createTicketController = Get.put(CreateTicketController());
+                createTicketController.isCTLoading?.value = false;
+
                 if (CommonUtil()
                     .validString(ticketList[i].name)
                     .toLowerCase()
@@ -169,11 +172,30 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.labBookAppointment.value = false;
                   createTicketController.labsList = [];
                 }
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => CreateTicketScreen(ticketList[i])),
-                );
+
+                if (CommonUtil()
+                    .validString(ticketList[i].name)
+                    .toLowerCase()
+                    .contains("doctor appointment")) {
+                  createTicketController.doctorBookAppointment.value = true;
+                  createTicketController.selPrefDoctor.value =
+                      CommonUtil().validString("Select");
+                  createTicketController.selPrefDoctorId.value =
+                      CommonUtil().validString("");
+                  createTicketController.getDoctorList();
+                } else {
+                  createTicketController.doctorBookAppointment.value = false;
+                  createTicketController.doctorsList = [];
+                }
+
+                ticketList[i].additionalInfo != null
+                    ? Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CreateTicketScreen(ticketList[i])),
+                      )
+                    : null;
               } catch (e) {
                 print(e);
               }

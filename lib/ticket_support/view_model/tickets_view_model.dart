@@ -74,14 +74,16 @@ class TicketViewModel extends ChangeNotifier {
   // Create Ticket
   Future<CreateTicketModel> createTicket() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var createTicketModel;
     if (userid != null) {
       try {
-        var createTicketModel = await userTicketService.createTicket();
-        return createTicketModel;
+        createTicketModel = await userTicketService.createTicket();
       } catch (e) {
         print('Exception in Craete Ticket VM Model : ${e.toString()}');
       }
     }
+
+    return createTicketModel;
   }
 
   // Comment Ticket

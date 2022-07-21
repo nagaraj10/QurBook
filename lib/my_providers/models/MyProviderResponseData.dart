@@ -1,3 +1,5 @@
+import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
+
 import 'Doctors.dart';
 import 'Hospitals.dart';
 
@@ -32,38 +34,41 @@ class MyProvidersResponseData {
   List<Hospitals> hospitals;
   List<Hospitals> labs;
   List<Hospitals> clinics;
+  List<ProviderRequestCollection3> providerRequestCollection3;
 
-  MyProvidersResponseData(
-      {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.doctors,
-        this.hospitals,
-        this.labs,
-        this.clinics});
+  MyProvidersResponseData({
+    this.id,
+    this.name,
+    this.userName,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.gender,
+    this.dateOfBirth,
+    this.bloodGroup,
+    this.countryCode,
+    this.profilePicThumbnailUrl,
+    this.isTempUser,
+    this.isVirtualUser,
+    this.isMigrated,
+    this.isClaimed,
+    this.isIeUser,
+    this.isEmailVerified,
+    this.isCpUser,
+    this.communicationPreferences,
+    this.medicalPreferences,
+    this.isSignedIn,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.doctors,
+    this.hospitals,
+    this.labs,
+    this.clinics,
+    this.providerRequestCollection3,
+  });
 
   MyProvidersResponseData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -116,6 +121,15 @@ class MyProvidersResponseData {
         clinics.add(Hospitals.fromJson(v));
       });
     }
+    if (json.containsKey('providerRequestCollection3')) {
+      if (json['providerRequestCollection3'] != null) {
+        providerRequestCollection3 = <ProviderRequestCollection3>[];
+        json['providerRequestCollection3'].forEach((v) {
+          providerRequestCollection3
+              .add(new ProviderRequestCollection3.fromJson(v));
+        });
+      }
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -157,6 +171,10 @@ class MyProvidersResponseData {
     }
     if (clinics != null) {
       data['clinics'] = clinics.map((v) => v.toJson()).toList();
+    }
+    if (this.providerRequestCollection3 != null) {
+      data['providerRequestCollection3'] =
+          this.providerRequestCollection3.map((v) => v.toJson()).toList();
     }
     return data;
   }

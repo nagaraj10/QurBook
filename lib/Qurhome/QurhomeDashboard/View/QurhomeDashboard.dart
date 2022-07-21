@@ -41,6 +41,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
         buttonSize = 100;
         textFontSize = 26;
       }
+
       controller.updateTabIndex(0);
     } catch (e) {
       print(e);
@@ -402,4 +403,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     DateTime now = DateTime.now();
     return DateFormat('dd MMM yyyy').format(now);
   }
+
+
 }
