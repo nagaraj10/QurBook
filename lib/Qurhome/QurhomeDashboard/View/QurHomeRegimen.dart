@@ -1239,21 +1239,15 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   callNowSOS() async {
     try {
       closeDialog();
-      if(CommonUtil().isTablet)
-      {
-        if (!controller.onGoingSOSCall.value) {
-          FHBUtils().check().then((intenet) {
-            if (intenet != null && intenet) {
+      FHBUtils().check().then((intenet) async {
+        if (intenet != null && intenet) {
+          if(CommonUtil().isTablet)
+          {
+            if (!controller.onGoingSOSCall.value) {
               VideoCallCommonUtils.callActions.value = CallActions.CALLING;
               controller.callSOSEmergencyServices();
-            } else {
-              FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
             }
-          });
-        }
-      }else{
-        FHBUtils().check().then((intenet) async {
-          if (intenet != null && intenet) {
+          }else{
             await controller.getSOSAgentNumber(true);
             String strSOSAgentNumber = CommonUtil()
                 .validString(controller.SOSAgentNumber.value);
@@ -1270,11 +1264,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               FlutterToast().getToast(CommonUtil()
                   .validString(controller.SOSAgentNumberEmptyMsg.value), Colors.red);
             }
-          } else {
-            FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
           }
-        });
-      }
+        } else {
+          FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
+        }
+      });
     } catch (e) {
       print(e);
     }

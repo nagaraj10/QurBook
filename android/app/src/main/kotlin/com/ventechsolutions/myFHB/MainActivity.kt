@@ -529,8 +529,22 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     private fun checkGPSIsOpen(): Boolean {
-        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (locationManager == null) {
+            Log.d("GTAG", "LOCATION_SERVICE Missing in the device.")
+            return false
+        }
+
+        Log.d("GTAG", "providers Available.")
+
+        val providerList = locationManager.allProviders
+        for (i in providerList.indices) {
+            Log.d("GTAG", providerList[i])
+        }
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
 
@@ -1490,6 +1504,25 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     scheduleAppointment(retMap)
                     result.success("success")
 
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            LOCATION_SERVICE_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == LOCATION_SERVICE_CHECK) {
+                Log.d("LOCATION_SERVICE_CHECK", "LOCATION_SERVICE_CHECK")
+                try {
+                    val locationServiceEnabled = checkGPSIsOpen()
+                    if (!locationServiceEnabled) {
+                        result.success(false)
+                    } else {
+                        result.success(true)
+                    }
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
