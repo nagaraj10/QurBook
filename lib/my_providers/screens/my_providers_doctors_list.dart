@@ -18,6 +18,7 @@ import '../../src/utils/colors_utils.dart';
 import '../../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import '../../telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 import 'my_provider.dart';
 
@@ -43,6 +44,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
@@ -105,21 +107,26 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                 : '';
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, router.rt_AddProvider,
-                  arguments: AddProvidersArguments(
-                      searchKeyWord: CommonConstants.doctors,
-                      doctorsModel: eachDoctorModel,
-                      fromClass: router.rt_myprovider,
-                      hasData: true,
-                      isRefresh: () {
-                        widget.refresh();
-                      })).then((value) {
+              if (eachDoctorModel.isPatientAssociatedRequest) {
+                toast.getToast('Approval request is pending', Colors.black54);
+              } else {
+                Navigator.pushNamed(context, router.rt_AddProvider,
+                    arguments: AddProvidersArguments(
+                        searchKeyWord: CommonConstants.doctors,
+                        doctorsModel: eachDoctorModel,
+                        fromClass: router.rt_myprovider,
+                        hasData: true,
+                        isRefresh: () {
+                          widget.refresh();
+                        })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
-                myProviderState.refreshPage();
-              });
+                  myProviderState.refreshPage();
+                });
+              }
             },
             child: Container(
-                padding: EdgeInsets.all(10),
+                padding:
+                    EdgeInsets.only(left: 10, right: 5, top: 10, bottom: 10),
                 margin: EdgeInsets.only(left: 12, right: 12, top: 12),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -135,8 +142,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                   children: <Widget>[
                     ClipOval(
                         child: eachDoctorModel.user != null
-                            ? eachDoctorModel.user.profilePicThumbnailUrl !=
-                                    null
+                            ? (eachDoctorModel.user.profilePicThumbnailUrl !=
+                                        null ||
+                                    (eachDoctorModel.user.firstName != null &&
+                                        eachDoctorModel.user.lastName != null))
                                 ? getProfilePicWidget(
                                     eachDoctorModel.user.profilePicThumbnailUrl,
                                     eachDoctorModel.user.firstName,
@@ -153,10 +162,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                 padding: EdgeInsets.all(12),
                                 color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
-                      width: 20.0.w,
+                      width: 15.0.w,
                     ),
                     Expanded(
-                      flex: 6,
+                      flex: 1,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +173,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                           SizedBox(height: 5.0.h),
                           AutoSizeText(
                             eachDoctorModel.user != null
-                                ? CommonUtil().getDoctorName(eachDoctorModel.user)
+                                ? CommonUtil()
+                                    .getDoctorName(eachDoctorModel.user)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -174,44 +184,72 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5.0.h),
-                          if (specialization != null) AutoSizeText(
-                                  specialization != null
-                                      ? toBeginningOfSentenceCase(
-                                          specialization)
-                                      : '',
-                                  maxLines: 1,
-                                  style: TextStyle(
-                                      fontSize: 15.0.sp,
-                                      fontWeight: FontWeight.w400,
-                                      color: ColorUtils.lightgraycolor),
-                                  textAlign: TextAlign.start,
-                                ) else SizedBox(height: 0.0.h, width: 0.0.h),
+                          if (specialization != null)
+                            AutoSizeText(
+                              specialization != null
+                                  ? toBeginningOfSentenceCase(specialization)
+                                  : '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorUtils.lightgraycolor),
+                              textAlign: TextAlign.start,
+                            )
+                          else
+                            SizedBox(height: 0.0.h, width: 0.0.h),
                           SizedBox(height: 5.0.h),
                         ],
                       ),
                     ),
                     Expanded(
                         child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              commonWidgets
-                                  .getBookMarkedIconNew(eachDoctorModel, () {
-                                providerViewModel
-                                    .bookMarkDoctor(
-                                        eachDoctorModel,
-                                        false,
-                                        'ListItem',
-                                        eachDoctorModel.sharedCategories)
-                                    .then((status) {
-                                  if (status) {
-                                    widget.refresh();
-                                  }
-                                });
-                              }),
-                            ],
-                          ),
-                        )),
+                      child: Column(
+                        children: [
+                          TextButton(
+                            child: Container(
+                                child: Text(
+                              eachDoctorModel.isPatientAssociatedRequest
+                                  ? "Waiting for approval"
+                                  : "",
+                              maxLines: 2,
+                            )),
+                            onPressed: () {
+                              toast.getToast('Approval request is pending',
+                                  Colors.black54);
+                            },
+                          )
+                        ],
+                      ),
+                    )),
+                    Container(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          commonWidgets.getBookMarkedIconNew(eachDoctorModel,
+                              () {
+                            if (eachDoctorModel.isPatientAssociatedRequest) {
+                              toast.getToast('Approval request is pending',
+                                  Colors.black54);
+                            } else {
+                              providerViewModel
+                                  .bookMarkDoctor(
+                                      eachDoctorModel,
+                                      false,
+                                      'ListItem',
+                                      eachDoctorModel.sharedCategories)
+                                  .then((status) {
+                                if (status) {
+                                  widget.refresh();
+                                }
+                              });
+                            }
+                          }),
+                        ],
+                      ),
+                    ),
                   ],
                 )));
       },

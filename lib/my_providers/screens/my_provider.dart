@@ -25,6 +25,8 @@ class MyProviderState extends State<MyProvider>
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
   MyProvidersResponse myProvidersResponseHospitalClinicList;
+  bool isFirstTymForDoctors = true;
+  bool isFirstTymForHospital = true;
 
   @override
   void initState() {
@@ -37,16 +39,16 @@ class MyProviderState extends State<MyProvider>
     _providersBloc = ProvidersBloc();
     _providersBloc.getMedicalPreferencesForDoctors().then((value) {
       setState(() {
+        isFirstTymForDoctors = false;
         myProvidersResponseList = value;
       });
     });
     _providersBloc.getMedicalPreferencesForHospital().then((value) {
       setState(() {
+        isFirstTymForHospital = false;
         myProvidersResponseHospitalClinicList = value;
       });
     });
-
-
   }
 
   @override
@@ -68,18 +70,22 @@ class MyProviderState extends State<MyProvider>
   void refreshPage() {
     setState(() {
       myProvidersResponseList = null;
-      myProvidersResponseHospitalClinicList=null;
+      myProvidersResponseHospitalClinicList = null;
+      isFirstTymForDoctors = true;
+      isFirstTymForHospital = true;
     });
     _providersBloc = ProvidersBloc();
     _providersBloc.getMedicalPreferencesForDoctors().then((value) {
       setState(() {
         myProvidersResponseList = value;
+        isFirstTymForDoctors = false;
       });
     });
 
     _providersBloc.getMedicalPreferencesForHospital().then((value) {
       setState(() {
         myProvidersResponseHospitalClinicList = value;
+        isFirstTymForHospital = false;
       });
     });
   }
@@ -133,22 +139,22 @@ class MyProviderState extends State<MyProvider>
       ),
       body: Container(
         color: Color(fhbColors.bgColorContainer),
-        child: myProvidersResponseList != null && myProvidersResponseHospitalClinicList!=null
-            ? MyProvidersTabBar(
-                data: myProvidersResponseList.result,
-                dataHospitalLab: myProvidersResponseHospitalClinicList.result,
+        child: (isFirstTymForHospital || isFirstTymForDoctors)
+            ? Center(
+                child: SizedBox(
+                width: 30.0.h,
+                height: 30.0.h,
+                child: CommonCircularIndicator(),
+              ))
+            : MyProvidersTabBar(
+                data: myProvidersResponseList?.result,
+                dataHospitalLab: myProvidersResponseHospitalClinicList?.result,
                 tabController: _tabController,
                 myProviderState: this,
                 refresh: () {
                   refreshPage();
                 },
-              )
-            : Center(
-                child: SizedBox(
-                width: 30.0.h,
-                height: 30.0.h,
-                child: CommonCircularIndicator(),
-              )),
+              ),
       ),
     );
   }
