@@ -139,6 +139,7 @@
         <receiver android:name=".services.CancelAppointment" />
         <receiver android:name=".services.RescheduleAppointment" />
         <receiver android:name=".services.OnTapNotification" />
+        <receiver android:name=".services.ChatwithCC" />
         <receiver android:name=".services.OnTapNotificationBackground" />
         <receiver android:name=".services.Accept" />
         <receiver android:name=".services.EscalateCareGiver" />

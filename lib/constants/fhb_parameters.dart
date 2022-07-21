@@ -138,6 +138,9 @@ const String strmediaMetaID = 'mediaMetaID';
 const String strmediaMetaInfo = 'mediaMetaInfo';
 const String strmetaTypeId = 'metaTypeId';
 const String struserId = 'userId';
+const String strIsCaregiver = 'isCaregiver';
+const String strDeliveredDateTime = 'deliveredDateTime';
+const String strisFromCareCoordinator = 'isFromCareCoordinator';
 const String strmetaInfo = 'metaInfo';
 const String strisDraft = 'isDraft';
 const String strcreatedByUser = 'createdByUser';
@@ -673,8 +676,8 @@ const String familyMemberCaregiverRequest = 'familyMemberCaregiverRequest';
 const String associationNotificationToCaregiver =
     'associationNotificationToCaregiver';
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
-const String strCaregiverNotifyPlanSubscription = 'caregiverNotifyPlanSubscription';
-
+const String strCaregiverNotifyPlanSubscription =
+    'caregiverNotifyPlanSubscription';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String uid = 'uid';
@@ -685,6 +688,8 @@ const String token = 'Token';
 const String healthRecordMetaIds = 'healthRecordMetaIds';
 const String ongoing_channel = 'ongoing_ns.channel';
 const String startOnGoingNS = 'startOnGoingNS';
+const String notifyCaregiverForMedicalRecord =
+    'notifyCaregiverForMedicalRecord';
 const String mode = 'mode';
 const String start = 'start';
 const String stop = 'stop';

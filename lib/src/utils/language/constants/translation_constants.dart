@@ -29,8 +29,10 @@ class TranslationConstants {
   static const String records = 'records';
   static const String receipt = 'receipt';
   static const String reschedule = 'reschedule';
+  static const String chatwithcc = 'Chat with CC';
   static const String renew = 'renew';
   static const String cancel = 'cancel';
+  static const String viewrecord = 'View Record';
   static const String accept = 'Accept';
   static const String reject = 'Reject';
   static const String newAppointment = 'newAppointment';
