@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -59,8 +60,9 @@ class _MyProvidersState extends State<MyProviders> {
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
-  List<Doctors> copyOfdoctorsModel;
+  List<Doctors> copyOfdoctorsModel = [];
   Future<MyProvidersResponse> _medicalPreferenceList;
+  List<Doctors> doctorsModelPatientAssociated = [];
 
   @override
   void initState() {
@@ -108,9 +110,10 @@ class _MyProvidersState extends State<MyProviders> {
                     isSearch = false;
                   });
                 }
-              },onClosePress: (){
-              FocusManager.instance.primaryFocus.unfocus();
-            },
+              },
+              onClosePress: () {
+                FocusManager.instance.primaryFocus.unfocus();
+              },
             ),
             Expanded(
               child: (widget.isRefresh && myProvidersResponseList != null ??
@@ -302,7 +305,11 @@ class _MyProvidersState extends State<MyProviders> {
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-            ? (CommonUtil.REGION_CODE != "IN"?variable.strDollar:variable.strRs) + ' ' + doctorId.fees.consulting.fee
+            ? (CommonUtil.REGION_CODE != "IN"
+                    ? variable.strDollar
+                    : variable.strRs) +
+                ' ' +
+                doctorId.fees.consulting.fee
             : '')
         : Text('');
   }
@@ -319,10 +326,7 @@ class _MyProvidersState extends State<MyProviders> {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
 
-          return (snapshot.data != null &&
-                  snapshot.data.result != null &&
-                  snapshot.data.result.doctors != null &&
-                  snapshot.data.result.doctors.length > 0)
+          return (snapshot.data != null && snapshot.data.result != null)
               ? myProviderList(snapshot.data)
               : Container(
                   child: Center(
@@ -334,21 +338,48 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
+    copyOfdoctorsModel = null;
+    copyOfdoctorsModel = [];
+    if (myProvidersResponse?.result?.doctors != null &&
+        myProvidersResponse?.result?.doctors.length > 0)
+      copyOfdoctorsModel.addAll(myProvidersResponse?.result?.doctors);
+
     if (myProvidersResponse != null && myProvidersResponse.isSuccess) {
-      copyOfdoctorsModel = myProvidersResponse?.result?.doctors;
+      if (myProvidersResponse.result?.providerRequestCollection3 != null &&
+          myProvidersResponse.result?.providerRequestCollection3.length > 0)
+        for (ProviderRequestCollection3 providerRequestCollection3
+            in myProvidersResponse.result?.providerRequestCollection3) {
+          Doctors patientAddedDoctor = providerRequestCollection3?.doctor;
+          patientAddedDoctor.isPatientAssociatedRequest = true;
+          doctorsModelPatientAssociated.add(providerRequestCollection3.doctor);
+        }
+
+      if (doctorsModelPatientAssociated.isNotEmpty &&
+          doctorsModelPatientAssociated.length > 0) {
+        copyOfdoctorsModel.addAll(doctorsModelPatientAssociated);
+      }
       final ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
       copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
-      return ListView.separated(
-        itemBuilder: (BuildContext context, index) => providerDoctorItemWidget(
-            index, isSearch ? doctors : copyOfdoctorsModel),
-        separatorBuilder: (BuildContext context, index) {
-          return Divider(
-            height: 0.0.h,
-            color: Colors.transparent,
-          );
-        },
-        itemCount: isSearch ? doctors.length : copyOfdoctorsModel.length,
-      );
+      if (copyOfdoctorsModel != null && copyOfdoctorsModel.length > 0) {
+        return ListView.separated(
+          itemBuilder: (BuildContext context, index) =>
+              providerDoctorItemWidget(
+                  index, isSearch ? doctors : copyOfdoctorsModel),
+          separatorBuilder: (BuildContext context, index) {
+            return Divider(
+              height: 0.0.h,
+              color: Colors.transparent,
+            );
+          },
+          itemCount: isSearch ? doctors.length : copyOfdoctorsModel.length,
+        );
+      } else {
+        return Container(
+          child: Center(
+            child: Text(variable.strNoDoctordata),
+          ),
+        );
+      }
     } else {
       return Container(
         child: Center(

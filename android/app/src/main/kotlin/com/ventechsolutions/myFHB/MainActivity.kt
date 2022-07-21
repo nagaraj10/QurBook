@@ -120,6 +120,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val BLE_SCAN_CANCEL = Constants.BLE_SCAN_CANCEL
     private val BP_CONNECT_CANCEL = Constants.BP_SCAN_CANCEL
     private val BP_ENABLE_CHECK = Constants.BP_ENABLE_CHECK
+    private val LOCATION_SERVICE_CHECK = Constants.LOCATION_SERVICE_CHECK
     private val ENABLE_BACKGROUND_NOTIFICATION = Constants.ENABLE_BACKGROUND_NOTIFICATION
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
@@ -528,8 +529,22 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     private fun checkGPSIsOpen(): Boolean {
-        val locationManager = this.getSystemService(LOCATION_SERVICE) as LocationManager
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        val locationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (locationManager == null) {
+            Log.d("GTAG", "LOCATION_SERVICE Missing in the device.")
+            return false
+        }
+
+        Log.d("GTAG", "providers Available.")
+
+        val providerList = locationManager.allProviders
+        for (i in providerList.indices) {
+            Log.d("GTAG", providerList[i])
+        }
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
 
@@ -1495,6 +1510,25 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
 
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            LOCATION_SERVICE_CHECK
+        ).setMethodCallHandler { call, result ->
+            if (call.method == LOCATION_SERVICE_CHECK) {
+                Log.d("LOCATION_SERVICE_CHECK", "LOCATION_SERVICE_CHECK")
+                try {
+                    val locationServiceEnabled = checkGPSIsOpen()
+                    if (!locationServiceEnabled) {
+                        result.success(false)
+                    } else {
+                        result.success(true)
+                    }
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -1721,6 +1755,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val patientName = intent.getStringExtra(Constants.PROB_PATIENT_NAME)
         val careGiverMemberId = intent.getStringExtra(Constants.PROP_CAREGIVER_REQUESTOR)
         val careCoordinatorUserId = intent.getStringExtra(Constants.CARE_COORDINATOR_USER_ID)
+        val isCareGiver = intent.getStringExtra(Constants.IS_CARE_GIVER)
+        val deliveredDateTime = intent.getStringExtra(Constants.DELIVERED_DATE_TIME)
+        val isFromCareCoordinator = intent.getStringExtra(Constants.IS_FROM_CARE_COORDINATOR)
         val careGiverName = intent.getStringExtra(Constants.CARE_GIVER_NAME)
         val activityTime = intent.getStringExtra(Constants.ACTIVITY_TIME)
         val activityName = intent.getStringExtra(Constants.ACTIVITY_NAME)
@@ -1746,7 +1783,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val appointmentID = intent.getStringExtra(Constants.APPOINTMENTID)
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
-        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH, false)
+        val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
+        val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
 
 
 
@@ -1758,6 +1796,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
+        }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
+
+            sharedValue = "ack&${redirect_to}&${userId}&${patientName}&${careCoordinatorUserId}&${isCareGiver}&${deliveredDateTime}&${isFromCareCoordinator}&${senderProfilePic}"
         } else if (redirect_to?.contains("escalateToCareCoordinatorToRegimen") == true) {
 
             sharedValue =

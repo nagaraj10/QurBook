@@ -51,6 +51,7 @@ class IosNotificationHandler {
   bool viewMemberAction = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
+  bool viewRecordAction, chatWithCC = false;
 
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
@@ -81,6 +82,8 @@ class IosNotificationHandler {
             rejectAction = (actionKey == "Reject");
             acceptAction = (actionKey == "Accept");
             escalteAction = (actionKey == "Escalate");
+            chatWithCC = (actionKey == "chatwithcc");
+            viewRecordAction = (actionKey == "viewrecord");
             viewMemberAction =
                 (actionKey.toLowerCase() == "ViewMember".toLowerCase());
             communicationSettingAction = (actionKey.toLowerCase() ==
@@ -170,6 +173,65 @@ class IosNotificationHandler {
       );
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
+    } else if (model.templateName ==
+            parameters.notifyCaregiverForMedicalRecord &&
+        chatWithCC) {
+      if (!notificationReceivedFromKilledState) {
+        if ((model.userId ?? '').isNotEmpty &&
+            (model.patientName ?? '').isNotEmpty &&
+            (model.doctorPicture ?? '').isNotEmpty &&
+            (model.careCoordinatorUserId ?? '').isNotEmpty) {
+          Get.to(
+            () => ChatDetail(
+              peerId: model.userId,
+              peerName: model.patientName,
+              peerAvatar: model.doctorPicture,
+              patientId: "",
+              patientName: "",
+              patientPicture: "",
+              isFromVideoCall: false,
+              isFromFamilyListChat: true,
+              isFromCareCoordinator: (model.isFromCareCoordinator ?? false),
+              carecoordinatorId: model.careCoordinatorUserId,
+              isCareGiver: (model.isCaregiver ?? false),
+              groupId: '',
+              lastDate: model.deliveredDateTime,
+            ),
+          );
+        } else {
+          Get.to(() => ChatUserList());
+        }
+      } else {
+        model.viewRecordAction = viewRecordAction;
+        model.chatWithCC = chatWithCC;
+        notificationReceivedFromKilledState = false;
+        await PreferenceUtil.saveNotificationData(model);
+      }
+    } else if (model.templateName ==
+            parameters.notifyCaregiverForMedicalRecord &&
+        viewRecordAction) {
+      if (model.redirectData != null) {
+        final dataOne = model.redirectData[1];
+        final dataTwo = model.redirectData[2];
+
+        if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
+          final userId = PreferenceUtil.getStringValue(KEY_USERID);
+          if ((model.userId ?? '') == userId) {
+            CommonUtil().navigateToRecordDetailsScreen(dataTwo);
+          } else {
+            CommonUtil.showFamilyMemberPlanExpiryDialog(
+              model.patientName,
+              redirect: model.redirect,
+            );
+          }
+        } else {
+          navigateToMyRecordsCategory(
+            dataOne,
+            dataTwo,
+            false,
+          );
+        }
+      }
     } else if (model.type == parameters.FETCH_LOG) {
       await CommonUtil.sendLogToServer();
     } else if (model.templateName == parameters.familyMemberCaregiverRequest) {
@@ -559,15 +621,14 @@ class IosNotificationHandler {
         escalteAction) {
       escalteAction = false;
       CommonUtil().escalateNonAdherance(
-        model.careCoordinatorUserId,
-        model.patientName,
-        model.careGiverName,
-        model.activityTime,
-        model.activityName,
-        model.userId,
-        model.uid,
-        model.patientPhoneNumber
-      );
+          model.careCoordinatorUserId,
+          model.patientName,
+          model.careGiverName,
+          model.activityTime,
+          model.activityName,
+          model.userId,
+          model.uid,
+          model.patientPhoneNumber);
     } else {
       isAlreadyLoaded
           ? PageNavigator.goTo(

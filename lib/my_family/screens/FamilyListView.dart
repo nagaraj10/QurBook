@@ -29,7 +29,8 @@ class FamilyListView {
       GlobalKey<State> _keyLoader,
       Function(BuildContext context, String searchParam, String name,
               String profilePic)
-          onTextFieldtap) async {
+          onTextFieldtap,
+      {bool removeDuplicate = false}) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
     return showDialog(
@@ -42,10 +43,12 @@ class FamilyListView {
                   children: <Widget>[
                     if (data != null)
                       setupAlertDialoadContainer(data.sharedByUsers, context,
-                          onTextFieldtap, _keyLoader)
+                          onTextFieldtap, _keyLoader,
+                          removeDuplicate: removeDuplicate)
                     else
                       setupAlertDialoadContainer(
-                          null, context, onTextFieldtap, _keyLoader),
+                          null, context, onTextFieldtap, _keyLoader,
+                          removeDuplicate: removeDuplicate),
                   ],
                 ),
               ));
@@ -72,7 +75,8 @@ class FamilyListView {
       Function(BuildContext context, String searchParam, String name,
               String profilePic)
           onTextFieldtap,
-      GlobalKey<State> _keyLoader) {
+      GlobalKey<State> _keyLoader,
+      {bool removeDuplicate = false}) {
     var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     final profileData = ProfileData(
@@ -101,7 +105,8 @@ class FamilyListView {
             new Sharedbyme(profileData: profileData, linkedData: linkedData));
       }
     }*/
-    var sharedByMe = removeDuplicates(sharedByMeList);
+    var sharedByMe =
+        removeDuplicates(sharedByMeList, condition: removeDuplicate);
 
     if (sharedByMe.isNotEmpty) {
       return Container(
@@ -363,22 +368,37 @@ class FamilyListView {
     }
   }
 
-  List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
-    final List<SharedByUsers> sharedByMeClone = [];
+  List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList,
+      {bool condition = false}) {
+    List<SharedByUsers> sharedByMeClone = [];
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     String familyID;
     for (int i = 0; i < SharedbymeList.length; i++) {
-      if (userId != SharedbymeList[i].id) {
-        if (SharedbymeList[i].nickName == variable.Self) {
-          familyID = SharedbymeList[i].id;
-        } else {
-          familyID = SharedbymeList[i]?.child?.id;
+      if (!condition) {
+        if (userId != SharedbymeList[i].id) {
+          if (SharedbymeList[i].nickName == variable.Self) {
+            familyID = SharedbymeList[i].id;
+          } else {
+            familyID = SharedbymeList[i]?.child?.id;
+          }
+          if (!sharedByMeClone.contains(SharedbymeList[i]) &&
+              (userId != familyID)) {
+            sharedByMeClone.add(SharedbymeList[i]);
+          }
         }
+      } else {
         if (!sharedByMeClone.contains(SharedbymeList[i]) &&
             (userId != familyID)) {
           sharedByMeClone.add(SharedbymeList[i]);
         }
       }
+    }
+    if (condition) {
+      List<SharedByUsers> copyOfSharedByMeClone = [];
+      copyOfSharedByMeClone = sharedByMeClone;
+      var ids = copyOfSharedByMeClone.map((e) => e?.child?.id).toSet();
+      copyOfSharedByMeClone.retainWhere((x) => ids.remove(x?.child?.id));
+      sharedByMeClone = copyOfSharedByMeClone;
     }
     return sharedByMeClone;
   }

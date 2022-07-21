@@ -67,10 +67,10 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
     final qurHomeWithGesture = InkWell(
       onTap: () async {
         try {
-          bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+          bool serviceEnabled = await CommonUtil().checkGPSIsOn();
           if (!serviceEnabled) {
             FlutterToast().getToast(
-                'Please turn on your location services and re-try again',
+                'Please turn on your GPS location services and try again',
                 Colors.red);
             return;
           } else {
@@ -117,10 +117,10 @@ class _QurHubHomeScreenState extends State<QurHubHomeScreen> {
     final qurHubIoTWithGesture = InkWell(
       onTap: () async {
         try {
-          bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+          bool serviceEnabled = await CommonUtil().checkGPSIsOn();
           if (!serviceEnabled) {
             FlutterToast().getToast(
-                'Please turn on your location services and re-try again',
+                'Please turn on your GPS location services and try again',
                 Colors.red);
             return;
           } else {
