@@ -121,10 +121,10 @@ class _BleConnectScreenState extends State<BleConnectScreen> {
       onTap: () async {
         try {
           if (!controller.isBleScanning.isTrue) {
-            bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+            bool serviceEnabled = await CommonUtil().checkGPSIsOn();
             if (!serviceEnabled) {
               FlutterToast().getToast(
-                  'Please turn on your location services and re-try again',
+                  'Please turn on your GPS location services and try again',
                   Colors.red);
               return;
             }

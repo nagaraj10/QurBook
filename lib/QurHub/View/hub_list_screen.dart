@@ -239,12 +239,12 @@ class _HubListScreenState extends State<HubListScreen> {
                   () => AddNetWorkView(),
             );
           } else {
-            bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+            bool serviceEnabled = await CommonUtil().checkGPSIsOn();
             /*var permissionStatus =
                 await CommonUtil.askPermissionForLocation(isLocation: false);*/
             if (!serviceEnabled) {
               FlutterToast().getToast(
-                  'Please turn on your location services and re-try again',
+                  'Please turn on your GPS location services and try again',
                   Colors.red);
               return;
             } else {

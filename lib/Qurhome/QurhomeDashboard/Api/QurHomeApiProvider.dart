@@ -308,9 +308,13 @@ class QurHomeApiProvider {
     http.Response responseJson;
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      responseJson = await ApiServices.get(
+      var data = {
+        qr_location: regController.locationModel,
+      };
+      responseJson = await ApiServices.post(
         '${Constants.BASE_URL}$qr_getSOSAgentNumber',
         headers: header,
+        body: json.encode(data),
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
