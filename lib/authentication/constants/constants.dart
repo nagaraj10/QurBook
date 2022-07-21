@@ -206,6 +206,8 @@ const String strFreeDiet = 'FreeDiet';
 
 const String strAddPlan = 'Add Plan';
 
+const String CARE_COORDINATOR_STRING = "'s (Care Coordinator)";
+
 const String strNewChatLabel = 'New Chat';
 
 const String strLabelNoFamily = 'No data available';

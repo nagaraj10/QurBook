@@ -472,7 +472,7 @@ class _ChatUserListState extends State<ChatUserList> {
                             data?.isCarecoordinator
                                 ? Expanded(
                                   child: Text(
-                                      ' (Care Coordinator)',
+                                    CARE_COORDINATOR_STRING,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16.0.sp,
@@ -712,9 +712,9 @@ class _ChatUserListState extends State<ChatUserList> {
                               userChatList?.isFamilyUserCareCoordinator
                                   ? Expanded(
                                     child: Text(
-                                        ' (Care Coordiantor)',
+                                      CARE_COORDINATOR_STRING,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w400,
                                           fontSize: 16.0.sp,
                                         ),
                                         softWrap: false,
