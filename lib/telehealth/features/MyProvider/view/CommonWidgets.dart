@@ -329,7 +329,7 @@ class CommonWidgets {
         onTap: () {
           onClick();
         },
-        child: docs.isDefault
+        child: docs.isDefault ?? false
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),

@@ -192,9 +192,8 @@ class AddProvidersState extends State<AddProviders> {
     }
   }
 
-  getTicketList()async{
-         await     controller.getTicketTypesList();
-
+  getTicketList() async {
+    await controller.getTicketTypesList();
   }
 
   @override
@@ -855,7 +854,7 @@ class AddProvidersState extends State<AddProviders> {
         child: labBookAppointmentWithGesture);
   }
 
-  labBookAppointmentBtnTapped() async{
+  labBookAppointmentBtnTapped() async {
     try {
       var createTicketController = Get.put(CreateTicketController());
       createTicketController.labBookAppointment.value = true;
@@ -863,14 +862,13 @@ class AddProvidersState extends State<AddProviders> {
           CommonUtil().validString(widget.arguments.labsModel.name);
       createTicketController.selPrefLabId.value =
           CommonUtil().validString(widget.arguments.labsModel.id);
-          createTicketController.labsList=widget.arguments.labsDataList;
-          if(createTicketController.labsList?.length>0){
-      await createTicketController.getLabList(updateLab:true);
-          }else{
-                  await createTicketController.getLabList(updateLab:false);
+      createTicketController.labsList = widget.arguments.labsDataList;
+      if (createTicketController.labsList?.length > 0) {
+        await createTicketController.getLabList(updateLab: true);
+      } else {
+        await createTicketController.getLabList(updateLab: false);
+      }
 
-          }
-        
       if (controller.labTicketTypesResult != null) {
         Navigator.push(
           context,
@@ -952,7 +950,9 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   updateDoctorsIdWithUserDetails() {
-    updateProvidersBloc.updateDoctorsIdWithUserDetails().then((value) {
+    updateProvidersBloc
+        .updateDoctorsIdWithUserDetails(isPAR: false)
+        .then((value) {
       var routeClassName = '';
 
       if (widget.arguments.fromClass == router.cn_AddProvider ||
