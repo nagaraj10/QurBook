@@ -56,6 +56,7 @@ class DoctorsListResult {
   String profilePicThumbnailUrl;
   bool isTelehealthEnabled;
   bool isMciVerified;
+  bool patientAssociationRequest;
 
   DoctorsListResult(
       {this.doctorId,
@@ -72,7 +73,8 @@ class DoctorsListResult {
       this.addressLine2,
       this.profilePicThumbnailUrl,
       this.isTelehealthEnabled,
-      this.isMciVerified});
+      this.isMciVerified,
+      this.patientAssociationRequest});
 
   DoctorsListResult.fromJson(Map<String, dynamic> json) {
     doctorId = json['doctorId'];
@@ -90,6 +92,7 @@ class DoctorsListResult {
     profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
     isTelehealthEnabled = json['isTelehealthEnabled'];
     isMciVerified = json['isMciVerified'];
+    patientAssociationRequest = json['patientAssociationRequest'];
   }
 
   Map<String, dynamic> toJson() {
@@ -109,6 +112,7 @@ class DoctorsListResult {
     data['profilePicThumbnailUrl'] = profilePicThumbnailUrl;
     data['isTelehealthEnabled'] = isTelehealthEnabled;
     data['isMciVerified'] = isMciVerified;
+    data['patientAssociationRequest'] = patientAssociationRequest;
     return data;
   }
 }
