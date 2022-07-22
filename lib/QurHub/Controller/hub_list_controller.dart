@@ -166,10 +166,9 @@ class HubListController extends GetxController {
     try {
       foundBLE.value = false;
       if (Platform.isAndroid) {
-        bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+        bool serviceEnabled = await CommonUtil().checkGPSIsOn();
         bool isBluetoothEnable = false;
-        const platform = MethodChannel(IS_BP_ENABLE_CHECK);
-        isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+        isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
         if (!isBluetoothEnable) {
           FlutterToast().getToast(
               'Please turn on your bluetooth and try again', Colors.red);

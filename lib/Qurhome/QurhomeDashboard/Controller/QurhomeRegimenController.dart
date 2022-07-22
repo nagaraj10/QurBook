@@ -51,7 +51,7 @@ class QurhomeRegimenController extends GetxController {
   var UID = "".obs;
   var resourceId = "".obs;
   var sid = "".obs;
-  var isSIMInserted = false.obs;
+  //var isSIMInserted = false.obs;
   var isSOSAgentCallDialogOpen = false.obs;
   var SOSAgentNumber = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;
@@ -164,29 +164,27 @@ class QurhomeRegimenController extends GetxController {
 
   getCurrentLocation() async {
     try {
-      if (locationModel == null) {
-        if (Platform.isAndroid) {
-          const platform = MethodChannel(GET_CURRENT_LOCATION);
-          var result = await platform.invokeMethod(GET_CURRENT_LOCATION);
-          result = CommonUtil().validString(result.toString());
-          if (result.trim().isNotEmpty) {
-            List<String> receivedValues = result.split('|');
-            getAddressFromLatLng(double.parse("${receivedValues.first}"),
-                double.parse("${receivedValues.last}"));
-          } else {
-            getNetworkBasedLocation();
-          }
+      if (Platform.isAndroid) {
+        const platform = MethodChannel(GET_CURRENT_LOCATION);
+        var result = await platform.invokeMethod(GET_CURRENT_LOCATION);
+        result = CommonUtil().validString(result.toString());
+        if (result.trim().isNotEmpty) {
+          List<String> receivedValues = result.split('|');
+          getAddressFromLatLng(double.parse("${receivedValues.first}"),
+              double.parse("${receivedValues.last}"));
         } else {
-          Geolocator.getCurrentPosition(
-                  desiredAccuracy: LocationAccuracy.best,
-                  forceAndroidLocationManager: true)
-              .then((Position position) {
-            getAddressFromLatLng(position.latitude, position.longitude);
-          }).catchError((e) {
-            getNetworkBasedLocation();
-            print(e);
-          });
+          getNetworkBasedLocation();
         }
+      } else {
+        Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.best,
+            forceAndroidLocationManager: true)
+            .then((Position position) {
+          getAddressFromLatLng(position.latitude, position.longitude);
+        }).catchError((e) {
+          getNetworkBasedLocation();
+          print(e);
+        });
       }
     } catch (e) {
       getNetworkBasedLocation();

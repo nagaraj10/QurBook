@@ -713,24 +713,37 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelCancelApps)
         }
 
-        val acceptCareGiverIntent = Intent(applicationContext, EscalateCareGiver::class.java)
-        acceptCareGiverIntent.putExtra(getString(R.string.nsid), NS_ID)
-        acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT,"ack")
-        acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
-        acceptCareGiverIntent.putExtra(Constants.CARE_COORDINATOR_USER_ID, data[Constants.CARE_COORDINATOR_USER_ID])
-        acceptCareGiverIntent.putExtra(Constants.PATIENT_NAME, data[Constants.PATIENT_NAME])
-        acceptCareGiverIntent.putExtra(Constants.CARE_GIVER_NAME, data[Constants.CARE_GIVER_NAME])
-        acceptCareGiverIntent.putExtra(Constants.ACTIVITY_TIME, data[Constants.ACTIVITY_TIME])
-        acceptCareGiverIntent.putExtra(Constants.ACTIVITY_NAME, data[Constants.ACTIVITY_NAME])
-        acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
-        acceptCareGiverIntent.putExtra(Constants.PATIENT_PHONE_NUMBER, data[Constants.PATIENT_PHONE_NUMBER])
-        acceptCareGiverIntent.putExtra(Constants.UID, data[Constants.UID])
+        val chatWithCcIntent = Intent(applicationContext, ChatwithCC::class.java)
+        chatWithCcIntent.putExtra(getString(R.string.nsid), NS_ID)
+        chatWithCcIntent.putExtra(Intent.EXTRA_TEXT,"ack")
+        chatWithCcIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
+        chatWithCcIntent.putExtra(Constants.CARE_COORDINATOR_USER_ID, data[Constants.CARE_COORDINATOR_USER_ID])
+        chatWithCcIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        chatWithCcIntent.putExtra(Constants.PATIENT_NAME, data[Constants.PATIENT_NAME])
+        chatWithCcIntent.putExtra(Constants.IS_CARE_GIVER, data[Constants.IS_CARE_GIVER])
+        chatWithCcIntent.putExtra(Constants.DELIVERED_DATE_TIME, data[Constants.DELIVERED_DATE_TIME])
+        chatWithCcIntent.putExtra(Constants.IS_FROM_CARE_COORDINATOR, data[Constants.IS_FROM_CARE_COORDINATOR])
+        chatWithCcIntent.putExtra(Constants.SENDER_PROFILE_PIC, data[Constants.SENDER_PROFILE_PIC])
 
 
-        val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(
+        val onTapNS = Intent(this, OnTapNotification::class.java)
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_PRESCRIPTION_ID, data[Constants.PROP_REDIRECT_TO]?.split("|")?.get(2))
+        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        onTapNS.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
+        val onTapPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,
-            acceptCareGiverIntent,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+        val chatWithCcPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            chatWithCcIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
@@ -747,11 +760,16 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setWhen(0)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
-//            .addAction(
-//                R.drawable.ic_reschedule,
-//                getString(R.string.ns_escalate),
-//                acceptCareGiverPendingIntent
-//            )
+            .addAction(
+                R.drawable.ic_reschedule,
+                getString(R.string.ns_chat_with_cc),
+                chatWithCcPendingIntent
+            )
+            .addAction(
+                R.drawable.ic_reschedule,
+                getString(R.string.ns_view_record),
+                onTapPendingIntent
+            )
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
             )

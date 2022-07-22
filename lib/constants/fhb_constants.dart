@@ -706,6 +706,7 @@ const String ISVIRTUALHUB = 'isVirtualHub';
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
 const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
+const String IS_LOCATION_SERVICE_CHECK = 'location_service_check';
 const String ENABLE_BACKGROUND_NOTIFICATION = 'enablebackgroundnotification';
 const String DISABLE_BACKGROUND_NOTIFICATION = 'disablebackgroundnotification';
 const String APPOINTMENT_DETAILS = 'appointmentDetails';

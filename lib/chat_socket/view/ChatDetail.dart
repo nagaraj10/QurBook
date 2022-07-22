@@ -11,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/EmitAckResponse.dart';
@@ -1018,7 +1019,7 @@ class ChatState extends State<ChatDetail> {
                         widget.peerName != null && widget.peerName != ''
                             ? isFromCareCoordinator
                                 ? widget.peerName?.capitalizeFirstofEach +
-                                    ' (CC)'
+                            CARE_COORDINATOR_STRING
                                 : widget.peerName?.capitalizeFirstofEach
                             : '',
                         textAlign: TextAlign.left,
@@ -1053,7 +1054,7 @@ class ChatState extends State<ChatDetail> {
 
   Widget getTopBookingDetail() {
     if (isFromCareCoordinator) {
-      return Text('CC: ' + careCoordinatorName,
+      return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,

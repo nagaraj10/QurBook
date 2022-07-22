@@ -49,6 +49,7 @@ const String qr_resourceId = 'resourceId';
 const String qr_sid = 'sid';
 const String qr_callLogId = 'callLogId';
 const String qr_joinedUid = 'joinedUid';
+const String qr_location = 'location';
 
 //modified by parvathi
 const String qr_doctorslot = 'doctorSlots/';
