@@ -1737,7 +1737,14 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           },
         );
 
-        showAlertDialog(context, okButton, "Request sent successfully");
+        showAlertDialog(
+            context,
+            okButton,
+            (value?.message != null &&
+                    value?.message !=
+                        "New Provider Request has been created successfully.")
+                ? value?.message ?? ""
+                : "Request sent successfully");
       } else {
         Navigator.pop(context);
 
@@ -1778,7 +1785,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       },
       child: Container(
         height: 40.0.h,
-        padding: EdgeInsets.only(left: 3, right: 3, top: 5, bottom: 5),
+        padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: BorderRadius.all(Radius.circular(25)),
