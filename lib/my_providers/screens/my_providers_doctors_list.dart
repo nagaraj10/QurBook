@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:intl/intl.dart';
@@ -213,6 +214,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                   ? "Waiting for approval"
                                   : "",
                               maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 12.0.sp,
+                              ),
                             )),
                             onPressed: () {
                               toast.getToast('Approval request is pending',
