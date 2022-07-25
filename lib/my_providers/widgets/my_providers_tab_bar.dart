@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../constants/fhb_constants.dart' as Constants;
 import '../bloc/providers_block.dart';
@@ -19,7 +20,8 @@ class MyProvidersTabBar extends StatefulWidget {
   Function refresh;
 
   MyProvidersTabBar(
-      {this.data,this.dataHospitalLab,
+      {this.data,
+      this.dataHospitalLab,
       this.tabController,
       this.providersBloc,
       this.myProviderState,
@@ -35,6 +37,8 @@ class MyProvidersTabBar extends StatefulWidget {
 class MyProviderTabBarState extends State<MyProvidersTabBar> {
   List<Hospitals> hospitalsModel = [];
   List<Doctors> doctorsModel = [];
+  List<Doctors> doctorsModelPatientAssociated = [];
+
   List<Hospitals> labsModel = List();
 
   @override
@@ -42,10 +46,23 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     // TODO: implement initState
     super.initState();
     if (widget.data != null) {
-      hospitalsModel = widget.dataHospitalLab.hospitals;
-      doctorsModel = widget.data.doctors;
+      hospitalsModel = widget.dataHospitalLab?.hospitals;
+      doctorsModel = widget.data?.doctors;
+      if (widget.data?.providerRequestCollection3 != null &&
+          widget.data?.providerRequestCollection3.length > 0)
+        for (ProviderRequestCollection3 providerRequestCollection3
+            in widget.data?.providerRequestCollection3) {
+          Doctors patientAddedDoctor = providerRequestCollection3.doctor;
+          patientAddedDoctor.isPatientAssociatedRequest = true;
+          doctorsModelPatientAssociated.add(providerRequestCollection3.doctor);
+        }
+
+      if (doctorsModelPatientAssociated.isNotEmpty &&
+          doctorsModelPatientAssociated.length > 0) {
+        doctorsModel.addAll(doctorsModelPatientAssociated);
+      }
       labsModel = widget.dataHospitalLab.labs;
-      if(widget.data.clinics!=null){
+      if (widget.data.clinics != null) {
         hospitalsModel.addAll(widget.dataHospitalLab.clinics);
       }
     }

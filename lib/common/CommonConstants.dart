@@ -314,6 +314,17 @@ class CommonConstants {
   static String hubId = 'Hub ID';
   static String nickName = 'Nick Name';
 
+  //for ticket Validation
+
+  static String ticketTitle = 'Please fill ticket title';
+  static String ticketDesc = 'Please fill Description';
+  static String ticketDoctor = 'Please Select Doctor';
+  static String ticketFile = 'Please Attach Files';
+  static String ticketDate = 'Please Select Preferred Date';
+  static String ticketCategory = 'Please Select Plan Category';
+
+  static String ticketPackage = 'Please fill Package Name';
+
   factory CommonConstants() => _instance;
 
   static bool showNotificationdialog = true;

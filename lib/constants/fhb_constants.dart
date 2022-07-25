@@ -31,6 +31,7 @@ const String KEY_IS_Active_Membership_SELECTED = 'isactivemembershipSelected';
 const String KEY_IS_Active_Qurhome = 'isactiveQurhome';
 const String QurhomeDefaultUI = 'QurhomeDefaultUI';
 const String ScanningForDevices = 'Scanning for devices...';
+const String SettingUpTheDevice = 'Setting up the Device...';
 const String ScanningForBpDevices = 'Scanning for Bp devices...';
 const String CallingEmergencyServiceIn = 'Calling \n emergency service in';
 const String sec = 'Sec';
@@ -654,8 +655,8 @@ const String Rmarks_HINT = "Remarks";
 
 // True desk
 const String strMyTickets = 'Tickets';
-const String strAddMyTicket = 'Add New Ticket';
-const String strSubmitNewTicket = 'SUBMIT TICKET';
+const String strAddMyTicket = 'Create Ticket';
+const String strSubmitNewTicket = 'SUBMIT';
 const String strTicketTitle = 'Title';
 const String strPreferredLab = 'Preferred Lab';
 const String strTicketDesc = 'Description';
@@ -664,8 +665,11 @@ const String strDetailsButton = 'Details';
 const String strThereAreNoPreferredLabsInYourProfile =
     'There are no preferred labs in your profile';
 
-var tckTitle = 'title';
-var tckDesc = 'desc';
+const String strPreferredDoctors = 'Preferred Doctors';
+
+var tckTitle = '';
+var tckTitleOpt = '';
+var tckDesc = '';
 var tckPrefDate = 'pref_date';
 var tckPrefLab = 'pref_lab';
 var tckPrefLabId = 'pref_lab_id';
@@ -673,6 +677,17 @@ var ticketType = 'ticket type';
 var tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
+var tckSelectedDoctor = 'Doctor';
+var tckSelectedHospital = 'Hospital';
+var tckSelectedCategory = 'Category';
+var tckPackageName = '';
+
+var tckTypeTitle = 'text';
+var tckTypeDescription = 'text_area';
+var tckTypeDropdown = 'dropdown';
+var tckTypeDate = 'date';
+var tckTypeFile = "file";
+var tckPackageTitle = "package_title";
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
@@ -694,6 +709,9 @@ const String ISVIRTUALHUB = 'isVirtualHub';
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
 const String IS_BP_ENABLE_CHECK = 'bluetooth_enable_check';
+const String IS_LOCATION_SERVICE_CHECK = 'location_service_check';
+const String ENABLE_BACKGROUND_NOTIFICATION = 'enablebackgroundnotification';
+const String DISABLE_BACKGROUND_NOTIFICATION = 'disablebackgroundnotification';
 const String APPOINTMENT_DETAILS = 'appointmentDetails';
 const String BP_LOCATION_CHECK = 'bp_location_check';
 const String GET_CURRENT_LOCATION = 'getCurrentLocation';

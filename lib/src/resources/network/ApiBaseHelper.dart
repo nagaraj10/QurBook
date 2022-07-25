@@ -8,6 +8,7 @@ import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:myfhb/widgets/make_payment_response.dart';
@@ -42,6 +43,7 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:async';
 import '../../../constants/fhb_query.dart';
 import 'AppException.dart';
+import 'package:mime_type/mime_type.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -245,15 +247,16 @@ class ApiBaseHelper {
     return true;
   }
 
-  Future<dynamic> updateTeleHealthProvidersNew(
-      String url, String jsonString) async {
+  Future<dynamic> updateTeleHealthProvidersNew(String url, String jsonString,
+      {bool isPAR}) async {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     dio.options.headers[Constants.KEY_OffSet] = CommonUtil().setTimeZone();
 
-    final response = await dio.put(_baseUrl + url, data: jsonString);
+    final response = await dio
+        .put(_baseUrl + url + "&associationRequest=${isPAR}", data: jsonString);
     print(response.data);
 
     return response.data;
@@ -2292,11 +2295,16 @@ class ApiBaseHelper {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
       var bodyData = {
-        'subject': Constants.tckTitle,
-        'issue': Constants.tckDesc,
+        'subject': (Constants.tckTitle != '' && Constants.tckTitle != null)
+            ? Constants.tckTitle
+            : Constants.tckTitleOpt,
+        'issue': (Constants.tckDesc != '' && Constants.tckDesc != null)
+            ? Constants.tckDesc
+            : 'desc',
         'type': Constants.ticketType, //ask
         'priority': Constants.tckPriority, //ask
-        'preferredDate': Constants.tckPrefDate,
+        'preferredDate':
+            Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
         'patientUserId': userid,
         'additionalInfo': {
           'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
@@ -2304,7 +2312,19 @@ class ApiBaseHelper {
               : "",
           'preferredLabId': Constants.tckPrefLabId.trim().isNotEmpty
               ? Constants.tckPrefLabId
-              : ""
+              : "",
+          "choose_doctor": Constants.tckSelectedDoctor != 'Doctor'
+              ? Constants.tckSelectedDoctor
+              : '',
+          "choose_hospital": Constants.tckSelectedHospital != 'Hospital'
+              ? Constants.tckSelectedHospital
+              : '',
+          "choose_category": Constants.tckSelectedCategory != 'Category'
+              ? Constants.tckSelectedHospital
+              : '',
+          "package_name": Constants.tckPackageName != 'Package Name'
+              ? Constants.tckPackageName
+              : '',
         },
       };
       var response = await ApiServices.post(_baseUrl + url,
@@ -2577,6 +2597,75 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> uploadAttachmentForTicket(
+      String url, String ticketId, List<ImagesModel> imagePaths) async {
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final dio = Dio();
+    dio.options.headers['accept'] = '*/*';
+
+    dio.options.headers['authorization'] = authToken;
+
+    List<FormData> formData = List();
+
+    if (imagePaths != null && imagePaths.isNotEmpty) {
+      for (ImagesModel image in imagePaths) {
+        FormData newFormData;
+
+        var fileName = File(image.file);
+        var fileNoun, filePathForUrl;
+        if (!image.isFromFile) {
+          filePathForUrl = fileName.path + image.fileType;
+        }
+        fileNoun =
+            image.isFromFile ? fileName.path.split('/').last : filePathForUrl;
+
+        String mimeType =
+            mime(image.isFromFile ? fileName.path : image.fileType);
+        String mimee = mimeType.split('/')[0];
+        String type = mimeType.split('/')[1];
+        print("-----------------------");
+        print(fileName);
+        print("-----------------------");
+        print(fileNoun);
+
+        newFormData = FormData.fromMap({
+          'userId': userId,
+          'attachment': await MultipartFile.fromFile(fileName.path,
+              filename: fileNoun, contentType: MediaType(mimee, type)),
+          'ticketId': ticketId
+        });
+
+        formData.add(newFormData);
+      }
+    }
+    var response;
+    List responses = List();
+
+    formData.forEach((element) async {
+      if (responses.length != formData.length) {
+        try {
+          response = await dio.post(url, data: element);
+
+          if (response.statusCode == 200) {
+            print(response.data.toString());
+            responses.add(response);
+          } else {
+            responses.add(response);
+          }
+        } on DioError catch (e) {
+          print(e.toString());
+          print(e);
+          responses.add(response);
+        }
+      }
+      if (responses.length == formData.length) {
+        return responses;
+      }
+    });
   }
 
 /*

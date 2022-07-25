@@ -33,7 +33,8 @@ class UpdateProvidersRepository {
       bool isPreferred,
       String provideReferenceId,
       String userId,
-      List<String> selectedCategories) async {
+      List<String> selectedCategories,
+      {bool isPAR}) async {
     //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final Map<String, dynamic> doctorDic = {};
     doctorDic[parameters.doctorId] = providerId;
@@ -49,7 +50,8 @@ class UpdateProvidersRepository {
     print(jsonString);
 
     var response = await _helper.updateTeleHealthProvidersNew(
-        webserviceCall.getUrlToUpdateDoctorNew(userId), jsonString);
+        webserviceCall.getUrlToUpdateDoctorNew(userId), jsonString,
+        isPAR: isPAR);
 
     return UpdateProvidersId.fromJson(response);
   }

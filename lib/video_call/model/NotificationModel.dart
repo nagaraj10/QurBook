@@ -38,11 +38,15 @@ class NotificationModel {
   String caregiverReceiver;
   CallArguments callArguments;
   bool isWeb;
+  bool isCaregiver;
+  String deliveredDateTime;
+  bool isFromCareCoordinator;
   String callType;
   String claimId;
   Map<int, dynamic> redirectData;
   String planId;
   String notificationListId;
+  bool viewRecordAction, chatWithCC = false;
 
   NotificationModel({
     this.title,
@@ -77,6 +81,9 @@ class NotificationModel {
     this.activityTime,
     this.careGiverName,
     this.uid,
+    this.isCaregiver,
+    this.deliveredDateTime,
+    this.isFromCareCoordinator,
   });
 
   Map<String, dynamic> toMap() {
@@ -108,6 +115,11 @@ class NotificationModel {
       'activityTime': activityTime,
       'careGiverName': careGiverName,
       'uid': uid,
+      'isCaregiver': isCaregiver,
+      'deliveredDateTime': deliveredDateTime,
+      'isFromCareCoordinator': isFromCareCoordinator,
+      'viewRecordAction': viewRecordAction,
+      'chatWithCC': chatWithCC,
     };
   }
 
@@ -137,6 +149,11 @@ class NotificationModel {
     activityName = message['activityName'];
     activityTime = message['activityTime'];
     careGiverName = message['careGiverName'];
+    isCaregiver = message['isCaregiver'];
+    deliveredDateTime = message['deliveredDateTime'];
+    isFromCareCoordinator = message['isFromCareCoordinator'];
+    viewRecordAction = message['viewRecordAction'];
+    chatWithCC = message['chatWithCC'];
   }
 
   NotificationModel.fromMap(Map<String, dynamic> messageFromNative) {
@@ -287,6 +304,23 @@ class NotificationModel {
         }
         if (message[parameters.CARE_GIVER_NAME] != null) {
           careGiverName = message[parameters.CARE_GIVER_NAME];
+        }
+        if (message[parameters.strIsCaregiver] != null) {
+          isCaregiver = message[parameters.strIsCaregiver];
+        }
+        if (message[parameters.strDeliveredDateTime] != null) {
+          deliveredDateTime = message[parameters.strDeliveredDateTime];
+        }
+        if (message[parameters.strisFromCareCoordinator] != null) {
+          var currentVal = message[parameters.strisFromCareCoordinator];
+          if (currentVal.runtimeType == String) {
+            isFromCareCoordinator =
+                (message[parameters.strisFromCareCoordinator] ?? "false") ==
+                    "true";
+          } else if (currentVal.runtimeType == bool) {
+            isFromCareCoordinator =
+                message[parameters.strisFromCareCoordinator];
+          }
         }
         if (message[parameters.isWeb] != null) {
           if (message[parameters.isWeb].runtimeType == String) {
@@ -475,6 +509,21 @@ class NotificationModel {
     }
     if (message[parameters.CARE_GIVER_NAME] != null) {
       careGiverName = message[parameters.CARE_GIVER_NAME];
+    }
+    if (message[parameters.strIsCaregiver] != null) {
+      isCaregiver = message[parameters.strIsCaregiver];
+    }
+    if (message[parameters.strDeliveredDateTime] != null) {
+      deliveredDateTime = message[parameters.strDeliveredDateTime];
+    }
+    if (message[parameters.strisFromCareCoordinator] != null) {
+      var currentVal = message[parameters.strisFromCareCoordinator];
+      if (currentVal.runtimeType == String) {
+        isFromCareCoordinator =
+            (message[parameters.strisFromCareCoordinator] ?? "false") == "true";
+      } else if (currentVal.runtimeType == bool) {
+        isFromCareCoordinator = message[parameters.strisFromCareCoordinator];
+      }
     }
     if (message[parameters.isWeb] != null) {
       if (message[parameters.isWeb].runtimeType == String) {

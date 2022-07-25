@@ -327,6 +327,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == 'appointmentPayment') {
                       var passedValArr = widget.bundle?.split('&');
+                      var body = {};
+                      body['templateName'] =
+                          parameters.strCaregiverAppointmentPayment;
+                      body['contextId'] = passedValArr[2];
+                      FetchNotificationService()
+                          .updateNsActionStatus(body)
+                          .then((data) {
+                        FetchNotificationService().updateNsOnTapAction(body);
+                      });
 
                       Get.to(BookingConfirmation(
                           isFromPaymentNotification: true,
@@ -408,6 +417,33 @@ class _SplashScreenState extends State<SplashScreen> {
                               .navigateToMyRecordsCategory(temp[1], null, true);
                         }
                       }
+                    }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'&&
+                        (widget.templateName != null &&
+                            widget.templateName != '')){
+                      final passedValArr = widget.bundle.split('|');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatDetail(
+                                  peerId:passedValArr[0],
+                                  peerAvatar: passedValArr[6],
+                                  peerName: passedValArr[1],
+                                  patientId: '',
+                                  patientName: '',
+                                  patientPicture: '',
+                                  isFromVideoCall: false,
+                                  isFromFamilyListChat: true,
+                                  isFromCareCoordinator: passedValArr[5].toString().toLowerCase()=='true',
+                                  carecoordinatorId:passedValArr[2],
+                                  isCareGiver: passedValArr[3].toString().toLowerCase()=='true',
+                                  groupId: '',
+                                  lastDate: passedValArr[4]
+                              )
+                          )
+                      ).then(
+                              (value) {
+
+                          });
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -511,6 +547,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       var passedValArr = widget.bundle?.split('&');
 
+                      var body = {};
+                      body['templateName'] =
+                          parameters.strCaregiverNotifyPlanSubscription;
+                      body['contextId'] = passedValArr[4];
+                      FetchNotificationService()
+                          .updateNsActionStatus(body)
+                          .then((data) {
+                        FetchNotificationService().updateNsOnTapAction(body);
+                      });
                       Get.to(CheckoutPage(
                         isFromNotification: true,
                         cartUserId: passedValArr[2],

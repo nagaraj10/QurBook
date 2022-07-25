@@ -25,7 +25,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   int chatTotalCount = 0;
 
-  Future<void> initSocket() async{
+  Future<void> initSocket() async {
     String token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     String userId = PreferenceUtil.getStringValue(KEY_USERID);
 
@@ -49,7 +49,7 @@ class ChatSocketViewModel extends ChangeNotifier {
               .build());
 
       //socket.io.options['extraHeaders'] = {'Authorization': 'Bearer ' + token,'userId': userId};
-      socket.io.options['query'] = 'userId='+userId.toString();
+      socket.io.options['query'] = 'userId=' + userId.toString();
 
       socket.connect();
 
@@ -99,7 +99,6 @@ class ChatSocketViewModel extends ChangeNotifier {
   }*/
 
   void updateChatTotalCount(TotalCountModel totalCountModel) {
-
     chatTotalCount = 0;
 
     if (totalCountModel != null) {
@@ -107,7 +106,7 @@ class ChatSocketViewModel extends ChangeNotifier {
         if (totalCountModel?.payload?.isNotEmpty) {
           if (totalCountModel?.payload[0]?.count != null &&
               totalCountModel?.payload[0]?.count != '') {
-            chatTotalCount = int.parse(totalCountModel?.payload[0]?.count??0);
+            chatTotalCount = int.parse(totalCountModel?.payload[0]?.count ?? 0);
           }
         }
       }
@@ -137,12 +136,22 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ChatHistoryModel> getChatHistory(String peerId) async {
+  Future<ChatHistoryModel> getChatHistory(
+      String peerId,
+      String familyUserId,
+      bool isCareCoordinator,
+      String careCoordiantorId,
+      bool isFromFamilyList) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID);
 
-      ChatHistoryModel chatHistoryModel =
-          await chocketService.getChatHistory(userId, peerId);
+      ChatHistoryModel chatHistoryModel = await chocketService.getChatHistory(
+          userId,
+          peerId,
+          familyUserId,
+          isCareCoordinator,
+          careCoordiantorId,
+          isFromFamilyList);
 
       return chatHistoryModel;
     } catch (e) {}
@@ -159,12 +168,14 @@ class ChatSocketViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<InitChatFamilyModel> initNewFamilyChat(String peerId,String familyName) async {
+  Future<InitChatFamilyModel> initNewFamilyChat(String peerId,
+      String familyName, bool isCareCoordinator, String careCooId) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
 
       InitChatFamilyModel chatHistoryModel =
-      await chocketService.initNewFamilyChat(userId, peerId,familyName);
+          await chocketService.initNewFamilyChat(
+              userId, peerId, familyName, isCareCoordinator, careCooId);
 
       return chatHistoryModel;
     } catch (e) {}
@@ -172,9 +183,8 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
     try {
-
       GetUserIdModel getUserIdModel =
-      await chocketService.getUserIdFromDocId(docId);
+          await chocketService.getUserIdFromDocId(docId);
 
       return getUserIdModel;
     } catch (e) {}

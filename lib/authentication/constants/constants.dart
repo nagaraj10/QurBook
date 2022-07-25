@@ -180,7 +180,11 @@ const String strOrText = 'OR';
 const String strOtpNotReceived = 'Didn\'t receive the OTP ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
+const String strSOSCallDirect =
+    'Redirecting to make an outgoing call to SOS hotline. Please ensure you have an active sim installed on your phone.';
 const String primaryNumber = 'Primary Number';
+const String accept = 'Accept';
+const String dismiss = 'Dismiss';
 const String alternateNumber = 'Alternate Number';
 
 //Strings used in ChangePassword
@@ -202,7 +206,9 @@ const String strFreeDiet = 'FreeDiet';
 
 const String strAddPlan = 'Add Plan';
 
-const String strNewChatLabel = 'My Family';
+const String CARE_COORDINATOR_STRING = "'s (Care Coordinator)";
+
+const String strNewChatLabel = 'New Chat';
 
 const String strLabelNoFamily = 'No data available';
 

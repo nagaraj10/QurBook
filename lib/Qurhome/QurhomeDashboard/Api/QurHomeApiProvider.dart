@@ -302,4 +302,35 @@ class QurHomeApiProvider {
       }
     } catch (e) {}
   }
+
+  getSOSAgentNumber() async {
+    var regController = Get.find<QurhomeRegimenController>();
+    http.Response responseJson;
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var data = {
+        qr_location: regController.locationModel,
+      };
+      responseJson = await ApiServices.post(
+        '${Constants.BASE_URL}$qr_getSOSAgentNumber',
+        headers: header,
+        body: json.encode(data),
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      } else {
+        regController.SOSAgentNumberEmptyMsg.value =
+            CommonUtil().validString(json.decode(responseJson.body));
+        return null;
+      }
+    } on SocketException {
+      regController.SOSAgentNumberEmptyMsg.value =
+          CommonUtil().validString(strNoInternet);
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      regController.SOSAgentNumberEmptyMsg.value =
+          CommonUtil().validString(e.toString());
+      return null;
+    }
+  }
 }

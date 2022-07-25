@@ -284,6 +284,8 @@ const String notification_preference =
 const String display_devices = 'assets/settings/display_devices.png';
 const String unit_preference = 'assets/settings/unit_preference.png';
 
+const String strApprovAdd = 'This provider addition needs approval';
+
 //for audioWidget
 
 List<String> assetSample = [
@@ -605,6 +607,7 @@ const String strMyFamily = 'My Family';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
+const String strAddNewDevice = 'Add New Device';
 const String strQurHubIoTdevice = 'QurHub IoT device';
 const String strCreateNewVirtualHub = 'Create New Virtual Hub';
 const String strMyProvider = 'My Provider';

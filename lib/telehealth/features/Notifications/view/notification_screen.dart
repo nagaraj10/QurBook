@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
@@ -1624,8 +1625,20 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  await readUnreadAction(notification, isRead: true);
+                  //await readUnreadAction(notification, isRead: true);
 
+                  var nsBody = {};
+                  nsBody['templateName'] =
+                      parameters.strCaregiverAppointmentPayment;
+                  nsBody['contextId'] =
+                      notification?.messageDetails?.payload?.bookingId;
+                  FetchNotificationService()
+                      .updateNsActionStatus(nsBody)
+                      .then((data) {
+                    FetchNotificationService()
+                        .updateNsOnTapAction(nsBody)
+                        .then((value) => {});
+                  });
                   checkIfPaymentLinkIsExpired(
                           notification?.messageDetails?.payload?.appointmentId)
                       .then((value) {
@@ -1639,14 +1652,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                     }
                   });
                 },
-                borderSide: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 14.0.sp,
@@ -1667,8 +1680,20 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  await readUnreadAction(notification, isRead: true);
+                  //await readUnreadAction(notification, isRead: true);
 
+                  var nsBody = {};
+                  nsBody['templateName'] =
+                      parameters.strCaregiverNotifyPlanSubscription;
+                  nsBody['contextId'] =
+                      notification?.messageDetails?.payload?.bookingId;
+                  FetchNotificationService()
+                      .updateNsActionStatus(nsBody)
+                      .then((data) {
+                    FetchNotificationService()
+                        .updateNsOnTapAction(nsBody)
+                        .then((value) => {});
+                  });
                   Get.to(CheckoutPage(
                     isFromNotification: true,
                     bookingId: notification?.messageDetails?.payload?.bookingId,
@@ -1678,14 +1703,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                     cartId: notification?.messageDetails?.payload?.bookingId,
                   )).then((value) {});
                 },
-                borderSide: BorderSide(
-                  color: Color(
-                    CommonUtil().getMyPrimaryColor(),
-                  ),
-                ),
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: Color(CommonUtil().getMyPrimaryColor()),
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
                   overflow: TextOverflow.visible,
                   fontWeight: FontWeight.w600,
                   fontsize: 14.0.sp,
@@ -1693,6 +1718,98 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               SizedBox(
                 width: 15.0.w,
+              ),
+            ],
+          ),
+        );
+        break;
+      case parameters.notifyCaregiverForMedicalRecord:
+        return Padding(
+          padding: EdgeInsets.only(left: 0, right: 0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed:() {
+                  readUnreadAction(notification);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                            peerId:payload.userId,
+                            peerAvatar: payload.senderProfilePic,
+                            peerName: payload.patientName,
+                            patientId: '',
+                            patientName: '',
+                            patientPicture: '',
+                            isFromVideoCall: false,
+                            isFromFamilyListChat: true,
+                            isFromCareCoordinator: payload.isFromCareCoordinator.toLowerCase()=='true',
+                            carecoordinatorId:payload.careCoordinatorUserId,
+                            isCareGiver: payload.isCareGiver.toLowerCase()=='true',
+                            groupId: '',
+                            lastDate: payload.deliveredDateTime
+                        )),
+                  ).then((value) {
+
+                  });
+                },
+                borderSide: notification?.isUnread
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: TranslationConstants.chatwithcc,
+                  colors: notification?.isUnread
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+              OutlineButton(
+                onPressed: () {
+                  readUnreadAction(notification);
+
+                  var body = {};
+                  body['templateName'] = payload?.templateName;
+                  final split = payload?.redirectTo?.split('|');
+                  var redirectData = {
+                    for (int i = 0; i < split.length; i++)
+                      i: split[i]
+                  };
+                  var id = redirectData[2];
+                  if (id.runtimeType == String &&
+                      (id ?? '').isNotEmpty) {
+                    final userId =
+                    PreferenceUtil.getStringValue(KEY_USERID);
+                    if ((payload?.userId ?? '') == userId) {
+                      CommonUtil()
+                          .navigateToRecordDetailsScreen(id);
+                    } else {
+                      CommonUtil.showFamilyMemberPlanExpiryDialog(
+                        (payload?.patientName ?? ''),
+                        redirect: (payload?.redirectTo ?? ''),
+                      );
+                    }
+                  }
+
+
+                },
+                borderSide: notification?.isUnread
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: TranslationConstants.viewrecord,
+                  colors: notification?.isUnread
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 15.0.sp,
+                ),
               ),
             ],
           ),

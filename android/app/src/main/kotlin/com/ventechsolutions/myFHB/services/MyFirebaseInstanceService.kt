@@ -300,6 +300,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotification4DocAndPatAssociation(data)
         } else if (data["templateName"] == "MissingActivitiesReminder") {
             createNotification4MissedEvents(data)
+        }else if (data["templateName"] == "notifyCaregiverForMedicalRecord") {
+            createNotificationCaregiverForMedicalRecord(data)
         } else if (data[Constants.PROB_EXTERNAL_LINK] != null && data[Constants.PROB_EXTERNAL_LINK] != "") {
             openURLFromNotification(data)
         } else if (data[Constants.PROP_REDIRECT_TO] == "mycartdetails") {
@@ -681,6 +683,92 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 R.drawable.ic_reschedule,
                 getString(R.string.ns_escalate),
                 acceptCareGiverPendingIntent
+            )
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID, notification)
+    }
+    private fun createNotificationCaregiverForMedicalRecord(data: Map<String, String> = HashMap()) {
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(
+                CHANNEL_CANCEL_APP,
+                getString(R.string.channel_cancel_apps),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
+            val attributes =
+                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+
+        val chatWithCcIntent = Intent(applicationContext, ChatwithCC::class.java)
+        chatWithCcIntent.putExtra(getString(R.string.nsid), NS_ID)
+        chatWithCcIntent.putExtra(Intent.EXTRA_TEXT,"ack")
+        chatWithCcIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
+        chatWithCcIntent.putExtra(Constants.CARE_COORDINATOR_USER_ID, data[Constants.CARE_COORDINATOR_USER_ID])
+        chatWithCcIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        chatWithCcIntent.putExtra(Constants.PATIENT_NAME, data[Constants.PATIENT_NAME])
+        chatWithCcIntent.putExtra(Constants.IS_CARE_GIVER, data[Constants.IS_CARE_GIVER])
+        chatWithCcIntent.putExtra(Constants.DELIVERED_DATE_TIME, data[Constants.DELIVERED_DATE_TIME])
+        chatWithCcIntent.putExtra(Constants.IS_FROM_CARE_COORDINATOR, data[Constants.IS_FROM_CARE_COORDINATOR])
+        chatWithCcIntent.putExtra(Constants.SENDER_PROFILE_PIC, data[Constants.SENDER_PROFILE_PIC])
+
+
+        val onTapNS = Intent(this, OnTapNotification::class.java)
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(Intent.EXTRA_TEXT, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_PRESCRIPTION_ID, data[Constants.PROP_REDIRECT_TO]?.split("|")?.get(2))
+        onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        onTapNS.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
+        val onTapPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
+
+        val chatWithCcPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            chatWithCcIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
+                )
+            )
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setWhen(0)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .addAction(
+                R.drawable.ic_reschedule,
+                getString(R.string.ns_chat_with_cc),
+                chatWithCcPendingIntent
+            )
+            .addAction(
+                R.drawable.ic_reschedule,
+                getString(R.string.ns_view_record),
+                onTapPendingIntent
             )
             .setStyle(
                 NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])

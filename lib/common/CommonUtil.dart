@@ -144,6 +144,8 @@ class CommonUtil {
   static String CURRENCY = INR;
   static String POWER_BI_URL = 'IN';
   static String BASE_URL_QURHUB = '';
+  static String TRUE_DESK_URL = '';
+
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
   static const secondaryGrey = 0xFF545454;
@@ -1408,11 +1410,13 @@ class CommonUtil {
     return removedString;
   }
 
-  static String getDateStringFromDateTime(String string,{bool forNotification=false}) {
+  static String getDateStringFromDateTime(String string,
+      {bool forNotification = false}) {
     try {
       var dateTime = DateTime.tryParse(string);
       if (dateTime != null) {
-        return dateConversionToApiFormat(dateTime, MMM: true,forAppointmentNotification:forNotification);
+        return dateConversionToApiFormat(dateTime,
+            MMM: true, forAppointmentNotification: forNotification);
       } else {
         DateFormat format = DateFormat(
             CommonUtil.REGION_CODE == 'IN' ? "dd-MM-yyyy" : "MM-dd-yyyy");
@@ -4750,6 +4754,34 @@ class CommonUtil {
       ]);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<bool> checkGPSIsOn() async
+  {
+    try {
+      bool serviceEnabled = false;
+      if (Platform.isAndroid)
+      {
+        const platform = MethodChannel(IS_LOCATION_SERVICE_CHECK);
+        serviceEnabled = await platform.invokeMethod(IS_LOCATION_SERVICE_CHECK);
+      }
+      else{
+        serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      }
+      return serviceEnabled;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> checkBluetoothIsOn() async {
+    try {
+      const platform = MethodChannel(IS_BP_ENABLE_CHECK);
+      bool isBluetoothEnable = await platform.invokeMethod(IS_BP_ENABLE_CHECK);
+      return isBluetoothEnable;
+    } catch (e) {
+      return false;
     }
   }
 

@@ -297,13 +297,11 @@ class _VerifyPatientState extends State<VerifyPatient>
                               ],
                             ),
                             Visibility(
-                              visible: from != strFromVerifyFamilyMember &&
-                                  CommonUtil.REGION_CODE == 'IN',
+                              visible: from != strFromVerifyFamilyMember,
                               child: OrDivider(),
                             ),
                             Visibility(
-                              visible: from != strFromVerifyFamilyMember &&
-                                  CommonUtil.REGION_CODE == 'IN',
+                              visible: from != strFromVerifyFamilyMember,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

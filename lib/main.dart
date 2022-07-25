@@ -26,6 +26,7 @@ import 'chat_socket/viewModel/chat_socket_view_model.dart';
 import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/DatabseUtil.dart';
 import 'common/firebase_analytics_service.dart';
+import 'constants/fhb_parameters.dart';
 import 'constants/router_variable.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
@@ -410,6 +411,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.CURRENCY = (CommonUtil.REGION_CODE == 'IN') ? INR : USD;
   CommonUtil.POWER_BI_URL = values[11];
   CommonUtil.BASE_URL_QURHUB = values[12];
+  CommonUtil.TRUE_DESK_URL = values[13];
 }
 
 Widget buildError(BuildContext context, FlutterErrorDetails error) {
@@ -583,6 +585,23 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
+        }else if(passedValArr[1] == 'notifyCaregiverForMedicalRecord'){
+          Get.to(ChatDetail(
+              peerId:passedValArr[2],
+              peerAvatar: passedValArr[8],
+              peerName: passedValArr[3],
+              patientId: '',
+              patientName: '',
+              patientPicture: '',
+              isFromVideoCall: false,
+              isFromFamilyListChat: true,
+              isFromCareCoordinator: passedValArr[7].toLowerCase()=='true',
+              carecoordinatorId:passedValArr[4],
+              isCareGiver: passedValArr[5].toLowerCase()=='true',
+              groupId: '',
+              lastDate: passedValArr[6]
+          ));
+
         } else if (passedValArr[1] == 'escalateToCareCoordinatorToRegimen') {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if (passedValArr[7] == userId) {
@@ -603,8 +622,15 @@ class _MyFHBState extends State<MyFHB> {
             );
           }
         } else if (passedValArr[1] == 'appointmentPayment') {
-          Get.to(BookingConfirmation(
-              isFromPaymentNotification: true, appointmentId: passedValArr[2]));
+          var nsBody = {};
+          nsBody['templateName'] = strCaregiverAppointmentPayment;
+          nsBody['contextId'] = passedValArr[3];
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody).then(
+                (value) => Get.to(BookingConfirmation(
+                    isFromPaymentNotification: true,
+                    appointmentId: passedValArr[2])));
+          });
         } else if (passedValArr[1] == 'careGiverMemberProfile') {
           print('caregiverid: ' + passedValArr[2]);
           Get.to(
@@ -857,14 +883,20 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'my cart',
             'navigationPage': 'My Cart',
           });
-          Get.to(CheckoutPage(
-            isFromNotification: true,
-            cartUserId: passedValArr[2],
-            bookingId: passedValArr[4],
-            notificationListId: passedValArr[3],
-            cartId: passedValArr[4],
-          )).then((value) =>
-              PageNavigator.goToPermanent(context, router.rt_Landing));
+          var nsBody = {};
+          nsBody['templateName'] = strCaregiverNotifyPlanSubscription;
+          nsBody['contextId'] = passedValArr[4];
+          FetchNotificationService().updateNsActionStatus(nsBody).then((data) {
+            FetchNotificationService().updateNsOnTapAction(nsBody).then(
+                (value) => Get.to(CheckoutPage(
+                      isFromNotification: true,
+                      cartUserId: passedValArr[2],
+                      bookingId: passedValArr[4],
+                      notificationListId: passedValArr[3],
+                      cartId: passedValArr[4],
+                    )).then((value) => PageNavigator.goToPermanent(
+                        context, router.rt_Landing)));
+          });
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1232,7 +1264,13 @@ class _MyFHBState extends State<MyFHB> {
               templateName: parsedData[1],
               bundle: parsedData[2],
             );
-          } else if (parsedData[1] == 'sheela') {
+          }else if(parsedData[1] == 'notifyCaregiverForMedicalRecord'){
+            return SplashScreen(
+              nsRoute: 'notifyCaregiverForMedicalRecord',
+              templateName: parsedData[1],
+              bundle: parsedData[2] + '|' + parsedData[3]+ '|' + parsedData[4]+ '|' + parsedData[5]+ '|' + parsedData[6]+ '|' + parsedData[7]+ '|' + parsedData[8],
+            );
+          }else if (parsedData[1] == 'sheela') {
             return SplashScreen(
               nsRoute: 'sheela',
               bundle: parsedData[2] + '|' + parsedData[3],
@@ -1275,7 +1313,8 @@ class _MyFHBState extends State<MyFHB> {
           } else if (parsedData[1] == 'appointmentPayment') {
             return SplashScreen(
                 nsRoute: 'appointmentPayment',
-                bundle: parsedData[1] + '&' + parsedData[2]);
+                bundle:
+                    parsedData[1] + '&' + parsedData[2] + '&' + parsedData[3]);
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
             return SplashScreen(

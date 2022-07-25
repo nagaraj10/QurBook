@@ -123,6 +123,8 @@ class RegimentViewModel extends ChangeNotifier {
         index: 0,
       );
     }
+    searchController.clear();
+    searchFocus.unfocus();
     setViewRegimentsData();
     notifyListeners();
   }
