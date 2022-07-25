@@ -7,7 +7,7 @@
     android:background="@android:color/transparent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
@@ -18,19 +18,19 @@
         app:cardElevation="0dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:layout_marginBottom="30dp"-->
-<!--                android:text="Sheela"-->
-<!--                android:textColor="@android:color/black"-->
-<!--                android:textSize="17sp" />-->
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="center"-->
+            <!--                android:layout_marginTop="10dp"-->
+            <!--                android:layout_marginBottom="30dp"-->
+            <!--                android:text="Sheela"-->
+            <!--                android:textColor="@android:color/black"-->
+            <!--                android:textSize="17sp" />-->
 
             <ImageView
                 android:id="@+id/close"
@@ -42,7 +42,7 @@
 
             <LinearLayout
                 android:id="@+id/listeningLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -82,45 +82,45 @@
 
 
                 <LinearLayout
-                        android:id="@+id/edit_view"
-                        android:layout_width="match_parent"
+                    android:id="@+id/edit_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/edit_text_border"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:weightSum="5">
+
+                    <EditText
+                        android:id="@+id/displayTxt"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/edit_text_border"
-                        android:orientation="horizontal"
-                        android:padding="5dp"
-                        android:visibility="visible"
-                        android:weightSum="5">
+                        android:layout_margin="5dp"
+                        android:layout_weight="5"
+                        android:background="@null"
+                        android:gravity="start"
+                        android:maxLines="3"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp" />
 
-                        <EditText
-                            android:id="@+id/displayTxt"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:layout_weight="5"
-                            android:background="@null"
-                            android:gravity="start"
-                            android:maxLines="3"
-                            android:textColor="@android:color/black"
-                            android:textSize="14sp" />
-
-                        <Button
-                            android:id="@+id/send"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="5dp"
-                            android:background="@drawable/ic_enable_send"
-                            android:gravity="end" />
-                    </LinearLayout>
+                    <Button
+                        android:id="@+id/send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/ic_enable_send"
+                        android:gravity="end" />
+                </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/tryMe"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone">
@@ -130,7 +130,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="14dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_marginEnd="35dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp"
                     android:gravity="center"
                     android:textColor="#D21C47"
                     android:textSize="20sp"

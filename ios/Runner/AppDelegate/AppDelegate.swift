@@ -268,7 +268,8 @@ import CoreBluetooth
                         print(result.isFinal)
                         timer.invalidate()
                         self.stopRecording()
-                        self.startTheVC(currentmessage: self.message)
+                        //self.startTheVC(currentmessage: self.message)
+                        self.STT_Result?(self.message)
                         self.message = "";
                     }
                 } else {
@@ -278,7 +279,8 @@ import CoreBluetooth
                         print(self.message)
                         timer.invalidate()
                         self.stopRecording()
-                        self.startTheVC(currentmessage: self.message)
+                        self.STT_Result?(self.message)
+                        //self.startTheVC(currentmessage: self.message)
                         self.message = "";
                         
                     })
