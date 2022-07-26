@@ -2010,7 +2010,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     userAddressCollection3.isPrimary = true;
     userAddressCollection3.isActive = true;
     userAddressCollection3.createdOn =
-        CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
+        CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now(),
+            isIndianTime: true);
     userAddressCollection3.lastModifiedOn = null;
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       userAddressCollection3.createdBy = widget.arguments.id;
@@ -2035,7 +2036,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       createdBy: widget.arguments.fromClass == CommonConstants.user_update
           ? PreferenceUtil.getStringValue(Constants.KEY_USERID)
           : widget.arguments.id,
-      createdOn: CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
+      createdOn: CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now(),
+          isIndianTime: true),
     );
 
     var userAddressCollection3List = List<UserAddressCollection3>();
