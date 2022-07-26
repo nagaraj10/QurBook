@@ -1449,8 +1449,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         try {
           final myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
-                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+              await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
+                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
           if (myProf.result.userContactCollection3 != null) {
             if (myProf.result.userContactCollection3.isNotEmpty) {
               mobileNoController.text =
@@ -1458,9 +1458,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               emailController.text =
                   myProf.result.userContactCollection3[0].email;
             }
+          } else {
+            final myProf =
+                await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+            if (myProf.result.userContactCollection3 != null) {
+              if (myProf.result.userContactCollection3.isNotEmpty) {
+                mobileNoController.text =
+                    myProf.result.userContactCollection3[0].phoneNumber;
+                emailController.text =
+                    myProf.result.userContactCollection3[0].email;
+              }
+            }
           }
         } catch (e) {
-          if (widget.arguments.myProfileResult.userAddressCollection3 != null) {
+          if (widget.arguments.myProfileResult.userContactCollection3 != null) {
             if (widget
                 .arguments.myProfileResult.userContactCollection3.isNotEmpty) {
               mobileNoController.text = widget.arguments.myProfileResult
@@ -2175,12 +2186,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? profileValue.result.lastName.capitalizeFirstofEach
                     : '';
 
-                PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
-                PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
+                if (widget.arguments.isFromAppointmentOrSlotPage != true) {
+                  PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
+                  PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
+                  PreferenceUtil.saveProfileData(
+                      Constants.KEY_PROFILE_MAIN, profileValue);
+                }
+
                 PreferenceUtil.saveProfileData(
                     Constants.KEY_PROFILE, profileValue);
-                PreferenceUtil.saveProfileData(
-                    Constants.KEY_PROFILE_MAIN, profileValue);
               }
               imageURI = null;
               Navigator.pop(dialogContext);

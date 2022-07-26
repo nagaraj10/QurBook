@@ -1834,7 +1834,8 @@ class CommonUtil {
                 await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
                         myProfileResult: myProfile?.result,
-                        fromClass: CommonConstants.user_update));
+                        fromClass: CommonConstants.user_update,
+                        isFromAppointmentOrSlotPage: true));
               } else {
                 FlutterToast()
                     .getToast('Unable to Fetch User Profile data', Colors.red);
@@ -4757,16 +4758,13 @@ class CommonUtil {
     }
   }
 
-  Future<bool> checkGPSIsOn() async
-  {
+  Future<bool> checkGPSIsOn() async {
     try {
       bool serviceEnabled = false;
-      if (Platform.isAndroid)
-      {
+      if (Platform.isAndroid) {
         const platform = MethodChannel(IS_LOCATION_SERVICE_CHECK);
         serviceEnabled = await platform.invokeMethod(IS_LOCATION_SERVICE_CHECK);
-      }
-      else{
+      } else {
         serviceEnabled = await Geolocator.isLocationServiceEnabled();
       }
       return serviceEnabled;
