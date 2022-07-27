@@ -132,7 +132,7 @@ class _MyProvidersState extends State<MyProviders> {
               router.rt_SearchProvider,
               arguments: SearchArguments(
                 searchWord: CommonConstants.doctors,
-                fromClass: router.cn_teleheathProvider,
+                fromClass: router.rt_TelehealthProvider,
               ),
             ).then((value) {
               providerViewModel.doctorIdsList = null;
