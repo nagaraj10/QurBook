@@ -1384,18 +1384,33 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         try {
           final myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
-                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
+              await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
+                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+          if (myProf.result.userContactCollection3 != null &&
+              myProf.result.userContactCollection3.length > 0) {
             if (myProf.result.userContactCollection3.isNotEmpty) {
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
               emailController.text =
                   myProf.result.userContactCollection3[0].email;
             }
+          } else {
+            final myProf =
+                await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+            if (myProf.result.userContactCollection3 != null &&
+                myProf.result.userContactCollection3.length > 0) {
+              if (myProf.result.userContactCollection3.isNotEmpty) {
+                mobileNoController.text =
+                    myProf.result.userContactCollection3[0].phoneNumber;
+                emailController.text =
+                    myProf.result.userContactCollection3[0].email;
+              }
+            }
           }
         } catch (e) {
-          if (widget.arguments.myProfileResult.userAddressCollection3 != null) {
+          if (widget.arguments.myProfileResult.userContactCollection3 != null &&
+              widget.arguments.myProfileResult.userContactCollection3.length >
+                  0) {
             if (widget
                 .arguments.myProfileResult.userContactCollection3.isNotEmpty) {
               mobileNoController.text = widget.arguments.myProfileResult
@@ -1415,7 +1430,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
             widget
-                .arguments.myProfileResult.userAddressCollection3.isNotEmpty) {
+                .arguments.myProfileResult.userAddressCollection3.isNotEmpty &&
+            widget.arguments.myProfileResult.userAddressCollection3.length >
+                0) {
           cntrlr_addr_one.text = widget
               .arguments.myProfileResult.userAddressCollection3[0].addressLine1;
           cntrlr_addr_two.text = widget
@@ -2110,12 +2127,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? profileValue.result.lastName.capitalizeFirstofEach
                     : '';
 
-                PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
-                PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
+                if (widget.arguments.isFromAppointmentOrSlotPage != true) {
+                  PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
+                  PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
+                  PreferenceUtil.saveProfileData(
+                      Constants.KEY_PROFILE_MAIN, profileValue);
+                }
+
                 PreferenceUtil.saveProfileData(
                     Constants.KEY_PROFILE, profileValue);
-                PreferenceUtil.saveProfileData(
-                    Constants.KEY_PROFILE_MAIN, profileValue);
               }
               imageURI = null;
               Navigator.pop(dialogContext);
