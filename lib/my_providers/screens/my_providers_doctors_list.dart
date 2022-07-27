@@ -108,22 +108,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                 : '';
         return InkWell(
             onTap: () {
-              if (eachDoctorModel.isPatientAssociatedRequest) {
-                toast.getToast('Approval request is pending', Colors.black54);
-              } else {
-                Navigator.pushNamed(context, router.rt_AddProvider,
-                    arguments: AddProvidersArguments(
-                        searchKeyWord: CommonConstants.doctors,
-                        doctorsModel: eachDoctorModel,
-                        fromClass: router.rt_myprovider,
-                        hasData: true,
-                        isRefresh: () {
-                          widget.refresh();
-                        })).then((value) {
-//                providersBloc.getMedicalPreferencesList();
-                  myProviderState.refreshPage();
-                });
-              }
+              callMethodToNavigate(eachDoctorModel);
             },
             child: Container(
                 padding:
@@ -219,8 +204,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                               ),
                             )),
                             onPressed: () {
-                              toast.getToast('Approval request is pending',
-                                  Colors.black54);
+                              callMethodToNavigate(eachDoctorModel);
                             },
                           )
                         ],
@@ -265,5 +249,24 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
       },
       itemCount: doctorsModel.length,
     );
+  }
+
+  callMethodToNavigate(Doctors eachDoctorModel) {
+    if (eachDoctorModel.isPatientAssociatedRequest) {
+      toast.getToast('Approval request is pending', Colors.black54);
+    } else {
+      Navigator.pushNamed(context, router.rt_AddProvider,
+          arguments: AddProvidersArguments(
+              searchKeyWord: CommonConstants.doctors,
+              doctorsModel: eachDoctorModel,
+              fromClass: router.rt_myprovider,
+              hasData: true,
+              isRefresh: () {
+                widget.refresh();
+              })).then((value) {
+//                providersBloc.getMedicalPreferencesList();
+        myProviderState.refreshPage();
+      });
+    }
   }
 }
