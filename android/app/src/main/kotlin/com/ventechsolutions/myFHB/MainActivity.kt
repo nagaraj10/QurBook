@@ -159,7 +159,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val STATE_MIC = 4
 
 
-    private lateinit var _result: MethodChannel.Result
+    private var _result: MethodChannel.Result? = null
     private lateinit var _securityResult: MethodChannel.Result
     private lateinit var _TTSResult: MethodChannel.Result
     //internal var smsBroadcastReceiver: SMSBroadcastReceiver? = null
@@ -308,15 +308,17 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         close.setOnClickListener {
-            speechRecognizer!!.cancel()
+            speechRecognizer?.cancel()
             if (dialog.isShowing) {
                 try {
                     _result.let {
-                        _result.success("")
+                        _result?.error("","","")
                     }
+                    _result=null
                 } catch (e: Exception) {
                     print(e.printStackTrace())
                 }
+                finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
             }
@@ -324,14 +326,16 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //builder.show()
 
         sendBtn.setOnClickListener {
-            speechRecognizer!!.cancel()
+            speechRecognizer?.cancel()
             if (displayText.text.toString().trim() == "") {
                 displayText.clearFocus()
                 val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
             } else {
-                _result.success(displayText.text.toString())
+                _result?.success(displayText.text.toString())
+                _result=null
+                finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
             }
@@ -1987,7 +1991,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         unregisterReceiver(broadcastReceiver);
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
-        speechRecognizer!!.destroy()
+        speechRecognizer?.destroy()
         MyApp.snoozeTapCountTime = 0
     }
 
@@ -2008,32 +2012,40 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 50000000)
-        intent.putExtra(
-            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-            50000000
-        )
-        intent.putExtra(
-            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
-            50000000
-        )
+
+//        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 5000)
+//        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.example.android.voicerecognitionservice");
+//        intent.putExtra(
+//            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+//            2000
+//        )
+//        intent.putExtra(
+//            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
+//            2000
+//        )
+
+
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
 
         //Timer().schedule(100){
         try {
             //startActivityForResult(intent, REQ_CODE)
-            speechRecognizer!!.setRecognitionListener(object : RecognitionListener {
-                override fun onReadyForSpeech(bundle: Bundle) {}
+            speechRecognizer?.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(bundle: Bundle) {
+                    Log.e("speechreco", "onReadyForSpeech: " )
+                }
                 override fun onBeginningOfSpeech() {
+                    Log.e("speechreco", "onBeginningOfSpeech: " )
+
                     if (!dialog.isShowing) {
                         this@MainActivity.runOnUiThread(
                             object : Runnable {
                                 override fun run() {
                                     //displayText.text = "Speak now"
-                                    micOn.visibility = View.VISIBLE
-                                    edit_view.visibility = View.GONE
+                                    micOn.visibility = View.GONE
+//                                    edit_view.visibility = View.GONE
                                     listeningLayout.visibility = View.VISIBLE
                                     tryMe.visibility = View.GONE
                                 }
@@ -2044,9 +2056,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     }
                 }
 
-                override fun onRmsChanged(v: Float) {}
-                override fun onBufferReceived(bytes: ByteArray) {}
+                override fun onRmsChanged(v: Float) {
+//                    Log.e("speechreco", "onRmsChanged: " )
+                }
+                override fun onBufferReceived(bytes: ByteArray) {
+                    Log.e("speechreco", "onBufferReceived: " )
+                }
                 override fun onEndOfSpeech() {
+                    Log.e("speechreco", "onEndOfSpeech: " )
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                         //dialog.dismiss()
                     } else if (finalWords == "") {
@@ -2054,37 +2071,40 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     } else if (isPartialResultInvoked == true) {
                         //do nothing
                     } else {
-                        this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    if (listeningLayout.visibility == View.VISIBLE) {
-                                        listeningLayout.visibility = View.GONE
-                                        tryMe.visibility = View.VISIBLE
-                                        errorTxt.text = "Please Retry"
-                                        customLayout.setOnClickListener {
-                                            this@MainActivity.runOnUiThread(
-                                                object : Runnable {
-                                                    override fun run() {
-                                                        //displayText.text = "Speak now"
-                                                        micOn.visibility = View.VISIBLE
-                                                        edit_view.visibility = View.GONE
-                                                        spin_kit.visibility = View.VISIBLE
-                                                        listeningLayout.visibility = View.VISIBLE
-                                                        tryMe.visibility = View.GONE
-                                                        speechRecognizer!!.startListening(intent)
-                                                    }
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        )
+//                        this@MainActivity.runOnUiThread(
+//                            object : Runnable {
+//                                override fun run() {
+//                                    if (listeningLayout.visibility == View.VISIBLE) {
+//                                        listeningLayout.visibility = View.GONE
+//                                        tryMe.visibility = View.VISIBLE
+//                                        errorTxt.text = "Please Retry"
+//                                        customLayout.setOnClickListener {
+//                                            this@MainActivity.runOnUiThread(
+//                                                object : Runnable {
+//                                                    override fun run() {
+//                                                        //displayText.text = "Speak now"
+//                                                        micOn.visibility = View.GONE
+//                                                        edit_view.visibility = View.GONE
+//                                                        spin_kit.visibility = View.VISIBLE
+//                                                        listeningLayout.visibility = View.VISIBLE
+//                                                        tryMe.visibility = View.GONE
+//                                                        speechRecognizer!!.startListening(intent)
+//                                                    }
+//                                                }
+//                                            )
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        )
 
                     }
                 }
 
                 override fun onError(errorCode: Int) {
+                    Log.e("speechreco", "onError: " )
+                    _result?.error("100","no response",errorCode)
+                    _result=null
                     val message: String
                     when (errorCode) {
                         SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
@@ -2102,88 +2122,93 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                             message = "Didn't understand, please try again."
                         }
                     }
-                    this@MainActivity.runOnUiThread(
-                        object : Runnable {
-                            override fun run() {
-                                //Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    )
+
                 }
 
                 override fun onResults(bundle: Bundle) {
+                    Log.e("speechreco", "onResults: " )
+
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    Log.e("speechreco", "onResults: "+data )
+
+//                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                     if (data != null && data.size > 0) {
-                        finalWords = data[0].toString()
-                        isPartialResultInvoked = false
-                        //_result.success(finalWords)
-                        if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
-                            handler.postDelayed(runnable, 1000)
-                            //dialog.dismiss()
-                            spin_kit.visibility = View.GONE
-                            displayText.setText(finalWords)
-                            finalWords = null
-                        } else if (finalWords == "") {
-                            //do nothing
-                        } else {
-                            this@MainActivity.runOnUiThread(
-                                object : Runnable {
-                                    override fun run() {
-                                        if (listeningLayout.visibility == View.VISIBLE) {
-                                            listeningLayout.visibility = View.GONE
-                                            tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Please Retry"
-                                            customLayout.setOnClickListener {
-                                                this@MainActivity.runOnUiThread(
-                                                    object : Runnable {
-                                                        override fun run() {
-                                                            //displayText.text = "Speak now"
-                                                            micOn.visibility = View.VISIBLE
-                                                            edit_view.visibility = View.GONE
-                                                            listeningLayout.visibility =
-                                                                View.VISIBLE
-                                                            tryMe.visibility = View.GONE
-                                                            speechRecognizer!!.startListening(intent)
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            )
-                        }
-                    } else {
-                        this@MainActivity.runOnUiThread(
-                            object : Runnable {
-                                override fun run() {
-                                    if (listeningLayout.visibility == View.VISIBLE) {
-                                        listeningLayout.visibility = View.GONE
-                                        tryMe.visibility = View.VISIBLE
-                                        errorTxt.text = "Please Retry"
-                                        customLayout.setOnClickListener {
-                                            this@MainActivity.runOnUiThread(
-                                                object : Runnable {
-                                                    override fun run() {
-                                                        //displayText.text = "Speak now"
-                                                        micOn.visibility = View.VISIBLE
-                                                        edit_view.visibility = View.GONE
-                                                        listeningLayout.visibility =
-                                                            View.VISIBLE
-                                                        tryMe.visibility = View.GONE
-                                                        speechRecognizer!!.startListening(intent)
-                                                    }
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        )
+                        finalWords=data[0]
+                        displayText.setText(finalWords)
+
                     }
+//                    if (data != null && data.size > 0) {
+//                        finalWords = data[0].toString()
+//                        isPartialResultInvoked = false
+//                        //_result.success(finalWords)
+//                        if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
+//                            handler.postDelayed(runnable, 1000)
+//                            //dialog.dismiss()
+//                            spin_kit.visibility = View.GONE
+//                            displayText.setText(finalWords)
+//                            finalWords = null
+//                        } else if (finalWords == "") {
+//                            //do nothing
+//                        } else {
+//                            this@MainActivity.runOnUiThread(
+//                                object : Runnable {
+//                                    override fun run() {
+//                                        if (listeningLayout.visibility == View.VISIBLE) {
+//                                            listeningLayout.visibility = View.GONE
+//                                            tryMe.visibility = View.VISIBLE
+//                                            errorTxt.text = "Please Retry"
+//                                            customLayout.setOnClickListener {
+//                                                this@MainActivity.runOnUiThread(
+//                                                    object : Runnable {
+//                                                        override fun run() {
+//                                                            //displayText.text = "Speak now"
+//                                                            micOn.visibility = View.VISIBLE
+//                                                            edit_view.visibility = View.GONE
+//                                                            listeningLayout.visibility =
+//                                                                View.VISIBLE
+//                                                            tryMe.visibility = View.GONE
+//                                                            speechRecognizer!!.startListening(intent)
+//                                                        }
+//                                                    }
+//                                                )
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            )
+//                        }
+//                    } else {
+//                        this@MainActivity.runOnUiThread(
+//                            object : Runnable {
+//                                override fun run() {
+//                                    if (listeningLayout.visibility == View.VISIBLE) {
+//                                        listeningLayout.visibility = View.GONE
+//                                        tryMe.visibility = View.VISIBLE
+//                                        errorTxt.text = "Please Retry"
+//                                        customLayout.setOnClickListener {
+//                                            this@MainActivity.runOnUiThread(
+//                                                object : Runnable {
+//                                                    override fun run() {
+//                                                        //displayText.text = "Speak now"
+//                                                        micOn.visibility = View.VISIBLE
+//                                                        edit_view.visibility = View.GONE
+//                                                        listeningLayout.visibility =
+//                                                            View.VISIBLE
+//                                                        tryMe.visibility = View.GONE
+//                                                        speechRecognizer!!.startListening(intent)
+//                                                    }
+//                                                }
+//                                            )
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        )
+//                    }
                 }
 
                 override fun onPartialResults(bundle: Bundle) {
+                    Log.e("speechreco", "onPartialResults: " )
                     val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
                     if (data != null && data.size > 0) {
                         finalWords = data[0].toString()
@@ -2195,7 +2220,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                         this@MainActivity.runOnUiThread(
                                             object : Runnable {
                                                 override fun run() {
-                                                    edit_view.visibility = View.VISIBLE
+                                                    edit_view.visibility = View.GONE
                                                     micOn.visibility = View.GONE
                                                 }
                                             }
