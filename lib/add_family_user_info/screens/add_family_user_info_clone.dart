@@ -1451,7 +1451,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           final myProf =
               await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
                   PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-          if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3 != null &&
+              myProf.result.userContactCollection3.length > 0) {
             if (myProf.result.userContactCollection3.isNotEmpty) {
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
@@ -1461,7 +1462,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             final myProf =
                 await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-            if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3 != null &&
+                myProf.result.userContactCollection3.length > 0) {
               if (myProf.result.userContactCollection3.isNotEmpty) {
                 mobileNoController.text =
                     myProf.result.userContactCollection3[0].phoneNumber;
@@ -1471,7 +1473,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
           }
         } catch (e) {
-          if (widget.arguments.myProfileResult.userContactCollection3 != null) {
+          if (widget.arguments.myProfileResult.userContactCollection3 != null &&
+              widget.arguments.myProfileResult.userContactCollection3.length >
+                  0) {
             if (widget
                 .arguments.myProfileResult.userContactCollection3.isNotEmpty) {
               mobileNoController.text = widget.arguments.myProfileResult
@@ -1491,7 +1495,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
             widget
-                .arguments.myProfileResult.userAddressCollection3.isNotEmpty) {
+                .arguments.myProfileResult.userAddressCollection3.isNotEmpty &&
+            widget.arguments.myProfileResult.userAddressCollection3.length >
+                0) {
           cntrlr_addr_one.text = widget
               .arguments.myProfileResult.userAddressCollection3[0].addressLine1;
           cntrlr_addr_two.text = widget
