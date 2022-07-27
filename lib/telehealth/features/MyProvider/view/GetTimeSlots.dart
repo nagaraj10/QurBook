@@ -287,7 +287,10 @@ class GetTimeSlots extends StatelessWidget {
                 myProfile.result.dateOfBirth.isNotEmpty) {
               if (myProfile.result.additionalInfo != null) {
                 if ((myProfile.result.additionalInfo.height != null &&
-                    myProfile.result.additionalInfo.height.isNotEmpty) ||  (myProfile.result.additionalInfo.heightObj!=null && myProfile.result.additionalInfo.heightObj.valueInches.isNotEmpty)) {
+                        myProfile.result.additionalInfo.height.isNotEmpty) ||
+                    (myProfile.result.additionalInfo.heightObj != null &&
+                        myProfile.result.additionalInfo.heightObj.valueInches
+                            .isNotEmpty)) {
                   if (myProfile.result.additionalInfo.weight != null &&
                       myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {

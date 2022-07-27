@@ -308,16 +308,18 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         close.setOnClickListener {
-            speechRecognizer!!.cancel()
+            speechRecognizer?.cancel()
             if (dialog.isShowing) {
                 try {
                     _result.let {
                         _result?.error("","","")
                     }
+                    _result=null
                 } catch (e: Exception) {
                     print(e.printStackTrace())
                 }
                 _result=null
+                finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
             }
@@ -325,7 +327,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //builder.show()
 
         sendBtn.setOnClickListener {
-            speechRecognizer!!.cancel()
+            speechRecognizer?.cancel()
             if (displayText.text.toString().trim() == "") {
                 displayText.clearFocus()
                 val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
@@ -334,6 +336,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             } else {
                 _result?.success(displayText.text.toString())
                 _result=null
+                finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
             }
@@ -1989,7 +1992,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         unregisterReceiver(broadcastReceiver);
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
-        speechRecognizer!!.destroy()
+        speechRecognizer?.destroy()
         MyApp.snoozeTapCountTime = 0
     }
 
@@ -2043,7 +2046,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                 override fun run() {
                                     //displayText.text = "Speak now"
                                     micOn.visibility = View.GONE
-                                    edit_view.visibility = View.GONE
+//                                    edit_view.visibility = View.GONE
                                     listeningLayout.visibility = View.VISIBLE
                                     tryMe.visibility = View.GONE
                                 }
@@ -2134,7 +2137,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (data != null && data.size > 0) {
                         finalWords=data[0]
                         displayText.setText(finalWords)
-
                         Log.e("speechreco", "onResults: working" )
                         sendBtn.performClick()
                     }
@@ -2148,7 +2150,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 //                            spin_kit.visibility = View.GONE
 //                            displayText.setText(finalWords)
 //                            finalWords = null
-//                            sendBtn.performClick()
 //                        } else if (finalWords == "") {
 //                            //do nothing
 //                        } else {
