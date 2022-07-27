@@ -839,16 +839,18 @@ class SymptomItemCard extends StatelessWidget {
     vitalsData?.forEach((vitalData) {
       var isNormal = true;
 
-      isNormal = (vitalData.fieldType == FieldType.NUMBER &&
-              int.tryParse(vitalData.value) != null &&
-              int.tryParse(vitalData.amin) != null &&
-              int.tryParse(vitalData.amax) != null &&
-              int.tryParse(vitalData.value).toString().isNotEmpty &&
-              int.tryParse(vitalData.amin).toString().isNotEmpty &&
-              int.tryParse(vitalData.amax).toString().isNotEmpty)
-          ? (int.tryParse(vitalData.value) <= int.tryParse(vitalData.amax) &&
-              int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
-          : true;
+      if (vitalData.fieldType == FieldType.NUMBER &&
+          (vitalData.value ?? "").isNotEmpty &&
+          (vitalData.amin ?? "").isNotEmpty &&
+          (vitalData.amax ?? "").isNotEmpty) {
+        isNormal = (int.tryParse(vitalData.value).toString().isNotEmpty &&
+                int.tryParse(vitalData.amin).toString().isNotEmpty &&
+                int.tryParse(vitalData.amax).toString().isNotEmpty)
+            ? (int.tryParse(vitalData.value) <= int.tryParse(vitalData.amax) &&
+                int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
+            : true;
+      }
+
       if ((vitalData.display ?? '').isNotEmpty) {
         fieldWidgets.add(
           Padding(
@@ -1047,25 +1049,23 @@ class SymptomItemCard extends StatelessWidget {
             : false);
   }
 
-  String getDialogTitle(BuildContext context,String activityName) {
+  String getDialogTitle(BuildContext context, String activityName) {
     String title = '';
     if (!(regimentData?.asNeeded ?? false) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
-      if(activityName!=null && activityName!=''){
+      if (activityName != null && activityName != '') {
         title = activityName?.capitalizeFirstofEach;
-      }else{
+      } else {
         title =
-        '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+            '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
       }
-
     } else {
-      if(activityName!=null && activityName!=''){
+      if (activityName != null && activityName != '') {
         title = activityName?.capitalizeFirstofEach;
-      }else{
+      } else {
         title = regimentData.title;
       }
-
     }
     return title;
   }
@@ -1073,7 +1073,7 @@ class SymptomItemCard extends StatelessWidget {
   Future<void> onCardPressed(BuildContext context,
       {String eventIdReturn,
       String followEventContext,
-        String activityName,
+      String activityName,
       dynamic uid,
       dynamic aid,
       dynamic formId,
@@ -1111,18 +1111,17 @@ class SymptomItemCard extends StatelessWidget {
           eid: eventId,
           color: color,
           mediaData: mediaData,
-          formTitle: getDialogTitle(context,activityName),
+          formTitle: getDialogTitle(context, activityName),
           canEdit: canEdit || isValidSymptom(context),
-          triggerAction: (String triggerEventId, String followContext,String activityName) {
+          triggerAction: (String triggerEventId, String followContext,
+              String activityName) {
             Provider.of<RegimentViewModel>(Get.context, listen: false)
                 .updateRegimentStatus(RegimentStatus.DialogClosed);
             Get.back();
-            onCardPressed(
-              Get.context,
-              eventIdReturn: triggerEventId,
-              followEventContext: followContext,
-              activityName: activityName
-            );
+            onCardPressed(Get.context,
+                eventIdReturn: triggerEventId,
+                followEventContext: followContext,
+                activityName: activityName);
           },
           followEventContext: followEventContext,
           isFollowEvent: eventIdReturn != null,
