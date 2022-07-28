@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -495,14 +494,18 @@ class _HubListScreenState extends State<HubListScreen> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  /*String strNickName = CommonUtil().validString(result
+                      .userDeviceCollection[index]
+                      .device
+                      .name);*/
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding:  EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            ClipOval(
+                            /*ClipOval(
                                 child: result.userDeviceCollection[
                                 index] !=
                                     null
@@ -526,7 +529,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                     height: 50.0.h,
                                     padding: EdgeInsets.all(12),
                                     color: Color(
-                                        fhbColors.bgColorContainer))),
+                                        fhbColors.bgColorContainer))),*/
                             SizedBox(
                               width: 10,
                             ),
@@ -544,15 +547,36 @@ class _HubListScreenState extends State<HubListScreen> {
                                   CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      result.userDeviceCollection[index].user
-                                          .firstName ??
-                                          '',
+                                      /*strNickName.trim().isNotEmpty?strNickName:*/CommonUtil().validString(result.userDeviceCollection[index].user
+                                          .firstName),
                                       style: TextStyle(color: Colors.black),
                                     ),
                                     Row(
                                       children: [
                                         Text(
-                                          'Device Id ',
+                                          'Device Type - ',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            CommonUtil().validString(result
+                                                .userDeviceCollection[index]
+                                                .device
+                                                .deviceType.name),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 12,fontWeight: FontWeight.w600,),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Device ID - ',
                                           style: TextStyle(
                                               color: Colors.grey[600],
                                               fontSize: 12),
@@ -565,18 +589,37 @@ class _HubListScreenState extends State<HubListScreen> {
                                                 .serialNumber),
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                                color: Colors.grey[700],
+                                              color: Colors.black,
+                                              fontSize: 12,fontWeight: FontWeight.w600,),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Connected on - ',
+                                          style: TextStyle(
+                                              color: Colors.grey[600],
+                                              fontSize: 12),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${changeDateFormat(CommonUtil().validString(result.userDeviceCollection[index].createdOn))}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: /*Colors.grey[600],*/Colors.black,
                                                 fontSize: 12),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Text(
+                                    /*Text(
                                       'Connected ${changeDateFormat(CommonUtil().validString(result.userDeviceCollection[index].createdOn))}',
                                       style: TextStyle(
-                                          color: Colors.grey[600],
+                                          color: *//*Colors.grey[600],*//*Colors.black,
                                           fontSize: 12),
-                                    )
+                                    )*/
                                   ],
                                 )),
                             InkWell(
@@ -591,7 +634,7 @@ class _HubListScreenState extends State<HubListScreen> {
                                 color: Color(
                                     CommonUtil().getMyPrimaryColor()),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
+                                  padding:  EdgeInsets.all(5.0),
                                   child: Text(
                                     'Unpair',
                                     style: TextStyle(
@@ -639,16 +682,18 @@ class _HubListScreenState extends State<HubListScreen> {
     return Container(
       decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color(CommonUtil().getMyPrimaryColor())),
-      height: 50,
-      width: 50,
+          color: /*Color(CommonUtil().getMyPrimaryColor())*/Colors.grey[200],),
+      height: 60,
+      width: 60,
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding:  EdgeInsets.all(12.0),
         child: Center(
           child: Image.asset(
             path,
-            height: 50,
-            width: 50,
+            height: 60,
+            width: 60,
+            color:
+            /*hexToColor('#8600bd')*/Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
       ),

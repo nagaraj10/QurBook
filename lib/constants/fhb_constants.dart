@@ -702,6 +702,11 @@ const String SERIAL_NUMBER = 'serialNumber';
 const String NICK_NAME = 'nickName';
 const String ADDITION_DETAILS = 'additionalDetails';
 const String ISVIRTUALHUB = 'isVirtualHub';
+const String DEVICE_ID = 'deviceId';
+const String DEVICE_TYPE = 'deviceType';
+const String USER_HUB_ID = 'userHubId';
+const String USER_ID = 'userId';
+const String DEVICE_NAME = 'deviceName';
 
 const String ISBPCONNECT = 'bpconnect';
 const String IS_BP_SCAN_CANCEL = 'bpscancancel';
