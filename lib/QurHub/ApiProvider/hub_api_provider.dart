@@ -46,11 +46,12 @@ class HubApiProvider {
     await PreferenceUtil.init();
     // var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     var data = {
-      "deviceId": deviceId,
-      "deviceType": deviceType,
-      "userHubId": hubId,
-      "userId": userId,
-      "additionalDetails": {}
+      DEVICE_ID: deviceId,
+      DEVICE_TYPE: deviceType,
+      USER_HUB_ID: hubId,
+      USER_ID: userId,
+      DEVICE_NAME: nickName,
+      ADDITION_DETAILS: {}
     };
 
     try {

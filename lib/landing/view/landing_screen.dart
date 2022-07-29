@@ -12,6 +12,7 @@ import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -759,6 +760,15 @@ class _LandingScreenState extends State<LandingScreen> {
   void moveToQurhome() async {
     var result = await healthReportListForUserRepository.getDeviceSelection();
     if (result.isSuccess) {
+      if (Platform.isIOS) {
+        reponseToRemoteNotificationMethodChannel.invokeListMethod(
+          QurhomeDefaultUI,
+          {
+            'status':
+                (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false)
+          },
+        );
+      }
       if (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false) {
         if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
           PreferenceUtil.saveQurhomeAsDefaultUI(

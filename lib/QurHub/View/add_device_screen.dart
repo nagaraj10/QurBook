@@ -30,6 +30,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
   bool isFamilyChanged = false;
   SharedByUsers selectedUser;
   final deviceIdController = TextEditingController();
+  final deviceTypeNameController = TextEditingController();
   final nickNameController = TextEditingController();
   bool isDeviceIdEmptied = false;
   var selectedId = '';
@@ -44,6 +45,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
       //controller.getFamilyMembers();
       if (hubListController.isFromQurHomeinQurBook.value) {
         deviceIdController.text = hubListController.bleMacId.value;
+        deviceTypeNameController.text = hubListController.bleDeviceTypeName.value;
       }
       super.initState();
     } catch (e) {
@@ -182,6 +184,36 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
         //   padding: EdgeInsets.all(8.0),
         //   child: qrCodeView(),
         // ),
+        hubListController.isFromQurHomeinQurBook.value?Padding(
+          padding: EdgeInsets.all(16),
+          child: TextFormField(
+            cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+            controller: deviceTypeNameController,
+            enabled:
+            false,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.0.sp,
+                color: ColorUtils.blackcolor),
+            decoration: InputDecoration(
+              hintText: 'Device Type',
+              labelText: 'Device Type',
+              labelStyle: TextStyle(
+                  fontSize: 14.0.sp,
+                  fontWeight: FontWeight.w400,
+                  color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 16.0.sp,
+                color: ColorUtils.myFamilyGreyColor,
+                fontWeight: FontWeight.w400,
+              ),
+              border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+            ),
+          ),
+        ):SizedBox.shrink(),
         Padding(
           padding: EdgeInsets.all(16),
           child: TextFormField(
@@ -198,6 +230,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
             decoration: InputDecoration(
               errorText: isDeviceIdEmptied ? 'Please Enter Device ID' : null,
               hintText: 'Device ID',
+              labelText: 'Device ID',
               labelStyle: TextStyle(
                   fontSize: 14.0.sp,
                   fontWeight: FontWeight.w400,
@@ -226,6 +259,7 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
             decoration: InputDecoration(
               errorText: isDeviceIdEmptied ? 'Please Enter Nick Name' : null,
               hintText: 'Nick Name',
+              labelText: 'Nick Name',
               labelStyle: TextStyle(
                   fontSize: 14.0.sp,
                   fontWeight: FontWeight.w400,
