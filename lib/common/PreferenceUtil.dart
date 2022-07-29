@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'CommonConstants.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../language/model/Language.dart';
@@ -478,6 +481,12 @@ class PreferenceUtil {
     bool qurhomeStatus = false,
   }) async {
     CommonUtil.updateDefaultUIStatus(qurhomeStatus);
+    if (Platform.isIOS) {
+      reponseToRemoteNotificationMethodChannel.invokeListMethod(
+        QurhomeDefaultUI,
+        {'status': (qurhomeStatus)},
+      );
+    }
     final instance = await _prefs;
     return instance.setBool(
       Constants.QurhomeDefaultUI,

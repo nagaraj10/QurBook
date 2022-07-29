@@ -57,5 +57,6 @@ struct Constants {
     static let BLEManuData = "kCBAdvDataManufacturerData";
     static let BLENameData = "kCBAdvDataLocalName";
     static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
+    static let QurhomeDefaultUI = "QurhomeDefaultUI";
 
 }

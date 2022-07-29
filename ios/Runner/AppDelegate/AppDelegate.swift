@@ -54,6 +54,8 @@ import CoreBluetooth
     var locationManager: CLLocationManager?
     var eventSink: FlutterEventSink? = nil
     var idForBP :UUID?
+    var isQurhomeDefaultUI = false
+    var ResponseNotificationChannel : FlutterMethodChannel!
     
     override func application(
         _ application: UIApplication,
@@ -95,6 +97,14 @@ import CoreBluetooth
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         setUpReminders(messanger: controller.binaryMessenger)
         requestAuthorization();
+        notificationCenter.getDeliveredNotifications { [weak self](data) in
+            guard let self = self else { return }
+            if(data.contains(where: { elem in
+                return elem.request.identifier == "criticalappnotification"
+            })){
+                self.notificationCenter.removeDeliveredNotifications(withIdentifiers: ["criticalappnotification"])
+            }
+        }
         notificationCenter.getPendingNotificationRequests { [weak self](data) in
             guard let self = self else { return }
             self.listOfScheduledNotificaitons = data
@@ -150,6 +160,20 @@ import CoreBluetooth
                                               binaryMessenger: controller.binaryMessenger)
         let evChannel =  FlutterEventChannel(name: Constants.devicesEventChannel, binaryMessenger: controller.binaryMessenger)
         evChannel.setStreamHandler(self)
+        if (ResponseNotificationChannel == nil){
+            ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+        }
+        ResponseNotificationChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            guard let self = self else{
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            if call.method == Constants.QurhomeDefaultUI{
+                if let QurhomeDefault = call.arguments as? NSDictionary,let status = QurhomeDefault["status"] as? Bool{
+                    self.isQurhomeDefaultUI = status
+                }
+            }
+        }
         let appointmentDetailsChannel =  FlutterMethodChannel(name: Constants.appointmentDetailsMethodAndChannel, binaryMessenger: controller.binaryMessenger)
         appointmentDetailsChannel.setMethodCallHandler {[weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
             guard let self = self else{
@@ -387,8 +411,6 @@ import CoreBluetooth
             
             if let dateForSchedule = dateFromStringBefore{
                 let strOfDateAndTime = "\(dateForSchedule)"
-                print(dateForSchedule)
-                print("----------------------------")
                 let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
                 let strDates = strSplitDateTime[0].components(separatedBy: "-")
                 let strTime = strSplitDateTime[1].components(separatedBy: ":")
@@ -618,11 +640,13 @@ import CoreBluetooth
         if let userInfo = notification.request.content.userInfo as? NSDictionary,let type = userInfo["type"] as? String,type.lowercased() == "call",let controller = navigationController?.children.first as? FlutterViewController{
             let data =
             [ "id" : notification.request.identifier,"meeting_id" : userInfo["meeting_id"]]
-            let notificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-            notificationChannel.invokeMethod(Constants.listenToCallStatusMethod, arguments: data)
+            if (ResponseNotificationChannel == nil){
+                ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+            }
+            ResponseNotificationChannel.invokeMethod(Constants.listenToCallStatusMethod, arguments: data)
         }
-        
     }
+    
     func responsdToNotificationTap(response : UNNotificationResponse){
         if let data = response.notification.request.content.userInfo as? NSDictionary,let controller = navigationController?.children.first as? FlutterViewController{
             if (data["eid"] as? String) != nil{
@@ -674,8 +698,11 @@ import CoreBluetooth
                 }else{
                     newData = data
                 }
-                let notificationResponseChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                notificationResponseChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
+                if (ResponseNotificationChannel == nil){
+                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                    
+                }
+                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments:newData)
             }
         }
     }
@@ -697,6 +724,41 @@ import CoreBluetooth
         }
         
         //        }
+    }
+    
+    override func applicationWillTerminate(_ application: UIApplication) {
+        if(isQurhomeDefaultUI){
+            var dateComponent:DateComponents = DateComponents();
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeZone = TimeZone.current
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            var dateFromString = Date()
+            dateFromString = Calendar.current.date(byAdding: .second, value: 1, to: dateFromString) ?? Date()
+            let strOfDateAndTime = dateFormatter.string(from: dateFromString)
+            let strSplitDateTime = strOfDateAndTime.components(separatedBy: " ")
+            let strDates = strSplitDateTime[0].components(separatedBy: "-")
+            let strTime = strSplitDateTime[1].components(separatedBy: ":")
+            if let year = Int(strDates[0]),let month = Int(strDates[1]),let day = Int(strDates[2]),let hour = Int(strTime[0]),let min = Int(strTime[1]),let sec = Int(strTime[2]){
+                dateComponent.year = year
+                dateComponent.month = month
+                dateComponent.day = day
+                dateComponent.hour = hour
+                dateComponent.minute = min
+                dateComponent.second = sec
+                
+            }
+            let notificationContent = UNMutableNotificationContent()
+            notificationContent.title = "CRITICAL-App Stopped"
+            notificationContent.body = "The app must be running in the background to receive alerts. Tap to re-open the app."
+            let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
+            let notificationRequest = UNNotificationRequest(identifier: "criticalappnotification", content: notificationContent, trigger: notificationTrigger)
+            UNUserNotificationCenter.current().add(notificationRequest) { (error) in
+                if let error = error {
+                    print("Unable to Add Notification Request (\(error), \(error.localizedDescription))")
+                }
+            }
+            
+        }
     }
 }
 
@@ -736,17 +798,13 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
         if let name =  advertisementData[Constants.BLENameData] as? String, name.lowercased().contains("blesmart"){
             centralManager.stopScan()
             let tempMacId = String(name.suffix(12))
-            print(tempMacId)
             let macID = tempMacId.inserting(reverse: false)
-            print(macID)
             OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) {[weak self] deviceInfoKeys in
                 guard let self = self else { return  }
                 OHQDeviceManager.shared().stopScan()
                 self.idForBP = deviceInfoKeys[OHQDeviceInfoKey.identifierKey] as? UUID
                 if (self.idForBP) != nil{
                     OHQDeviceManager.shared().startSession(withDevice: self.idForBP!, usingDataObserver: { dataType, data in
-                        print("---------------------------------------------------------")
-                        print("received data is ", data as? NSArray ?? [])
                         if let ArrayData =  data as? NSArray,ArrayData.count > 0,let lastObj = ArrayData.lastObject as? NSDictionary{
                             let lsOBj : [String:Any] = [
                                 "BloodPressureMeasurementStatusKey" : lastObj["bloodPressureMeasurementStatus"],
@@ -762,7 +820,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                                 let jsonData = try JSONSerialization.data(withJSONObject: ["measurementRecords" : [lsOBj
                                                                                                                   ]], options: JSONSerialization.WritingOptions.prettyPrinted)
                                 let jsonString = String(data: jsonData, encoding: .utf8)
-                                print("JSON String : " + (jsonString ?? ""))
                                 self.eventSink?("measurement|" + (jsonString ?? ""))
                                 if self.idForBP != nil {
                                     OHQDeviceManager.shared().cancelSession(withDevice: self.idForBP!)
@@ -775,13 +832,11 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                         }
                     }, connectionObserver: {[weak self] state in
                         guard let self = self else { return }
-                        print("current " ,state)
                         if (state == OHQConnectionState.connected){
                             self.eventSink?("macid|"+macID)
                             self.eventSink?("bleDeviceType|BP")
                         }
                     }, completion: { completionReason in
-                        print("completed",completionReason)
                         if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
                             DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
                                 print("restarted");
@@ -796,7 +851,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                     ])
                 }
             } completion: { completionReason in
-                print("completed",completionReason)
                 if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
                         print("restarted");
@@ -828,7 +882,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
         for service in services {
-            print(service)
             peripheral.discoverCharacteristics(nil, for: service)
         }
     }
@@ -837,18 +890,15 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
         guard let characteristics = service.characteristics else { return }
         for characteristic in characteristics {
             if characteristic.properties.contains(.read) {
-                print("\(characteristic.uuid): properties contains .read")
                 peripheral.readValue(for: characteristic)
             }
             if characteristic.properties.contains(.notify) {
-                print("\(characteristic.uuid): properties contains .notify")
                 peripheral.setNotifyValue(true, for: characteristic)
             }
         }
     }
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        print(characteristic.uuid)
         switch characteristic.uuid {
         case Constants.poMeasurementCharacteristicCBUUID:
             spoReading(from: characteristic,peripheral:peripheral)
