@@ -417,15 +417,16 @@ class _SplashScreenState extends State<SplashScreen> {
                               .navigateToMyRecordsCategory(temp[1], null, true);
                         }
                       }
-                    }else if(widget.nsRoute == 'notifyCaregiverForMedicalRecord'&&
+                    } else if (widget.nsRoute ==
+                            'notifyCaregiverForMedicalRecord' &&
                         (widget.templateName != null &&
-                            widget.templateName != '')){
+                            widget.templateName != '')) {
                       final passedValArr = widget.bundle.split('|');
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChatDetail(
-                                  peerId:passedValArr[0],
+                                  peerId: passedValArr[0],
                                   peerAvatar: passedValArr[6],
                                   peerName: passedValArr[1],
                                   patientId: '',
@@ -433,17 +434,17 @@ class _SplashScreenState extends State<SplashScreen> {
                                   patientPicture: '',
                                   isFromVideoCall: false,
                                   isFromFamilyListChat: true,
-                                  isFromCareCoordinator: passedValArr[5].toString().toLowerCase()=='true',
-                                  carecoordinatorId:passedValArr[2],
-                                  isCareGiver: passedValArr[3].toString().toLowerCase()=='true',
+                                  isFromCareCoordinator: passedValArr[5]
+                                          .toString()
+                                          .toLowerCase() ==
+                                      'true',
+                                  carecoordinatorId: passedValArr[2],
+                                  isCareGiver: passedValArr[3]
+                                          .toString()
+                                          .toLowerCase() ==
+                                      'true',
                                   groupId: '',
-                                  lastDate: passedValArr[4]
-                              )
-                          )
-                      ).then(
-                              (value) {
-
-                          });
+                                  lastDate: passedValArr[4]))).then((value) {});
                     } else if (widget.nsRoute == 'regiment_screen') {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',
@@ -562,6 +563,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         bookingId: passedValArr[4],
                         notificationListId: passedValArr[3],
                         cartId: passedValArr[4],
+                        patientName: passedValArr[6],
                       )).then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'Renew' ||
