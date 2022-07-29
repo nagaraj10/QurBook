@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:geolocator/geolocator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +34,7 @@ class HubListController extends GetxController {
   var foundBLE = false.obs;
   var bleMacId = "".obs;
   var bleDeviceType = "".obs;
+  var bleDeviceTypeName = "".obs;
   var hubId = "".obs;
   var virtualHubId = "";
   var eid;
@@ -253,6 +253,7 @@ class HubListController extends GetxController {
               break;
             case "bleDeviceType":
               bleDeviceType.value = CommonUtil().validString(receivedValues.last);
+              bleDeviceTypeName.value = getDeviceTypeName(CommonUtil().validString(receivedValues.last));
               foundBLE.value = true;
               disableTimer();
               bleController.stopBleScan();
@@ -288,5 +289,21 @@ class HubListController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  String getDeviceTypeName(String deviceType) {
+    try {
+      switch (deviceType) {
+        case 'SPO2':
+          return 'Pulse Oximeter';
+          break;
+        case 'BP':
+          return 'BP Monitor';
+          break;
+      }
+    } catch (e) {
+      return "";
+    }
+    return "";
   }
 }

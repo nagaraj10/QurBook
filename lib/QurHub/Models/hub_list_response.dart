@@ -201,26 +201,58 @@ class Device {
   String id;
   String serialNumber;
   DeviceType deviceType;
-  Device({this.id, this.serialNumber, this.deviceType});
+  String name;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  String deviceTypeId;
+  Device({this.id, this.serialNumber, this.deviceType,this.name,this.isActive,this.createdOn,this.lastModifiedOn,this.deviceTypeId});
 
   Device.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    serialNumber = json['serialNumber'];
-    deviceType = json['deviceType'] != null
-        ? new DeviceType.fromJson(json['deviceType'])
-        : null;
+    try {
+      id = json['id'];
+      serialNumber = json['serialNumber'];
+      deviceType = json['deviceType'] != null
+              ? new DeviceType.fromJson(json['deviceType'])
+              : null;
+      name = json['name'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      deviceTypeId = json['deviceTypeId'];
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
 class DeviceType {
   String id;
   String code;
+  String name;
+  String description;
+  int sortOrder;
+  bool isActive;
+  String createdBy;
+  String createdOn;
+  String lastModifiedOn;
 
-  DeviceType({this.id, this.code});
+  DeviceType({this.id, this.code,this.name,this.description,this.sortOrder,this.isActive,this.createdBy,this.createdOn,this.lastModifiedOn});
 
   DeviceType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    code = json['code'];
+    try {
+      id = json['id'];
+      code = json['code'];
+      name = json['name'];
+      description = json['description'];
+      sortOrder = json['sortOrder'];
+      isActive = json['isActive'];
+      createdBy = json['createdBy'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+    } catch (e) {
+      print(e);
+    }
   }
 }
 
