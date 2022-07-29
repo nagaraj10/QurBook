@@ -193,6 +193,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                       child: Column(
                         children: [
                           TextButton(
+                            style: ButtonStyle(
+                                overlayColor: MaterialStateProperty.all(
+                                    Colors.transparent)),
                             child: Container(
                                 child: Text(
                               eachDoctorModel.isPatientAssociatedRequest
@@ -204,7 +207,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                               ),
                             )),
                             onPressed: () {
-                              callMethodToNavigate(eachDoctorModel);
+                              callMethodToNavigate(eachDoctorModel,
+                                  isButton: true);
                             },
                           )
                         ],
@@ -251,7 +255,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
     );
   }
 
-  callMethodToNavigate(Doctors eachDoctorModel) {
+  callMethodToNavigate(Doctors eachDoctorModel, {bool isButton = false}) {
     if (eachDoctorModel.isPatientAssociatedRequest) {
       toast.getToast('Approval request is pending', Colors.black54);
     } else {
