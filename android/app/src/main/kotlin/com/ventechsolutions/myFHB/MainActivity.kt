@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
 import com.facebook.FacebookSdk.fullyInitialize
@@ -248,6 +249,12 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private val mDiscoveredDevices = LinkedHashMap<String, DiscoveredDevice>()
     var mLocationManager: LocationManager? = null
+    private val lbm by lazy { LocalBroadcastManager.getInstance(this) }
+
+    companion object {
+        var foregroundActivityRef: Boolean = false
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -324,6 +331,19 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
         //builder.show()
+
+        val notificationAndAlarmId = NotificationID.currentMillis
+
+        createNotifiationBuilder(
+            "title",
+            "body",
+            "eIdAppend",
+            notificationAndAlarmId,
+            Calendar.getInstance().timeInMillis+4020,
+            false,
+            false,
+            "schedule"
+        )
 
         sendBtn.setOnClickListener {
             speechRecognizer?.cancel()
@@ -1905,9 +1925,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     override fun onPause() {
+        foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(true)
         }
+        lbm.unregisterReceiver(badgeListener)
         super.onPause()
     }
 
@@ -1976,23 +1998,34 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onResume() {
         Log.e("Myapp", "onResume: " + " onResume")
+        foregroundActivityRef=true;
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
+        lbm.registerReceiver(badgeListener,IntentFilter("remainderSheelaInvokeEvent"))
         super.onResume()
     }
 
 
     override fun onDestroy() {
         Log.e("Myapp", "onDestroy: " + " onDestroy")
+        foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(false)
         }
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiver)
+        lbm.unregisterReceiver(badgeListener)
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
         speechRecognizer?.destroy()
         MyApp.snoozeTapCountTime = 0
+    }
+
+    private val badgeListener = object : BroadcastReceiver() {
+        override fun onReceive(ctx: Context, data: Intent) {
+            val message = intent.getStringExtra("remainderSheelaInvokeEvent")
+            mEventChannel.success("eid")
+        }
     }
 
     val handler: Handler = Handler()

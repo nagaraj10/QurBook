@@ -1,25 +1,16 @@
 package com.ventechsolutions.myFHB.services
 
+//import com.pichillilorenzo.flutter_inappwebview.Shared.applicationContext
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-//import com.pichillilorenzo.flutter_inappwebview.Shared.applicationContext
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.ventechsolutions.myFHB.MainActivity
 import com.ventechsolutions.myFHB.MyApp
-import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.SharedPrefUtils
-import com.ventechsolutions.myFHB.constants.Constants
 
 class ReminderBroadcaster : BroadcastReceiver() {
 //    override fun onReceive(p0: Context?, p1: Intent?) {
@@ -144,7 +135,17 @@ class ReminderBroadcaster : BroadcastReceiver() {
         if (isCancel){
             notificationManager.cancel(notificationId)
         }else{
-            notificationManager.notify(notificationId, notification)
+            Log.e("remaidner",MainActivity.foregroundActivityRef.toString());
+            if(MainActivity.foregroundActivityRef){
+                Log.e("remaidner","ongoing");
+                notificationManager.notify(notificationId, notification)
+            }else{
+                Log.e("remaidner","killed");
+                val lbm = LocalBroadcastManager.getInstance(context)
+                val intent = Intent("remainderSheelaInvokeEvent")
+                intent.putExtra("remainderSheelaInvokeEvent", "123456")
+                lbm.sendBroadcast(intent)
+            }
         }
         SharedPrefUtils().deleteNotificationObject(context,notificationId)
     }
