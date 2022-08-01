@@ -875,11 +875,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Constants.CREATEDBY, data[Constants.CREATEDBY])
         acceptCareGiverIntent.putExtra(Constants.PAYMENTLINKVIAPUSH, data[Constants.PAYMENTLINKVIAPUSH])
         acceptCareGiverIntent.putExtra(Constants.CARTID, data[Constants.BOOKINGID])
+     acceptCareGiverIntent.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
 
-       
 
 
-        val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(
+
+
+     val acceptCareGiverPendingIntent = PendingIntent.getBroadcast(
             applicationContext,
             NS_ID,
             acceptCareGiverIntent,
