@@ -21,8 +21,10 @@ class PlanPaymentNotification:BroadcastReceiver() {
         val bookingId = p1?.getStringExtra(Constants.BOOKINGID)
         val paymentLinkViaPush = p1?.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
         val cartId = p1?.getStringExtra(Constants.BOOKINGID)
+        val patientName = p1?.getStringExtra(Constants.PROB_PATIENT_NAME)
 
-       
+
+
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
                 p0.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
@@ -41,6 +43,8 @@ class PlanPaymentNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.BOOKINGID,bookingId)
         launchIntent?.putExtra(Constants.CREATEDBY,createdBy)
         launchIntent?.putExtra(Constants.PAYMENTLINKVIAPUSH,paymentLinkViaPush)
+        launchIntent?.putExtra(Constants.PROB_PATIENT_NAME,patientName)
+
         launchIntent?.putExtra(Constants.CARTID,cartId)
 
 

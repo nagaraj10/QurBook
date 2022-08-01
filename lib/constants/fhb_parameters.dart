@@ -313,6 +313,8 @@ const String strdestinationId = 'destinationId';
 //Booking Confirm
 const String self = 'Self';
 const String theAppointmentIsFor = 'The Appointment is for';
+const String thePlanIsFor = 'The Plan is for';
+
 const String dateAndTime = 'Date & Time';
 const String confirmDetails = 'Confirmation Details';
 const String preConsultingDetails = 'Pre Consulting Details';

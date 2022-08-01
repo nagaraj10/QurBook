@@ -102,43 +102,55 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   void initState() {
-    super.initState();
-    controller.updateNewChatFloatShown(false);
-    mInitialTime = DateTime.now();
-    dbInitialize();
-    userId = PreferenceUtil.getStringValue(KEY_USERID);
-    moveToQurhome();
-    QurPlanReminders.getTheRemindersFromAPI();
-    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
-    callImportantsMethod();
-    callGetFamiltMappingCaregiver();
-    var profilebanner =
-        PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
-    if (profilebanner != null) {
-      imageURIProfile = File(profilebanner);
+    try {
+      super.initState();
+      onInit();
+    } catch (e) {
+      print(e);
     }
-    checkIfUserIdSame();
-    if (widget.landingArguments?.needFreshLoad ?? true) {
-      try {
-        commonUtil.versionCheck(context);
-      } catch (e) {}
-      profileData = getMyProfile();
-      Provider.of<LandingViewModel>(context, listen: false)
-          .getQurPlanDashBoard(needNotify: true);
-    } else {
-      Provider.of<LandingViewModel>(context, listen: false)
-          .getQurPlanDashBoard();
-    }
-    Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
-    Future.delayed(const Duration(seconds: 1)).then((_) {
-      if (Platform.isIOS) {
-        if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
-          changeTabToAppointments();
-        }
-      }
-    });
+  }
 
-    initSocket();
+  onInit() async {
+    try {
+      controller.updateNewChatFloatShown(false);
+      mInitialTime = DateTime.now();
+      dbInitialize();
+      userId = PreferenceUtil.getStringValue(KEY_USERID);
+      QurPlanReminders.getTheRemindersFromAPI();
+      Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+      await callImportantsMethod();
+      moveToQurhome();
+      callGetFamiltMappingCaregiver();
+      var profilebanner =
+      PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
+      if (profilebanner != null) {
+        imageURIProfile = File(profilebanner);
+      }
+      checkIfUserIdSame();
+      if (widget.landingArguments?.needFreshLoad ?? true) {
+        try {
+          commonUtil.versionCheck(context);
+        } catch (e) {}
+        profileData = getMyProfile();
+        Provider.of<LandingViewModel>(context, listen: false)
+            .getQurPlanDashBoard(needNotify: true);
+      } else {
+        Provider.of<LandingViewModel>(context, listen: false)
+            .getQurPlanDashBoard();
+      }
+      Provider.of<LandingViewModel>(context, listen: false).checkIfUserIdSame();
+      Future.delayed(const Duration(seconds: 1)).then((_) {
+        if (Platform.isIOS) {
+          if (PreferenceUtil.isKeyValid(constants.NotificationData)) {
+            changeTabToAppointments();
+          }
+        }
+      });
+
+      initSocket();
+    } catch (e) {
+      print(e);
+    }
   }
 
   void initSocket() {
@@ -751,10 +763,14 @@ class _LandingScreenState extends State<LandingScreen> {
   void refresh({
     bool userChanged = false,
   }) {
-    if (userChanged) {
-      profileData = getMyProfile();
+    try {
+      if (userChanged) {
+            profileData = getMyProfile();
+          }
+      setState(() {});
+    } catch (e) {
+      print(e);
     }
-    setState(() {});
   }
 
   void moveToQurhome() async {

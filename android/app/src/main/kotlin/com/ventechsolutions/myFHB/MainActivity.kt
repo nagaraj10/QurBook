@@ -1815,7 +1815,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if (redirect_to?.contains("mycart") == true) {
 
             sharedValue =
-                "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${paymentLinkViaPush}"
+                "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${patName}&${paymentLinkViaPush}"
         } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
