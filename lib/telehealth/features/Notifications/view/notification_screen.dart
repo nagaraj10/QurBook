@@ -1701,6 +1701,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                     notificationListId:
                         notification?.messageDetails?.payload?.createdBy,
                     cartId: notification?.messageDetails?.payload?.bookingId,
+                    patientName:
+                        notification?.messageDetails?.payload?.patientName,
                   )).then((value) {});
                 },
                 borderSide: !notification?.isActionDone
@@ -1729,13 +1731,13 @@ class _NotificationScreen extends State<NotificationScreen> {
           child: Row(
             children: [
               OutlineButton(
-                onPressed:() {
+                onPressed: () {
                   readUnreadAction(notification);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => ChatDetail(
-                            peerId:payload.userId,
+                            peerId: payload.userId,
                             peerAvatar: payload.senderProfilePic,
                             peerName: payload.patientName,
                             patientId: '',
@@ -1743,15 +1745,15 @@ class _NotificationScreen extends State<NotificationScreen> {
                             patientPicture: '',
                             isFromVideoCall: false,
                             isFromFamilyListChat: true,
-                            isFromCareCoordinator: payload.isFromCareCoordinator.toLowerCase()=='true',
-                            carecoordinatorId:payload.careCoordinatorUserId,
-                            isCareGiver: payload.isCareGiver.toLowerCase()=='true',
+                            isFromCareCoordinator:
+                                payload.isFromCareCoordinator.toLowerCase() ==
+                                    'true',
+                            carecoordinatorId: payload.careCoordinatorUserId,
+                            isCareGiver:
+                                payload.isCareGiver.toLowerCase() == 'true',
                             groupId: '',
-                            lastDate: payload.deliveredDateTime
-                        )),
-                  ).then((value) {
-
-                  });
+                            lastDate: payload.deliveredDateTime)),
+                  ).then((value) {});
                 },
                 borderSide: notification?.isUnread
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
@@ -1777,17 +1779,13 @@ class _NotificationScreen extends State<NotificationScreen> {
                   body['templateName'] = payload?.templateName;
                   final split = payload?.redirectTo?.split('|');
                   var redirectData = {
-                    for (int i = 0; i < split.length; i++)
-                      i: split[i]
+                    for (int i = 0; i < split.length; i++) i: split[i]
                   };
                   var id = redirectData[2];
-                  if (id.runtimeType == String &&
-                      (id ?? '').isNotEmpty) {
-                    final userId =
-                    PreferenceUtil.getStringValue(KEY_USERID);
+                  if (id.runtimeType == String && (id ?? '').isNotEmpty) {
+                    final userId = PreferenceUtil.getStringValue(KEY_USERID);
                     if ((payload?.userId ?? '') == userId) {
-                      CommonUtil()
-                          .navigateToRecordDetailsScreen(id);
+                      CommonUtil().navigateToRecordDetailsScreen(id);
                     } else {
                       CommonUtil.showFamilyMemberPlanExpiryDialog(
                         (payload?.patientName ?? ''),
@@ -1795,8 +1793,6 @@ class _NotificationScreen extends State<NotificationScreen> {
                       );
                     }
                   }
-
-
                 },
                 borderSide: notification?.isUnread
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))

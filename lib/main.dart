@@ -585,9 +585,9 @@ class _MyFHBState extends State<MyFHB> {
             //     temp[1], [passedValArr[2]], false
             // );
           }
-        }else if(passedValArr[1] == 'notifyCaregiverForMedicalRecord'){
+        } else if (passedValArr[1] == 'notifyCaregiverForMedicalRecord') {
           Get.to(ChatDetail(
-              peerId:passedValArr[2],
+              peerId: passedValArr[2],
               peerAvatar: passedValArr[8],
               peerName: passedValArr[3],
               patientId: '',
@@ -595,13 +595,11 @@ class _MyFHBState extends State<MyFHB> {
               patientPicture: '',
               isFromVideoCall: false,
               isFromFamilyListChat: true,
-              isFromCareCoordinator: passedValArr[7].toLowerCase()=='true',
-              carecoordinatorId:passedValArr[4],
-              isCareGiver: passedValArr[5].toLowerCase()=='true',
+              isFromCareCoordinator: passedValArr[7].toLowerCase() == 'true',
+              carecoordinatorId: passedValArr[4],
+              isCareGiver: passedValArr[5].toLowerCase() == 'true',
               groupId: '',
-              lastDate: passedValArr[6]
-          ));
-
+              lastDate: passedValArr[6]));
         } else if (passedValArr[1] == 'escalateToCareCoordinatorToRegimen') {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
           if (passedValArr[7] == userId) {
@@ -894,6 +892,7 @@ class _MyFHBState extends State<MyFHB> {
                       bookingId: passedValArr[4],
                       notificationListId: passedValArr[3],
                       cartId: passedValArr[4],
+                      patientName: passedValArr[6],
                     )).then((value) => PageNavigator.goToPermanent(
                         context, router.rt_Landing)));
           });
@@ -1264,13 +1263,25 @@ class _MyFHBState extends State<MyFHB> {
               templateName: parsedData[1],
               bundle: parsedData[2],
             );
-          }else if(parsedData[1] == 'notifyCaregiverForMedicalRecord'){
+          } else if (parsedData[1] == 'notifyCaregiverForMedicalRecord') {
             return SplashScreen(
               nsRoute: 'notifyCaregiverForMedicalRecord',
               templateName: parsedData[1],
-              bundle: parsedData[2] + '|' + parsedData[3]+ '|' + parsedData[4]+ '|' + parsedData[5]+ '|' + parsedData[6]+ '|' + parsedData[7]+ '|' + parsedData[8],
+              bundle: parsedData[2] +
+                  '|' +
+                  parsedData[3] +
+                  '|' +
+                  parsedData[4] +
+                  '|' +
+                  parsedData[5] +
+                  '|' +
+                  parsedData[6] +
+                  '|' +
+                  parsedData[7] +
+                  '|' +
+                  parsedData[8],
             );
-          }else if (parsedData[1] == 'sheela') {
+          } else if (parsedData[1] == 'sheela') {
             return SplashScreen(
               nsRoute: 'sheela',
               bundle: parsedData[2] + '|' + parsedData[3],
