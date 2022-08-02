@@ -97,6 +97,15 @@ class IosNotificationHandler {
           }
           final data = Map<String, dynamic>.from(call.arguments);
           CommonUtil().listenToCallStatus(data);
+        } else if (call.method == variable.navigateToSheelaReminderMethod) {
+          if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                eId: call.arguments["eid"],
+              ),
+            );
+          }
         }
       },
     );
