@@ -33,7 +33,7 @@ struct Constants {
     static let removeAllReminderMethod = "removeAllReminder"
     static let navigateToRegimentMethod = "navigateToRegiment"
     static let listenToCallStatusMethod = "listenToCallStatus"
-
+static let navigateToSheelaReminderMethod = "navigateToSheelaReminderMethod"
     static let title = "title";
     static let description = "description";
     static let notification = "notification";
