@@ -559,6 +559,7 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
+        print("eid: "+passedValArr[1].toString());
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(eId: passedValArr[1].toString()),

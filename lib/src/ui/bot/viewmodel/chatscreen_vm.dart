@@ -749,7 +749,6 @@ class ChatScreenViewModel extends ChangeNotifier {
       isMicListening = false;
       if (response.body != null) {
         final jsonResponse = jsonDecode(response.body);
-
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);

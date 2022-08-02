@@ -1,6 +1,7 @@
 package com.ventechsolutions.myFHB.constants
 
 object Constants {
+    var foregroundActivityRef=false
     val FUN_APP_VERSION = "getAppVersion"
     val FUN_LISTEN_SMS = "listenForSMS"
     val FUN_KEY_GAURD = "secureMe"

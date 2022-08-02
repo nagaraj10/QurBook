@@ -251,10 +251,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     var mLocationManager: LocationManager? = null
     private val lbm by lazy { LocalBroadcastManager.getInstance(this) }
 
-    companion object {
-        var foregroundActivityRef: Boolean = false
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -331,20 +327,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
         //builder.show()
-
-        val notificationAndAlarmId = NotificationID.currentMillis
-
-        createNotifiationBuilder(
-            "title",
-            "body",
-            "eIdAppend",
-            notificationAndAlarmId,
-            Calendar.getInstance().timeInMillis+4020,
-            false,
-            false,
-            "schedule"
-        )
-
         sendBtn.setOnClickListener {
             speechRecognizer?.cancel()
             if (displayText.text.toString().trim() == "") {
@@ -1925,7 +1907,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     override fun onPause() {
-        foregroundActivityRef=false;
+//        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(true)
         }
@@ -1998,23 +1980,23 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onResume() {
         Log.e("Myapp", "onResume: " + " onResume")
-        foregroundActivityRef=true;
+        Constants.foregroundActivityRef=true
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
-        lbm.registerReceiver(badgeListener,IntentFilter("remainderSheelaInvokeEvent"))
+        registerReceiver(badgeListener,IntentFilter("remainderSheelaInvokeEvent"))
         super.onResume()
     }
 
 
     override fun onDestroy() {
         Log.e("Myapp", "onDestroy: " + " onDestroy")
-        foregroundActivityRef=false;
+//        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(false)
         }
         super.onDestroy()
         unregisterReceiver(broadcastReceiver)
-        lbm.unregisterReceiver(badgeListener)
+        unregisterReceiver(badgeListener)
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
         speechRecognizer?.destroy()
@@ -2023,8 +2005,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
-            val message = intent.getStringExtra("remainderSheelaInvokeEvent")
-            mEventChannel.success("eid")
+            val message = data.getStringExtra("eid")
+            mEventChannel.success("activityRemainderInvokeSheela&${message}")
         }
     }
 
@@ -2505,7 +2487,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 createNotifiationBuilder(
                     title,
                     body,
-                    eIdAppend,
+                    nsId,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
@@ -2564,7 +2546,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 createNotifiationBuilder(
                     title,
                     body,
-                    eIdAppend,
+                    nsId,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
@@ -2702,6 +2684,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             val notification: Notification = builder.build()
             val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+            notificationIntent.putExtra(ReminderBroadcaster.EID, eId)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
             val pendingIntent = PendingIntent.getBroadcast(
                 this,

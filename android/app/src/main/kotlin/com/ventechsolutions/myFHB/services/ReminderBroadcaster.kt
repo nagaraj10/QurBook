@@ -11,6 +11,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.ventechsolutions.myFHB.MainActivity
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.SharedPrefUtils
+import com.ventechsolutions.myFHB.constants.Constants
 
 class ReminderBroadcaster : BroadcastReceiver() {
 //    override fun onReceive(p0: Context?, p1: Intent?) {
@@ -131,21 +132,15 @@ class ReminderBroadcaster : BroadcastReceiver() {
         val notification: Notification? = intent.getParcelableExtra(NOTIFICATION)
         val isCancel = intent.getBooleanExtra("isCancel", false)
         val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
+        val eid = intent.getStringExtra(EID)
         Log.e("MyNotificationPublisher", "onReceive: " )
         if (isCancel){
             notificationManager.cancel(notificationId)
         }else{
-            Log.e("remaidner",MainActivity.foregroundActivityRef.toString());
-            if(MainActivity.foregroundActivityRef){
-                Log.e("remaidner","ongoing");
                 notificationManager.notify(notificationId, notification)
-            }else{
-                Log.e("remaidner","killed");
-                val lbm = LocalBroadcastManager.getInstance(context)
                 val intent = Intent("remainderSheelaInvokeEvent")
-                intent.putExtra("remainderSheelaInvokeEvent", "123456")
-                lbm.sendBroadcast(intent)
-            }
+                intent.putExtra("eid", eid)
+                context.sendBroadcast(intent)
         }
         SharedPrefUtils().deleteNotificationObject(context,notificationId)
     }
@@ -153,5 +148,6 @@ class ReminderBroadcaster : BroadcastReceiver() {
     companion object {
         var NOTIFICATION_ID = "notification_id"
         var NOTIFICATION = "notification"
+        var EID = "eid"
     }
 }
