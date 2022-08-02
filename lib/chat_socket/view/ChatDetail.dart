@@ -1069,7 +1069,7 @@ class ChatState extends State<ChatDetail> {
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
-        if (!isFromFamilyListChat) {
+        if (!isFamilyPatientApi) {
           return Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
