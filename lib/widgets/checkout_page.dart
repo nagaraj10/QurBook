@@ -40,6 +40,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 import 'CartIconWithBadge.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
@@ -48,6 +49,7 @@ class CheckoutPage extends StatefulWidget {
   final String bookingId;
   final String notificationListId;
   final String cartId;
+  final String patientName;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
   CheckoutPage(
@@ -55,7 +57,8 @@ class CheckoutPage extends StatefulWidget {
       this.isFromNotification = false,
       this.bookingId = "",
       this.notificationListId = "",
-      this.cartId = ""});
+      this.cartId = "",
+      this.patientName = ""});
 
   @override
   _CheckoutPageState createState() => _CheckoutPageState();
@@ -384,6 +387,42 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           ],
                                         ),
                                         Divider(),
+                                        widget.isFromNotification
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text("Member Name :",
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    14.0.sp,
+                                                                color: Colors
+                                                                    .grey)),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(widget.patientName,
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    18.0.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : SizedBox(),
+                                        SizedBoxWidget(
+                                          height: 8.0,
+                                        ),
                                         ListView.builder(
                                           physics:
                                               NeverScrollableScrollPhysics(),

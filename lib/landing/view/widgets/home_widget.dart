@@ -45,13 +45,21 @@ class _HomeWidgetState extends State<HomeWidget> {
   bool addPlanButton = false;
   @override
   void initState() {
-    getConfiguration();
-    super.initState();
+    try {
+      getConfiguration();
+      super.initState();
+    } catch (e) {
+      print(e);
+    }
   }
 
   getConfiguration() async {
-    addPlanButton = await PreferenceUtil.getAddPlanBtn();
-    setState(() {});
+    try {
+      addPlanButton = await PreferenceUtil.getAddPlanBtn();
+      //setState(() {});
+    } catch (e) {
+      print(e);
+    }
   }
 
   void moveToQurhome() {
