@@ -558,6 +558,12 @@ class _MyFHBState extends State<MyFHB> {
           "total": passedValArr[1]
         });
       }
+      if (passedValArr[0] == 'activityRemainderInvokeSheela') {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(eId: passedValArr[1].toString()),
+        );
+      }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
