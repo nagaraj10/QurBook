@@ -69,6 +69,7 @@ class ChatDetail extends StatefulWidget {
 
   final String groupId;
   final String familyUserId;
+  final String isNormalChatUserList;
 
   const ChatDetail(
       {Key key,
@@ -83,6 +84,7 @@ class ChatDetail extends StatefulWidget {
       this.message,
       this.isCareGiver,
       this.carecoordinatorId,
+      this.isNormalChatUserList = 'false',
       this.familyUserId,
       this.isForGetUserId = false,
       this.isFromFamilyListChat = false,
@@ -195,6 +197,8 @@ class ChatState extends State<ChatDetail> {
 
   bool isFromCareCoordinator = false;
 
+  String isNormalChatUserList = 'false';
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
@@ -222,6 +226,7 @@ class ChatState extends State<ChatDetail> {
     isFromFamilyListChat = widget.isFromFamilyListChat;
     isFromCareCoordinator = widget.isFromCareCoordinator;
     isFromVideoCall = widget.isFromVideoCall;
+    isNormalChatUserList = widget.isNormalChatUserList;
 
     groupId = widget.groupId;
 
@@ -407,7 +412,7 @@ class ChatState extends State<ChatDetail> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, userId, carecoordinatorId)
+        .fetchAppointmentDetail(widget.peerId, userId, carecoordinatorId,isNormalChatUserList)
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
