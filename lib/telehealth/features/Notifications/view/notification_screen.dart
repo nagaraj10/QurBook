@@ -1648,7 +1648,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           appointmentId: notification
                               ?.messageDetails?.payload?.appointmentId));
                     } else {
-                      toast.getToast('Payment Link Expired', Colors.red);
+                      toast.getToastWithBuildContext('Payment Link Expired', Colors.red,context);
                     }
                   });
                 },
