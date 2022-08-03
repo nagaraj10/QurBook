@@ -369,6 +369,7 @@ import CoreBluetooth
             if call.method == self.addReminderMethod{
                 let notificationArray = call.arguments as! NSArray
                 if let notifiationToShow = notificationArray[0] as? NSDictionary{
+                    notifiationToShow.setValue("Reminders", forKey: "NotificationType")
                     self.scheduleNotification(message: notifiationToShow)
                 }
             }else if call.method == self.removeReminderMethod{
@@ -627,8 +628,19 @@ import CoreBluetooth
             completionHandler([])
             
         }else{
+            if let userInfo = notification.request.content.userInfo as? NSDictionary,
+               let type = userInfo["NotificationType"] as? String,
+               type.lowercased() == "reminders",
+               let eid = userInfo["eid"] as? String
+                ,let controller = navigationController?.children.first as? FlutterViewController{
+                let data =
+                [ "eid" : eid]
+                if (ResponseNotificationChannel == nil){
+                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                }
+                ResponseNotificationChannel.invokeMethod(Constants.navigateToSheelaReminderMethod, arguments: data)
+            }
             completionHandler([.alert, .sound])
-            
         }
     }
     
