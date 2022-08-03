@@ -23,6 +23,7 @@ class AddFamilyUserInfoArguments {
   bool feeZero;
   bool isFromCartPage;
   bool isFromAppointmentOrSlotPage = false;
+  bool isForFamilyAddition = false;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -43,5 +44,6 @@ class AddFamilyUserInfoArguments {
       this.refresh,
       this.feeZero,
       this.isFromCartPage,
-      this.isFromAppointmentOrSlotPage});
+      this.isFromAppointmentOrSlotPage,
+      this.isForFamilyAddition});
 }

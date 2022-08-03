@@ -4811,6 +4811,28 @@ class CommonUtil {
     print(Device.get().isTablet);
     return Device.get().isTablet;
   }
+
+  void getDetailsOfAddedFamilyMember(
+      BuildContext context, String userID) async {
+    MyProfileModel myProfile;
+    AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+        AddFamilyUserInfoRepository();
+
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userID).then((value) {
+      myProfile = value;
+
+      if (myProfile?.result != null) {
+        Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+            arguments: AddFamilyUserInfoArguments(
+                myProfileResult: myProfile?.result,
+                fromClass: CommonConstants.user_update,
+                isForFamilyAddition: true));
+      } else {
+        FlutterToast()
+            .getToast('Unable to Fetch User Profile data', Colors.red);
+      }
+    });
+  }
 }
 
 extension CapExtension on String {

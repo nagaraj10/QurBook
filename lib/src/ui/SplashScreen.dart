@@ -566,6 +566,11 @@ class _SplashScreenState extends State<SplashScreen> {
                         patientName: passedValArr[6],
                       )).then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
+                    } else if (widget.nsRoute == "familyProfile") {
+                      var passedValArr = widget.bundle?.split('&');
+
+                      new CommonUtil().getDetailsOfAddedFamilyMember(
+                          context, passedValArr[2].toString());
                     } else if (widget.nsRoute == 'Renew' ||
                         widget.nsRoute == 'Callback' ||
                         widget.nsRoute == 'myplandetails') {
