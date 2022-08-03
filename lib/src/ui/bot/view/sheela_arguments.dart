@@ -8,6 +8,8 @@ class SheelaArgument {
   final bool scheduleAppointment;
   final eId;
   final bool showUnreadMessage;
+  final bool isJumperDevice;
+  final String deviceType;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -19,5 +21,7 @@ class SheelaArgument {
     this.scheduleAppointment = false,
     this.eId,
     this.showUnreadMessage = false,
+    this.isJumperDevice = false,
+    this.deviceType,
   });
 }

@@ -78,7 +78,16 @@ class _ChatScreenState extends State<ChatScreen>
     getMyViewModel().uuid = Uuid().v1();
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.takeActiveDeviceReadings &&
+    if (widget?.arguments?.isJumperDevice &&
+        (widget?.arguments?.deviceType ?? '').isNotEmpty &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      String strText = CommonUtil().validString(widget?.arguments?.deviceType);
+      getMyViewModel().addToSheelaConversation(
+        text:
+            "Your ${strText.toLowerCase() == "weight" ? "Weighing scale" : "$strText device"} is connected & reading values. Please wait",
+      );
+      getMyViewModel().setupListenerForReadings();
+    } else if (widget?.arguments?.takeActiveDeviceReadings &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
         text: "Your SPO2 device is connected & reading values. Please wait",
@@ -386,67 +395,69 @@ class _ChatScreenState extends State<ChatScreen>
         bottomNavigationBar: Container(
           height: 0,
         ),
-        floatingActionButton: Visibility(
-          visible:
-              !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
-          child: AnimatedBuilder(
-            animation: animationController,
-            builder: (context, child) {
-              return Container(
+        floatingActionButton:
+            //  Visibility(
+            //   visible:
+            //       !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
+            //   child:
+            AnimatedBuilder(
+          animation: animationController,
+          builder: (context, child) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              padding: EdgeInsets.all((_animation?.value ?? 0)),
+              child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.transparent,
+                  color:
+                      Provider.of<ChatScreenViewModel>(context).isMicListening
+                          ? Colors.redAccent.shade100
+                          : Colors.transparent,
                   shape: BoxShape.circle,
                 ),
-                padding: EdgeInsets.all((_animation?.value ?? 0)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color:
-                        Provider.of<ChatScreenViewModel>(context).isMicListening
-                            ? Colors.redAccent.shade100
-                            : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all((15.0 - (_animation?.value ?? 0))),
-                  child: child,
-                ),
-              );
-            },
-            child: FloatingActionButton(
-              onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
-                  ? null
-                  : () {
-                      if (getMyViewModel().isLoading ||
-                          (getMyViewModel().isMicListening ?? false)) {
-                        //do nothing
-                      } else if (getMyViewModel().isSheelaSpeaking) {
-                        stopTTSEngine();
-                      } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-                        stopTTSEngine();
-                        getMyViewModel().gettingReposnseFromNative();
-                      } else {
-                        getMyViewModel().gettingReposnseFromNative();
-                      }
-                    },
-              elevation: 10,
-              child: Icon(
-                Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
-                    ? Icons.pause
-                    : Provider.of<ChatScreenViewModel>(context).isLoading
-                        ? Icons.mic_off
-                        : Icons.mic,
-                color: Colors.white,
+                padding: EdgeInsets.all((15.0 - (_animation?.value ?? 0))),
+                child: child,
               ),
-              backgroundColor:
-                  Provider.of<ChatScreenViewModel>(context).isMicListening
-                      ? Colors.red
-                      : Provider.of<ChatScreenViewModel>(context).isLoading
-                          ? Colors.black45
-                          : isFromQurhome
-                              ? Color(CommonUtil().getQurhomeGredientColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
+            );
+          },
+          child: FloatingActionButton(
+            onPressed: Provider.of<ChatScreenViewModel>(context).isLoading
+                ? null
+                : () {
+                    if (getMyViewModel().isLoading ||
+                        (getMyViewModel().isMicListening ?? false)) {
+                      //do nothing
+                    } else if (getMyViewModel().isSheelaSpeaking) {
+                      stopTTSEngine();
+                    } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+                      stopTTSEngine();
+                      getMyViewModel().gettingReposnseFromNative();
+                    } else {
+                      getMyViewModel().gettingReposnseFromNative();
+                    }
+                  },
+            elevation: 10,
+            child: Icon(
+              Provider.of<ChatScreenViewModel>(context).isSheelaSpeaking
+                  ? Icons.pause
+                  : Provider.of<ChatScreenViewModel>(context).isLoading
+                      ? Icons.mic_off
+                      : Icons.mic,
+              color: Colors.white,
             ),
+            backgroundColor:
+                Provider.of<ChatScreenViewModel>(context).isMicListening
+                    ? Colors.red
+                    : Provider.of<ChatScreenViewModel>(context).isLoading
+                        ? Colors.black45
+                        : isFromQurhome
+                            ? Color(CommonUtil().getQurhomeGredientColor())
+                            : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
+        // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );

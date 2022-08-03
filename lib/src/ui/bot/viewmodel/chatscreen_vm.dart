@@ -333,38 +333,44 @@ class ChatScreenViewModel extends ChangeNotifier {
     //   isMicListening = true;
     //   notifyListeners();
     // }
-    isLoading = true;
-    Conversation model = new Conversation(
-      isMayaSaid: true,
-      text: text,
-      name: prof.result != null
-          ? prof.result.firstName + ' ' + prof.result.lastName
-          : '',
-    );
-    conversations.add(model);
-    isMayaSpeaks = 0;
-    final lan = Utils.getCurrentLanCode();
-    String langCodeForRequest;
-    if (lan != "undef") {
-      final langCode = lan.split("-").first;
-      langCodeForRequest = langCode;
-      //print(langCode);
+    try {
+      isLoading = true;
+      Conversation model = new Conversation(
+        isMayaSaid: true,
+        text: text,
+        name: prof.result != null
+            ? prof.result.firstName + ' ' + prof.result.lastName
+            : '',
+      );
+      conversations.add(model);
+      isMayaSpeaks = 0;
+      final lan = Utils.getCurrentLanCode();
+      String langCodeForRequest;
+      if (lan != "undef") {
+        final langCode = lan.split("-").first;
+        langCodeForRequest = langCode;
+        //print(langCode);
+      }
+      // isLoading = false;
+      conversations[conversations.length - 1].isSpeaking = true;
+      isSheelaSpeaking = true;
+      notifyListeners();
+      var response = await variable.tts_platform.invokeMethod(variable.strtts, {
+        parameters.strMessage: text,
+        parameters.strIsClose: false,
+        parameters.strLanguage: langCodeForRequest
+      });
+      if (response == 1) {
+        isMayaSpeaks = 1;
+      }
+      conversations[conversations.length - 1].isSpeaking = false;
+      isSheelaSpeaking = false;
+      notifyListeners();
+    } catch (e) {
+      conversations[conversations.length - 1].isSpeaking = false;
+      isSheelaSpeaking = false;
+      notifyListeners();
     }
-    // isLoading = false;
-    conversations[conversations.length - 1].isSpeaking = true;
-    isSheelaSpeaking = true;
-    notifyListeners();
-    var response = await variable.tts_platform.invokeMethod(variable.strtts, {
-      parameters.strMessage: text,
-      parameters.strIsClose: false,
-      parameters.strLanguage: langCodeForRequest
-    });
-    if (response == 1) {
-      isMayaSpeaks = 1;
-    }
-    conversations[conversations.length - 1].isSpeaking = false;
-    isSheelaSpeaking = false;
-    notifyListeners();
   }
 
   startMayaAutomatically({String message}) {
@@ -624,7 +630,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           redirect: isRedirect,
           screen: _screen);
 
-      conversations.add(model);
+      // conversations.add(model);
       notifyListeners();
     }
     Future.delayed(Duration(seconds: 3), () {
@@ -728,12 +734,12 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.KIOSK_eid: eId
       };
       eId = null;
-    }else if(scheduleAppointment){
+    } else if (scheduleAppointment) {
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.KIOSK_appointment_avail,
       };
       scheduleAppointment = false;
-    }else if(showUnreadMessage){
+    } else if (showUnreadMessage) {
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.KIOSK_messages,
       };
@@ -787,6 +793,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             conversations.add(model);
             if ((res?.buttons?.length ?? 0) > 0) {
               isButtonResponse = true;
+              isEndOfConv = false;
             } else {
               isButtonResponse = false;
             }
@@ -889,6 +896,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                         langCode: res.lang,
                         buttons: res.buttons,
                       );
+                      if (!isEndOfConv) {
+                        gettingReposnseFromNative();
+                      }
                     }
                   }).catchError((error) {
                     conversations[conversations.length - 1].isSpeaking = false;
@@ -1065,6 +1075,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         }
       });
       stopTTSEngine(index: index);
+      reEnableMicButton();
       // conversations[index].isSpeaking = false;
       // isSheelaSpeaking = false;
       // notifyListeners();
@@ -1177,7 +1188,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             isMicListening = false;
             notifyListeners();
             if ((response ?? '').toString()?.isNotEmpty) {
-              sendToMaya(response, screen: screenValue);
+              //sendToMaya(response, screen: screenValue);
+              var lastObj = conversations.last;
               var date = new FHBUtils()
                   .getFormattedDateString(DateTime.now().toString());
               Conversation model = new Conversation(
@@ -1190,6 +1202,24 @@ class ChatScreenViewModel extends ChangeNotifier {
                   redirect: isRedirect,
                   screen: screenValue);
               conversations.add(model);
+              if ((lastObj.buttons?.length ?? 0) > 0) {
+                var responseRecived = response.toString().toLowerCase();
+                var button;
+                try {
+                  button = lastObj.buttons.firstWhere((element) =>
+                      element.title.toLowerCase() == responseRecived);
+                  startSheelaFromButton(
+                      buttonText: button?.title ?? response,
+                      payload: button?.payload ?? response);
+                } catch (e) {
+                  startSheelaFromButton(
+                      buttonText: button?.title ?? response,
+                      payload: button?.payload ?? response);
+                }
+              } else {
+                sendToMaya(response, screen: screenValue);
+                //conversations.add(model);
+              }
               notifyListeners();
             }
           }).whenComplete(() {
