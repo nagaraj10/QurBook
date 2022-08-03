@@ -199,10 +199,10 @@ class ChatViewModel extends ChangeNotifier {
   }
 
   Future<AppointmentResult> fetchAppointmentDetail(
-      String doctorId, String patientId, String careCoorId) async {
+      String doctorId, String patientId, String careCoorId,String isNormalChatUserList) async {
     try {
       AppointmentDetailModel appointmentModel = await _providersListRepository
-          .getAppointmentDetail(doctorId, patientId, careCoorId);
+          .getAppointmentDetail(doctorId, patientId, careCoorId,isNormalChatUserList);
       appointments = appointmentModel.result;
       return appointments;
     } catch (e) {}

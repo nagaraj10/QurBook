@@ -394,7 +394,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, patientId,'')
+        .fetchAppointmentDetail(widget.peerId, patientId,'','')
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {

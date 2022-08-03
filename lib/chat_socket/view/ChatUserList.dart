@@ -612,6 +612,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientName: '',
                         patientPicture: '',
                         isFromVideoCall: false,
+                        isNormalChatUserList: 'true',
                         carecoordinatorId: userChatList?.isFamilyUserCareCoordinator?userChatList?.peerId:'',
                         familyUserId: userChatList?.familyUserId,
                         isFromCareCoordinator: userChatList?.isFamilyUserCareCoordinator,

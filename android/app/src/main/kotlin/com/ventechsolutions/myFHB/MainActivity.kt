@@ -334,12 +334,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
-            } else {
+            } else {    
                 _result?.success(displayText.text.toString())
                 _result=null
                 finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
+                displayText?.setText("")
+
             }
         }
 
