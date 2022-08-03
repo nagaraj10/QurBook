@@ -1,23 +1,15 @@
 package com.ventechsolutions.myFHB.services
 
+//import com.pichillilorenzo.flutter_inappwebview.Shared.applicationContext
 import android.app.Notification
-import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-//import com.pichillilorenzo.flutter_inappwebview.Shared.applicationContext
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.ventechsolutions.myFHB.MainActivity
 import com.ventechsolutions.myFHB.MyApp
-import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.SharedPrefUtils
 import com.ventechsolutions.myFHB.constants.Constants
 
@@ -140,11 +132,15 @@ class ReminderBroadcaster : BroadcastReceiver() {
         val notification: Notification? = intent.getParcelableExtra(NOTIFICATION)
         val isCancel = intent.getBooleanExtra("isCancel", false)
         val notificationId = intent.getIntExtra(NOTIFICATION_ID, 0)
+        val eid = intent.getStringExtra(EID)
         Log.e("MyNotificationPublisher", "onReceive: " )
         if (isCancel){
             notificationManager.cancel(notificationId)
         }else{
-            notificationManager.notify(notificationId, notification)
+                notificationManager.notify(notificationId, notification)
+                val intent = Intent("remainderSheelaInvokeEvent")
+                intent.putExtra("eid", eid)
+                context.sendBroadcast(intent)
         }
         SharedPrefUtils().deleteNotificationObject(context,notificationId)
     }
@@ -152,5 +148,6 @@ class ReminderBroadcaster : BroadcastReceiver() {
     companion object {
         var NOTIFICATION_ID = "notification_id"
         var NOTIFICATION = "notification"
+        var EID = "eid"
     }
 }

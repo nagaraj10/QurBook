@@ -207,7 +207,7 @@ class ProvidersListRepository {
   }
 
   Future<AppointmentDetailModel> getAppointmentDetail(
-      String doctorId, String patientId, String careCoorId) async {
+      String doctorId, String patientId, String careCoorId,String isNormalChatUserList) async {
     var carCooApiId = null;
     carCooApiId = careCoorId != '' ? careCoorId : 'null';
     var response = await _helper.getAppointmentDetail(appointmentSlash +
@@ -217,7 +217,7 @@ class ProvidersListRepository {
         doctorId +
         isDoctor +
         careCoordiantorId +
-        carCooApiId);
+        carCooApiId+isNormalChatList+isNormalChatUserList);
     return AppointmentDetailModel.fromJson(response);
   }
 

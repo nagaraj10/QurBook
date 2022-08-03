@@ -723,6 +723,7 @@ const String str_far = 'Farenheit';
 //
 const reminderMethodChannel = MethodChannel('flutter.native/reminder');
 const addReminderMethod = 'addReminder';
+const navigateToSheelaReminderMethod = 'navigateToSheelaReminderMethod';
 const removeReminderMethod = 'removeReminder';
 const removeAllReminderMethod = 'removeAllReminder';
 const navigateToRegimentMethod = 'navigateToRegiment';

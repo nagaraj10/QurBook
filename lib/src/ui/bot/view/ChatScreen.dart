@@ -78,7 +78,16 @@ class _ChatScreenState extends State<ChatScreen>
     getMyViewModel().uuid = Uuid().v1();
 
     getMyViewModel().clearMyConversation();
-    if (widget?.arguments?.takeActiveDeviceReadings &&
+    if (widget?.arguments?.isJumperDevice &&
+        (widget?.arguments?.deviceType ?? '').isNotEmpty &&
+        PreferenceUtil.getIfQurhomeisAcive()) {
+      String strText = CommonUtil().validString(widget?.arguments?.deviceType);
+      getMyViewModel().addToSheelaConversation(
+        text:
+            "Your ${strText.toLowerCase() == "weight" ? "Weighing scale" : "$strText device"} is connected & reading values. Please wait",
+      );
+      getMyViewModel().setupListenerForReadings();
+    } else if (widget?.arguments?.takeActiveDeviceReadings &&
         PreferenceUtil.getIfQurhomeisAcive()) {
       getMyViewModel().addToSheelaConversation(
         text: "Your SPO2 device is connected & reading values. Please wait",
@@ -387,7 +396,6 @@ class _ChatScreenState extends State<ChatScreen>
           height: 0,
         ),
         floatingActionButton:
-            // Visibility(
             //   visible:
             //       !Provider.of<ChatScreenViewModel>(context).getIsButtonResponse,
             //   child:
@@ -448,7 +456,6 @@ class _ChatScreenState extends State<ChatScreen>
                             : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
-        //),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );

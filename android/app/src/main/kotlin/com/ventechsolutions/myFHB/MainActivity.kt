@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
 import com.facebook.FacebookSdk.fullyInitialize
@@ -248,6 +249,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private val mDiscoveredDevices = LinkedHashMap<String, DiscoveredDevice>()
     var mLocationManager: LocationManager? = null
+    private val lbm by lazy { LocalBroadcastManager.getInstance(this) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -325,7 +328,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
         //builder.show()
-
         sendBtn.setOnClickListener {
             speechRecognizer?.cancel()
             if (displayText.text.toString().trim() == "") {
@@ -333,12 +335,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 val toast = Toast.makeText(context, "Please enter a valid input", Toast.LENGTH_LONG)
                 toast.setGravity(Gravity.CENTER, 0, 0)
                 toast.show()
-            } else {
+            } else {    
                 _result?.success(displayText.text.toString())
                 _result=null
                 finalWords=""
                 dialog.dismiss()
                 spin_kit.visibility = View.VISIBLE
+                displayText?.setText("")
+
             }
         }
 
@@ -1906,9 +1910,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     override fun onPause() {
+//        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(true)
         }
+        lbm.unregisterReceiver(badgeListener)
         super.onPause()
     }
 
@@ -1977,23 +1983,34 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onResume() {
         Log.e("Myapp", "onResume: " + " onResume")
+        Constants.foregroundActivityRef=true
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         nsManager.cancel(2022)
+        registerReceiver(badgeListener,IntentFilter("remainderSheelaInvokeEvent"))
         super.onResume()
     }
 
 
     override fun onDestroy() {
         Log.e("Myapp", "onDestroy: " + " onDestroy")
+//        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(false)
         }
         super.onDestroy()
-        unregisterReceiver(broadcastReceiver);
+        unregisterReceiver(broadcastReceiver)
+        unregisterReceiver(badgeListener)
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
         speechRecognizer?.destroy()
         MyApp.snoozeTapCountTime = 0
+    }
+
+    private val badgeListener = object : BroadcastReceiver() {
+        override fun onReceive(ctx: Context, data: Intent) {
+            val message = data.getStringExtra("eid")
+            mEventChannel.success("activityRemainderInvokeSheela&${message}")
+        }
     }
 
     val handler: Handler = Handler()
@@ -2475,7 +2492,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 createNotifiationBuilder(
                     title,
                     body,
-                    eIdAppend,
+                    nsId,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
@@ -2534,7 +2551,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 createNotifiationBuilder(
                     title,
                     body,
-                    eIdAppend,
+                    nsId,
                     notificationAndAlarmId,
                     calendar.timeInMillis,
                     false,
@@ -2672,6 +2689,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             val notification: Notification = builder.build()
             val notificationIntent = Intent(this, ReminderBroadcaster::class.java)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
+            notificationIntent.putExtra(ReminderBroadcaster.EID, eId)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
             val pendingIntent = PendingIntent.getBroadcast(
                 this,

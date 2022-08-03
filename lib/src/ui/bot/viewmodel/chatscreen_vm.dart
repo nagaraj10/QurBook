@@ -615,7 +615,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           redirect: isRedirect,
           screen: _screen);
 
-      conversations.add(model);
+      // conversations.add(model);
       notifyListeners();
     }
     Future.delayed(Duration(seconds: 3), () {
@@ -740,7 +740,6 @@ class ChatScreenViewModel extends ChangeNotifier {
       isMicListening = false;
       if (response.body != null) {
         final jsonResponse = jsonDecode(response.body);
-
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
@@ -778,6 +777,7 @@ class ChatScreenViewModel extends ChangeNotifier {
             conversations.add(model);
             if ((res?.buttons?.length ?? 0) > 0) {
               isButtonResponse = true;
+              isEndOfConv = false;
             } else {
               isButtonResponse = false;
             }
@@ -880,6 +880,9 @@ class ChatScreenViewModel extends ChangeNotifier {
                         langCode: res.lang,
                         buttons: res.buttons,
                       );
+                      if (!isEndOfConv) {
+                        gettingReposnseFromNative();
+                      }
                     }
                   }).catchError((error) {
                     conversations[conversations.length - 1].isSpeaking = false;
@@ -1182,25 +1185,24 @@ class ChatScreenViewModel extends ChangeNotifier {
                   timeStamp: date,
                   redirect: isRedirect,
                   screen: screenValue);
+              conversations.add(model);
               if ((lastObj.buttons?.length ?? 0) > 0) {
+                var responseRecived = response.toString().toLowerCase();
+                var button;
                 try {
-                  var responseRecived = response.toString().toLowerCase();
-                  var button = lastObj.buttons.firstWhere((element) =>
-                      (element.title ?? "").toLowerCase() == responseRecived);
-                  if (button != null) {
-                    startSheelaFromButton(
-                        buttonText: button.title, payload: button.payload);
-                  } else {
-                    sendToMaya(response, screen: screenValue);
-                    conversations.add(model);
-                  }
+                  button = lastObj.buttons.firstWhere((element) =>
+                      element.title.toLowerCase() == responseRecived);
+                  startSheelaFromButton(
+                      buttonText: button?.title ?? response,
+                      payload: button?.payload ?? response);
                 } catch (e) {
-                  sendToMaya(response, screen: screenValue);
-                  conversations.add(model);
+                  startSheelaFromButton(
+                      buttonText: button?.title ?? response,
+                      payload: button?.payload ?? response);
                 }
               } else {
                 sendToMaya(response, screen: screenValue);
-                conversations.add(model);
+                //conversations.add(model);
               }
               notifyListeners();
             }
