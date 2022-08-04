@@ -11,9 +11,6 @@ class SheelaArgument {
   final bool isJumperDevice;
   final String deviceType;
   final bool isSheelaFollowup;
-  final String task;
-  final String action;
-  final String activityName;
   final String message;
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -28,9 +25,6 @@ class SheelaArgument {
     this.isJumperDevice = false,
     this.deviceType,
     this.isSheelaFollowup=false,
-    this.task,
-    this.action,
-    this.activityName,
     this.message,
   });
 }

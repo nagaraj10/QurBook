@@ -568,7 +568,7 @@ class _MyFHBState extends State<MyFHB> {
       if (passedValArr[0] == 'isSheelaFollowup') {
         Get.toNamed(
           rt_Sheela,
-          arguments: SheelaArgument(isSheelaFollowup: true,task: '',action : '',activityName:'',message:'',),
+          arguments: SheelaArgument(isSheelaFollowup: true,message:passedValArr[1],),
         );
       }
       if (passedValArr[0] == 'ack') {
