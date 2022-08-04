@@ -1263,6 +1263,12 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: '',
           );
+        }else if (parsedData[0] == 'isSheelaFollowup') {
+          return SplashScreen(
+            nsRoute: 'isSheelaFollowup',
+            bundle: parsedData[0]+'|'+parsedData[1],
+          );
+
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(

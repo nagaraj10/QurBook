@@ -420,7 +420,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotificationForSheela(data: Map<String, String>) {
 
-        if (Constants.foregroundActivityRef){
+        if (!Constants.foregroundActivityRef){
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
             val ack_sound: Uri =
@@ -441,15 +441,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 manager.createNotificationChannel(channelAck)
             }
 
-            val sheelaIntent = Intent(applicationContext, ViewMemberReceiver::class.java)
+            val sheelaIntent = Intent(applicationContext, SheelaFollowReceiver::class.java)
             sheelaIntent.putExtra(getString(R.string.nsid), NS_ID)
-            sheelaIntent.putExtra("type", "sheelaFollow")
-            sheelaIntent.putExtra("eid", data["eid"])
-            sheelaIntent.putExtra("task", data["task"])
-            sheelaIntent.putExtra("action", data["Action"])
-            sheelaIntent.putExtra("activityName", data["ActivityName"])
-            sheelaIntent.putExtra("message", data["Message"])
-            sheelaIntent.putExtra("isSheela", data["isSheela"])
+            sheelaIntent.putExtra("message", data[getString(R.string.pro_ns_body)])
+
 
             val sheelaPendingIntent = PendingIntent.getBroadcast(
                 applicationContext,
@@ -478,17 +473,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setSound(ack_sound)
                 .setAutoCancel(true)
                 .build()
-
+            nsManager.notify(NS_ID, notification)
 
         }else{
             val intent = Intent("remainderSheelaInvokeEvent")
-            intent.putExtra("type", "sheelaFollow")
-            intent.putExtra("eid", data["eid"])
-            intent.putExtra("task", data["task"])
-            intent.putExtra("action", data["Action"])
-            intent.putExtra("activityName", data["ActivityName"])
-            intent.putExtra("message", data["Message"])
-            intent.putExtra("isSheela", data["isSheela"])
+            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
             this.sendBroadcast(intent)
         }
     }
