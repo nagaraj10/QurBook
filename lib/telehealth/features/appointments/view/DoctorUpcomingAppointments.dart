@@ -277,6 +277,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         ));
   }
 
+  String getFormattedDateTime(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp.toLocal());
+    return formattedDate;
+  }
+
   void goToChatIntegration(Past doc) {
     //chat integration start
     String doctorId = doc.doctor.id;
@@ -284,6 +290,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     String chatListId = doc?.chatListId;
+    String strLastDate = doc?.chatMessage?.deliveredOn != null &&
+        doc?.chatMessage?.deliveredOn != ''
+        ? getFormattedDateTime(
+        doc?.chatMessage?.deliveredOn): '';
     /* chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/
     Navigator.push(
@@ -298,7 +308,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 patientName: '',
                 patientPicture: '',
                 isFromVideoCall: false,
-                isCareGiver: false)));
+                isCareGiver: false,lastDate: strLastDate)));
   }
 
   void navigateToProviderScreen(Past doc, isReshedule) async {
