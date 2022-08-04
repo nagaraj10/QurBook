@@ -573,15 +573,19 @@ class CheckoutPageWidgets {
                                 await commonUtil.fetchUserProfileInfo();
                             Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
-                                    myProfileResult: myProfile?.result,
-                                    fromClass: CommonConstants.user_update,
-                                    isFromCSIR: false,
-                                    packageId: packageId,
-                                    providerId: providerId,
-                                    isSubscribed: isSubscribed,
-                                    feeZero: feeZero,
-                                    refresh: refresh,
-                                    isFromCartPage: true));
+                                  myProfileResult: myProfile?.result,
+                                  fromClass: CommonConstants.user_update,
+                                  isFromCSIR: false,
+                                  packageId: packageId,
+                                  providerId: providerId,
+                                  isSubscribed: isSubscribed,
+                                  feeZero: feeZero,
+                                  refresh: refresh,
+                                  isFromCartPage: true,
+                                  isForFamilyAddition: false,
+                                  isFromAppointmentOrSlotPage: false,
+                                  isForFamily: false,
+                                ));
                             isAccepted = true;
                           },
                           borderSide: BorderSide(

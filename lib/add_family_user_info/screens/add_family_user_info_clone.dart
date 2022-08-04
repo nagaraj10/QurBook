@@ -5,7 +5,9 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/widgets/DropdownWithTags.dart';
 import 'package:myfhb/widgets/TagsList.dart';
@@ -1349,9 +1351,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           var _familyListBloc = FamilyListBloc();
           //NOTE this would be called when family member profile update
           if (widget.arguments.isForFamilyAddition == true) {
+            CommonUtil.showLoadingDialog(
+                dialogContext, _keyLoader, variable.Please_Wait);
             methodToAddFamilyFromNotification();
-          }
-          if (widget.arguments.fromClass == CommonConstants.my_family) {
+          } else if (widget.arguments.fromClass == CommonConstants.my_family) {
             addFamilyUserInfoBloc.userId = widget.arguments.id;
             addFamilyUserInfoBloc.relationship = UpdateRelationshipModel(
                 id: widget.arguments.sharedbyme.id,
@@ -1365,7 +1368,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setValues();
           } else {
             addFamilyUserInfoBloc.userId =
-                widget.arguments.addFamilyUserInfo.id;
+                widget.arguments.addFamilyUserInfo.childInfo.id;
 
             setValues();
           }
@@ -1637,8 +1640,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
-      addFamilyUserInfoBloc.userId =
-          widget.arguments.id; //widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId = widget
+          .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
 
       relationShipResponseList = widget.arguments?.defaultrelationShips;
 
@@ -1778,7 +1781,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else {
       //* primary user adding section
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo?.id;
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.addFamilyUserInfo?.childInfo?.id;
       await addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         if (widget.arguments.isPrimaryNoSelected) {
           try {
@@ -1792,19 +1796,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setMobileAndEmail();
           }
         } else {
-          if (widget.arguments.enteredFirstName != null &&
-              widget.arguments.enteredLastName != null) {
-            firstNameController.text = widget.arguments.enteredFirstName;
-            lastNameController.text = widget.arguments.enteredLastName;
-          } else {
-            firstNameController.text =
-                value?.result?.firstName?.capitalizeFirstofEach;
-            middleNameController.text =
-                value?.result?.middleName?.capitalizeFirstofEach;
-            lastNameController.text =
-                value?.result?.lastName?.capitalizeFirstofEach;
-          }
-
           mobileNoController.text =
               value.result.userContactCollection3[0].phoneNumber;
           if (value?.result?.userContactCollection3[0].email != null &&
@@ -1813,76 +1804,79 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
 
           mContactInfo = value?.result?.userContactCollection3[0];
+        }
+        //*user already user exist set the address data if available
+        if (value?.result?.userAddressCollection3.isNotEmpty) {
+          var currentAddress = value?.result?.userAddressCollection3[0];
+          cntrlr_addr_one.text = currentAddress.addressLine1;
+          cntrlr_addr_two.text = currentAddress.addressLine2;
+          cntrlr_addr_city.text = currentAddress.city?.name;
+          cntrlr_addr_state.text = currentAddress.state?.name;
+          cntrlr_addr_zip.text = currentAddress.pincode;
+          setState(() {
+            _addressResult = AddressResult(
+                id: currentAddress.addressType.id,
+                code: currentAddress.addressType.code,
+                name: currentAddress.addressType.name);
+          });
 
-          //*user already user exist set the address data if available
-          if (value?.result?.userAddressCollection3.isNotEmpty) {
-            var currentAddress = value?.result?.userAddressCollection3[0];
-            cntrlr_addr_one.text = currentAddress.addressLine1;
-            cntrlr_addr_two.text = currentAddress.addressLine2;
-            cntrlr_addr_city.text = currentAddress.city?.name;
-            cntrlr_addr_state.text = currentAddress.state?.name;
-            cntrlr_addr_zip.text = currentAddress.pincode;
-            setState(() {
-              _addressResult = AddressResult(
-                  id: currentAddress.addressType.id,
-                  code: currentAddress.addressType.code,
-                  name: currentAddress.addressType.name);
-            });
+          cityVal = currentAddress.city;
+          stateVal = currentAddress.state;
+          currentAddressID = currentAddress.id;
+        }
 
-            cityVal = currentAddress.city;
-            stateVal = currentAddress.state;
-            currentAddressID = currentAddress.id;
-          }
-
-          //? check relatioship id against logged in user
-          if (value?.result?.userRelationshipCollection.isNotEmpty) {
-            for (var cRelationship
-                in value?.result?.userRelationshipCollection) {
-              if (cRelationship?.parent?.id ==
-                  PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-                relationShipController.text = cRelationship?.relationship?.name;
-              } else {
-                relationShipController.text =
-                    widget?.arguments?.relationShip?.name;
-              }
+        firstNameController.text =
+            value?.result?.firstName?.capitalizeFirstofEach;
+        middleNameController.text =
+            value?.result?.middleName?.capitalizeFirstofEach;
+        lastNameController.text =
+            value?.result?.lastName?.capitalizeFirstofEach;
+        //? check relatioship id against logged in user
+        if (value?.result?.userRelationshipCollection.isNotEmpty) {
+          for (var cRelationship in value?.result?.userRelationshipCollection) {
+            if (cRelationship?.parent?.id ==
+                PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
+              relationShipController.text = cRelationship?.relationship?.name;
+            } else {
+              relationShipController.text =
+                  widget?.arguments?.relationShip?.name;
             }
-          } else {
-            relationShipController.text = widget?.arguments?.relationShip?.name;
           }
-          try {
-            setState(() {
-              _addressResult = _addressList[0];
-            });
-          } catch (e) {}
-          if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
-            currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
-            currentselectedBloodGroupRange =
-                value.result.bloodGroup.split(' ')[1];
-          } else {
-            currentselectedBloodGroup = null;
-            currentselectedBloodGroupRange = null;
-          }
-          selectedGender = value.result.gender == null
-              ? null
-              : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
+        } else {
+          relationShipController.text = widget?.arguments?.relationShip?.name;
+        }
+        try {
+          setState(() {
+            _addressResult = _addressList[0];
+          });
+        } catch (e) {}
+        if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
+          currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
+          currentselectedBloodGroupRange =
+              value.result.bloodGroup.split(' ')[1];
+        } else {
+          currentselectedBloodGroup = null;
+          currentselectedBloodGroupRange = null;
+        }
+        selectedGender = value.result.gender == null
+            ? null
+            : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
 
-          dateofBirthStr = value.result.dateOfBirth != null
-              ? FHBUtils()
-                  .getFormattedDateForUserBirth(value.result.dateOfBirth)
-              : '';
-          dateOfBirthController.text = value.result.dateOfBirth != null
-              ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
-              : '';
+        dateofBirthStr = value.result.dateOfBirth != null
+            ? FHBUtils().getFormattedDateForUserBirth(value.result.dateOfBirth)
+            : '';
+        dateOfBirthController.text = value.result.dateOfBirth != null
+            ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
+            : '';
 
-          if (value?.result?.additionalInfo != null) {
-            heightController.text = value?.result?.additionalInfo?.height ?? '';
-            weightController.text = value?.result?.additionalInfo?.weight ?? '';
-          }
+        if (value?.result?.additionalInfo != null) {
+          heightController.text = value?.result?.additionalInfo?.height ?? '';
+          weightController.text = value?.result?.additionalInfo?.weight ?? '';
+        }
 
-          if (value.result.membershipOfferedBy != null &&
-              value.result.membershipOfferedBy != '') {
-            cntrlr_corp_name.text = value.result.membershipOfferedBy;
-          }
+        if (value.result.membershipOfferedBy != null &&
+            value.result.membershipOfferedBy != '') {
+          cntrlr_corp_name.text = value.result.membershipOfferedBy;
         }
       });
     }
@@ -2096,7 +2090,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var userAddressCollection3 = UserAddressCollection3();
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.isUpdate = true;
-      profileResult.id = widget.arguments.sharedbyme.child.id;
+      profileResult.id = widget.arguments.sharedbyme.id;
 
       if (widget
           .arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
@@ -2194,26 +2188,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((valueInner) {
+            _familyListBloc.getFamilyMembersListNew().then((value) {
               PreferenceUtil.saveFamilyData(
-                      Constants.KEY_FAMILYMEMBER, valueInner.result)
-                  .then((userID) {
+                      Constants.KEY_FAMILYMEMBER, value.result)
+                  .then((value) {
                 //saveProfileImage();
                 /* MySliverAppBar.imageURI = null;
                       fetchedProfileData = null;*/
                 imageURI = null;
-                if (widget.arguments.isForFamilyAddition == true) {
-                  Navigator.pop(dialogContext);
-                  Navigator.pop(dialogContext);
-                  MyProfileModel myProfileModel = new MyProfileModel(
-                      isSuccess: true, message: value.message);
-                  Navigator.of(context).pop(
-                      {"myProfileData": convert.jsonEncode(myProfileModel)});
-                } else {
-                  Navigator.pop(dialogContext);
-                  Navigator.pop(dialogContext);
-                  Navigator.pop(dialogContext, true);
-                }
+                Navigator.pop(dialogContext);
+                Navigator.pop(dialogContext);
+                Navigator.pop(dialogContext, true);
               });
             });
           } else {
@@ -2252,8 +2237,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? profileValue.result.lastName.capitalizeFirstofEach
                     : '';
 
-                if (widget.arguments.isFromAppointmentOrSlotPage != true &&
-                    widget.arguments.isForFamilyAddition != true) {
+                if (widget.arguments.isFromAppointmentOrSlotPage != true) {
                   PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                   PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
                   PreferenceUtil.saveProfileData(
@@ -2293,7 +2277,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
               addFamilyUserInfoBloc.profileBanner.path);
         }
-        print('*********************');
         CommonUtil.showLoadingDialog(
             dialogContext, _keyLoader, variable.Please_Wait); //
 
@@ -2309,8 +2292,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 /*  MySliverAppBar.imageURI = null;
                       fetchedProfileData = null;*/
                 imageURI = null;
-                Navigator.pop(dialogContext);
-                Navigator.pop(dialogContext);
+                if (widget.arguments.isForFamily) {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext);
+
+                  Navigator.pushNamed(
+                    Get.context,
+                    rt_UserAccounts,
+                    arguments: UserAccountsArguments(
+                      selectedIndex: 1,
+                    ),
+                  );
+                } else {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext);
+                }
               });
             });
           } else {
@@ -2716,7 +2713,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
-              familyWidget = CommonCircularIndicator();
               break;
 
             case Status.ERROR:
@@ -3107,10 +3103,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     _familyListBloc.postUserLinking(jsonString).then((userLinking) {
       if (userLinking.success) {
         Navigator.pop(_keyLoader.currentContext);
-        Navigator.pop(context);
 
         Navigator.push(
-          context,
+          dialogContext,
           MaterialPageRoute(
             builder: (context) => VerifyPatient(
               PhoneNumber: mobileNo,
@@ -3121,6 +3116,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               relationship: selectedRelationShip,
               isPrimaryNoSelected: false,
               userConfirm: false,
+              forFamilyMember: true,
             ),
           ),
         );
