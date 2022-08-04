@@ -4812,24 +4812,44 @@ class CommonUtil {
     return Device.get().isTablet;
   }
 
-  void getDetailsOfAddedFamilyMember(
+  Future<MyProfileModel> getDetailsOfAddedFamilyMember(
       BuildContext context, String userID) async {
+    final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
     MyProfileModel myProfile;
     AddFamilyUserInfoRepository addFamilyUserInfoRepository =
         AddFamilyUserInfoRepository();
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-    await addFamilyUserInfoRepository.getMyProfileInfoNew(userID).then((value) {
-      myProfile = value;
+    await addFamilyUserInfoRepository
+        .checkIfChildISMember(userID)
+        .then((mainValue) async {
+      if (mainValue.isSuccess) {
+        await addFamilyUserInfoRepository
+            .getMyProfileInfoNew(userID)
+            .then((value) {
+          myProfile = value;
 
-      if (myProfile?.result != null) {
-        Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
-            arguments: AddFamilyUserInfoArguments(
-                myProfileResult: myProfile?.result,
-                fromClass: CommonConstants.user_update,
-                isForFamilyAddition: true));
+          if (myProfile?.result != null) {
+            Navigator.of(context).pop();
+
+            Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                arguments: AddFamilyUserInfoArguments(
+                    myProfileResult: myProfile?.result,
+                    fromClass: CommonConstants.user_update,
+                    isForFamilyAddition: true));
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            FlutterToast()
+                .getToast('Unable to Fetch User Profile data', Colors.red);
+          }
+        });
       } else {
-        FlutterToast()
-            .getToast('Unable to Fetch User Profile data', Colors.red);
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+        FlutterToast().getToast(mainValue.message, Colors.red);
+        return mainValue;
       }
     });
   }

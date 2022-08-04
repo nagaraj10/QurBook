@@ -1160,10 +1160,6 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
 
       case "familyProfile":
-        new CommonUtil().getDetailsOfAddedFamilyMember(
-            context, result?.messageDetails?.payload?.userId);
-        readUnreadAction(result);
-
         break;
       case "devices_tab":
         getProfileData();
@@ -1831,20 +1827,8 @@ class _NotificationScreen extends State<NotificationScreen> {
             children: [
               OutlineButton(
                 onPressed: () async {
-                  //await readUnreadAction(notification, isRead: true);
+                  await readUnreadAction(notification, isRead: true);
 
-                  var nsBody = {};
-                  nsBody['templateName'] =
-                      parameters.strCaregiverAppointmentPayment;
-                  nsBody['contextId'] =
-                      notification?.messageDetails?.payload?.bookingId;
-                  FetchNotificationService()
-                      .updateNsActionStatus(nsBody)
-                      .then((data) {
-                    FetchNotificationService()
-                        .updateNsOnTapAction(nsBody)
-                        .then((value) => {});
-                  });
                   new CommonUtil().getDetailsOfAddedFamilyMember(
                       context, notification?.messageDetails?.payload?.userId);
                 },

@@ -943,12 +943,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT,"ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
-        acceptCareGiverIntent.putExtra(Constants.BOOKINGID, data[Constants.BOOKINGID])
-        acceptCareGiverIntent.putExtra(Constants.CREATEDBY, data[Constants.CREATEDBY])
-        acceptCareGiverIntent.putExtra(Constants.PAYMENTLINKVIAPUSH, data[Constants.PAYMENTLINKVIAPUSH])
-        acceptCareGiverIntent.putExtra(Constants.CARTID, data[Constants.BOOKINGID])
-        acceptCareGiverIntent.putExtra(Constants.PROB_PATIENT_NAME, data[Constants.PROB_PATIENT_NAME])
-
 
 
 

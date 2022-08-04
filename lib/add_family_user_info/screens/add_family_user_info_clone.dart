@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -59,6 +60,7 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
 import '../../constants/fhb_parameters.dart';
 import '../../telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'dart:convert' as convert;
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -181,6 +183,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     getSupportedLanguages();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
     _addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
+    addFamilyUserInfoBloc.getCustomRoles();
     _healthReportListForUserRepository =
         new HealthReportListForUserRepository();
 
@@ -423,9 +426,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             ],
                           )
                         : _showRelationShipTextField()
-                    : widget.arguments.fromClass == CommonConstants.user_update
-                        ? Container()
-                        : _showRelationShipTextField(),
+                    : widget.arguments.isForFamilyAddition == true
+                        ? getAllCustomRoles()
+                        : widget.arguments.fromClass ==
+                                CommonConstants.user_update
+                            ? Container()
+                            : _showRelationShipTextField(),
                 _showCommonEditText(
                     emailController,
                     emailFocus,
@@ -1034,11 +1040,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ),
             child: Center(
               child: Text(
-                (widget.arguments.fromClass == CommonConstants.my_family ||
-                        widget.arguments.fromClass ==
-                            CommonConstants.user_update)
-                    ? CommonConstants.update
-                    : CommonConstants.save,
+                (widget.arguments.isForFamilyAddition == true)
+                    ? CommonConstants.add
+                    : (widget.arguments.fromClass ==
+                                CommonConstants.my_family ||
+                            widget.arguments.fromClass ==
+                                CommonConstants.user_update)
+                        ? CommonConstants.update
+                        : CommonConstants.save,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16.0.sp,
@@ -1136,12 +1145,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getRelationshipDetails(List<RelationsShipModel> data) {
-    var currentSelectedUserRole = data[0];
-    for (final model in data) {
-      if (model.id == selectedRelationShip.id) {
-        currentSelectedUserRole = model;
+    var currentSelectedUserRole = data[15];
+    if (widget.arguments.isForFamilyAddition == true &&
+        selectedRelationShip == null)
+      selectedRelationShip = currentSelectedUserRole;
+
+    if (selectedRelationShip != null)
+      for (final model in data) {
+        if (model.id == selectedRelationShip.id) {
+          currentSelectedUserRole = model;
+        }
       }
-    }
+
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5),
       child: DropdownButton<RelationsShipModel>(
@@ -1186,14 +1201,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         ],
                       )
                     : getAllCustomRoles()
-                : widget.arguments.fromClass == CommonConstants.user_update
-                    ? Container()
-                    : _showRelationShipTextField();
+                : widget.arguments.isForFamilyAddition == true
+                    ? getAllCustomRoles()
+                    : widget.arguments.fromClass == CommonConstants.user_update
+                        ? Container()
+                        : _showRelationShipTextField();
           },
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
-                  widget.arguments.fromClass == CommonConstants.add_family)
+                  widget.arguments.fromClass == CommonConstants.add_family ||
+                  widget.arguments.isForFamilyAddition == true)
               ? true
               : false,
           keyboardType: TextInputType.text,
@@ -1325,6 +1343,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (_formkey.currentState.validate()) {
           var _familyListBloc = FamilyListBloc();
           //NOTE this would be called when family member profile update
+          if (widget.arguments.isForFamilyAddition == true) {
+            methodToAddFamilyFromNotification();
+          }
           if (widget.arguments.fromClass == CommonConstants.my_family) {
             addFamilyUserInfoBloc.userId = widget.arguments.id;
             addFamilyUserInfoBloc.relationship = UpdateRelationshipModel(
@@ -1339,7 +1360,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setValues();
           } else {
             addFamilyUserInfoBloc.userId =
-                widget.arguments.addFamilyUserInfo.childInfo.id;
+                widget.arguments.addFamilyUserInfo.id;
 
             setValues();
           }
@@ -1447,21 +1468,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = '';
         }
       } else {
-        try {
-          final myProf =
-              await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
-                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-          if (myProf.result.userContactCollection3 != null &&
-              myProf.result.userContactCollection3.length > 0) {
-            if (myProf.result.userContactCollection3.isNotEmpty) {
-              mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  myProf.result.userContactCollection3[0].email;
+        if (widget.arguments.isForFamilyAddition) {
+          try {
+            if (widget?.arguments?.myProfileResult?.userContactCollection3
+                .isNotEmpty) {
+              mobileNoController.text = widget?.arguments?.myProfileResult
+                  ?.userContactCollection3[0].phoneNumber;
+              emailController.text = widget
+                  ?.arguments?.myProfileResult?.userContactCollection3[0].email;
             }
-          } else {
+          } catch (e) {
+            mobileNoController.text = '';
+            emailController.text = '';
+          }
+        } else {
+          try {
             final myProf =
-                await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+                await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
+                    PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             if (myProf.result.userContactCollection3 != null &&
                 myProf.result.userContactCollection3.length > 0) {
               if (myProf.result.userContactCollection3.isNotEmpty) {
@@ -1470,18 +1494,31 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 emailController.text =
                     myProf.result.userContactCollection3[0].email;
               }
+            } else {
+              final myProf = await PreferenceUtil.getProfileData(
+                  Constants.KEY_PROFILE_MAIN);
+              if (myProf.result.userContactCollection3 != null &&
+                  myProf.result.userContactCollection3.length > 0) {
+                if (myProf.result.userContactCollection3.isNotEmpty) {
+                  mobileNoController.text =
+                      myProf.result.userContactCollection3[0].phoneNumber;
+                  emailController.text =
+                      myProf.result.userContactCollection3[0].email;
+                }
+              }
             }
-          }
-        } catch (e) {
-          if (widget.arguments.myProfileResult.userContactCollection3 != null &&
-              widget.arguments.myProfileResult.userContactCollection3.length >
-                  0) {
-            if (widget
-                .arguments.myProfileResult.userContactCollection3.isNotEmpty) {
-              mobileNoController.text = widget.arguments.myProfileResult
-                  .userContactCollection3[0].phoneNumber;
-              emailController.text = widget
-                  .arguments.myProfileResult.userContactCollection3[0].email;
+          } catch (e) {
+            if (widget.arguments.myProfileResult.userContactCollection3 !=
+                    null &&
+                widget.arguments.myProfileResult.userContactCollection3.length >
+                    0) {
+              if (widget.arguments.myProfileResult.userContactCollection3
+                  .isNotEmpty) {
+                mobileNoController.text = widget.arguments.myProfileResult
+                    .userContactCollection3[0].phoneNumber;
+                emailController.text = widget
+                    .arguments.myProfileResult.userContactCollection3[0].email;
+              }
             }
           }
         }
@@ -1595,8 +1632,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       await setValueLanguages();
     } else if (widget.arguments.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
-      addFamilyUserInfoBloc.userId = widget
-          .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.id; //widget.arguments.addFamilyUserInfo.id;
 
       relationShipResponseList = widget.arguments?.defaultrelationShips;
 
@@ -1736,8 +1773,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else {
       //* primary user adding section
-      addFamilyUserInfoBloc.userId =
-          widget.arguments.addFamilyUserInfo?.childInfo?.id;
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo?.id;
       await addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         if (widget.arguments.isPrimaryNoSelected) {
           try {
@@ -2045,7 +2081,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     var userAddressCollection3 = UserAddressCollection3();
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.isUpdate = true;
-      profileResult.id = widget.arguments.sharedbyme.id;
+      profileResult.id = widget.arguments.sharedbyme.child.id;
 
       if (widget
           .arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
@@ -2143,17 +2179,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           if (value != null && value.isSuccess) {
             chatViewModel.upateUserNickname(myProf.result.id,
                 firstNameController.text + ' ' + lastNameController.text);
-            _familyListBloc.getFamilyMembersListNew().then((value) {
+            _familyListBloc.getFamilyMembersListNew().then((valueInner) {
               PreferenceUtil.saveFamilyData(
-                      Constants.KEY_FAMILYMEMBER, value.result)
-                  .then((value) {
+                      Constants.KEY_FAMILYMEMBER, valueInner.result)
+                  .then((userID) {
                 //saveProfileImage();
                 /* MySliverAppBar.imageURI = null;
                       fetchedProfileData = null;*/
                 imageURI = null;
-                Navigator.pop(dialogContext);
-                Navigator.pop(dialogContext);
-                Navigator.pop(dialogContext, true);
+                if (widget.arguments.isForFamilyAddition == true) {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext);
+                  MyProfileModel myProfileModel = new MyProfileModel(
+                      isSuccess: true, message: value.message);
+                  Navigator.of(context).pop(
+                      {"myProfileData": convert.jsonEncode(myProfileModel)});
+                } else {
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext);
+                  Navigator.pop(dialogContext, true);
+                }
               });
             });
           } else {
@@ -2192,7 +2237,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? profileValue.result.lastName.capitalizeFirstofEach
                     : '';
 
-                if (widget.arguments.isFromAppointmentOrSlotPage != true) {
+                if (widget.arguments.isFromAppointmentOrSlotPage != true &&
+                    widget.arguments.isForFamilyAddition != true) {
                   PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                   PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
                   PreferenceUtil.saveProfileData(
@@ -2655,6 +2701,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
+              familyWidget = CommonCircularIndicator();
               break;
 
             case Status.ERROR:
@@ -2670,10 +2717,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               isCalled = true;
               // relationShipResponseList =
               //     snapshot.data.data.result[0].referenceValueCollection;
-              setState(() {
+              if (widget.arguments.isForFamilyAddition != true) {
+                setState(() {
+                  relationShipResponseList =
+                      snapshot.data.data.result[0].referenceValueCollection;
+                });
+              } else {
                 relationShipResponseList =
                     snapshot.data.data.result[0].referenceValueCollection;
-              });
+              }
               familyWidget = getRelationshipDetails(relationShipResponseList);
 
               break;
@@ -3016,5 +3068,57 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       },
     );
+  }
+
+  void methodToAddFamilyFromNotification() async {
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
+
+    final mobileNo = '${mobileNoController.text}';
+    final addFamilyMemberRequest = {};
+    addFamilyMemberRequest['isVirtualUser'] = false;
+    addFamilyMemberRequest['firstName'] = firstNameController.text;
+    addFamilyMemberRequest['lastName'] = lastNameController.text;
+    addFamilyMemberRequest['dateOfBirth'] = dateOfBirthController.text;
+    addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+    addFamilyMemberRequest['phoneNumber'] =
+        mobileNo; //TODO this has be dynamic country code.
+    addFamilyMemberRequest['email'] = emailController.text;
+    addFamilyMemberRequest['isPrimary'] = true;
+
+    final jsonString = convert.jsonEncode(addFamilyMemberRequest);
+
+    var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+
+    _familyListBloc.postUserLinking(jsonString).then((userLinking) {
+      if (userLinking.success) {
+        Navigator.pop(_keyLoader.currentContext);
+        Navigator.pop(context);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyPatient(
+              PhoneNumber: mobileNo,
+              from: strFromVerifyFamilyMember,
+              fName: firstNameController.text,
+              mName: middleNameController.text,
+              lName: lastNameController.text,
+              relationship: selectedRelationShip,
+              isPrimaryNoSelected: false,
+              userConfirm: false,
+            ),
+          ),
+        );
+      } else {
+        if (widget.arguments.isForFamilyAddition == true) {
+          Navigator.pop(_keyLoader.currentContext);
+          Navigator.pop(context);
+          MyProfileModel myProfileModel =
+              new MyProfileModel(isSuccess: true, message: userLinking.message);
+          Navigator.of(context)
+              .pop({"myProfileData": convert.jsonEncode(myProfileModel)});
+        }
+      }
+    });
   }
 }

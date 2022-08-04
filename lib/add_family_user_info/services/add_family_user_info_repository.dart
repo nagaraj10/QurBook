@@ -68,6 +68,17 @@ class AddFamilyUserInfoRepository {
     return MyProfileModel.fromJson(response);
   }
 
+  Future<MyProfileModel> checkIfChildISMember(String userID) async {
+    var primaryUserID =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var response;
+    if (userID != null) {
+      response = await _helper.checkIfChildIsMember(
+          'user-relationship/check-relationship-existence?parentId=${primaryUserID}&childId=${userID}');
+    }
+    return MyProfileModel.fromJson(response);
+  }
+
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
       String userID,
       String name,

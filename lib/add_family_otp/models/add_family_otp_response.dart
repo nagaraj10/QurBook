@@ -339,7 +339,8 @@ class ChildInfo {
       this.lastModifiedOn,
       this.contactInfo,
       this.additionalInfo,
-      this.providerId,this.membershipOfferedBy});
+      this.providerId,
+      this.membershipOfferedBy});
 
   ChildInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -423,23 +424,59 @@ class ChildInfo {
   }
 }
 
+class HeightObjNew {
+  String valueFeet;
+  String valueInches;
+
+  HeightObjNew({this.valueFeet, this.valueInches});
+
+  HeightObjNew.fromJson(Map<String, dynamic> json) {
+    valueFeet = json['valueFeet'];
+    valueInches = json['valueInches'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['valueFeet'] = this.valueFeet;
+    data['valueInches'] = this.valueInches;
+    return data;
+  }
+}
+
 class AdditionalInfos {
   String height;
   String weight;
+  HeightObjNew heightObj;
   String offSet = CommonUtil().setTimeZone();
 
   AdditionalInfos({this.height, this.weight});
 
   AdditionalInfos.fromJson(Map<String, dynamic> json) {
-    height = json['height'];
+    try {
+      if (json['height'].runtimeType == String) {
+        height = json['height'];
+      } else {
+        heightObj = json['height'] != null
+            ? HeightObjNew.fromJson(json['height'])
+            : null;
+      }
+    } catch (e) {}
     weight = json['weight'];
+    try {
+      height = json['height'];
+      weight = json['weight'];
+    } catch (e) {}
   }
 
   Map<String, dynamic> toJson() {
-    final data = <String, dynamic>{};
+    final data = Map<String, dynamic>();
     data['height'] = height;
     data['weight'] = weight;
+    if (this.heightObj != null) {
+      data['height'] = this.heightObj.toJson();
+    }
     data[KEY_OffSet] = CommonUtil().setTimeZone();
+
     return data;
   }
 }

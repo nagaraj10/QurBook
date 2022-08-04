@@ -905,7 +905,7 @@ class _MyFHBState extends State<MyFHB> {
           });
         } else if (passedValArr[1] == 'familyProfile') {
           new CommonUtil()
-              .getDetailsOfAddedFamilyMember(context, passedValArr[2]);
+              .getDetailsOfAddedFamilyMember(Get.context, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',

@@ -309,7 +309,7 @@ const String strfollowupIn = 'followupIn';
 const String strfollowupValue = 'followupValue';
 const String strfollowupType = 'followupType';
 const String strdestinationId = 'destinationId';
-const String strFamilyProfile = 'familyProfile';
+const String strFamilyProfile = 'memberAdditionReceiverNotification';
 
 //Booking Confirm
 const String self = 'Self';
