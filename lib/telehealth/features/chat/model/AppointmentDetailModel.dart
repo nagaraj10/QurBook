@@ -546,6 +546,8 @@ class ChatList {
 
   bool isDisable;
 
+  String deliveredOn;
+
   //var isMuted;
 
   ChatList({
@@ -562,6 +564,7 @@ class ChatList {
       this.actualUserId,*/
 
     this.isDisable,
+    this.deliveredOn,
 
     /*this.isMuted*/
   });
@@ -580,6 +583,7 @@ class ChatList {
     actualUserId = json['actualUserId'];*/
 
     isDisable = json['isDisable'] != null ? json['isDisable'] : false;
+    deliveredOn = json['deliveredOn'];
 
     //isMuted = json['isMuted'];
   }
@@ -600,6 +604,7 @@ class ChatList {
     data['actualUserId'] = this.actualUserId;*/
 
     data['isDisable'] = this.isDisable;
+    data['deliveredOn'] = this.deliveredOn;
 
     //data['isMuted'] = this.isMuted;
 

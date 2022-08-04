@@ -35,6 +35,7 @@ class Past {
     this.feeDetails,
     this.doctor,
     this.chatListId,
+    this.chatMessage,
   });
 
   String id;
@@ -64,6 +65,7 @@ class Past {
   City healthOrganization;
   bool isFollowUpTaken;
   String chatListId;
+  ChatMessage chatMessage;
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -114,6 +116,9 @@ class Past {
         ? json[parameters.strIsFollowUpTaken]
         : null;
     chatListId = json[parameters.strChatListId]==null?null:json[parameters.strChatListId];
+    chatMessage = json["chatMessage"] == null
+        ? null
+        : ChatMessage.fromJson(json["chatMessage"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -151,4 +156,24 @@ class Past {
     data[parameters.strChatListId] = chatListId;
     return data;
   }
+}
+
+class ChatMessage {
+  ChatMessage({
+    this.deliveredOn,
+    this.documentId,
+    this.chatMessageId,
+  });
+
+  String deliveredOn;
+  String documentId;
+  String chatMessageId;
+
+
+  ChatMessage.fromJson(Map<String, dynamic> json) {
+    deliveredOn = json["deliveredOn"];
+    documentId = json["documentId"];
+    chatMessageId = json["chatMessageId"];
+  }
+
 }

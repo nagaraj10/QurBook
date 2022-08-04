@@ -167,6 +167,8 @@ class ChatState extends State<ChatDetail> {
 
   String familyUserId = '';
 
+  String chatById = '';
+
   String careCoordinatorName = '';
 
   bool isLoading = false;
@@ -231,6 +233,14 @@ class ChatState extends State<ChatDetail> {
     groupId = widget.groupId;
 
     familyUserId = widget.familyUserId;
+
+    chatById = widget.carecoordinatorId;
+
+    if(isFromCareCoordinator){
+
+      chatById = familyUserId;
+
+    }
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -412,7 +422,7 @@ class ChatState extends State<ChatDetail> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, userId, carecoordinatorId,isNormalChatUserList)
+        .fetchAppointmentDetail(widget.peerId, userId, chatById,isNormalChatUserList)
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
