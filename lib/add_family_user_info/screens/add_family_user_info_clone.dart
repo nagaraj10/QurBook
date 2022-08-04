@@ -1157,33 +1157,38 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
 
-    return Padding(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 5),
-      child: DropdownButton<RelationsShipModel>(
-        hint: Text(
-          CommonConstants.relationship,
-          style: TextStyle(
-            fontSize: 16.0.sp,
-          ),
-        ),
-        isExpanded: true,
-        value: currentSelectedUserRole,
-        items: data.map((val) {
-          return DropdownMenuItem<RelationsShipModel>(
-            value: val,
-            child: Text(
-              val.name,
-              style: TextStyle(
-                fontSize: 16.0.sp,
-              ),
+    return Container(
+      color: widget.arguments.isForFamilyAddition
+          ? Colors.yellow[300]
+          : Colors.white,
+      child: Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5),
+        child: DropdownButton<RelationsShipModel>(
+          hint: Text(
+            CommonConstants.relationship,
+            style: TextStyle(
+              fontSize: 16.0.sp,
             ),
-          );
-        }).toList(),
-        onChanged: (newSelectedValue) {
-          setState(() {
-            selectedRelationShip = newSelectedValue;
-          });
-        },
+          ),
+          isExpanded: true,
+          value: currentSelectedUserRole,
+          items: data.map((val) {
+            return DropdownMenuItem<RelationsShipModel>(
+              value: val,
+              child: Text(
+                val.name,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+            );
+          }).toList(),
+          onChanged: (newSelectedValue) {
+            setState(() {
+              selectedRelationShip = newSelectedValue;
+            });
+          },
+        ),
       ),
     );
   }
