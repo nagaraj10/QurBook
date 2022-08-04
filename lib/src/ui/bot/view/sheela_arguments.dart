@@ -10,7 +10,11 @@ class SheelaArgument {
   final bool showUnreadMessage;
   final bool isJumperDevice;
   final String deviceType;
-
+  final bool isSheelaFollowup;
+  final String task;
+  final String action;
+  final String activityName;
+  final String message;
   SheelaArgument({
     this.isSheelaAskForLang,
     this.langCode,
@@ -23,5 +27,10 @@ class SheelaArgument {
     this.showUnreadMessage = false,
     this.isJumperDevice = false,
     this.deviceType,
+    this.isSheelaFollowup=false,
+    this.task,
+    this.action,
+    this.activityName,
+    this.message,
   });
 }
