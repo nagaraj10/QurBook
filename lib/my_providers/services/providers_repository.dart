@@ -209,7 +209,7 @@ class ProvidersListRepository {
   Future<AppointmentDetailModel> getAppointmentDetail(
       String doctorId, String patientId, String careCoorId,String isNormalChatUserList) async {
     var carCooApiId = null;
-    carCooApiId = careCoorId != '' ? careCoorId : 'null';
+    carCooApiId = (careCoorId != '' && careCoorId!=null)? careCoorId : 'null';
     var response = await _helper.getAppointmentDetail(appointmentSlash +
         patientIdEqualTo +
         patientId +
