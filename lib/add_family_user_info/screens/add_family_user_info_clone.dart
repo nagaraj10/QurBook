@@ -1792,6 +1792,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             setMobileAndEmail();
           }
         } else {
+          if (widget.arguments.enteredFirstName != null &&
+              widget.arguments.enteredLastName != null) {
+            firstNameController.text = widget.arguments.enteredFirstName;
+            lastNameController.text = widget.arguments.enteredLastName;
+          } else {
+            firstNameController.text =
+                value?.result?.firstName?.capitalizeFirstofEach;
+            middleNameController.text =
+                value?.result?.middleName?.capitalizeFirstofEach;
+            lastNameController.text =
+                value?.result?.lastName?.capitalizeFirstofEach;
+          }
+
           mobileNoController.text =
               value.result.userContactCollection3[0].phoneNumber;
           if (value?.result?.userContactCollection3[0].email != null &&
@@ -1800,79 +1813,76 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
 
           mContactInfo = value?.result?.userContactCollection3[0];
-        }
-        //*user already user exist set the address data if available
-        if (value?.result?.userAddressCollection3.isNotEmpty) {
-          var currentAddress = value?.result?.userAddressCollection3[0];
-          cntrlr_addr_one.text = currentAddress.addressLine1;
-          cntrlr_addr_two.text = currentAddress.addressLine2;
-          cntrlr_addr_city.text = currentAddress.city?.name;
-          cntrlr_addr_state.text = currentAddress.state?.name;
-          cntrlr_addr_zip.text = currentAddress.pincode;
-          setState(() {
-            _addressResult = AddressResult(
-                id: currentAddress.addressType.id,
-                code: currentAddress.addressType.code,
-                name: currentAddress.addressType.name);
-          });
 
-          cityVal = currentAddress.city;
-          stateVal = currentAddress.state;
-          currentAddressID = currentAddress.id;
-        }
+          //*user already user exist set the address data if available
+          if (value?.result?.userAddressCollection3.isNotEmpty) {
+            var currentAddress = value?.result?.userAddressCollection3[0];
+            cntrlr_addr_one.text = currentAddress.addressLine1;
+            cntrlr_addr_two.text = currentAddress.addressLine2;
+            cntrlr_addr_city.text = currentAddress.city?.name;
+            cntrlr_addr_state.text = currentAddress.state?.name;
+            cntrlr_addr_zip.text = currentAddress.pincode;
+            setState(() {
+              _addressResult = AddressResult(
+                  id: currentAddress.addressType.id,
+                  code: currentAddress.addressType.code,
+                  name: currentAddress.addressType.name);
+            });
 
-        firstNameController.text =
-            value?.result?.firstName?.capitalizeFirstofEach;
-        middleNameController.text =
-            value?.result?.middleName?.capitalizeFirstofEach;
-        lastNameController.text =
-            value?.result?.lastName?.capitalizeFirstofEach;
-        //? check relatioship id against logged in user
-        if (value?.result?.userRelationshipCollection.isNotEmpty) {
-          for (var cRelationship in value?.result?.userRelationshipCollection) {
-            if (cRelationship?.parent?.id ==
-                PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-              relationShipController.text = cRelationship?.relationship?.name;
-            } else {
-              relationShipController.text =
-                  widget?.arguments?.relationShip?.name;
-            }
+            cityVal = currentAddress.city;
+            stateVal = currentAddress.state;
+            currentAddressID = currentAddress.id;
           }
-        } else {
-          relationShipController.text = widget?.arguments?.relationShip?.name;
-        }
-        try {
-          setState(() {
-            _addressResult = _addressList[0];
-          });
-        } catch (e) {}
-        if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
-          currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
-          currentselectedBloodGroupRange =
-              value.result.bloodGroup.split(' ')[1];
-        } else {
-          currentselectedBloodGroup = null;
-          currentselectedBloodGroupRange = null;
-        }
-        selectedGender = value.result.gender == null
-            ? null
-            : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
 
-        dateofBirthStr = value.result.dateOfBirth != null
-            ? FHBUtils().getFormattedDateForUserBirth(value.result.dateOfBirth)
-            : '';
-        dateOfBirthController.text = value.result.dateOfBirth != null
-            ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
-            : '';
+          //? check relatioship id against logged in user
+          if (value?.result?.userRelationshipCollection.isNotEmpty) {
+            for (var cRelationship
+                in value?.result?.userRelationshipCollection) {
+              if (cRelationship?.parent?.id ==
+                  PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
+                relationShipController.text = cRelationship?.relationship?.name;
+              } else {
+                relationShipController.text =
+                    widget?.arguments?.relationShip?.name;
+              }
+            }
+          } else {
+            relationShipController.text = widget?.arguments?.relationShip?.name;
+          }
+          try {
+            setState(() {
+              _addressResult = _addressList[0];
+            });
+          } catch (e) {}
+          if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
+            currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
+            currentselectedBloodGroupRange =
+                value.result.bloodGroup.split(' ')[1];
+          } else {
+            currentselectedBloodGroup = null;
+            currentselectedBloodGroupRange = null;
+          }
+          selectedGender = value.result.gender == null
+              ? null
+              : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
 
-        if (value?.result?.additionalInfo != null) {
-          heightController.text = value?.result?.additionalInfo?.height ?? '';
-          weightController.text = value?.result?.additionalInfo?.weight ?? '';
-        }
+          dateofBirthStr = value.result.dateOfBirth != null
+              ? FHBUtils()
+                  .getFormattedDateForUserBirth(value.result.dateOfBirth)
+              : '';
+          dateOfBirthController.text = value.result.dateOfBirth != null
+              ? FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
+              : '';
 
-        if (value.result.membershipOfferedBy != null &&
-            value.result.membershipOfferedBy != '') {
-          cntrlr_corp_name.text = value.result.membershipOfferedBy;
+          if (value?.result?.additionalInfo != null) {
+            heightController.text = value?.result?.additionalInfo?.height ?? '';
+            weightController.text = value?.result?.additionalInfo?.weight ?? '';
+          }
+
+          if (value.result.membershipOfferedBy != null &&
+              value.result.membershipOfferedBy != '') {
+            cntrlr_corp_name.text = value.result.membershipOfferedBy;
+          }
         }
       });
     }
