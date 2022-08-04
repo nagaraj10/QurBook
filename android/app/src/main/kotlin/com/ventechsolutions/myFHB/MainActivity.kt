@@ -1793,6 +1793,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
         val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
         val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val eid = intent.getStringExtra("eid")
+        val task = intent.getStringExtra("task")
+        val action = intent.getStringExtra("action")
+        val isSheela = intent.getStringExtra("isSheela")
 
 
 
@@ -1801,6 +1805,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${claimId}&${userId}"
+        } else if (redirect_to == "isSheela") {
+            sharedValue = "${redirect_to}&${eid}&${task}&${action}&${task}&${activityName}&${isSheela}"
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
