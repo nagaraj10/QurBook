@@ -650,7 +650,7 @@ import CoreBluetooth
                 if (ResponseNotificationChannel == nil){
                     ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
                 }
-                ResponseNotificationChannel.invokeMethod(Constants.Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
+                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
                 completionHandler([])
             }else{
                 completionHandler([.alert, .sound])
