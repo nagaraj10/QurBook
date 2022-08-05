@@ -150,12 +150,9 @@
         <receiver android:name=".services.EscalateCareGiver" />
         <receiver android:name=".services.AppointmentPaymentNotification" />
         <receiver android:name=".services.PlanPaymentNotification" />
-<<<<<<< HEAD
         <receiver android:name=".services.FamilyAdditionNotification" />
 
-=======
         <receiver android:name=".services.SheelaFollowReceiver" />
->>>>>>> 0a45898d68f5c241f0dee3814e97678c35fa0698
 
         <receiver android:name=".services.Renew" />
         <receiver android:name=".services.Callback" />
