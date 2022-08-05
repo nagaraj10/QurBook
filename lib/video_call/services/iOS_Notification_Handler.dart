@@ -48,7 +48,7 @@ class IosNotificationHandler {
   bool acceptAction = false;
   bool escalteAction = false;
   bool rejectAction = false;
-  bool viewMemberAction = false;
+  bool viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool viewRecordAction, chatWithCC = false;
@@ -84,6 +84,7 @@ class IosNotificationHandler {
             escalteAction = (actionKey == "Escalate");
             chatWithCC = (actionKey == "chatwithcc");
             viewRecordAction = (actionKey == "viewrecord");
+            viewDetails = (actionKey == "ViewDetails");
             viewMemberAction =
                 (actionKey.toLowerCase() == "ViewMember".toLowerCase());
             communicationSettingAction = (actionKey.toLowerCase() ==
@@ -163,6 +164,11 @@ class IosNotificationHandler {
       CaregiverAPIProvider().rejectCareGiver(
         receiver: model.caregiverReceiver,
         requestor: model.caregiverRequestor,
+      );
+    } else if (viewDetails && (model.userId ?? '').isNotEmpty) {
+      CommonUtil().getDetailsOfAddedFamilyMember(
+        Get.context,
+        model.userId,
       );
     } else if (acceptAction &&
         (model.patientPhoneNumber ?? '').isNotEmpty &&

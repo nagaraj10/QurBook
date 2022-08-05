@@ -1825,7 +1825,12 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
             sharedValue =
                 "ack&${redirect_to}&${userId}&${createdBy}&${bookingId}&${cartId}&${patName}&${paymentLinkViaPush}"
-        } else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
+        }else if (redirect_to?.contains("familyProfile") == true) {
+
+            sharedValue =
+                "ack&${redirect_to}&${userId}"
+        }
+         else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
             sharedValue =
                 "ack&${redirect_to}&${type}&${patientPhoneNumber}&${verificationCode}&${caregiverReceiver}&${caregiverRequestor}"

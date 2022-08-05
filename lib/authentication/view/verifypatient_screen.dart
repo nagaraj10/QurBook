@@ -55,7 +55,8 @@ class VerifyPatient extends StatefulWidget {
       this.userId,
       this.dataForResendOtp,
       this.emailId,
-      this.fromSignUp});
+      this.fromSignUp,
+      this.forFamilyMember});
 
   final String PhoneNumber;
   final String from;
@@ -68,6 +69,7 @@ class VerifyPatient extends StatefulWidget {
   final bool fromSignUp;
   final String userId;
   final String emailId;
+  final bool forFamilyMember;
   Map<String, dynamic> dataForResendOtp;
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
@@ -546,6 +548,9 @@ class _VerifyPatientState extends State<VerifyPatient>
           toast.getToast('User added successfully', Colors.green);
           //Navigator.pop(context);
           LoaderClass.hideLoadingDialog(context);
+          if (widget.forFamilyMember) {
+            Navigator.pop(context);
+          }
           await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       fromClass: CommonConstants.add_family,
@@ -554,6 +559,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                       enteredLastName: widget.lName,
                       relationShip: widget.relationship,
                       isPrimaryNoSelected: widget.isPrimaryNoSelected,
+                      isForFamily: widget.forFamilyMember ?? false,
                       addFamilyUserInfo: response.result ?? null))
               .then((value) {
             Navigator.pop(context);

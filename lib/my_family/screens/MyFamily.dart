@@ -399,7 +399,10 @@ class _MyFamilyState extends State<MyFamily> {
                                   data.child?.firstName != null &&
                                           data.child.lastName != null
                                       ? data.child.firstName[0].toUpperCase() +
-                                      (data.child.lastName.length>0?data.child.lastName[0].toUpperCase():'')
+                                          (data.child.lastName.length > 0
+                                              ? data.child.lastName[0]
+                                                  .toUpperCase()
+                                              : '')
                                       : data.child.firstName != null
                                           ? data.child.firstName[0]
                                               .toUpperCase()
@@ -1147,6 +1150,7 @@ class _MyFamilyState extends State<MyFamily> {
                             relationShip: selectedRelationShip,
                             isPrimaryNoSelected: isPrimaryNoSelected,
                             id: addFamilyOTPResponse.result.childInfo.id,
+                            isForFamily: false,
                             addFamilyUserInfo:
                                 addFamilyOTPResponse.result ?? ''),
                       ).then((value) {
@@ -1215,6 +1219,7 @@ class _MyFamilyState extends State<MyFamily> {
                       relationship: selectedRelationShip,
                       isPrimaryNoSelected: isPrimaryNoSelected,
                       userConfirm: false,
+                      forFamilyMember: false,
                     ),
                   ),
                 ).then((value) {

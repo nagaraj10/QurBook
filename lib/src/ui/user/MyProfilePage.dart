@@ -382,7 +382,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                 Navigator.pushNamed(
                                         context, router.rt_AddFamilyUserInfo,
                                         arguments: AddFamilyUserInfoArguments(
+                                            isForFamilyAddition: false,
+                                            isFromAppointmentOrSlotPage: false,
                                             myProfileResult: myProfile?.result,
+                                            isForFamily: false,
                                             fromClass:
                                                 CommonConstants.user_update))
                                     .then((value) {

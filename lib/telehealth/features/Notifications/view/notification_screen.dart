@@ -467,6 +467,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.redirectTo,
                             );
+                          } else if (payload?.redirectTo == 'familyProfile') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.redirectTo,
+                            );
                           } else if (payload?.redirectTo ==
                               'escalateToCareCoordinatorToRegimen') {
                             notificationOnTapActions(
@@ -1153,6 +1158,9 @@ class _NotificationScreen extends State<NotificationScreen> {
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);*/
         break;
+
+      case "familyProfile":
+        break;
       case "devices_tab":
         getProfileData();
         Get.toNamed(
@@ -1648,7 +1656,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                           appointmentId: notification
                               ?.messageDetails?.payload?.appointmentId));
                     } else {
-                      toast.getToastWithBuildContext('Payment Link Expired', Colors.red,context);
+                      toast.getToastWithBuildContext(
+                          'Payment Link Expired', Colors.red, context);
                     }
                   });
                 },
@@ -1811,7 +1820,39 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
         break;
+      case parameters.strFamilyProfile:
+        return Padding(
+          padding: const EdgeInsets.all(0),
+          child: Row(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  await readUnreadAction(notification, isRead: true);
 
+                  new CommonUtil().getDetailsOfAddedFamilyMember(
+                      context, notification?.messageDetails?.payload?.userId);
+                },
+                borderSide: !notification?.isActionDone
+                    ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
+                    : BorderSide(color: Colors.grey),
+                child: TextWidget(
+                  text: 'View Details',
+                  colors: !notification?.isActionDone
+                      ? Color(CommonUtil().getMyPrimaryColor())
+                      : Colors.grey,
+                  overflow: TextOverflow.visible,
+                  fontWeight: FontWeight.w600,
+                  fontsize: 14.0.sp,
+                ),
+              ),
+              SizedBox(
+                width: 15.0.w,
+              ),
+            ],
+          ),
+        );
+
+        break;
       default:
         return Container();
         break;
