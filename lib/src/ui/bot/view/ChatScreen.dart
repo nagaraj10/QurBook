@@ -103,6 +103,12 @@ class _ChatScreenState extends State<ChatScreen>
       getMyViewModel().eId = widget?.arguments?.eId;
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);
       getMyViewModel().uuid = Uuid().v1();
+    }else if(widget.arguments.isSheelaFollowup){
+
+      getMyViewModel().message = widget?.arguments?.message;
+      getMyViewModel().addToSheelaConversation(
+        text: widget?.arguments?.message,
+      );
     } else if (widget?.arguments?.scheduleAppointment ?? false) {
       getMyViewModel().scheduleAppointment = true;
       getMyViewModel().sendToMaya(constants.KIOSK_SHEELA);

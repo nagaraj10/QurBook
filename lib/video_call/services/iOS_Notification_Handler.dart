@@ -188,6 +188,14 @@ class IosNotificationHandler {
       );
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
+    } else if (model.isSheela && (model.message ?? '').isNotEmpty) {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+          isSheelaFollowup: true,
+          message: model.message,
+        ),
+      );
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
         chatWithCC) {

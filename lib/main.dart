@@ -565,6 +565,12 @@ class _MyFHBState extends State<MyFHB> {
           arguments: SheelaArgument(eId: passedValArr[1].toString()),
         );
       }
+      if (passedValArr[0] == 'isSheelaFollowup') {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(isSheelaFollowup: true,message:passedValArr[1],),
+        );
+      }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
         if (temp[0] == 'myRecords') {
@@ -1260,6 +1266,12 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: '',
           );
+        }else if (parsedData[0] == 'isSheelaFollowup') {
+          return SplashScreen(
+            nsRoute: 'isSheelaFollowup',
+            bundle: parsedData[0]+'|'+parsedData[1],
+          );
+
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(

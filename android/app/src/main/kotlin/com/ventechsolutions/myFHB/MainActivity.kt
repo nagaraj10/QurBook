@@ -1793,6 +1793,10 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
         val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
         val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
+        val eid = intent.getStringExtra("eid")
+        val task = intent.getStringExtra("task")
+        val action = intent.getStringExtra("action")
+        val isSheela = intent.getStringExtra("isSheela")
 
 
 
@@ -1801,6 +1805,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${claimId}&${userId}"
+        } else if (redirect_to == "isSheelaFollowup") {
+            sharedValue = "${redirect_to}&${message}"
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
@@ -1914,7 +1920,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     override fun onPause() {
-//        Constants.foregroundActivityRef=false;
+        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(true)
         }
@@ -1997,7 +2003,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     override fun onDestroy() {
         Log.e("Myapp", "onDestroy: " + " onDestroy")
-//        Constants.foregroundActivityRef=false;
+        Constants.foregroundActivityRef=false;
         if (enableBackgroundNotification) {
             openBackgroundAppFromNotification(false)
         }
@@ -2012,8 +2018,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     private val badgeListener = object : BroadcastReceiver() {
         override fun onReceive(ctx: Context, data: Intent) {
-            val message = data.getStringExtra("eid")
-            mEventChannel.success("activityRemainderInvokeSheela&${message}")
+            val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
+            if(redirectTo!=null&&redirectTo.equals("isSheelaFollowup")){
+                val message = data.getStringExtra("message")
+                mEventChannel.success("isSheelaFollowup&${message}")
+            }else{
+                val eid = data.getStringExtra("eid")
+                mEventChannel.success("activityRemainderInvokeSheela&${eid}")
+            }
         }
     }
 
