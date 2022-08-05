@@ -104,9 +104,14 @@ class ChatScreenViewModel extends ChangeNotifier {
   HubListController hublistController;
   QurhomeDashboardController qurhomeController;
   String eId;
+  String task;
+  String action;
+  String activityName;
+  String message;
   bool showUnreadMessage = false;
 
   bool scheduleAppointment = false;
+  bool isSheelaFollowup = false;
 
   PreferredMeasurement preferredMeasurement;
 
@@ -713,7 +718,17 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
     reqJson[parameters.strProviderMsg] = providerMsg;
-    if (eId != null) {
+    if(isSheelaFollowup){
+      reqJson[parameters.KIOSK_data] = {
+        parameters.KIOSK_task: parameters.strfollowup,
+        parameters.KIOSK_eid: eId,
+        parameters.KIOSK_action: action,
+        parameters.KIOSK_activityName: activityName,
+        parameters.KIOSK_message: message,
+        parameters.KIOSK_isSheela: isSheelaFollowup,
+      };
+      isSheelaFollowup=false;
+    }else if (eId != null) {
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.KIOSK_remind,
         parameters.KIOSK_eid: eId

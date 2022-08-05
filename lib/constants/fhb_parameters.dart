@@ -102,6 +102,10 @@ const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
 const String KIOSK_appointment_avail = 'availability';
 const String KIOSK_eid = 'eid';
+const String KIOSK_action = 'Action';
+const String KIOSK_activityName = 'ActivityName';
+const String KIOSK_message = 'Message';
+const String KIOSK_isSheela = 'isSheela';
 const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
 const String strVideoLinks = 'videoLinks';
@@ -309,6 +313,7 @@ const String strfollowupIn = 'followupIn';
 const String strfollowupValue = 'followupValue';
 const String strfollowupType = 'followupType';
 const String strdestinationId = 'destinationId';
+const String strFamilyProfile = 'memberAdditionReceiverNotification';
 
 //Booking Confirm
 const String self = 'Self';

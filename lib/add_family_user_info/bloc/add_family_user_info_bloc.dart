@@ -168,17 +168,15 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         StreamController<ApiResponse<VerifyEmailResponse>>();
   }
 
-  Future<RelationShipResponseList> getCustomRoles() async {
+  getCustomRoles() async {
     relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
-    RelationShipResponseList relationShipResponseList;
     try {
-      relationShipResponseList =
+      var relationShipResponseList =
           await addFamilyUserInfoRepository.getCustomRoles();
+      relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
     } catch (e) {
       relationShipListSink.add(ApiResponse.error(e.toString()));
     }
-
-    return relationShipResponseList;
   }
 
   Future<MyProfileModel> getMyProfileInfo() async {

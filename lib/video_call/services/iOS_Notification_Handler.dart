@@ -48,7 +48,7 @@ class IosNotificationHandler {
   bool acceptAction = false;
   bool escalteAction = false;
   bool rejectAction = false;
-  bool viewMemberAction = false;
+  bool viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool viewRecordAction, chatWithCC = false;
@@ -84,6 +84,7 @@ class IosNotificationHandler {
             escalteAction = (actionKey == "Escalate");
             chatWithCC = (actionKey == "chatwithcc");
             viewRecordAction = (actionKey == "viewrecord");
+            viewDetails = (actionKey == "ViewDetails");
             viewMemberAction =
                 (actionKey.toLowerCase() == "ViewMember".toLowerCase());
             communicationSettingAction = (actionKey.toLowerCase() ==
@@ -164,6 +165,11 @@ class IosNotificationHandler {
         receiver: model.caregiverReceiver,
         requestor: model.caregiverRequestor,
       );
+    } else if (viewDetails && (model.userId ?? '').isNotEmpty) {
+      CommonUtil().getDetailsOfAddedFamilyMember(
+        Get.context,
+        model.userId,
+      );
     } else if (acceptAction &&
         (model.patientPhoneNumber ?? '').isNotEmpty &&
         (model.verificationCode ?? '').isNotEmpty) {
@@ -182,6 +188,14 @@ class IosNotificationHandler {
       );
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
+    } else if (model.isSheela && (model.message ?? '').isNotEmpty) {
+      Get.toNamed(
+        rt_Sheela,
+        arguments: SheelaArgument(
+          isSheelaFollowup: true,
+          message: model.message,
+        ),
+      );
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
         chatWithCC) {
