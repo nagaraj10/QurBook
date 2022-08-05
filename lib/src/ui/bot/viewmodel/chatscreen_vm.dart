@@ -370,10 +370,12 @@ class ChatScreenViewModel extends ChangeNotifier {
       }
       conversations[conversations.length - 1].isSpeaking = false;
       isSheelaSpeaking = false;
+      isLoading = false;
       notifyListeners();
     } catch (e) {
       conversations[conversations.length - 1].isSpeaking = false;
       isSheelaSpeaking = false;
+      isLoading = false;
       notifyListeners();
     }
   }

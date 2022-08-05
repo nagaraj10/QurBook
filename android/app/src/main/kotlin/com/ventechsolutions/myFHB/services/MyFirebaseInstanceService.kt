@@ -284,7 +284,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //createNotificationCancelAppointment(data)
 
         if(data["isSheela"]!=null&&data["isSheela"]=="true"){
-            createNotificationForSheela(data)
+//            createNotificationForSheela(data)
         }else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
         }

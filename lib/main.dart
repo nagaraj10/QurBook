@@ -566,10 +566,15 @@ class _MyFHBState extends State<MyFHB> {
         );
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(isSheelaFollowup: true,message:passedValArr[1],),
-        );
+        Future.delayed(Duration(milliseconds: 500), () async {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              isSheelaFollowup: true,
+              message: passedValArr[1],
+            ),
+          );
+        });
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
@@ -1266,12 +1271,11 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: '',
           );
-        }else if (parsedData[0] == 'isSheelaFollowup') {
+        } else if (parsedData[0] == 'isSheelaFollowup') {
           return SplashScreen(
             nsRoute: 'isSheelaFollowup',
-            bundle: parsedData[0]+'|'+parsedData[1],
+            bundle: parsedData[0] + '|' + parsedData[1],
           );
-
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(

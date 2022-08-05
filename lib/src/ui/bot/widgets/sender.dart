@@ -85,7 +85,7 @@ class SenderLayout extends StatelessWidget {
               ),
               PreferenceUtil.getIfQurhomeisAcive()
                   ? Container()
-                  : Text(
+                  : c.timeStamp==null||c.timeStamp=="null"?Container():Text(
                       "${c.timeStamp}",
                       style: Theme.of(context)
                           .textTheme
