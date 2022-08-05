@@ -640,19 +640,19 @@ import CoreBluetooth
             notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: Constants.appointmentDetailsMethodAndChannel)
             completionHandler([])
             
-        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
-                 let type = userInfo["isSheela"] as? String,
-                 let controller = navigationController?.children.first as? FlutterViewController,
-                 UIApplication.shared.applicationState == .active{
-            if(type.lowercased() == "true"){
-                if (ResponseNotificationChannel == nil){
-                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-                }
-                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
-                completionHandler([])
-            }else{
-                completionHandler([.alert, .sound])
-            }
+//        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
+//                 let type = userInfo["isSheela"] as? String,
+//                 let controller = navigationController?.children.first as? FlutterViewController,
+//                 UIApplication.shared.applicationState == .active{
+//            if(type.lowercased() == "true"){
+//                if (ResponseNotificationChannel == nil){
+//                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+//                }
+//                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
+//                completionHandler([])
+//            }else{
+//                completionHandler([.alert, .sound])
+//            }
         }else{
             if let userInfo = notification.request.content.userInfo as? NSDictionary,
                let type = userInfo["NotificationType"] as? String,
