@@ -46,7 +46,8 @@ class NotificationModel {
   Map<int, dynamic> redirectData;
   String planId;
   String notificationListId;
-  bool viewRecordAction, chatWithCC = false;
+  bool viewRecordAction, isSheela, chatWithCC = false;
+  String message;
 
   NotificationModel({
     this.title,
@@ -84,6 +85,7 @@ class NotificationModel {
     this.isCaregiver,
     this.deliveredDateTime,
     this.isFromCareCoordinator,
+    this.message,
   });
 
   Map<String, dynamic> toMap() {
@@ -263,6 +265,12 @@ class NotificationModel {
         if ((message[parameters.claimId] ?? '').isNotEmpty) {
           claimId = message[parameters.claimId];
         }
+        if ((message[parameters.KIOSK_isSheela] ?? '').isNotEmpty) {
+          isSheela = (message[parameters.KIOSK_isSheela] ?? '')
+                  .toString()
+                  .toLowerCase() ==
+              "true";
+        }
         if ((message[parameters.gcmClaimId] ?? '').isNotEmpty) {
           claimId = message[parameters.gcmClaimId];
         }
@@ -310,6 +318,9 @@ class NotificationModel {
         }
         if (message[parameters.strDeliveredDateTime] != null) {
           deliveredDateTime = message[parameters.strDeliveredDateTime];
+        }
+        if (message[parameters.strMessage] != null) {
+          this.message = message[parameters.strMessage];
         }
         if (message[parameters.strisFromCareCoordinator] != null) {
           var currentVal = message[parameters.strisFromCareCoordinator];
@@ -401,6 +412,14 @@ class NotificationModel {
     }
     if (message[parameters.uid] != null) {
       uid = message[parameters.uid];
+    }
+    if (message[parameters.strMessage] != null) {
+      this.message = message[parameters.strMessage];
+    }
+    if ((message[parameters.KIOSK_isSheela] ?? '').isNotEmpty) {
+      isSheela =
+          (message[parameters.KIOSK_isSheela] ?? '').toString().toLowerCase() ==
+              "true";
     }
     if (message[parameters.verificationCode] != null) {
       verificationCode = message[parameters.verificationCode];

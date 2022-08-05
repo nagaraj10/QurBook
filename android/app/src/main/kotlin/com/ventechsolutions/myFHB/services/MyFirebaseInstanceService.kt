@@ -2,6 +2,7 @@ package com.ventechsolutions.myFHB.services
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.ventechsolutions.myFHB.MainActivity
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.NotificationActivity
 import com.ventechsolutions.myFHB.R
@@ -280,7 +282,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotification4Ack(data: Map<String, String> = HashMap()) {
         Log.e("notification data",data.toString())
         //createNotificationCancelAppointment(data)
-        if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
+
+        if(data["isSheela"]!=null&&data["isSheela"]=="true"){
+            createNotificationForSheela(data)
+        }else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
         }
 //        else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
@@ -410,6 +415,71 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setAutoCancel(true)
                 .build()
             nsManager.notify(NS_ID, notification)
+        }
+    }
+
+    private fun createNotificationForSheela(data: Map<String, String>) {
+
+        if (!Constants.foregroundActivityRef){
+            val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+            val NS_ID = System.currentTimeMillis().toInt()
+            val ack_sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val manager = getSystemService(NotificationManager::class.java)
+                val channelAck = NotificationChannel(
+                    CHANNEL_ACK,
+                    getString(R.string.channel_ack),
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
+                channelAck.description = getString(R.string.channel_ack_desc)
+                val attributes = AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+                channelAck.setSound(ack_sound, attributes)
+                manager.createNotificationChannel(channelAck)
+            }
+
+            val sheelaIntent = Intent(applicationContext, SheelaFollowReceiver::class.java)
+            sheelaIntent.putExtra(getString(R.string.nsid), NS_ID)
+            sheelaIntent.putExtra("message", data[getString(R.string.pro_ns_body)])
+
+
+            val sheelaPendingIntent = PendingIntent.getBroadcast(
+                applicationContext,
+                NS_ID,
+                sheelaIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
+
+            var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(
+                    BitmapFactory.decodeResource(
+                        applicationContext.resources,
+                        R.mipmap.ic_launcher
+                    )
+                )
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setWhen(0)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .setContentIntent(sheelaPendingIntent)
+                .setStyle(
+                    NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+                )
+                .setSound(ack_sound)
+                .setAutoCancel(true)
+                .build()
+            nsManager.notify(NS_ID, notification)
+
+        }else{
+            val intent = Intent("remainderSheelaInvokeEvent")
+            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+            this.sendBroadcast(intent)
         }
     }
 
