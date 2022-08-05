@@ -316,6 +316,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                     from: strFromLogin,
                     userConfirm: false,
                     dataForResendOtp: dataForResendOtp,
+                    forFamilyMember: false,
                   )));
     } else {
       if (response.message == 'User is not confirmed.') {
@@ -327,6 +328,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       from: strFromSignUp,
                       userConfirm: true,
                       userId: response.diagnostics.errorData.userId,
+                      forFamilyMember: false,
                     )));
       } else {
         toast.getToast(response.message, Colors.red);

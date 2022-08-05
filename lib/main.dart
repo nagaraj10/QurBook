@@ -914,6 +914,9 @@ class _MyFHBState extends State<MyFHB> {
                     )).then((value) => PageNavigator.goToPermanent(
                         context, router.rt_Landing)));
           });
+        } else if (passedValArr[1] == 'familyProfile') {
+          new CommonUtil()
+              .getDetailsOfAddedFamilyMember(Get.context, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1431,6 +1434,11 @@ class _MyFHBState extends State<MyFHB> {
                     parsedData[5] +
                     '&' +
                     parsedData[6]);
+          } else if (parsedData[1] == 'familyProfile') {
+            return SplashScreen(
+                nsRoute: 'familyProfile',
+                bundle:
+                    parsedData[0] + '&' + parsedData[1] + '&' + parsedData[2]);
           } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',

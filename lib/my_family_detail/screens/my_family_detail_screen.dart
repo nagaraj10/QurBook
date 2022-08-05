@@ -207,11 +207,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                             arguments: AddFamilyUserInfoArguments(
                                 //TODO we need to pass the logged in user id
+                                isForFamilyAddition: false,
+                                isFromAppointmentOrSlotPage: false,
                                 id: widget.arguments
                                     .profilesSharedByMe[_currentPage].child.id,
                                 sharedbyme: widget
                                     .arguments.profilesSharedByMe[_currentPage],
                                 fromClass: CommonConstants.my_family,
+                                isForFamily: false,
                                 defaultrelationShips:
                                     relationShipResponseList?.result?.isNotEmpty
                                         ? relationShipResponseList
