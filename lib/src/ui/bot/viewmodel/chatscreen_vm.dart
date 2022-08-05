@@ -613,11 +613,11 @@ class ChatScreenViewModel extends ChangeNotifier {
     }
   }
 
-  startSheelaFromButton({
-    String buttonText,
-    String payload,
-    bool isRedirectionNeed = false,
-  }) async {
+  startSheelaFromButton(
+      {String buttonText,
+      String payload,
+      bool isRedirectionNeed = false,
+      bool addMsg = false}) async {
     stopTTSEngine();
 
     if (!isRedirectionNeed) {
@@ -636,8 +636,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           timeStamp: date,
           redirect: isRedirect,
           screen: _screen);
-
-      // conversations.add(model);
+      if (addMsg) {
+        conversations.add(model);
+      }
       notifyListeners();
     }
     Future.delayed(Duration(seconds: 3), () {
@@ -735,7 +736,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
     reqJson[parameters.strScreen] = screen;
     reqJson[parameters.strProviderMsg] = providerMsg;
-    if(isSheelaFollowup){
+    if (isSheelaFollowup) {
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.strfollowup,
         parameters.KIOSK_eid: eId,
@@ -744,8 +745,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         parameters.KIOSK_message: message,
         parameters.KIOSK_isSheela: isSheelaFollowup,
       };
-      isSheelaFollowup=false;
-    }else if (eId != null) {
+      isSheelaFollowup = false;
+    } else if (eId != null) {
       reqJson[parameters.KIOSK_data] = {
         parameters.KIOSK_task: parameters.KIOSK_remind,
         parameters.KIOSK_eid: eId
@@ -1226,11 +1227,13 @@ class ChatScreenViewModel extends ChangeNotifier {
                       element.title.toLowerCase() == responseRecived);
                   startSheelaFromButton(
                       buttonText: button?.title ?? response,
-                      payload: button?.payload ?? response);
+                      payload: button?.payload ?? response,
+                      addMsg: true);
                 } catch (e) {
                   startSheelaFromButton(
                       buttonText: button?.title ?? response,
-                      payload: button?.payload ?? response);
+                      payload: button?.payload ?? response,
+                      addMsg: false);
                 }
               } else {
                 sendToMaya(response, screen: screenValue);
