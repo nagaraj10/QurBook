@@ -146,7 +146,8 @@ class _ReceiverLayoutState extends State<ReceiverLayout> {
                   : SizedBox.shrink(),
               PreferenceUtil.getIfQurhomeisAcive()
                   ? Container()
-                  : Text(
+                  : widget.c.timeStamp==null||widget.c.timeStamp=="null" ?
+              Container() :Text(
                       "${widget.c.timeStamp}",
                       style: Theme.of(context)
                           .textTheme
