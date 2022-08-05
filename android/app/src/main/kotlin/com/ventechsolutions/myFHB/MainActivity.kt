@@ -151,7 +151,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     var lang_list = arrayOf("English", "Tamil", "Telugu", "Hindi")
     var lang_ref = arrayOf("en_US", "ta_IN", "te_IN", "hi_IN")
     var tts: TextToSpeech? = null
-    private var finalWords: String? = null
+    private var finalWords: String? = ""
 
     private val STATE_START = 0
     private val STATE_READY = 1
@@ -2137,6 +2137,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
                 override fun onError(errorCode: Int) {
                     Log.e("speechreco", "onError: " )
+                    close.performClick()
                     _result?.error("100","no response",errorCode)
                     _result=null
                     val message: String
@@ -2167,9 +2168,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 //                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                     if (data != null && data.size > 0) {
-                        finalWords=data[0]
+                        finalWords+=data[0]+" "
                         displayText.setText(finalWords)
-
+                        speechRecognizer?.startListening(intent)
                     }
 //                    if (data != null && data.size > 0) {
 //                        finalWords = data[0].toString()
