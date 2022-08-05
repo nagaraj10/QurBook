@@ -559,17 +559,22 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
-        print("eid: "+passedValArr[1].toString());
+        print("eid: " + passedValArr[1].toString());
         Get.toNamed(
           rt_Sheela,
           arguments: SheelaArgument(eId: passedValArr[1].toString()),
         );
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(isSheelaFollowup: true,message:passedValArr[1],),
-        );
+        Future.delayed(Duration(milliseconds: 500), () async {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              isSheelaFollowup: true,
+              message: passedValArr[1],
+            ),
+          );
+        });
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
@@ -909,6 +914,9 @@ class _MyFHBState extends State<MyFHB> {
                     )).then((value) => PageNavigator.goToPermanent(
                         context, router.rt_Landing)));
           });
+        } else if (passedValArr[1] == 'familyProfile') {
+          new CommonUtil()
+              .getDetailsOfAddedFamilyMember(Get.context, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1263,12 +1271,11 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: '',
           );
-        }else if (parsedData[0] == 'isSheelaFollowup') {
+        } else if (parsedData[0] == 'isSheelaFollowup') {
           return SplashScreen(
             nsRoute: 'isSheelaFollowup',
-            bundle: parsedData[0]+'|'+parsedData[1],
+            bundle: parsedData[0] + '|' + parsedData[1],
           );
-
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(
@@ -1427,6 +1434,11 @@ class _MyFHBState extends State<MyFHB> {
                     parsedData[5] +
                     '&' +
                     parsedData[6]);
+          } else if (parsedData[1] == 'familyProfile') {
+            return SplashScreen(
+                nsRoute: 'familyProfile',
+                bundle:
+                    parsedData[0] + '&' + parsedData[1] + '&' + parsedData[2]);
           } else if (parsedData[1] == 'manageActivities') {
             return SplashScreen(
               nsRoute: 'manageActivities',

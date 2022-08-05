@@ -527,15 +527,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         content: variable.strFamilySucess,
         onPressedConfirm: () {
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
-                  arguments: AddFamilyUserInfoArguments(
-                      fromClass: CommonConstants.add_family,
-                      enteredFirstName: widget.arguments.enteredFirstName,
-                      enteredMiddleName: widget.arguments.enteredMiddleName,
-                      enteredLastName: widget.arguments.enteredLastName,
-                      relationShip: widget.arguments.relationShip,
-                      isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                      addFamilyUserInfo: addFamilyOTPResponse.result ?? ''))
-              .then((value) {});
+              arguments: AddFamilyUserInfoArguments(
+                fromClass: CommonConstants.add_family,
+                enteredFirstName: widget.arguments.enteredFirstName,
+                enteredMiddleName: widget.arguments.enteredMiddleName,
+                enteredLastName: widget.arguments.enteredLastName,
+                relationShip: widget.arguments.relationShip,
+                isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
+                addFamilyUserInfo: addFamilyOTPResponse.result ?? '',
+                isForFamilyAddition: false,
+                isFromAppointmentOrSlotPage: false,
+                isForFamily: false,
+              )).then((value) {});
         },
       );
     } else {

@@ -12,6 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
 import 'package:myfhb/video_call/model/payload.dart' as vsPayLoad;
@@ -1833,9 +1834,12 @@ class CommonUtil {
               if (myProfile?.result != null) {
                 await Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
-                        myProfileResult: myProfile?.result,
-                        fromClass: CommonConstants.user_update,
-                        isFromAppointmentOrSlotPage: true));
+                      myProfileResult: myProfile?.result,
+                      fromClass: CommonConstants.user_update,
+                      isFromAppointmentOrSlotPage: true,
+                      isForFamilyAddition: false,
+                      isForFamily: false,
+                    ));
               } else {
                 FlutterToast()
                     .getToast('Unable to Fetch User Profile data', Colors.red);
@@ -2726,14 +2730,18 @@ class CommonUtil {
                             var myProfile = await fetchUserProfileInfo();
                             await Get.toNamed(router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
-                                    myProfileResult: myProfile?.result,
-                                    fromClass: CommonConstants.user_update,
-                                    isFromCSIR: true,
-                                    packageId: packageId,
-                                    providerId: providerId,
-                                    isSubscribed: isSubscribed,
-                                    feeZero: feeZero,
-                                    refresh: refresh));
+                                  myProfileResult: myProfile?.result,
+                                  fromClass: CommonConstants.user_update,
+                                  isFromCSIR: true,
+                                  packageId: packageId,
+                                  providerId: providerId,
+                                  isSubscribed: isSubscribed,
+                                  feeZero: feeZero,
+                                  refresh: refresh,
+                                  isForFamilyAddition: false,
+                                  isFromAppointmentOrSlotPage: false,
+                                  isForFamily: false,
+                                ));
                           },
                           borderSide: BorderSide(
                             color: Color(
@@ -4810,6 +4818,52 @@ class CommonUtil {
     print("<<<<<<");
     print(Device.get().isTablet);
     return Device.get().isTablet;
+  }
+
+  Future<MyProfileModel> getDetailsOfAddedFamilyMember(
+      BuildContext context, String userID) async {
+    final GlobalKey<State> _keyLoader = GlobalKey<State>();
+
+    MyProfileModel myProfile;
+    AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+        AddFamilyUserInfoRepository();
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+
+    await addFamilyUserInfoRepository
+        .checkIfChildISMember(userID)
+        .then((mainValue) async {
+      if (mainValue.isSuccess) {
+        await addFamilyUserInfoRepository
+            .getMyProfileInfoNew(userID)
+            .then((value) {
+          myProfile = value;
+
+          if (myProfile?.result != null) {
+            Navigator.of(context).pop();
+
+            Get.toNamed(router.rt_AddFamilyUserInfo,
+                    arguments: AddFamilyUserInfoArguments(
+                        myProfileResult: myProfile?.result,
+                        fromClass: CommonConstants.user_update,
+                        isFromAppointmentOrSlotPage: false,
+                        isForFamily: false,
+                        isForFamilyAddition: true))
+                .then((value) =>
+                    PageNavigator.goToPermanent(context, router.rt_Landing));
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            FlutterToast()
+                .getToast('Unable to Fetch User Profile data', Colors.red);
+          }
+        });
+      } else {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+        FlutterToast().getToast(mainValue.message, Colors.red);
+        return mainValue;
+      }
+    });
   }
 }
 

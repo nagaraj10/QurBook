@@ -46,6 +46,7 @@ import CoreBluetooth
     
     let acceptDeclineButtonsCaregiver = "showAcceptDeclineButtonsCaregiver"
     let ChatCCAndViewrecordButtons = "showChatCCAndViewrecordButtons"
+    let viewDetailsButton = "memberviewDetailsButtons"
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
     var poPeripheral: CBPeripheral!
@@ -123,6 +124,7 @@ import CoreBluetooth
         let chatwithCCAction = UNNotificationAction(identifier: "chatwithcc", title: "Chat with cc", options: [.foreground])
         let viewRecordAction = UNNotificationAction(identifier: "viewrecord", title: "View Record", options: [.foreground])
         let viewMemberAction = UNNotificationAction(identifier: "ViewMember", title: "View Member", options: [.foreground])
+        let viewDetailsAction = UNNotificationAction(identifier: "ViewDetails", title: "View Details", options: [.foreground])
         let communicationsettingsAction = UNNotificationAction(identifier: "Communicationsettings", title: "Communication settings", options: [.foreground])
         
         let showBothButtonscategory = UNNotificationCategory(identifier: showBothButtonsCat,
@@ -153,7 +155,18 @@ import CoreBluetooth
                                                                         actions:  [chatwithCCAction,viewRecordAction],
                                                                         intentIdentifiers: [],
                                                                         options: [])
-        notificationCenter.setNotificationCategories([showBothButtonscategory,showSingleButtonCategory,planRenewButtonCategory,acceptRejectCargiverButtonCategory,showViewMemberAndCommunicationButtonscategory,esclateButtonscategory,chatCCAndViewrecordButtonsCategory])
+        let viewDetailButtonCategory = UNNotificationCategory(identifier: viewDetailsButton,
+                                                                        actions:  [viewDetailsAction],
+                                                                        intentIdentifiers: [],
+                                                                        options: [])
+        notificationCenter.setNotificationCategories([showBothButtonscategory,
+                                                      showSingleButtonCategory,
+                                                      planRenewButtonCategory,
+                                                      acceptRejectCargiverButtonCategory,
+                                                      showViewMemberAndCommunicationButtonscategory,
+                                                      esclateButtonscategory,
+                                                      chatCCAndViewrecordButtonsCategory,
+                                                     viewDetailButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -635,7 +648,7 @@ import CoreBluetooth
                 if (ResponseNotificationChannel == nil){
                     ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
                 }
-                ResponseNotificationChannel.invokeMethod(Constants.Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
+                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
                 completionHandler([])
             }else{
                 completionHandler([.alert, .sound])
@@ -710,7 +723,7 @@ import CoreBluetooth
                         "action" : response.actionIdentifier,
                         "data" : data
                     ]
-                }else if (response.actionIdentifier == "Escalate"){
+                }else if (response.actionIdentifier == "Escalate" || response.actionIdentifier == "ViewDetails"){
                     newData  = [
                         "action" : response.actionIdentifier,
                         "data" : data
