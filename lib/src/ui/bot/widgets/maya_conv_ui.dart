@@ -45,10 +45,10 @@ class MayaConvUI extends StatelessWidget {
                           Provider.of<ChatScreenViewModel>(context,
                                   listen: false)
                               .startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                            isRedirectionNeed: true,
-                          );
+                                  buttonText: buttonData.title,
+                                  payload: buttonData.payload,
+                                  isRedirectionNeed: true,
+                                  addMsg: true);
                           FlutterToast()
                               .getToast('Redirecting...', Colors.black54);
                           Get.toNamed(
@@ -65,10 +65,10 @@ class MayaConvUI extends StatelessWidget {
                           Provider.of<ChatScreenViewModel>(context,
                                   listen: false)
                               .startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                            isRedirectionNeed: true,
-                          );
+                                  buttonText: buttonData.title,
+                                  payload: buttonData.payload,
+                                  isRedirectionNeed: true,
+                                  addMsg: true);
                           FlutterToast()
                               .getToast('Redirecting...', Colors.black54);
                           Get.to(CheckoutPage());
@@ -76,9 +76,9 @@ class MayaConvUI extends StatelessWidget {
                           Provider.of<ChatScreenViewModel>(context,
                                   listen: false)
                               .startSheelaFromButton(
-                            buttonText: buttonData.title,
-                            payload: buttonData.payload,
-                          );
+                                  buttonText: buttonData.title,
+                                  payload: buttonData.payload,
+                                  addMsg: true);
                         }
                       },
                 child: Card(
