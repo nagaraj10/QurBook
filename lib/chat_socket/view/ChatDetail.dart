@@ -236,7 +236,7 @@ class ChatState extends State<ChatDetail> {
 
     chatById = widget.carecoordinatorId;
 
-    if(isFromCareCoordinator){
+    if(isFromCareCoordinator && isNormalChatUserList=="true"){
 
       chatById = familyUserId;
 

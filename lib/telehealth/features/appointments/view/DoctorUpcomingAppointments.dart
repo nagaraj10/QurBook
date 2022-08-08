@@ -277,11 +277,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         ));
   }
 
-  String getFormattedDateTime(String datetime) {
-    DateTime dateTimeStamp = DateTime.parse(datetime);
-    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp.toLocal());
-    return formattedDate;
-  }
+
 
   void goToChatIntegration(Past doc) {
     //chat integration start
@@ -292,7 +288,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String chatListId = doc?.chatListId;
     String strLastDate = doc?.chatMessage?.deliveredOn != null &&
         doc?.chatMessage?.deliveredOn != ''
-        ? getFormattedDateTime(
+        ? CommonUtil().getFormattedDateTime(
         doc?.chatMessage?.deliveredOn): '';
     /* chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/

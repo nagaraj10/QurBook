@@ -4653,6 +4653,12 @@ class CommonUtil {
     return "";
   }
 
+  String getFormattedDateTime(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp.toLocal());
+    return formattedDate;
+  }
+
   void dialogForScanDevices(BuildContext context,
       {Function() onPressManual,
       Function() onPressCancel,
@@ -6101,4 +6107,6 @@ class VideoCallCommonUtils {
       return '';
     }
   }
+
+
 }
