@@ -99,6 +99,7 @@ class ChatListItem {
   bool isMuted;
   int unReadNotificationCount;
   String lastModifiedOn;
+  String deliveredOn;
 
   ChatListItem(
       {this.id,
@@ -109,7 +110,7 @@ class ChatListItem {
         this.isDisable,
         this.isMuted,
         this.unReadNotificationCount,
-        this.lastModifiedOn});
+        this.lastModifiedOn,this.deliveredOn});
 
   ChatListItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -121,6 +122,7 @@ class ChatListItem {
     isMuted = json['isMuted'];
     unReadNotificationCount = json['unReadNotificationCount'];
     lastModifiedOn = json['lastModifiedOn'];
+    deliveredOn = json['deliveredOn'];
   }
 
   Map<String, dynamic> toJson() {
@@ -134,6 +136,7 @@ class ChatListItem {
     data['isMuted'] = this.isMuted;
     data['unReadNotificationCount'] = this.unReadNotificationCount;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    data['deliveredOn'] = this.deliveredOn;
     return data;
   }
 }
