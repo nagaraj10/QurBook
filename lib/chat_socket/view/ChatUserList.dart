@@ -355,34 +355,42 @@ class _ChatUserListState extends State<ChatUserList> {
     return Card(
       child: InkWell(
           onTap: () {
-            Get.back();
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChatDetail(
-                        peerId: data?.id,
-                        peerAvatar: data?.profilePicThumbnailUrl,
-                        peerName: getFamilyName(data),
-                        patientId: '',
-                        patientName: '',
-                        patientPicture: '',
-                        isFromVideoCall: false,
-                        familyUserId: data?.id,
-                        isFromFamilyListChat: true,
-                        isFromCareCoordinator: data?.isCarecoordinator,
-                        carecoordinatorId: data?.carecoordinatorId,
-                        isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
-                            ? true
-                            : false,
-                        groupId: data?.chatListItem?.id ?? '',
-                        lastDate: data?.chatListItem?.lastModifiedOn))).then(
-                (value) {
-              if (value) {
-                initSocket(true);
-              } else {
-                initSocket(false);
-              }
-            });
+            try {
+              String strLastDate = data?.chatListItem?.deliveredOn != null &&
+                              data?.chatListItem?.deliveredOn != ''
+                              ? CommonUtil().getFormattedDateTime(
+                              data?.chatListItem?.deliveredOn): '';
+              Get.back();
+              Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatDetail(
+                                      peerId: data?.id,
+                                      peerAvatar: data?.profilePicThumbnailUrl,
+                                      peerName: getFamilyName(data),
+                                      patientId: '',
+                                      patientName: '',
+                                      patientPicture: '',
+                                      isFromVideoCall: false,
+                                      familyUserId: data?.id,
+                                      isFromFamilyListChat: true,
+                                      isFromCareCoordinator: data?.isCarecoordinator,
+                                      carecoordinatorId: data?.carecoordinatorId,
+                                      isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
+                                          ? true
+                                          : false,
+                                      groupId: data?.chatListItem?.id ?? '',
+                                      lastDate: strLastDate))).then(
+                              (value) {
+                            if (value) {
+                              initSocket(true);
+                            } else {
+                              initSocket(false);
+                            }
+                          });
+            } catch (e) {
+              print(e);
+            }
           },
           child: Container(
               margin: EdgeInsets.only(bottom: 6),
