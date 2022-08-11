@@ -14,7 +14,6 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -172,8 +171,6 @@ class QurhomeRegimenController extends GetxController {
           List<String> receivedValues = result.split('|');
           getAddressFromLatLng(double.parse("${receivedValues.first}"),
               double.parse("${receivedValues.last}"));
-        } else {
-          getNetworkBasedLocation();
         }
       } else {
         Geolocator.getCurrentPosition(
@@ -182,12 +179,10 @@ class QurhomeRegimenController extends GetxController {
             .then((Position position) {
           getAddressFromLatLng(position.latitude, position.longitude);
         }).catchError((e) {
-          getNetworkBasedLocation();
           print(e);
         });
       }
     } catch (e) {
-      getNetworkBasedLocation();
       print(e);
     }
   }
@@ -216,41 +211,13 @@ class QurhomeRegimenController extends GetxController {
               thoroughfare: CommonUtil().validString(address.thoroughfare),
               subThoroughfare:
                   CommonUtil().validString(address.subThoroughfare));
-        } else {
-          getNetworkBasedLocation();
         }
-      } else {
-        getNetworkBasedLocation();
       }
     } catch (e) {
       print(e);
     }
   }
 
-  getNetworkBasedLocation() async {
-    try {
-      http.Response data = await http.get(Uri.parse(GET_LOCATION_URL));
-      LocationDataModel locationDataModel =
-          LocationDataModel.fromJson(jsonDecode(data.body));
-      locationModel = Location(
-          latitude: CommonUtil().validString(locationDataModel.lat.toString()),
-          longitude: CommonUtil().validString(locationDataModel.lon.toString()),
-          addressLine: CommonUtil().validString(
-              '${CommonUtil().validString(locationDataModel.city.toString())} ${CommonUtil().validString(locationDataModel.zip.toString())} ${CommonUtil().validString(locationDataModel.regionName.toString())} ${CommonUtil().validString(locationDataModel.country.toString())}'),
-          countryName: CommonUtil().validString(locationDataModel.country),
-          countryCode: CommonUtil().validString(locationDataModel.countryCode),
-          featureName: CommonUtil().validString(""),
-          postalCode: CommonUtil().validString(locationDataModel.zip),
-          adminArea: CommonUtil().validString(locationDataModel.regionName),
-          subAdminArea: CommonUtil().validString(locationDataModel.city),
-          locality: CommonUtil().validString(locationDataModel.city),
-          subLocality: CommonUtil().validString(locationDataModel.city),
-          thoroughfare: CommonUtil().validString(""),
-          subThoroughfare: CommonUtil().validString(""));
-    } catch (e) {
-      print(e);
-    }
-  }
 
   getCareCoordinatorId() async {
     try {

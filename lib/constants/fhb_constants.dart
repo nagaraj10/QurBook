@@ -717,7 +717,6 @@ const String DISABLE_BACKGROUND_NOTIFICATION = 'disablebackgroundnotification';
 const String APPOINTMENT_DETAILS = 'appointmentDetails';
 const String BP_LOCATION_CHECK = 'bp_location_check';
 const String GET_CURRENT_LOCATION = 'getCurrentLocation';
-const String GET_LOCATION_URL = 'http://ip-api.com/json';
 
 //Qurhome vitals
 const String filterTitleDay = 'Day';
