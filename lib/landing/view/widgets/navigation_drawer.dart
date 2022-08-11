@@ -251,26 +251,28 @@ class NavigationDrawer extends StatelessWidget {
                           Navigator.pop(context);
                         },
                       ),
-                      DrawerTile(
-                        title: variable.strReports,
-                        /*iconWidget: SvgPicture.asset(
-                            variable.icon_settings,
-                            color: Colors.black54,
-                          ),*/
-                        iconWidget: Image.asset(
-                          variable.icon_report_icon,
-                          width: 24.sp,
-                          height: 24.sp,
+                      Visibility(
+                        visible: CommonUtil.REGION_CODE == 'IN',
+                        child: DrawerTile(
+                          title: variable.strReports,
+                          /*iconWidget: SvgPicture.asset(
+                              variable.icon_settings,
+                              color: Colors.black54,
+                            ),*/
+                          iconWidget: Image.asset(
+                            variable.icon_report_icon,
+                            width: 24.sp,
+                            height: 24.sp,
+                          ),
+                          onPressed: () {
+                            try {
+                              Get.back();
+                              Get.to(() => ReportListScreen());
+                            } catch (e) {
+                              //print(e);
+                            }
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ReportListScreen(),
-                            ),
-                          );
-                        },
                       ),
                       Visibility(
                           child: DrawerTile(
@@ -284,16 +286,15 @@ class NavigationDrawer extends StatelessWidget {
                               color: Colors.black54,
                             ),
                             onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ClaimList(),
-                                ),
-                              );
+                              try {
+                                Get.back();
+                                Get.to(() => ClaimList());
+                              } catch (e) {
+                                //print(e);
+                              }
                             },
                           ),
-                          visible: userChangedbool),
+                          visible: userChangedbool&&CommonUtil.REGION_CODE == 'IN'),
                       DrawerTile(
                         title: variable.strLogout,
                         iconWidget: SvgPicture.asset(
