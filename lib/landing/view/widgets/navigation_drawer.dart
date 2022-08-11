@@ -266,13 +266,8 @@ class NavigationDrawer extends StatelessWidget {
                           ),
                           onPressed: () {
                             try {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ReportListScreen(),
-                                ),
-                              );
+                              Get.back();
+                              Get.to(() => ReportListScreen());
                             } catch (e) {
                               //print(e);
                             }
@@ -292,13 +287,8 @@ class NavigationDrawer extends StatelessWidget {
                             ),
                             onPressed: () {
                               try {
-                                Navigator.pop(context);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ClaimList(),
-                                  ),
-                                );
+                                Get.back();
+                                Get.to(() => ClaimList());
                               } catch (e) {
                                 //print(e);
                               }
