@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/View/hub_list_screen.dart';
-import 'package:myfhb/QurHub/View/qur_hub_home_screen.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -104,16 +101,20 @@ class NavigationDrawer extends StatelessWidget {
                         title: variable.strProfile,
                         icon: variable.icon_profile,
                         onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 0,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
+                          try {
+                            Get.back();
+                            await Navigator.pushNamed(
+                              context,
+                              router.rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 0,
+                              ),
+                            );
+                            if (refresh != null) {
+                              refresh(true);
+                            }
+                          } catch (e) {
+                            //print(e);
                           }
                         },
                       ),
@@ -121,7 +122,7 @@ class NavigationDrawer extends StatelessWidget {
                       //   title: variable.strMyRecords,
                       //   icon: variable.icon_records,
                       //   onPressed: () {
-                      //     Navigator.pop(context);
+                      //     Get.back();
                       //     Navigator.pushNamed(
                       //       context,
                       //       router.rt_MyRecords,
@@ -133,16 +134,20 @@ class NavigationDrawer extends StatelessWidget {
                         title: variable.strMyProvider,
                         icon: variable.icon_provider,
                         onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 2,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
+                          try {
+                            Get.back();
+                            await Navigator.pushNamed(
+                              context,
+                              router.rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 2,
+                              ),
+                            );
+                            if (refresh != null) {
+                              refresh(true);
+                            }
+                          } catch (e) {
+                            //print(e);
                           }
                         },
                       ),
@@ -153,16 +158,20 @@ class NavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () async {
-                          Navigator.pop(context);
-                          await Navigator.pushNamed(
-                            context,
-                            router.rt_UserAccounts,
-                            arguments: UserAccountsArguments(
-                              selectedIndex: 1,
-                            ),
-                          );
-                          if (refresh != null) {
-                            refresh(true);
+                          try {
+                            Get.back();
+                            await Navigator.pushNamed(
+                              context,
+                              router.rt_UserAccounts,
+                              arguments: UserAccountsArguments(
+                                selectedIndex: 1,
+                              ),
+                            );
+                            if (refresh != null) {
+                              refresh(true);
+                            }
+                          } catch (e) {
+                            //print(e);
                           }
                         },
                       ),
@@ -175,29 +184,32 @@ class NavigationDrawer extends StatelessWidget {
                         ),
                         onPressed: () async {
                           try {
-                            Navigator.pop(context);
-                            Get.to(
-                              HubListScreen(),
-                            );
+                            Get.back();
+                            Get.to(() => HubListScreen());
                           } catch (e) {
-                            print(e);
+                            //print(e);
                           }
                         },
                       ),
-                      DrawerTile(
-                        title: variable.strMyOrders,
-                        iconWidget: Image.asset(
-                          variable.icon_orderHistory,
-                          color: Colors.black54,
-                          width: 24.sp,
-                          height: 24.sp,
+                      Visibility(
+                        visible: CommonUtil.REGION_CODE == 'IN',
+                        child: DrawerTile(
+                          title: variable.strMyOrders,
+                          iconWidget: Image.asset(
+                            variable.icon_orderHistory,
+                            color: Colors.black54,
+                            width: 24.sp,
+                            height: 24.sp,
+                          ),
+                          onPressed: () {
+                            try {
+                              Get.back();
+                              Get.to(() => OrdersView());
+                            } catch (e) {
+                              //print(e);
+                            }
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Get.to(
-                            OrdersView(),
-                          );
-                        },
                       ),
                       DrawerTile(
                         title: variable.strSettings,
@@ -206,15 +218,12 @@ class NavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MoreMenuScreen(
-                                refresh: refresh,
-                              ),
-                            ),
-                          );
+                          try {
+                            Get.back();
+                            Get.to(() => MoreMenuScreen(refresh: refresh));
+                          } catch (e) {
+                            //print(e);
+                          }
                         },
                       ),
                       DrawerTile(
@@ -226,13 +235,12 @@ class NavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HelpSupport(),
-                            ),
-                          );
+                          try {
+                            Get.back();
+                            Get.to(() => HelpSupport());
+                          } catch (e) {
+                            //print(e);
+                          }
                         },
                       ),
                       DrawerTile(
@@ -247,8 +255,12 @@ class NavigationDrawer extends StatelessWidget {
                           height: 24.sp,
                         ),
                         onPressed: () {
-                          CommonUtil().accessContactsDialog();
-                          Navigator.pop(context);
+                          try {
+                            Get.back();
+                            CommonUtil().accessContactsDialog();
+                          } catch (e) {
+                            //print(e);
+                          }
                         },
                       ),
                       Visibility(
