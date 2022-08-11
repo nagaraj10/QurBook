@@ -1897,10 +1897,11 @@ class CommonUtil {
 
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NotificationMain()),
-                  );
+                  try {
+                    navigateToNotificationScreen();
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 child: BadgeIcon(
                     icon: Icon(
@@ -1914,10 +1915,11 @@ class CommonUtil {
             } else {
               return GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NotificationMain()),
-                  );
+                  try {
+                    navigateToNotificationScreen();
+                  } catch (e) {
+                    print(e);
+                  }
                 },
                 child: BadgeIcon(
                     icon: Icon(
@@ -1932,10 +1934,11 @@ class CommonUtil {
     } catch (e) {
       return GestureDetector(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationMain()),
-          );
+          try {
+            navigateToNotificationScreen();
+          } catch (e) {
+            print(e);
+          }
         },
         child: BadgeIcon(
             icon: Icon(
@@ -1946,6 +1949,14 @@ class CommonUtil {
             badgeColor: ColorUtils.countColor),
       );
     }
+  }
+
+  navigateToNotificationScreen() async {
+    try {
+      Get.to(
+        NotificationMain(),
+      );
+    } catch (e) {}
   }
 
   versionCheck(context) async {
