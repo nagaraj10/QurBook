@@ -114,21 +114,19 @@ class _AddDeviceScreenState extends State<AddDeviceScreen>
                     ],
                   )
                 : */
-            Stack(
-                children: [
-                  Container(
-                    child: Column(
-                      children: [
-                        getView(),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        getButton(),
-                      ],
+            Container(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    getView(),
+                    SizedBox(
+                      height: 15,
                     ),
-                  ),
-                ],
-              );
+                    getButton(),
+                  ],
+                ),
+              ),
+            );
       }),
     );
   }

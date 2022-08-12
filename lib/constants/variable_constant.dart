@@ -680,6 +680,7 @@ const String strNoDoctordata = 'No Doctor List Available';
 const String strNoHospitaldata = 'No Hospital List Available';
 const String strNoAppointments = 'No Appoinments Available';
 const String strNoPlans = 'No Plan List Available';
+const String strNoPlansUS = 'Please contact your provider to add a care plan';
 const String strNoActivities = 'No Activities Available';
 const String strNoPackages = 'No Packages Available';
 const String strNoReports =

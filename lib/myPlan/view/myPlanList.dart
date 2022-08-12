@@ -250,7 +250,12 @@ class _MyPlanState extends State<MyPlanList> {
               height: 1.sh / 1.3,
               child: Container(
                   child: Center(
-                child: Text(variable.strNoPlans),
+                child: CommonUtil.REGION_CODE == 'IN'
+                    ? Text(variable.strNoPlans)
+                    : Text(variable.strNoPlansUS,
+                    textAlign: TextAlign.center,
+                    style:
+                    TextStyle(fontSize: 20.0.sp, color: Colors.black)),
               )),
             ),
           );
@@ -286,7 +291,12 @@ class _MyPlanState extends State<MyPlanList> {
                 height: 1.sh / 1.3,
                 child: Container(
                     child: Center(
-                  child: Text(variable.strNoPlans),
+                  child: CommonUtil.REGION_CODE == 'IN'
+                      ? Text(variable.strNoPlans)
+                      : Text(variable.strNoPlansUS,
+                      textAlign: TextAlign.center,
+                      style:
+                      TextStyle(fontSize: 20.0.sp, color: Colors.black)),
                 )),
               ),
             );
