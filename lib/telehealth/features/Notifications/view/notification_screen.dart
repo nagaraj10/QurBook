@@ -227,12 +227,20 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Future<bool> onBackPressed(BuildContext context) async {
-    Get.offAllNamed(
-      router.rt_Landing,
-      arguments: LandingArguments(
-        needFreshLoad: false,
-      ),
-    );
+    try {
+      if (Navigator.canPop(context)) {
+        Get.back();
+      } else {
+        Get.offAllNamed(
+          router.rt_Landing,
+          arguments: LandingArguments(
+            needFreshLoad: false,
+          ),
+        );
+      }
+    } catch (e) {
+      //print(e);
+    }
   }
 
   Future<void> _showNotificationClearDialog() async {

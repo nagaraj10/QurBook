@@ -1139,7 +1139,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             Colors.red);
         return;
       }
-      controller.getCurrentLocation();
+      await controller.getCurrentLocation();
       /*permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.deniedForever ||
           permission == LocationPermission.denied) {
