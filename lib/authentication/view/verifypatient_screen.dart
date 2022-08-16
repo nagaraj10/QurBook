@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -185,7 +186,30 @@ class _VerifyPatientState extends State<VerifyPatient>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      SizedBox(height: height * .1),
+                      SizedBox(height: height * .06),
+                      Container(
+                        margin: EdgeInsets.only(left: 10.0.sp),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            IconWidget(
+                              icon: Icons.arrow_back_ios,
+                              colors: Colors.black,
+                              size: 26.0.sp,
+                              onTap: () {
+                                try {
+                                  if (Navigator.canPop(context)) {
+                                    Get.back();
+                                  }
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: height * .04),
                       AssetImageWidget(
                         icon: myFHB_logo,
                         height: 120.0.h,
