@@ -110,23 +110,24 @@ class HelpSupport extends StatelessWidget {
                         height: 1.h,
                         color: Colors.grey[200],
                       ),
-                      InkWell(
-                        onTap: () {
-                          launchWhatsApp(
-                              phone: c_qurhealth_helpline,
-                              message: c_chat_with_whatsapp_begin_conv);
-                        },
-                        child: ListTile(
-                            leading: ImageIcon(
-                              AssetImage(icon_whatsapp),
-                              color: Color(0XFF66AB5B),
-                            ),
-                            title: Text(TranslationConstants.chatWithUs.t())),
-                      ),
-                      Container(
-                        height: 1.h,
-                        color: Colors.grey[200],
-                      ),
+                      // InkWell(
+                      //   onTap: () {
+                      //     launchWhatsApp(
+                      //       context,
+                      //         phone: c_qurhealth_helpline,
+                      //         message: c_chat_with_whatsapp_begin_conv);
+                      //   },
+                      //   child: ListTile(
+                      //       leading: ImageIcon(
+                      //         AssetImage(icon_whatsapp),
+                      //         color: Color(0XFF66AB5B),
+                      //       ),
+                      //       title: Text(TranslationConstants.chatWithUs.t())),
+                      // ),
+                      // Container(
+                      //   height: 1.h,
+                      //   color: Colors.grey[200],
+                      // ),
                     ],
                   ),
                 )
@@ -145,7 +146,7 @@ class HelpSupport extends StatelessWidget {
             title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
 
-  void launchWhatsApp({
+  void launchWhatsApp(context,{
     @required String phone,
     @required String message,
   }) async {
@@ -160,6 +161,11 @@ class HelpSupport extends StatelessWidget {
     if (await canLaunch(url())) {
       await launch(url());
     } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("WhatsApp is not installed on the device"),
+        ),
+      );
       throw 'Could not launch ${url()}';
     }
   }
