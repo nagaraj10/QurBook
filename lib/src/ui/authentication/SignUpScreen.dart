@@ -153,7 +153,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   SizedBox(height: 10.0.h),
                   Center(
                     child: Container(
-                      constraints: BoxConstraints(maxWidth: 200),
+                      constraints: BoxConstraints(maxWidth: 220),
                       margin: EdgeInsets.all(20),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(

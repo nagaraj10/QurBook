@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,7 +5,6 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:sms_autofill/sms_autofill.dart';
-import '../../add_family_otp/models/add_family_otp_response.dart';
 import '../../add_family_user_info/models/add_family_user_info_arguments.dart';
 import '../constants/constants.dart';
 import '../model/patientverify_model.dart';
@@ -14,9 +12,7 @@ import '../model/resend_otp_model.dart';
 import '../model/verifyotp_model.dart';
 import 'authentication_validator.dart';
 import 'login_screen.dart';
-import 'verify_arguments.dart';
 import '../view_model/patientauth_view_model.dart';
-import '../model/patientverify_model.dart' as OtpModel;
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../common/CommonConstants.dart';
 import '../../common/CommonUtil.dart';
@@ -27,13 +23,10 @@ import '../../src/model/Authentication/UserModel.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 import '../../constants/variable_constant.dart';
 import '../../src/model/Authentication/DeviceInfoSucess.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert';
 import 'dart:io';
 import '../../constants/router_variable.dart' as router;
-import '../model/resend_otp_model.dart' as ResendModel;
-import '../../src/ui/Dashboard.dart';
 import '../../src/ui/loader_class.dart';
 import '../../src/utils/PageNavigator.dart';
 import '../model/patientlogin_model.dart' as loginModel;
@@ -297,7 +290,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                     Color(CommonUtil().getMyPrimaryColor()),
                                     Color(CommonUtil().getMyGredientColor()),
                                   ]),
-                                  width: 200.0.w,
+                                  width: 280.0.w,
                                   onPressed: otpViewModel.timerSeconds == 0
                                       ? () {
                                           otpViewModel?.stopOTPTimer();
@@ -336,7 +329,7 @@ class _VerifyPatientState extends State<VerifyPatient>
                                       Color(CommonUtil().getMyPrimaryColor()),
                                       Color(CommonUtil().getMyGredientColor()),
                                     ]),
-                                    width: 200.0.w,
+                                    width: 280.0.w,
                                     onPressed: otpViewModel.timerSeconds == 0
                                         ? () {
                                             otpViewModel?.stopOTPTimer();
@@ -419,7 +412,7 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   _loginOTPSent(loginModel.PatientLogIn response) {
     if (response.isSuccess) {
-      toast.getToast('OTP sent successfully', Colors.green);
+      toast.getToast('One Time Password sent successfully', Colors.green);
     } else {
       if (response.message != null) {
         toast.getToast(response.message, Colors.red);
@@ -658,7 +651,7 @@ class _VerifyPatientState extends State<VerifyPatient>
 
   _checkOtpResponse(ResendOtpModel response) {
     if (response.isSuccess) {
-      toast.getToast('OTP sent successfully', Colors.green);
+      toast.getToast('One Time Password sent successfully', Colors.green);
     } else {
       if (response.message != null) {
         toast.getToast(response.message, Colors.red);
