@@ -88,12 +88,12 @@ class TranslationConstants {
   static const String STR_MSG_SIGNUP = 'Please signup and then try again';
   static const String STR_MSG_SIGNUP1 = 'Please signup then try again';
   static const String STR_VERIFY_OTP =
-      'Please complete your registration process, by generating and verifying the OTP';
+      'Please complete your registration process, by generating and verifying the One Time Password';
   static const String STR_VERIFY_USER =
-      'Please complete your Sign Up process, by generating and verifying the OTP';
+      'Please complete your Sign Up process, by generating and verifying the One Time Password';
   static const String STR_OTPMISMATCHED =
-      'Requested operation forbidden. OTP Mismatched';
-  static const String STR_OTPMISMATCHED_STRING = 'OTP Mismatched';
+      'Requested operation forbidden. One Time Password Mismatched';
+  static const String STR_OTPMISMATCHED_STRING = 'One Time Password Mismatched';
   static const String STR_FEEDBACKS = 'Feedback';
   static const String CURRENT_THEME = 'App Theme';
   static const String stop_detecting = 'StopDetecting';
@@ -212,7 +212,7 @@ class TranslationConstants {
   static const String HospitalSelection = 'Hospital Selection';
 
   static const String STR_NO_CONNECTIVITY = 'No Internet connection';
-  static const String STR_OTP_FIELD = 'Please enter a valid OTP';
+  static const String STR_OTP_FIELD = 'Please enter a valid One Time Password';
   static const String STR_ERROR_LOADING_DATA =
       'Unable To Load Data,Please Try Again';
   static const String STR_ERROR_LOADING_IMAGE =
@@ -227,12 +227,12 @@ class TranslationConstants {
   static const String DeLink = 'De-Link';
   static const String Error = 'Error';
   static const String Success = 'Success';
-  static const String Otp_Verification = 'Otp Verification';
+  static const String Otp_Verification = 'One Time Password Verification';
   static const String Resend_Code = 'Resend Code';
-  static const String Receive_OTP = 'Didn\'t receive the OTP?';
-  static const String enter_otp = 'Please enter the received OTP';
+  static const String Receive_OTP = 'Didn\'t receive the One Time Password?';
+  static const String enter_otp = 'Please enter the received One Time Password';
   static const String Successfully = 'Successfully';
-  static const String OTP_Matched = 'Otp matched successfully';
+  static const String OTP_Matched = 'One Time Password matched successfully';
   static const String Family_Member_Added =
       'Your family member has been added successfully';
   static const String VerifyEmail = 'Tap to verify Email address';
@@ -472,13 +472,13 @@ class TranslationConstants {
       'Looks like there are no notifications';
   static const String strHealthRecordChannel = 'Health Record channel';
 
-  static const String strVerifyOtp = 'Verifying OTP';
-  static const String strOTPVerification = 'Otp Verification';
-  static const String strEnterOtp = 'Please enter the received OTP';
+  static const String strVerifyOtp = 'Verifying One Time Password';
+  static const String strOTPVerification = 'One Time Password Verification';
+  static const String strEnterOtp = 'Please enter the received One Time Password';
 
   static const String strError = 'Error';
   static const String strSuccessfully = 'Successfully';
-  static const String strOTPMatched = 'Otp matched successfully.';
+  static const String strOTPMatched = 'One Time Password matched successfully.';
   static const String strSucess = 'Success';
   static const String strFamilySucess =
       'Your family member has been added successfully';
@@ -606,8 +606,8 @@ class TranslationConstants {
   static const String strCreateuser = 'Creating User';
   static const String strSignOut = 'Signing Out';
 
-  static const String strVerifyingOtp = 'Verifying OTP';
-  static const String strGeneratingOtp = 'Generating OTP';
+  static const String strVerifyingOtp = 'Verifying One Time Password';
+  static const String strGeneratingOtp = 'Generating One Time Password';
 
   static const String strGettingCategory = 'Getting Category List';
   static const String strGettingHealthRecords = 'Getting Health Records';
@@ -633,10 +633,10 @@ class TranslationConstants {
   static const String strStopRecord = 'Stop Recording';
   static const String strVoiceRecord = 'Voice Record';
 
-  static const String strOtpVerification = 'OTP Verification';
-  static const String strPlsEnterotpReceived = 'Please enter the OTP received';
-  static const String strEnterotpReceived = 'Enter the OTP received at';
-  static const String strdidtReceive = 'Didn\'t receive the OTP?';
+  static const String strOtpVerification = 'One Time Password Verification';
+  static const String strPlsEnterotpReceived = 'Please enter the One Time Password received';
+  static const String strEnterotpReceived = 'Enter the One Time Password received at';
+  static const String strdidtReceive = 'Didn\'t receive the One Time Password?';
   static const String strResendCode = 'Resend Code';
   static const String strAgree = 'By completing Sign Up, you agree to our ';
   static const String strTermService = 'Terms of Service';
@@ -649,7 +649,7 @@ class TranslationConstants {
 
   static const String strMobileNum = 'Mobile Number';
   static const String strEmailOpt = 'Email address';
-  static const String strSendOtp = 'Send OTP';
+  static const String strSendOtp = 'Send One Time Password';
   static const String strEmailAddress = 'Email address';
 
   List<String> genderList = ['Male', 'Female', 'Others'];

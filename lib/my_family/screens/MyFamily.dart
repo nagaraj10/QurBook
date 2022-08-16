@@ -1071,7 +1071,7 @@ class _MyFamilyState extends State<MyFamily> {
     final addButtonWithGesture = GestureDetector(
       onTap: _sendOTPBtnTapped,
       child: Container(
-        width: 130.0.w,
+        width: 220.0.w,
         height: 40.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
@@ -1091,7 +1091,7 @@ class _MyFamilyState extends State<MyFamily> {
                 : CommonConstants.send_otp,
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.0.sp,
+              fontSize: 14.0.sp,
               fontWeight: FontWeight.w400,
             ),
           ),

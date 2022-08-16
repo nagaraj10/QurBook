@@ -100,13 +100,13 @@ const String help_support = 'Help and support';
 const String STR_MSG_SIGNUP = 'Please signup and then try again';
 const String STR_MSG_SIGNUP1 = 'Please signup then try again';
 const String STR_VERIFY_OTP =
-    'Please complete your registration process, by generating and verifying the OTP';
+    'Please complete your registration process, by generating and verifying the One Time Password';
 const String STR_VERIFY_USER =
-    'Please complete your Sign Up process, by generating and verifying the OTP';
+    'Please complete your Sign Up process, by generating and verifying the One Time Password';
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
 const String STR_OTPMISMATCHED =
-    'Requested operation forbidden. OTP Mismatched';
-const String STR_OTPMISMATCHED_STRING = 'OTP Mismatched';
+    'Requested operation forbidden. One Time Password Mismatched';
+const String STR_OTPMISMATCHED_STRING = 'One Time Password Mismatched';
 const String KEY_INTRO_SLIDER = 'keyIntroSlider';
 const String STR_FEEDBACKS = 'Feedback';
 const String KEY_PREFERRED_DOCTOR = 'prefered doctor';
@@ -248,7 +248,7 @@ const String KEY_FAMILYMEMBER = 'familymember';
 const String KEY_PROVIDER = 'provider';
 
 const String STR_NO_CONNECTIVITY = 'No Internet connection';
-const String STR_OTP_FIELD = 'Please enter a valid OTP';
+const String STR_OTP_FIELD = 'Please enter a valid One Time Password';
 const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
 const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
 
@@ -275,10 +275,10 @@ const String Error = 'Error';
 const String Success = 'Success';
 const String Otp_Verification = 'Otp Verification';
 const String Resend_Code = 'Resend Code';
-const String Receive_OTP = 'Didn\'t receive the OTP?';
-const String enter_otp = 'Please enter the received OTP';
+const String Receive_OTP = 'Didn\'t receive the One Time Password?';
+const String enter_otp = 'Please enter the received One Time Password';
 const String Successfully = 'Successfully';
-const String OTP_Matched = 'Otp matched successfully';
+const String OTP_Matched = 'One Time Password matched successfully';
 const String Family_Member_Added =
     'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';

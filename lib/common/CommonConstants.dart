@@ -178,10 +178,10 @@ class CommonConstants {
   static String save = 'Save';
   static String ok = 'OK';
   static String update = 'Update';
-  static String send_otp = 'Send OTP';
+  static String send_otp = 'Send One Time Password';
 
-  static String verify_otp = 'Verify OTP';
-  static String add_family_otp = 'Add Family OTP';
+  static String verify_otp = 'Verify One Time Password';
+  static String add_family_otp = 'Add Family One Time Password';
 
   static String delink_alert = 'Are you sure you want to Remove/De-Link?';
   static String my_family = 'MyFamily';
