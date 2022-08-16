@@ -146,7 +146,7 @@ class HelpSupport extends StatelessWidget {
             title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
 
-  void launchWhatsApp(context,{
+  void launchWhatsApp({
     @required String phone,
     @required String message,
   }) async {
@@ -161,11 +161,6 @@ class HelpSupport extends StatelessWidget {
     if (await canLaunch(url())) {
       await launch(url());
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("WhatsApp is not installed on the device"),
-        ),
-      );
       throw 'Could not launch ${url()}';
     }
   }
