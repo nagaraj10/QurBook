@@ -122,7 +122,7 @@ class _LandingScreenState extends State<LandingScreen> {
       moveToQurhome();
       callGetFamiltMappingCaregiver();
       var profilebanner =
-      PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
+          PreferenceUtil.getStringValue(constants.KEY_DASHBOARD_BANNER);
       if (profilebanner != null) {
         imageURIProfile = File(profilebanner);
       }
@@ -465,6 +465,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     AssetImage(
                       variable.icon_home,
                     ),
+                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
                   ),
                   title: Text(
                     variable.strhome,
@@ -491,8 +492,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 BottomNavigationBarItem(
                   icon: Image.asset(
                     variable.icon_mayaMain,
-                    height: 25,
-                    width: 25,
+                    height: CommonUtil().isTablet ? 33.0.sp : 25.0.sp,
+                    width: CommonUtil().isTablet ? 33.0.sp : 25.0.sp,
                   ),
                   title: Text(
                     variable.strMaya,
@@ -504,8 +505,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   ),
                 ),
                 BottomNavigationBarItem(
-                  icon: const ImageIcon(
+                  icon: ImageIcon(
                     AssetImage(variable.icon_th),
+                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
                   ),
                   title: Text(
                     constants.strAppointment,
@@ -519,6 +521,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 BottomNavigationBarItem(
                   icon: ImageIcon(
                     AssetImage(variable.icon_records),
+                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
                   ),
                   title: Text(
                     variable.strMyRecords,
@@ -683,6 +686,7 @@ class _LandingScreenState extends State<LandingScreen> {
       icon: GestureDetector(
         child: ImageIcon(
           const AssetImage(variable.icon_chat),
+          size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
           color: landingViewModel.currentTabIndex == 1
               ? Color(CommonUtil().getMyPrimaryColor())
               : Colors.black54,
@@ -765,8 +769,8 @@ class _LandingScreenState extends State<LandingScreen> {
   }) {
     try {
       if (userChanged) {
-            profileData = getMyProfile();
-          }
+        profileData = getMyProfile();
+      }
       setState(() {});
     } catch (e) {
       print(e);
