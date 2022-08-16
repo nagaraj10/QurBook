@@ -822,7 +822,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           inputFormatters: (textEditingController == firstNameController ||
                   textEditingController == lastNameController ||
                   textEditingController == middleNameController)
-              ? [WhitelistingTextInputFormatter(RegExp('[a-zA-Z]'))]
+              ? [WhitelistingTextInputFormatter(RegExp('[a-zA-Z ]*'))]
               : [],
         ));
   }
