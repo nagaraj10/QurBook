@@ -256,6 +256,7 @@ class CommonConstants {
   static const String addr_city = 'City*';
   static const String addr_state = 'State*';
   static const String addr_zip = 'Zipcode';
+  static const String addr_pin = 'Pincode';
 
   static const String corpname = 'Membership offered by';
 
