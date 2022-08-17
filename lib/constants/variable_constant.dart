@@ -17,9 +17,9 @@ const String strPhoneNumber = 'phoneNumber';
 const String strOTP = 'otp';
 const String strOperation = 'operation';
 
-const String strVerifyOtp = 'Verifying OTP';
-const String strOTPVerification = 'Otp Verification';
-const String strEnterOtp = 'Please enter the received OTP';
+const String strVerifyOtp = 'Verifying One Time Password';
+const String strOTPVerification = 'One Time Password Verification';
+const String strEnterOtp = 'Please enter the received One Time Password';
 
 const String strOtpIcon = 'assets/icons/otp_icon.png';
 
@@ -69,9 +69,9 @@ const String DeLink = 'De-Link';
 const String Error = 'Error';
 const String Success = 'Success';
 const String Otp_Verification = 'Otp Verification';
-const String enter_otp = 'Please enter the received OTP';
+const String enter_otp = 'Please enter the received One Time Password';
 const String Successfully = 'Successfully';
-const String OTP_Matched = 'Otp matched successfully';
+const String OTP_Matched = 'One Time Password matched successfully';
 const String Family_Member_Added =
     'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';
@@ -454,8 +454,8 @@ const String strSignUp = 'Sign Up';
 const String strCreateuser = 'Creating User';
 const String strSignOut = 'Signing Out';
 
-const String strVerifyingOtp = 'Verifying OTP';
-const String strGeneratingOtp = 'Generating OTP';
+const String strVerifyingOtp = 'Verifying One Time Password';
+const String strGeneratingOtp = 'Generating One Time Password';
 
 const String strGettingCategory = 'Getting Category List';
 const String strGettingHealthRecords = 'Getting Health Records';
@@ -498,10 +498,10 @@ const String strStopRecord = 'Stop Recording';
 const String strVoiceRecord = 'Voice Record';
 
 // for otp Verify screen
-const String strOtpVerification = 'OTP Verification';
-const String strPlsEnterotpReceived = 'Please enter the OTP received';
-const String strEnterotpReceived = 'Enter the OTP received at';
-const String strdidtReceive = 'Didn\'t receive the OTP?';
+const String strOtpVerification = 'One Time Password Verification';
+const String strPlsEnterotpReceived = 'Please enter the One Time Password received';
+const String strEnterotpReceived = 'Enter the One Time Password received at';
+const String strdidtReceive = 'Didn\'t receive the One Time Password?';
 const String strResendCode = 'Resend Code';
 const String strAgree = 'By completing Sign Up, you agree to our ';
 const String strTermService = 'Terms of Service';
@@ -517,7 +517,7 @@ const String strNext = 'NEXT';
 // for Sign Up
 const String strMobileNum = 'Mobile Number';
 const String strEmailOpt = 'Email address';
-const String strSendOtp = 'Send OTP';
+const String strSendOtp = 'Send One Time Password';
 const String strEmailAddress = 'Email address';
 
 List<String> genderList = ['Male', 'Female', 'Others'];
@@ -614,7 +614,7 @@ const String strMyProvider = 'My Provider';
 const String strMyPlans = 'My Plan';
 const String strExtImg = '.png';
 const String strTelehealth = 'TeleHealth';
-const String strMyRecords = 'My Records';
+const String strMyRecords = 'Health Records';
 const String strhome = 'Home';
 const String strSchedule = 'Schedules';
 const String strProfile = 'Profile';

@@ -187,7 +187,7 @@ const String patientList = 'patientList';
 const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'OR';
 const String strOtpNotReceived =
-    'Don\'t you receive the OTP ? you can re-try in ';
+    'Don\'t you receive the One Time Password ? you can re-try in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String primaryNumber = 'Primary Number';

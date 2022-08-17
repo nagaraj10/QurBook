@@ -9,6 +9,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
@@ -98,12 +99,10 @@ class _VitalsDetailsState extends State<VitalsDetails>
   String validationMsg;
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-
   var commonConstants = CommonConstants();
-
   final controllerGetx = Get.put(VitalDetailController());
-
   var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  var hubController;
 
   AnimationController animationController;
 
@@ -122,7 +121,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
       mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
-      controllerGetx.updateisShowTimerDialog(true);
       catgoryDataList = PreferenceUtil.getCategoryType();
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
@@ -134,12 +132,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
       });
 
       controllerGetx.onTapFilterBtn(0);
-
+      hubController = Get.find<HubListController>();
       initGetX().then((value) {
-        if (widget.device_name == strOxgenSaturation) {
-          initBleTimer();
-        } else if (widget.device_name == strDataTypeBP) {
-          initBpScan();
+        if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
+                .length >
+            0) {
+          controllerGetx.updateisShowTimerDialog(true);
+          if (widget.device_name == strOxgenSaturation) {
+            initBleTimer();
+          } else if (widget.device_name == strDataTypeBP) {
+            initBpScan();
+          }
         }
       });
     } catch (e) {
@@ -165,7 +168,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
       if (_timer != null) {
         _timer.cancel();
       }
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (!_events.isClosed) {
           (_counter > 0) ? _counter-- : _timer.cancel();
           _events.add(_counter);
@@ -182,30 +185,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
   void initBleTimer() async {
     try {
       qurhomeDashboardController.checkForConnectedDevices(true);
-      /*await Future.delayed(Duration(milliseconds: 500));
-      animationController = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 180),
-      );
-      animationController.addListener(() {
-        if (animationController.isAnimating) {
-          controllerGetx.updateTimerValue(animationController.value);
-        } else {
-          controllerGetx.updateTimerValue(1.0);
-        }
-      });
-      if (controllerGetx.isShowTimerDialog.value) {
-        _startTimer();
-        showSearchingBleDialog(context);
-        controllerGetx.updateisShowTimerDialog(false);
-        await Future.delayed(Duration(seconds: 1));
-        qurhomeDashboardController.checkForConnectedDevices(true);
-        qurhomeDashboardController.foundBLE.listen((val) {
-          if (val) {
-            closeDialog();
-          }
-        });
-      }*/
     } catch (e) {
       print(e);
     }
@@ -230,7 +209,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
   void closeDialog() {
     try {
-      Timer(Duration(milliseconds: 1000), () {
+      Timer(const Duration(milliseconds: 1000), () {
         if (animationController.isAnimating) {
           animationController.stop();
         }
