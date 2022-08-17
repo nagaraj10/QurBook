@@ -80,10 +80,13 @@ class _AppointmentsState extends State<Appointments> {
     return Scaffold(
       body: body(),
       appBar: widget.isHome ? null : appBar(),
-      floatingActionButton: commonWidget.floatingButton(
-        context,
-        isHome: widget.isHome,
+        floatingActionButton: Visibility(
+          visible: CommonUtil.REGION_CODE == 'IN',
+          child: commonWidget.floatingButton(
+          context,
+          isHome: widget.isHome,
       ),
+        ),
     );
   }
 
