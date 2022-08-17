@@ -1000,12 +1000,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ),
               controller: cntrlr_addr_zip,
               enabled: true,
+              maxLength: CommonUtil.REGION_CODE == 'IN'?6:5,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 14.0.sp,
                 ),
-                labelText: CommonConstants.addr_zip,
+                labelText: CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip,
               ),
               /* validator: (res) {
                 return (res.isEmpty || res == null)
