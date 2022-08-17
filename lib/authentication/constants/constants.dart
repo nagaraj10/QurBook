@@ -45,11 +45,11 @@ const String careEmployees =
 //Strings used in VerifyPatient
 const String strSource = 'myFHBMobile';
 const String strVerify = 'Verify';
-const String strOtp = 'OTP';
-const String strOtpHint = 'OTP Here';
+const String strOtp = 'One Time Password';
+const String strOtpHint = 'One Time Password Here';
 const String strOtpText =
-    'Enter OTP below which we sent to your mobile number ';
-const String strOtpTextForFamilyMember = 'Please enter the OTP received to ';
+    'Enter One Time Password below which we sent to your mobile number ';
+const String strOtpTextForFamilyMember = 'Please enter the One Time Password received to ';
 const String mobileNumber = "'s mobile number ";
 
 //Strings used in VerifyPatient
@@ -72,7 +72,7 @@ const String strDobHintText = 'Date of Birth';
 const String strEnterDob = 'Please Enter Dateofbirth';
 const String strEmailHintText = 'name@host.com';
 const String strEmailHint = 'Email';
-const String strEnterOtpp = 'Otp must be 6 digits';
+const String strEnterOtpp = 'One Time Password must be 6 digits';
 
 //Strings used in ForgotPasswordScreen
 const String strResetButton = 'Reset my password';
@@ -95,8 +95,8 @@ const String strEmailCantEmpty = 'Please Enter Valid Email';
 const String strPhoneValidText = 'Please Enter Valid Phone Number';
 const String strUserNameCantEmpty = 'Please Enter Valid User Name';
 const String strUserNameValid = 'Please Enter Username in lowercase';
-const String strOtpCantEmpty = 'Please Enter Valid OTP';
-const String strValidOtp = 'Otp should have six characters';
+const String strOtpCantEmpty = 'Please Enter Valid One Time Password';
+const String strValidOtp = 'One Time Password should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';
 const String strConfirmPasswordText = 'New and confirm password should be same';
@@ -131,9 +131,9 @@ const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
 
 //Strings used in ChangePassword
 const String strChangePasswordText =
-    'OTP has been sent to the registered mobile number, enter it below to change the password';
+    'One Time Password has been sent to the registered mobile number, enter it below to change the password';
 const String strChangeButtonText = 'Change Password';
-const String strCodeHintText = 'Otp';
+const String strCodeHintText = 'One Time Password';
 const String strNewPasswordHintTxt = 'New Password';
 const String strNewPasswordAgainHintText = 'Enter New Password Again';
 const String strOldPasswordHintTxt = 'Old Password';
@@ -174,10 +174,10 @@ const String strGivenName = 'given_name';
 const String strUser = 'user';
 const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
-const String strresendOtp = 'Resend OTP';
+const String strresendOtp = 'Resend One Time Password';
 const String strVerifyCall = 'Confirm via Call';
 const String strOrText = 'OR';
-const String strOtpNotReceived = 'Didn\'t receive the OTP ? Retry in ';
+const String strOtpNotReceived = 'Didn\'t receive the One Time Password ? Retry in ';
 const String strCallDirect =
     'Please call from your registered mobile number to a phone number below. Thank you for your understanding';
 const String strSOSCallDirect =
@@ -222,7 +222,7 @@ const String strIndianPhoneCode = 'IN';
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
 const String strsupportEmail =
-    'If OTP is not received within 5mins, please contact support at support@qurhealth.in';
+    'If One Time Password is not received within 5mins, please contact support at support@qurhealth.in';
 
 const String strEmptyWebView = 'Plan summary will be available soon';
 
