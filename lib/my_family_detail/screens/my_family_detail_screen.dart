@@ -1439,7 +1439,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   hintStyle: TextStyle(fontSize: 16.0.sp),
-                  labelText: CommonConstants.addr_zip
+                  labelText:CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip
                   //.substring(0, CommonConstants.addr_zip.length - 1),
                   ),
               validator: (res) {

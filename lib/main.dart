@@ -1259,7 +1259,7 @@ class _MyFHBState extends State<MyFHB> {
 
   Widget findHomeWidget(String navRoute) {
     if (isFirstTime != null && !isFirstTime) {
-      return IntroductionScreen();
+      return CommonUtil.REGION_CODE == 'IN'?IntroductionScreen():SplashScreen();
     } else if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
