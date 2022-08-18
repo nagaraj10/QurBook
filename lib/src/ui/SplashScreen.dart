@@ -289,11 +289,14 @@ class _SplashScreenState extends State<SplashScreen> {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
-                    }else if(widget.nsRoute=='isSheelaFollowup'){
+                    } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
                       Get.toNamed(
                         rt_Sheela,
-                        arguments: SheelaArgument(isSheelaFollowup: true,message:temp[1],),
+                        arguments: SheelaArgument(
+                          isSheelaFollowup: true,
+                          message: temp[1],
+                        ),
                       );
                     } else if (widget.nsRoute ==
                         'familyMemberCaregiverRequest') {
