@@ -242,12 +242,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 keyboardType: TextInputType.emailAddress,
                                 controller: emailController,
                                 validator: (value) {
-                                  return AuthenticationValidator()
-                                      .emailValidation(
-                                    value,
-                                    patternEmail,
-                                    strEmailValidText,
-                                  );
+                                  return CommonUtil.toCheckEmailValidiation(
+                                      value, patternEmail, strEmailValidText);
                                 },
                                 onSaved: (value) {},
                               ),
