@@ -12,6 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
+import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -1848,6 +1849,19 @@ class CommonUtil {
         duration: const Duration(seconds: 10),
       ),
     );
+  }
+
+  static String toCheckEmailValidiation(
+      String value, String patternEmail, String strEmailValidText) {
+    if (CommonUtil.REGION_CODE != "IN") {
+      if (value.length > 0 && value != null) {
+        return AuthenticationValidator()
+            .emailValidation(value, patternEmail, strEmailValidText);
+      }
+    } else {
+      return AuthenticationValidator()
+          .emailValidation(value, patternEmail, strEmailValidText);
+    }
   }
 
   Future<MyProfileModel> fetchUserProfileInfo() async {
@@ -4666,7 +4680,8 @@ class CommonUtil {
 
   String getFormattedDateTime(String datetime) {
     DateTime dateTimeStamp = DateTime.parse(datetime);
-    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp.toLocal());
+    String formattedDate =
+        DateFormat('MMM d, hh:mm a').format(dateTimeStamp.toLocal());
     return formattedDate;
   }
 
@@ -6118,6 +6133,4 @@ class VideoCallCommonUtils {
       return '';
     }
   }
-
-
 }
