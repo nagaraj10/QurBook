@@ -374,7 +374,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     emailController,
                     emailFocus,
                     genderFocus,
-                    CommonConstants.emailWithStar,
+                    CommonUtil.REGION_CODE == "IN"
+                        ? CommonConstants.emailWithStar
+                        : CommonConstants.emailWithoutStar,
                     CommonConstants.email_address_optional,
                     (widget.arguments.fromClass ==
                                 CommonConstants.user_update ||
@@ -935,13 +937,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ),
               controller: cntrlr_addr_zip,
               enabled: true,
-              maxLength: CommonUtil.REGION_CODE == 'IN'?6:5,
+              maxLength: CommonUtil.REGION_CODE == 'IN' ? 6 : 5,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                   fontSize: 14.0.sp,
                 ),
-                labelText: CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip,
+                labelText: CommonUtil.REGION_CODE == 'IN'
+                    ? CommonConstants.addr_pin
+                    : CommonConstants.addr_zip,
               ),
               /* validator: (res) {
                 return (res.isEmpty || res == null)
@@ -1378,7 +1382,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
       isValid = false;
       strErrorMsg = variable.selectBloodGroup;
-    } else if (emailController.text == '' || !emailValid) {
+    } else if (emailController.text != '' && !emailValid) {
       isValid = false;
       strErrorMsg = 'Invalid Email Address';
     } else {

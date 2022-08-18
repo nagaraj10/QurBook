@@ -218,6 +218,8 @@ class CommonConstants {
   static String date_of_birthWithStar = 'Date of Birth*';
   static String firstNameWithStar = 'FirstName*';
   static String emailWithStar = 'Email Address*';
+  static String emailWithoutStar = 'Email Address';
+
   static String middleNameWithStar = 'MiddleName*';
   static String lastNameWithStar = 'LastName*';
   static String exprityDate = 'Expiry Date*';
