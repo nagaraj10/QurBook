@@ -322,4 +322,29 @@ class CheckoutPageProvider extends ChangeNotifier {
       }
     });
   }
+
+  Future<FetchingCartItemsModel> updateCartItems(
+      {bool isNeedRelod = false,
+      String cartUserId,
+      String notificationListId,
+      bool isPaymentLinkViaPush = false,
+      String cartId = ""}) async {
+    changeCartStatus(CartStatus.LOADING, isNeedRelod: false);
+    if (isPaymentLinkViaPush) {
+      fetchingCartItemsModel = await helper.fetchCartItems(
+          cartUserId: cartUserId,
+          notificationListId: notificationListId,
+          isPaymentLinkViaPush: isPaymentLinkViaPush,
+          cartId: cartId);
+    } else {
+      fetchingCartItemsModel = await helper.fetchCartItems(
+        cartUserId: cartUserId,
+        notificationListId: notificationListId,
+        isPaymentLinkViaPush: isPaymentLinkViaPush,
+      );
+    }
+    changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
+
+    return fetchingCartItemsModel;
+  }
 }

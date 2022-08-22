@@ -699,12 +699,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
       "isQurbook": true
     };
-    print("bodybodybody" + body.toString());
-
     FetchingCartItemsModel fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
-            .fetchCartItems(
-                isNeedRelod: true,
+            .updateCartItems(
+                isNeedRelod: false,
                 cartUserId: widget?.cartUserId,
                 notificationListId: widget?.notificationListId,
                 isPaymentLinkViaPush: widget?.isFromNotification,
@@ -727,6 +725,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       notificationListId: widget.notificationListId,
                       isPaymentLinkViaPush: widget.isFromNotification,
                       cartUserId: widget.cartUserId);
+
+              Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+                  .fetchCartItems(
+                      isNeedRelod: true,
+                      cartUserId: widget?.cartUserId,
+                      notificationListId: widget?.notificationListId,
+                      isPaymentLinkViaPush: widget?.isFromNotification,
+                      cartId: widget.cartId);
             }
           });
     } else {
