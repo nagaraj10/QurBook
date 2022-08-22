@@ -9,7 +9,9 @@ class FetchingCartItemsModel {
 
   FetchingCartItemsModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    message = json['message'];
+    if (json.containsKey('message')) {
+      message = json['message'];
+    }
     if (json.containsKey('result')) {
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
