@@ -2101,6 +2101,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                 }
                             }
                         )
+             displayText?.setText("")
 
                         dialog.show()
                     }
