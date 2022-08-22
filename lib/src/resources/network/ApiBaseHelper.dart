@@ -2068,7 +2068,9 @@ class ApiBaseHelper {
         }
         return responseJson;
       }
-    } catch (e) {}
+    } catch (e) {
+      print("**********************" + e.toString());
+    }
   }
 
   Future<FetchingCartItemsModel> clearCartItems() async {
@@ -2141,6 +2143,30 @@ class ApiBaseHelper {
         //responseJson = _returnResponse(response);
         responseJson =
             MakePaymentResponse.fromJson(json.decode(response.body.toString()));
+      } on SocketException {
+        throw FetchDataException(variable.strNoInternet);
+      }
+      return responseJson;
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<dynamic> updateCartIcon(dynamic body) async {
+    try {
+      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String createBy =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      DateTime dateTime = DateTime.now();
+      var responseJson;
+
+      try {
+        final response = await ApiServices.post(
+            _baseUrl + "cart/update-product-details",
+            body: json.encode(body),
+            headers: await headerRequest.getRequestHeadersAuthContent());
+        //responseJson = _returnResponse(response);
+        responseJson = json.decode(response.body.toString());
       } on SocketException {
         throw FetchDataException(variable.strNoInternet);
       }

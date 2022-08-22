@@ -15,11 +15,13 @@ import 'package:myfhb/plan_dashboard/model/CreateSubscribeModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
+import 'package:myfhb/widgets/fetching_cart_items_model.dart';
 import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +38,9 @@ class CheckoutPageWidgets {
       {dynamic body,
       dynamic totalCartAmount,
       Function(String) closePage,
-      bool isPaymentNotification = false}) {
+      bool isPaymentNotification = false,
+      FetchingCartItemsModel fetchingCartItemsModel,
+      Function(bool) isSuccess}) {
     return showDialog(
         context: Get.context,
         builder: (context) {
@@ -286,6 +290,33 @@ class CheckoutPageWidgets {
                                                         'Subscribe Failed',
                                                         Colors.red);
                                                 }
+                                              } else {
+                                                Navigator.of(
+                                                        _keyLoader
+                                                            .currentContext,
+                                                        rootNavigator: true)
+                                                    .pop();
+
+                                                Alert.displayConfirmProceed(
+                                                    Get.context,
+                                                    confirm: "Update Cart",
+                                                    title: "Update",
+                                                    content:
+                                                        value?.message ?? '',
+                                                    onPressedConfirm: () {
+                                                  ApiBaseHelper()
+                                                      .updateCartIcon(
+                                                          fetchingCartItemsModel
+                                                              ?.result)
+                                                      .then((value) {
+                                                    Navigator.of(Get.context)
+                                                        .pop();
+                                                    if (value['isSuccess']) {
+                                                      isSuccess(
+                                                          value['isSuccess']);
+                                                    }
+                                                  });
+                                                });
                                               }
                                             } else {
                                               Navigator.of(

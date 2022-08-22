@@ -44,8 +44,8 @@ class _MyPlanState extends State<MyPlanList> {
   final GlobalKey _GotoRegimentKey = GlobalKey();
   final GlobalKey _PlanCardKey = GlobalKey();
   bool isFirst;
-  bool addplanbutton=false;
-  bool showRenewOrSubscribeButton=false;
+  bool addplanbutton = false;
+  bool showRenewOrSubscribeButton = false;
   BuildContext _myContext;
   @override
   void initState() {
@@ -59,7 +59,8 @@ class _MyPlanState extends State<MyPlanList> {
         listen: false,
       ).updateTabIndex(currentIndex: 3);
     }
-    Provider.of<PlanWizardViewModel>(context, listen: false)?.getCreditBalance();
+    Provider.of<PlanWizardViewModel>(context, listen: false)
+        ?.getCreditBalance();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.fetchCartItem();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.updateCareCount();
     Provider.of<PlanWizardViewModel>(context, listen: false)?.updateDietCount();
@@ -79,12 +80,13 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Future<void> getConfiguration() async {
-    bool addplanbutton=await PreferenceUtil.getAddPlanBtn();
-    bool showRenewOrSubscribeButton=await PreferenceUtil.getUnSubscribeValue();
-    print('addplanbtn: '+addplanbutton.toString());
+    bool addplanbutton = await PreferenceUtil.getAddPlanBtn();
+    bool showRenewOrSubscribeButton =
+        await PreferenceUtil.getUnSubscribeValue();
+    print('addplanbtn: ' + addplanbutton.toString());
     setState(() {
-      this.addplanbutton=addplanbutton;
-      this.showRenewOrSubscribeButton=showRenewOrSubscribeButton;
+      this.addplanbutton = addplanbutton;
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
     });
   }
 
@@ -108,23 +110,27 @@ class _MyPlanState extends State<MyPlanList> {
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return Scaffold(
-          floatingActionButton: addplanbutton?FloatingActionButton.extended(
-            onPressed: () async {
-              var firebase=FirebaseAnalyticsService();
-              firebase.trackEvent("on_add_plan_button_click",{"user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN)});
+          floatingActionButton: addplanbutton
+              ? FloatingActionButton.extended(
+                  onPressed: () async {
+                    var firebase = FirebaseAnalyticsService();
+                    firebase.trackEvent("on_add_plan_button_click", {
+                      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN)
+                    });
 
-              // await Get.toNamed(rt_Diseases);
-              await Get.toNamed(rt_PlanWizard).then(
-                  (value) => FocusManager.instance.primaryFocus.unfocus());
-            },
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            label: Text(strAddPlan,
-                style: TextStyle(fontSize: 18.sp, color: Colors.white)),
-          ):Container(),
+                    // await Get.toNamed(rt_Diseases);
+                    await Get.toNamed(rt_PlanWizard).then((value) =>
+                        FocusManager.instance.primaryFocus.unfocus());
+                  },
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  icon: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  label: Text(strAddPlan,
+                      style: TextStyle(fontSize: 18.sp, color: Colors.white)),
+                )
+              : Container(),
           body: Stack(
             fit: StackFit.expand,
             alignment: Alignment.bottomCenter,
@@ -253,9 +259,9 @@ class _MyPlanState extends State<MyPlanList> {
                 child: CommonUtil.REGION_CODE == 'IN'
                     ? Text(variable.strNoPlans)
                     : Text(variable.strNoPlansUS,
-                    textAlign: TextAlign.center,
-                    style:
-                    TextStyle(fontSize: 20.0.sp, color: Colors.black)),
+                        textAlign: TextAlign.center,
+                        style:
+                            TextStyle(fontSize: 20.0.sp, color: Colors.black)),
               )),
             ),
           );
@@ -294,9 +300,9 @@ class _MyPlanState extends State<MyPlanList> {
                   child: CommonUtil.REGION_CODE == 'IN'
                       ? Text(variable.strNoPlans)
                       : Text(variable.strNoPlansUS,
-                      textAlign: TextAlign.center,
-                      style:
-                      TextStyle(fontSize: 20.0.sp, color: Colors.black)),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20.0.sp, color: Colors.black)),
                 )),
               ),
             );
@@ -431,104 +437,124 @@ class _MyPlanState extends State<MyPlanList> {
                       ],
                     ),
                   ),
-                  if(planList[i]?.tags!=strMemb)Row(
-                    children: [
-                      showRenewOrSubscribeButton?Column(
-                        children: [
-                          Align(
-                            child: SizedBoxWithChild(
-                              height: 32.0.h,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                    side: BorderSide(
-                                        color: planList[i].isexpired == '1'
+                  if (planList[i]?.tags != strMemb)
+                    Row(
+                      children: [
+                        showRenewOrSubscribeButton
+                            ? Column(
+                                children: [
+                                  Align(
+                                    child: SizedBoxWithChild(
+                                      height: 32.0.h,
+                                      child: FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                            side: BorderSide(
+                                                color: planList[i].isexpired ==
+                                                        '1'
+                                                    ? Color(CommonUtil()
+                                                        .getMyPrimaryColor())
+                                                    : Colors.red)),
+                                        color: Colors.transparent,
+                                        textColor: planList[i].isexpired == '1'
                                             ? Color(CommonUtil()
                                                 .getMyPrimaryColor())
-                                            : Colors.red)),
-                                color: Colors.transparent,
-                                textColor: planList[i].isexpired == '1'
-                                    ? Color(CommonUtil().getMyPrimaryColor())
-                                    : Colors.red,
-                                padding: EdgeInsets.all(
-                                  8.0.sp,
-                                ),
-                                onPressed: () async {
-                                  if (planList[i].isexpired == '1') {
-                                    await CommonUtil().renewAlertDialog(context,
-                                        packageId: planList[i]?.packageid,
-                                        price: planList[i]?.price,
-                                        startDate: planList[i]?.startdate,
-                                        endDate: planList[i]?.enddate,
-                                        isExpired: true,
-                                        IsExtendable:
-                                            planList[i]?.isExtendable == '1'
-                                                ? true
-                                                : false, refresh: () {
-                                      setState(() {});
-                                    });
-                                  } else {
-                                    if (planList[i].price == '0') {
-                                      await CommonUtil().unSubcribeAlertDialog(
-                                          context,
-                                          packageId: planList[i].packageid,
-                                          refresh: () {
-                                        setState(() {});
-                                      });
-                                    } else {
-                                      await CommonUtil().alertDialogForNoReFund(
-                                          context,
-                                          packageId: planList[i].packageid,
-                                          refresh: () {
-                                        setState(() {});
-                                      });
-                                    }
-                                  }
-                                },
-                                child: TextWidget(
-                                  text: planList[i].isexpired == '1'
-                                      ? strIsRenew
-                                      : strUnSubscribe,
-                                  fontsize: 12.0.sp,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ):Column(
-                        children: [
-                          Align(
-                            child: SizedBoxWithChild(
-                              height: 32.0.h,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                    side: BorderSide(
-                                        color: planList[i].isexpired == '1'
+                                            : Colors.red,
+                                        padding: EdgeInsets.all(
+                                          8.0.sp,
+                                        ),
+                                        onPressed: () async {
+                                          if (planList[i].isexpired == '1') {
+                                            await CommonUtil().renewAlertDialog(
+                                                context,
+                                                packageId:
+                                                    planList[i]?.packageid,
+                                                price: planList[i]?.price,
+                                                startDate:
+                                                    planList[i]?.startdate,
+                                                endDate: planList[i]?.enddate,
+                                                isExpired: true,
+                                                packageDuration:
+                                                    planList[i]?.duration,
+                                                IsExtendable:
+                                                    planList[i]?.isExtendable ==
+                                                            '1'
+                                                        ? true
+                                                        : false, refresh: () {
+                                              setState(() {});
+                                            });
+                                          } else {
+                                            if (planList[i].price == '0') {
+                                              await CommonUtil()
+                                                  .unSubcribeAlertDialog(
+                                                      context,
+                                                      packageId:
+                                                          planList[i].packageid,
+                                                      refresh: () {
+                                                setState(() {});
+                                              });
+                                            } else {
+                                              await CommonUtil()
+                                                  .alertDialogForNoReFund(
+                                                      context,
+                                                      packageId:
+                                                          planList[i].packageid,
+                                                      refresh: () {
+                                                setState(() {});
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: TextWidget(
+                                          text: planList[i].isexpired == '1'
+                                              ? strIsRenew
+                                              : strUnSubscribe,
+                                          fontsize: 12.0.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                children: [
+                                  Align(
+                                    child: SizedBoxWithChild(
+                                      height: 32.0.h,
+                                      child: FlatButton(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(18),
+                                            side: BorderSide(
+                                                color: planList[i].isexpired ==
+                                                        '1'
+                                                    ? Colors.red
+                                                    : Color(CommonUtil()
+                                                        .getMyPrimaryColor()))),
+                                        color: Colors.transparent,
+                                        textColor: planList[i].isexpired == '1'
                                             ? Colors.red
-                                            : Color(CommonUtil().getMyPrimaryColor()))),
-                                color: Colors.transparent,
-                                textColor: planList[i].isexpired == '1'
-                                    ? Colors.red
-                                    : Color(CommonUtil().getMyPrimaryColor()),
-                                padding: EdgeInsets.all(
-                                  8.0.sp,
-                                ),
-                                onPressed: (){},
-                                child: TextWidget(
-                                  text: planList[i].isexpired == '1'
-                                      ? strExpired
-                                      : strActive,
-                                  fontsize: 12.0.sp,
-                                ),
+                                            : Color(CommonUtil()
+                                                .getMyPrimaryColor()),
+                                        padding: EdgeInsets.all(
+                                          8.0.sp,
+                                        ),
+                                        onPressed: () {},
+                                        child: TextWidget(
+                                          text: planList[i].isexpired == '1'
+                                              ? strExpired
+                                              : strActive,
+                                          fontsize: 12.0.sp,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 4.w),
-                    ],
-                  )
+                        SizedBox(width: 4.w),
+                      ],
+                    )
                 ],
               ),
               SizedBox(height: 5.h),
