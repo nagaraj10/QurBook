@@ -702,7 +702,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
     print("bodybodybody" + body.toString());
 
     FetchingCartItemsModel fetchingCartItemsModel =
-        value?.fetchingCartItemsModel;
+        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+            .fetchCartItems(
+                isNeedRelod: true,
+                cartUserId: widget?.cartUserId,
+                notificationListId: widget?.notificationListId,
+                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartId: widget.cartId);
 
     if (mCartTotal > 0) {
       CheckoutPageWidgets().showPaymentConfirmationDialog(
