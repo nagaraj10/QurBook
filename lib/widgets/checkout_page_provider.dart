@@ -64,10 +64,31 @@ class CheckoutPageProvider extends ChangeNotifier {
         if (product?.additionalInfo?.isMembershipAvail ?? false) {
           totalProductCount = totalProductCount + 0;
         } else {
-          if (product?.paidAmount.contains(".")) {
+          if (product?.productDetail?.planSubscriptionFee != null &&
+              product?.productDetail?.planSubscriptionFee != "") {
+            int amtToPay =
+                double.parse(product?.productDetail?.planSubscriptionFee)
+                    .toInt();
+            totalProductCount = totalProductCount + amtToPay;
+          } else if (product?.additionalInfo?.newFee != null &&
+              product?.additionalInfo?.newFee != "") {
+            int amtToPay =
+                double.parse(product?.additionalInfo?.newFee).toInt();
+            totalProductCount = totalProductCount + amtToPay;
+          } else if (product?.additionalInfo?.actualFee != null &&
+              product?.additionalInfo?.actualFee != "") {
+            if (product?.additionalInfo?.actualFee?.contains(".")) {
+              int amtToPay =
+                  double.parse(product?.additionalInfo?.actualFee).toInt();
+              totalProductCount = totalProductCount + amtToPay;
+            } else if (!product?.additionalInfo?.actualFee?.contains(".")) {
+              int amtToPay = int.parse(product?.additionalInfo?.actualFee);
+              totalProductCount = totalProductCount + amtToPay;
+            }
+          } else if (product?.paidAmount.contains(".")) {
             int amtToPay = double.parse(product?.paidAmount).toInt();
             totalProductCount = totalProductCount + amtToPay;
-          } else if (!product?.paidAmount.contains(".")) {
+          } else if (!product?.paidAmount?.contains(".")) {
             int amtToPay = int.parse(product?.paidAmount);
             totalProductCount = totalProductCount + amtToPay;
           }
@@ -150,13 +171,32 @@ class CheckoutPageProvider extends ChangeNotifier {
       FlutterToast().getToast(value.message, Colors.green);
       await fetchCartItems(isNeedRelod: isNeedRelod);
       await fetchCartItem();
-      await updateCareCount();
+      await updateProductCount();
+
       //setCartType(CartType.DEFAULT_CART);
     } else {
       //failed to remove from cart
       FlutterToast().getToast(value.message, Colors.red);
     }
     await clearAllInCareDiet();
+  }
+
+  Future<void> updateAmount({
+    bool isNeedRelod = false,
+    bool isPaymentLinkViaPush = false,
+    String cartId = "",
+    String cartUserId,
+    String notificationListId,
+  }) async {
+    //item removed from cart
+    await fetchCartItems(
+        isNeedRelod: isNeedRelod,
+        isPaymentLinkViaPush: isPaymentLinkViaPush,
+        cartId: cartId,
+        cartUserId: cartUserId,
+        notificationListId: notificationListId);
+    await updateCareCount();
+    //setCartType(CartType.DEFAULT_CART);
   }
 
   void changeCartStatus(CartStatus currentCartStatus,
@@ -281,5 +321,30 @@ class CheckoutPageProvider extends ChangeNotifier {
             ?.isMembershipAVailable = false;
       }
     });
+  }
+
+  Future<FetchingCartItemsModel> updateCartItems(
+      {bool isNeedRelod = false,
+      String cartUserId,
+      String notificationListId,
+      bool isPaymentLinkViaPush = false,
+      String cartId = ""}) async {
+    changeCartStatus(CartStatus.LOADING, isNeedRelod: false);
+    if (isPaymentLinkViaPush) {
+      fetchingCartItemsModel = await helper.fetchCartItems(
+          cartUserId: cartUserId,
+          notificationListId: notificationListId,
+          isPaymentLinkViaPush: isPaymentLinkViaPush,
+          cartId: cartId);
+    } else {
+      fetchingCartItemsModel = await helper.fetchCartItems(
+        cartUserId: cartUserId,
+        notificationListId: notificationListId,
+        isPaymentLinkViaPush: isPaymentLinkViaPush,
+      );
+    }
+    changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
+
+    return fetchingCartItemsModel;
   }
 }
