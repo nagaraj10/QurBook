@@ -1220,7 +1220,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   screen: screenValue);
               conversations.add(model);
               if ((lastObj.buttons?.length ?? 0) > 0) {
-                var responseRecived = response.toString().toLowerCase();
+                var responseRecived = response.toString().trim().toLowerCase();
                 var button;
                 try {
                   button = lastObj.buttons.firstWhere((element) =>
@@ -1228,7 +1228,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   startSheelaFromButton(
                       buttonText: button?.title ?? response,
                       payload: button?.payload ?? response,
-                      addMsg: true);
+                      addMsg: false);
                 } catch (e) {
                   startSheelaFromButton(
                       buttonText: button?.title ?? response,
