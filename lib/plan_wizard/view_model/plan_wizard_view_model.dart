@@ -571,7 +571,8 @@ class PlanWizardViewModel extends ChangeNotifier {
       String remarks,
       bool isMemberShipAvail,
       String actualFee,
-      String planType}) async {
+      String planType,
+      String packageDuration}) async {
     try {
       AddToCartModel addToCartModel = await planWizardService.addToCartService(
           packageId: packageId,
@@ -581,7 +582,8 @@ class PlanWizardViewModel extends ChangeNotifier {
           remarks: remarks,
           isMemberShipAvail: isMemberShipAvail,
           actualFee: actualFee,
-          planType: planType);
+          planType: planType,
+          packageDuration: packageDuration);
 
       if (addToCartModel.isSuccess) {
         if (isFromAdd == strProviderDiet) {
@@ -618,8 +620,10 @@ class PlanWizardViewModel extends ChangeNotifier {
         }
 
         Get.snackbar(
-            '', (addToCartModel?.message ?? 'Adding Failed! Try again'),backgroundColor: Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),colorText: Colors.white
-    );
+            '', (addToCartModel?.message ?? 'Adding Failed! Try again'),
+            backgroundColor:
+                Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.9),
+            colorText: Colors.white);
       }
 
       return addToCartModel;

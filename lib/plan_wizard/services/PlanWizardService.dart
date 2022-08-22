@@ -37,7 +37,8 @@ class PlanWizardService {
     return PlanListModel.fromJson(response);
   }
 
-  Future<PlanListModel> getDietPlanListNew({String patientId,String isFrom, bool isVeg = false}) async {
+  Future<PlanListModel> getDietPlanListNew(
+      {String patientId, String isFrom, bool isVeg = false}) async {
     String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)
         .selectedTag;
     var body = {};
@@ -84,7 +85,15 @@ class PlanWizardService {
   }
 
   Future<AddToCartModel> addToCartService(
-      {String packageId, String price, bool isRenew, String tag,String remarks,bool isMemberShipAvail,String actualFee,String planType}) async {
+      {String packageId,
+      String price,
+      bool isRenew,
+      String tag,
+      String remarks,
+      bool isMemberShipAvail,
+      String actualFee,
+      String planType,
+      String packageDuration}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var paymentInput = {};
@@ -95,12 +104,13 @@ class PlanWizardService {
     paymentInput['productType'] = 'PRD_PLAN';
     paymentInput['paidAmount'] = price;
     additionalInfo['isRenewal'] = isRenew;
-    if(!isRenew) {
+    if (!isRenew) {
       additionalInfo['isMembershipAvail'] = isMemberShipAvail;
       additionalInfo['remarks'] = remarks;
       additionalInfo['PlanType'] = planType;
       additionalInfo['actualFee'] = actualFee;
       additionalInfo['newFee'] = isMemberShipAvail ? 0 : price;
+      additionalInfo['duration'] = int.parse(packageDuration);
     }
     additionalInfo['tag'] = tag;
     paymentInput['additionalInfo'] = additionalInfo;
