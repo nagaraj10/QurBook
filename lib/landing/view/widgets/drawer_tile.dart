@@ -1,3 +1,4 @@
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -22,6 +23,9 @@ class DrawerTile extends StatelessWidget {
           Divider(
             height: CommonUtil().isTablet ? 3.0.h : 1.0.h,
           ),
+          CommonUtil().isTablet ?SizedBoxWidget(
+            height: 4.0.h,
+          ):SizedBox.shrink(),
           Material(
             color: Colors.transparent,
             child: ListTile(
@@ -44,6 +48,9 @@ class DrawerTile extends StatelessWidget {
               ),
             ),
           ),
+          CommonUtil().isTablet ?SizedBoxWidget(
+            height: 4.0.h,
+          ):SizedBox.shrink(),
         ],
       );
 }

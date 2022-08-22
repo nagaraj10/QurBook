@@ -40,7 +40,7 @@ class NavigationDrawer extends StatelessWidget {
     print('*********************************');
     print(userChangedbool);
     return Container(
-      // width: CommonUtil().isTablet ? 480.00 : null,
+       width: CommonUtil().isTablet ? MediaQuery.of(context).size.width * 0.75 : null,
       child: Drawer(
         child: Container(
           color: Colors.white,
