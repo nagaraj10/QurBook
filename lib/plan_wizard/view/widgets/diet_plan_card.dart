@@ -209,7 +209,8 @@ class DietPlanCard extends StatelessWidget {
                                         .checkItemInCart(
                                             planList.packageid, isFrom);
                                 if (isSelected) {
-                                  commonRemoveCartDialog(context,null,planList.packageid);
+                                  commonRemoveCartDialog(
+                                      context, null, planList.packageid);
                                 } else {
                                   _alertForSubscribedPlan(context);
                                 }
@@ -224,8 +225,8 @@ class DietPlanCard extends StatelessWidget {
                                   .checkItemInCart(planList.packageid, isFrom,
                                       providerId: planList.providerid);
                               if (isSelected) {
-                                commonRemoveCartDialog(context,null,planList.packageid);
-
+                                commonRemoveCartDialog(
+                                    context, null, planList.packageid);
                               } else {
                                 bool canProceed =
                                     await Provider.of<PlanWizardViewModel>(
@@ -239,12 +240,13 @@ class DietPlanCard extends StatelessWidget {
                                                 listen: false)
                                             ?.currentPackageProviderDietId !=
                                         '') {
-                                      commonRemoveCartDialog(context,null,Provider.of<
-                                          PlanWizardViewModel>(
+                                      commonRemoveCartDialog(
                                           context,
-                                          listen: false)
-                                          ?.currentPackageProviderDietId);
-
+                                          null,
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageProviderDietId);
                                     }
 
                                     bool isItemInCart =
@@ -253,11 +255,13 @@ class DietPlanCard extends StatelessWidget {
                                                 listen: false)
                                             .checkAllItemsForFreeDiet();
                                     if (isItemInCart) {
-                                      commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
+                                      commonRemoveCartDialog(
                                           context,
-                                          listen: false)
-                                          ?.currentCartProviderDietPackageId);
-
+                                          null,
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentCartProviderDietPackageId);
                                     }
 
                                     checkIfMemberShipIsAvailable(
@@ -268,11 +272,13 @@ class DietPlanCard extends StatelessWidget {
                                                 listen: false)
                                             ?.currentPackageFreeDietId !=
                                         '') {
-                                      commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
+                                      commonRemoveCartDialog(
                                           context,
-                                          listen: false)
-                                          ?.currentPackageFreeDietId);
-
+                                          null,
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentPackageFreeDietId);
                                     }
 
                                     bool isItemInCart =
@@ -281,11 +287,13 @@ class DietPlanCard extends StatelessWidget {
                                                 listen: false)
                                             .checkAllItemsForFreeDiet();
                                     if (isItemInCart) {
-                                      commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
+                                      commonRemoveCartDialog(
                                           context,
-                                          listen: false)
-                                          ?.currentCartFreeDietPackageId);
-
+                                          null,
+                                          Provider.of<PlanWizardViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              ?.currentCartFreeDietPackageId);
                                     }
 
                                     checkIfMemberShipIsAvailable(
@@ -332,11 +340,12 @@ class DietPlanCard extends StatelessWidget {
                                   listen: false)
                               ?.currentPackageProviderDietId !=
                           '') {
-
-                        commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
-                            Get.context,
-                            listen: false)
-                            ?.currentPackageProviderDietId);
+                        commonRemoveCartDialog(
+                            context,
+                            null,
+                            Provider.of<PlanWizardViewModel>(Get.context,
+                                    listen: false)
+                                ?.currentPackageProviderDietId);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
@@ -344,11 +353,12 @@ class DietPlanCard extends StatelessWidget {
                               listen: false)
                           .checkAllItemsForProviderDiet();
                       if (isItemInCart) {
-                        commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
-                            Get.context,
-                            listen: false)
-                            ?.currentCartProviderDietPackageId);
-
+                        commonRemoveCartDialog(
+                            context,
+                            null,
+                            Provider.of<PlanWizardViewModel>(Get.context,
+                                    listen: false)
+                                ?.currentCartProviderDietPackageId);
                       }
 
                       checkIfMemberShipIsAvailable(
@@ -361,12 +371,12 @@ class DietPlanCard extends StatelessWidget {
                                   listen: false)
                               ?.currentPackageFreeDietId !=
                           '') {
-                        commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
-                            Get.context,
-                            listen: false)
-                            ?.currentPackageFreeDietId);
-
-
+                        commonRemoveCartDialog(
+                            context,
+                            null,
+                            Provider.of<PlanWizardViewModel>(Get.context,
+                                    listen: false)
+                                ?.currentPackageFreeDietId);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
@@ -374,11 +384,12 @@ class DietPlanCard extends StatelessWidget {
                               listen: false)
                           .checkAllItemsForFreeDiet();
                       if (isItemInCart) {
-                        commonRemoveCartDialog(context,null,Provider.of<PlanWizardViewModel>(
-                            Get.context,
-                            listen: false)
-                            ?.currentCartFreeDietPackageId);
-
+                        commonRemoveCartDialog(
+                            context,
+                            null,
+                            Provider.of<PlanWizardViewModel>(Get.context,
+                                    listen: false)
+                                ?.currentCartFreeDietPackageId);
                       }
 
                       checkIfMemberShipIsAvailable(
@@ -397,11 +408,11 @@ class DietPlanCard extends StatelessWidget {
   void checkIfMemberShipIsAvailable(
       BuildContext context, PlanListResult planList, String price) async {
     bool isMemberShip =
-    await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.isMembershipAVailable;
+        await Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.isMembershipAVailable;
     int dietCount =
-    await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.dietPlanCount;
+        await Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.dietPlanCount;
     int priceValue = int.parse(price);
     if (isMemberShip && priceValue > 0 && dietCount > 0) {
       print("Condition Statisfied dietCount******************** Show Alert");
@@ -409,57 +420,61 @@ class DietPlanCard extends StatelessWidget {
           dietCount.toString());
       _alertForMemberShip(context, planList, true);
     } else {
-      print("Condition not Statisfied dietCount ******************** Show Alert");
-      print("Condition not Statisfied dietCount ******************** Show Alert");
+      print(
+          "Condition not Statisfied dietCount ******************** Show Alert");
+      print(
+          "Condition not Statisfied dietCount ******************** Show Alert");
 
       addToCartCommonMethod(planList, context, planList.price, "", false);
     }
   }
-  Future<bool> _alertForMemberShip(BuildContext context,PlanListResult planList,bool isMemberShip) {
+
+  Future<bool> _alertForMemberShip(
+      BuildContext context, PlanListResult planList, bool isMemberShip) {
     String originalPrice = planList.price;
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        content: Text("You can subscribe/renew this plan for free. Do you want to use your membership benefit?"),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            addToCartCommonMethod(planList, context, originalPrice,
-                "", false);
-            },
-            child: Text('No'),
-          ),
-          FlatButton(
-            onPressed: () async {
-              Navigator.pop(context);
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+                "You can subscribe/renew this plan for free. Do you want to use your membership benefit?"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  addToCartCommonMethod(
+                      planList, context, originalPrice, "", false);
+                },
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  Navigator.pop(context);
 
-              addToCartCommonMethod(planList, context, originalPrice,
-                  "", true);
-
-            },
-            child: Text('Yes'),
+                  addToCartCommonMethod(
+                      planList, context, originalPrice, "", true);
+                },
+                child: Text('Yes'),
+              ),
+            ],
           ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
   void addToCartCommonMethod(PlanListResult planList, BuildContext context,
       String orginalPrice, String remark, bool isMemberShipAvailable) async {
-
     await Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.addToCartItem(
-        packageId: planList.packageid,
-        price: orginalPrice,
-        isRenew: planList.isexpired == '1' ? true : false,
-        providerId: planList.providerid,
-        isFromAdd: isFrom,
-        isMemberShipAvail: isMemberShipAvailable ?? false,
-        actualFee: orginalPrice,
-        remarks: remark,
-        planType: isFrom == strProviderDiet ? "DIET" : "");
+            packageId: planList.packageid,
+            price: orginalPrice,
+            isRenew: planList.isexpired == '1' ? true : false,
+            providerId: planList.providerid,
+            isFromAdd: isFrom,
+            isMemberShipAvail: isMemberShipAvailable ?? false,
+            actualFee: orginalPrice,
+            remarks: remark,
+            planType: isFrom == strProviderDiet ? "DIET" : "",
+            packageDuration: planList?.packageDuration);
   }
 
   Future<Widget> _alertBoxforCheckMemberShip(
@@ -469,7 +484,7 @@ class DietPlanCard extends StatelessWidget {
     var dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -527,38 +542,38 @@ class DietPlanCard extends StatelessWidget {
                         ),
                         showCheckBox
                             ? Row(
-                          children: [
-                            Checkbox(
-                              checkColor:
-                              Color(CommonUtil().getMyPrimaryColor()),
-                              activeColor:
-                              Color(CommonUtil().getThemeColor()),
-                              value: isCheckbox,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  if (value) {
-                                    priceSet = 0.toString();
-                                  } else {
-                                    priceSet = originalPrice;
-                                  }
-                                  isCheckbox = value;
-                                });
-                              },
-                            ),
-                            Text(
-                              "AVAIL MEMBERSHIP BENEFIT",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: fhbStyles.fnt_doc_name,
-                                color: Color(
-                                    CommonUtil().getMyPrimaryColor()),
-                              ),
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                            )
-                          ],
-                        )
+                                children: [
+                                  Checkbox(
+                                    checkColor:
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                    activeColor:
+                                        Color(CommonUtil().getThemeColor()),
+                                    value: isCheckbox,
+                                    onChanged: (bool value) {
+                                      setState(() {
+                                        if (value) {
+                                          priceSet = 0.toString();
+                                        } else {
+                                          priceSet = originalPrice;
+                                        }
+                                        isCheckbox = value;
+                                      });
+                                    },
+                                  ),
+                                  Text(
+                                    "AVAIL MEMBERSHIP BENEFIT",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: fhbStyles.fnt_doc_name,
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    ),
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                              )
                             : SizedBox(),
                         fhbBasicWidget.getRichTextFieldWithNoCallbacks(
                             context,
@@ -566,7 +581,7 @@ class DietPlanCard extends StatelessWidget {
                             Constants.Rmarks_HINT,
                             500,
                             "",
-                                (value) {},
+                            (value) {},
                             false),
                         SizedBox(
                           height: 15.0.h,
@@ -607,10 +622,10 @@ class DietPlanCard extends StatelessWidget {
     await Provider.of<PlanWizardViewModel>(context, listen: false)
         ?.fetchCartItem();
 
-    ProductList productList=Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.getProductListUsingPackageId(packageId);
-    await Provider.of<PlanWizardViewModel>(context, listen: false)
-        ?.removeCart(packageId: packageId, isFrom: isFrom,productList:productList);
-
+    ProductList productList =
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            ?.getProductListUsingPackageId(packageId);
+    await Provider.of<PlanWizardViewModel>(context, listen: false)?.removeCart(
+        packageId: packageId, isFrom: isFrom, productList: productList);
   }
 }

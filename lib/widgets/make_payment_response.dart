@@ -1,13 +1,19 @@
 class MakePaymentResponse {
   bool isSuccess;
   Result result;
+  String message;
 
-  MakePaymentResponse({this.isSuccess, this.result});
+  MakePaymentResponse({this.isSuccess, this.result, this.message});
 
   MakePaymentResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
+    if (json.containsKey('result')) {
+      result =
+          json['result'] != null ? new Result.fromJson(json['result']) : null;
+    }
+    if (json.containsKey('message')) {
+      message = json['message'];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -16,6 +22,7 @@ class MakePaymentResponse {
     if (this.result != null) {
       data['result'] = this.result.toJson();
     }
+    data['message'] = this.message;
     return data;
   }
 }
@@ -26,10 +33,11 @@ class Result {
   Payment payment;
   PaymentGatewayDetail paymentGatewayDetail;
 
-  Result({this.orderId,
-    this.subscribeResponse,
-    this.payment,
-    this.paymentGatewayDetail});
+  Result(
+      {this.orderId,
+      this.subscribeResponse,
+      this.payment,
+      this.paymentGatewayDetail});
 
   Result.fromJson(Map<String, dynamic> json) {
     orderId = json['orderId'];
@@ -40,7 +48,7 @@ class Result {
       });
     }
     payment =
-    json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
+        json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
     paymentGatewayDetail = json['paymentGatewayDetail'] != null
         ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
         : null;
@@ -71,12 +79,13 @@ class SubscribeResponse {
   String price;
   String docid;
 
-  SubscribeResponse({this.result,
-    this.planStartDate,
-    this.message,
-    this.packageid,
-    this.price,
-    this.docid});
+  SubscribeResponse(
+      {this.result,
+      this.planStartDate,
+      this.message,
+      this.packageid,
+      this.price,
+      this.docid});
 
   SubscribeResponse.fromJson(Map<String, dynamic> json) {
     result = json['Result'];
@@ -120,25 +129,26 @@ class Payment {
   bool isDiscount;
   String discountDetails;
 
-  Payment({this.id,
-    this.paymentStatus,
-    this.paymentGateway,
-    this.paidTo,
-    this.paidBy,
-    this.createdBy,
-    this.createdOn,
-    this.isActive,
-    this.purpose,
-    this.paidAmount,
-    this.transactionDateTime,
-    this.metadata,
-    this.cart,
-    this.paymentReference,
-    this.paidDate,
-    this.receiptUrl,
-    this.lastModifiedOn,
-    this.isDiscount,
-    this.discountDetails});
+  Payment(
+      {this.id,
+      this.paymentStatus,
+      this.paymentGateway,
+      this.paidTo,
+      this.paidBy,
+      this.createdBy,
+      this.createdOn,
+      this.isActive,
+      this.purpose,
+      this.paidAmount,
+      this.transactionDateTime,
+      this.metadata,
+      this.cart,
+      this.paymentReference,
+      this.paidDate,
+      this.receiptUrl,
+      this.lastModifiedOn,
+      this.isDiscount,
+      this.discountDetails});
 
   Payment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -213,16 +223,17 @@ class PaymentStatus {
   String lastModifiedOn;
   ReferenceData referenceData;
 
-  PaymentStatus({this.id,
-    this.code,
-    this.name,
-    this.description,
-    this.sortOrder,
-    this.isActive,
-    this.createdBy,
-    this.createdOn,
-    this.lastModifiedOn,
-    this.referenceData});
+  PaymentStatus(
+      {this.id,
+      this.code,
+      this.name,
+      this.description,
+      this.sortOrder,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.referenceData});
 
   PaymentStatus.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -267,14 +278,15 @@ class ReferenceData {
   String createdOn;
   String lastModifiedOn;
 
-  ReferenceData({this.id,
-    this.code,
-    this.name,
-    this.description,
-    this.isActive,
-    this.createdBy,
-    this.createdOn,
-    this.lastModifiedOn});
+  ReferenceData(
+      {this.id,
+      this.code,
+      this.name,
+      this.description,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn});
 
   ReferenceData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -344,15 +356,16 @@ class PaymentGatewayDetail {
   String lastModifiedOn;
   String id;
 
-  PaymentGatewayDetail({this.sourceId,
-    this.sourceCode,
-    this.responseInfo,
-    this.createdBy,
-    this.createdOn,
-    this.isActive,
-    this.paymentGatewayRequestId,
-    this.lastModifiedOn,
-    this.id});
+  PaymentGatewayDetail(
+      {this.sourceId,
+      this.sourceCode,
+      this.responseInfo,
+      this.createdBy,
+      this.createdOn,
+      this.isActive,
+      this.paymentGatewayRequestId,
+      this.lastModifiedOn,
+      this.id});
 
   PaymentGatewayDetail.fromJson(Map<String, dynamic> json) {
     sourceId = json['sourceId'];
@@ -408,27 +421,28 @@ class ResponseInfo {
   String modifiedAt;
   String paymentGateWay;
 
-  ResponseInfo({this.id,
-    this.phone,
-    this.email,
-    this.buyerName,
-    this.amount,
-    this.purpose,
-    this.expiresAt,
-    this.status,
-    this.sendSms,
-    this.sendEmail,
-    this.smsStatus,
-    this.emailStatus,
-    this.shorturl,
-    this.longurl,
-    this.redirectUrl,
-    this.webhook,
-    this.allowRepeatedPayments,
-    this.customerId,
-    this.createdAt,
-    this.modifiedAt,
-    this.paymentGateWay});
+  ResponseInfo(
+      {this.id,
+      this.phone,
+      this.email,
+      this.buyerName,
+      this.amount,
+      this.purpose,
+      this.expiresAt,
+      this.status,
+      this.sendSms,
+      this.sendEmail,
+      this.smsStatus,
+      this.emailStatus,
+      this.shorturl,
+      this.longurl,
+      this.redirectUrl,
+      this.webhook,
+      this.allowRepeatedPayments,
+      this.customerId,
+      this.createdAt,
+      this.modifiedAt,
+      this.paymentGateWay});
 
   ResponseInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];

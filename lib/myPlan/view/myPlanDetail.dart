@@ -82,8 +82,9 @@ class PlanDetail extends State<MyPlanDetail> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   InAppWebViewController webView;
-  bool showRenewOrSubscribeButton=false;
+  bool showRenewOrSubscribeButton = false;
   Future<MyPlanListModel> planListFetch;
+  String packageDuration;
   @override
   void initState() {
     super.initState();
@@ -94,9 +95,10 @@ class PlanDetail extends State<MyPlanDetail> {
   }
 
   Future<void> getConfiguration() async {
-    bool showRenewOrSubscribeButton=await PreferenceUtil.getUnSubscribeValue();
+    bool showRenewOrSubscribeButton =
+        await PreferenceUtil.getUnSubscribeValue();
     setState(() {
-      this.showRenewOrSubscribeButton=showRenewOrSubscribeButton;
+      this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
     });
   }
 
@@ -127,6 +129,7 @@ class PlanDetail extends State<MyPlanDetail> {
     descriptionURL = planList?.metadata?.descriptionURL ?? '';
     price = planList?.price ?? '';
     isExtendable = planList?.isExtendable ?? '';
+    packageDuration = planList?.duration;
   }
 
   @override
@@ -193,23 +196,21 @@ class PlanDetail extends State<MyPlanDetail> {
     await Future.delayed(Duration(seconds: 2));
     if (CommonUtil.isRenewDialogOpened) return;
     CommonUtil.isRenewDialogOpened = true;
-    CommonUtil().renewAlertDialog(
-      context,
-      packageId: widget?.packageId,
-      price: price,
-      startDate: startDate,
-      endDate: endDate,
-      isExpired: isExpired == '1' ? true : false,
-      refresh: () {
-        print('ns done');
-      },
-      IsExtendable: isExtendable == '1' ? true : false,
-      moveToCart: true,
-      nsBody: {
-        "templateName": "${widget?.templateName}",
-        "contextId": "${widget.packageId}"
-      },
-    );
+    CommonUtil().renewAlertDialog(context,
+        packageId: widget?.packageId,
+        price: price,
+        startDate: startDate,
+        endDate: endDate,
+        isExpired: isExpired == '1' ? true : false, refresh: () {
+      print('ns done');
+    },
+        IsExtendable: isExtendable == '1' ? true : false,
+        moveToCart: true,
+        nsBody: {
+          "templateName": "${widget?.templateName}",
+          "contextId": "${widget.packageId}"
+        },
+        packageDuration: packageDuration);
   }
 
   Widget getMainWidget() {
@@ -348,95 +349,95 @@ class PlanDetail extends State<MyPlanDetail> {
                       ],
                     ),
             ),
-            if(tags!=strMemb&&
-                showRenewOrSubscribeButton)Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlineButton(
-                  onPressed: () async {
-                    if (isExpired == '1') {
-                      await CommonUtil().renewAlertDialog(context,
-                          packageId: packageId,
-                          price: price,
-                          startDate: startDate,
-                          endDate: endDate,
-                          isExpired: isExpired == '1' ? true : false,
-                          IsExtendable: isExtendable == '1' ? true : false,
-                          refresh: () {
-                        Navigator.pop(context);
-                      });
-                    } else {
-                      if (price == '0') {
-                        await CommonUtil().unSubcribeAlertDialog(
-                          context,
-                          packageId: packageId,
-                          fromDetail: true,
-                        );
+            if (tags != strMemb && showRenewOrSubscribeButton)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlineButton(
+                    onPressed: () async {
+                      if (isExpired == '1') {
+                        await CommonUtil().renewAlertDialog(context,
+                            packageId: packageId,
+                            price: price,
+                            startDate: startDate,
+                            endDate: endDate,
+                            isExpired: isExpired == '1' ? true : false,
+                            IsExtendable: isExtendable == '1' ? true : false,
+                            packageDuration: packageDuration, refresh: () {
+                          Navigator.pop(context);
+                        });
                       } else {
-                        await CommonUtil().alertDialogForNoReFund(
-                          context,
-                          packageId: packageId,
-                          fromDetail: true,
-                        );
+                        if (price == '0') {
+                          await CommonUtil().unSubcribeAlertDialog(
+                            context,
+                            packageId: packageId,
+                            fromDetail: true,
+                          );
+                        } else {
+                          await CommonUtil().alertDialogForNoReFund(
+                            context,
+                            packageId: packageId,
+                            fromDetail: true,
+                          );
+                        }
                       }
-                    }
-                  },
-                  borderSide: BorderSide(
-                    color: isExpired == '1'
-                        ? Color(CommonUtil().getMyPrimaryColor())
-                        : Colors.red,
-                  ),
-                  child: Text(
-                    isExpired == '1'
-                        ? strIsRenew.toUpperCase()
-                        : strUnSubscribe.toUpperCase(),
-                    style: TextStyle(
+                    },
+                    borderSide: BorderSide(
                       color: isExpired == '1'
-                          ? Color(new CommonUtil().getMyPrimaryColor())
+                          ? Color(CommonUtil().getMyPrimaryColor())
                           : Colors.red,
-                      fontSize: 13.sp,
+                    ),
+                    child: Text(
+                      isExpired == '1'
+                          ? strIsRenew.toUpperCase()
+                          : strUnSubscribe.toUpperCase(),
+                      style: TextStyle(
+                        color: isExpired == '1'
+                            ? Color(new CommonUtil().getMyPrimaryColor())
+                            : Colors.red,
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                OutlineButton(
-                  //hoverColor: Color(getMyPrimaryColor()),
-                  onPressed: () async {
-                    if (isExpired == '1') {
-                      Navigator.of(context).pop();
-                    } else {
-                      await CommonUtil().renewAlertDialog(context,
-                          packageId: packageId,
-                          price: price,
-                          startDate: startDate,
-                          endDate: endDate,
-                          isExpired: isExpired == '1' ? true : false,
-                          IsExtendable: isExtendable == '1' ? true : false,
-                          refresh: () {
-                        Navigator.pop(context);
-                      });
-                    }
-                  },
-                  borderSide: BorderSide(
-                    color: Color(
-                      CommonUtil().getMyPrimaryColor(),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  OutlineButton(
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    onPressed: () async {
+                      if (isExpired == '1') {
+                        Navigator.of(context).pop();
+                      } else {
+                        await CommonUtil().renewAlertDialog(context,
+                            packageId: packageId,
+                            price: price,
+                            startDate: startDate,
+                            endDate: endDate,
+                            isExpired: isExpired == '1' ? true : false,
+                            IsExtendable: isExtendable == '1' ? true : false,
+                            packageDuration: packageDuration, refresh: () {
+                          Navigator.pop(context);
+                        });
+                      }
+                    },
+                    borderSide: BorderSide(
+                      color: Color(
+                        CommonUtil().getMyPrimaryColor(),
+                      ),
+                    ),
+                    //hoverColor: Color(getMyPrimaryColor()),
+                    child: Text(
+                      isExpired == '1'
+                          ? 'cancel'.toUpperCase()
+                          : 'renew'.toUpperCase(),
+                      style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontSize: 13.sp,
+                      ),
                     ),
                   ),
-                  //hoverColor: Color(getMyPrimaryColor()),
-                  child: Text(
-                    isExpired == '1'
-                        ? 'cancel'.toUpperCase()
-                        : 'renew'.toUpperCase(),
-                    style: TextStyle(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontSize: 13.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       ),

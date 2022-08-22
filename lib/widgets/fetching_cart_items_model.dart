@@ -9,7 +9,9 @@ class FetchingCartItemsModel {
 
   FetchingCartItemsModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
-    message = json['message'];
+    if (json.containsKey('message')) {
+      message = json['message'];
+    }
     if (json.containsKey('result')) {
       result =
           json['result'] != null ? new Result.fromJson(json['result']) : null;
@@ -219,16 +221,29 @@ class AdditionalInfo {
   String remarks;
   String planType;
   bool isMembershipAvail;
-  String actualFee;
+  dynamic actualFee;
+  dynamic newFee;
 
   AdditionalInfo({this.isRenewal, this.tag});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("tag")) tag = json['tag'];
+    if (json.containsKey("newFee")) {
+      if (json['newFee'].runtimeType == String) {
+        newFee = json['newFee'];
+      }
+      newFee = json['newFee'].toString();
+    }
+    if (json.containsKey("actualFee")) {
+      if (json['actualFee'].runtimeType == String) {
+        actualFee = json['actualFee'];
+      }
+      actualFee = json['actualFee'].toString();
+    }
+
     if (json.containsKey("isRenewal")) isRenewal = json['isRenewal'];
     if (json.containsKey("remarks")) remarks = json['remarks'];
     if (json.containsKey("PlanType")) planType = json['PlanType'];
-    if (json.containsKey("actualFee")) actualFee = json['actualFee'].toString();
     if (json.containsKey("isMembershipAvail"))
       isMembershipAvail = json['isMembershipAvail'];
   }
@@ -239,6 +254,8 @@ class AdditionalInfo {
     data['remarks'] = this.remarks;
     data['PlanType'] = this.planType;
     data['actualFee'] = this.actualFee;
+    data['newFee'] = this.newFee;
+
     data['isRenewal'] = this.isRenewal;
     data['isMembershipAvail'] = this.isMembershipAvail;
 

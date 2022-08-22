@@ -3172,7 +3172,8 @@ class CommonUtil {
       bool isExpired,
       Function() refresh,
       bool moveToCart = false,
-      dynamic nsBody}) async {
+      dynamic nsBody,
+      String packageDuration}) async {
     DateTime initDate;
     var formatter = new DateFormat('yyyy-MM-dd');
 
@@ -3301,7 +3302,8 @@ class CommonUtil {
                                             packageId: packageId,
                                             price: price,
                                             isRenew: true,
-                                            isFromAdd: strMyPlan);
+                                            isFromAdd: strMyPlan,
+                                            packageDuration: packageDuration);
 
                                 refresh();
                                 if (moveToCart) {
