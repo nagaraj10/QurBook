@@ -42,6 +42,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
@@ -1921,33 +1922,38 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
     override fun onPause() {
-        Constants.foregroundActivityRef=false;
-        if (enableBackgroundNotification) {
-            openBackgroundAppFromNotification(true)
+        try {
+            Constants.foregroundActivityRef=false;
+            if (enableBackgroundNotification) {
+                openBackgroundAppFromNotification(true)
+            }
+            lbm.unregisterReceiver(badgeListener)
+            super.onPause()
+        } catch (e: Exception) {
+            Log.d("Catch", "" + e.toString())
         }
-        lbm.unregisterReceiver(badgeListener)
-        super.onPause()
     }
 
     private fun openBackgroundAppFromNotification(setOngoing: Boolean) {
-        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = System.currentTimeMillis().toInt()
-        val ack_sound: Uri =
-            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager = getSystemService(NotificationManager::class.java)
-            val channelCancelApps = NotificationChannel(
-                "backgroundapp",
-                getString(R.string.channel_cancel_apps),
-                NotificationManager.IMPORTANCE_HIGH
-            )
-            channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
-            val attributes =
-                AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channelCancelApps.setSound(ack_sound, attributes)
-            manager.createNotificationChannel(channelCancelApps)
-        }
+        try {
+            val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+            val NS_ID = System.currentTimeMillis().toInt()
+            val ack_sound: Uri =
+                Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw./*msg_tone*/beep_beep)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val manager = getSystemService(NotificationManager::class.java)
+                val channelCancelApps = NotificationChannel(
+                    "backgroundapp_v1",
+                    getString(R.string.channel_cancel_apps),
+                    NotificationManager.IMPORTANCE_HIGH
+                )
+                channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
+                val attributes =
+                    AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+                channelCancelApps.setSound(ack_sound, attributes)
+                manager.createNotificationChannel(channelCancelApps)
+            }
 //        val onTapNS = Intent(applicationContext, OnTapNotificationBackground::class.java)
 //        val onTapPendingIntent = PendingIntent.getBroadcast(
 //            applicationContext,
@@ -1956,38 +1962,44 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 //            PendingIntent.FLAG_CANCEL_CURRENT
 //        )
 
-        val notificationIntent = Intent(context, MainActivity::class.java)
+            val notificationIntent = Intent(context, MainActivity::class.java)
 
-        notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
-                or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    or Intent.FLAG_ACTIVITY_SINGLE_TOP)
 
-        val onTapPendingIntent = PendingIntent.getActivity(
-            context, 0,
-            notificationIntent, 0
-        )
+            val onTapPendingIntent = PendingIntent.getActivity(
+                context, 0,
+                notificationIntent, 0
+            )
 
-        var notification = NotificationCompat.Builder(this, "backgroundapp")
-            .setSmallIcon(R.mipmap.app_ns_icon)
-            .setLargeIcon(
-                BitmapFactory.decodeResource(
-                    applicationContext.resources,
-                    R.mipmap.ic_launcher
+            //val colorRes = android.R.color.holo_red_dark
+
+            var notification = NotificationCompat.Builder(this, "backgroundapp_v1")
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(
+                    BitmapFactory.decodeResource(
+                        applicationContext.resources,
+                        R.mipmap.ic_launcher
+                    )
                 )
-            )
-            .setContentTitle(Constants.CRITICAL_APP_STOPPED)
-            .setContentText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_SYSTEM)
-            .setStyle(
-                NotificationCompat.BigTextStyle().bigText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
-            )
-            .setSound(ack_sound)
-            .setVibrate(longArrayOf(1000, 1000))
-            .setOngoing(true)
-            .setContentIntent(onTapPendingIntent)
-            .build()
-        notification.flags = Notification.FLAG_NO_CLEAR
-        nsManager.notify(2022, notification)
+                .setContentTitle(Constants.CRITICAL_APP_STOPPED)
+                //.setContentTitle(HtmlCompat.fromHtml("<font color=\"" + colorRes + "\">" + Constants.CRITICAL_APP_STOPPED + "</font>", HtmlCompat.FROM_HTML_MODE_LEGACY))
+                .setContentText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_SYSTEM)
+                .setStyle(
+                    NotificationCompat.BigTextStyle().bigText(Constants.CRITICAL_APP_STOPPED_DESCRIPTION)
+                )
+                .setSound(ack_sound)
+                .setVibrate(longArrayOf(1000, 1000))
+                .setOngoing(true)
+                .setContentIntent(onTapPendingIntent)
+                .build()
+            notification.flags = Notification.FLAG_NO_CLEAR
+            nsManager.notify(2022, notification)
+        } catch (e: Exception) {
+            Log.d("Catch", "" + e.toString())
+        }
 
 
     }
@@ -2003,18 +2015,22 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 
     override fun onDestroy() {
-        Log.e("Myapp", "onDestroy: " + " onDestroy")
-        Constants.foregroundActivityRef=false;
-        if (enableBackgroundNotification) {
-            openBackgroundAppFromNotification(false)
+        try {
+            Log.e("Myapp", "onDestroy: " + " onDestroy")
+            Constants.foregroundActivityRef=false;
+            if (enableBackgroundNotification) {
+                openBackgroundAppFromNotification(false)
+            }
+            super.onDestroy()
+            unregisterReceiver(broadcastReceiver)
+            unregisterReceiver(badgeListener)
+            val serviceIntent = Intent(this, AVServices::class.java)
+            stopService(serviceIntent)
+            speechRecognizer?.destroy()
+            MyApp.snoozeTapCountTime = 0
+        } catch (e: Exception) {
+            Log.d("Catch", "" + e.toString())
         }
-        super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
-        unregisterReceiver(badgeListener)
-        val serviceIntent = Intent(this, AVServices::class.java)
-        stopService(serviceIntent)
-        speechRecognizer?.destroy()
-        MyApp.snoozeTapCountTime = 0
     }
 
     private val badgeListener = object : BroadcastReceiver() {
