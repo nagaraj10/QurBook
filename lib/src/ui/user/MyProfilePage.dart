@@ -726,7 +726,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     enabled: false,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 16.0.sp),
-                      labelText: CommonConstants.addr_zip,
+                      labelText: CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip,
                     ),
                   ),
                 ),
