@@ -19,8 +19,6 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/checkout_page_provider.dart';
@@ -33,11 +31,8 @@ import 'package:get/get.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 import 'CartIconWithBadge.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
@@ -321,15 +316,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                 children: <Widget>[
                                                                                   SizedBoxWithChild(
-                                                                                    width: 90,
-                                                                                    height: 40,
+                                                                                    width: CommonUtil().isTablet ?120:90,
+                                                                                    height: CommonUtil().isTablet ?50:40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
                                                                                       textColor: Color(CommonUtil().getMyPrimaryColor()),
                                                                                       padding: EdgeInsets.all(8.0),
                                                                                       onPressed: () {
-                                                                                        Navigator.pop(context);
+                                                                                        try {
+                                                                                          Navigator.pop(context);
+                                                                                        } catch (e) {
+                                                                                          //print(e);
+                                                                                        }
                                                                                       },
                                                                                       child: TextWidget(
                                                                                         text: 'Cancel',
@@ -338,17 +337,21 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                     ),
                                                                                   ),
                                                                                   SizedBoxWithChild(
-                                                                                    width: 90,
-                                                                                    height: 40,
+                                                                                    width: CommonUtil().isTablet ?120:90,
+                                                                                    height: CommonUtil().isTablet ?50:40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
                                                                                       textColor: Color(CommonUtil().getMyPrimaryColor()),
                                                                                       padding: EdgeInsets.all(8.0),
                                                                                       onPressed: () {
-                                                                                        if (widget.isFromNotification == false) {
-                                                                                          Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
-                                                                                          Navigator.pop(context);
+                                                                                        try {
+                                                                                          if (widget.isFromNotification == false) {
+                                                                                            Provider.of<CheckoutPageProvider>(context, listen: false).clearCartItem(isNeedRelod: true);
+                                                                                            Navigator.pop(context);
+                                                                                          }
+                                                                                        } catch (e) {
+                                                                                          //print(e);
                                                                                         }
                                                                                       },
                                                                                       child: TextWidget(
@@ -358,7 +361,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                     ),
                                                                                   ),
                                                                                 ],
-                                                                              )
+                                                                              ),
+                                                                              CommonUtil().isTablet ?SizedBoxWidget(
+                                                                                height: 8.0.h,
+                                                                              ):SizedBox.shrink(),
                                                                             ],
                                                                           ),
                                                                         ),
