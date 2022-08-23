@@ -1000,8 +1000,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 .spaceEvenly,
                                                         children: <Widget>[
                                                           SizedBoxWithChild(
-                                                            width: 90,
-                                                            height: 40,
+                                                            width: CommonUtil().isTablet ?120:90,
+                                                            height: CommonUtil().isTablet ?50:40,
                                                             child: FlatButton(
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
@@ -1021,8 +1021,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                   EdgeInsets
                                                                       .all(8.0),
                                                               onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
+                                                                try {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                } catch (e) {
+                                                                  //print(e);
+                                                                }
                                                               },
                                                               child: TextWidget(
                                                                 text: 'Cancel',
@@ -1032,8 +1036,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             ),
                                                           ),
                                                           SizedBoxWithChild(
-                                                            width: 90,
-                                                            height: 40,
+                                                            width: CommonUtil().isTablet ?120:90,
+                                                            height: CommonUtil().isTablet ?50:40,
                                                             child: FlatButton(
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
@@ -1054,37 +1058,36 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       .all(8.0),
                                                               onPressed:
                                                                   () async {
-                                                                await Provider.of<
-                                                                            CheckoutPageProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .fetchCartItem();
+                                                                    try {
+                                                                  await Provider.of<
+                                                                              CheckoutPageProvider>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      .fetchCartItem();
 
-                                                                ProductList productList = Provider.of<
-                                                                            CheckoutPageProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    ?.getProductListUsingPackageId(
-                                                                        '${item?.productDetail?.id}');
-                                                                await Provider.of<
-                                                                            CheckoutPageProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .removeCartItem(
-                                                                        productId:
-                                                                            '${item?.productDetail?.id}',
-                                                                        isNeedRelod:
-                                                                            true,
-                                                                        productList:
-                                                                            productList,
-                                                                        isFrom:
-                                                                            "Cart");
+                                                                  ProductList productList = Provider.of<
+                                                                              CheckoutPageProvider>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                      ?.getProductListUsingPackageId(
+                                                                          '${item?.productDetail?.id}');
+                                                                  await Provider.of<CheckoutPageProvider>(context, listen: false).removeCartItem(
+                                                                      productId:
+                                                                          '${item?.productDetail?.id}',
+                                                                      isNeedRelod:
+                                                                          true,
+                                                                      productList:
+                                                                          productList,
+                                                                      isFrom:
+                                                                          "Cart");
 
-                                                                Navigator.pop(
-                                                                    context);
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                } catch (e) {
+                                                                  //print(e);
+                                                                }
                                                               },
                                                               child: TextWidget(
                                                                 text: ok,
@@ -1094,7 +1097,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             ),
                                                           ),
                                                         ],
-                                                      )
+                                                      ),
+                                                      CommonUtil().isTablet ?SizedBoxWidget(
+                                                        height: 8.0.h,
+                                                      ):SizedBox.shrink(),
                                                     ],
                                                   ),
                                                 ),
