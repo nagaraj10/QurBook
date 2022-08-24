@@ -803,7 +803,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               fontSize: 16.0.sp,
             ),
           ),
-          padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+          padding: EdgeInsets.only(left: 20, top: CommonUtil().isTablet ?1:10, bottom: CommonUtil().isTablet ?1:20),
         ),
         value: selectedClaimType != null
             ? toBeginningOfSentenceCase(selectedClaimType.toLowerCase())
@@ -815,7 +815,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                 eachGender,
                 style: fhbBasicWidget.getTextStyleForValue(),
               ),
-              padding: EdgeInsets.only(left: 20, top: 10, bottom: 20),
+              padding: EdgeInsets.only(left: 20, top: CommonUtil().isTablet ?1:10, bottom: CommonUtil().isTablet ?1:20),
             ),
             value: eachGender,
           );
@@ -840,7 +840,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             Padding(
                 child: Text(parameters.self,
                     style: fhbBasicWidget.getTextStyleForValue()),
-                padding: EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+        padding: EdgeInsets.only(left: 20, top: CommonUtil().isTablet ?1:10, bottom: CommonUtil().isTablet ?1:20)),
           ],
         ),
         items: _familyNames
@@ -857,8 +857,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                           ?.capitalizeFirstofEach ??
                           '',
                       style: fhbBasicWidget.getTextStyleForValue()),
-                  padding:
-                  EdgeInsets.only(left: 20, top: 10, bottom: 20)),
+            padding: EdgeInsets.only(left: 20, top: CommonUtil().isTablet ?1:10, bottom: CommonUtil().isTablet ?1:20)),
             ],
           ),
           value: user,
