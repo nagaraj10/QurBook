@@ -1562,33 +1562,41 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadFile(
       HealthRecordCollection audioMediaId, String fileType) async {
-    await FHBUtils.createFolderInAppDocDirClone(
-            variable.stAudioPath, widget.data.metadata.fileName)
-        .then((filePath) async {
-      var file = File('$filePath' /*+ fileType*/);
-      final request = await ApiServices.get(
-        audioMediaId.healthRecordUrl,
-        headers: {
-          HttpHeaders.authorizationHeader: authToken,
-          Constants.KEY_OffSet: CommonUtil().setTimeZone()
-        },
-      );
-      final bytes = request.bodyBytes; //close();
-      await file.writeAsBytes(bytes);
+    try {
+      await FHBUtils.createDir(
+        variable.stAudioPath,
+        widget.data.metadata.fileName,
+        isTempDir: true,
+      ).then((filePath) async {
+        var file = File('$filePath' /*+ fileType*/);
+        final request = await ApiServices.get(
+          audioMediaId.healthRecordUrl,
+          headers: {
+            HttpHeaders.authorizationHeader: authToken,
+            Constants.KEY_OffSet: CommonUtil().setTimeZone()
+          },
+          timeout: 60,
+        );
+        final bytes = request.bodyBytes; //close();
+        await file.writeAsBytes(bytes);
 
-      setState(() {
-        if (fileType == '.mp3') {
-          //await path.writeAsBytes(bytes);
+        setState(() {
+          if (fileType == '.mp3') {
+            //await path.writeAsBytes(bytes);
 
-          containsAudio = true;
-          audioPath = file.path;
-          isAudioDownload = true;
-        } else {
-          pdfFile = file.path;
-        }
+            containsAudio = true;
+            audioPath = file.path;
+            isAudioDownload = true;
+          } else {
+            pdfFile = file.path;
+          }
+        });
       });
-    });
-    return isAudioDownload;
+      return isAudioDownload;
+    } catch (e) {
+      print(e.toString());
+      return isAudioDownload;
+    }
   }
 
   Future<bool> downloadImageFile(String fileType, String fileUrl) async {

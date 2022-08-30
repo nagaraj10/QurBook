@@ -4483,20 +4483,25 @@ class CommonUtil {
   }
 
   Widget showPDFInWidget(String filePath) {
-    return FutureBuilder<PDFDocument>(
-      future: PDFDocument.fromFile(File(filePath)), // async work
-      builder: (BuildContext context, AsyncSnapshot<PDFDocument> snapshot) {
-        switch (snapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Text('Loading....');
-          default:
-            if (snapshot.hasError)
-              return Text('Error: ${snapshot.error}');
-            else
-              return ShowPDFFromFile(document: snapshot.data);
-        }
-      },
-    );
+    try {
+      return FutureBuilder<PDFDocument>(
+        future: PDFDocument.fromFile(File(filePath)), // async work
+        builder: (BuildContext context, AsyncSnapshot<PDFDocument> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.waiting:
+              return Text('Loading....');
+            default:
+              if (snapshot.hasError)
+                return Text('Error: ${snapshot.error}');
+              else
+                return ShowPDFFromFile(document: snapshot.data);
+          }
+        },
+      );
+    } catch (e) {
+      print(e.toString());
+      return Text('Failed to load');
+    }
   }
 
   updateSocketFamily() {
