@@ -12,7 +12,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 
 class ApiServices {
   static Future<Response> get(String path,
-      {Map<String, String> headers}) async {
+      {Map<String, String> headers, int timeout = 20}) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
@@ -23,7 +23,7 @@ class ApiServices {
             Uri.parse(_baseUrl + path),
             headers: headers,
           )
-          .timeout(Duration(seconds: 20));
+          .timeout(Duration(seconds: timeout));
       await CommonUtil.saveLog(
         message:
             'Request - ${response?.request ?? ''} || Response(${response?.statusCode}) - ${response?.body}',

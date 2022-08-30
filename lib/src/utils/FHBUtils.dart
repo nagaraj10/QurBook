@@ -318,11 +318,14 @@ class FHBUtils {
     return await createDir(folderName, fileType);
   }
 
-  static Future<String> createDir(String folderName, String fileType) async {
+  static Future<String> createDir(String folderName, String fileType,
+      {bool isTempDir = false}) async {
     try {
       List<Directory> appDocDir = Platform.isAndroid
           ? await getExternalCacheDirectories()
-          : [await getApplicationDocumentsDirectory()];
+          : isTempDir
+              ? [await getTemporaryDirectory()]
+              : [await getApplicationDocumentsDirectory()];
 
       print(appDocDir);
       String path = Platform.isIOS
@@ -535,14 +538,14 @@ class FHBUtils {
 
     if (strDate != null && strDate != '') {
       if (CURRENT_DATE_CODE == 'MDY') {
-        formattedDate = DateFormat('MMM dd yyyy')
-            .format(DateTime.parse(strDate).toLocal());
+        formattedDate =
+            DateFormat('MMM dd yyyy').format(DateTime.parse(strDate).toLocal());
       } else if (CURRENT_DATE_CODE == 'YMD') {
-        formattedDate = DateFormat('yyyy MMM dd')
-            .format(DateTime.parse(strDate).toLocal());
+        formattedDate =
+            DateFormat('yyyy MMM dd').format(DateTime.parse(strDate).toLocal());
       } else {
-        formattedDate = DateFormat('dd MMM yyyy')
-            .format(DateTime.parse(strDate).toLocal());
+        formattedDate =
+            DateFormat('dd MMM yyyy').format(DateTime.parse(strDate).toLocal());
       }
     }
     return formattedDate;
