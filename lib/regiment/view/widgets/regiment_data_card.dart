@@ -385,12 +385,18 @@ class RegimentDataCard extends StatelessWidget {
           (vitalData.value ?? "").isNotEmpty &&
           (vitalData.amin ?? "").isNotEmpty &&
           (vitalData.amax ?? "").isNotEmpty) {
-        isNormal = (int.tryParse(vitalData.value).toString().isNotEmpty &&
-                int.tryParse(vitalData.amin).toString().isNotEmpty &&
-                int.tryParse(vitalData.amax).toString().isNotEmpty)
-            ? (int.tryParse(vitalData.value) <= int.tryParse(vitalData.amax) &&
-                int.tryParse(vitalData.value) >= int.tryParse(vitalData.amin))
-            : true;
+        try {
+          isNormal = (double.tryParse(vitalData.value).toString().isNotEmpty &&
+                  double.tryParse(vitalData.amin).toString().isNotEmpty &&
+                  double.tryParse(vitalData.amax).toString().isNotEmpty)
+              ? (double.tryParse(vitalData.value) <=
+                      double.tryParse(vitalData.amax) &&
+                  double.tryParse(vitalData.value) >=
+                      double.tryParse(vitalData.amin))
+              : true;
+        } catch (e) {
+          //print(e);
+        }
       }
 
       if ((vitalData.display ?? '').isNotEmpty) {
