@@ -11,6 +11,8 @@ import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
 import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
@@ -24,8 +26,6 @@ import '../../../../landing/view/landing_arguments.dart';
 import '../../../../myPlan/view/myPlanDetail.dart';
 import '../../../../regiment/models/regiment_arguments.dart';
 import '../../../../regiment/view_model/regiment_view_model.dart';
-import '../../../../src/ui/bot/view/sheela_arguments.dart';
-import '../../../../src/ui/bot/viewmodel/chatscreen_vm.dart';
 import '../../../../src/utils/language/language_utils.dart';
 import '../../MyProvider/view/MyProvidersMain.dart';
 import '../constants/notification_constants.dart' as constants;
@@ -57,7 +57,6 @@ import '../../MyProvider/view/TelehealthProviders.dart';
 import '../../../../src/model/home_screen_arguments.dart';
 import '../../../../constants/router_variable.dart' as router;
 import '../../../../src/utils/PageNavigator.dart';
-import '../../../../src/ui/bot/SuperMaya.dart';
 import '../../../../src/model/user/user_accounts_arguments.dart';
 import '../../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../../src/ui/MyRecord.dart';
@@ -1119,37 +1118,15 @@ class _NotificationScreen extends State<NotificationScreen> {
               'navigationPage': 'Sheela Start Page',
             });
 
-            String sheela_lang =
-                PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
-            if ((Provider.of<ChatScreenViewModel>(context, listen: false)
-                        ?.conversations
-                        ?.length ??
-                    0) >
-                0) {
-              Provider.of<ChatScreenViewModel>(context, listen: false)
-                  ?.startMayaAutomatically(message: rawBody);
-            } else if (sheela_lang != null && sheela_lang != '') {
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: false,
-                  langCode: sheela_lang,
-                  rawMessage: rawBody,
-                ),
-              ).then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
-              readUnreadAction(result);
-            } else {
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: rawBody,
-                ),
-              ).then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
-              readUnreadAction(result);
-            }
+            Get.toNamed(
+              routervariable.rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: rawBody,
+              ),
+            ).then((value) =>
+                PageNavigator.goToPermanent(context, router.rt_Landing));
+            readUnreadAction(result);
           } else {
             Get.to(SuperMaya());
           }

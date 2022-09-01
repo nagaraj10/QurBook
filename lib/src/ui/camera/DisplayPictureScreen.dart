@@ -786,7 +786,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void setFileName() {
-    if (categoryName == CommonConstants.strDevice) {
+    if (categoryName == variable.strDevices) {
       fileName = new TextEditingController(
           text:
               deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');

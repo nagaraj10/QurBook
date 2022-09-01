@@ -1172,7 +1172,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
               : ''),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 22.0.sp,
+        fontSize: 18.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );
@@ -1181,7 +1181,7 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
       myProfile.result.firstName[0].toUpperCase(),
       style: TextStyle(
         color: Colors.white,
-        fontSize: 22.0.sp,
+        fontSize: 18.0.sp,
         fontWeight: FontWeight.w400,
       ),
     );

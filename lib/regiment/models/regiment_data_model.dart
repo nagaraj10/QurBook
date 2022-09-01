@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 
@@ -44,7 +45,6 @@ class RegimentDataModel {
       this.doseRepeat,
       this.metadata,
       this.isActive,
-      this.isPlaying = false,
       this.scheduled = false,
       this.asNeeded = false,
       this.isEventDisabled = false,
@@ -96,7 +96,7 @@ class RegimentDataModel {
   final bool doseMeal;
   final dynamic doseRepeat;
   final Metadata metadata;
-  bool isPlaying;
+  Rx<bool> isPlaying = false.obs;
   final bool scheduled;
   final bool asNeeded;
   final bool isEventDisabled;

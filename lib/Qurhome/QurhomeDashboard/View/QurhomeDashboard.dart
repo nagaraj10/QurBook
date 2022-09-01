@@ -9,9 +9,9 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/router_variable.dart';
-import '../../../src/ui/bot/view/sheela_arguments.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/variable_constant.dart';
@@ -46,7 +46,6 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     } catch (e) {
       print(e);
     }
-
   }
 
   BorderSide getBorder() {
@@ -403,6 +402,4 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     DateTime now = DateTime.now();
     return DateFormat('dd MMM yyyy').format(now);
   }
-
-
 }

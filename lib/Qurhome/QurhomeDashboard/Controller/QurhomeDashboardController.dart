@@ -16,8 +16,8 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
-import '../../../src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -173,12 +173,16 @@ class QurhomeDashboardController extends GetxController {
                       ),
                     ).then((_) async {
                       if (isFromVitalsList) {
-                        await Future.delayed(Duration(seconds: 2));
-                        VitalDetailController vitalController = Get.find();
-                        vitalController.fetchBPDetailsQurHome(
-                          filter: filterApiDay,
-                          isLoading: true,
-                        );
+                        try {
+                          await Future.delayed(Duration(seconds: 2));
+                          VitalDetailController vitalController = Get.find();
+                          vitalController.fetchBPDetailsQurHome(
+                            filter: filterApiDay,
+                            isLoading: true,
+                          );
+                        } catch (e) {
+                          print(e.toString());
+                        }
                       } else {
                         regController.getRegimenList();
                       }
@@ -254,12 +258,16 @@ class QurhomeDashboardController extends GetxController {
         ).then(
           (_) async {
             if (isFromVitalsList) {
-              await Future.delayed(Duration(seconds: 2));
-              VitalDetailController vitalController = Get.find();
-              vitalController.fetchOXYDetailsQurHome(
-                filter: filterApiDay,
-                isLoading: true,
-              );
+              try {
+                await Future.delayed(Duration(seconds: 2));
+                VitalDetailController vitalController = Get.find();
+                vitalController.fetchOXYDetailsQurHome(
+                  filter: filterApiDay,
+                  isLoading: true,
+                );
+              } catch (e) {
+                print(e.toString());
+              }
             } else {
               regController.getRegimenList();
             }

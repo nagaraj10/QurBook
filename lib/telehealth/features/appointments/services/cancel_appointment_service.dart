@@ -122,7 +122,7 @@ class CancelAppointmentsService {
       {String msg = 'something went wrong, please try again later.'}) {
     PreferenceUtil.clearAllData().then((value) {
       Get.offAll(PatientSignInScreen());
-      Get.snackbar(variable.strMessage, msg);
+      Get.snackbar(parameters.strMessage, msg);
     });
   }
 }

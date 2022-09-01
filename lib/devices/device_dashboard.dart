@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../constants/router_variable.dart';
-import '../src/ui/bot/view/sheela_arguments.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +20,6 @@ import '../src/blocs/health/HealthReportListForUserBlock.dart';
 import '../src/model/Category/catergory_result.dart';
 import '../src/model/Media/media_data_list.dart';
 import '../src/model/Media/media_result.dart';
-import '../src/ui/bot/view/ChatScreen.dart';
 import '../src/utils/FHBUtils.dart';
 import '../widgets/GradientAppBar.dart';
 import '../constants/variable_constant.dart' as variable;
@@ -466,7 +465,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       postMediaData[parameters.strEndDate] = dateTime.toUtc().toString();
       final commonConstants = CommonConstants();
 
-      if (categoryName == CommonConstants.strDevice) {
+      if (categoryName == variable.strDevices) {
         var postDeviceData = List<Map<String, dynamic>>();
         final Map<String, dynamic> postDeviceValues = {};
         final Map<String, dynamic> postDeviceValuesExtra = {};

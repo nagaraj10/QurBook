@@ -28,7 +28,6 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
-import 'package:myfhb/src/ui/bot/widgets/youtube_player.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/ChooseDateSlot.dart';
@@ -46,6 +45,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 
 class ChatDetail extends StatefulWidget {
   final String patientId;
@@ -236,10 +236,8 @@ class ChatState extends State<ChatDetail> {
 
     chatById = widget.carecoordinatorId;
 
-    if(isFromCareCoordinator && isNormalChatUserList=="true"){
-
+    if (isFromCareCoordinator && isNormalChatUserList == "true") {
       chatById = familyUserId;
-
     }
 
     token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
@@ -422,7 +420,8 @@ class ChatState extends State<ChatDetail> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, userId, chatById,isNormalChatUserList)
+        .fetchAppointmentDetail(
+            widget.peerId, userId, chatById, isNormalChatUserList)
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -1034,7 +1033,7 @@ class ChatState extends State<ChatDetail> {
                         widget.peerName != null && widget.peerName != ''
                             ? isFromCareCoordinator
                                 ? widget.peerName?.capitalizeFirstofEach +
-                            CARE_COORDINATOR_STRING
+                                    CARE_COORDINATOR_STRING
                                 : widget.peerName?.capitalizeFirstofEach
                             : '',
                         textAlign: TextAlign.left,

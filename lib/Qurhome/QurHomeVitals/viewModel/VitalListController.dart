@@ -12,7 +12,6 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:flutter/material.dart';
 
 class VitalListController extends GetxController {

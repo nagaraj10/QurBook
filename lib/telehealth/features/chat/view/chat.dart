@@ -29,9 +29,9 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
-import 'package:myfhb/src/ui/bot/widgets/youtube_player.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -394,7 +394,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   parseData() async {
     await chatViewModel
-        .fetchAppointmentDetail(widget.peerId, patientId,'','')
+        .fetchAppointmentDetail(widget.peerId, patientId, '', '')
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -761,7 +761,7 @@ class ChatScreenState extends State<ChatScreen> {
       }
     } else {
       _currentImage = fileUrl;
-      List<String> imageList=new List();
+      List<String> imageList = new List();
       try {
         await downloadFile(fileType, fileUrl);
         //final file = await CommonUtil.downloadFile(fileUrl, fileType);

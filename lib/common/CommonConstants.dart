@@ -85,8 +85,6 @@ class CommonConstants {
   static String locate_your = 'Locate your ';
   static String confirm_location = 'Confirm Location';
 
-  static String strDevice = 'Devices';
-
   static String strGlucometerValue = 'mg/dL';
   static String strValue = 'Value';
   static String strMemo = 'Memo (500)';

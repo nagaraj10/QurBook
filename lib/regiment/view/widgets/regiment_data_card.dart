@@ -351,7 +351,7 @@ class RegimentDataCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    if (regimentData.isPlaying) {
+                    if (regimentData.isPlaying.value) {
                       stopRegimenTTS();
                     } else {
                       Provider.of<RegimentViewModel>(context, listen: false)
@@ -362,13 +362,15 @@ class RegimentDataCard extends StatelessWidget {
                       );
                     }
                   },
-                  child: Icon(
-                    regimentData.isPlaying
-                        ? Icons.stop_circle_outlined
-                        : Icons.play_circle_fill_rounded,
-                    size: 30.0.sp,
-                    color: color,
-                  ),
+                  child: Obx(() {
+                    return Icon(
+                      regimentData.isPlaying.value
+                          ? Icons.stop_circle_outlined
+                          : Icons.play_circle_fill_rounded,
+                      size: 30.0.sp,
+                      color: color,
+                    );
+                  }),
                 ),
               ),
             ),

@@ -180,7 +180,7 @@ class SymptomItemCard extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: () {
-                                    if (regimentData.isPlaying) {
+                                    if (regimentData.isPlaying.value) {
                                       stopRegimenTTS();
                                     } else {
                                       controller.startSymptomTTS(
@@ -191,13 +191,15 @@ class SymptomItemCard extends StatelessWidget {
                                       );
                                     }
                                   },
-                                  child: Icon(
-                                    regimentData.isPlaying
-                                        ? Icons.stop_circle_outlined
-                                        : Icons.play_circle_fill_rounded,
-                                    size: 30.0.sp,
-                                    color: color,
-                                  ),
+                                  child: Obx(() {
+                                    return Icon(
+                                      regimentData.isPlaying.value
+                                          ? Icons.stop_circle_outlined
+                                          : Icons.play_circle_fill_rounded,
+                                      size: 30.0.sp,
+                                      color: color,
+                                    );
+                                  }),
                                 ),
                               ],
                             ) /*Row(
@@ -813,7 +815,7 @@ class SymptomItemCard extends StatelessWidget {
                       color: Colors.transparent,
                       child: InkWell(
                         onTap: () {
-                          if (regimentData.isPlaying) {
+                          if (regimentData.isPlaying.value) {
                             stopRegimenTTS();
                           } else {
                             controller.startSymptomTTS(
@@ -823,13 +825,15 @@ class SymptomItemCard extends StatelessWidget {
                             );
                           }
                         },
-                        child: Icon(
-                          regimentData.isPlaying
-                              ? Icons.stop_circle_outlined
-                              : Icons.play_circle_fill_rounded,
-                          size: 30.0.sp,
-                          color: color,
-                        ),
+                        child: Obx(() {
+                          return Icon(
+                            regimentData.isPlaying.value
+                                ? Icons.stop_circle_outlined
+                                : Icons.play_circle_fill_rounded,
+                            size: 30.0.sp,
+                            color: color,
+                          );
+                        }),
                       ),
                     )),
               ],
