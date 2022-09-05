@@ -25,12 +25,15 @@ import 'package:myfhb/widgets/checkout_page_provider.dart';
 import 'package:myfhb/widgets/checkoutpage_genric_widget.dart';
 import 'package:myfhb/widgets/dotted_line.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
+import 'package:myfhb/widgets/payment_gatway.dart';
 import 'package:myfhb/widgets/result_page_new.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import 'CartIconWithBadge.dart';
 
@@ -71,7 +74,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
         cartUserId: widget?.cartUserId,
         notificationListId: widget?.notificationListId,
         isPaymentLinkViaPush: widget?.isFromNotification,
-        cartId: widget.cartId);
+        cartId: widget.cartId,
+        firstTym: true);
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     Provider.of<CheckoutPageProvider>(context, listen: false)
         .loader(false, isNeedRelod: false);
@@ -316,8 +320,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                 children: <Widget>[
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ?120:90,
-                                                                                    height: CommonUtil().isTablet ?50:40,
+                                                                                    width: CommonUtil().isTablet ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -337,8 +341,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                     ),
                                                                                   ),
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ?120:90,
-                                                                                    height: CommonUtil().isTablet ?50:40,
+                                                                                    width: CommonUtil().isTablet ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -362,9 +366,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                   ),
                                                                                 ],
                                                                               ),
-                                                                              CommonUtil().isTablet ?SizedBoxWidget(
-                                                                                height: 8.0.h,
-                                                                              ):SizedBox.shrink(),
+                                                                              CommonUtil().isTablet
+                                                                                  ? SizedBoxWidget(
+                                                                                      height: 8.0.h,
+                                                                                    )
+                                                                                  : SizedBox.shrink(),
                                                                             ],
                                                                           ),
                                                                         ),
@@ -550,26 +556,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20),
                                       ),
-                                      // InkWell(
-                                      //   onTap: () {
-                                      //     Timer(Duration(milliseconds: 1000),
-                                      //         () {
-                                      //       if (_controller?.hasClients ??
-                                      //           false) {
-                                      //         _controller.jumpTo(_controller
-                                      //             .position.maxScrollExtent);
-                                      //       }
-                                      //     });
-                                      //   },
-                                      //   child: Text(
-                                      //     'View price details',
-                                      //     style: TextStyle(
-                                      //         color: Color(CommonUtil()
-                                      //             .getMyPrimaryColor()),
-                                      //         fontWeight: FontWeight.bold,
-                                      //         fontSize: 12),
-                                      //   ),
-                                      // ),
                                     ],
                                   ),
                                   Spacer(),
@@ -584,18 +570,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     .then((intenet) async {
                                                   if (intenet != null &&
                                                       intenet) {
-                                                    var result = await CheckoutPageWidgets()
-                                                        .profileValidationCheckOnCart(
-                                                            context,
-                                                            feeZero:
-                                                                (value?.totalProductCount ??
-                                                                            0) >
-                                                                        0
-                                                                    ? false
-                                                                    : true);
-                                                    if (result ?? false) {
-                                                      planSubLogic(value);
-                                                    }
+                                                    methodToCheckIfCartIsUpdated(
+                                                        value);
                                                   } else {
                                                     Provider.of<CheckoutPageProvider>(
                                                             context,
@@ -726,7 +702,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       cartId: widget.cartId,
                       notificationListId: widget.notificationListId,
                       isPaymentLinkViaPush: widget.isFromNotification,
-                      cartUserId: widget.cartUserId);
+                      cartUserId: widget.cartUserId,
+                      firstTym: false);
 
               Provider.of<CheckoutPageProvider>(Get.context, listen: false)
                   .fetchCartItems(
@@ -734,7 +711,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       cartUserId: widget?.cartUserId,
                       notificationListId: widget?.notificationListId,
                       isPaymentLinkViaPush: widget?.isFromNotification,
-                      cartId: widget.cartId);
+                      cartId: widget.cartId,
+                      firstTym: false);
             }
           });
     } else {
@@ -775,41 +753,47 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
   }
 
-  Widget _cartItem(BuildContext context, ProductList item) {
+  Widget _cartItem(BuildContext context, ProductList item,
+      {bool isFirsTym = true}) {
     int productValue = 0;
-    if (item?.productDetail?.planSubscriptionFee != null &&
-        item?.productDetail?.planSubscriptionFee != "") {
-      if (item?.additionalInfo?.isMembershipAvail ?? false) {
-        productValue = 0;
-      } else {
-        productValue =
-            double.parse(item?.productDetail?.planSubscriptionFee).toInt();
-      }
-    } else if (item?.additionalInfo?.newFee != null &&
-        item?.additionalInfo?.newFee != "") {
-      if (item?.additionalInfo?.isMembershipAvail ?? false) {
-        productValue = 0;
-      } else {
-        productValue = double.parse(item?.additionalInfo?.newFee).toInt();
-      }
-    } else if (item?.additionalInfo?.actualFee != null &&
-        item?.additionalInfo?.actualFee != "") {
-      if (item?.additionalInfo?.isMembershipAvail ?? false) {
-        productValue = 0;
-      } else {
-        productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
-      }
-    } else if (item?.paidAmount.contains(".")) {
-      if (item?.additionalInfo?.isMembershipAvail ?? false) {
-        productValue = 0;
-      } else {
-        productValue = double.parse(item.paidAmount).toInt();
+
+    if (!isFirsTym) {
+      if (item?.productDetail?.planSubscriptionFee != null &&
+          item?.productDetail?.planSubscriptionFee != "") {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          productValue = 0;
+        } else {
+          productValue =
+              double.parse(item?.productDetail?.planSubscriptionFee).toInt();
+        }
       }
     } else {
-      if (item?.additionalInfo?.isMembershipAvail ?? false) {
-        productValue = 0;
+      if (item?.additionalInfo?.newFee != null &&
+          item?.additionalInfo?.newFee != "") {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          productValue = 0;
+        } else {
+          productValue = double.parse(item?.additionalInfo?.newFee).toInt();
+        }
+      } else if (item?.additionalInfo?.actualFee != null &&
+          item?.additionalInfo?.actualFee != "") {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          productValue = 0;
+        } else {
+          productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
+        }
+      } else if (item?.paidAmount.contains(".")) {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          productValue = 0;
+        } else {
+          productValue = double.parse(item.paidAmount).toInt();
+        }
       } else {
-        productValue = int.parse(item.paidAmount);
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          productValue = 0;
+        } else {
+          productValue = int.parse(item.paidAmount);
+        }
       }
     }
     return Container(
@@ -872,7 +856,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
                     //duration
                     Text(
-                      'Duration-${item?.productDetail?.packageDuration} days',
+                      'Duration-${getDurationBasedOnCondition(item, firstTym: isFirsTym)} days',
                       style: TextStyle(
                           color: Colors.black38,
                           // fontWeight: FontWeight.bold,
@@ -1000,8 +984,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 .spaceEvenly,
                                                         children: <Widget>[
                                                           SizedBoxWithChild(
-                                                            width: CommonUtil().isTablet ?120:90,
-                                                            height: CommonUtil().isTablet ?50:40,
+                                                            width: CommonUtil()
+                                                                    .isTablet
+                                                                ? 120
+                                                                : 90,
+                                                            height: CommonUtil()
+                                                                    .isTablet
+                                                                ? 50
+                                                                : 40,
                                                             child: FlatButton(
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
@@ -1036,8 +1026,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                             ),
                                                           ),
                                                           SizedBoxWithChild(
-                                                            width: CommonUtil().isTablet ?120:90,
-                                                            height: CommonUtil().isTablet ?50:40,
+                                                            width: CommonUtil()
+                                                                    .isTablet
+                                                                ? 120
+                                                                : 90,
+                                                            height: CommonUtil()
+                                                                    .isTablet
+                                                                ? 50
+                                                                : 40,
                                                             child: FlatButton(
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
@@ -1058,7 +1054,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                       .all(8.0),
                                                               onPressed:
                                                                   () async {
-                                                                    try {
+                                                                try {
                                                                   await Provider.of<
                                                                               CheckoutPageProvider>(
                                                                           context,
@@ -1098,9 +1094,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      CommonUtil().isTablet ?SizedBoxWidget(
-                                                        height: 8.0.h,
-                                                      ):SizedBox.shrink(),
+                                                      CommonUtil().isTablet
+                                                          ? SizedBoxWidget(
+                                                              height: 8.0.h,
+                                                            )
+                                                          : SizedBox.shrink(),
                                                     ],
                                                   ),
                                                 ),
@@ -1131,5 +1129,127 @@ class _CheckoutPageState extends State<CheckoutPage> {
         ],
       ),
     );
+  }
+
+  int getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
+    int planDuration = 0;
+    if (!firstTym) {
+      if (item?.productDetail?.packageDuration != null &&
+          item?.productDetail?.packageDuration != "") {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          planDuration = 0;
+        } else {
+          planDuration = item?.productDetail?.packageDuration;
+        }
+      }
+    } else {
+      if (item?.additionalInfo?.duration != null &&
+          item?.additionalInfo?.duration != "") {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          planDuration = 0;
+        } else {
+          planDuration = item?.additionalInfo?.duration.toInt();
+        }
+      } else {
+        if (item?.additionalInfo?.isMembershipAvail ?? false) {
+          planDuration = 0;
+        } else {
+          planDuration = item?.productDetail?.packageDuration;
+        }
+      }
+    }
+
+    return planDuration;
+  }
+
+  void methodToCheckIfCartIsUpdated(CheckoutPageProvider value) async {
+    await Provider.of<CheckoutPageProvider>(context, listen: false)
+        .loader(true);
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+
+    Provider.of<CheckoutPageProvider>(context, listen: false).isMembershipCart =
+        Provider.of<PlanWizardViewModel>(context, listen: false)
+            .checkCartForBundle();
+    var mCartTotal = value?.totalProductCount ?? 0;
+    var firebase = FirebaseAnalyticsService();
+    firebase.trackEvent("on_pay_clicked", {
+      "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
+      "total": mCartTotal
+    });
+    var body = {
+      "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
+      "isQurbook": true
+    };
+
+    FetchingCartItemsModel fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+            .updateCartItems(
+                isNeedRelod: false,
+                cartUserId: widget?.cartUserId,
+                notificationListId: widget?.notificationListId,
+                isPaymentLinkViaPush: widget?.isFromNotification,
+                cartId: widget.cartId);
+
+    ApiBaseHelper().makePayment(body).then((result) async {
+      await Provider.of<CheckoutPageProvider>(context, listen: false)
+          .loader(false, isNeedRelod: false);
+      if (result != null) {
+        if (result?.isSuccess) {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+          if (result?.result != null) {
+            var checkValidation = await CheckoutPageWidgets()
+                .profileValidationCheckOnCart(context,
+                    feeZero:
+                        (value?.totalProductCount ?? 0) > 0 ? false : true);
+            if (checkValidation ?? false) {
+              planSubLogic(value);
+            }
+          } else {
+            Alert.displayConfirmProceed(Get.context,
+                confirm: "Update Cart",
+                title: "Update",
+                content: result?.message ?? '', onPressedConfirm: () {
+              ApiBaseHelper()
+                  .updateCartIcon(fetchingCartItemsModel?.result)
+                  .then((value) {
+                Navigator.of(Get.context).pop();
+                if (value['isSuccess']) {
+                  Provider.of<CheckoutPageProvider>(context, listen: false)
+                      .loader(false, isNeedRelod: true);
+                  Provider.of<CheckoutPageProvider>(context, listen: false)
+                      .updateAmount(
+                          isNeedRelod: true,
+                          cartId: widget.cartId,
+                          notificationListId: widget.notificationListId,
+                          isPaymentLinkViaPush: widget.isFromNotification,
+                          cartUserId: widget.cartUserId,
+                          firstTym: false);
+
+                  Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+                      .fetchCartItems(
+                          isNeedRelod: true,
+                          cartUserId: widget?.cartUserId,
+                          notificationListId: widget?.notificationListId,
+                          isPaymentLinkViaPush: widget?.isFromNotification,
+                          cartId: widget.cartId,
+                          firstTym: false);
+                }
+              });
+            });
+          }
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          FlutterToast()..getToast('Subscribe Failed', Colors.red);
+        }
+      } else {
+        var result = await CheckoutPageWidgets().profileValidationCheckOnCart(
+            context,
+            feeZero: (value?.totalProductCount ?? 0) > 0 ? false : true);
+        if (result ?? false) {
+          planSubLogic(value);
+        }
+      }
+    });
   }
 }
