@@ -634,39 +634,35 @@ class _LandingScreenState extends State<LandingScreen> {
     return landingTab;
   }
 
-  Widget _getUserName() => AnimatedSwitcher(
-        duration: const Duration(milliseconds: 10),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 5.0.w,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    myProfile?.result != null &&
-                            myProfile.result.firstName != null &&
-                            myProfile.result.firstName != ''
-                        ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
-                        : myProfile != null
-                            ? 'Hey User'
-                            : '',
-                    style: TextStyle(
-                      fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+  Widget _getUserName() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 10),
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 5.0.w,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  CommonUtil().getUserName(),
+                  style: TextStyle(
+                    fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
   Widget getAppBarTitle() {
     return Row(

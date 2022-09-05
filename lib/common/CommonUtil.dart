@@ -4805,6 +4805,27 @@ class CommonUtil {
     }
   }
 
+  getUserName() {
+    String userName = '';
+    try {
+      MyProfileModel myProfile;
+
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      userName = myProfile?.result != null &&
+              myProfile.result.firstName != null &&
+              myProfile.result.firstName != ''
+          ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
+          : myProfile != null
+              ? 'Hey User'
+              : '';
+
+      return userName;
+    } catch (e) {
+      //debugPrint(e.toString());
+      return userName;
+    }
+  }
+
   Future<bool> checkGPSIsOn() async {
     try {
       bool serviceEnabled = false;
