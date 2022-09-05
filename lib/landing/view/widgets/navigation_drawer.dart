@@ -7,6 +7,7 @@ import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
@@ -22,6 +23,7 @@ import 'drawer_tile.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import '../../../authentication/constants/constants.dart';
 import '../../../constants/router_variable.dart' as router;
+
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer(
@@ -82,7 +84,7 @@ class NavigationDrawer extends StatelessWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   child: UserProfileImage(
-                                    myProfile,
+                                    PreferenceUtil.getProfileData(KEY_PROFILE),
                                     textColor:
                                         Color(CommonUtil().getMyPrimaryColor()),
                                     circleColor: Color(bgColorContainer),
@@ -331,17 +333,27 @@ class NavigationDrawer extends StatelessWidget {
   }
 
   Widget getNameWidget() {
-    var name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-            myProfile?.result?.name != '')
-        ? myProfile?.result?.name?.capitalizeFirstofEach
-        : myProfile?.result?.firstName != null &&
-                myProfile?.result?.lastName != null
-            ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
-            : '');
-    final phoneNumber =
-        (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-            ? myProfile?.result?.userContactCollection3[0].phoneNumber
-            : '';
+
+    MyProfileModel myProfile;
+    var name = "";
+    var phoneNumber = "";
+
+    try {
+      myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
+      name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
+                  myProfile?.result?.name != '')
+              ? myProfile?.result?.name?.capitalizeFirstofEach
+              : myProfile?.result?.firstName != null &&
+                      myProfile?.result?.lastName != null
+                  ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+                  : '');
+      phoneNumber =
+              (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
+                  ? myProfile?.result?.userContactCollection3[0].phoneNumber
+                  : '';
+    } catch (e) {
+      //print(e);
+    }
 
     return Flexible(
       child: RichText(
