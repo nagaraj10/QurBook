@@ -666,7 +666,7 @@ class PlanWizardViewModel extends ChangeNotifier {
   Future<void> fetchCartItem() async {
     FetchingCartItemsModel fetchingCartItemsModel =
         await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
-            .fetchCartItems();
+            .fetchCartItems(firstTym: true);
     if (fetchingCartItemsModel?.isSuccess ?? false) {
       cartList = fetchingCartItemsModel?.result?.cart?.productList ?? [];
     } else {
