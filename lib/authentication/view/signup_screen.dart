@@ -419,7 +419,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                     emailId: emailController.text.trim(),
                   )));
     } else {
-      toast.getToast(response.message, Colors.red);
+      toast.getToastWithBuildContext(response.message, Colors.red,context);
     }
   }
 
