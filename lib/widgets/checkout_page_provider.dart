@@ -30,6 +30,8 @@ class CheckoutPageProvider extends ChangeNotifier {
   int _cartCount = 0;
 
   bool isLoading = false;
+  bool isFirstTym = true;
+
   int totalProductCount = 0;
   List<ProductList> productList;
   List<ProductList> cartList = [];
@@ -107,7 +109,8 @@ class CheckoutPageProvider extends ChangeNotifier {
       String cartUserId,
       String notificationListId,
       bool isPaymentLinkViaPush = false,
-      String cartId = ""}) async {
+      String cartId = "",
+      bool firstTym = true}) async {
     changeCartStatus(CartStatus.LOADING, isNeedRelod: false);
     if (isPaymentLinkViaPush) {
       fetchingCartItemsModel = await helper.fetchCartItems(
@@ -126,7 +129,7 @@ class CheckoutPageProvider extends ChangeNotifier {
 
     updateCartCount(fetchingCartItemsModel?.result?.productsCount ?? 0,
         isNeedRelod: isNeedRelod);
-    updateProductCount();
+    updateProductCountBasedOnCondiiton(firstTym: firstTym);
     return fetchingCartItemsModel;
   }
 
@@ -171,7 +174,7 @@ class CheckoutPageProvider extends ChangeNotifier {
       FlutterToast().getToast(value.message, Colors.green);
       await fetchCartItems(isNeedRelod: isNeedRelod);
       await fetchCartItem();
-      await updateProductCount();
+      await updateProductCountBasedOnCondiiton();
 
       //setCartType(CartType.DEFAULT_CART);
     } else {
@@ -181,20 +184,21 @@ class CheckoutPageProvider extends ChangeNotifier {
     await clearAllInCareDiet();
   }
 
-  Future<void> updateAmount({
-    bool isNeedRelod = false,
-    bool isPaymentLinkViaPush = false,
-    String cartId = "",
-    String cartUserId,
-    String notificationListId,
-  }) async {
+  Future<void> updateAmount(
+      {bool isNeedRelod = false,
+      bool isPaymentLinkViaPush = false,
+      String cartId = "",
+      String cartUserId,
+      String notificationListId,
+      bool firstTym = true}) async {
     //item removed from cart
     await fetchCartItems(
         isNeedRelod: isNeedRelod,
         isPaymentLinkViaPush: isPaymentLinkViaPush,
         cartId: cartId,
         cartUserId: cartUserId,
-        notificationListId: notificationListId);
+        notificationListId: notificationListId,
+        firstTym: firstTym);
     await updateCareCount();
     //setCartType(CartType.DEFAULT_CART);
   }
@@ -346,5 +350,55 @@ class CheckoutPageProvider extends ChangeNotifier {
     changeCartStatus(CartStatus.LOADED, isNeedRelod: isNeedRelod);
 
     return fetchingCartItemsModel;
+  }
+
+  void updateProductCountBasedOnCondiiton(
+      {bool isNeedRelod = true, bool firstTym = true}) {
+    if (productList != null && productList.length > 0) {
+      productList.clear();
+      totalProductCount = 0;
+    }
+
+    productList = fetchingCartItemsModel?.result?.cart?.productList;
+    if (productList != null && productList.length > 0) {
+      productList.forEach((product) {
+        if (product?.additionalInfo?.isMembershipAvail ?? false) {
+          totalProductCount = totalProductCount + 0;
+        } else {
+          if (!firstTym) {
+            if (product?.productDetail?.planSubscriptionFee != null &&
+                product?.productDetail?.planSubscriptionFee != "") {
+              int amtToPay =
+                  double.parse(product?.productDetail?.planSubscriptionFee)
+                      .toInt();
+              totalProductCount = totalProductCount + amtToPay;
+            }
+          } else {
+            if (product?.additionalInfo?.newFee != null &&
+                product?.additionalInfo?.newFee != "") {
+              if (product?.additionalInfo?.newFee?.contains(".")) {
+                int amtToPay =
+                    double.parse(product?.additionalInfo?.newFee).toInt();
+                totalProductCount = totalProductCount + amtToPay;
+              } else if (!product?.additionalInfo?.newFee?.contains(".")) {
+                int amtToPay = int.parse(product?.additionalInfo?.newFee);
+                totalProductCount = totalProductCount + amtToPay;
+              }
+            } else if (product?.additionalInfo?.actualFee != null &&
+                product?.additionalInfo?.actualFee != "") {
+              if (product?.additionalInfo?.actualFee?.contains(".")) {
+                int amtToPay =
+                    double.parse(product?.additionalInfo?.actualFee).toInt();
+                totalProductCount = totalProductCount + amtToPay;
+              } else if (!product?.additionalInfo?.actualFee?.contains(".")) {
+                int amtToPay = int.parse(product?.additionalInfo?.actualFee);
+                totalProductCount = totalProductCount + amtToPay;
+              }
+            }
+          }
+        }
+      });
+    }
+    notifyListeners();
   }
 }
