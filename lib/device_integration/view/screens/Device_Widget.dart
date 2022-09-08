@@ -2400,7 +2400,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'SPO2',
+                                                      'SpO2',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2434,7 +2434,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'PRBpm',
+                                                      'PR bpm',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2473,7 +2473,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'SPO2',
+                                                            'SpO2',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2515,7 +2515,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'PRBpm',
+                                                            'PR bpm',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2797,7 +2797,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? unitForWeight !=
                                                                       null
                                                                   ? unitForWeight
-                                                                      ?.capitalizeFirstofEach
                                                                   : ''
                                                               : '',
                                                           style: TextStyle(
@@ -2866,7 +2865,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     ? unitForWeight !=
                                                                             null
                                                                         ? unitForWeight
-                                                                            ?.capitalizeFirstofEach
                                                                         : ''
                                                                     : '',
                                                                 style:

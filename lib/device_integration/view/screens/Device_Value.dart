@@ -1055,7 +1055,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'SPO2',
+                        'SpO2',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1078,7 +1078,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'PRBpm',
+                        'PR bpm',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1298,7 +1298,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'mg/dl',
+                      'mg/dL',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12.0.sp,
@@ -1635,7 +1635,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '${translist[index].oxygenSaturation}',
                               '',
                               '',
-                              'SPO2',
+                              'SpO2',
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
@@ -1922,7 +1922,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2.0.w,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -1963,7 +1963,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -2485,7 +2485,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             Column(
                               children: [
                                 Text(
-                                  'PRBpm',
+                                  'PR bpm',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 13.0.sp),
                                   textAlign: TextAlign.center,
