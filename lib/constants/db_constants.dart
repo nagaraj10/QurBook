@@ -34,7 +34,7 @@ const String PRO_MGDL = 'mg/dL';
 const String PRO_SPO2 = '%';
 const String PRO_PRBPM = 'PR bpm';
 const String PRO_F = 'F';
-const String PRO_KG = 'Kg';
+const String PRO_KG = 'kg';
 const String CC_WHR_CALUSE = 'countryCode = ?';
 const String CT_APPOINTMENTS =
     'CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, apptime TEXT, reason TEXT)';

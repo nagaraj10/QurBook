@@ -13,6 +13,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -147,6 +148,8 @@ class CommonUtil {
   static String POWER_BI_URL = 'IN';
   static String BASE_URL_QURHUB = '';
   static String TRUE_DESK_URL = '';
+  static String UNIT_CONFIGURATION_URL =
+      'system-configuration/unit-configuration';
 
   static const bgColor = 0xFFe3e2e2;
   static bool isRenewDialogOpened = false;
@@ -184,6 +187,207 @@ class CommonUtil {
 
   static String bookedForId = null;
   static bool isCallStarted = false;
+
+  var commonConstants = CommonConstants();
+
+  String tempUnit = 'C';
+  String weightUnit = 'kg';
+
+  bool isTouched = true;
+
+  bool isPounds = false;
+  bool isKg = false;
+
+  bool isCele = false;
+  bool isFaren = false;
+
+  bool isInchFeet = false;
+  bool isCenti = false;
+
+  GetDeviceSelectionModel selectionResult;
+  PreferredMeasurement preferredMeasurement;
+  ProfileSetting profileSetting;
+
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+
+  Height heightObj, weightObj, tempObj;
+  String userMappingId = '';
+
+  Future<GetDeviceSelectionModel> getProfileSetings() async {
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) async {
+      if (value.isSuccess) {
+        selectionResult = value;
+        if (value.result != null && value.result.length > 0) {
+          if (value.result[0] != null) {
+            profileSetting = value.result[0].profileSetting;
+            userMappingId = value.result[0].id;
+
+            if (profileSetting != null) {
+              if (profileSetting.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting.preferredMeasurement;
+                weightObj = preferredMeasurement.weight;
+
+                if (weightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      preferredMeasurement.weight?.unitCode);
+                  if (preferredMeasurement.weight?.unitCode.toLowerCase() ==
+                      Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
+                    isKg = true;
+                    isPounds = false;
+                  } else {
+                    isKg = false;
+                    isPounds = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                heightObj = preferredMeasurement.height;
+
+                if (heightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode);
+                  if (preferredMeasurement.height?.unitCode ==
+                      Constants.STR_VAL_HEIGHT_IND) {
+                    isInchFeet = true;
+                    isCenti = false;
+                  } else {
+                    isInchFeet = false;
+                    isCenti = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                tempObj = preferredMeasurement.temperature;
+                if (tempObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                      preferredMeasurement.temperature?.unitCode);
+                  if (preferredMeasurement.temperature?.unitCode
+                          .toLowerCase() ==
+                      Constants.STR_VAL_TEMP_IND.toLowerCase()) {
+                    isFaren = true;
+                    isCele = false;
+                  } else {
+                    isFaren = false;
+                    isCele = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                return selectionResult;
+              } else {
+                commonMethodToSetPreference();
+                return selectionResult;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  void commonMethodToSetPreference() async {
+    var apiBaseHelper = ApiBaseHelper();
+
+    var unitConfiguration = await apiBaseHelper
+        .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
+
+    if (unitConfiguration?.isSuccess) {
+      if (unitConfiguration?.result != null) {
+        var configurationData = unitConfiguration?.result[0]?.configurationData;
+        if (configurationData != null) {
+          if (CommonUtil.REGION_CODE != "IN") {
+            await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                    configurationData.unitSystemList?.us?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      configurationData.unitSystemList?.us?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.us?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          } else {
+            await PreferenceUtil.saveString(
+                    Constants.STR_KEY_HEIGHT,
+                    configurationData
+                        .unitSystemList?.india?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT,
+                      configurationData
+                          .unitSystemList?.india?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.india?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          }
+        }
+      }
+    }
+  }
+
+  void commonMethodToSetPreferenceNew() async {
+    if (CommonUtil.REGION_CODE != "IN") {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'feet/Inches');
+      weightObj =
+          new Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+      tempObj =
+          new Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+      isKg = true;
+      isPounds = false;
+
+      isInchFeet = true;
+      isCenti = false;
+
+      isFaren = true;
+      isCele = false;
+    } else {
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
+      await PreferenceUtil.saveString(
+          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
+
+      heightObj = new Height(
+          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
+      weightObj = new Height(
+          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+      tempObj = new Height(
+          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+      isKg = false;
+      isPounds = true;
+
+      isInchFeet = false;
+      isCenti = true;
+
+      isFaren = false;
+      isCele = true;
+    }
+  }
 
   static Future<dynamic> getResourceLoader() async {
     final secret = SecretLoader(secretPath: 'secrets.json').load();

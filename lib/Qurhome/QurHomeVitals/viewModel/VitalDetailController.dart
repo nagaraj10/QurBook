@@ -332,7 +332,7 @@ class VitalDetailController extends GetxController {
               weight: weightValue.weight,
               weightUnit: weightValue.weightUnit != null
                   ? weightValue.weightUnit.description
-                  : 'Kg',
+                  : 'kg',
               deviceId: dataElement.deviceId,
               dateTimeValue: weightValue.startDateTime);
           ret.add(weightList);

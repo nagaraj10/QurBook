@@ -825,7 +825,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       try {
         unitForTemp =
             deviceValues.bodyTemperature.entities[0].temperatureUnit != null
-                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -869,7 +869,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-            ? deviceValues.bodyWeight.entities[0].weightUnit.name
+            ? deviceValues.bodyWeight.entities[0].weightUnit.code
             : '';
       } catch (e) {
         unitForWeight = '';
