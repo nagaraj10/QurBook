@@ -228,7 +228,7 @@ class CommonConstants {
 
   static String heightNameFeetInd = 'Height(Feet)';
   static String heightNameInchInd = 'Height(Inches)';
-  static String weightNameUS = 'Weight(lbs)';
+  static String weightNameUS = 'Weight(lb)';
 
   static String preferredLanguage = 'Preferred Language';
   static String tags = 'Tags';
