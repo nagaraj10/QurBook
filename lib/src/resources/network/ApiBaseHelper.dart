@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
+import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
@@ -2706,6 +2707,22 @@ class ApiBaseHelper {
         return responses;
       }
     });
+  }
+
+  Future<UnitConfiguration> getUnitConfiguration(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    print(url);
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersForSearch());
+
+      responseJson = _returnResponse(response, forDoctorSearch: true);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return UnitConfiguration.fromJson(responseJson);
   }
 
 /*

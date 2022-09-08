@@ -385,7 +385,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     deviceReadings[i].unit.toLowerCase() ==
                             CommonConstants.strOxygenUnits.toLowerCase()
                         ? CommonConstants.strOxygenUnitsName
-                        : getUnitForTemperature(" " + deviceReadings[i].unit),
+                        : " " + deviceReadings[i].unit,
                     maxLines: 2,
                     style: TextStyle(color: Colors.black54, fontSize: 10.0.sp))
               ],

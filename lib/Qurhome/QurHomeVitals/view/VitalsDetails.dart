@@ -110,8 +110,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
-  String tempUnit = 'c';
-  String weightUnit = 'Kg';
+  String tempUnit = 'C';
+  String weightUnit = 'kg';
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
@@ -152,7 +152,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
 
     try {
@@ -1448,7 +1448,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
     return Container(
         //height: 70.0.h,
@@ -1496,7 +1496,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   Column(
                     children: <Widget>[
                       Text(
-                        weightUnit != null ? weightUnit : 'Kg',
+                        weightUnit != null ? weightUnit : 'kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,

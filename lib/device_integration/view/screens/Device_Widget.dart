@@ -821,7 +821,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       try {
         unitForTemp =
             deviceValues.bodyTemperature.entities[0].temperatureUnit != null
-                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -863,14 +863,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForWeigh = '';
       }
 
-        try {
-          unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-              ? deviceValues.bodyWeight.entities[0].weightUnit.name
-              : '';
-        } catch (e) {
-          unitForWeight = '';
-        }
-     
+      try {
+        unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+            ? deviceValues.bodyWeight.entities[0].weightUnit.code
+            : '';
+      } catch (e) {
+        unitForWeight = '';
+      }
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
