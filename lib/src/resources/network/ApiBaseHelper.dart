@@ -801,6 +801,23 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<http.Response> getNotificationList(String path,
+      {Map<String, String> headers, int timeout = 20}) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(path,
+          headers: headers,timeout:timeout);
+      if (response.statusCode != 200)
+      {
+        await _returnResponse(response);
+      }
+      responseJson = response;
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> saveImageToServerClone1(
       String url, File file, String jsonBody) async {
     var response;
