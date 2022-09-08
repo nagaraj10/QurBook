@@ -294,6 +294,54 @@ class CommonUtil {
   }
 
   void commonMethodToSetPreference() async {
+    var apiBaseHelper = ApiBaseHelper();
+
+    var unitConfiguration = await apiBaseHelper
+        .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
+
+    if (unitConfiguration?.isSuccess) {
+      if (unitConfiguration?.result != null) {
+        var configurationData = unitConfiguration?.result[0]?.configurationData;
+        if (configurationData != null) {
+          if (CommonUtil.REGION_CODE != "IN") {
+            await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                    configurationData.unitSystemList?.us?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      configurationData.unitSystemList?.us?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.us?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          } else {
+            await PreferenceUtil.saveString(
+                    Constants.STR_KEY_HEIGHT,
+                    configurationData
+                        .unitSystemList?.india?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT,
+                      configurationData
+                          .unitSystemList?.india?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.india?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          }
+        }
+      }
+    }
+  }
+
+  void commonMethodToSetPreferenceNew() async {
     if (CommonUtil.REGION_CODE != "IN") {
       await PreferenceUtil.saveString(
           Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
