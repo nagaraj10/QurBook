@@ -899,7 +899,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'SPO2',
+                        'SpO2',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -921,7 +921,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'PRBpm',
+                        'PR bpm',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
