@@ -630,7 +630,7 @@ class _VitalsListState extends State<VitalsList> {
       try {
         unitForTemp =
             deviceValues.bodyTemperature.entities[0].temperatureUnit != null
-                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -673,7 +673,7 @@ class _VitalsListState extends State<VitalsList> {
       }
       try {
         unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-            ? deviceValues.bodyWeight.entities[0].weightUnit.name
+            ? deviceValues.bodyWeight.entities[0].weightUnit.code
             : '';
       } catch (e) {
         unitForWeight = '';
@@ -1982,7 +1982,7 @@ class _VitalsListState extends State<VitalsList> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'SPO2',
+                                                      'SpO2',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2016,7 +2016,7 @@ class _VitalsListState extends State<VitalsList> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'PRBpm',
+                                                      'PR bpm',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2055,7 +2055,7 @@ class _VitalsListState extends State<VitalsList> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'SPO2',
+                                                            'SpO2',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2097,7 +2097,7 @@ class _VitalsListState extends State<VitalsList> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'PRBpm',
+                                                            'PR bpm',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2373,7 +2373,6 @@ class _VitalsListState extends State<VitalsList> {
                                                               ? unitForWeight !=
                                                                       null
                                                                   ? unitForWeight
-                                                                      ?.capitalizeFirstofEach
                                                                   : ''
                                                               : '',
                                                           style: TextStyle(
@@ -2442,7 +2441,6 @@ class _VitalsListState extends State<VitalsList> {
                                                                     ? unitForWeight !=
                                                                             null
                                                                         ? unitForWeight
-                                                                            ?.capitalizeFirstofEach
                                                                         : ''
                                                                     : '',
                                                                 style:
