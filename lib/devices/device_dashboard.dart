@@ -822,7 +822,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                   Column(
                     children: <Widget>[
                       Text(
-                        'Kg',
+                        'kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,

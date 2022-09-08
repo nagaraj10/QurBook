@@ -114,7 +114,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   FlutterToast toast = FlutterToast();
 
   String tempUnit = "F";
-  String weightUnit = "Kg";
+  String weightUnit = "kg";
   String heightUnit = "feet";
 
   @override
