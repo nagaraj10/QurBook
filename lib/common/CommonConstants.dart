@@ -100,9 +100,9 @@ class CommonConstants {
   static String strTempParams = 'temperature';
 
   static String strWeight = 'Weight';
-  static String strWeightValue = 'Kg';
+  static String strWeightValue = 'kg';
   static String strWeightParam = 'weight';
-  static String strWeightUnit = 'Kg';
+  static String strWeightUnit = 'kg';
 
   static String strOxygenSaturation = 'Spo2';
   static String strOxygenValue = '%spo2';
@@ -172,7 +172,7 @@ class CommonConstants {
   static String user_linking = 'user_linking';
 
   static String height = 'Height(cm)';
-  static String weight = 'Weight(Kg)';
+  static String weight = 'Weight(kg)';
 
   static String add = 'Add';
   static String save = 'Save';
@@ -223,8 +223,8 @@ class CommonConstants {
   static String middleNameWithStar = 'MiddleName*';
   static String lastNameWithStar = 'LastName*';
   static String exprityDate = 'Expiry Date*';
-  static String heightName = 'Height(Cm)';
-  static String weightName = 'Weight(Kg)';
+  static String heightName = 'Height(cm)';
+  static String weightName = 'Weight(kg)';
 
   static String heightNameFeetInd = 'Height(Feet)';
   static String heightNameInchInd = 'Height(Inches)';

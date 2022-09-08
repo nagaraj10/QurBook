@@ -462,8 +462,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                       Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
                 }
                 if (preferredMeasurement.weight != null) {
-                  if (preferredMeasurement.weight?.unitCode ==
-                      Constants.STR_VAL_WEIGHT_IND) {
+                  if (preferredMeasurement.weight?.unitCode.toLowerCase() ==
+                      Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
                     isKg = true;
                     isPounds = false;
                   } else {
@@ -531,8 +531,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
                 }
 
                 if (preferredMeasurement.temperature != null) {
-                  if (preferredMeasurement.temperature?.unitCode ==
-                      Constants.STR_VAL_TEMP_IND) {
+                  if (preferredMeasurement.temperature?.unitCode
+                          .toLowerCase() ==
+                      Constants.STR_VAL_TEMP_IND.toLowerCase()) {
                     isFaren = true;
                     isCele = false;
                   } else {
