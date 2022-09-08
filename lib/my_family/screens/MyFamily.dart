@@ -1119,6 +1119,7 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['isVirtualUser'] = true;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
             addFamilyMemberRequest['lastName'] = lastNameController.text;
+            addFamilyMemberRequest['middleName'] = middleNameController.text;
             addFamilyMemberRequest['dateOfBirth'] = null;
             addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
             addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
@@ -1193,6 +1194,7 @@ class _MyFamilyState extends State<MyFamily> {
             addFamilyMemberRequest['isVirtualUser'] = false;
             addFamilyMemberRequest['firstName'] = firstNameController.text;
             addFamilyMemberRequest['lastName'] = lastNameController.text;
+            addFamilyMemberRequest['middleName'] = middleNameController.text;
             addFamilyMemberRequest['dateOfBirth'] = null;
             addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
             addFamilyMemberRequest['phoneNumber'] =
