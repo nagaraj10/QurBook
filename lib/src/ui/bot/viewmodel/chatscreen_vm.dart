@@ -372,17 +372,24 @@ class ChatScreenViewModel extends ChangeNotifier {
   }
 
   startMayaAutomatically({String message}) {
-    isLoading = true;
-    Future.delayed(Duration(seconds: 1), () {
-      _screen = parameters.strSheela;
-      sendToMaya(
-          ((message ?? '').isNotEmpty)
-              ? '/provider_message'
-              : variable.strhiMaya,
-          screen: _screen,
-          providerMsg:
-              (message != null && message.isNotEmpty) ? message : null);
-    });
+    isLoading = false;
+    isSheelaSpeaking = false;
+    isMayaSpeaks = 1;
+    _screen = parameters.strSheela;
+    notifyListeners();
+    gettingReposnseFromNative();
+
+    // Future.delayed(Duration(seconds: 1), () {
+    //   _screen = parameters.strSheela;
+    //   sendToMaya(
+    //       ((message ?? '').isNotEmpty)
+    //           ? '/provider_message'
+    //           : variable.strhiMaya,
+    //       screen: _screen,
+    //       providerMsg:
+    //           (message != null && message.isNotEmpty) ? message : null,
+    //   addToConvo: false);
+    // });
 
     // var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
     // // Conversation model = new Conversation(
@@ -1204,8 +1211,13 @@ class ChatScreenViewModel extends ChangeNotifier {
               await _audioCache.play('raw/Negative.mp3');
             }
             if ((response ?? '').toString()?.isNotEmpty) {
-              var lastObj = conversations.last;
-
+              //sendToMaya(response, screen: screenValue);
+              var lastObj;
+              try {
+                lastObj = conversations.last;
+              } catch (e) {
+                //e.printError();
+              }
               var date = new FHBUtils()
                   .getFormattedDateString(DateTime.now().toString());
               Conversation model = new Conversation(
@@ -1218,7 +1230,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   redirect: isRedirect,
                   screen: screenValue);
               conversations.add(model);
-              if ((lastObj.buttons?.length ?? 0) > 0) {
+              if (lastObj != null && ((lastObj.buttons?.length ?? 0) > 0)) {
                 var responseRecived = response.toString().trim().toLowerCase();
                 var button;
                 try {

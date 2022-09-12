@@ -2188,7 +2188,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (data != null && data.size > 0) {
                         finalWords+=data[0]+" "
                         displayText.setText(finalWords)
-                        Log.e("speechreco", "onResults: working" )
                         sendBtn.performClick()
                     }
 //                    if (data != null && data.size > 0) {
