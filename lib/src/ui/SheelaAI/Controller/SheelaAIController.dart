@@ -151,11 +151,14 @@ class SheelaAIController extends GetxController {
       var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
         msg = arguments.rawMessage;
+        getAIAPIResponseFor(msg);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
         msg = arguments.sheelaInputs;
         conversations.add(SheelaResponse(text: msg));
+        getAIAPIResponseFor(msg);
+      } else {
+        gettingReposnseFromNative();
       }
-      getAIAPIResponseFor(msg);
     }
   }
 
@@ -312,20 +315,33 @@ class SheelaAIController extends GetxController {
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = base64Decode(textForPlaying);
-          if (bytes != null) {
-            final dir = await getTemporaryDirectory();
-            randomNum++;
-            if (randomNum > 4) {
-              randomNum = 0;
+          if (Platform.isIOS) {
+            final bytes = base64Decode(textForPlaying);
+            if (bytes != null) {
+              final dir = await getTemporaryDirectory();
+              randomNum++;
+              if (randomNum > 4) {
+                randomNum = 0;
+              }
+              final tempFile =
+                  await File('${dir.path}/tempAudioFile$randomNum.mp3')
+                      .create();
+              await tempFile.writeAsBytesSync(
+                bytes,
+              );
+              currentPlayingConversation.isPlaying.value = true;
+              player.play('${dir.path}/tempAudioFile$randomNum.mp3');
             }
-            final tempFile =
-                await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
-            await tempFile.writeAsBytesSync(
-              bytes,
-            );
-            currentPlayingConversation.isPlaying.value = true;
-            player.play('${dir.path}/tempAudioFile$randomNum.mp3');
+          } else {
+            final bytes = const Base64Decoder().convert(textForPlaying);
+            if (bytes != null) {
+              final dir = await getTemporaryDirectory();
+              final file = File('${dir.path}/tempAudioFile.mp3');
+              await file.writeAsBytes(bytes);
+              final path = "${dir.path}/tempAudioFile.mp3";
+              currentPlayingConversation.isPlaying.value = true;
+              await player.play(path, isLocal: true);
+            }
           }
         } catch (e) {
           //failed play the audio
@@ -428,14 +444,16 @@ class SheelaAIController extends GetxController {
           ).then((response) {
             isMicListening.value = false;
             if ((response ?? '').toString()?.isNotEmpty) {
-              final lastObj = conversations.last;
               final newConversation = SheelaResponse(text: response);
-              if ((lastObj.buttons?.length ?? 0) > 0) {
+              if (conversations.isNotEmpty &&
+                  ((conversations.last?.buttons?.length ?? 0) > 0)) {
                 try {
                   final responseRecived =
                       response.toString().toLowerCase().trim();
-                  final button = lastObj.buttons.firstWhere((element) =>
-                      (element.title ?? "").toLowerCase() == responseRecived);
+                  final button = conversations.last?.buttons.firstWhere(
+                      (element) =>
+                          (element.title ?? "").toLowerCase() ==
+                          responseRecived);
                   if (button != null) {
                     startSheelaFromButton(
                       buttonText: button.title,
