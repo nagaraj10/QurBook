@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart' as gett;
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
+import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
@@ -794,6 +795,23 @@ class ApiBaseHelper {
       var response = await ApiServices.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<http.Response> getNotificationList(String path,
+      {Map<String, String> headers, int timeout = 20}) async {
+    var responseJson;
+    try {
+      var response = await ApiServices.get(path,
+          headers: headers,timeout:timeout);
+      if (response.statusCode != 200)
+      {
+        await _returnResponse(response);
+      }
+      responseJson = response;
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -2706,6 +2724,22 @@ class ApiBaseHelper {
         return responses;
       }
     });
+  }
+
+  Future<UnitConfiguration> getUnitConfiguration(String url) async {
+    var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    print(url);
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersForSearch());
+
+      responseJson = _returnResponse(response, forDoctorSearch: true);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return UnitConfiguration.fromJson(responseJson);
   }
 
 /*

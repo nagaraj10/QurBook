@@ -821,7 +821,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       try {
         unitForTemp =
             deviceValues.bodyTemperature.entities[0].temperatureUnit != null
-                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.name
+                ? deviceValues.bodyTemperature.entities[0].temperatureUnit.code
                 : '';
       } catch (e) {
         unitForTemp = '';
@@ -863,14 +863,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForWeigh = '';
       }
 
-        try {
-          unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
-              ? deviceValues.bodyWeight.entities[0].weightUnit.name
-              : '';
-        } catch (e) {
-          unitForWeight = '';
-        }
-     
+      try {
+        unitForWeight = deviceValues.bodyWeight.entities[0].weightUnit != null
+            ? deviceValues.bodyWeight.entities[0].weightUnit.code
+            : '';
+      } catch (e) {
+        unitForWeight = '';
+      }
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
@@ -2397,7 +2396,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'SPO2',
+                                                      'SpO2',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2431,7 +2430,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Container(
                                                     child: Text(
-                                                      'PRBpm',
+                                                      'PR bpm',
                                                       style: TextStyle(
                                                         fontSize: 11.0.sp,
                                                         color: hexToColor(
@@ -2470,7 +2469,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'SPO2',
+                                                            'SpO2',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2512,7 +2511,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       children: [
                                                         Container(
                                                           child: Text(
-                                                            'PRBpm',
+                                                            'PR bpm',
                                                             style: TextStyle(
                                                               fontSize: 12.0.sp,
                                                               fontWeight:
@@ -2794,7 +2793,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               ? unitForWeight !=
                                                                       null
                                                                   ? unitForWeight
-                                                                      ?.capitalizeFirstofEach
                                                                   : ''
                                                               : '',
                                                           style: TextStyle(
@@ -2863,7 +2861,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     ? unitForWeight !=
                                                                             null
                                                                         ? unitForWeight
-                                                                            ?.capitalizeFirstofEach
                                                                         : ''
                                                                     : '',
                                                                 style:

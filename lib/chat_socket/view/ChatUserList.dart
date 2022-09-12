@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -465,17 +466,19 @@ class _ChatUserListState extends State<ChatUserList> {
                       children: <Widget>[
                         Row(
                           children: [
-                            Text(
-                              fulName != null
-                                  ? CommonUtil()
-                                      .titleCase(fulName.toLowerCase())
-                                  : '',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.0.sp,
+                            Expanded(
+                              child: Text(
+                                fulName != null
+                                    ? CommonUtil()
+                                        .titleCase(fulName.toLowerCase())
+                                    : '',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16.0.sp,
+                                ),
+                                // softWrap: false,
+                                // overflow: TextOverflow.ellipsis,
                               ),
-                              softWrap: false,
-                              overflow: TextOverflow.ellipsis,
                             ),
                             data?.isCarecoordinator
                                 ? Expanded(

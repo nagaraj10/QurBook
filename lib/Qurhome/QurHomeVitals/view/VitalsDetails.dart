@@ -110,8 +110,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   StreamController<int> _events = StreamController<int>();
   Timer _timer;
 
-  String tempUnit = 'c';
-  String weightUnit = 'Kg';
+  String tempUnit = 'C';
+  String weightUnit = 'kg';
 
   //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
@@ -152,7 +152,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
 
     try {
@@ -1368,7 +1368,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'SPO2',
+                        'SpO2',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1391,7 +1391,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'PRBpm',
+                        'PR bpm',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1448,7 +1448,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
     return Container(
         //height: 70.0.h,
@@ -1496,7 +1496,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                   Column(
                     children: <Widget>[
                       Text(
-                        weightUnit != null ? weightUnit : 'Kg',
+                        weightUnit != null ? weightUnit : 'kg',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1570,7 +1570,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'mg/dl',
+                      'mg/dL',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12.0.sp,
@@ -1878,7 +1878,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         '${translist[index].oxygenSaturation}',
                         '',
                         '',
-                        'SPO2',
+                        'SpO2',
                         '',
                         '',
                         getFormattedTime(translist[index].startDateTime),
@@ -2143,7 +2143,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                   width: 2.0.w,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(CommonUtil()
                                           .getQurhomePrimaryColor()),
@@ -2184,7 +2184,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                   width: 2,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(CommonUtil()
                                           .getQurhomePrimaryColor()),
@@ -2706,7 +2706,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             Column(
                               children: [
                                 Text(
-                                  'PRBpm',
+                                  'PR bpm',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 13.0.sp),
                                   textAlign: TextAlign.center,
