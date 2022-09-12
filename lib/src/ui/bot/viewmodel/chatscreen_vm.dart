@@ -1202,7 +1202,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               try {
                 lastObj = conversations.last;
               } catch (e) {
-                e.printError();
+                //e.printError();
               }
               var date = new FHBUtils()
                   .getFormattedDateString(DateTime.now().toString());
