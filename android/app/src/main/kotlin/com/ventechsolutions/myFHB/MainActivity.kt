@@ -2187,6 +2187,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (data != null && data.size > 0) {
                         finalWords+=data[0]+" "
                         displayText.setText(finalWords)
+                        speechRecognizer?.cancel()
                         speechRecognizer?.startListening(intent)
                     }
 //                    if (data != null && data.size > 0) {
