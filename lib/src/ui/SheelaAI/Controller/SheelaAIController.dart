@@ -48,6 +48,7 @@ class SheelaAIController extends GetxController {
   SheelaArgument arguments;
   SheelaBLEController bleController;
   bool isSheelaScreenActive = false;
+  int randomNum = 0;
 
   @override
   void onInit() {
@@ -62,6 +63,7 @@ class SheelaAIController extends GetxController {
     userName = profile.result != null
         ? '${profile.result.firstName} ${profile.result.lastName}'
         : '';
+
     player = AudioPlayer();
     listnerForAudioPlayer();
   }
@@ -310,14 +312,20 @@ class SheelaAIController extends GetxController {
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = const Base64Decoder().convert(textForPlaying);
+          final bytes = base64Decode(textForPlaying);
           if (bytes != null) {
             final dir = await getTemporaryDirectory();
-            final file = File('${dir.path}/tempAudioFile.mp3');
-            await file.writeAsBytes(bytes);
-            final path = "${dir.path}/tempAudioFile.mp3";
+            randomNum++;
+            if (randomNum > 4) {
+              randomNum = 0;
+            }
+            final tempFile =
+                await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
+            await tempFile.writeAsBytesSync(
+              bytes,
+            );
             currentPlayingConversation.isPlaying.value = true;
-            await player.play(path, isLocal: true);
+            player.play('${dir.path}/tempAudioFile$randomNum.mp3');
           }
         } catch (e) {
           //failed play the audio
