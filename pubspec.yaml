@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: D:\commonwidget
+    path: ../../Qurhealth/fhbCommon
 
   # The following adds the Cupertino Icons font to your application.
   firebase_core: ^1.3.0
@@ -182,6 +182,9 @@ flutter:
     - assets/loading_wave.json
     - assets/languages/
     - assets/raw/dailer_tone.mp3
+    - assets/raw/Positive.mp3
+    - assets/raw/Negative.mp3
+
 
   #  - images/a_dot_ham.jpeg
 

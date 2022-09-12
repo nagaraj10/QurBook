@@ -42,6 +42,7 @@ import '../../../resources/repository/health/HealthReportListForUserRepository.d
 import '../../../utils/FHBUtils.dart';
 import '../common/botutils.dart';
 import '../service/sheela_service.dart';
+import 'package:audioplayers/audioplayers.dart' as players;
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
@@ -114,6 +115,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   bool isSheelaFollowup = false;
 
   PreferredMeasurement preferredMeasurement;
+  players.AudioCache _audioCache;
 
   void updateAppState(bool canSheelaSpeak, {bool isInitial: false}) {
     if (disableMic) {
@@ -320,6 +322,10 @@ class ChatScreenViewModel extends ChangeNotifier {
         ? prof.result.firstName + ' ' + prof.result.lastName
         : '';
     user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
+    if (Platform.isIOS) {
+      _audioCache = players.AudioCache();
+      _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
+    }
   }
 
   addToSheelaConversation({String text = ''}) async {
@@ -1192,10 +1198,18 @@ class ChatScreenViewModel extends ChangeNotifier {
         if (!isMicListening) {
           isMicListening = true;
           notifyListeners();
+          if (Platform.isIOS) {
+            await _audioCache.play('raw/Positive.mp3');
+            await Future.delayed(Duration(seconds: 2));
+          }
+
           await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
-              {'langcode': Utils.getCurrentLanCode()}).then((response) {
+              {'langcode': Utils.getCurrentLanCode()}).then((response) async {
             isMicListening = false;
             notifyListeners();
+            if (Platform.isIOS) {
+              await _audioCache.play('raw/Negative.mp3');
+            }
             if ((response ?? '').toString()?.isNotEmpty) {
               //sendToMaya(response, screen: screenValue);
               var lastObj;
