@@ -13,6 +13,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
@@ -346,26 +347,7 @@ Future<void> main() async {
 }
 
 void saveUnitSystemToPreference() async {
-  if (CommonUtil.REGION_CODE != "IN") {
-    await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_US)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_US)
-          .then((value) {
-        PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_US)
-            .then((value) {});
-      });
-    });
-  } else {
-    await PreferenceUtil.saveString(
-            Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_IND)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_IND)
-          .then((value) {
-        PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_IND)
-            .then((value) {});
-      });
-    });
-  }
+  new CommonUtil().commonMethodToSetPreference();
 }
 
 void saveToPreference() async {
@@ -450,6 +432,7 @@ class _MyFHBState extends State<MyFHB> {
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
+  var apiBaseHelper = ApiBaseHelper();
 
   @override
   void initState() {
@@ -466,7 +449,6 @@ class _MyFHBState extends State<MyFHB> {
     });
     getMyRoute();
     _enableTimer();
-    var apiBaseHelper = ApiBaseHelper();
     final res = apiBaseHelper.updateLastVisited();
     isAlreadyLoaded = true;
     if (Platform.isIOS) {

@@ -485,7 +485,7 @@ const String strWeighingScale = 'Weighing Scale';
 const String strWeight = 'Weight';
 const String strParamWeight = 'weight';
 const String strParamWeightUnit = 'weightUnit';
-const String strValueWeightUnit = 'Kg';
+const String strValueWeightUnit = 'kg';
 
 //HeartRate
 const String strHeartRate = 'Heart Rate';

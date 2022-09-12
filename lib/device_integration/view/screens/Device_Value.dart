@@ -47,6 +47,7 @@ import '../../../constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import '../../../src/resources/network/ApiBaseHelper.dart';
 
 class EachDeviceValues extends StatefulWidget {
   const EachDeviceValues(
@@ -100,8 +101,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   var commonConstants = CommonConstants();
 
-  String tempUnit = 'c';
-  String weightUnit = 'Kg';
+  String tempUnit = 'C';
+  String weightUnit = 'kg';
 
   bool isTouched = true;
 
@@ -141,7 +142,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
 
     try {
@@ -181,84 +182,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         ),
       ],
     );
-  }
-
-  Future<GetDeviceSelectionModel> getProfileSetings() async {
-    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-
-    await healthReportListForUserRepository
-        .getDeviceSelection(userIdFromBloc: userId)
-        .then((value) async {
-      if (value.isSuccess) {
-        selectionResult = value;
-        if (value.result != null && value.result.length > 0) {
-          if (value.result[0] != null) {
-            profileSetting = value.result[0].profileSetting;
-            userMappingId = value.result[0].id;
-
-            if (profileSetting != null) {
-              if (profileSetting.preferredMeasurement != null) {
-                preferredMeasurement = profileSetting.preferredMeasurement;
-                weightObj = preferredMeasurement.weight;
-
-                if (weightObj != null) {
-                  await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement.weight?.unitCode);
-                  if (preferredMeasurement.weight?.unitCode ==
-                      Constants.STR_VAL_WEIGHT_IND) {
-                    isKg = true;
-                    isPounds = false;
-                  } else {
-                    isKg = false;
-                    isPounds = true;
-                  }
-                } else {
-                  commonMethodToSetPreference();
-                }
-
-                heightObj = preferredMeasurement.height;
-
-                if (heightObj != null) {
-                  await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode);
-                  if (preferredMeasurement.height?.unitCode ==
-                      Constants.STR_VAL_HEIGHT_IND) {
-                    isInchFeet = true;
-                    isCenti = false;
-                  } else {
-                    isInchFeet = false;
-                    isCenti = true;
-                  }
-                } else {
-                  commonMethodToSetPreference();
-                }
-
-                tempObj = preferredMeasurement.temperature;
-                if (tempObj != null) {
-                  await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement.temperature?.unitCode);
-                  if (preferredMeasurement.temperature?.unitCode ==
-                      Constants.STR_VAL_TEMP_IND) {
-                    isFaren = true;
-                    isCele = false;
-                  } else {
-                    isFaren = false;
-                    isCele = true;
-                  }
-                } else {
-                  commonMethodToSetPreference();
-                }
-
-                return selectionResult;
-              } else {
-                commonMethodToSetPreference();
-                return selectionResult;
-              }
-            }
-          }
-        }
-      }
-    });
   }
 
   @override
@@ -1023,12 +946,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strTemperature,
-                          tempUnit,
+                          tempUnit.toUpperCase(),
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, tempUnit, deviceName,
+                      }, errorMsg, tempUnit.toUpperCase(), deviceName,
                           range: "", device: "Temp")
                     ],
                   ),
@@ -1047,7 +970,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                             child: Text(
-                              tempUnit != null ? tempUnit : 'c',
+                              tempUnit != null ? tempUnit.toUpperCase() : 'C',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0.sp,
@@ -1132,7 +1055,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'SPO2',
+                        'SpO2',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1155,7 +1078,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       child: Column(
                     children: <Widget>[
                       Text(
-                        'PRBpm',
+                        'PR bpm',
                         style: TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 14.0.sp,
@@ -1212,7 +1135,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     }
     return Container(
         //height: 70.0.h,
@@ -1293,7 +1216,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                             child: Text(
-                              weightUnit != null ? weightUnit : 'Kg',
+                              weightUnit != null ? weightUnit : 'kg',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0.sp,
@@ -1375,7 +1298,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'mg/dl',
+                      'mg/dL',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 12.0.sp,
@@ -1711,7 +1634,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               '${translist[index].oxygenSaturation}',
                               '',
                               '',
-                              'SPO2',
+                              'SpO2',
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
@@ -1998,7 +1921,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2.0.w,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -2039,7 +1962,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   width: 2,
                                 ),
                                 Text(
-                                  value1 == '' ? '' : 'mm Hg',
+                                  value1 == '' ? '' : 'mmHg',
                                   style: TextStyle(
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
@@ -2559,7 +2482,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             Column(
                               children: [
                                 Text(
-                                  'PRBpm',
+                                  'PR bpm',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 13.0.sp),
                                   textAlign: TextAlign.center,
@@ -2639,51 +2562,130 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
   }
 
+  Future<GetDeviceSelectionModel> getProfileSetings() async {
+    var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    await healthReportListForUserRepository
+        .getDeviceSelection(userIdFromBloc: userId)
+        .then((value) async {
+      if (value.isSuccess) {
+        selectionResult = value;
+        if (value.result != null && value.result.length > 0) {
+          if (value.result[0] != null) {
+            profileSetting = value.result[0].profileSetting;
+            userMappingId = value.result[0].id;
+
+            if (profileSetting != null) {
+              if (profileSetting.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting.preferredMeasurement;
+                weightObj = preferredMeasurement.weight;
+
+                if (weightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      preferredMeasurement.weight?.unitCode);
+                  if (preferredMeasurement.weight?.unitCode.toLowerCase() ==
+                      Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
+                    isKg = true;
+                    isPounds = false;
+                  } else {
+                    isKg = false;
+                    isPounds = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                heightObj = preferredMeasurement.height;
+
+                if (heightObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode);
+                  if (preferredMeasurement.height?.unitCode ==
+                      Constants.STR_VAL_HEIGHT_IND) {
+                    isInchFeet = true;
+                    isCenti = false;
+                  } else {
+                    isInchFeet = false;
+                    isCenti = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                tempObj = preferredMeasurement.temperature;
+                if (tempObj != null) {
+                  await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
+                      preferredMeasurement.temperature?.unitCode);
+                  if (preferredMeasurement.temperature?.unitCode
+                          .toLowerCase() ==
+                      Constants.STR_VAL_TEMP_IND.toLowerCase()) {
+                    isFaren = true;
+                    isCele = false;
+                  } else {
+                    isFaren = false;
+                    isCele = true;
+                  }
+                } else {
+                  commonMethodToSetPreference();
+                }
+
+                return selectionResult;
+              } else {
+                commonMethodToSetPreference();
+                return selectionResult;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
   void commonMethodToSetPreference() async {
-    if (CommonUtil.REGION_CODE != "IN") {
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
+    var apiBaseHelper = ApiBaseHelper();
 
-      heightObj = new Height(
-          unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'feet/Inches');
-      weightObj =
-          new Height(unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
-      tempObj =
-          new Height(unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
-      isKg = true;
-      isPounds = false;
+    var unitConfiguration = await apiBaseHelper
+        .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
 
-      isInchFeet = true;
-      isCenti = false;
-
-      isFaren = true;
-      isCele = false;
-    } else {
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_IND);
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_IND);
-      await PreferenceUtil.saveString(
-          Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
-
-      heightObj = new Height(
-          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
-      weightObj = new Height(
-          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
-      tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
-      isKg = false;
-      isPounds = true;
-
-      isInchFeet = false;
-      isCenti = true;
-
-      isFaren = false;
-      isCele = true;
+    if (unitConfiguration?.isSuccess) {
+      if (unitConfiguration?.result != null) {
+        var configurationData = unitConfiguration?.result[0]?.configurationData;
+        if (configurationData != null) {
+          if (CommonUtil.REGION_CODE != "IN") {
+            await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                    configurationData.unitSystemList?.us?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                      configurationData.unitSystemList?.us?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.us?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          } else {
+            await PreferenceUtil.saveString(
+                    Constants.STR_KEY_HEIGHT,
+                    configurationData
+                        .unitSystemList?.india?.height[0]?.unitCode)
+                .then((value) {
+              PreferenceUtil.saveString(
+                      Constants.STR_KEY_WEIGHT,
+                      configurationData
+                          .unitSystemList?.india?.weight[0]?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(
+                        Constants.STR_KEY_TEMP,
+                        configurationData
+                            .unitSystemList?.india?.temperature[0]?.unitCode)
+                    .then((value) {});
+              });
+            });
+          }
+        }
+      }
     }
   }
 }

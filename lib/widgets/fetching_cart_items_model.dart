@@ -223,11 +223,14 @@ class AdditionalInfo {
   bool isMembershipAvail;
   dynamic actualFee;
   dynamic newFee;
+  int duration;
 
   AdditionalInfo({this.isRenewal, this.tag});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
     if (json.containsKey("tag")) tag = json['tag'];
+    if (json.containsKey("duration")) duration = json['duration'];
+
     if (json.containsKey("newFee")) {
       if (json['newFee'].runtimeType == String) {
         newFee = json['newFee'];

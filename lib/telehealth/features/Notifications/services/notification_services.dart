@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/notification_model.dart';
@@ -18,9 +19,10 @@ class FetchNotificationService {
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<NotificationModel> fetchNotificationList(int page) async {
-    return await ApiServices.get(
+    return await _helper.getNotificationList(
       _baseUrl +
           qr_notification_fetch +
           DateTime.now().toString() +

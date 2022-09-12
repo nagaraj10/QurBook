@@ -108,7 +108,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   bool skipTapped;
 
   String tempUnit = "F";
-  String weightUnit = "Kg";
+  String weightUnit = "kg";
   String heightUnit = "feet";
 
   List<T> map<T>(List list, Function handler) {

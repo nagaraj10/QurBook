@@ -127,7 +127,7 @@ class CommonDialogBox {
   bool showHospitalList = true;
 
   String tempUnit = "F";
-  String weightMainUnit = "Kg";
+  String weightMainUnit = "kg";
   String heightUnit = "feet";
 
   Future<Widget> getDialogBoxForPrescription(
@@ -1315,7 +1315,7 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
 
     if (weightUnit == null) {
-      weightUnit = "Kg";
+      weightUnit = "kg";
     } else {
       weightMainUnit = weightUnit;
     }
@@ -1960,8 +1960,7 @@ class CommonDialogBox {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              tempUnit == "c" ? "Celsius" : "Farenheit";
+          postDeviceValues[parameters.strunit] = tempUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =

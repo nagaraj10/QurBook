@@ -14,6 +14,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
 
@@ -634,39 +635,35 @@ class _LandingScreenState extends State<LandingScreen> {
     return landingTab;
   }
 
-  Widget _getUserName() => AnimatedSwitcher(
-        duration: const Duration(milliseconds: 10),
-        child: Row(
-          children: <Widget>[
-            SizedBox(
-              width: 5.0.w,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    myProfile?.result != null &&
-                            myProfile.result.firstName != null &&
-                            myProfile.result.firstName != ''
-                        ? 'Hey ${toBeginningOfSentenceCase(myProfile?.result?.firstName ?? "")}'
-                        : myProfile != null
-                            ? 'Hey User'
-                            : '',
-                    style: TextStyle(
-                      fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+  Widget _getUserName() {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 10),
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 5.0.w,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  CommonUtil().getUserName(),
+                  style: TextStyle(
+                    fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
                   ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
   Widget getAppBarTitle() {
     return Row(
@@ -727,22 +724,24 @@ class _LandingScreenState extends State<LandingScreen> {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
                         preferredMeasurement.weight?.unitCode)
                     .then((value) {
-                  PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature?.unitCode)
+                  PreferenceUtil.saveString(
+                          Constants.STR_KEY_TEMP,
+                          preferredMeasurement.temperature?.unitCode
+                              .toUpperCase())
                       .then((value) {});
                 });
               });
             } else {
-              saveUnitSystemToPreference();
+              new CommonUtil().commonMethodToSetPreference();
             }
           } else {
-            saveUnitSystemToPreference();
+            new CommonUtil().commonMethodToSetPreference();
           }
         } else {
-          saveUnitSystemToPreference();
+          new CommonUtil().commonMethodToSetPreference();
         }
       } catch (e) {
-        saveUnitSystemToPreference();
+        new CommonUtil().commonMethodToSetPreference();
       }
     } else {
       CommonUtil().logout(moveToLoginPage);
@@ -1016,29 +1015,5 @@ class _LandingScreenState extends State<LandingScreen> {
         controller.updateNewChatFloatShown(false);
       }
     });
-  }
-
-  void saveUnitSystemToPreference() async {
-    if (CommonUtil.REGION_CODE != "IN") {
-      await PreferenceUtil.saveString(
-              Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_US)
-          .then((value) {
-        PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_US)
-            .then((value) {
-          PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_US)
-              .then((value) {});
-        });
-      });
-    } else {
-      await PreferenceUtil.saveString(
-              Constants.STR_KEY_HEIGHT, STR_VAL_HEIGHT_IND)
-          .then((value) {
-        PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT, STR_VAL_WEIGHT_IND)
-            .then((value) {
-          PreferenceUtil.saveString(Constants.STR_KEY_TEMP, STR_VAL_TEMP_IND)
-              .then((value) {});
-        });
-      });
-    }
   }
 }
