@@ -42,7 +42,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.multidex.BuildConfig
 import com.facebook.FacebookSdk
@@ -252,7 +251,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     var mLocationManager: LocationManager? = null
     private val lbm by lazy { LocalBroadcastManager.getInstance(this) }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
@@ -263,7 +261,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         setAutoLogAppEventsEnabled(true)
         AppEventsLogger.newLogger(this).logEvent("started")
         // Get user consent
-
         val target: Uri? = getIntent().getData()
         Log.e("deeplink", "onCreate: " + target)
         if (target != null) {
@@ -2047,9 +2044,16 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
     val handler: Handler = Handler()
     val runnable = Runnable {
-//        if (dialog.isShowing) {
-//            dialog.dismiss()
-//        }
+        try{
+            if (dialog.isShowing) {
+                Log.e("showing" ,"showing dialog")
+                close.performClick()
+                _result?.error("100","no response",100)
+                _result=null
+            }
+        }catch (e:Exception){
+
+        }
     }
 
     //todo this method need to uncomment
@@ -2187,6 +2191,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (data != null && data.size > 0) {
                         finalWords+=data[0]+" "
                         displayText.setText(finalWords)
+                        speechRecognizer?.cancel()
                         speechRecognizer?.startListening(intent)
                     }
 //                    if (data != null && data.size > 0) {
@@ -2288,6 +2293,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
             speechRecognizer!!.startListening(intent)
+            handler.postDelayed(runnable, 7000);
+
+
         } catch (a: ActivityNotFoundException) {
             // Toast.makeText(applicationContext,
             //         "Sorry your device not supported",
