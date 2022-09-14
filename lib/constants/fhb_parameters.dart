@@ -138,6 +138,7 @@ const String strUserName = 'name';
 const String strSourceLex = 'source';
 const String strTimeZone = 'timeZone';
 const String strTimeZoneOffset = 'timeZoneOffset';
+const String strLocalDateTime = 'localDateTime';
 const String strQURHOME_LEX = 'QURHOME_LEX';
 
 const String qr_sheela_lex = 'sheela/wrapper';

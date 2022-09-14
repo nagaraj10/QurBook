@@ -78,6 +78,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   var screenValue;
   bool enableMic = true;
   bool isButtonResponse = false;
+  bool isButtonResponseLex = false;
   bool stopTTS = false;
   bool isSheelaSpeaking = false;
   String _screen = parameters.strSheela;
@@ -748,11 +749,13 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strScreen] = screen;
     reqJson[parameters.strProviderMsg] = providerMsg;
 
-    reqJson[parameters.strEndPoint] = getUrlForLex();
-    reqJson[parameters.strRelationShipId] = relationshipId ?? user_id;
+    reqJson[parameters.strEndPoint] = Constants.BASE_URL;
+    reqJson[parameters.strRelationShipId] =
+        isButtonResponseLex ? msg : relationshipId ?? user_id;
     reqJson[parameters.strConversationFlag] = conversationFlag;
     reqJson[parameters.strSourceLex] = variable.strdevice;
-    reqJson[parameters.strTimeZoneOffset] = "Asia/Kolkata"; // TODO
+    reqJson[parameters.strLocalDateTime] =
+        CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now());
 
     if (isSheelaFollowup) {
       reqJson[parameters.KIOSK_data] = {
@@ -843,16 +846,19 @@ class ChatScreenViewModel extends ChangeNotifier {
               conversations.add(model);
               if ((res?.result?.buttons?.length ?? 0) > 0) {
                 isButtonResponse = true;
+                isButtonResponseLex = true;
                 isEndOfConv = false;
               } else {
                 isButtonResponse = false;
+                isButtonResponseLex = false;
               }
               isSheelaSpeaking = false;
               enableMic = res?.result?.enableMic ?? false;
               sessionIdRes = isEndOfConv ? null : res?.result?.sessionId;
-              relationshipId = res?.result?.relationshipId ?? null;
+              relationshipId =
+                  isEndOfConv ? null : res?.result?.relationshipId ?? null;
               conversationFlag =
-              isEndOfConv ? null : res?.result?.conversationFlag ?? null;
+                  isEndOfConv ? null : res?.result?.conversationFlag ?? null;
               notifyListeners();
               Future.delayed(
                   Duration(
@@ -1079,7 +1085,9 @@ class ChatScreenViewModel extends ChangeNotifier {
             notifyListeners();
           }
         } catch (e) {
-          FlutterToast().getToast('could not read pointing url', Colors.red);
+          FlutterToast().getToast(
+              'There is some issue with sheela,\n Please try after some time',
+              Colors.red);
           print(e);
         }
       } else {
@@ -1093,11 +1101,6 @@ class ChatScreenViewModel extends ChangeNotifier {
           'There is some issue with sheela,\n Please try after some time',
           Colors.black54);
     }
-  }
-
-  String getUrlForLex() {
-    final uri = Uri.parse(Constants.BASE_URL);
-    return uri.host.toString();
   }
 
   Future<void> startButtonsSpeech({
@@ -1257,9 +1260,9 @@ class ChatScreenViewModel extends ChangeNotifier {
             if ((response ?? '').toString()?.isNotEmpty) {
               //sendToMaya(response, screen: screenValue);
               var lastObj;
-              try{
-                 lastObj = conversations.last;
-              }catch(e){
+              try {
+                lastObj = conversations.last;
+              } catch (e) {
                 //e.printError();
               }
               var date = new FHBUtils()
@@ -1274,7 +1277,7 @@ class ChatScreenViewModel extends ChangeNotifier {
                   redirect: isRedirect,
                   screen: screenValue);
               conversations.add(model);
-              if (lastObj!=null&&((lastObj.buttons?.length ?? 0) > 0)) {
+              if (lastObj != null && ((lastObj.buttons?.length ?? 0) > 0)) {
                 var responseRecived = response.toString().trim().toLowerCase();
                 var button;
                 try {
