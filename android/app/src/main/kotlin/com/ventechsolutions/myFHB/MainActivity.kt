@@ -2159,9 +2159,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
                 override fun onError(errorCode: Int) {
                     Log.e("speechreco", "onError: " )
-                    close.performClick()
-                    _result?.error("100","no response",errorCode)
-                    _result=null
+                    //close.performClick()
+                    //_result?.error("100","no response",errorCode)
+                    //_result=null
                     val message: String
                     when (errorCode) {
                         SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
@@ -2293,7 +2293,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
             speechRecognizer!!.startListening(intent)
-            handler.postDelayed(runnable, 7000);
+            //handler.postDelayed(runnable, 7000);
 
 
         } catch (a: ActivityNotFoundException) {
