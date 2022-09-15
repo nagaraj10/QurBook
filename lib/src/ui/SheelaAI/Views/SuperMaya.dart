@@ -169,6 +169,15 @@ class _SuperMayaState extends State<SuperMaya> {
                                     ],
                                   ),
                                   onPressed: () {
+                                    Provider.of<ChatScreenViewModel>(context,
+                                            listen: false)
+                                        .conversationFlag = null;
+                                    Provider.of<ChatScreenViewModel>(context,
+                                            listen: false)
+                                        .relationshipId = null;
+                                    Provider.of<ChatScreenViewModel>(context,
+                                            listen: false)
+                                        .sessionIdRes = null;
                                     String sheela_lang =
                                         PreferenceUtil.getStringValue(
                                             Constants.SHEELA_LANG);
