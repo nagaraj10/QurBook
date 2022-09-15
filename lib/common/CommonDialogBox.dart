@@ -1268,7 +1268,7 @@ class CommonDialogBox {
       fileName.text = fileNameClone;
     } else {
       if (fileNameClone == '') {
-        if (categoryName == CommonConstants.strDevice) {
+        if (categoryName == variable.strDevices) {
           fileName = TextEditingController(
               text: deviceName +
                   '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
@@ -1939,7 +1939,7 @@ class CommonDialogBox {
       }
       final commonConstants = CommonConstants();
 
-      if (categoryName == CommonConstants.strDevice) {
+      if (categoryName == variable.strDevices) {
         final List<Map<String, dynamic>> postDeviceData = [];
         final Map<String, dynamic> postDeviceValues = {};
         final Map<String, dynamic> postDeviceValuesExtra = {};

@@ -29,8 +29,6 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -51,11 +49,12 @@ import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
 import 'package:connectivity/connectivity.dart';
 import 'NetworkScreen.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart' as bot;
 import 'package:get/get.dart';
+
+import 'SheelaAI/Models/sheela_arguments.dart';
+import 'SheelaAI/Views/SuperMaya.dart';
 
 class SplashScreen extends StatefulWidget {
   final String nsRoute;
@@ -236,54 +235,14 @@ class _SplashScreenState extends State<SplashScreen> {
                               .inAppUnreadAction(notificationListId);
                         }
 
-                        String sheela_lang = PreferenceUtil.getStringValue(
-                            Constants.SHEELA_LANG);
-                        if ((Provider.of<ChatScreenViewModel>(context,
-                                        listen: false)
-                                    ?.conversations
-                                    ?.length ??
-                                0) >
-                            0) {
-                          Provider.of<ChatScreenViewModel>(context,
-                                  listen: false)
-                              ?.startMayaAutomatically(message: rawBody);
-                        } else if (sheela_lang != null && sheela_lang != '') {
-                          Get.toNamed(
-                            rt_Sheela,
-                            arguments: SheelaArgument(
-                              isSheelaAskForLang: false,
-                              langCode: sheela_lang,
-                              rawMessage: rawBody,
-                            ),
-                          ).then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
-
-                          /* Get.to(bot.ChatScreen(
-                              arguments: SheelaArgument(
-                                isSheelaAskForLang: false,
-                                langCode: sheela_lang,
-                                rawMessage: rawBody,
-                              ),
-                            )).then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing)); */
-                        } else {
-                          Get.toNamed(
-                            rt_Sheela,
-                            arguments: SheelaArgument(
-                              isSheelaAskForLang: true,
-                              rawMessage: rawBody,
-                            ),
-                          ).then((value) => PageNavigator.goToPermanent(
-                              context, router.rt_Landing));
-
-                          /* Get.to(bot.ChatScreen(
-                              arguments: SheelaArgument(
-                                isSheelaAskForLang: true,
-                                rawMessage: rawBody,
-                              ),
-                            )).then((value) => PageNavigator.goToPermanent(
-                                context, router.rt_Landing)); */
-                        }
+                        Get.toNamed(
+                          rt_Sheela,
+                          arguments: SheelaArgument(
+                            isSheelaAskForLang: true,
+                            rawMessage: rawBody,
+                          ),
+                        ).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
                       } else {
                         Get.to(SuperMaya()).then((value) =>
                             PageNavigator.goToPermanent(

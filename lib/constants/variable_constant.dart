@@ -478,7 +478,6 @@ const String strcontenttype = 'content-type';
 const String strErrComm =
     'Error occured while Communication with Server with StatusCode :';
 const String strauthorization = 'authorization';
-const String strMessage = 'Message';
 const String strlogInDeviceOthr = 'Logged into other Device';
 
 //string for netwrok error
@@ -499,7 +498,8 @@ const String strVoiceRecord = 'Voice Record';
 
 // for otp Verify screen
 const String strOtpVerification = 'One Time Password Verification';
-const String strPlsEnterotpReceived = 'Please enter the One Time Password received';
+const String strPlsEnterotpReceived =
+    'Please enter the One Time Password received';
 const String strEnterotpReceived = 'Enter the One Time Password received at';
 const String strdidtReceive = 'Didn\'t receive the One Time Password?';
 const String strResendCode = 'Resend Code';
@@ -542,7 +542,7 @@ const String requestSheelaForpo = 'Record my Pulse oximeter readings';
 const String requestSheelaForweight = 'Record my Weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
-const String strdevice = 'QURBOOK_SHEELA';
+const String strQurbookSheela = 'QURBOOK_SHEELA';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';

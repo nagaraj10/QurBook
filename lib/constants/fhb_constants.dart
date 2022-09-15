@@ -569,7 +569,6 @@ const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
 const String strManageActivities = 'Enable / Disable Activities';
-const String strDevices = 'Devices';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Plans';
 const String strMyReports = 'My Reports';

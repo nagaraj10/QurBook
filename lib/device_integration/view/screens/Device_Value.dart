@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonConstants.dart';
@@ -27,8 +28,6 @@ import '../../../src/model/Category/catergory_result.dart';
 import '../../../src/model/Media/media_data_list.dart';
 import '../../../src/model/Media/media_result.dart';
 import '../../../src/resources/repository/health/HealthReportListForUserRepository.dart';
-import '../../../src/ui/bot/view/ChatScreen.dart';
-import '../../../src/ui/bot/view/sheela_arguments.dart';
 import '../../../src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -403,7 +402,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       postMediaData[strlocalTime] = dateTime.toLocal().toString();
       final commonConstants = CommonConstants();
 
-      if (categoryName == CommonConstants.strDevice) {
+      if (categoryName == variable.strDevices) {
         final List<Map<String, dynamic>> postDeviceData = [];
         final Map<String, dynamic> postDeviceValues = {};
         final Map<String, dynamic> postDeviceValuesExtra = {};

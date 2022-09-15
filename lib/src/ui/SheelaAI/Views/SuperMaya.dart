@@ -2,24 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
-import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
-import 'view/ChatScreen.dart';
-import 'viewmodel/chatscreen_vm.dart';
+import '../../../../colors/fhb_colors.dart' as fhbColors;
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/FHBBasicWidget.dart';
+import '../../../../common/PreferenceUtil.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/router_variable.dart';
+import '../../../../constants/variable_constant.dart' as variable;
+import '../../../../widgets/GradientAppBar.dart';
+import '../../../../widgets/RaisedGradientButton.dart';
+import '../../../utils/screenutils/size_extensions.dart';
+import '../Models/sheela_arguments.dart';
 
 class SuperMaya extends StatefulWidget {
   SuperMaya({
@@ -120,8 +116,8 @@ class _SuperMayaState extends State<SuperMaya> {
                           title: Text(strSheelaG),
                           actions: [
                             Center(
-                                child: new CommonUtil()
-                                    .getNotificationIcon(context)),
+                                child:
+                                    CommonUtil().getNotificationIcon(context)),
                             SizedBoxWidget(
                               width: 10.0.w,
                             ),
@@ -168,16 +164,11 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ),
                                   gradient: LinearGradient(
                                     colors: <Color>[
-                                      Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      Color(new CommonUtil()
-                                          .getMyGredientColor()),
+                                      Color(CommonUtil().getMyPrimaryColor()),
+                                      Color(CommonUtil().getMyGredientColor()),
                                     ],
                                   ),
                                   onPressed: () {
-                                    Provider.of<ChatScreenViewModel>(context,listen: false).conversationFlag = null;
-                                    Provider.of<ChatScreenViewModel>(context,listen: false).relationshipId = null;
-                                    Provider.of<ChatScreenViewModel>(context,listen: false).sessionIdRes = null;
                                     String sheela_lang =
                                         PreferenceUtil.getStringValue(
                                             Constants.SHEELA_LANG);

@@ -9,8 +9,6 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
-//import 'package:myfhb/src/ui/MyRecords.dart';
-import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -18,6 +16,8 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/user/UserAccountMain.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+
+import 'SheelaAI/Views/SuperMaya.dart';
 
 class HomeScreen extends StatefulWidget {
   static _HomeScreenState of(BuildContext context) =>

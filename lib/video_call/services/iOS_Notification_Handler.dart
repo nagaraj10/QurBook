@@ -1,18 +1,11 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myfhb/caregiverAssosication/caregiverAPIProvider.dart';
-import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
-import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
-
+import '../../caregiverAssosication/caregiverAPIProvider.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import '../../chat_socket/view/ChatUserList.dart';
-import '../../claim/model/claimmodel/ClaimRecordDetail.dart';
 import '../../claim/screen/ClaimRecordDisplay.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/PreferenceUtil.dart';
@@ -22,19 +15,17 @@ import '../../constants/router_variable.dart' as router;
 import '../../constants/router_variable.dart';
 import '../../constants/variable_constant.dart' as variable;
 import '../../myPlan/view/myPlanDetail.dart';
+import '../../my_family_detail/models/my_family_detail_arguments.dart';
+import '../../my_family_detail/screens/my_family_detail_screen.dart';
 import '../../regiment/models/regiment_arguments.dart';
 import '../../src/model/home_screen_arguments.dart';
 import '../../src/model/user/user_accounts_arguments.dart';
+import '../../src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../../src/ui/SplashScreen.dart';
-import '../../src/ui/bot/SuperMaya.dart';
-import '../../src/ui/bot/view/ChatScreen.dart' as bot;
-import '../../src/ui/bot/view/sheela_arguments.dart';
+import '../../src/ui/settings/CaregiverSettng.dart';
 import '../../src/utils/PageNavigator.dart';
-import '../../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import '../../telehealth/features/Notifications/services/notification_services.dart';
 import '../../telehealth/features/Notifications/view/notification_main.dart';
-import '../../telehealth/features/chat/view/chat.dart';
-import '../../telehealth/features/chat/view/home.dart';
 import '../../widgets/checkout_page.dart';
 import '../model/NotificationModel.dart';
 import '../utils/audiocall_provider.dart';

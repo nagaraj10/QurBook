@@ -22,7 +22,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
-import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -31,13 +33,11 @@ import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
-
 
 class QurHomeRegimenScreen extends StatefulWidget {
   const QurHomeRegimenScreen({Key key}) : super(key: key);
@@ -75,10 +75,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             if (value?.result != null) {
               if (value?.result[0]?.count != null) {
                 if (int.parse(value?.result[0]?.count ?? 0) > 0) {
-                  if(PreferenceUtil.getIfQurhomeisAcive()){
+                  if (PreferenceUtil.getIfQurhomeisAcive()) {
                     redirectToSheelaUnreadMessage();
                   }
-
                 }
               }
             }
@@ -115,7 +114,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }*/
 
-
   initSocketCountUnread() {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
@@ -130,10 +128,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (unreadCountNotify != null) {
           if (unreadCountNotify?.result != null) {
             if (unreadCountNotify?.result?.isSuccess) {
-              if(PreferenceUtil.getIfQurhomeisAcive()){
+              if (PreferenceUtil.getIfQurhomeisAcive()) {
                 redirectToSheelaUnreadMessage();
               }
-
             }
           }
         }
@@ -320,8 +317,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       RegimentDataModel regimen, int nextRegimenPosition, bool isPortrait) {
     return InkWell(
       onTap: () {
-        if (regimen?.activityOrgin !=
-            strAppointmentRegimen) {
+        if (regimen?.activityOrgin != strAppointmentRegimen) {
           showRegimenDialog(regimen, itemIndex);
         }
       },
@@ -618,39 +614,33 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             child: Material(
                               color: Colors.transparent,
                               child: InkWell(
-                                onTap: () {
-                                  if (regimen.isPlaying) {
+                                onTap: () async {
+                                  if (regimen.isPlaying.value) {
                                     stopRegimenTTS();
-                                    regimen.isPlaying = false;
+                                    regimen.isPlaying.value = false;
                                     setState(() {});
                                   } else {
                                     stopRegimenTTS();
-                                    regimen.isPlaying = true;
+                                    regimen.isPlaying.value = true;
                                     setState(() {});
-                                    Provider.of<ChatScreenViewModel>(
-                                            Get.context,
-                                            listen: false)
-                                        ?.startTTSEngine(
-                                      textToSpeak: regimen?.title ?? '',
-                                      dynamicText:
-                                          regimen?.sayTextDynamic ?? '',
-                                      isRegiment: true,
-                                      onStop: () {
-                                        stopRegimenTTS();
-                                        regimen.isPlaying = false;
-                                        setState(() {});
-                                      },
-                                    );
+                                    final status = await sheelaController
+                                        .playTTS(regimen?.title ?? '', () {
+                                      sheelaController.stopTTS();
+                                      regimen.isPlaying.value = false;
+                                      setState(() {});
+                                    });
                                   }
                                 },
-                                child: Icon(
-                                  regimen.isPlaying
-                                      ? Icons.stop_circle_outlined
-                                      : Icons.play_circle_fill_rounded,
-                                  size: 30.0,
-                                  color: Color(
-                                      CommonUtil().getQurhomePrimaryColor()),
-                                ),
+                                child: Obx(() {
+                                  return Icon(
+                                    (regimen.isPlaying.value ?? false)
+                                        ? Icons.stop_circle_outlined
+                                        : Icons.play_circle_fill_rounded,
+                                    size: 30.0,
+                                    color: Color(
+                                        CommonUtil().getQurhomePrimaryColor()),
+                                  );
+                                }),
                               ),
                             ),
                           ),
@@ -1009,8 +999,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     }
   }
 
+  SheelaAICommonTTSService sheelaController = SheelaAICommonTTSService();
+
   stopRegimenTTS() {
-    Provider.of<RegimentViewModel>(Get.context, listen: false).stopRegimenTTS();
+    sheelaController.stopTTS();
   }
 
   bool isValidSymptom(BuildContext context) {
@@ -1241,18 +1233,16 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       closeDialog();
       FHBUtils().check().then((intenet) async {
         if (intenet != null && intenet) {
-          if(CommonUtil().isTablet)
-          {
+          if (CommonUtil().isTablet) {
             if (!controller.onGoingSOSCall.value) {
               VideoCallCommonUtils.callActions.value = CallActions.CALLING;
               controller.callSOSEmergencyServices();
             }
-          }else{
+          } else {
             await controller.getSOSAgentNumber(true);
-            String strSOSAgentNumber = CommonUtil()
-                .validString(controller.SOSAgentNumber.value);
-            if(strSOSAgentNumber.trim().isNotEmpty)
-            {
+            String strSOSAgentNumber =
+                CommonUtil().validString(controller.SOSAgentNumber.value);
+            if (strSOSAgentNumber.trim().isNotEmpty) {
               controller.updateSOSAgentCallDialogStatus(true);
               await Get.dialog(
                 SOSAgentCallWidget(
@@ -1260,9 +1250,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 ),
                 barrierDismissible: false,
               );
-            }else{
-              FlutterToast().getToast(CommonUtil()
-                  .validString(controller.SOSAgentNumberEmptyMsg.value), Colors.red);
+            } else {
+              FlutterToast().getToast(
+                  CommonUtil()
+                      .validString(controller.SOSAgentNumberEmptyMsg.value),
+                  Colors.red);
             }
           }
         } else {
@@ -1561,9 +1553,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 }
 
-
-class SOSAgentCallWidget extends StatelessWidget
-{
+class SOSAgentCallWidget extends StatelessWidget {
   SOSAgentCallWidget({
     @required this.SOSAgentNumber,
   });
@@ -1619,32 +1609,22 @@ class SOSAgentCallWidget extends StatelessWidget
                     }
                   },
                   child: Card(
-                    shape:
-                    RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius
-                          .circular(
-                          15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
                     color: Colors.red,
                     child: Padding(
-                      padding:
-                      EdgeInsets
-                          .only(
-                          top:15.0,
-                          left:20.0,
-                          right:20.0,
-                          bottom:15.0,
+                      padding: EdgeInsets.only(
+                        top: 15.0,
+                        left: 20.0,
+                        right: 20.0,
+                        bottom: 15.0,
                       ),
                       child: Text(
                         dismiss,
-                        style:
-                        TextStyle(
-                          color: Colors
-                              .white,
-                          fontWeight:
-                          FontWeight
-                              .w500,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -1656,8 +1636,7 @@ class SOSAgentCallWidget extends StatelessWidget
                 InkWell(
                   onTap: () async {
                     try {
-                      if (await canLaunch('tel:$SOSAgentNumber'))
-                      {
+                      if (await canLaunch('tel:$SOSAgentNumber')) {
                         await launch('tel:$SOSAgentNumber');
                       }
                     } catch (e) {
@@ -1665,32 +1644,22 @@ class SOSAgentCallWidget extends StatelessWidget
                     }
                   },
                   child: Card(
-                    shape:
-                    RoundedRectangleBorder(
-                      borderRadius:
-                      BorderRadius
-                          .circular(
-                          15.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
                     color: Colors.green,
                     child: Padding(
-                      padding:
-                      EdgeInsets
-                          .only(
-                        top:15.0,
-                        left:20.0,
-                        right:20.0,
-                        bottom:15.0,
+                      padding: EdgeInsets.only(
+                        top: 15.0,
+                        left: 20.0,
+                        right: 20.0,
+                        bottom: 15.0,
                       ),
                       child: Text(
                         accept,
-                        style:
-                        TextStyle(
-                          color: Colors
-                              .white,
-                          fontWeight:
-                          FontWeight
-                              .w500,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
@@ -1710,6 +1679,4 @@ class SOSAgentCallWidget extends StatelessWidget
       ),
     );
   }
-
-
 }

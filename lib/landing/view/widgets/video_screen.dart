@@ -5,13 +5,13 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
 import 'package:provider/provider.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_constants.dart';
 import '../../../constants/fhb_parameters.dart';
 import '../../model/qur_plan_dashboard_model.dart';
-import '../../../src/ui/bot/widgets/youtube_player.dart';
 import '../../../widgets/GradientAppBar.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -43,7 +43,7 @@ class _VideoScreenState extends State<VideoScreen> {
     }
   }
 
-   @override
+  @override
   void dispose() {
     super.dispose();
     fbaLog(eveName: 'qurbook_screen_event', eveParams: {

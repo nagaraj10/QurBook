@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import '../../common/CommonUtil.dart';
 import '../models/field_response_model.dart';
 import '../models/profile_response_model.dart';
@@ -9,7 +11,6 @@ import '../models/regiment_data_model.dart';
 import '../models/regiment_response_model.dart';
 import '../models/save_response_model.dart';
 import '../service/regiment_service.dart';
-import '../../src/ui/bot/viewmodel/chatscreen_vm.dart';
 import '../../src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 
@@ -204,35 +205,30 @@ class RegimentViewModel extends ChangeNotifier {
     return filteredRegimenList;
   }
 
-  void startRegimenTTS(int index, {String staticText, String dynamicText}) {
+  void startRegimenTTS(int index,
+      {String staticText, String dynamicText}) async {
     stopRegimenTTS();
     if (index < regimentsList.length) {
       Future.delayed(
           Duration(
             milliseconds: 100,
           ), () {
-        regimentsList[index].isPlaying = true;
+        regimentsList[index].isPlaying.value = true;
         notifyListeners();
       });
     }
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
-        ?.startTTSEngine(
-      textToSpeak: staticText,
-      dynamicText: dynamicText,
-      isRegiment: true,
-      onStop: () {
-        stopRegimenTTS();
-      },
-    );
+    sheelaTTSController.playTTS(staticText, () {
+      stopRegimenTTS();
+    });
   }
 
+  SheelaAICommonTTSService sheelaTTSController = SheelaAICommonTTSService();
+
   void stopRegimenTTS({bool isInitial = false}) {
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false)?.stopTTSEngine(
-      isInitial: isInitial,
-    );
+    sheelaTTSController.stopTTS();
 
     regimentsList?.forEach((regimenData) {
-      regimenData.isPlaying = false;
+      regimenData.isPlaying.value = false;
     });
     if (!isInitial) {
       notifyListeners();
@@ -332,8 +328,7 @@ class RegimentViewModel extends ChangeNotifier {
       }
     }*/
 
-    List<RegimentDataModel> tempRegimentsList =
-        regimentsSymptomsList;
+    List<RegimentDataModel> tempRegimentsList = regimentsSymptomsList;
 
     //print("tempRegimentsList length ${tempRegimentsList.length}");
 
@@ -344,20 +339,31 @@ class RegimentViewModel extends ChangeNotifier {
     //finalSortList
     List<RegimentDataModel> finalRegimentsList = [];
 
-    if (tempRegimentsList != null && tempRegimentsList.length > 0)
-    {
-      recentRegimentsList = tempRegimentsList.where((item) => item?.ack_local!=null).toList();
-      seqRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) !=null&&CommonUtil().validString(item?.seq) != "0"&&CommonUtil().validString(item?.seq).trim().isNotEmpty).toList();
-      seqRegimentsList.sort((b,a) => int.parse(CommonUtil().validString(a?.seq)).compareTo(int.parse(CommonUtil().validString(b?.seq))));
-      otherRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) == "0"||CommonUtil().validString(item?.seq).trim().isEmpty).toList();
+    if (tempRegimentsList != null && tempRegimentsList.length > 0) {
+      recentRegimentsList =
+          tempRegimentsList.where((item) => item?.ack_local != null).toList();
+      seqRegimentsList = tempRegimentsList
+          .where((item) =>
+              CommonUtil().validString(item?.seq) != null &&
+              CommonUtil().validString(item?.seq) != "0" &&
+              CommonUtil().validString(item?.seq).trim().isNotEmpty)
+          .toList();
+      seqRegimentsList.sort((b, a) =>
+          int.parse(CommonUtil().validString(a?.seq))
+              .compareTo(int.parse(CommonUtil().validString(b?.seq))));
+      otherRegimentsList = tempRegimentsList
+          .where((item) =>
+              CommonUtil().validString(item?.seq) == "0" ||
+              CommonUtil().validString(item?.seq).trim().isEmpty)
+          .toList();
 
-      finalRegimentsList = recentRegimentsList+seqRegimentsList+otherRegimentsList;
+      finalRegimentsList =
+          recentRegimentsList + seqRegimentsList + otherRegimentsList;
       finalRegimentsList = finalRegimentsList.toSet().toList();
 
       //print("finalRegimentsList length ${finalRegimentsList.length}");
 
       regimentsSymptomsList = finalRegimentsList;
-
     }
 
     if (setIndex) {
