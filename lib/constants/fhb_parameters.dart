@@ -91,6 +91,8 @@ const String strSender = 'sender';
 const String strSenderName = 'Name';
 const String strSource = 'source';
 const String strSessionId = 'sessionId';
+const String strRelationShipId = 'relationshipId';
+const String strConversationFlag = 'conversationFlag';
 const String strReceiptId = 'recipient_id';
 const String strEndOfConv = 'endOfConv';
 const String strSpeechImageURL = 'imageURL';
@@ -119,6 +121,27 @@ const String strSheela = 'sheela';
 const String strsingleuse = 'singleuse';
 const String strisActionDone = 'isActionDone';
 const String strRedirectTo = 'redirectTo';
+
+// sheel lex
+const String strBotaliasid = 'botAliasId';
+const String strBotId = 'botId';
+const String strLocaleId = 'localeId';
+const String strTextLex = 'text';
+const String strSessionIdLex = 'sessionId';
+const String strSessionState = 'sessionState';
+const String strSessionAttributes = 'sessionAttributes';
+const String strAuthTokenLex = 'authToken';
+const String strUserId = 'userId';
+const String strEndPoint = 'endPoint';
+const String strRelationshipId = 'relationshipId';
+const String strUserName = 'name';
+const String strSourceLex = 'source';
+const String strTimeZone = 'timeZone';
+const String strTimeZoneOffset = 'timeZoneOffset';
+const String strLocalDateTime = 'localDateTime';
+const String strQURHOME_LEX = 'QURHOME_LEX';
+
+const String qr_sheela_lex = 'sheela/wrapper';
 
 //for category
 const String strCategoryName = 'categoryName';
