@@ -14,10 +14,12 @@ import 'package:myfhb/src/ui/bot/view/sheela_arguments.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 import 'view/ChatScreen.dart';
+import 'viewmodel/chatscreen_vm.dart';
 
 class SuperMaya extends StatefulWidget {
   SuperMaya({
@@ -173,6 +175,9 @@ class _SuperMayaState extends State<SuperMaya> {
                                     ],
                                   ),
                                   onPressed: () {
+                                    Provider.of<ChatScreenViewModel>(context,listen: false).conversationFlag = null;
+                                    Provider.of<ChatScreenViewModel>(context,listen: false).relationshipId = null;
+                                    Provider.of<ChatScreenViewModel>(context,listen: false).sessionIdRes = null;
                                     String sheela_lang =
                                         PreferenceUtil.getStringValue(
                                             Constants.SHEELA_LANG);

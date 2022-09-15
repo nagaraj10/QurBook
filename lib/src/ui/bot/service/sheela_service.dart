@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
@@ -17,7 +18,9 @@ class Service {
       HeaderRequest headerRequest = new HeaderRequest();
 
       var response = await ApiServices.post(
-        mayaUrl,
+        // old rasa url
+       /* mayaUrl,*/
+        Constants.BASE_URL+qr_sheela_lex,
         body: jsonString,
         headers: await headerRequest.getRequesHeaderWithoutToken(),
       );
