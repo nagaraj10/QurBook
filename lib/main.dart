@@ -33,6 +33,9 @@ import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
 import 'regiment/models/regiment_arguments.dart';
+import 'src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'src/utils/dynamic_links.dart';
 import 'src/utils/language/app_localizations.dart';
 import 'src/utils/language/language_utils.dart';
@@ -84,9 +87,6 @@ import 'src/resources/network/ApiBaseHelper.dart';
 import 'src/ui/MyRecord.dart';
 import 'src/ui/NetworkScreen.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/bot/SuperMaya.dart';
-import 'src/ui/bot/view/sheela_arguments.dart';
-import 'src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
 import 'src/utils/screenutils/screenutil.dart';
@@ -126,9 +126,6 @@ import 'src/ui/MyRecord.dart';
 import 'src/ui/MyRecordsArguments.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/ui/NetworkScreen.dart';
-import 'src/ui/bot/view/ChatScreen.dart' as bot;
-import 'src/ui/bot/view/sheela_arguments.dart';
-import 'src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'src/utils/FHBUtils.dart';
 import 'src/utils/PageNavigator.dart';
 import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -149,7 +146,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'src/ui/bot/SuperMaya.dart';
 import 'constants/router_variable.dart' as router;
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
@@ -314,9 +310,6 @@ Future<void> main() async {
     runApp(
       provider.MultiProvider(
         providers: [
-          provider.ChangeNotifierProvider<ChatScreenViewModel>(
-            create: (_) => ChatScreenViewModel(),
-          ),
           provider.ChangeNotifierProvider<RegimentViewModel>(
             create: (_) => RegimentViewModel(),
           ),
@@ -470,7 +463,7 @@ class _MyFHBState extends State<MyFHB> {
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
-
+    Get.put(SheelaAIController());
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -668,33 +661,13 @@ class _MyFHBState extends State<MyFHB> {
               FetchNotificationService().inAppUnreadAction(notificationListId);
             }
 
-            var sheelaLang =
-                PreferenceUtil.getStringValue(Constants.SHEELA_LANG);
-            if ((Provider.of<ChatScreenViewModel>(context, listen: false)
-                        ?.conversations
-                        ?.length ??
-                    0) >
-                0) {
-              Provider.of<ChatScreenViewModel>(context, listen: false)
-                  ?.startMayaAutomatically(message: rawBody);
-            } else if (sheelaLang != null && sheelaLang != '') {
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: false,
-                  langCode: sheelaLang,
-                  rawMessage: rawBody,
-                ),
-              );
-            } else {
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: rawBody,
-                ),
-              );
-            }
+            Get.toNamed(
+              routervariable.rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaAskForLang: true,
+                rawMessage: rawBody,
+              ),
+            );
           } else {
             Get.to(SuperMaya());
           }

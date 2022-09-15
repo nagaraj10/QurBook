@@ -4,6 +4,7 @@ import 'package:myfhb/add_provider_plan/view/AddProviderPlan.dart';
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/plan_wizard/view/plan_wizard_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/SheelaAIMainScreen.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import '../add_family_user_info/screens/add_family_user_info_clone.dart';
 import 'router_variable.dart' as router;
@@ -35,7 +36,6 @@ import '../telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import '../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import '../video_call/pages/callmain.dart';
 import 'package:provider/provider.dart';
-import '../src/ui/bot/view/ChatScreen.dart';
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
 import '../add_providers/screens/add_providers_screen.dart';
@@ -61,7 +61,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
   */
 
   final fhbRouter = <String, WidgetBuilder>{
-    router.rt_Sheela: (context) => ChatScreen(
+    router.rt_Sheela: (context) => SheelaAIMainScreen(
           arguments: ModalRoute.of(context).settings.arguments,
         ),
     router.rt_Splash: (context) => SplashScreen(),

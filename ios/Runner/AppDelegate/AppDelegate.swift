@@ -57,7 +57,7 @@ import CoreBluetooth
     var idForBP :UUID?
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
-    
+   
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -206,6 +206,9 @@ import CoreBluetooth
                 print(Constants.speechToText)
                 print(Constants.STT, result)
                 Loading.sharedInstance.showLoader()
+                let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(self?.myTapActions))
+                mytapGestureRecog.numberOfTapsRequired = 1
+                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
                 self?.STT_Result = result;
                 do{
                     try self?.startRecording();
@@ -254,7 +257,11 @@ import CoreBluetooth
         window?.makeKeyAndVisible()
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
+    @objc func myTapActions(recognizer: UITapGestureRecognizer) {
+        STT_Result?("");
+        Loading.sharedInstance.hideLoader()
+        stopRecording()
+    }
     // 2 a)
     // Speech to Text
     func startRecording() throws {
@@ -265,7 +272,7 @@ import CoreBluetooth
         // Initialization
         audioEngine = AVAudioEngine()
         recognitionTask = SFSpeechRecognitionTask()
-        
+
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
@@ -297,7 +304,7 @@ import CoreBluetooth
                 
                 print(result.bestTranscription.formattedString as Any)
                 print(result.isFinal)
-                
+
                 if let timer = self.detectionTimer, timer.isValid {
                     if result.isFinal {
                         // pull out the best transcription...
@@ -327,6 +334,7 @@ import CoreBluetooth
             }
         }
     }
+
     func startTheVC(currentmessage:String){
         let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
         if let container = storyboard.instantiateViewController(withIdentifier: "SheelaAIVC") as? SheelaAIVC {

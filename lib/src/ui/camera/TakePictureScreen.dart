@@ -85,7 +85,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     initializeData();
 
-
 /*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_CAMERASCREEN);
@@ -100,8 +99,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   initFlashlight() async {
-   // bool hasFlash = await Flashlight.hasFlashlight;
-    categoryName=await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    // bool hasFlash = await Flashlight.hasFlashlight;
+    categoryName =
+        await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     setState(() {
       _hasFlashlight = false;
     });
@@ -231,37 +231,40 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           ),
                           Expanded(
                             child: Center(
-                              child: Visibility(child: IconButton(
-                                icon: new ImageIcon(
-                                  AssetImage(variable.icon_attach),
-                                  color: Colors.white,
-                                  size: 32.0.sp,
-                                ),
-                                onPressed: () async {
-                                  // Take the Picture in a try / catch block. If anything goes wrong,
-                                  // catch the error.
+                              child: Visibility(
+                                child: IconButton(
+                                  icon: new ImageIcon(
+                                    AssetImage(variable.icon_attach),
+                                    color: Colors.white,
+                                    size: 32.0.sp,
+                                  ),
+                                  onPressed: () async {
+                                    // Take the Picture in a try / catch block. If anything goes wrong,
+                                    // catch the error.
 
-                                  if (isMultipleImages) {
-                                    await getFilePath();
-                                    callDisplayPictureScreen(context);
-                                  } else {
-                                    try {
-                                      var image = await FilePicker.platform
-                                          .pickFiles(
-                                          type: FileType.custom,
-                                          allowedExtensions: [
-                                            variable.strpdf
-                                          ]);
-                                      if ((image?.files?.length ?? 0) > 0) {
-                                        imagePaths.add(image.files[0].path);
-                                      }
+                                    if (isMultipleImages) {
+                                      await getFilePath();
                                       callDisplayPictureScreen(context);
-                                    } catch (e) {
-                                      // If an error occurs, log the error to the console.
+                                    } else {
+                                      try {
+                                        var image = await FilePicker.platform
+                                            .pickFiles(
+                                                type: FileType.custom,
+                                                allowedExtensions: [
+                                              variable.strpdf
+                                            ]);
+                                        if ((image?.files?.length ?? 0) > 0) {
+                                          imagePaths.add(image.files[0].path);
+                                        }
+                                        callDisplayPictureScreen(context);
+                                      } catch (e) {
+                                        // If an error occurs, log the error to the console.
+                                      }
                                     }
-                                  }
-                                },
-                              ),visible:!isThumbnails?true:false,),
+                                  },
+                                ),
+                                visible: !isThumbnails ? true : false,
+                              ),
                             ),
                           ),
                           Expanded(
@@ -380,34 +383,39 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               child: FHBBasicWidget.customShowCase(
                                   _attachments,
                                   Constants.ATTACH_DESC,
-                                   Visibility(child:IconButton(
-                                     icon: new ImageIcon(
-                                       AssetImage(variable.icon_attach),
-                                       color: Colors.white,
-                                       size: 32.0.sp,
-                                     ),
-                                     onPressed: () async {
-                                       // Take the Picture in a try / catch block. If anything goes wrong,
-                                       // catch the error.
+                                  Visibility(
+                                    child: IconButton(
+                                      icon: new ImageIcon(
+                                        AssetImage(variable.icon_attach),
+                                        color: Colors.white,
+                                        size: 32.0.sp,
+                                      ),
+                                      onPressed: () async {
+                                        // Take the Picture in a try / catch block. If anything goes wrong,
+                                        // catch the error.
 
-                                       if (isMultipleImages) {
-                                         await getFilePath();
-                                         callDisplayPictureScreen(context);
-                                       } else {
-                                         try {
-                                           var image = await FilePicker.platform
-                                               .pickFiles();
-                                           if ((image?.files?.length ?? 0) > 0)
-                                             imagePaths.add(image.files[0].path);
-                                           callDisplayPictureScreen(context);
-                                         } catch (e) {
-                                           // If an error occurs, log the error to the console.
-                                         }
-                                       }
-                                     },
-                                   ),visible:!isThumbnails?true:false,),
+                                        if (isMultipleImages) {
+                                          await getFilePath();
+                                          callDisplayPictureScreen(context);
+                                        } else {
+                                          try {
+                                            var image = await FilePicker
+                                                .platform
+                                                .pickFiles();
+                                            if ((image?.files?.length ?? 0) > 0)
+                                              imagePaths
+                                                  .add(image.files[0].path);
+                                            callDisplayPictureScreen(context);
+                                          } catch (e) {
+                                            // If an error occurs, log the error to the console.
+                                          }
+                                        }
+                                      },
+                                    ),
+                                    visible: !isThumbnails ? true : false,
+                                  ),
                                   Constants.ATTACH_TITLE),
-                           ),
+                            ),
                           ),
                           Expanded(
                             child: Center(
@@ -581,7 +589,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   String setFileName() {
-    if (categoryName == CommonConstants.strDevice) {
+    if (categoryName == variable.strDevices) {
       return categoryName;
     } else {
       return categoryName;

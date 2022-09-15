@@ -12,7 +12,8 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/models/save_response_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
@@ -52,21 +53,33 @@ class SymptomListController extends GetxController {
           //finalSortList
           List<RegimentDataModel> finalRegimentsList = [];
 
-          if (tempRegimentsList != null && tempRegimentsList.length > 0)
-          {
-            recentRegimentsList = tempRegimentsList.where((item) => item?.ack_local!=null).toList();
-            seqRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) !=null&&CommonUtil().validString(item?.seq) != "0"&&CommonUtil().validString(item?.seq).trim().isNotEmpty).toList();
-            seqRegimentsList.sort((b,a) => int.parse(CommonUtil().validString(a?.seq)).compareTo(int.parse(CommonUtil().validString(b?.seq))));
-            otherRegimentsList = tempRegimentsList.where((item) => CommonUtil().validString(item?.seq) == "0"||CommonUtil().validString(item?.seq).trim().isEmpty).toList();
+          if (tempRegimentsList != null && tempRegimentsList.length > 0) {
+            recentRegimentsList = tempRegimentsList
+                .where((item) => item?.ack_local != null)
+                .toList();
+            seqRegimentsList = tempRegimentsList
+                .where((item) =>
+                    CommonUtil().validString(item?.seq) != null &&
+                    CommonUtil().validString(item?.seq) != "0" &&
+                    CommonUtil().validString(item?.seq).trim().isNotEmpty)
+                .toList();
+            seqRegimentsList.sort((b, a) =>
+                int.parse(CommonUtil().validString(a?.seq))
+                    .compareTo(int.parse(CommonUtil().validString(b?.seq))));
+            otherRegimentsList = tempRegimentsList
+                .where((item) =>
+                    CommonUtil().validString(item?.seq) == "0" ||
+                    CommonUtil().validString(item?.seq).trim().isEmpty)
+                .toList();
 
-            finalRegimentsList = recentRegimentsList+seqRegimentsList+otherRegimentsList;
+            finalRegimentsList =
+                recentRegimentsList + seqRegimentsList + otherRegimentsList;
             finalRegimentsList = finalRegimentsList.toSet().toList();
 
             //print("finalRegimentsList length ${finalRegimentsList.length}");
 
             symptomList.value = finalRegimentsList;
-
-          }else{
+          } else {
             symptomList.value = symtomListModel.regimentsList;
           }
         } on PlatformException {
@@ -79,35 +92,31 @@ class SymptomListController extends GetxController {
     }
   }
 
-  void startSymptomTTS(int index, {String staticText, String dynamicText}) {
+  SheelaAICommonTTSService sheelaTTSController = SheelaAICommonTTSService();
+
+  void startSymptomTTS(int index,
+      {String staticText, String dynamicText}) async {
     stopSymptomTTS();
     if (index < symptomList.value?.length) {
       Future.delayed(
           Duration(
             milliseconds: 100,
           ), () {
-        symptomList.value[index].isPlaying = true;
+        symptomList.value[index].isPlaying.value = true;
       });
     }
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false)
-        ?.startTTSEngine(
-      textToSpeak: staticText,
-      dynamicText: dynamicText,
-      isRegiment: true,
-      onStop: () {
-        stopSymptomTTS();
-      },
-    );
+
     symptomList.refresh();
+    sheelaTTSController.playTTS(staticText, () {
+      stopSymptomTTS();
+    });
   }
 
   void stopSymptomTTS({bool isInitial = false}) {
-    Provider.of<ChatScreenViewModel>(Get.context, listen: false)?.stopTTSEngine(
-      isInitial: isInitial,
-    );
+    sheelaTTSController.stopTTS();
 
     symptomList.value?.forEach((regimenData) {
-      regimenData.isPlaying = false;
+      regimenData.isPlaying.value = false;
     });
 
     symptomList.refresh();

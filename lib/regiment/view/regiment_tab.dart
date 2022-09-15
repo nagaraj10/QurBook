@@ -18,7 +18,6 @@ import '../models/profile_response_model.dart';
 import '../models/regiment_data_model.dart';
 import 'widgets/event_list_widget.dart';
 import '../view_model/regiment_view_model.dart';
-import '../../src/ui/bot/viewmodel/chatscreen_vm.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:provider/provider.dart';
@@ -89,10 +88,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       isInitial: true,
       eventId: widget?.eventId,
     );
-    Provider.of<ChatScreenViewModel>(context, listen: false)?.updateAppState(
-      true,
-      isInitial: true,
-    );
+
     Provider.of<RegimentViewModel>(context, listen: false).resetRegimenTab(
       isInitial: true,
     );
@@ -102,7 +98,8 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
 
     PreferenceUtil.init();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+        [];
   }
 
   @override
@@ -187,12 +184,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.detached) {
-      Provider.of<ChatScreenViewModel>(context, listen: false)
-          .updateAppState(false);
-    } else if (state == AppLifecycleState.resumed) {
-      Provider.of<ChatScreenViewModel>(context, listen: false)
-          .updateAppState(true);
-    }
+    } else if (state == AppLifecycleState.resumed) {}
   }
 
   @override

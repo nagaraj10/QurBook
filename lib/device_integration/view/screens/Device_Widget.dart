@@ -34,7 +34,6 @@ import '../../../src/ui/HomeScreen.dart';
 import '../../../src/ui/user/UserAccounts.dart';
 import '../../../src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
-import '../../../src/ui/bot/common/botutils.dart';
 import '../../../regiment/view_model/regiment_view_model.dart';
 
 import '../../../constants/variable_constant.dart' as variable;

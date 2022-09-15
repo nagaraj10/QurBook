@@ -13,6 +13,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardContro
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import '../../chat_socket/view/ChatDetail.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,6 @@ import '../../src/model/user/MyProfileModel.dart';
 import '../../src/resources/repository/health/HealthReportListForUserRepository.dart';
 import '../../src/ui/MyRecord.dart';
 import '../../src/ui/MyRecordsArguments.dart';
-import '../../src/ui/bot/SuperMaya.dart';
 import '../../src/utils/colors_utils.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/appointments/view/appointmentsMain.dart';

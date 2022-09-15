@@ -8,6 +8,7 @@ import 'package:myfhb/landing/view/landing_arguments.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 
 class DevicesScreen extends StatelessWidget {
   @override

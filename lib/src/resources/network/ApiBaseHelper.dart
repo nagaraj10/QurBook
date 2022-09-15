@@ -1101,7 +1101,7 @@ class ApiBaseHelper {
       {String msg = 'something went wrong, please try again later.'}) {
     PreferenceUtil.clearAllData().then((value) {
       gett.Get.offAll(PatientSignInScreen());
-      gett.Get.snackbar(variable.strMessage, msg);
+      gett.Get.snackbar(parameters.strMessage, msg);
     });
   }
 
