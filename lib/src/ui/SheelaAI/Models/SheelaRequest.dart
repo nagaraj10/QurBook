@@ -1,3 +1,6 @@
+import '../../../../constants/fhb_constants.dart';
+import '../../../../constants/variable_constant.dart';
+
 class SheelaRequestModel {
   String sender;
   String name;
@@ -10,11 +13,15 @@ class SheelaRequestModel {
   String deviceType;
   String ProviderMsg;
   Map<String, dynamic> kioskData;
+  String endPoint;
+  String relationshipId;
+  String conversationFlag;
+  String localDateTime;
   SheelaRequestModel({
     this.sender,
     this.name,
     this.message,
-    this.source,
+    this.source = strQurbookSheela,
     this.sessionId,
     this.authToken,
     this.timezone,
@@ -22,13 +29,16 @@ class SheelaRequestModel {
     this.deviceType,
     this.kioskData,
     this.ProviderMsg,
+    this.endPoint,
+    this.relationshipId,
+    this.conversationFlag,
+    this.localDateTime,
   });
 
   SheelaRequestModel.fromJson(Map<String, dynamic> json) {
     sender = json['sender'];
     name = json['Name'];
     message = json['message'];
-    source = json['source'];
     sessionId = json['sessionId'];
     authToken = json['authToken'];
     timezone = json['timezone'];
@@ -53,6 +63,10 @@ class SheelaRequestModel {
       data['kiosk_data'] = kioskData;
     }
     data['provider_msg'] = ProviderMsg;
+    data['endPoint'] = endPoint;
+    data['relationshipId'] = relationshipId;
+    data['conversationFlag'] = conversationFlag;
+    data["localDateTime"] = localDateTime;
     return data;
   }
 }

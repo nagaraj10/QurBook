@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../constants/HeaderRequest.dart';
 import '../../../../constants/fhb_constants.dart';
@@ -7,7 +8,9 @@ import '../../../../constants/fhb_query.dart';
 import '../../../resources/network/api_services.dart';
 
 class SheelAIAPIService {
-  String mayaUrl = CommonUtil.SHEELA_URL;
+  static bool useRasaAPI = false;
+  String mayaUrl =
+      useRasaAPI ? CommonUtil.SHEELA_URL : BASE_URL + qr_sheela_lex;
 
   Future<Response> SheelaAIAPI(Map<String, dynamic> reqJson) async {
     try {

@@ -1,32 +1,58 @@
 import 'package:get/get.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/GoogleTTSResponseModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:rxdart/streams.dart';
+
+class SpeechModelAPIResponse {
+  bool isSuccess;
+  SheelaResponse result;
+
+  SpeechModelAPIResponse({this.isSuccess, this.result});
+
+  SpeechModelAPIResponse.fromJson(Map<String, dynamic> json) {
+    isSuccess = json['isSuccess'] ?? false;
+    result =
+        json['result'] != null ? SheelaResponse.fromJson(json['result']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isSuccess'] = this.isSuccess;
+    if (this.result != null) {
+      data['result'] = this.result.toJson();
+    }
+    return data;
+  }
+}
 
 class SheelaResponse {
   String recipientId;
   String text;
   bool endOfConv = true;
   List<Buttons> buttons;
-  String imageURL;
-  String searchURL;
+  var imageURL;
+  var searchURL;
   String lang;
-  String postId;
-  String matchedQuestion;
+  var postId;
+  var matchedQuestion;
   List<VideoLinks> videoLinks;
-  String translatedUserText;
+  var translatedUserText;
   bool redirect;
   bool enableMic;
   bool providerMsg;
-  String redirectTo;
+  var redirectTo;
   bool singleuse = false;
   bool isActionDone = false;
-  String eid;
+  var eid;
   String timeStamp =
       FHBUtils().getFormattedDateString(DateTime.now().toString());
   GoogleTTSResponseModel ttsResponse;
   Rx<bool> isPlaying = false.obs;
   int currentButtonPlayingIndex;
   bool loading = false;
+  String conversationFlag;
+  String sessionId;
+  String relationshipId;
 
   SheelaResponse({
     this.recipientId,
@@ -49,6 +75,9 @@ class SheelaResponse {
     this.eid,
     this.ttsResponse,
     this.loading,
+    this.conversationFlag,
+    this.sessionId,
+    this.relationshipId,
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -80,6 +109,9 @@ class SheelaResponse {
     singleuse = json['singleuse'];
     isActionDone = json['isActionDone'];
     eid = json['eid'];
+    conversationFlag = json['conversationFlag'];
+    sessionId = json['sessionId'];
+    relationshipId = json['relationshipId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -106,6 +138,9 @@ class SheelaResponse {
     data['singleuse'] = this.singleuse;
     data['isActionDone'] = this.isActionDone;
     data['eid'] = this.eid;
+    data['conversationFlag'] = this.conversationFlag;
+    data['sessionId'] = this.sessionId;
+    data['relationshipId'] = this.relationshipId;
     return data;
   }
 }

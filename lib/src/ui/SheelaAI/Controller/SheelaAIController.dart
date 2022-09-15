@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -49,7 +50,9 @@ class SheelaAIController extends GetxController {
   SheelaBLEController bleController;
   bool isSheelaScreenActive = false;
   int randomNum = 0;
-
+  String relationshipId;
+  String conversationFlag;
+  bool lastMsgIsOfButtons = false;
   @override
   void onInit() {
     super.onInit();
@@ -60,10 +63,11 @@ class SheelaAIController extends GetxController {
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
+    relationshipId = userId;
     userName = profile.result != null
         ? '${profile.result.firstName} ${profile.result.lastName}'
         : '';
-
+    conversationFlag = null;
     player = AudioPlayer();
     listnerForAudioPlayer();
   }
@@ -173,20 +177,34 @@ class SheelaAIController extends GetxController {
         sender: userId,
         name: userName,
         message: message,
-        source: strdevice,
         sessionId: sessionToken,
         authToken: authToken,
         lang: getCurrentLanCode(),
         timezone:
             splitedArr.isNotEmpty ? '${splitedArr[0]}:${splitedArr[1]}' : '',
         deviceType: Platform.isAndroid ? 'android' : 'ios',
+        relationshipId: lastMsgIsOfButtons ? message : relationshipId,
+        conversationFlag: conversationFlag,
+        localDateTime:
+            CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
+        endPoint: BASE_URL,
       );
       if (getCurrentLanCode() == 'undef') {
         sheelaRequest.message = '/provider_message';
         sheelaRequest.ProviderMsg = message;
       }
       var reqJson;
-      if (arguments?.eId != null) {
+      if (arguments?.isSheelaFollowup ?? false) {
+        reqJson = {
+          KIOSK_task: strfollowup,
+          KIOSK_eid: arguments.eId,
+          KIOSK_action: arguments.action,
+          KIOSK_activityName: arguments.activityName,
+          KIOSK_message: message,
+          KIOSK_isSheela: arguments.isSheelaFollowup,
+        };
+        arguments.isSheelaFollowup = false;
+      } else if (arguments?.eId != null) {
         reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments.eId};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.eId = null;
@@ -202,17 +220,42 @@ class SheelaAIController extends GetxController {
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
       }
+      final body = sheelaRequest.toJson();
       final response = await SheelAIAPIService().SheelaAIAPI(
-        sheelaRequest.toJson(),
+        body,
       );
       if (response?.statusCode == 200 && (response?.body ?? '').isNotEmpty) {
-        final List<dynamic> listParsedResponse = jsonDecode(response.body);
-        if (listParsedResponse.isNotEmpty) {
-          var currentResponse =
-              SheelaResponse.fromJson(listParsedResponse.first);
+        final parsedResponse = jsonDecode(response.body);
+        SpeechModelAPIResponse apiResponse =
+            SpeechModelAPIResponse.fromJson(parsedResponse);
+        if (apiResponse.isSuccess && apiResponse.result != null) {
+          var currentResponse = apiResponse.result;
+          if ((currentResponse.recipientId ?? '').isEmpty) {
+            currentResponse.recipientId = "Sheela Response";
+          }
           currentResponse = await getGoogleTTSForConversation(currentResponse);
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
+          if ((currentResponse.buttons ?? []).length > 0) {
+            currentResponse.endOfConv = false;
+            lastMsgIsOfButtons = true;
+          } else {
+            lastMsgIsOfButtons = false;
+          }
+          if ((currentResponse.sessionId ?? '').isNotEmpty) {
+            sessionToken = currentResponse.sessionId;
+          }
+          if ((currentResponse.relationshipId ?? '').isNotEmpty) {
+            relationshipId = currentResponse.relationshipId;
+          }
+          if ((currentResponse.conversationFlag ?? '').isNotEmpty) {
+            conversationFlag = currentResponse.conversationFlag;
+          }
+          if (currentResponse.endOfConv ?? false) {
+            conversationFlag = null;
+            sessionToken = const Uuid().v1();
+            relationshipId = userId;
+          }
           playTTS();
           PreferenceUtil.saveString(SHEELA_LANG, currentResponse.lang);
           scrollToEnd();

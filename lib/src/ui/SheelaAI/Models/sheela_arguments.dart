@@ -12,6 +12,9 @@ class SheelaArgument {
   String deviceType;
   bool isSheelaFollowup;
   String message;
+  String task;
+  String action;
+  String activityName;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -27,5 +30,8 @@ class SheelaArgument {
     this.deviceType,
     this.isSheelaFollowup = false,
     this.message,
+    this.task,
+    this.action,
+    this.activityName,
   });
 }
