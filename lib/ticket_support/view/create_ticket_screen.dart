@@ -207,7 +207,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       controller = null;
 
-      controller.dispose();
+      //controller.dispose();
       textEditingControllers.forEach((_, v) {
         v.dispose();
       });
@@ -223,45 +223,51 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   setBooleanValues() {
-    if (widget.ticketList != null) {
-      if (widget.ticketList.additionalInfo != null)
-        for(int i = 0; i < widget.ticketList.additionalInfo?.field.length; i++)
-        {
-          Field field = widget.ticketList.additionalInfo?.field[i];
-          if (field.type == tckConstants.tckTypeTitle &&
-              field.name == tckConstants.tckMainTitle) {
-            isTxt = true;
+    try {
+      if (widget.ticketList != null) {
+        if (widget.ticketList.additionalInfo != null)
+          for (int i = 0;
+              i < widget.ticketList.additionalInfo?.field.length;
+              i++) {
+            Field field = widget.ticketList.additionalInfo?.field[i];
+            if (field.type == tckConstants.tckTypeTitle &&
+                field.name == tckConstants.tckMainTitle) {
+              isTxt = true;
+            }
+            if (field.type == tckConstants.tckTypeTitle &&
+                (field.name != tckConstants.tckMainTitle &&
+                    field.name != tckConstants.tckPackageTitle)) {
+              var textEditingController = new TextEditingController();
+              textEditingControllers.putIfAbsent(
+                  getFieldName(field), () => textEditingController);
+            }
+            if (field.type == tckConstants.tckTypeDescription &&
+                field.name == tckConstants.tckMainDescription) {
+              isDescription = true;
+            }
+            if (field.type == tckConstants.tckTypeDescription &&
+                field.name != tckConstants.tckMainDescription) {
+              var textEditingController = new TextEditingController();
+              textEditingControllers.putIfAbsent(
+                  getFieldName(field), () => textEditingController);
+            }
+            if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
+              isDoctor = true;
+            }
+            if (field.type == tckConstants.tckTypeDropdown &&
+                field.isHospital) {
+              isHospital = true;
+            }
+            if (field.type == tckConstants.tckTypeDate) {
+              isPreferredDate = true;
+            }
+            if (field.type == tckConstants.tckTypeFile) {
+              isFileUpload = true;
+            }
           }
-          if (field.type == tckConstants.tckTypeTitle &&
-              (field.name != tckConstants.tckMainTitle &&
-                  field.name != tckConstants.tckPackageTitle))
-          {
-            var textEditingController = new TextEditingController();
-            textEditingControllers.putIfAbsent(getFieldName(field), ()=>textEditingController);
-          }
-          if (field.type == tckConstants.tckTypeDescription &&
-              field.name == tckConstants.tckMainDescription) {
-            isDescription = true;
-          }
-          if (field.type == tckConstants.tckTypeDescription &&
-              field.name != tckConstants.tckMainDescription) {
-            var textEditingController = new TextEditingController();
-            textEditingControllers.putIfAbsent(
-                getFieldName(field), () => textEditingController);
-          }
-          if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
-            isDoctor = true;
-          }
-          if (field.type == tckConstants.tckTypeDropdown && field.isHospital) {
-            isHospital = true;
-          }
-          if (field.type == tckConstants.tckTypeDate) {
-            isPreferredDate = true;
-          }
-          if (field.type == tckConstants.tckTypeFile) {
-            isFileUpload = true;
-          }
-        }
+      }
+    } catch (e) {
+      //print(e);
     }
   }
 
@@ -343,12 +349,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         for(int i = 0; i < ticketTypesResult.additionalInfo?.field.length; i++)
         {
           Field field = ticketTypesResult.additionalInfo?.field[i];
+
+          if (field.type == tckConstants.tckTypeDropdown &&
+              field.name == tckConstants.tckTypeModeOfService &&
+              field.fieldData != null &&
+              field.fieldData.length == 1) {
+            selectedModeOfService = field.fieldData[0];
+            modeOfServiceController.text = selectedModeOfService.name != null
+                ? selectedModeOfService.name
+                : '';
+          }
+
           (field.type == tckConstants.tckTypeTitle &&
                   field.name == tckConstants.tckMainTitle)
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForTitleText(),
+                    getWidgetForTitleText(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTitleValue()
                   ],
@@ -361,7 +378,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForTitleText(title: getFieldName(field)),
+                    getWidgetForTitleText(title: getFieldName(field),isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTextValue(i,getFieldName(field)),
                   ],
@@ -373,7 +390,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForTitleDescription(),
+                    getWidgetForTitleDescription(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTitleDescriptionValue(),
                   ],
@@ -385,7 +402,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForTitleText(title: getFieldName(field)),
+                    getWidgetForTitleText(title: getFieldName(field),isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTextAreaValue(i, getFieldName(field)),
                   ],
@@ -477,32 +494,53 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   field.name == tckConstants.tckTypeModeOfService &&
                   field.fieldData != null &&
                   field.fieldData.length > 0)
-              ? widgetForColumn.add(Row(
-                  children: [
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: fhbBasicWidget.getTextFiledWithHint(context,
-                          'Choose mode of service', modeOfServiceController,
-                          enabled: false),
-                    ),
-                    Container(
-                      height: 50,
-                      child: getModeOfServiceDropDown(
-                        controller.modeOfServiceList,
-                        selectedModeOfService,
-                      ),
-                    ),
-                  ],
-                ))
+              ? field.fieldData.length == 1
+                  ? widgetForColumn.add(Row(
+                      children: [
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: fhbBasicWidget.getTextFiledWithHint(context,
+                              'Choose mode of service', modeOfServiceController,
+                              enabled: false),
+                        ),
+                        /*Container(
+                          height: 50,
+                          child: getModeOfServiceDropDown(
+                            controller.modeOfServiceList,
+                            selectedModeOfService,
+                          ),
+                        ),*/
+                      ],
+                    ))
+                  : widgetForColumn.add(Row(
+                      children: [
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: fhbBasicWidget.getTextFiledWithHint(context,
+                              'Choose mode of service', modeOfServiceController,
+                              enabled: false),
+                        ),
+                        Container(
+                          height: 50,
+                          child: getModeOfServiceDropDown(
+                            controller.modeOfServiceList,
+                            selectedModeOfService,
+                          ),
+                        ),
+                      ],
+                    ))
               : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeDate)
               ? widgetForColumn.add(Column(
                   children: [
-                    getWidgetForPreferredDate(),
+                    getWidgetForPreferredDate(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredDateValue(),
                     SizedBox(height: 25.h),
@@ -513,7 +551,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeTime)
               ? widgetForColumn.add(Column(
                   children: [
-                    getWidgetForPreferredTime(),
+                    getWidgetForPreferredTime(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredTimeValue(),
                     SizedBox(height: 25.h),
@@ -525,7 +563,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForFileText(),
+                    getWidgetForFileText(isRequired: field.isRequired ?? false),
                     imagePaths.length > 0 ? SizedBox(height: 20.h) : SizedBox(),
                     imagePaths.length > 0 ? buildGridView() : SizedBox()
                   ],
@@ -537,7 +575,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
-                    getWidgetForTitleText(title: "Package Name"),
+                    getWidgetForTitleText(title: "Package Name",isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getTitleForPlanPackage()
                   ],
@@ -547,7 +585,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeDropdown && field.isCategory)
               ? widgetForColumn.add(Column(
                   children: [
-                    getWidgetForTitleText(title: "Category"),
+                    getWidgetForTitleText(title: "Category",isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     healthConditionsResult != null
                         ? getDropDownForPlanCategory(
@@ -788,10 +826,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForPreferredDate() {
+  Widget getWidgetForPreferredDate({bool isRequired = false}) {
     return Row(
       children: [
-        Text(tckConstants.strTicketPreferredDate,
+        Text("${tckConstants.strTicketPreferredDate}${isRequired?"\t*":""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -850,10 +888,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
 
-  Widget getWidgetForPreferredTime() {
+  Widget getWidgetForPreferredTime({bool isRequired = false}) {
     return Row(
       children: [
-        Text(tckConstants.strTicketPreferredTime,
+        Text("${tckConstants.strTicketPreferredTime}${isRequired?"\t*":""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -862,10 +900,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTitleText({String title, bool isbold = false}) {
+  Widget getWidgetForTitleText({String title, bool isbold = false,bool isRequired = false}) {
     return Row(
       children: [
-        Text(title ?? tckConstants.strTicketTitle,
+        Text("${title ?? tckConstants.strTicketTitle}${isRequired?"\t*":""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -951,10 +989,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTitleDescription() {
+  Widget getWidgetForTitleDescription({bool isRequired = false}) {
     return Row(
       children: [
-        Text(tckConstants.strTicketDesc,
+        Text("${tckConstants.strTicketDesc}${isRequired?"\t*":""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -1135,6 +1173,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     try {
       preferredDateStr = FHBUtils().getPreferredDateString(dateTime.toString());
       preferredDateController.text = preferredDateStr;
+      selectedTime= TimeOfDay.now();
       preferredTimeStr = FHBUtils().formatTimeOfDay(selectedTime);
       preferredTimeController.text = preferredTimeStr;
     } catch (e) {
@@ -1851,8 +1890,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (ticketListData.additionalInfo != null) {
         for (Field field in widget.ticketList.additionalInfo?.field) {
           if (field.type == tckConstants.tckTypeDropdown &&
-              field.name == tckConstants.tckTypeModeOfService &&
-              field.isRequired) {
+              field.name == tckConstants.tckTypeModeOfService) {
             String strMOS =
                 CommonUtil().validString(modeOfServiceController.text);
             if (strMOS.isNotEmpty) {
@@ -1860,18 +1898,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   ? CommonUtil().validString(selectedModeOfService.id)
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
-            } else {
+            } else if(field.isRequired) {
               showAlertMsg(CommonConstants.ticketModeOfService);
               return;
             }
           }
 
-          if (field.type == tckConstants.tckTypeTime && field.isRequired) {
+          if (field.type == tckConstants.tckTypeTime) {
             String strTime =
                 CommonUtil().validString(preferredTimeController.text);
             if (strTime.isNotEmpty) {
               tckConstants.tckPrefTime = strTime;
-            } else {
+            } else if(field.isRequired) {
               showAlertMsg(CommonConstants.ticketTime);
               return;
             }
@@ -1879,26 +1917,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
           if (field.type == tckConstants.tckTypeTitle &&
               (field.name != tckConstants.tckMainTitle &&
-                  field.name != tckConstants.tckPackageTitle) &&
-              field.isRequired) {
+                  field.name != tckConstants.tckPackageTitle)) {
             String strText = CommonUtil()
                 .validString(textEditingControllers[getFieldName(field)].text);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
-            } else {
+            } else if(field.isRequired) {
               showAlertMsg("Please fill " + getFieldName(field));
               return;
             }
           }
 
           if (field.type == tckConstants.tckTypeDescription &&
-              field.name != tckConstants.tckMainDescription &&
-              field.isRequired) {
+              field.name != tckConstants.tckMainDescription) {
             String strText = CommonUtil()
                 .validString(textEditingControllers[getFieldName(field)].text);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
-            } else {
+            } else if(field.isRequired) {
               showAlertMsg("Please fill " + getFieldName(field));
               return;
             }
@@ -1965,12 +2001,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }
   }
 
-  Widget getWidgetForFileText() {
+  Widget getWidgetForFileText({bool isRequired = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: Text("Attach File",
+          child: Text("Attach File${isRequired?"\t*":""}",
               style: TextStyle(
                   fontSize: 18.sp,
                   color: Colors.black,
@@ -2463,19 +2499,26 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   void setDefaultValues() {
-    Constants.tckTitle = '';
-    Constants.tckDesc = '';
-    Constants.tckPrefDate = 'pref_date';
-    Constants.tckPrefLab = 'pref_lab';
-    Constants.tckPrefLabId = 'pref_lab_id';
-    Constants.ticketType = 'ticket type';
-    Constants.tckPriority = 'ticket priority';
-    Constants.tckID = 'ticket_id';
-    Constants.tckComment = 'ticket_comment';
-    Constants.tckSelectedDoctor = 'Doctor';
-    Constants.tckSelectedHospital = 'Hospital';
-    Constants.tckSelectedCategory = 'Category';
-    Constants.tckPackageName = 'Package Name';
+    try {
+      Constants.tckTitle = '';
+      Constants.tckDesc = '';
+      Constants.tckPrefDate = 'pref_date';
+      Constants.tckPrefTime = 'pref_time';
+      Constants.tckPrefMOSId = 'pref_mos_id';
+      Constants.tckPrefMOSName = 'pref_mos_name';
+      Constants.tckPrefLab = 'pref_lab';
+      Constants.tckPrefLabId = 'pref_lab_id';
+      Constants.ticketType = 'ticket type';
+      Constants.tckPriority = 'ticket priority';
+      Constants.tckID = 'ticket_id';
+      Constants.tckComment = 'ticket_comment';
+      Constants.tckSelectedDoctor = 'Doctor';
+      Constants.tckSelectedHospital = 'Hospital';
+      Constants.tckSelectedCategory = 'Category';
+      Constants.tckPackageName = 'Package Name';
+    } catch (e) {
+      //print(e);
+    }
   }
 
   getModeOfServiceDropDown(List<FieldData> modeOfServiceList, FieldData modeOfServiceSample,

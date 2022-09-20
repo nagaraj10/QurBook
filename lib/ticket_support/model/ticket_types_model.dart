@@ -178,7 +178,7 @@ class Field {
       isHospital = json['isHospital'] ?? false;
       isCategory = json['isCategory'] ?? false;
       isLab = json['isLab'] ?? false;
-      isRequired = json['is_required'];
+      isRequired = json['is_required']?? false;
       if (json['data'] != null) {
         fieldData = <FieldData>[];
         json['data'].forEach((v) {

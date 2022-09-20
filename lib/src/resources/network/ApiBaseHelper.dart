@@ -18,8 +18,6 @@ import 'package:myfhb/widgets/update_payment_response.dart';
 import '../../../add_family_user_info/models/address_type_list.dart';
 import '../../../authentication/constants/constants.dart';
 import '../../../authentication/view/login_screen.dart';
-import '../../../common/CommonConstants.dart';
-import '../../../common/CommonDialogBox.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/HeaderRequest.dart';
@@ -32,12 +30,7 @@ import '../../../record_detail/model/ImageDocumentResponse.dart';
 import '../../model/Health/MediaMasterIds.dart';
 import '../../model/common_response.dart';
 import '../../model/error_map.dart';
-import '../../model/Health/asgard/health_record_success.dart';
 import 'AppException.dart';
-import '../../ui/authentication/SignInScreen.dart';
-import '../../../telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
-import '../../../telehealth/features/chat/model/GetRecordIdsFilter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
@@ -2366,7 +2359,7 @@ class ApiBaseHelper {
               ? Constants.tckSelectedHospital
               : '',
           "choose_category": Constants.tckSelectedCategory != 'Category'
-              ? Constants.tckSelectedHospital
+              ? Constants.tckSelectedCategory
               : '',
           "package_name": Constants.tckPackageName != 'Package Name'
               ? Constants.tckPackageName
