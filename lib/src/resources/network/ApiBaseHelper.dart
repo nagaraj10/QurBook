@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
@@ -2335,6 +2336,7 @@ class ApiBaseHelper {
 
   // True desk Create Ticket -- Yogeshwar
   Future<dynamic> createTicket(url) async {
+    var createTicketController = gett.Get.put(CreateTicketController());
     var responseJson;
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
@@ -2369,6 +2371,17 @@ class ApiBaseHelper {
           "package_name": Constants.tckPackageName != 'Package Name'
               ? Constants.tckPackageName
               : '',
+          'preferredTime':
+          Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
+          "modeOfService": {
+            "id": Constants.tckPrefMOSId != 'pref_mos_id'
+                ? Constants.tckPrefMOSId
+                : '',
+            "name": Constants.tckPrefMOSName != 'pref_mos_name'
+                ? Constants.tckPrefMOSName
+                : ''
+          },
+          ...createTicketController.dynamicTextFiledObj,
         },
       };
       var response = await ApiServices.post(_baseUrl + url,

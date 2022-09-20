@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
@@ -25,18 +23,15 @@ import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/models/health_condition_response_model.dart';
 import 'package:myfhb/plan_wizard/view_model/plan_wizard_view_model.dart';
-import 'package:myfhb/record_detail/services/downloadmultipleimages.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/MyRecordsArguments.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
@@ -73,9 +68,12 @@ class CreateTicketScreen extends StatefulWidget {
 class _CreateTicketScreenState extends State<CreateTicketScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   DateTime dateTime = DateTime.now();
+  static TimeOfDay selectedTime= TimeOfDay.now();
   var preferredDateStr;
+  var preferredTimeStr;
 
   final preferredDateController = TextEditingController(text: '');
+  final preferredTimeController = TextEditingController(text: '');
   final titleController = TextEditingController();
   final descController = TextEditingController();
   FocusNode preferredDateFocus = FocusNode();
@@ -103,12 +101,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   TextEditingController doctor = TextEditingController();
   TextEditingController lab = TextEditingController();
   TextEditingController hospital = TextEditingController();
+  TextEditingController modeOfServiceController = TextEditingController();
   bool isTxt = false,
       isDescription = false,
       isDoctor = false,
       isHospital = false,
       isPreferredDate = false,
       isFileUpload = false;
+
 
   bool isFirstTym = true;
 
@@ -124,6 +124,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   var package_title_ctrl = TextEditingController(text: '');
   PlanListResult planListModel;
   List<PlanListResult> planListModelList = List();
+
+  FieldData selectedModeOfService;
+
+  Map<String,TextEditingController> textEditingControllers = {};
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -143,9 +147,38 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }
   }
 
+  Future<void> _selectTime(BuildContext context) async {
+    try {
+      final pickedTime = await showTimePicker(
+        context: context,
+        initialTime: selectedTime,
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        },
+      );
+
+      if (pickedTime != null && pickedTime != selectedTime) {
+        setState(() {
+          selectedTime = pickedTime;
+          preferredTimeStr =
+              FHBUtils().formatTimeOfDay(selectedTime);
+          preferredTimeController.text = preferredTimeStr;
+        });
+      }
+
+
+    } catch (e) {
+      //print(e);
+    }
+  }
+
   @override
   void initState() {
     try {
+
       super.initState();
 
       setDefaultValues();
@@ -158,20 +191,31 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
               .getHealthConditions();
+
+      setBooleanValues();
+
+
     } catch (e) {
-      print(e);
+      //print(e);
     }
 
-    setBooleanValues();
+
   }
 
   @override
   void dispose() {
-    controller = null;
+    try {
+      controller = null;
 
-    controller.dispose();
+      controller.dispose();
+      textEditingControllers.forEach((_, v) {
+        v.dispose();
+      });
 
-    super.dispose();
+      super.dispose();
+    } catch (e) {
+      //print(e);
+    }
   }
 
   void setAuthToken() async {
@@ -181,9 +225,19 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   setBooleanValues() {
     if (widget.ticketList != null) {
       if (widget.ticketList.additionalInfo != null)
-        for (Field field in widget.ticketList.additionalInfo?.field) {
-          if (field.type == tckConstants.tckTypeTitle) {
+        for(int i = 0; i < widget.ticketList.additionalInfo?.field.length; i++)
+        {
+          Field field = widget.ticketList.additionalInfo?.field[i];
+          if (field.type == tckConstants.tckTypeTitle &&
+              field.name == tckConstants.tckMainTitle) {
             isTxt = true;
+          }
+          if (field.type == tckConstants.tckTypeTitle &&
+              (field.name != tckConstants.tckMainTitle &&
+                  field.name != tckConstants.tckPackageTitle))
+          {
+            var textEditingController = new TextEditingController();
+            textEditingControllers.putIfAbsent(getFieldName(field), ()=>textEditingController);
           }
           if (field.type == tckConstants.tckTypeDescription) {
             isDescription = true;
@@ -258,19 +312,51 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )));
   }
 
+  String getFieldName(Field field) {
+    String strName = "";
+    try {
+      strName = field.name;
+      if (strName.contains("_")) {
+        strName = strName.replaceAll('_', '');
+        strName = CommonUtil()
+            .titleCase(strName.toLowerCase());
+      } else {
+        strName = CommonUtil()
+            .titleCase(strName.toLowerCase());
+      }
+      return strName;
+    } catch (e) {}
+    return strName;
+  }
+
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
     List<Widget> widgetForColumn = List();
     try {
       if (ticketTypesResult.additionalInfo != null) {
-        for (Field field in ticketTypesResult.additionalInfo?.field) {
+        for(int i = 0; i < ticketTypesResult.additionalInfo?.field.length; i++)
+        {
+          Field field = ticketTypesResult.additionalInfo?.field[i];
           (field.type == tckConstants.tckTypeTitle &&
-                  field.name != tckConstants.tckPackageTitle)
+                  field.name == tckConstants.tckMainTitle)
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
                     getWidgetForTitleText(),
                     SizedBox(height: 10.h),
                     getWidgetForTitleValue()
+                  ],
+                ))
+              : SizedBox.shrink();
+
+          (field.type == tckConstants.tckTypeTitle &&
+              (field.name != tckConstants.tckMainTitle &&
+                  field.name != tckConstants.tckPackageTitle))
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 10.h),
+                    getWidgetForTitleText(title: getFieldName(field)),
+                    SizedBox(height: 10.h),
+                    getWidgetForTextValue(i,getFieldName(field)),
                   ],
                 ))
               : SizedBox.shrink();
@@ -363,12 +449,53 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
+          widgetForColumn.add(SizedBox(
+            height: 10,
+          ));
+
+          (field.type == tckConstants.tckTypeDropdown &&
+                  field.name == tckConstants.tckTypeModeOfService &&
+                  field.fieldData != null &&
+                  field.fieldData.length > 0)
+              ? widgetForColumn.add(Row(
+                  children: [
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: fhbBasicWidget.getTextFiledWithHint(context,
+                          'Choose mode of service', modeOfServiceController,
+                          enabled: false),
+                    ),
+                    Container(
+                      height: 50,
+                      child: getModeOfServiceDropDown(
+                        controller.modeOfServiceList,
+                        selectedModeOfService,
+                      ),
+                    ),
+                  ],
+                ))
+              : SizedBox.shrink();
+
           (field.type == tckConstants.tckTypeDate)
               ? widgetForColumn.add(Column(
                   children: [
                     getWidgetForPreferredDate(),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredDateValue(),
+                    SizedBox(height: 25.h),
+                  ],
+                ))
+              : SizedBox.shrink();
+
+          (field.type == tckConstants.tckTypeTime)
+              ? widgetForColumn.add(Column(
+                  children: [
+                    getWidgetForPreferredTime(),
+                    SizedBox(height: 10.h),
+                    getWidgetForPreferredTimeValue(),
                     SizedBox(height: 25.h),
                   ],
                 ))
@@ -543,14 +670,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       children: [
         InkWell(
           onTap: () {
-            FHBUtils().check().then((internet) {
-              if (internet != null && internet) {
-                _validateAndCreateTicket(context, widget.ticketList);
-              } else {
-                FHBBasicWidget().showInSnackBar(
-                    tckConstants.STR_NO_CONNECTIVITY, scaffold_state);
-              }
-            });
+            try {
+              FHBUtils().check().then((internet) {
+                if (internet != null && internet) {
+                  _validateAndCreateTicket(context, widget.ticketList);
+                } else {
+                  FHBBasicWidget().showInSnackBar(
+                      tckConstants.STR_NO_CONNECTIVITY, scaffold_state);
+                }
+              });
+            } catch (e) {
+              //print(e);
+            }
           },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.85,
@@ -649,6 +780,68 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
+  Widget getWidgetForPreferredTimeValue() {
+    return Container(
+      child: TextFormField(
+        autofocus: false,
+        enableInteractiveSelection: false,
+        readOnly: true,
+        controller: preferredTimeController,
+        decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
+          suffixIcon: IconButton(
+            onPressed: () {
+              _selectTime(context);
+            },
+            iconSize: 15,
+            icon: ShaderMask(
+              blendMode: BlendMode.srcATop,
+              shaderCallback: (bounds) {
+                return LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ]).createShader(bounds);
+              },
+              child: Image.asset(
+                'assets/icons/11.png',
+                // color: Color(CommonUtil().getMyPrimaryColor())
+              ),
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(8.0)),
+            borderSide: BorderSide(width: 0, color: Colors.white),
+          ),
+          enabledBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(8.0),
+            borderSide: BorderSide(color: Colors.white),
+          ),
+          focusedBorder: new OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(8.0),
+            borderSide: BorderSide(color: getColorFromHex('#fffff')),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+  Widget getWidgetForPreferredTime() {
+    return Row(
+      children: [
+        Text(tckConstants.strTicketPreferredTime,
+            style: TextStyle(
+                fontSize: 18.sp,
+                color: Colors.black,
+                fontWeight: FontWeight.w400)),
+      ],
+    );
+  }
+
   Widget getWidgetForTitleText({String title, bool isbold = false}) {
     return Row(
       children: [
@@ -665,6 +858,31 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return TextField(
       autofocus: false,
       controller: titleController,
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          borderSide: BorderSide(width: 0, color: Colors.white),
+        ),
+        enabledBorder: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getWidgetForTextValue(int index,String strName) {
+    return TextField(
+      autofocus: false,
+      controller: textEditingControllers[strName],
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
@@ -748,6 +966,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             } else {
               showAlertMsg(CommonConstants.ticketDesc);
             }
+          }else {
+            showAlertMsg(CommonConstants.ticketHospital);
           }
         } else {
           showAlertMsg(CommonConstants.ticketDoctor);
@@ -824,6 +1044,35 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         } else {
           showAlertMsg(CommonConstants.ticketCategory);
         }
+      } else if (CommonUtil()
+              .validString(ticketListData.name)
+              .toLowerCase()
+              .contains("transportation") ||
+          CommonUtil()
+              .validString(ticketListData.name)
+              .toLowerCase()
+              .contains("homecare services") ||
+          CommonUtil()
+              .validString(ticketListData.name)
+              .toLowerCase()
+              .contains("food delivery")) {
+        if (isTxt && titleController.text.isNotEmpty) {
+          tckConstants.tckTitle = titleController.text.toString();
+          if (isDescription && descController.text.isNotEmpty) {
+            tckConstants.tckDesc = descController.text.toString();
+            if (isPreferredDate && preferredDateController.text.isNotEmpty) {
+              tckConstants.tckPrefDate =
+                  preferredDateController.text.toString();
+              commonMethodToCreateTicket(ticketListData);
+            } else {
+              showAlertMsg(CommonConstants.ticketDate);
+            }
+          } else {
+            showAlertMsg(CommonConstants.ticketDesc);
+          }
+        } else {
+          showAlertMsg(CommonConstants.ticketTitle);
+        }
       }
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
@@ -836,8 +1085,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   }
 
   void _getInitialDate(BuildContext context) {
-    preferredDateStr = FHBUtils().getPreferredDateString(dateTime.toString());
-    preferredDateController.text = preferredDateStr;
+    try {
+      preferredDateStr = FHBUtils().getPreferredDateString(dateTime.toString());
+      preferredDateController.text = preferredDateStr;
+      preferredTimeStr = FHBUtils().formatTimeOfDay(selectedTime);
+      preferredTimeController.text = preferredTimeStr;
+    } catch (e) {
+      //print(e);
+    }
   }
 
   Widget dropDownButton(List<Hospitals> labsList) {
@@ -852,7 +1107,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     } catch (e) {
-      print(e);
+      //print(e);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -921,7 +1176,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     } catch (e) {
-      print(e);
+      //print(e);
     }
     return SizedBoxWithChild(
       height: 50,
@@ -1543,34 +1798,93 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  void commonMethodToCreateTicket(var ticketListData) {
-    tckConstants.ticketType = ticketListData.id;
-    tckConstants.tckPriority = ticketListData.id;
+  void commonMethodToCreateTicket(var ticketListData)
+  {
+    try {
+      if (ticketListData.additionalInfo != null) {
+        for (Field field in widget.ticketList.additionalInfo?.field) {
+          if (field.type == tckConstants.tckTypeDropdown &&
+              field.name == tckConstants.tckTypeModeOfService &&
+              field.isRequired) {
+            String strMOS =
+                CommonUtil().validString(modeOfServiceController.text);
+            if (strMOS.isNotEmpty) {
+              tckConstants.tckPrefMOSId = selectedModeOfService != null
+                  ? CommonUtil().validString(selectedModeOfService.id)
+                  : "";
+              tckConstants.tckPrefMOSName = strMOS;
+            } else {
+              showAlertMsg(CommonConstants.ticketModeOfService);
+              return;
+            }
+          }
 
-    if (controller.labBookAppointment.value &&
-        controller.selPrefLab.value != "Select") {
-      tckConstants.tckPrefLab = controller.selPrefLab.value;
-      tckConstants.tckPrefLabId = controller.selPrefLabId.value;
-    } else {
-      tckConstants.tckPrefLab = "";
-      tckConstants.tckPrefLabId = "";
-    }
-    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+          if (field.type == tckConstants.tckTypeTime && field.isRequired) {
+            String strTime =
+                CommonUtil().validString(preferredTimeController.text);
+            if (strTime.isNotEmpty) {
+              tckConstants.tckPrefTime = strTime;
+            } else {
+              showAlertMsg(CommonConstants.ticketTime);
+              return;
+            }
+          }
 
-    ticketViewModel.createTicket().then((value) async {
-      if (value != null) {
-        if (CommonUtil()
-                .validString(ticketListData.name)
-                .toLowerCase()
-                .contains("order prescription") &&
-            imagePaths.length > 0) {
-          ApiBaseHelper apiBaseHelper = ApiBaseHelper();
-          List resposnes = await apiBaseHelper
-              .uploadAttachmentForTicket(
-                  CommonUtil.TRUE_DESK_URL + "tickets/uploadattachment",
-                  value?.result?.ticket?.id,
-                  imagePaths)
-              .then((values) {
+          if (field.type == tckConstants.tckTypeTitle &&
+              (field.name != tckConstants.tckMainTitle &&
+                  field.name != tckConstants.tckPackageTitle)&& field.isRequired)
+          {
+            String strText =
+            CommonUtil().validString(textEditingControllers[getFieldName(field)].text);
+            if (strText.isNotEmpty) {
+              controller.dynamicTextFiledObj[field.name] = strText;
+            } else {
+              showAlertMsg("Please fill "+getFieldName(field));
+              return;
+            }
+          }
+
+        }
+      }
+
+      tckConstants.ticketType = ticketListData.id;
+      tckConstants.tckPriority = ticketListData.id;
+
+      if (controller.labBookAppointment.value &&
+          controller.selPrefLab.value != "Select") {
+        tckConstants.tckPrefLab = controller.selPrefLab.value;
+        tckConstants.tckPrefLabId = controller.selPrefLabId.value;
+      } else {
+        tckConstants.tckPrefLab = "";
+        tckConstants.tckPrefLabId = "";
+      }
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+
+      ticketViewModel.createTicket().then((value) async {
+        if (value != null) {
+          if (CommonUtil()
+                  .validString(ticketListData.name)
+                  .toLowerCase()
+                  .contains("order prescription") &&
+              imagePaths.length > 0) {
+            ApiBaseHelper apiBaseHelper = ApiBaseHelper();
+            List resposnes = await apiBaseHelper
+                .uploadAttachmentForTicket(
+                    CommonUtil.TRUE_DESK_URL + "tickets/uploadattachment",
+                    value?.result?.ticket?.id,
+                    imagePaths)
+                .then((values) {
+              FlutterToast()
+                  .getToast('Ticket Created Successfully', Colors.grey);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              print('Hitting API .. : ${value.toJson()}');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
+              );
+            });
+          } else {
             FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -1579,24 +1893,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               context,
               MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
             );
-          });
+          }
         } else {
-          FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          print('Hitting API .. : ${value.toJson()}');
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
-          );
+          Navigator.of(context, rootNavigator: true).pop();
         }
-      } else {
+      }).catchError((error) {
         Navigator.of(context, rootNavigator: true).pop();
-      }
-    }).catchError((error) {
-      Navigator.of(context, rootNavigator: true).pop();
-      print('API Error Occured : $error');
-    });
+        print('API Error Occured : $error');
+      });
+    } catch (e) {
+      //print(e);
+    }
   }
 
   Widget getWidgetForFileText() {
@@ -2110,6 +2417,60 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     Constants.tckSelectedHospital = 'Hospital';
     Constants.tckSelectedCategory = 'Category';
     Constants.tckPackageName = 'Package Name';
+  }
+
+  getModeOfServiceDropDown(List<FieldData> modeOfServiceList, FieldData modeOfServiceSample,
+      {Widget child}) {
+    if (modeOfServiceSample != null) {
+      for (var modeOfServiceObj in modeOfServiceList) {
+        if (modeOfServiceObj.id == modeOfServiceSample.id) {
+          selectedModeOfService = modeOfServiceObj;
+        }
+      }
+    }
+
+    return StatefulBuilder(builder: (context, setState) {
+      return PopupMenuButton<FieldData>(
+        offset: Offset(-100, 60),
+        //padding: EdgeInsets.all(20),
+
+        itemBuilder: (context) => (modeOfServiceList != null &&
+            modeOfServiceList.isNotEmpty)
+            ? modeOfServiceList
+            .mapIndexed((index, element) => index == modeOfServiceList.length - 1
+            ? PopupMenuItem<FieldData>(
+            value: element,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  width: 0.5.sw,
+                  child: Text(
+                      element.name != null ? element.name : ''),
+                ),
+                SizedBox(height: 10),
+              ],
+            ))
+            : PopupMenuItem<FieldData>(
+          value: element,
+          child: Container(
+            width: 0.5.sw,
+            child: Text(element.name != null ? element.name : ''),
+          ),
+        ))
+            .toList()
+            : SizedBox.shrink(),
+        onSelected: (value) {
+          selectedModeOfService = value;
+          setState(() {
+            modeOfServiceController.text = selectedModeOfService.name != null ? selectedModeOfService.name : '';
+          });
+        },
+        child: child ?? getIconButton(),
+      );
+    });
   }
 }
 
