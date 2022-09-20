@@ -2293,7 +2293,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
             speechRecognizer!!.startListening(intent)
-            //handler.postDelayed(runnable, 7000);
+            handler.postDelayed(runnable, 15000);
 
 
         } catch (a: ActivityNotFoundException) {
