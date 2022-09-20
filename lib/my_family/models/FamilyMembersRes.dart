@@ -382,6 +382,7 @@ class HeightObj {
 class AdditionalInfo {
   String height;
   String weight;
+  String weightUnitCode;
   HeightObj heightObj;
 
   AdditionalInfo({this.height, this.weight});
@@ -396,6 +397,9 @@ class AdditionalInfo {
       }
     } catch (e) {}
     weight = json['weight'];
+    if (json.containsKey('weightUnitCode')) {
+      weightUnitCode = json['weightUnitCode'];
+    }
     try {
       height = json['height'];
       weight = json['weight'];

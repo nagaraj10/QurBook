@@ -1928,6 +1928,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               if (myProfile?.result != null) {
                 Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                     arguments: AddFamilyUserInfoArguments(
+                        isFromAppointmentOrSlotPage: true,
+                        isForFamilyAddition: false,
                         isForFamily: false,
                         myProfileResult: myProfile?.result,
                         fromClass: CommonConstants.user_update));
