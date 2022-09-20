@@ -690,6 +690,7 @@ var tckTypeTime = 'time';
 var tckTypeFile = "file";
 var tckPackageTitle = "package_title";
 var tckMainTitle = "title";
+var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";
 
 const String keyMembeShipID = 'memberShipID';

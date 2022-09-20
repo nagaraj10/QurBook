@@ -239,8 +239,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             var textEditingController = new TextEditingController();
             textEditingControllers.putIfAbsent(getFieldName(field), ()=>textEditingController);
           }
-          if (field.type == tckConstants.tckTypeDescription) {
+          if (field.type == tckConstants.tckTypeDescription &&
+              field.name == tckConstants.tckMainDescription) {
             isDescription = true;
+          }
+          if (field.type == tckConstants.tckTypeDescription &&
+              field.name != tckConstants.tckMainDescription) {
+            var textEditingController = new TextEditingController();
+            textEditingControllers.putIfAbsent(
+                getFieldName(field), () => textEditingController);
           }
           if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
             isDoctor = true;
@@ -361,13 +368,26 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
-          field.type == tckConstants.tckTypeDescription
+          field.type == tckConstants.tckTypeDescription&&
+              field.name == tckConstants.tckMainDescription
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 10.h),
                     getWidgetForTitleDescription(),
                     SizedBox(height: 10.h),
                     getWidgetForTitleDescriptionValue(),
+                  ],
+                ))
+              : SizedBox.shrink();
+
+          field.type == tckConstants.tckTypeDescription &&
+                  field.name != tckConstants.tckMainDescription
+              ? widgetForColumn.add(Column(
+                  children: [
+                    SizedBox(height: 10.h),
+                    getWidgetForTitleText(title: getFieldName(field)),
+                    SizedBox(height: 10.h),
+                    getWidgetForTextAreaValue(i, getFieldName(field)),
                   ],
                 ))
               : SizedBox.shrink();
@@ -858,6 +878,33 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     return TextField(
       autofocus: false,
       controller: titleController,
+      decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          borderSide: BorderSide(width: 0, color: Colors.white),
+        ),
+        enabledBorder: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(8.0),
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderRadius: new BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getWidgetForTextAreaValue(int index,String strName) {
+    return TextField(
+      keyboardType: TextInputType.multiline,
+      autofocus: false,
+      maxLines: 6,
+      controller: textEditingControllers[strName],
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,
@@ -1832,18 +1879,30 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
           if (field.type == tckConstants.tckTypeTitle &&
               (field.name != tckConstants.tckMainTitle &&
-                  field.name != tckConstants.tckPackageTitle)&& field.isRequired)
-          {
-            String strText =
-            CommonUtil().validString(textEditingControllers[getFieldName(field)].text);
+                  field.name != tckConstants.tckPackageTitle) &&
+              field.isRequired) {
+            String strText = CommonUtil()
+                .validString(textEditingControllers[getFieldName(field)].text);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else {
-              showAlertMsg("Please fill "+getFieldName(field));
+              showAlertMsg("Please fill " + getFieldName(field));
               return;
             }
           }
 
+          if (field.type == tckConstants.tckTypeDescription &&
+              field.name != tckConstants.tckMainDescription &&
+              field.isRequired) {
+            String strText = CommonUtil()
+                .validString(textEditingControllers[getFieldName(field)].text);
+            if (strText.isNotEmpty) {
+              controller.dynamicTextFiledObj[field.name] = strText;
+            } else {
+              showAlertMsg("Please fill " + getFieldName(field));
+              return;
+            }
+          }
         }
       }
 
