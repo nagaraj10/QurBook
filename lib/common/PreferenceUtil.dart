@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'CommonConstants.dart';
 import '../constants/fhb_constants.dart' as Constants;
 import '../language/model/Language.dart';
@@ -503,5 +504,21 @@ class PreferenceUtil {
     if (_prefsInstance == null) {}
     return UserModel.fromJson(
         json.decode(_prefsInstance.getString(keyProfile)));
+  }
+
+  static Future<bool> savePreferredMeasurement(String keyCompletedData,
+      PreferredMeasurement preferredMeasurementNew) async {
+    final instance = await _prefs;
+    final completeDataStr = json.encode(preferredMeasurementNew);
+
+    return instance.setString(keyCompletedData, completeDataStr);
+  }
+
+  static PreferredMeasurement getPreferredMeasurement(String keyCompletedData) {
+    try {
+      if (_prefsInstance == null) {}
+      return PreferredMeasurement.fromJson(
+          json.decode(_prefsInstance.getString(keyCompletedData)));
+    } catch (e) {}
   }
 }
