@@ -108,6 +108,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   String selectedGender;
 
   var heightConroller = TextEditingController();
+  var heightInchConroller = TextEditingController();
+
   FocusNode heightFocus = FocusNode();
 
   var weightController = TextEditingController();
@@ -117,6 +119,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       FamilyMemberListRepository();
   List<SharedByUsers> profilesSharedByMeAry = [];
 
+  bool isFeetOrInches = true;
+  bool isKg = true;
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -295,6 +299,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipFocus = FocusNode();
 
     heightConroller = TextEditingController(text: '');
+    heightInchConroller = TextEditingController(text: '');
+
     weightController = TextEditingController(text: '');
 
     cntrlr_addr_one = TextEditingController(text: '');
@@ -376,9 +382,57 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme?.child?.additionalInfo != null) {
-      heightConroller.text = sharedbyme?.child?.additionalInfo.height ?? '';
+      if (sharedbyme?.child?.additionalInfo?.heightObj != null) {
+        isFeetOrInches = true;
+        heightConroller.text =
+            sharedbyme?.child?.additionalInfo.heightObj?.valueFeet ?? '';
+        heightInchConroller.text =
+            sharedbyme?.child?.additionalInfo.heightObj?.valueInches ?? '';
+      } else {
+        isFeetOrInches = false;
+
+        heightConroller.text = sharedbyme?.child?.additionalInfo.height ?? '';
+      }
+
+      if (sharedbyme?.child?.additionalInfo?.weightUnitCode == 'lb') {
+        isKg = false;
+      } else {
+        isKg = true;
+      }
       weightController.text = sharedbyme?.child?.additionalInfo.weight ?? '';
+    } else {
+      var preferredMeasurement = PreferenceUtil.getPreferredMeasurement(
+          Constants.KEY_PREFERREDMEASUREMENT);
+
+      if (preferredMeasurement != null) {
+        try {
+          if (preferredMeasurement?.height?.unitCode ==
+                  Constants.STR_VAL_HEIGHT_IND ||
+              preferredMeasurement?.height?.unitCode ==
+                  STR_VAL_HEIGHT_IND_NEW) {
+            isFeetOrInches = true;
+          } else {
+            isFeetOrInches = false;
+          }
+
+          if (preferredMeasurement?.weight?.unitCode ==
+              Constants.STR_VAL_WEIGHT_IND) {
+            isKg = true;
+          } else {
+            isKg = false;
+          }
+        } catch (e) {
+          if (CommonUtil.REGION_CODE == 'IN') {
+            isFeetOrInches = true;
+            isKg = true;
+          } else {
+            isFeetOrInches = true;
+            isKg = false;
+          }
+        }
+      }
     }
+
     if (CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
       //renameBloodGroup(sharedbyme.child.bloodGroup);
       final bloodGroup = sharedbyme.child.bloodGroup;
@@ -544,12 +598,28 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               _showBloodRangeTextField(),
             ],
           ),
-          Row(
-            children: <Widget>[
-              showHeight(),
-              showWeight(),
-            ],
-          ),
+          isFeetOrInches
+              ? Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: showHeight(
+                          heightConroller, CommonConstants.heightNameFeetInd),
+                    ),
+                    Expanded(
+                      child: showHeight(heightInchConroller,
+                          CommonConstants.heightNameInchInd),
+                    ),
+                    Expanded(
+                      child: showWeight(),
+                    )
+                  ],
+                )
+              : Row(
+                  children: <Widget>[
+                    showHeight(heightConroller, CommonConstants.heightName),
+                    showWeight(),
+                  ],
+                ),
           _showDateOfBirthTextField(),
           cntrlr_corp_name.text != ''
               ? Padding(
@@ -1018,7 +1088,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-  Widget showHeight() {
+  Widget showHeight(TextEditingController heightConroller, String labelText) {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: Container(
@@ -1038,8 +1108,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
               decoration: InputDecoration(
-                labelText: CommonConstants.height,
-                hintText: CommonConstants.heightName,
+                labelText: labelText,
+                hintText: labelText,
                 labelStyle: TextStyle(
                     fontSize: 14.0.sp,
                     fontWeight: FontWeight.w400,
@@ -1076,8 +1146,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   fontSize: 16.0.sp,
                   color: ColorUtils.blackcolor),
               decoration: InputDecoration(
-                labelText: CommonConstants.weight,
-                hintText: CommonConstants.weightName,
+                labelText: isKg
+                    ? CommonConstants.weight
+                    : CommonConstants.weightNameUS,
+                hintText: isKg
+                    ? CommonConstants.weightName
+                    : CommonConstants.weightNameUS,
                 labelStyle: TextStyle(
                     fontSize: 14.0.sp,
                     fontWeight: FontWeight.w400,
@@ -1439,7 +1513,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                   hintStyle: TextStyle(fontSize: 16.0.sp),
-                  labelText:CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip
+                  labelText: CommonUtil.REGION_CODE == 'IN'
+                      ? CommonConstants.addr_pin
+                      : CommonConstants.addr_zip
                   //.substring(0, CommonConstants.addr_zip.length - 1),
                   ),
               validator: (res) {

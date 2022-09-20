@@ -133,6 +133,9 @@ class _ChooseUnitState extends State<ChooseUnit> {
         .then((value) {
       if (value?.isSuccess ?? false) {
         toast.getToast(value?.message, Colors.green);
+
+        PreferenceUtil.savePreferredMeasurement(
+            Constants.KEY_PREFERREDMEASUREMENT, preferredMeasurementNew);
       } else {
         toast.getToast(value?.message, Colors.red);
       }

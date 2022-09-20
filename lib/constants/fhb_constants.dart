@@ -47,6 +47,8 @@ const String KEY_CATEGORYNAME = 'categoryName';
 const String KEY_CATEGORYID = 'categoryID';
 const String KEY_CATEGORYLIST = 'categoryList';
 const String KEY_PROFILE = 'profile';
+const String KEY_PREFERREDMEASUREMENT = 'preferredMeasurement';
+
 const String KEY_USERID = 'userID';
 const String KEY_LASTLOGGEDTIME = 'lastLoggedIn';
 const String KEY_AUTHTOKEN = 'authToken';
@@ -81,6 +83,8 @@ const String STR_KEY_WEIGHT = 'weight';
 const String STR_KEY_TEMP = 'temp';
 
 const String STR_VAL_HEIGHT_IND = 'f-in';
+const String STR_VAL_HEIGHT_IND_NEW = 'feet';
+
 const String STR_VAL_WEIGHT_IND = 'kg';
 const String STR_VAL_TEMP_IND = 'F';
 
