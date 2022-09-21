@@ -1,23 +1,18 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
@@ -30,7 +25,6 @@ import 'package:path/path.dart' as p;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
-import 'package:myfhb/colors/fhb_colors.dart' as colors;
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -218,17 +212,34 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         maxLines: 2,
                       ),
                       ticket.preferredDate != null
-                          ? Text(
-                              constants.notificationDate(
-                                  '${ticket.preferredDate.toString()}'),
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                                fontWeight: FontWeight.w100,
-                              ),
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            )
+                          ? Row(
+                        children: [
+                          Text(
+                            constants.notificationDate(
+                                '${ticket.preferredDate.toString()}'),
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w100,
+                            ),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          (ticket?.additionalInfo?.preferredTime != null &&
+                              ticket?.additionalInfo?.preferredTime != "")
+                              ? Text(
+                            ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                            style: TextStyle(
+                              fontSize: 16.0.sp,
+                              fontWeight: FontWeight.w100,
+                            ),
+                            textAlign: TextAlign.start,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          )
+                              : SizedBox.shrink(),
+                        ],
+                      )
                           : SizedBox(),
                       CommonUtil()
                               .validString(ticket?.preferredLabName ?? '')
@@ -260,6 +271,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           ? commonWidgetForDropDownValue(
                               "Preferred Hospital Name",
                               ticket?.additionalInfo?.chooseHospital)
+                          : SizedBox.shrink(),
+                      (ticket?.additionalInfo?.modeOfService != null &&
+                              ticket?.additionalInfo?.modeOfService.name != "")
+                          ? commonWidgetForDropDownValue("Mode Of Service",
+                              ticket?.additionalInfo?.modeOfService.name)
                           : SizedBox.shrink(),
                       Row(
                         children: [

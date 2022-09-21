@@ -155,6 +155,8 @@ class Field {
   bool isHospital;
   bool isCategory;
   bool isLab;
+  bool isRequired;
+  List<FieldData> fieldData;
 
   Field(
       {this.name,
@@ -163,28 +165,76 @@ class Field {
       this.isDoctor = false,
       this.isHospital = false,
       this.isCategory = false,
-      this.isLab = false});
+      this.isLab = false,
+      this.isRequired = false,
+      this.fieldData});
 
   Field.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    type = json['type'];
-    field = json['field'];
-    isDoctor = json['isDoctor'] ?? false;
-    isHospital = json['isHospital'] ?? false;
-    isCategory = json['isCategory'] ?? false;
-    isLab = json['isLab'] ?? false;
+    try {
+      name = json['name'];
+      type = json['type'];
+      field = json['field'];
+      isDoctor = json['isDoctor'] ?? false;
+      isHospital = json['isHospital'] ?? false;
+      isCategory = json['isCategory'] ?? false;
+      isLab = json['isLab'] ?? false;
+      isRequired = json['is_required']?? false;
+      if (json['data'] != null) {
+        fieldData = <FieldData>[];
+        json['data'].forEach((v) {
+          fieldData.add(new FieldData.fromJson(v));
+        });
+      }
+    } catch (e) {
+      //print(e);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['type'] = this.type;
-    data['field'] = this.field;
-    data['isDoctor'] = this.isDoctor;
-    data['isHospital'] = this.isHospital;
-    data['isCategory'] = this.isCategory;
-    data['isLab'] = this.isLab;
+    try {
+      data['name'] = this.name;
+      data['type'] = this.type;
+      data['field'] = this.field;
+      data['isDoctor'] = this.isDoctor;
+      data['isHospital'] = this.isHospital;
+      data['isCategory'] = this.isCategory;
+      data['isLab'] = this.isLab;
+      data['is_required'] = this.isRequired;
+      if (this.fieldData != null) {
+            data['data'] = this.fieldData.map((v) => v.toJson()).toList();
+          }
+    } catch (e) {
+      //print(e);
+    }
 
+    return data;
+  }
+}
+
+class FieldData {
+  String id;
+  String name;
+
+  FieldData({this.id, this.name});
+
+  FieldData.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      name = json['name'];
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['id'] = this.id;
+      data['name'] = this.name;
+    } catch (e) {
+      //print(e);
+    }
     return data;
   }
 }
