@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/add_new_plan/model/PlanCode.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
+import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/widgets/cart_genric_response.dart';
 import 'package:myfhb/widgets/fetching_cart_items_model.dart';
@@ -17,8 +18,6 @@ import 'package:myfhb/widgets/update_payment_response.dart';
 import '../../../add_family_user_info/models/address_type_list.dart';
 import '../../../authentication/constants/constants.dart';
 import '../../../authentication/view/login_screen.dart';
-import '../../../common/CommonConstants.dart';
-import '../../../common/CommonDialogBox.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/HeaderRequest.dart';
@@ -31,12 +30,7 @@ import '../../../record_detail/model/ImageDocumentResponse.dart';
 import '../../model/Health/MediaMasterIds.dart';
 import '../../model/common_response.dart';
 import '../../model/error_map.dart';
-import '../../model/Health/asgard/health_record_success.dart';
 import 'AppException.dart';
-import '../../ui/authentication/SignInScreen.dart';
-import '../../../telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
-import '../../../telehealth/features/chat/model/GetRecordIdsFilter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
@@ -2335,6 +2329,7 @@ class ApiBaseHelper {
 
   // True desk Create Ticket -- Yogeshwar
   Future<dynamic> createTicket(url) async {
+    var createTicketController = gett.Get.put(CreateTicketController());
     var responseJson;
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     try {
@@ -2364,11 +2359,22 @@ class ApiBaseHelper {
               ? Constants.tckSelectedHospital
               : '',
           "choose_category": Constants.tckSelectedCategory != 'Category'
-              ? Constants.tckSelectedHospital
+              ? Constants.tckSelectedCategory
               : '',
           "package_name": Constants.tckPackageName != 'Package Name'
               ? Constants.tckPackageName
               : '',
+          'preferredTime':
+          Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
+          "modeOfService": {
+            "id": Constants.tckPrefMOSId != 'pref_mos_id'
+                ? Constants.tckPrefMOSId
+                : '',
+            "name": Constants.tckPrefMOSName != 'pref_mos_name'
+                ? Constants.tckPrefMOSName
+                : ''
+          },
+          ...createTicketController.dynamicTextFiledObj,
         },
       };
       var response = await ApiServices.post(_baseUrl + url,

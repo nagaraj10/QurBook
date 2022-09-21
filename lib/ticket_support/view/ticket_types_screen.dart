@@ -1,28 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/landing/view/widgets/landing_card.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
-import 'package:myfhb/ticket_support/view/create_ticket_scree_new.dart';
-import 'package:myfhb/ticket_support/view/tickets_list_view.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as constants;
-import 'package:myfhb/colors/fhb_colors.dart' as colors;
 import '../../constants/variable_constant.dart' as variable;
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
-import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
-    as constants;
 import '../../common/errors_widget.dart';
-import '../../src/utils/FHBUtils.dart';
 
 import 'create_ticket_screen.dart';
 
@@ -186,6 +175,21 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                 } else {
                   createTicketController.doctorBookAppointment.value = false;
                   createTicketController.doctorsList = [];
+                }
+
+                try {
+                  final index = ticketList[i].additionalInfo.field.indexWhere(
+                      (element) => element.name == "mode_of_service");
+                  if (index >= 0) {
+                    List<FieldData> fieldData =
+                        ticketList[i].additionalInfo.field[index].fieldData;
+                    if (fieldData != null && fieldData.length > 0) {
+                      createTicketController.modeOfServiceList =
+                          ticketList[i].additionalInfo.field[index].fieldData;
+                    }
+                  }
+                } catch (e) {
+                  //print(e);
                 }
 
                 ticketList[i].additionalInfo != null
