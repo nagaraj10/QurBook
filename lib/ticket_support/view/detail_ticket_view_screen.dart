@@ -137,6 +137,49 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget detailView(Ticket ticket) {
+    List<Widget> widgetForColumn = List();
+    String strName = "";
+    try {
+      strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
+      print("strName $strName");
+      if (strName.contains("transportation") ||
+          strName.contains("homecare services") ||
+          strName.contains("food delivery")) {
+        final dataFields = ticket.dataFields;
+        if (dataFields != null) {
+          for (final name in dataFields.keys) {
+            String LabelName = CommonUtil().validString(name.toString());
+            if (!LabelName.contains("preferredLabName") &&
+                !LabelName.contains("preferredLabId") &&
+                !LabelName.contains("choose_doctor") &&
+                !LabelName.contains("choose_hospital") &&
+                !LabelName.contains("choose_category") &&
+                !LabelName.contains("package_name") &&
+                !LabelName.contains("hospital") &&
+                !LabelName.contains("healthOrgTypeId") &&
+                !LabelName.contains("doctor")) {
+              var value = dataFields[LabelName];
+
+              if (value != null && value.toString().trim() != "") {
+                if (LabelName.contains("modeOfService")) {
+                  widgetForColumn.add(
+                      (ticket?.additionalInfo?.modeOfService != null &&
+                              ticket?.additionalInfo?.modeOfService.name != "")
+                          ? commonWidgetForDropDownValue("Mode Of Service",
+                              ticket?.additionalInfo?.modeOfService.name)
+                          : SizedBox.shrink());
+                } else {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      CommonUtil().getFieldName(LabelName), CommonUtil().validString(value.toString())));
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      //print(e);
+    }
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -201,82 +244,93 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         ],
                       ),
                       SizedBox(height: 5.0),
-                      Text(
-                        ticket?.subject?.toString().capitalizeFirstofEach,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      ticket.preferredDate != null
-                          ? Row(
+                      (strName.contains("transportation") ||
+                          strName.contains("homecare services") ||
+                          strName.contains("food delivery"))?Column(crossAxisAlignment: CrossAxisAlignment.start,children: widgetForColumn):Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            constants.notificationDate(
-                                '${ticket.preferredDate.toString()}'),
+                            ticket?.subject?.toString().capitalizeFirstofEach,
                             style: TextStyle(
                               fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w100,
+                              fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
-                          (ticket?.additionalInfo?.preferredTime != null &&
-                              ticket?.additionalInfo?.preferredTime != "")
-                              ? Text(
-                            ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w100,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          )
+                          ticket.preferredDate != null
+                              ? Row(
+                                  children: [
+                                    Text(
+                                      constants.notificationDate(
+                                          '${ticket.preferredDate.toString()}'),
+                                      style: TextStyle(
+                                        fontSize: 16.0.sp,
+                                        fontWeight: FontWeight.w100,
+                                      ),
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                    (ticket?.additionalInfo?.preferredTime !=
+                                                null &&
+                                            ticket?.additionalInfo
+                                                    ?.preferredTime !=
+                                                "")
+                                        ? Text(
+                                            ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                              fontWeight: FontWeight.w100,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          )
+                                        : SizedBox.shrink(),
+                                  ],
+                                )
+                              : SizedBox(),
+                          CommonUtil()
+                                  .validString(ticket?.preferredLabName ?? '')
+                                  .trim()
+                                  .isNotEmpty
+                              ? commonWidgetForDropDownValue(
+                                  "Preferred Lab Name",
+                                  CommonUtil().parseHtmlString(
+                                      ticket.preferredLabName ?? ''))
+                              : SizedBox.shrink(),
+                          (ticket?.additionalInfo?.chooseCategory != null &&
+                                  ticket?.additionalInfo?.chooseCategory != "")
+                              ? commonWidgetForDropDownValue("Category Name",
+                                  ticket?.additionalInfo?.chooseCategory ?? '')
+                              : SizedBox.shrink(),
+                          (ticket?.additionalInfo?.packageName != null &&
+                                  ticket?.additionalInfo?.packageName != "")
+                              ? commonWidgetForDropDownValue("Package Name",
+                                  ticket?.additionalInfo?.packageName ?? '')
+                              : SizedBox.shrink(),
+                          (ticket?.additionalInfo?.chooseDoctor != null &&
+                                  ticket?.additionalInfo?.chooseDoctor != "")
+                              ? commonWidgetForDropDownValue(
+                                  "Preferred Doctor Name",
+                                  ticket?.additionalInfo?.chooseDoctor ?? '')
+                              : SizedBox.shrink(),
+                          (ticket?.additionalInfo?.chooseHospital != null &&
+                                  ticket?.additionalInfo?.chooseHospital != "")
+                              ? commonWidgetForDropDownValue(
+                                  "Preferred Hospital Name",
+                                  ticket?.additionalInfo?.chooseHospital)
+                              : SizedBox.shrink(),
+                          (ticket?.additionalInfo?.modeOfService != null &&
+                                  ticket?.additionalInfo?.modeOfService.name !=
+                                      "")
+                              ? commonWidgetForDropDownValue("Mode Of Service",
+                                  ticket?.additionalInfo?.modeOfService.name)
                               : SizedBox.shrink(),
                         ],
-                      )
-                          : SizedBox(),
-                      CommonUtil()
-                              .validString(ticket?.preferredLabName ?? '')
-                              .trim()
-                              .isNotEmpty
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Lab Name",
-                              CommonUtil().parseHtmlString(
-                                  ticket.preferredLabName ?? ''))
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseCategory != null &&
-                              ticket?.additionalInfo?.chooseCategory != "")
-                          ? commonWidgetForDropDownValue("Category Name",
-                              ticket?.additionalInfo?.chooseCategory ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.packageName != null &&
-                              ticket?.additionalInfo?.packageName != "")
-                          ? commonWidgetForDropDownValue("Package Name",
-                              ticket?.additionalInfo?.packageName ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseDoctor != null &&
-                              ticket?.additionalInfo?.chooseDoctor != "")
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Doctor Name",
-                              ticket?.additionalInfo?.chooseDoctor ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseHospital != null &&
-                              ticket?.additionalInfo?.chooseHospital != "")
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Hospital Name",
-                              ticket?.additionalInfo?.chooseHospital)
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.modeOfService != null &&
-                              ticket?.additionalInfo?.modeOfService.name != "")
-                          ? commonWidgetForDropDownValue("Mode Of Service",
-                              ticket?.additionalInfo?.modeOfService.name)
-                          : SizedBox.shrink(),
+                      ),
                       Row(
                         children: [
                           Spacer(

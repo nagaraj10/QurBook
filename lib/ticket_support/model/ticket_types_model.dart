@@ -126,22 +126,33 @@ class Priority {
 
 class AdditionalInfo {
   List<Field> field;
+  String healthOrgTypeId;
 
-  AdditionalInfo({this.field});
+  AdditionalInfo({this.field,this.healthOrgTypeId});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
-    if (json['field'] != null) {
-      field = <Field>[];
-      json['field'].forEach((v) {
-        field.add(new Field.fromJson(v));
-      });
+    try {
+      if (json['field'] != null) {
+            field = <Field>[];
+            json['field'].forEach((v) {
+              field.add(new Field.fromJson(v));
+            });
+          }
+      healthOrgTypeId = json['healthOrgTypeId'];
+    } catch (e) {
+      //print(e);
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.field != null) {
-      data['field'] = this.field.map((v) => v.toJson()).toList();
+    try {
+      if (this.field != null) {
+            data['field'] = this.field.map((v) => v.toJson()).toList();
+          }
+      data['healthOrgTypeId'] = this.healthOrgTypeId;
+    } catch (e) {
+      //print(e);
     }
     return data;
   }

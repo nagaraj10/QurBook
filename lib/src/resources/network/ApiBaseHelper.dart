@@ -2364,8 +2364,20 @@ class ApiBaseHelper {
           "package_name": Constants.tckPackageName != 'Package Name'
               ? Constants.tckPackageName
               : '',
+          'preferredDate':
+              Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
           'preferredTime':
-          Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
+              Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
+          "doctor": {"id": Constants.tckSelectedDoctorId != 'DoctorId'
+              ? Constants.tckSelectedDoctorId
+              : '', "name": Constants.tckSelectedDoctor != 'Doctor'
+              ? Constants.tckSelectedDoctor
+              : ''},
+          "hospital": {"id": Constants.tckSelectedHospitalId != 'HospitalId'
+              ? Constants.tckSelectedHospitalId
+              : '', "name": Constants.tckSelectedHospital != 'Hospital'
+              ? Constants.tckSelectedHospital
+              : ''},
           "modeOfService": {
             "id": Constants.tckPrefMOSId != 'pref_mos_id'
                 ? Constants.tckPrefMOSId
