@@ -320,8 +320,11 @@ class CommonConstants {
   static String ticketTitle = 'Please fill ticket title';
   static String ticketDesc = 'Please fill Description';
   static String ticketDoctor = 'Please Select Doctor';
+  static String ticketHospital = 'Please Select Hospital';
+  static String ticketModeOfService = 'Please Select mode of service';
   static String ticketFile = 'Please Attach Files';
   static String ticketDate = 'Please Select Preferred Date';
+  static String ticketTime = 'Please Select Preferred Time';
   static String ticketCategory = 'Please Select Plan Category';
 
   static String ticketPackage = 'Please fill Package Name';

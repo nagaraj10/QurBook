@@ -286,7 +286,7 @@ import CoreBluetooth
         try audioEngine.start()
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         guard let recognitionRequest = recognitionRequest else { fatalError(Constants.unableToRecognition) }
-        recognitionRequest.shouldReportPartialResults = false
+        recognitionRequest.shouldReportPartialResults = true
         
         if #available(iOS 13, *) {
             if speechRecognizer.supportsOnDeviceRecognition ?? false{
@@ -295,7 +295,14 @@ import CoreBluetooth
         }
         print(recognitionRequest)
         print(Constants.recogEntered)
-        
+                Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { time in
+                    if(self.message.count == 0){
+                        Loading.sharedInstance.hideLoader()
+                        self.stopRecording()
+                        self.detectionTimer?.invalidate()
+                        self.STT_Result!("")
+                    }
+                }
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
                 
@@ -305,8 +312,7 @@ import CoreBluetooth
                 print(result.bestTranscription.formattedString as Any)
                 print(result.isFinal)
 
-                if let timer = self.detectionTimer, timer.isValid {
-                    if result.isFinal {
+                if let timer = self.detectionTimer, timer.isValid, result.isFinal {
                         // pull out the best transcription...
                         print(result.bestTranscription.formattedString as Any)
                         print(result.isFinal)
@@ -315,7 +321,7 @@ import CoreBluetooth
                         self.startTheVC(currentmessage: self.message)
                         self.message = "";
                     }
-                } else {
+                 else {
                     self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
