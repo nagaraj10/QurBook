@@ -488,8 +488,8 @@ class _ChatUserListState extends State<ChatUserList> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 16.0.sp,
                                       ),
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
+                                      // softWrap: false,
+                                      // overflow: TextOverflow.ellipsis,
                                     ),
                                 )
                                 : SizedBox.shrink(),
@@ -711,16 +711,19 @@ class _ChatUserListState extends State<ChatUserList> {
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Row(
                             children: [
-                              Text(
-                                CommonUtil().capitalizeFirstofEach(
-                                    getDocName(userChatList)),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15.0.sp,
-                                    fontFamily: variable.font_poppins),
+                              Expanded(
+                                child :Text(
+                                  CommonUtil().capitalizeFirstofEach(
+                                      getDocName(userChatList)),
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15.0.sp,
+                                      fontFamily: variable.font_poppins),
+                                ),
                               ),
+
                               userChatList?.isFamilyUserCareCoordinator
                                   ? Expanded(
                                     child: Text(
