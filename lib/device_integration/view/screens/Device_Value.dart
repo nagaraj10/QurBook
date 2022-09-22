@@ -19,8 +19,6 @@ import '../../../constants/fhb_constants.dart';
 import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
 import '../../model/DeleteDeviceHealthRecord.dart';
-import '../../model/DeviceIntervalData.dart';
-import '../../model/HeartRate.dart';
 import '../../../src/blocs/Category/CategoryListBlock.dart';
 import '../../../src/blocs/Media/MediaTypeBlock.dart';
 import '../../../src/blocs/health/HealthReportListForUserBlock.dart';
@@ -127,48 +125,50 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-    catgoryDataList = PreferenceUtil.getCategoryType();
-    if (catgoryDataList == null) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        catgoryDataList = value.result;
+    try {
+      super.initState();
+      onInit();
+      mInitialTime = DateTime.now();
+      catgoryDataList = PreferenceUtil.getCategoryType();
+      if (catgoryDataList == null) {
+        _categoryListBlock.getCategoryLists().then((value) {
+          catgoryDataList = value.result;
+        });
+      }
+      _mediaTypeBlock.getMediTypesList().then((value) {
+        mediaTypesResponse = value;
       });
-    }
-    _mediaTypeBlock.getMediTypesList().then((value) {
-      mediaTypesResponse = value;
-    });
 
-    try {
-      weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
-    } catch (e) {
-      weightUnit = "kg";
-    }
+      try {
+        weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
+      } catch (e) {
+        weightUnit = "kg";
+      }
 
-    try {
-      tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+      try {
+        tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
+      } catch (e) {
+        tempUnit = "F";
+      }
     } catch (e) {
-      tempUnit = "F";
+      //print(e);
+    }
+  }
+
+  onInit() async {
+    try {
+      if (profileSetting == null) {
+        await getProfileSetings();
+      }
+    } catch (e) {
+      //print(e);
     }
   }
 
   Widget getAppColorsAndDeviceValues() {
     final _devicesmodel = Provider.of<DevicesViewModel>(context);
 
-    return profileSetting == null
-        ? FutureBuilder<GetDeviceSelectionModel>(
-            future: getProfileSetings(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CommonCircularIndicator();
-              } else if (snapshot.hasError) {
-                return ErrorsWidget();
-              } else {
-                return getBody(_devicesmodel);
-              }
-            },
-          )
-        : getBody(_devicesmodel);
+    return getBody(_devicesmodel);
   }
 
   getBody(DevicesViewModel devicesmodel) {
@@ -197,7 +197,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   @override
   Widget build(BuildContext context) {
-    final _devicesmodel = Provider.of<DevicesViewModel>(context);
+    //final _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
