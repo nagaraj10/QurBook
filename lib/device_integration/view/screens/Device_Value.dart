@@ -163,19 +163,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     } catch (e) {
       //print(e);
     }
-    } catch (e) {
-      //print(e);
-    }
-  }
-
-  onInit() async {
-    try {
-      if (profileSetting == null) {
-        await getProfileSetings();
-      }
-    } catch (e) {
-      //print(e);
-    }
   }
 
   Widget getAppColorsAndDeviceValues() {
