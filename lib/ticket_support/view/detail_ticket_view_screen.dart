@@ -72,11 +72,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   String authToken = '';
   @override
   void initState() {
-    super.initState();
-    _controller = TabController(vsync: this, length: 3);
-    _controller.addListener(_handleTabSelection);
-    callTicketDetailsApi();
-
+    try {
+      super.initState();
+      _controller = TabController(vsync: this, length: 3);
+      _controller.addListener(_handleTabSelection);
+      callTicketDetailsApi();
+    } catch (e) {
+      //print(e);
+    }
     // _getHistoryData(widget.ticketUid);
   }
 
