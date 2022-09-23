@@ -153,22 +153,26 @@ class _AppointmentsState extends State<Appointments> {
                       fontSize: 16.0.sp,
                     ),
                     onChanged: (value) {
-                      if (value.trim().length > 1) {
-                        setState(() {
-                          isSearch = true;
-                          upcomingInfo = appointmentsViewModel
-                              .filterSearchResults(value)
-                              .upcoming;
-                          historyInfo = appointmentsViewModel
-                              .filterSearchResults(value)
-                              .past;
-                        });
-                      } else {
-                        setState(() {
-                          isSearch = false;
-                          upcomingInfo.clear();
-                          historyInfo.clear();
-                        });
+                      try {
+                        if (value.trim().length > 1) {
+                          setState(() {
+                            isSearch = true;
+                            upcomingInfo = appointmentsViewModel
+                                .filterSearchResults(value)
+                                .upcoming;
+                            historyInfo = appointmentsViewModel
+                                .filterSearchResults(value)
+                                .past;
+                          });
+                        } else {
+                          setState(() {
+                            isSearch = false;
+                            upcomingInfo.clear();
+                            historyInfo.clear();
+                          });
+                        }
+                      } catch (e) {
+                        //print(e);
                       }
                     },
                   ),
