@@ -100,13 +100,17 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             children: <Widget>[
                               commonWidget.docName(
                                   context,
-                                  widget?.doc?.doctor?.user?.firstName
-                                          ?.capitalizeFirstofEach +
-                                      ' ' +
-                                      widget?.doc?.doctor?.user?.lastName
-                                          ?.capitalizeFirstofEach),
+                                  widget.doc.doctorSessionId == null
+                                      ? widget?.doc?.healthOrganization?.name
+                                          ?.capitalizeFirstofEach
+                                      : widget?.doc?.doctor?.user?.firstName
+                                              ?.capitalizeFirstofEach +
+                                          ' ' +
+                                          widget?.doc?.doctor?.user?.lastName
+                                              ?.capitalizeFirstofEach),
                               SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                              widget.doc?.doctor?.specialization == null
+                              widget.doc.doctorSessionId == null ||
+                                      widget.doc?.doctor?.specialization == null
                                   ? Container()
                                   : Container(
                                       width: 1.sw / 2,
@@ -154,7 +158,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                              widget.doc.doctor.specialization == null
+                              widget.doc.doctorSessionId == null ||widget.doc.doctor.specialization == null
                                   ? Container()
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(

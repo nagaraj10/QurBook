@@ -55,10 +55,14 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    Provider.of<AppointmentsListViewModel>(context, listen: false)
-        .fetchAppointments();
-    super.initState();
+    try {
+      mInitialTime = DateTime.now();
+      Provider.of<AppointmentsListViewModel>(context, listen: false)
+              .fetchAppointments();
+      super.initState();
+    } catch (e) {
+      //print(e);
+    }
   }
 
   @override

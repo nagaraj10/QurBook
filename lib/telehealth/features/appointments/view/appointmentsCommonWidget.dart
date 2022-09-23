@@ -595,7 +595,16 @@ class AppointmentsCommonWidget {
   }
 
   Widget getFirstLastNameText(Past doc) {
-    if (doc != null &&
+    if (doc.doctorSessionId == null && doc.healthOrganization != null) {
+      return Text(
+        doc.healthOrganization.name[0]?.toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doc != null &&
         doc.doctor.user.firstName != null &&
         doc.doctor.user.lastName != null) {
       return Text(
