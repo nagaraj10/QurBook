@@ -685,7 +685,9 @@ var tckPriority = 'ticket priority';
 var tckID = 'ticket_id';
 var tckComment = 'ticket_comment';
 var tckSelectedDoctor = 'Doctor';
+var tckSelectedDoctorId = 'DoctorId';
 var tckSelectedHospital = 'Hospital';
+var tckSelectedHospitalId = 'HospitalId';
 var tckSelectedCategory = 'Category';
 var tckPackageName = '';
 
