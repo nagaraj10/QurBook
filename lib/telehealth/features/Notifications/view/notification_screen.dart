@@ -16,6 +16,7 @@ import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
+import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import '../../../../claim/screen/ClaimRecordDisplay.dart';
 import '../../../../common/CommonUtil.dart';
@@ -490,6 +491,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             notificationOnTapActions(
                               notification,
                               payload?.redirectTo,
+                            );
+                          } else if (payload?.templateName ==
+                              'qurbookServiceRequestStatusUpdate') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
                             );
                           } else if (payload?.redirectTo ==
                                   constants.strMyCardDetails ||
@@ -993,6 +1000,12 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "PaymentReceipt":
+      case strQurbookServiceRequestStatusUpdate:
+        Get.to(DetailedTicketView(
+            null, true, result?.messageDetails?.payload?.userId));
+        readUnreadAction(result);
+
+        break;
       case "appointmentPayment":
         break;
       case "PaymentConfirmation":
