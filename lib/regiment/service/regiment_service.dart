@@ -126,7 +126,7 @@ class RegimentService {
         ),
       );
       if (response != null && response.statusCode == 200) {
-        print(response.body);
+        getProviderFromTriggerInputs(response.body);
         return SaveResponseModel.fromJson(json.decode(response.body));
       } else {
         return SaveResponseModel(
@@ -141,6 +141,34 @@ class RegimentService {
         isSuccess: false,
       );
       throw Exception('$e was thrown');
+    }
+  }
+
+   static getProviderFromTriggerInputs(String response){
+    var data;
+    var data1;
+    var data2;
+    final decoded = jsonDecode(response) as Map;
+    if (decoded != null) {
+      data = decoded['result'] as Map;
+    }
+    if (data != null) {
+      data1 = data['actions'] as Map;
+    }
+    if (data1 != null) {
+      data2 = data1['input'] as Map;
+    }
+    if (data2 != null) {
+      for (final name in data2.keys) {
+        final value = data2[name];
+        if (name.contains('pf_')) {
+          var provider =
+          Provider.of<RegimentViewModel>(Get.context, listen: false);
+          provider.cachedEvents
+              ?.removeWhere((element) => element?.contains(name));
+          provider.cachedEvents.add('&$name=$value'.toString());
+        }
+      }
     }
   }
 

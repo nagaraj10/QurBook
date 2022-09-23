@@ -537,13 +537,39 @@ class RegimentDataCard extends StatelessWidget {
                             eid: eid,
                           );
                           if (saveResponse?.isSuccess ?? false) {
-                            Future.delayed(Duration(milliseconds: 300),
+                            if ((saveResponse?.result != null) &&
+                                (saveResponse?.result?.actions != null) &&
+                                (saveResponse?.result?.actions?.returnData !=
+                                    null) &&
+                                (saveResponse
+                                        ?.result?.actions?.returnData?.eid !=
+                                    null) &&
+                                (saveResponse?.result?.actions?.returnData
+                                        ?.activityName !=
+                                    null)) {
+                              LoaderClass.hideLoadingDialog(Get.context);
+                              checkForReturnActionsProviderForm(
+                                returnAction: saveResponse
+                                    ?.result
+                                    ?.actions
+                                    ?.returnData,
+                              );
+                            } else {
+                              Future.delayed(Duration(milliseconds: 300),
+                                  () async {
+                                await Provider.of<RegimentViewModel>(context,
+                                        listen: false)
+                                    .fetchRegimentData();
+                                LoaderClass.hideLoadingDialog(Get.context);
+                              });
+                            }
+                            /* Future.delayed(Duration(milliseconds: 300),
                                 () async {
                               await Provider.of<RegimentViewModel>(context,
                                       listen: false)
                                   .fetchRegimentData();
                               LoaderClass.hideLoadingDialog(Get.context);
-                            });
+                            });*/
                           } else {
                             LoaderClass.hideLoadingDialog(Get.context);
                           }
@@ -622,75 +648,82 @@ class RegimentDataCard extends StatelessWidget {
       dynamic aid,
       dynamic formId,
       dynamic formName}) async {
-    stopRegimenTTS();
-    var eventId = eventIdReturn ?? eid;
-    if (eventId == null || eventId == '' || eventId == 0) {
-      final response = await Provider.of<RegimentViewModel>(context,
-              listen: false)
-          .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
-      if (response != null && response?.isSuccess && response?.result != null) {
-        print('forEventId: ' + response.toJson().toString());
-        eventId = response?.result?.eid.toString();
+    try {
+      stopRegimenTTS();
+      var eventId = eventIdReturn ?? eid;
+      if (eventId == null || eventId == '' || eventId == 0) {
+        final response = await Provider.of<RegimentViewModel>(context,
+                listen: false)
+            .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
+        if (response != null &&
+            response?.isSuccess &&
+            response?.result != null) {
+          print('forEventId: ' + response.toJson().toString());
+          eventId = response?.result?.eid.toString();
+        }
       }
-    }
-    var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
-            RegimentMode.Schedule;
-    // if (canEdit || isValidSymptom(context)) {
-    final fieldsResponseModel =
-        await Provider.of<RegimentViewModel>(context, listen: false)
-            .getFormData(eid: eventId);
-    print(fieldsResponseModel);
-    if (fieldsResponseModel.isSuccess &&
-        (fieldsResponseModel.result.fields.isNotEmpty ||
-            mediaData.toJson().toString().contains('1')) &&
-        Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
-            RegimentStatus.DialogOpened) {
-      Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogOpened);
-      var value = await showDialog(
-        context: context,
-        builder: (context) => FormDataDialog(
-          fieldsData: fieldsResponseModel.result.fields,
-          eid: eventId,
-          color: color,
-          mediaData: mediaData,
-          formTitle: getDialogTitle(context, activityName),
-          canEdit: canEdit || isValidSymptom(context),
-          triggerAction: (String triggerEventId, String followContext,
-              String activityName) {
-            Provider.of<RegimentViewModel>(Get.context, listen: false)
-                .updateRegimentStatus(RegimentStatus.DialogClosed);
-            Get.back();
-            onCardPressed(Get.context,
-                eventIdReturn: triggerEventId,
-                followEventContext: followContext,
-                activityName: activityName);
-          },
-          followEventContext: followEventContext,
-          isFollowEvent: eventIdReturn != null,
-          providerId: regimentData?.providerid,
-        ),
-      );
-      if (value != null && (value ?? false)) {
-        LoaderClass.showLoadingDialog(
-          Get.context,
-          canDismiss: false,
-        );
-        Future.delayed(Duration(milliseconds: 300), () async {
+      var canEdit = startTime.difference(DateTime.now()).inMinutes <= 15 &&
+          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+              RegimentMode.Schedule;
+      // if (canEdit || isValidSymptom(context)) {
+      final fieldsResponseModel =
           await Provider.of<RegimentViewModel>(context, listen: false)
-              .fetchRegimentData();
-          LoaderClass.hideLoadingDialog(Get.context);
-        });
-      }
+              .getFormData(eid: eventId);
+      print(fieldsResponseModel);
+      if (fieldsResponseModel.isSuccess &&
+          (fieldsResponseModel.result.fields.isNotEmpty ||
+              mediaData.toJson().toString().contains('1')) &&
+          Provider.of<RegimentViewModel>(context, listen: false)
+                  .regimentStatus !=
+              RegimentStatus.DialogOpened) {
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogOpened);
+        var value = await showDialog(
+          context: context,
+          builder: (context) => FormDataDialog(
+            fieldsData: fieldsResponseModel.result.fields,
+            eid: eventId,
+            color: color,
+            mediaData: mediaData,
+            formTitle: getDialogTitle(context, activityName),
+            canEdit: canEdit || isValidSymptom(context),
+            triggerAction: (String triggerEventId, String followContext,
+                String activityName) {
+              Provider.of<RegimentViewModel>(Get.context, listen: false)
+                  .updateRegimentStatus(RegimentStatus.DialogClosed);
+              Get.back();
+              onCardPressed(Get.context,
+                  eventIdReturn: triggerEventId,
+                  followEventContext: followContext,
+                  activityName: activityName);
+            },
+            followEventContext: followEventContext,
+            isFollowEvent: eventIdReturn != null,
+            providerId: regimentData?.providerid,
+          ),
+        );
+        if (value != null && (value ?? false)) {
+          LoaderClass.showLoadingDialog(
+            Get.context,
+            canDismiss: false,
+          );
+          Future.delayed(Duration(milliseconds: 300), () async {
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+            LoaderClass.hideLoadingDialog(Get.context);
+          });
+        }
 
-      Provider.of<RegimentViewModel>(context, listen: false)
-          .updateRegimentStatus(RegimentStatus.DialogClosed);
-    } else if (!regimentData.hasform) {
-      FlutterToast().getToast(
-        tickInfo,
-        Colors.black,
-      );
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .updateRegimentStatus(RegimentStatus.DialogClosed);
+      } else if (!regimentData.hasform) {
+        FlutterToast().getToast(
+          tickInfo,
+          Colors.black,
+        );
+      }
+    } catch (e) {
+      LoaderClass.hideLoadingDialog(Get.context);
     }
   }
 
@@ -769,5 +802,150 @@ class RegimentDataCard extends StatelessWidget {
 
   stopRegimenTTS() {
     Provider.of<RegimentViewModel>(Get.context, listen: false).stopRegimenTTS();
+  }
+
+  checkForReturnActionsProviderForm({
+    ReturnModel returnAction,
+  }) async {
+    if ((returnAction?.action ?? '').isNotEmpty &&
+        (returnAction?.message ?? '').isNotEmpty) {
+      await showDialog(
+        context: Get.context,
+        barrierDismissible: false,
+        builder: (context) => WillPopScope(
+          onWillPop: () async {
+            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+            Get.back();
+            await Provider.of<RegimentViewModel>(context, listen: false)
+                .fetchRegimentData();
+          },
+          child: AlertDialog(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      size: 24.0.sp,
+                    ),
+                    onPressed: () async {
+                      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                      Navigator.pop(context);
+                      await Provider.of<RegimentViewModel>(context, listen: false)
+                          .fetchRegimentData();
+                    }
+                ),
+              ],
+            ),
+            titlePadding: EdgeInsets.only(
+              top: 10.0.h,
+              right: 5.0.w,
+              left: 15.0.w,
+            ),
+            content: Container(
+              width: 0.75.sw,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      bottom: 10.0.h,
+                    ),
+                    child: Text(
+                      returnAction?.message ?? '',
+                      style: TextStyle(
+                        fontSize: 16.0.sp,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RaisedButton(
+                        onPressed: () async {
+                          if (returnAction?.eid != null &&
+                              (returnAction?.action ?? '') == startActivity) {
+                            if(returnAction?.activityName==''||returnAction?.activityName==null){
+                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            }
+                            Provider.of<RegimentViewModel>(Get.context, listen: false)
+                                .updateRegimentStatus(RegimentStatus.DialogClosed);
+                            Get.back();
+                            onCardPressed(Get.context,
+                                eventIdReturn: returnAction?.eid,
+                                followEventContext: returnAction?.context,
+                                activityName: returnAction?.activityName);
+                          } else {
+                            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            Get.back();
+                            await Provider.of<RegimentViewModel>(context, listen: false)
+                                .fetchRegimentData();
+                          }
+                        },
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              5.0.sp,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          okButton,
+                          style: TextStyle(
+                            fontSize: 16.0.sp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (returnAction?.action == startActivity)
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 20.0.w,
+                          ),
+                          child: RaisedButton(
+                            onPressed: () async {
+                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                              Get.back();
+                              await Provider.of<RegimentViewModel>(context, listen: false)
+                                  .fetchRegimentData();
+                            },
+                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  5.0.sp,
+                                ),
+                              ),
+                            ),
+                            child: Text(
+                              laterButton,
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            contentPadding: EdgeInsets.only(
+              top: 0.0.h,
+              left: 10.0.w,
+              right: 10.0.w,
+              bottom: 10.0.w,
+            ),
+          ),
+        ),
+      );
+    }else{
+      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+      LoaderClass.hideLoadingDialog(
+          Get.context);
+    }
   }
 }
