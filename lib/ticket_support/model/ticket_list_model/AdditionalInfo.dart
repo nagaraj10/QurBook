@@ -1,3 +1,4 @@
+import 'package:myfhb/src/model/Health/Data.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 
 class AdditionalInfo {
@@ -7,7 +8,8 @@ class AdditionalInfo {
       String chooseHospital,
       String packageName,
       String preferredLabId,
-      String preferredLabName}) {
+      String preferredLabName,
+      Data ticketStatus}) {
     _chooseCategory = chooseCategory;
   }
 
@@ -19,7 +21,12 @@ class AdditionalInfo {
     _preferredLabId = json['preferredLabId'];
     _preferredLabName = json['preferredLabName'];
     _preferredTime = json['preferredTime'];
-    _modeOfService = json['modeOfService'] != null ? new FieldData.fromJson(json['modeOfService']) : null;
+    _modeOfService = json['modeOfService'] != null
+        ? new FieldData.fromJson(json['modeOfService'])
+        : null;
+    _ticketStatus = json['ticketStatus'] != null
+        ? new Data.fromJson(json['ticketStatus'])
+        : null;
   }
 
   String _chooseCategory;
@@ -30,6 +37,7 @@ class AdditionalInfo {
   String _preferredLabName;
   String _preferredTime;
   FieldData _modeOfService;
+  Data _ticketStatus;
 
   String get chooseCategory => _chooseCategory;
   String get chooseDoctor => _chooseDoctor;
@@ -39,6 +47,7 @@ class AdditionalInfo {
   String get preferredLabName => _preferredLabName;
   String get preferredTime => _preferredTime;
   FieldData get modeOfService => _modeOfService;
+  Data get ticketStatus => _ticketStatus;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -52,7 +61,29 @@ class AdditionalInfo {
     if (this._modeOfService != null) {
       map['modeOfService'] = this._modeOfService.toJson();
     }
+    if (this.ticketStatus != null) {
+      map['ticketStatus'] = this._ticketStatus.toJson();
+    }
 
     return map;
+  }
+}
+
+class Data {
+  String id;
+  String name;
+
+  Data({this.id, this.name});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    return data;
   }
 }
