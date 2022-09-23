@@ -147,7 +147,8 @@ class _TicketsList extends State<TicketsList> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedTicketView(ticketList[i])),
+                builder: (context) => DetailedTicketView(
+                    ticketList[i], false, ticketList[i].uid.toString())),
           );
         },
         child: Container(
@@ -292,7 +293,10 @@ class _TicketsList extends State<TicketsList> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            DetailedTicketView(ticketList[i])),
+                                            DetailedTicketView(
+                                                ticketList[i],
+                                                false,
+                                                ticketList[i].uid.toString())),
                                   );
                                 },
                                 child: Container(

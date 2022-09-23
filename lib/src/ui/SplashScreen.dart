@@ -44,6 +44,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:provider/provider.dart';
 import '../utils/PageNavigator.dart';
@@ -308,6 +309,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       Get.to(BookingConfirmation(
                           isFromPaymentNotification: true,
                           appointmentId: passedValArr[1] ?? ""));
+                    } else if (widget.nsRoute ==
+                        'qurbookServiceRequestStatusUpdate') {
+                      var passedValArr = widget.bundle?.split('&');
+
+                      Get.to(DetailedTicketView(null, true, passedValArr[0]));
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {
