@@ -160,6 +160,11 @@ class SheelaAIController extends GetxController {
         msg = arguments.sheelaInputs;
         conversations.add(SheelaResponse(text: msg));
         getAIAPIResponseFor(msg);
+      } else if ((arguments?.eId ?? '').isNotEmpty ||
+          (arguments?.scheduleAppointment ?? false) ||
+          (arguments?.showUnreadMessage ?? false)) {
+        msg = KIOSK_SHEELA;
+        getAIAPIResponseFor(msg);
       } else {
         gettingReposnseFromNative();
       }
