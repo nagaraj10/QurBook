@@ -92,11 +92,11 @@ class SheelaAIController extends GetxController {
           } else {
             stopTTS();
             try {
-              if (conversations.last.isEndOfConv) {
+              if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
               }
             } catch (e) {
-              gettingReposnseFromNative();
+              //gettingReposnseFromNative();
             }
           }
         }
@@ -332,11 +332,11 @@ class SheelaAIController extends GetxController {
           } else {
             stopTTS();
             try {
-              if (conversations.last.isEndOfConv) {
+              if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
               }
             } catch (e) {
-              gettingReposnseFromNative();
+              //gettingReposnseFromNative();
             }
           }
         }
