@@ -220,10 +220,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           Text(
                             widget.isFromNotification
                                 ? ticket.additionalInfo?.ticketStatus.name
-                                : ticket.additionalInfo?.ticketStatus?.name ??
-                                        widget.ticket.status == 0
-                                    ? 'Open'
-                                    : 'Closed',
+                                : (ticket.additionalInfo?.ticketStatus?.name !=
+                                            null &&
+                                        ticket.additionalInfo?.ticketStatus
+                                                ?.name !=
+                                            '')
+                                    ? ticket.additionalInfo?.ticketStatus?.name
+                                    : widget.ticket.status == 0
+                                        ? 'Open'
+                                        : 'Closed',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,

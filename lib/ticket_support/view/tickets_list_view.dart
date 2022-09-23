@@ -239,7 +239,23 @@ class _TicketsList extends State<TicketsList> {
                                 maxLines: 2,
                               ),
                               Text(
-                                ticketList[i].status == 0 ? 'Open' : 'Closed',
+                                (ticketList[i]
+                                                .additionalInfo
+                                                ?.ticketStatus
+                                                ?.name !=
+                                            null &&
+                                        ticketList[i]
+                                                .additionalInfo
+                                                ?.ticketStatus
+                                                ?.name !=
+                                            '')
+                                    ? ticketList[i]
+                                        .additionalInfo
+                                        ?.ticketStatus
+                                        ?.name
+                                    : ticketList[i].status == 0
+                                        ? 'Open'
+                                        : 'Closed',
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w600,
