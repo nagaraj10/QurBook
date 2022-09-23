@@ -710,6 +710,8 @@ const String associationNotificationToCaregiver =
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
 const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
+    const String strQurbookServiceRequestStatusUpdate =
+    'qurbookServiceRequestStatusUpdate';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String uid = 'uid';

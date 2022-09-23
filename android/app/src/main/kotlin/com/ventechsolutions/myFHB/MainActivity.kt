@@ -1795,6 +1795,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         val task = intent.getStringExtra("task")
         val action = intent.getStringExtra("action")
         val isSheela = intent.getStringExtra("isSheela")
+        var uuid = intent.getStringExtra(Constants.PROP_UUID)
+
 
 
 
@@ -1827,6 +1829,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
             sharedValue =
                 "ack&${redirect_to}&${userId}"
+        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true) {
+
+
+            sharedValue =
+                "ack&${redirect_to}&${uuid}"
         }
          else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
