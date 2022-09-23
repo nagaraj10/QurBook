@@ -140,11 +140,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget detailView(Ticket ticket) {
+    String strDesc = "";
+    String strTitle = "";
+    String strDate = "";
+    String strTime = "";
     List<Widget> widgetForColumn = List();
     String strName = "";
     try {
       strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
-      print("strName $strName");
+      //print("strName $strName");
       if (strName.contains("transportation") ||
           strName.contains("homecare services") ||
           strName.contains("food delivery")) {
@@ -171,9 +175,44 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           ? commonWidgetForDropDownValue("Mode Of Service",
                               ticket?.additionalInfo?.modeOfService.name)
                           : SizedBox.shrink());
+                } else if (LabelName.contains("preferredDate")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Date",
+                      CommonUtil().validString(value.toString())));
+                } else if (LabelName.contains("preferredTime")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Time",
+                      CommonUtil().validString(value.toString()),isTime: true));
                 } else {
                   widgetForColumn.add(commonWidgetForDropDownValue(
-                      CommonUtil().getFieldName(LabelName), CommonUtil().validString(value.toString())));
+                      CommonUtil().getFieldName(LabelName),
+                      CommonUtil().validString(value.toString())));
+                }
+              }
+            }
+          }
+        }
+      } else if (strName.contains("doctor appointment") ||
+          strName.contains("lab appointment")) {
+        final dataFields = ticket.dataFields;
+        if (dataFields != null) {
+          for (final name in dataFields.keys) {
+            String LabelName = CommonUtil().validString(name.toString());
+            if (LabelName.contains("description") ||
+                LabelName.contains("preferredDate") ||
+                LabelName.contains("preferredTime") ||
+                LabelName.contains("title")) {
+              var value = dataFields[LabelName];
+
+              if (value != null && value.toString().trim() != "") {
+                if (LabelName.contains("description")) {
+                  strDesc = value;
+                } else if (LabelName.contains("preferredDate")) {
+                  strDate = value;
+                } else if (LabelName.contains("preferredTime")) {
+                  strTime = value;
+                } else {
+                  strTitle = value;
                 }
               }
             }
@@ -252,17 +291,53 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                           strName.contains("food delivery"))?Column(crossAxisAlignment: CrossAxisAlignment.start,children: widgetForColumn):Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            ticket?.subject?.toString().capitalizeFirstofEach,
-                            style: TextStyle(
-                              fontSize: 16.0.sp,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                          ticket.preferredDate != null
+                          strName.contains("doctor appointment") ||
+                                        strName.contains("lab appointment")
+                                    ? SizedBox.shrink()
+                                    : Text(
+                                        ticket?.subject
+                                            ?.toString()
+                                            .capitalizeFirstofEach,
+                                        style: TextStyle(
+                                          fontSize: 16.0.sp,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+
+                          strName.contains("doctor appointment") ||
+                                        strName.contains("lab appointment")
+                                    ? CommonUtil()
+                                            .validString(strTitle ?? '')
+                                            .trim()
+                                            .isNotEmpty
+                                        ? commonWidgetForDropDownValue(
+                                            "Title",
+                                            CommonUtil().parseHtmlString(
+                                                strTitle ?? ''))
+                                        : SizedBox.shrink()
+                                    : SizedBox.shrink(),
+                                strName.contains("doctor appointment") ||
+                                        strName.contains("lab appointment")
+                                    ? CommonUtil()
+                                            .validString(strDesc ?? '')
+                                            .trim()
+                                            .isNotEmpty
+                                        ? commonWidgetForDropDownValue(
+                                            "Description",
+                                            CommonUtil()
+                                                .parseHtmlString(strDesc ?? ''))
+                                        : SizedBox.shrink()
+                                    : SizedBox.shrink(),
+
+
+
+                                strName.contains("doctor appointment") ||
+                              strName.contains("lab appointment")
+                              ? SizedBox.shrink()
+                              : ticket.preferredDate != null
                               ? Row(
                                   children: [
                                     Text(
@@ -295,7 +370,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   ],
                                 )
                               : SizedBox(),
-                          CommonUtil()
+
+                                CommonUtil()
                                   .validString(ticket?.preferredLabName ?? '')
                                   .trim()
                                   .isNotEmpty
@@ -326,12 +402,39 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   "Preferred Hospital Name",
                                   ticket?.additionalInfo?.chooseHospital)
                               : SizedBox.shrink(),
-                          (ticket?.additionalInfo?.modeOfService != null &&
+
+                          strName.contains("doctor appointment") ||
+                                        strName.contains("lab appointment")
+                                    ? CommonUtil()
+                                            .validString(strDate ?? '')
+                                            .trim()
+                                            .isNotEmpty
+                                        ? commonWidgetForDropDownValue(
+                                            "Preferred Date",
+                                            CommonUtil()
+                                                .parseHtmlString(strDate ?? ''))
+                                        : SizedBox.shrink()
+                                    : SizedBox.shrink(),
+                                strName.contains("doctor appointment") ||
+                                        strName.contains("lab appointment")
+                                    ? CommonUtil()
+                                            .validString(strTime ?? '')
+                                            .trim()
+                                            .isNotEmpty
+                                        ? commonWidgetForDropDownValue(
+                                            "Preferred Time",
+                                            CommonUtil()
+                                                .parseHtmlString(strTime ?? ''),isTime: true)
+                                        : SizedBox.shrink()
+                                    : SizedBox.shrink(),
+
+                                (ticket?.additionalInfo?.modeOfService != null &&
                                   ticket?.additionalInfo?.modeOfService.name !=
                                       "")
                               ? commonWidgetForDropDownValue("Mode Of Service",
                                   ticket?.additionalInfo?.modeOfService.name)
                               : SizedBox.shrink(),
+
                         ],
                       ),
                       Row(
@@ -1147,7 +1250,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return file.path.toString();
   }
 
-  commonWidgetForDropDownValue(String header, String value) {
+  commonWidgetForDropDownValue(String header, String value,{bool isTime = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1165,7 +1268,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         Expanded(
           flex: 1,
           child: Text(
-            CommonUtil().capitalizeFirstofEach(value),
+            isTime?value.toUpperCase():CommonUtil().capitalizeFirstofEach(value),
             style: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
