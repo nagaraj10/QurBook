@@ -16,6 +16,7 @@ import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
 import 'QurHub/View/hub_list_screen.dart';
@@ -612,6 +613,13 @@ class _MyFHBState extends State<MyFHB> {
               redirect: "caregiver",
             );
           }
+        } else if (passedValArr[1] == 'qurbookServiceRequestStatusUpdate') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'qurbookServiceRequestStatusUpdate',
+            'navigationPage': 'TicketDetails',
+          });
+          Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'appointmentPayment') {
           var nsBody = {};
           nsBody['templateName'] = strCaregiverAppointmentPayment;
@@ -1309,6 +1317,10 @@ class _MyFHBState extends State<MyFHB> {
                 nsRoute: 'appointmentPayment',
                 bundle:
                     parsedData[1] + '&' + parsedData[2] + '&' + parsedData[3]);
+          } else if (parsedData[1] == 'qurbookServiceRequestStatusUpdate') {
+            return SplashScreen(
+                nsRoute: 'qurbookServiceRequestStatusUpdate',
+                bundle: parsedData[2]);
           } else if (parsedData[1] == 'th_provider' ||
               parsedData[1] == 'provider') {
             return SplashScreen(
