@@ -639,7 +639,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getDeviceSelectionValues({String preferredLanguage}) async {
+  Future getDeviceSelectionValues({String preferredLanguage}) async {
     final GetDeviceSelectionModel selectionResult =
         await HealthReportListForUserRepository().getDeviceSelection();
     if (selectionResult.isSuccess) {
@@ -672,7 +672,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.isOxyActive,
         currentDeviceStatus.isThActive,
         currentDeviceStatus.isWsActive,
-        currentDeviceStatus.preferred_language,
+        preferredLanguage??currentDeviceStatus.preferred_language,
         currentDeviceStatus.qa_subscription,
         currentDeviceStatus.preColor,
         currentDeviceStatus.greColor,

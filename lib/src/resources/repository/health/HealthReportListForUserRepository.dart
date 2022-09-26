@@ -370,16 +370,16 @@ class HealthReportListForUserRepository {
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
         'preferred_measurement': {
           'height': {
-            'unitCode': preferredMeasurement.height.unitCode,
-            'unitName': preferredMeasurement.height.unitName
+            'unitCode': preferredMeasurement?.height?.unitCode??'',
+            'unitName': preferredMeasurement?.height?.unitName??''
           },
           'weight': {
-            'unitCode': preferredMeasurement.weight.unitCode,
-            'unitName': preferredMeasurement.weight.unitName
+            'unitCode': preferredMeasurement?.weight?.unitCode??'',
+            'unitName': preferredMeasurement?.weight?.unitName??''
           },
           'temperature': {
-            'unitCode': preferredMeasurement.temperature.unitCode,
-            'unitName': preferredMeasurement.temperature.unitName
+            'unitCode': preferredMeasurement?.temperature?.unitCode??'',
+            'unitName': preferredMeasurement?.temperature?.unitName??''
           },
         },
         'caregiverCommunicationSetting': {
