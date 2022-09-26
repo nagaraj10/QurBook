@@ -55,7 +55,12 @@ class AppointmentsListViewModel extends ChangeNotifier {
     AppointmentsModel appointments = _appointmentsModel;
     dummySearchListUpcoming = appointments.result.upcoming
         .where((element) =>
-            element.doctor.user.firstName
+    element.doctorSessionId == null
+            ? element.healthOrganization?.name
+                ?.toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim())
+            :element.doctor.user.firstName
                 .toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim()) ||
@@ -67,7 +72,12 @@ class AppointmentsListViewModel extends ChangeNotifier {
 
     dummySearchListHistory = appointments.result.past
         .where((element) =>
-            element.doctor.user.firstName
+    element.doctorSessionId == null
+            ? element.healthOrganization?.name
+                ?.toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim())
+            : element.doctor.user.firstName
                 .toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim()) ||
