@@ -469,10 +469,12 @@ class _ChatUserListState extends State<ChatUserList> {
                             Expanded(
                               child: Text(
                                 fulName != null
-                                    ? CommonUtil()
-                                        .titleCase(fulName.toLowerCase())
-                                    : ''+(data?.isCarecoordinator
-                                        ?CARE_COORDINATOR_STRING:''),
+                                    ? CommonUtil().titleCase(
+                                    fulName.toLowerCase()) +
+                                    (data?.isCarecoordinator
+                                        ? CARE_COORDINATOR_STRING
+                                        : '')
+                                    : '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0.sp,
@@ -512,8 +514,8 @@ class _ChatUserListState extends State<ChatUserList> {
                                     fontSize: 14.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
+                                // softWrap: false,
+                                // overflow: TextOverflow.ellipsis,
                               )
                             : Text(
                                 (data?.relationshipName != null &&
