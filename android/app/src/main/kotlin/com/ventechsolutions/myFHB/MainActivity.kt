@@ -30,6 +30,8 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AndroidRuntimeException
 import android.util.Log
 import android.view.Gravity
@@ -308,6 +310,18 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         //dialog.setInverseBackgroundForced(true)
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        displayText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                handler.removeCallbacks(runnable)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+
         close.setOnClickListener {
             speechRecognizer?.cancel()
             if (dialog.isShowing) {
@@ -2165,6 +2179,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
                 override fun onError(errorCode: Int) {
                     Log.e("speechreco", "onError: " )
+                    handler.postDelayed(runnable, 15000);
                     //close.performClick()
                     //_result?.error("100","no response",errorCode)
                     //_result=null
@@ -2184,7 +2199,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                         else -> {
                             message = "Didn't understand, please try again."
                         }
+
                     }
+                    Log.e("speechErrorNative", "onError: "+message )
 
                 }
 
@@ -2300,7 +2317,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
             speechRecognizer!!.startListening(intent)
-            handler.postDelayed(runnable, 15000);
 
 
         } catch (a: ActivityNotFoundException) {

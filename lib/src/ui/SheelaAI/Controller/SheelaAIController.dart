@@ -43,6 +43,7 @@ class SheelaAIController extends GetxController {
   int indexOfCurrentPlayingConversation;
   AudioPlayer player;
   ScrollController scrollController = ScrollController();
+
   //Just make it true for using local tts,
   //rest of the cases will be auto handled .
   bool useLocalTTSEngine = false;
@@ -53,6 +54,7 @@ class SheelaAIController extends GetxController {
   String relationshipId;
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -89,8 +91,12 @@ class SheelaAIController extends GetxController {
             }
           } else {
             stopTTS();
-            if (conversations.last.isEndOfConv) {
-              gettingReposnseFromNative();
+            try {
+              if (!conversations.last.endOfConv) {
+                gettingReposnseFromNative();
+              }
+            } catch (e) {
+              //gettingReposnseFromNative();
             }
           }
         }
@@ -325,8 +331,12 @@ class SheelaAIController extends GetxController {
             gettingReposnseFromNative();
           } else {
             stopTTS();
-            if (conversations.last?.isEndOfConv ?? false) {
-              gettingReposnseFromNative();
+            try {
+              if (!conversations.last.endOfConv) {
+                gettingReposnseFromNative();
+              }
+            } catch (e) {
+              //gettingReposnseFromNative();
             }
           }
         }
@@ -571,6 +581,7 @@ class SheelaAIController extends GetxController {
 
   DeviceStatus currentDeviceStatus = DeviceStatus();
   CreateDeviceSelectionModel createDeviceSelectionModel;
+
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     final selection = getDeviceSelectionModel.result[0];
     final prof = selection.profileSetting;
