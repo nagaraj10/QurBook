@@ -100,14 +100,18 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             children: <Widget>[
                               commonWidget.docName(
                                   context,
-                                  widget?.doc?.doctor?.user?.firstName
-                                          ?.capitalizeFirstofEach +
-                                      ' ' +
-                                      widget?.doc?.doctor?.user?.lastName
-                                          ?.capitalizeFirstofEach),
+                                  widget.doc.doctorSessionId == null
+                                      ? widget?.doc?.healthOrganization?.name
+                                          ?.capitalizeFirstofEach
+                                      : widget?.doc?.doctor?.user?.firstName
+                                              ?.capitalizeFirstofEach +
+                                          ' ' +
+                                          widget?.doc?.doctor?.user?.lastName
+                                              ?.capitalizeFirstofEach),
                               SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                              widget.doc?.doctor?.specialization == null
-                                  ? Container()
+                              widget.doc.doctorSessionId == null ||
+                                      widget.doc?.doctor?.specialization == null
+                                  ? SizedBox.shrink()
                                   : Container(
                                       width: 1.sw / 2,
                                       child: Text(
@@ -154,31 +158,54 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                              widget.doc.doctor.specialization == null
-                                  ? Container()
+                              widget.doc.doctorSessionId == null ||
+                                  widget.doc?.doctor?.specialization == null
+                                  ? SizedBox.shrink()
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(
                                   context,
-                                  widget
-                                          .doc
-                                          ?.doctor
-                                          ?.user
-                                          ?.userAddressCollection3[0]
-                                          ?.city
-                                          ?.name ??
-                                      ''),
+                                  widget.doc.doctorSessionId == null &&
+                                          widget?.doc?.healthOrganization
+                                                  ?.healthOrganizationAddressCollection !=
+                                              null &&
+                                          widget
+                                                  ?.doc
+                                                  ?.healthOrganization
+                                                  ?.healthOrganizationAddressCollection
+                                                  .length >
+                                              0
+                                      ? widget
+                                              ?.doc
+                                              ?.healthOrganization
+                                              ?.healthOrganizationAddressCollection[
+                                                  0]
+                                              ?.city
+                                              ?.name ??
+                                          ''
+                                      : widget
+                                              .doc
+                                              ?.doctor
+                                              ?.user
+                                              ?.userAddressCollection3[0]
+                                              ?.city
+                                              ?.name ??
+                                          ''),
                               SizedBox(height: 5.0),
-                              DoctorTimeSlotWidget(
-                                doc: widget.doc,
-                                onChanged: widget.onChanged,
-                              ),
+                              widget.doc.doctorSessionId == null
+                                  ? SizedBox.shrink()
+                                  : DoctorTimeSlotWidget(
+                                      doc: widget.doc,
+                                      onChanged: widget.onChanged,
+                                    ),
                               SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(true, widget.doc, context,
-                                  () {
-                                widget.onChanged(
-                                    TranslationConstants.callback.t());
-                                setState(() {});
-                              })
+                              widget.doc.doctorSessionId == null
+                                  ? SizedBox.shrink()
+                                  : commonWidget
+                                      .docIcons(true, widget.doc, context, () {
+                                      widget.onChanged(
+                                          TranslationConstants.callback.t());
+                                      setState(() {});
+                                    })
                             ],
                           ),
                         ],
@@ -189,7 +216,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
-                          IconButton(
+                          widget.doc.doctorSessionId == null
+                              ? SizedBox.shrink()
+                              : IconButton(
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
@@ -203,11 +232,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 //                                : 15,
 //                          ),
                           SizedBoxWidget(
-                            height: widget.doc?.doctor?.specialization == null
+                            height: widget.doc?.doctor?.specialization == null||widget.doc.doctorSessionId == null
                                 ? 10
                                 : 20,
                           ),
-                          commonWidget.count(widget.doc.slotNumber),
+                          widget.doc.doctorSessionId == null
+                              ? SizedBox.shrink()
+                              : commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
                             fontsize: 12.0.sp,
                             text: DateFormat(CommonUtil.REGION_CODE == 'IN'
@@ -238,7 +269,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 )),
             SizedBoxWidget(height: 10.0),
             Container(height: 1, color: Colors.black26),
-            Container(
+            widget.doc.doctorSessionId == null
+                ? SizedBox.shrink()
+                : Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
               child: Row(

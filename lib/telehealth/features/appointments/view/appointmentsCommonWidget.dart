@@ -571,7 +571,16 @@ class AppointmentsCommonWidget {
         child: ClipOval(
           child: Container(
             child: //Container(color: Color(fhbColors.bgColorContainer)),
-            doc?.doctor?.user?.profilePicThumbnailUrl == null
+            doc.doctorSessionId == null && doc.healthOrganization != null
+                    ? Container(
+                        height: 50.0.h,
+                        width: 50.0.h,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: getFirstLastNameText(doc),
+                        ),
+                      )
+                    : doc?.doctor?.user?.profilePicThumbnailUrl == null
                 ? Container(color: Color(fhbColors.bgColorContainer))
                 : Image.network(doc.doctor.user.profilePicThumbnailUrl,
                 fit: BoxFit.cover,
@@ -594,8 +603,33 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  Widget getFirstLastNameText(Past doc) {
-    if (doc != null &&
+  Widget getFirstLastNameText(Past doc)
+  {
+    if (doc.doctorSessionId == null && doc.healthOrganization != null) {
+      String strName = doc.healthOrganization.name ?? "";
+      String strName1 = "";
+      String strName2 = "";
+      try {
+        if (strName.contains(" ")) {
+          strName1 = strName.split(" ").first;
+          strName2 = strName.split(" ").last;
+        } else {
+          strName1 = strName;
+        }
+      } catch (e) {
+        //print(e);
+      }
+      return Text(
+        strName2.trim().isNotEmpty
+            ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
+            : strName1[0].toUpperCase() + strName1[1]?.toUpperCase(),
+        style: TextStyle(
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          fontSize: 16.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      );
+    } else if (doc != null &&
         doc.doctor.user.firstName != null &&
         doc.doctor.user.lastName != null) {
       return Text(
