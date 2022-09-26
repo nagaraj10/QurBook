@@ -471,7 +471,8 @@ class _ChatUserListState extends State<ChatUserList> {
                                 fulName != null
                                     ? CommonUtil()
                                         .titleCase(fulName.toLowerCase())
-                                    : '',
+                                    : ''+(data?.isCarecoordinator
+                                        ?CARE_COORDINATOR_STRING:''),
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16.0.sp,
@@ -480,21 +481,22 @@ class _ChatUserListState extends State<ChatUserList> {
                                 // overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            data?.isCarecoordinator
-                                ? Expanded(
-                                  child: Text(
-                                    CARE_COORDINATOR_STRING,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0.sp,
-                                      ),
-                                      // softWrap: false,
-                                      // overflow: TextOverflow.ellipsis,
-                                    ),
-                                )
-                                : SizedBox.shrink(),
+
                           ],
                         ),
+                        // data?.isCarecoordinator
+                        //     ? Expanded(
+                        //   child: Text(
+                        //     CARE_COORDINATOR_STRING,
+                        //     style: TextStyle(
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 16.0.sp,
+                        //     ),
+                        //     // softWrap: false,
+                        //     // overflow: TextOverflow.ellipsis,
+                        //   ),
+                        // )
+                        //     : SizedBox.shrink(),
                         SizedBox(
                           height: 2.0.h,
                         ),
@@ -714,29 +716,16 @@ class _ChatUserListState extends State<ChatUserList> {
                               Expanded(
                                 child :Text(
                                   CommonUtil().capitalizeFirstofEach(
-                                      getDocName(userChatList)),
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
+                                      getDocName(userChatList))+(userChatList?.isFamilyUserCareCoordinator
+                                      ?CARE_COORDINATOR_STRING:''),
+                                  // overflow: TextOverflow.ellipsis,
+                                  // softWrap: true,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15.0.sp,
                                       fontFamily: variable.font_poppins),
                                 ),
                               ),
-
-                              userChatList?.isFamilyUserCareCoordinator
-                                  ? Expanded(
-                                    child: Text(
-                                      CARE_COORDINATOR_STRING,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16.0.sp,
-                                        ),
-                                        softWrap: false,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                  )
-                                  : SizedBox.shrink(),
                             ],
                           ),
                         ),
