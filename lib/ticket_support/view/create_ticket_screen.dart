@@ -1017,9 +1017,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (isPreferredDate && preferredDateController.text.isNotEmpty) {
                 tckConstants.tckPrefDate =
                     preferredDateController.text.toString();
+                controller.dynamicTextFiledObj["description"] = descController.text.toString();
                 controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
                 controller.dynamicTextFiledObj["healthOrgTypeId"] = widget.ticketList.additionalInfo.healthOrgTypeId??"";
-                controller.dynamicTextFiledObj["description"] = descController.text.toString();
                 commonMethodToCreateTicket(ticketListData);
               } else {
                 showAlertMsg(CommonConstants.ticketDate);
@@ -1044,10 +1044,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (isPreferredDate && preferredDateController.text.isNotEmpty) {
               tckConstants.tckPrefDate =
                   preferredDateController.text.toString();
+              controller.dynamicTextFiledObj["title"] = titleController.text.toString();
+              controller.dynamicTextFiledObj["description"] = descController.text.toString();
               controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
               controller.dynamicTextFiledObj["healthOrgTypeId"] = widget.ticketList.additionalInfo.healthOrgTypeId??"";
-              controller.dynamicTextFiledObj["description"] = descController.text.toString();
-              controller.dynamicTextFiledObj["title"] = titleController.text.toString();
               commonMethodToCreateTicket(ticketListData);
             } else {
               showAlertMsg(CommonConstants.ticketDate);
@@ -1067,6 +1067,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           if (isDescription && descController.text.isNotEmpty) {
             tckConstants.tckDesc = descController.text.toString();
 
+            controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
+
             commonMethodToCreateTicket(ticketListData);
           } else {
             showAlertMsg(CommonConstants.ticketDesc);
@@ -1081,6 +1083,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         if (imagePaths.length > 0) {
           if (isDescription && descController.text.isNotEmpty) {
             tckConstants.tckDesc = descController.text.toString();
+            controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
             commonMethodToCreateTicket(ticketListData);
           } else {
             showAlertMsg(CommonConstants.ticketDesc);
@@ -1099,6 +1102,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             Constants.tckPackageName = package_title_ctrl.text;
             if (isDescription && descController.text.isNotEmpty) {
               tckConstants.tckDesc = descController.text.toString();
+              controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
               commonMethodToCreateTicket(ticketListData);
             } else {
               showAlertMsg(CommonConstants.ticketDesc);
@@ -1128,10 +1132,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (isPreferredDate && preferredDateController.text.isNotEmpty) {
               tckConstants.tckPrefDate =
                   preferredDateController.text.toString();
+
+              controller.dynamicTextFiledObj["title"] = titleController.text.toString();
+              controller.dynamicTextFiledObj["description"] = descController.text.toString();
               controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
               controller.dynamicTextFiledObj["healthOrgTypeId"] = widget.ticketList.additionalInfo.healthOrgTypeId??"";
-              controller.dynamicTextFiledObj["description"] = descController.text.toString();
-              controller.dynamicTextFiledObj["title"] = titleController.text.toString();
+
               commonMethodToCreateTicket(ticketListData);
             } else {
               showAlertMsg(CommonConstants.ticketDate);
