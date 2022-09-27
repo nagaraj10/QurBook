@@ -68,6 +68,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
+      controller.currLoggedEID.value = "";
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then((value) {
         if (value != null) {
@@ -88,6 +89,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       //initGeoLocation();
       //checkMobileOrTablet();
       WidgetsBinding.instance.addObserver(this);
+      controller.startTimer();
       super.initState();
     } catch (e) {
       print(e);
@@ -211,7 +213,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               : GetBuilder<QurhomeRegimenController>(
                   id: "newUpdate",
                   builder: (val) {
-                    print("working builder");
+                    //print("working builder");
                     return val.qurHomeRegimenResponseModel == null
                         ? const Center(
                             child: Text(
@@ -897,7 +899,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -916,7 +918,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -936,7 +938,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -985,7 +987,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           //       .fetchRegimentData();
           //   LoaderClass.hideLoadingDialog(Get.context);
           // });
-          controller.getRegimenList();
+          controller.showCurrLoggedRegimen(regimen);
         }
 
         Provider.of<RegimentViewModel>(context, listen: false)
@@ -1100,11 +1102,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eid: regimen.eid,
       );
       if (saveResponse?.isSuccess ?? false) {
+
         FlutterToast().getToast(
           'Logged Successfully',
           Colors.red,
         );
-        controller.getRegimenList();
+
+        controller.showCurrLoggedRegimen(regimen);
 
         LoaderClass.hideLoadingDialog(Get.context);
       } else {
