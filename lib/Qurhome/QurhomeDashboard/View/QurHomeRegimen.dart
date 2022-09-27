@@ -22,7 +22,6 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -35,7 +34,6 @@ import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/reminders/ReminderModel.dart';
 import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
@@ -206,60 +204,66 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               ),
             ),
           ),
-          Obx(() => controller.loadingData.isTrue
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
+          Obx(() =>
+          controller.loadingData.isTrue
+              ? controller.loadingDataWithoutProgress.isTrue ? getDataFromAPI(
+              controller, isPortrait) : Center(
+            child: CircularProgressIndicator(),
+          )
               : GetBuilder<QurhomeRegimenController>(
-                  id: "newUpdate",
-                  builder: (val) {
-                    //print("working builder");
-                    return val.qurHomeRegimenResponseModel == null
-                        ? const Center(
-                            child: Text(
-                              'Please re-try after some time',
-                            ),
-                          )
-                        : val.qurHomeRegimenResponseModel.regimentsList
-                                    .length !=
-                                0
-                            ? Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 50.0),
-                                child: Container(
-                                  child: PageView.builder(
-                                    itemCount: val.qurHomeRegimenResponseModel
-                                        .regimentsList.length,
-                                    scrollDirection: Axis.vertical,
-                                    onPageChanged: (int index) {
-                                      setState(() {
-                                        controller.currentIndex = index;
-                                      });
-                                    },
-                                    controller: PageController(
-                                        initialPage: val.nextRegimenPosition,
-                                        viewportFraction:
-                                            1 / (isPortrait == true ? 5 : 3)),
-                                    itemBuilder:
-                                        (BuildContext context, int itemIndex) {
-                                      return _buildCarouselItem(
-                                          context,
-                                          itemIndex,
-                                          val.qurHomeRegimenResponseModel
-                                              .regimentsList[itemIndex],
-                                          val.nextRegimenPosition,
-                                          isPortrait);
-                                    },
-                                  ),
-                                ),
-                              )
-                            : const Center(
-                                child: Text(
-                                  'No activities scheduled today',
-                                ),
-                              );
-                  })),
+              id: "newUpdate",
+              builder: (val) {
+                print("working builder");
+                return getDataFromAPI(val, isPortrait);
+              })),
         ],
+      ),
+    );
+  }
+
+  getDataFromAPI(QurhomeRegimenController val, var isPortrait) {
+    return val.qurHomeRegimenResponseModel == null
+        ? const Center(
+      child: Text(
+        'Please re-try after some time',
+      ),
+    )
+        : val.qurHomeRegimenResponseModel.regimentsList
+        .length !=
+        0
+        ? Padding(
+      padding:
+      const EdgeInsets.symmetric(vertical: 50.0),
+      child: Container(
+        child: PageView.builder(
+          itemCount: val.qurHomeRegimenResponseModel
+              .regimentsList.length,
+          scrollDirection: Axis.vertical,
+          onPageChanged: (int index) {
+            setState(() {
+              controller.currentIndex = index;
+            });
+          },
+          controller: PageController(
+              initialPage: val.nextRegimenPosition,
+              viewportFraction:
+              1 / (isPortrait == true ? 5 : 3)),
+          itemBuilder:
+              (BuildContext context, int itemIndex) {
+            return _buildCarouselItem(
+                context,
+                itemIndex,
+                val.qurHomeRegimenResponseModel
+                    .regimentsList[itemIndex],
+                val.nextRegimenPosition,
+                isPortrait);
+          },
+        ),
+      ),
+    )
+        : const Center(
+      child: Text(
+        'No activities scheduled today',
       ),
     );
   }
@@ -899,7 +903,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+          ).then((value) => {controller.getRegimenList()});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -918,7 +922,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+          ).then((value) => {controller.getRegimenList()});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -938,7 +942,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+          ).then((value) => {controller.getRegimenList()});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)

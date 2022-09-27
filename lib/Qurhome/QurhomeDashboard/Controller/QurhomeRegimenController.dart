@@ -29,6 +29,7 @@ import 'QurhomeDashboardController.dart';
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
   var loadingData = false.obs;
+  var loadingDataWithoutProgress = false.obs;
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel qurHomeRegimenResponseModel;
@@ -66,18 +67,19 @@ class QurhomeRegimenController extends GetxController {
   var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   Timer timer;
-  int _secondCount = 0;
 
-  getRegimenList({bool isLoading = true}) async
-  {
+  getRegimenList({bool isLoading = true}) async {
     try {
-      if (isLoading) {
-        loadingData.value = true;
+      if (!isLoading) {
+        loadingDataWithoutProgress.value = true;
       }
+      loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
       loadingData.value = false;
-      qurHomeRegimenResponseModel.regimentsList
-          .removeWhere((element) => element?.isEventDisabled&&!element?.isSymptom||!element?.scheduled);
+      loadingDataWithoutProgress.value = false;
+      qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
+          element?.isEventDisabled && !element?.isSymptom ||
+          !element?.scheduled);
       for (int i = 0;
           i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
           i++) {
@@ -143,6 +145,7 @@ class QurhomeRegimenController extends GetxController {
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
     }
   }
 
@@ -342,7 +345,7 @@ class QurhomeRegimenController extends GetxController {
               .validString(prof.result.userContactCollection3[0].phoneNumber)
           : '';
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 
@@ -372,7 +375,7 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
@@ -380,7 +383,7 @@ class QurhomeRegimenController extends GetxController {
     try {
       isSOSAgentCallDialogOpen.value = newStatus;
     } catch (e) {
-      print(e);
+      //print(e);
     }
 
   }
@@ -389,8 +392,6 @@ class QurhomeRegimenController extends GetxController {
   {
     try {
       timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
-        this._secondCount += 1;
-        print("startTimer ${_secondCount}");
         getRegimenList(isLoading: false);
       });
     } catch (e) {
@@ -410,7 +411,7 @@ class QurhomeRegimenController extends GetxController {
   showCurrLoggedRegimen(RegimentDataModel regimen) {
     try {
       currLoggedEID.value = CommonUtil().validString(regimen.eid.toString());
-      getRegimenList(isLoading: true);
+      getRegimenList();
     } catch (e) {
       //print(e);
     }
