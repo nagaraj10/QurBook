@@ -986,7 +986,11 @@ class CommonDialogBox {
                   errGluco = errorValue;
                 });
               }, errGluco, variable.strGlucUnit,
-                  range: isSelected[0] == true ? 'Fast' : 'PP'),
+                  range: isSelected[0] == true ? 'Fast' : 'PP',
+                  device: Constants.STR_GLUCOMETER,
+                  inputFormatters: [
+                    DecimalTextInputFormatter(decimalRange: 2)
+                  ]),
               SizedBox(
                 height: 15.0.h,
               ),
@@ -1166,7 +1170,12 @@ class CommonDialogBox {
                         errTemp = errorValue;
                       });
                     }, errTemp, tempMainUnit,
-                        range: "", device: "Temp", showLabel: false)),
+                        range: "",
+                        device: Constants.STR_THERMOMETER,
+                        showLabel: false,
+                        inputFormatters: [
+                          DecimalTextInputFormatter(decimalRange: 2)
+                        ])),
                 SizedBox(width: 20),
                 Container(
                     width: 50,
@@ -1367,7 +1376,13 @@ class CommonDialogBox {
                       setState(() {
                         errWeight = errorValue;
                       });
-                    }, errWeight, weightUnit, range: "", showLabel: false)),
+                    }, errWeight, weightUnit,
+                        range: "",
+                        device: Constants.STR_WEIGHING_SCALE,
+                        showLabel: false,
+                        inputFormatters: [
+                          DecimalTextInputFormatter(decimalRange: 2)
+                        ])),
                 SizedBox(width: 20),
                 Container(
                     width: 50,
@@ -1522,7 +1537,10 @@ class CommonDialogBox {
               setState(() {
                 errPoOs = errorValue;
               });
-            }, errPoOs, variable.strpulseUnit, range: ""),
+            }, errPoOs, variable.strpulseUnit,
+                range: "",
+                device: Constants.STR_PULSE_OXIMETER,
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)]),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1534,7 +1552,10 @@ class CommonDialogBox {
               setState(() {
                 errPoPulse = errorValue;
               });
-            }, errPoPulse, variable.strpulse, range: ""),
+            }, errPoPulse, variable.strpulse,
+                range: "",
+                device: Constants.STR_PULSE_OXIMETER,
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)]),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1658,7 +1679,10 @@ class CommonDialogBox {
               setState(() {
                 errForbpSp = errorValue;
               });
-            }, errForbpSp, variable.strbpunit, range: "Sys"),
+            }, errForbpSp, variable.strbpunit,
+                range: "Sys",
+                device: Constants.STR_BP_MONITOR,
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)]),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1670,7 +1694,10 @@ class CommonDialogBox {
               setState(() {
                 errFForbpDp = errorValue;
               });
-            }, errFForbpDp, variable.strbpunit, range: "Dia"),
+            }, errFForbpDp, variable.strbpunit,
+                range: "Dia",
+                device: Constants.STR_BP_MONITOR,
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)]),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1682,7 +1709,10 @@ class CommonDialogBox {
               setState(() {
                 errForbpPulse = errorValue;
               });
-            }, errForbpPulse, variable.strpulse, range: ""),
+            }, errForbpPulse, variable.strpulse,
+                range: "",
+                device: Constants.STR_BP_MONITOR,
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)]),
             SizedBox(
               height: 15.0.h,
             ),
