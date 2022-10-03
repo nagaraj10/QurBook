@@ -375,7 +375,7 @@ class QurhomeDashboardController extends GetxController {
   }
 
   Future<void> checkForBpConnection({bool isFromVitals}) async {
-    if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
+    if ((hubController.hubListResponse?.result?.userDeviceCollection ?? [])
         .isEmpty) {
       Get.toNamed(
         rt_Sheela,
