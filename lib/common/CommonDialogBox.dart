@@ -981,15 +981,20 @@ class CommonDialogBox {
                 height: 15.0.h,
               ),
               fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                  context,
-                  CommonConstants.strValue,
-                  commonConstants.glucometerUNIT,
-                  deviceController, (errorValue) {
-                setState(() {
-                  errGluco = errorValue;
-                });
-              }, errGluco, variable.strGlucUnit,
-                  range: isSelected[0] == true ? 'Fast' : 'PP'),
+                context,
+                CommonConstants.strValue,
+                commonConstants.glucometerUNIT,
+                deviceController,
+                (errorValue) {
+                  setState(() {
+                    errGluco = errorValue;
+                  });
+                },
+                errGluco,
+                variable.strGlucUnit,
+                range: isSelected[0] == true ? 'Fast' : 'PP',
+                device: Constants.STR_GLUCOMETER,
+              ),
               SizedBox(
                 height: 15.0.h,
               ),
@@ -1161,15 +1166,21 @@ class CommonDialogBox {
                 Expanded(
                     flex: 2,
                     child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                        context,
-                        CommonConstants.strTemperature,
-                        tempMainUnit,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errTemp = errorValue;
-                      });
-                    }, errTemp, tempMainUnit,
-                        range: "", device: "Temp", showLabel: false)),
+                      context,
+                      CommonConstants.strTemperature,
+                      tempMainUnit,
+                      deviceController,
+                      (errorValue) {
+                        setState(() {
+                          errTemp = errorValue;
+                        });
+                      },
+                      errTemp,
+                      tempMainUnit,
+                      range: "",
+                      device: Constants.STR_THERMOMETER,
+                      showLabel: false,
+                    )),
                 SizedBox(width: 20),
                 Container(
                     width: 50,
@@ -1362,14 +1373,21 @@ class CommonDialogBox {
                 Expanded(
                     flex: 2,
                     child: fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                        context,
-                        CommonConstants.strWeight,
-                        weightUnit,
-                        deviceController, (errorValue) {
-                      setState(() {
-                        errWeight = errorValue;
-                      });
-                    }, errWeight, weightUnit, range: "", showLabel: false)),
+                      context,
+                      CommonConstants.strWeight,
+                      weightUnit,
+                      deviceController,
+                      (errorValue) {
+                        setState(() {
+                          errWeight = errorValue;
+                        });
+                      },
+                      errWeight,
+                      weightUnit,
+                      range: "",
+                      device: Constants.STR_WEIGHING_SCALE,
+                      showLabel: false,
+                    )),
                 SizedBox(width: 20),
                 Container(
                     width: 50,
@@ -1517,26 +1535,38 @@ class CommonDialogBox {
               height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strOxygenSaturation,
-                commonConstants.poOxySatUNIT,
-                deviceController, (errorValue) {
-              setState(() {
-                errPoOs = errorValue;
-              });
-            }, errPoOs, variable.strpulseUnit, range: ""),
+              context,
+              CommonConstants.strOxygenSaturation,
+              commonConstants.poOxySatUNIT,
+              deviceController,
+              (errorValue) {
+                setState(() {
+                  errPoOs = errorValue;
+                });
+              },
+              errPoOs,
+              variable.strpulseUnit,
+              range: "",
+              device: Constants.STR_PULSE_OXIMETER,
+            ),
             SizedBox(
               height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                commonConstants.poPulseUNIT,
-                pulse, (errorValue) {
-              setState(() {
-                errPoPulse = errorValue;
-              });
-            }, errPoPulse, variable.strpulse, range: ""),
+              context,
+              CommonConstants.strPulse,
+              commonConstants.poPulseUNIT,
+              pulse,
+              (errorValue) {
+                setState(() {
+                  errPoPulse = errorValue;
+                });
+              },
+              errPoPulse,
+              variable.strpulse,
+              range: "",
+              device: Constants.STR_PULSE_OXIMETER,
+            ),
             SizedBox(
               height: 15.0.h,
             ),
@@ -1653,38 +1683,56 @@ class CommonDialogBox {
               height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strSystolicPressure,
-                commonConstants.bpDPUNIT,
-                deviceController, (errorValue) {
-              setState(() {
-                errForbpSp = errorValue;
-              });
-            }, errForbpSp, variable.strbpunit, range: "Sys"),
+              context,
+              CommonConstants.strSystolicPressure,
+              commonConstants.bpDPUNIT,
+              deviceController,
+              (errorValue) {
+                setState(() {
+                  errForbpSp = errorValue;
+                });
+              },
+              errForbpSp,
+              variable.strbpunit,
+              range: "Sys",
+              device: Constants.STR_BP_MONITOR,
+            ),
             SizedBox(
               height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strDiastolicPressure,
-                commonConstants.bpDPUNIT,
-                diaStolicPressure, (errorValue) {
-              setState(() {
-                errFForbpDp = errorValue;
-              });
-            }, errFForbpDp, variable.strbpunit, range: "Dia"),
+              context,
+              CommonConstants.strDiastolicPressure,
+              commonConstants.bpDPUNIT,
+              diaStolicPressure,
+              (errorValue) {
+                setState(() {
+                  errFForbpDp = errorValue;
+                });
+              },
+              errFForbpDp,
+              variable.strbpunit,
+              range: "Dia",
+              device: Constants.STR_BP_MONITOR,
+            ),
             SizedBox(
               height: 15.0.h,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                commonConstants.bpPulseUNIT,
-                pulse, (errorValue) {
-              setState(() {
-                errForbpPulse = errorValue;
-              });
-            }, errForbpPulse, variable.strpulse, range: ""),
+              context,
+              CommonConstants.strPulse,
+              commonConstants.bpPulseUNIT,
+              pulse,
+              (errorValue) {
+                setState(() {
+                  errForbpPulse = errorValue;
+                });
+              },
+              errForbpPulse,
+              variable.strpulse,
+              range: "",
+              device: Constants.STR_BP_MONITOR,
+            ),
             SizedBox(
               height: 15.0.h,
             ),
