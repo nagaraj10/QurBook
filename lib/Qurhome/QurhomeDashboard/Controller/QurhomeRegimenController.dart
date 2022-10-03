@@ -391,6 +391,7 @@ class QurhomeRegimenController extends GetxController {
   void startTimer()
   {
     try {
+      //30 seconds API calling
       timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
         getRegimenList(isLoading: false);
       });
