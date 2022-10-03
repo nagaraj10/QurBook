@@ -139,10 +139,11 @@ class SheelaAIController extends GetxController {
   startSheelaFromButton({
     String buttonText,
     String payload,
+    Buttons buttons,
   }) async {
     stopTTS();
     conversations.add(SheelaResponse(text: buttonText));
-    getAIAPIResponseFor(payload);
+    getAIAPIResponseFor(payload, buttons);
   }
 
   startSheelaConversation() {
@@ -161,23 +162,23 @@ class SheelaAIController extends GetxController {
       var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
         msg = arguments.rawMessage;
-        getAIAPIResponseFor(msg);
+        getAIAPIResponseFor(msg, null);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
         msg = arguments.sheelaInputs;
         conversations.add(SheelaResponse(text: msg));
-        getAIAPIResponseFor(msg);
+        getAIAPIResponseFor(msg, null);
       } else if ((arguments?.eId ?? '').isNotEmpty ||
           (arguments?.scheduleAppointment ?? false) ||
           (arguments?.showUnreadMessage ?? false)) {
         msg = KIOSK_SHEELA;
-        getAIAPIResponseFor(msg);
+        getAIAPIResponseFor(msg, null);
       } else {
         gettingReposnseFromNative();
       }
     }
   }
 
-  getAIAPIResponseFor(String message) async {
+  getAIAPIResponseFor(String message, Buttons buttonsList) async {
     try {
       isLoading.value = true;
       conversations.add(SheelaResponse(loading: true));
@@ -194,7 +195,11 @@ class SheelaAIController extends GetxController {
         timezone:
             splitedArr.isNotEmpty ? '${splitedArr[0]}:${splitedArr[1]}' : '',
         deviceType: Platform.isAndroid ? 'android' : 'ios',
-        relationshipId: lastMsgIsOfButtons ? message : relationshipId,
+        relationshipId: lastMsgIsOfButtons
+            ? buttonsList?.relationshipIdNotRequired ?? false
+                ? userId
+                : message
+            : relationshipId,
         conversationFlag: conversationFlag,
         localDateTime:
             CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
@@ -514,20 +519,20 @@ class SheelaAIController extends GetxController {
                           responseRecived);
                   if (button != null) {
                     startSheelaFromButton(
-                      buttonText: button.title,
-                      payload: button.payload,
-                    );
+                        buttonText: button.title,
+                        payload: button.payload,
+                        buttons: button);
                   } else {
                     conversations.add(newConversation);
-                    getAIAPIResponseFor(response);
+                    getAIAPIResponseFor(response, button);
                   }
                 } catch (e) {
                   conversations.add(newConversation);
-                  getAIAPIResponseFor(response);
+                  getAIAPIResponseFor(response, null);
                 }
               } else {
                 conversations.add(newConversation);
-                getAIAPIResponseFor(response);
+                getAIAPIResponseFor(response, null);
               }
             }
             scrollToEnd();
@@ -672,7 +677,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.isOxyActive,
         currentDeviceStatus.isThActive,
         currentDeviceStatus.isWsActive,
-        preferredLanguage??currentDeviceStatus.preferred_language,
+        preferredLanguage ?? currentDeviceStatus.preferred_language,
         currentDeviceStatus.qa_subscription,
         currentDeviceStatus.preColor,
         currentDeviceStatus.greColor,
