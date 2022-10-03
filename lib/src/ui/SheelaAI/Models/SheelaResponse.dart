@@ -149,13 +149,16 @@ class Buttons {
   String payload;
   String title;
   bool skipTts;
+  bool relationshipIdNotRequired;
   GoogleTTSResponseModel ttsResponse;
   Rx<bool> isPlaying = false.obs;
   bool isSelected = false;
+
   Buttons({
     this.payload,
     this.title,
     this.skipTts,
+    this.relationshipIdNotRequired = false,
     this.ttsResponse,
   });
 
@@ -163,6 +166,7 @@ class Buttons {
     payload = json['payload'];
     title = json['title'];
     skipTts = (json['skip_tts'] ?? false);
+    relationshipIdNotRequired = (json['relationshipIdNotRequired'] ?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -170,6 +174,7 @@ class Buttons {
     data['payload'] = this.payload;
     data['title'] = this.title;
     data['skip_tts'] = this.skipTts;
+    data['relationshipIdNotRequired'] = this.relationshipIdNotRequired;
     return data;
   }
 }
