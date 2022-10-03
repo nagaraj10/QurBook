@@ -17,6 +17,7 @@ import 'youtube_player.dart';
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
   SheelaAIController controller = Get.find();
+
   SheelaAIReceiverBubble(
     this.chat,
   );
@@ -277,7 +278,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                         buttonData.isSelected = true;
                         controller.startSheelaFromButton(
                             buttonText: buttonData.title,
-                            payload: buttonData.payload);
+                            payload: buttonData.payload,
+                            buttons: buttonData);
                         Future.delayed(const Duration(seconds: 3), () {
                           buttonData.isSelected = false;
                         });

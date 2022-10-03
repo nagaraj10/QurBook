@@ -542,7 +542,7 @@ const String requestSheelaForpo = 'Record my Pulse oximeter readings';
 const String requestSheelaForweight = 'Record my Weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
-const String strQurbookSheela = 'QURBOOK_SHEELA';
+const String strQurbookSheela = 'SHEELA'; // For lex to be done for seperation lex and rasa
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
