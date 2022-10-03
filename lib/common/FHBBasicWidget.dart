@@ -338,17 +338,17 @@ class FHBBasicWidget {
   }
 
   Widget getTextFiledWithHintAndSuffixText(
-      BuildContext context,
-      String hintTextValue,
-      String suffixTextValue,
-      TextEditingController controllerValue,
-      Function(String) onTextChanged,
-      String error,
-      String unitsTosearch,
-      {String range,
-      String device,
-      bool showLabel,
-      List<TextInputFormatter> inputFormatters}) {
+    BuildContext context,
+    String hintTextValue,
+    String suffixTextValue,
+    TextEditingController controllerValue,
+    Function(String) onTextChanged,
+    String error,
+    String unitsTosearch, {
+    String range,
+    String device,
+    bool showLabel,
+  }) {
     var errorValue = error;
     if (showLabel == null) {
       showLabel = true;
