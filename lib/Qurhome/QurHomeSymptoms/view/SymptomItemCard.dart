@@ -10,6 +10,7 @@ import 'package:myfhb/regiment/view/widgets/form_data_dialog.dart';
 import 'package:myfhb/regiment/view/widgets/media_icon_widget.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../constants/fhb_constants.dart';
@@ -1150,6 +1151,7 @@ class SymptomItemCard extends StatelessWidget {
           LoaderQurHome.hideLoadingDialog(Get.context);
         });
       }
+      QurPlanReminders.getTheRemindersFromAPI();
 
       Provider.of<RegimentViewModel>(context, listen: false)
           .updateRegimentStatus(RegimentStatus.DialogClosed);
