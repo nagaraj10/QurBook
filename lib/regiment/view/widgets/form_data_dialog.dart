@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_query.dart';
@@ -28,20 +29,19 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class FormDataDialog extends StatefulWidget {
-  FormDataDialog({
-    @required this.fieldsData,
-    @required this.eid,
-    @required this.color,
-    @required this.mediaData,
-    @required this.formTitle,
-    @required this.canEdit,
-    @required this.triggerAction,
-    this.isFollowEvent,
-    this.followEventContext,
-    this.isFromQurHomeSymptom = false,
-    this.isFromQurHomeRegimen = false,
-    @required this.providerId
-  });
+  FormDataDialog(
+      {@required this.fieldsData,
+      @required this.eid,
+      @required this.color,
+      @required this.mediaData,
+      @required this.formTitle,
+      @required this.canEdit,
+      @required this.triggerAction,
+      this.isFollowEvent,
+      this.followEventContext,
+      this.isFromQurHomeSymptom = false,
+      this.isFromQurHomeRegimen = false,
+      @required this.providerId});
 
   final List<FieldModel> fieldsData;
   final String eid;
@@ -49,7 +49,8 @@ class FormDataDialog extends StatefulWidget {
   final Otherinfo mediaData;
   final String formTitle;
   final bool canEdit;
-  final Function(String eventId, String followContext,String activityName) triggerAction;
+  final Function(String eventId, String followContext, String activityName)
+      triggerAction;
   final bool isFollowEvent;
   final bool isFromQurHomeSymptom;
   final bool isFromQurHomeRegimen;
@@ -91,16 +92,16 @@ class FormDataDialogState extends State<FormDataDialog> {
   @override
   void initState() {
     super.initState();
-    try{
-      widget.fieldsData.sort((a,b)=>a.seq??0.compareTo(b?.seq??0));
-    }catch(e){
+    try {
+      widget.fieldsData.sort((a, b) => a.seq ?? 0.compareTo(b?.seq ?? 0));
+    } catch (e) {
       // e.printError();
     }
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
     mediaData = widget.mediaData;
-    providerId=widget.providerId;
+    providerId = widget.providerId;
   }
 
   @override
@@ -554,36 +555,35 @@ class FormDataDialogState extends State<FormDataDialog> {
         bottom: 10.0.w,
       ),
     );*/
-      return AlertDialog(
-        title:getTitle(),
-        titlePadding: EdgeInsets.only(
-          top: 10.0.h,
-          right: 5.0.w,
-          left: 15.0.w,
-          bottom: 10.0.h,
-        ),
-        content: getBody(),
-        contentPadding: EdgeInsets.only(
-          top: 0.0.h,
-          left: 10.0.w,
-          right: 10.0.w,
-          bottom: 10.0.w,
-        ),
-      );
-  }
-
-  getBody(){
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return Container(
-          width: 0.75.sw,
-          child: getListView(),
-        );
-      }
+    return AlertDialog(
+      title: getTitle(),
+      titlePadding: EdgeInsets.only(
+        top: 10.0.h,
+        right: 5.0.w,
+        left: 15.0.w,
+        bottom: 10.0.h,
+      ),
+      content: getBody(),
+      contentPadding: EdgeInsets.only(
+        top: 0.0.h,
+        left: 10.0.w,
+        right: 10.0.w,
+        bottom: 10.0.w,
+      ),
     );
   }
 
-  getListView(){
+  getBody() {
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return Container(
+        width: 0.75.sw,
+        child: getListView(),
+      );
+    });
+  }
+
+  getListView() {
     return ListView(
       shrinkWrap: true,
       children: [
@@ -612,24 +612,23 @@ class FormDataDialogState extends State<FormDataDialog> {
                   child: FormFieldWidget(
                     canEdit: widget.canEdit ?? false,
                     fieldData: fieldsData[index],
-                    isFromQurHomeSymptom: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen,
+                    isFromQurHomeSymptom: widget.isFromQurHomeSymptom ||
+                        widget.isFromQurHomeRegimen,
                     updateValue: (
-                        updatedFieldData, {
-                          isAdd,
-                          title,
-                        }) {
+                      updatedFieldData, {
+                      isAdd,
+                      title,
+                    }) {
                       if (isAdd == null || isAdd) {
                         isAdd = isAdd ?? false;
                         final oldValue = saveMap.putIfAbsent(
-                          isAdd
-                              ? 'pf_$title'
-                              : 'pf_${updatedFieldData.title}',
-                              () => updatedFieldData.value,
+                          isAdd ? 'pf_$title' : 'pf_${updatedFieldData.title}',
+                          () => updatedFieldData.value,
                         );
                         if (oldValue != null) {
                           saveMap[isAdd
-                              ? 'pf_$title'
-                              : 'pf_${updatedFieldData.title}'] =
+                                  ? 'pf_$title'
+                                  : 'pf_${updatedFieldData.title}'] =
                               updatedFieldData.value;
                         }
                       } else {
@@ -652,8 +651,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
-                    _showSelectionDialog(context);
-                  }
+                          _showSelectionDialog(context);
+                        }
                       : null,
                   child: ValueListenableBuilder(
                     valueListenable: isUploading,
@@ -680,17 +679,18 @@ class FormDataDialogState extends State<FormDataDialog> {
                           ),
                           val
                               ? SizedBox(
-                            width: 20.0.w,
-                            height: 18.0.h,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                                  ? Color(CommonUtil()
-                                  .getQurhomePrimaryColor())
-                                  : Color(CommonUtil()
-                                  .getMyPrimaryColor()),
-                            ),
-                          )
+                                  width: 20.0.w,
+                                  height: 18.0.h,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: widget.isFromQurHomeSymptom ||
+                                            widget.isFromQurHomeRegimen
+                                        ? Color(CommonUtil()
+                                            .getQurhomePrimaryColor())
+                                        : Color(
+                                            CommonUtil().getMyPrimaryColor()),
+                                  ),
+                                )
                               : SizedBox.shrink(),
                           SizedBox(
                             width: 5,
@@ -706,52 +706,48 @@ class FormDataDialogState extends State<FormDataDialog> {
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
-                    Navigator.of(context)
-                        .push(
-                      MaterialPageRoute(
-                        builder: (context) => AudioRecorder(
-                          arguments: AudioScreenArguments(
-                            fromVoice: false,
-                          ),
-                        ),
-                      ),
-                    )
-                        .then((results) {
-                      final String audioPath =
-                      results[Constants.keyAudioFile];
-                      if (audioPath != null && audioPath != '') {
-                        imagePaths = audioPath;
-                        setState(() {
-                          audioFileName = strUploading;
-                        });
-                        if (imagePaths != null &&
-                            imagePaths != '') {
-                          saveMediaRegiment(imagePaths,providerId)
-                              .then((value) {
-                            if (value.isSuccess) {
+                          Navigator.of(context)
+                              .push(
+                            MaterialPageRoute(
+                              builder: (context) => AudioRecorder(
+                                arguments: AudioScreenArguments(
+                                  fromVoice: false,
+                                ),
+                              ),
+                            ),
+                          )
+                              .then((results) {
+                            final String audioPath =
+                                results[Constants.keyAudioFile];
+                            if (audioPath != null && audioPath != '') {
+                              imagePaths = audioPath;
                               setState(() {
-                                audioFileName =
-                                    audioPath.split('/').last;
+                                audioFileName = strUploading;
                               });
-                              final oldValue =
-                              saveMap.putIfAbsent(
-                                'audio',
-                                    () => value.result.accessUrl,
-                              );
-                              if (oldValue != null) {
-                                saveMap['audio'] =
-                                    value.result.accessUrl;
+                              if (imagePaths != null && imagePaths != '') {
+                                saveMediaRegiment(imagePaths, providerId)
+                                    .then((value) {
+                                  if (value.isSuccess) {
+                                    setState(() {
+                                      audioFileName = audioPath.split('/').last;
+                                    });
+                                    final oldValue = saveMap.putIfAbsent(
+                                      'audio',
+                                      () => value.result.accessUrl,
+                                    );
+                                    if (oldValue != null) {
+                                      saveMap['audio'] = value.result.accessUrl;
+                                    }
+                                  } else {
+                                    setState(() {
+                                      audioFileName = 'Add Audio';
+                                    });
+                                  }
+                                });
                               }
-                            } else {
-                              setState(() {
-                                audioFileName = 'Add Audio';
-                              });
                             }
                           });
                         }
-                      }
-                    });
-                  }
                       : null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -780,8 +776,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
-                    getOpenGallery(strVideo);
-                  }
+                          getOpenGallery(strVideo);
+                        }
                       : null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -810,8 +806,8 @@ class FormDataDialogState extends State<FormDataDialog> {
                 child: InkWell(
                   onTap: widget.canEdit
                       ? () {
-                    getOpenGallery(strFiles);
-                  }
+                          getOpenGallery(strFiles);
+                        }
                       : null,
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -848,8 +844,8 @@ class FormDataDialogState extends State<FormDataDialog> {
             child: Visibility(
               child: Text(
                 (Provider.of<RegimentViewModel>(context, listen: false)
-                    .regimentMode ==
-                    RegimentMode.Symptoms)
+                            .regimentMode ==
+                        RegimentMode.Symptoms)
                     ? symptomsError
                     : activitiesError,
                 style: TextStyle(
@@ -860,7 +856,7 @@ class FormDataDialogState extends State<FormDataDialog> {
               visible: widget.canEdit ? false : true,
             )),
         if (Provider.of<RegimentViewModel>(context, listen: false)
-            .regimentFilter ==
+                .regimentFilter ==
             RegimentFilter.AsNeeded)
           Container(
             child: Column(
@@ -878,18 +874,16 @@ class FormDataDialogState extends State<FormDataDialog> {
                           'Select Date:',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                                ? Color(CommonUtil()
-                                .getQurhomePrimaryColor())
-                                : Color(
-                                CommonUtil().getMyPrimaryColor()),
+                            color: widget.isFromQurHomeSymptom ||
+                                    widget.isFromQurHomeRegimen
+                                ? Color(CommonUtil().getQurhomePrimaryColor())
+                                : Color(CommonUtil().getMyPrimaryColor()),
                           ),
                         ),
                         IconButton(
                           icon: Icon(Icons.calendar_today, size: 16.sp),
                           onPressed: () async {
-                            initDate =
-                            await selectDate(context, initDate);
+                            initDate = await selectDate(context, initDate);
                             setState(() {});
                           },
                         ),
@@ -914,11 +908,10 @@ class FormDataDialogState extends State<FormDataDialog> {
                           'Select Time:',
                           style: TextStyle(
                               fontSize: 14.sp,
-                              color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                                  ? Color(CommonUtil()
-                                  .getQurhomePrimaryColor())
-                                  : Color(CommonUtil()
-                                  .getMyPrimaryColor())),
+                              color: widget.isFromQurHomeSymptom ||
+                                      widget.isFromQurHomeRegimen
+                                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                                  : Color(CommonUtil().getMyPrimaryColor())),
                         ),
                         IconButton(
                           icon: Icon(Icons.access_time, size: 16.sp),
@@ -949,87 +942,88 @@ class FormDataDialogState extends State<FormDataDialog> {
                     return RaisedButton(
                         onPressed: (!val)
                             ? () async {
-                          if (widget.canEdit) {
-                            if (_formKey.currentState
-                                .validate()) {
-                              var events = '';
-                              saveMap.forEach((key, value) {
-                                events += '&$key=$value';
-                                var provider=Provider.of<RegimentViewModel>(context, listen: false);
-                                provider.cachedEvents?.removeWhere((element) => element?.contains(key));
-                                provider.cachedEvents.add('&$key=$value'.toString());
-                              });
-                              if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
-                                LoaderQurHome.showLoadingDialog(
-                                  Get.context,
-                                  canDismiss: false,
-                                );
-                              } else {
-                                LoaderClass.showLoadingDialog(
-                                  Get.context,
-                                  canDismiss: false,
-                                );
-                              }
+                                if (widget.canEdit) {
+                                  if (_formKey.currentState.validate()) {
+                                    var events = '';
+                                    saveMap.forEach((key, value) {
+                                      events += '&$key=$value';
+                                      var provider =
+                                          Provider.of<RegimentViewModel>(
+                                              context,
+                                              listen: false);
+                                      provider.cachedEvents?.removeWhere(
+                                          (element) => element?.contains(key));
+                                      provider.cachedEvents
+                                          .add('&$key=$value'.toString());
+                                    });
+                                    if (widget.isFromQurHomeSymptom ||
+                                        widget.isFromQurHomeRegimen) {
+                                      LoaderQurHome.showLoadingDialog(
+                                        Get.context,
+                                        canDismiss: false,
+                                      );
+                                    } else {
+                                      LoaderClass.showLoadingDialog(
+                                        Get.context,
+                                        canDismiss: false,
+                                      );
+                                    }
 
-                              final saveResponse = await Provider
-                                  .of<RegimentViewModel>(
-                                  context,
-                                  listen: false)
-                                  .saveFormData(
-                                eid: eid,
-                                events: events,
-                                isFollowEvent:
-                                widget.isFollowEvent,
-                                followEventContext:
-                                widget.followEventContext,
-                                selectedDate: initDate,
-                                selectedTime: _currentTime,
-                              );
-                              if (saveResponse?.isSuccess ??
-                                  false) {
-                                if (widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen) {
-                                  LoaderQurHome.hideLoadingDialog(
-                                      Get.context);
+                                    final saveResponse =
+                                        await Provider.of<RegimentViewModel>(
+                                                context,
+                                                listen: false)
+                                            .saveFormData(
+                                      eid: eid,
+                                      events: events,
+                                      isFollowEvent: widget.isFollowEvent,
+                                      followEventContext:
+                                          widget.followEventContext,
+                                      selectedDate: initDate,
+                                      selectedTime: _currentTime,
+                                    );
+                                    if (saveResponse?.isSuccess ?? false) {
+                                      QurPlanReminders.getTheRemindersFromAPI();
+                                      if (widget.isFromQurHomeSymptom ||
+                                          widget.isFromQurHomeRegimen) {
+                                        LoaderQurHome.hideLoadingDialog(
+                                            Get.context);
+                                      } else {
+                                        LoaderClass.hideLoadingDialog(
+                                            Get.context);
+                                      }
+                                      if (Provider.of<RegimentViewModel>(
+                                                  context,
+                                                  listen: false)
+                                              .regimentStatus ==
+                                          RegimentStatus.DialogOpened) {
+                                        Navigator.pop(context, true);
+                                      }
+                                      checkForReturnActions(
+                                        returnAction: saveResponse
+                                            ?.result?.actions?.returnData,
+                                      );
+                                    }
+                                  }
                                 } else {
-                                  LoaderClass.hideLoadingDialog(
-                                      Get.context);
+                                  FlutterToast().getToast(
+                                    (Provider.of<RegimentViewModel>(context,
+                                                    listen: false)
+                                                .regimentMode ==
+                                            RegimentMode.Symptoms)
+                                        ? symptomsError
+                                        : activitiesError,
+                                    Colors.red,
+                                  );
                                 }
-                                if (Provider.of<RegimentViewModel>(
-                                    context,
-                                    listen: false)
-                                    .regimentStatus ==
-                                    RegimentStatus.DialogOpened) {
-                                  Navigator.pop(context, true);
-                                }
-                                checkForReturnActions(
-                                  returnAction: saveResponse
-                                      ?.result
-                                      ?.actions
-                                      ?.returnData,
-                                );
                               }
-                            }
-                          } else {
-                            FlutterToast().getToast(
-                              (Provider.of<RegimentViewModel>(
-                                  context,
-                                  listen: false)
-                                  .regimentMode ==
-                                  RegimentMode.Symptoms)
-                                  ? symptomsError
-                                  : activitiesError,
-                              Colors.red,
-                            );
-                          }
-                        }
                             : null,
-                        color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
-                            ? Color(
-                            CommonUtil().getQurhomePrimaryColor())
+                        color: widget.isFromQurHomeSymptom ||
+                                widget.isFromQurHomeRegimen
+                            ? Color(CommonUtil().getQurhomePrimaryColor())
                             : Color(CommonUtil().getMyPrimaryColor()),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.all(Radius.circular(
+                          borderRadius: BorderRadius.all(Radius.circular(
                             5.0.sp,
                           )),
                         ),
@@ -1048,8 +1042,8 @@ class FormDataDialogState extends State<FormDataDialog> {
     );
   }
 
-  Widget getTitle(){
-    return  Row(
+  Widget getTitle() {
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Flexible(
@@ -1080,8 +1074,9 @@ class FormDataDialogState extends State<FormDataDialog> {
         context: context,
         barrierDismissible: false,
         builder: (context) => WillPopScope(
-          onWillPop: (){
-            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+          onWillPop: () {
+            Provider.of<RegimentViewModel>(Get.context, listen: false)
+                .cachedEvents = [];
             Get.back();
           },
           child: AlertDialog(
@@ -1089,15 +1084,15 @@ class FormDataDialogState extends State<FormDataDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 IconButton(
-                  icon: Icon(
-                    Icons.close,
-                    size: 24.0.sp,
-                  ),
-                  onPressed: () {
-                    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
-                    Navigator.pop(context);
-                  }
-                ),
+                    icon: Icon(
+                      Icons.close,
+                      size: 24.0.sp,
+                    ),
+                    onPressed: () {
+                      Provider.of<RegimentViewModel>(Get.context, listen: false)
+                          .cachedEvents = [];
+                      Navigator.pop(context);
+                    }),
               ],
             ),
             titlePadding: EdgeInsets.only(
@@ -1129,8 +1124,11 @@ class FormDataDialogState extends State<FormDataDialog> {
                         onPressed: () {
                           if (returnAction?.eid != null &&
                               (returnAction?.action ?? '') == startActivity) {
-                            if(returnAction?.activityName==''||returnAction?.activityName==null){
-                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            if (returnAction?.activityName == '' ||
+                                returnAction?.activityName == null) {
+                              Provider.of<RegimentViewModel>(Get.context,
+                                      listen: false)
+                                  .cachedEvents = [];
                             }
                             widget.triggerAction(
                               returnAction?.eid,
@@ -1138,11 +1136,14 @@ class FormDataDialogState extends State<FormDataDialog> {
                               returnAction?.activityName,
                             );
                           } else {
-                            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            Provider.of<RegimentViewModel>(Get.context,
+                                    listen: false)
+                                .cachedEvents = [];
                             Get.back();
                           }
                         },
-                        color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                        color: widget.isFromQurHomeSymptom ||
+                                widget.isFromQurHomeRegimen
                             ? Color(CommonUtil().getQurhomePrimaryColor())
                             : Color(CommonUtil().getMyPrimaryColor()),
                         shape: RoundedRectangleBorder(
@@ -1167,10 +1168,13 @@ class FormDataDialogState extends State<FormDataDialog> {
                           ),
                           child: RaisedButton(
                             onPressed: () {
-                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                              Provider.of<RegimentViewModel>(Get.context,
+                                      listen: false)
+                                  .cachedEvents = [];
                               Get.back();
                             },
-                            color: widget.isFromQurHomeSymptom||widget.isFromQurHomeRegimen
+                            color: widget.isFromQurHomeSymptom ||
+                                    widget.isFromQurHomeRegimen
                                 ? Color(CommonUtil().getQurhomePrimaryColor())
                                 : Color(CommonUtil().getMyPrimaryColor()),
                             shape: RoundedRectangleBorder(
@@ -1203,16 +1207,18 @@ class FormDataDialogState extends State<FormDataDialog> {
           ),
         ),
       );
-    }else{
-      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+    } else {
+      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+          [];
     }
   }
 
-  Future<AddMediaRegimentModel> saveMediaRegiment(String imagePaths,String providerId) async {
+  Future<AddMediaRegimentModel> saveMediaRegiment(
+      String imagePaths, String providerId) async {
     var patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.saveRegimentMedia(
-        qr_save_regi_media, imagePaths, patientId,providerId);
+        qr_save_regi_media, imagePaths, patientId, providerId);
     return AddMediaRegimentModel.fromJson(response);
   }
 
@@ -1236,7 +1242,7 @@ class FormDataDialogState extends State<FormDataDialog> {
         imagePaths = croppedFile.path;
 
         if (imagePaths != null && imagePaths != '') {
-          saveMediaRegiment(imagePaths,providerId).then((value) {
+          saveMediaRegiment(imagePaths, providerId).then((value) {
             if (value.isSuccess) {
               var file = File(croppedFile.path);
               setState(() {
@@ -1292,7 +1298,7 @@ class FormDataDialogState extends State<FormDataDialog> {
       }
     });
     if (imagePaths != null && imagePaths != '') {
-      await saveMediaRegiment(imagePaths,providerId).then((value) {
+      await saveMediaRegiment(imagePaths, providerId).then((value) {
         if (value.isSuccess) {
           isUploading.value = false;
           setState(() {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
@@ -549,10 +550,8 @@ class RegimentDataCard extends StatelessWidget {
                                     null)) {
                               LoaderClass.hideLoadingDialog(Get.context);
                               checkForReturnActionsProviderForm(
-                                returnAction: saveResponse
-                                    ?.result
-                                    ?.actions
-                                    ?.returnData,
+                                returnAction:
+                                    saveResponse?.result?.actions?.returnData,
                               );
                             } else {
                               Future.delayed(Duration(milliseconds: 300),
@@ -713,7 +712,7 @@ class RegimentDataCard extends StatelessWidget {
             LoaderClass.hideLoadingDialog(Get.context);
           });
         }
-
+        QurPlanReminders.getTheRemindersFromAPI();
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
       } else if (!regimentData.hasform) {
@@ -814,7 +813,8 @@ class RegimentDataCard extends StatelessWidget {
         barrierDismissible: false,
         builder: (context) => WillPopScope(
           onWillPop: () async {
-            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+            Provider.of<RegimentViewModel>(Get.context, listen: false)
+                .cachedEvents = [];
             Get.back();
             await Provider.of<RegimentViewModel>(context, listen: false)
                 .fetchRegimentData();
@@ -829,12 +829,13 @@ class RegimentDataCard extends StatelessWidget {
                       size: 24.0.sp,
                     ),
                     onPressed: () async {
-                      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                      Provider.of<RegimentViewModel>(Get.context, listen: false)
+                          .cachedEvents = [];
                       Navigator.pop(context);
-                      await Provider.of<RegimentViewModel>(context, listen: false)
+                      await Provider.of<RegimentViewModel>(context,
+                              listen: false)
                           .fetchRegimentData();
-                    }
-                ),
+                    }),
               ],
             ),
             titlePadding: EdgeInsets.only(
@@ -866,20 +867,28 @@ class RegimentDataCard extends StatelessWidget {
                         onPressed: () async {
                           if (returnAction?.eid != null &&
                               (returnAction?.action ?? '') == startActivity) {
-                            if(returnAction?.activityName==''||returnAction?.activityName==null){
-                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            if (returnAction?.activityName == '' ||
+                                returnAction?.activityName == null) {
+                              Provider.of<RegimentViewModel>(Get.context,
+                                      listen: false)
+                                  .cachedEvents = [];
                             }
-                            Provider.of<RegimentViewModel>(Get.context, listen: false)
-                                .updateRegimentStatus(RegimentStatus.DialogClosed);
+                            Provider.of<RegimentViewModel>(Get.context,
+                                    listen: false)
+                                .updateRegimentStatus(
+                                    RegimentStatus.DialogClosed);
                             Get.back();
                             onCardPressed(Get.context,
                                 eventIdReturn: returnAction?.eid,
                                 followEventContext: returnAction?.context,
                                 activityName: returnAction?.activityName);
                           } else {
-                            Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                            Provider.of<RegimentViewModel>(Get.context,
+                                    listen: false)
+                                .cachedEvents = [];
                             Get.back();
-                            await Provider.of<RegimentViewModel>(context, listen: false)
+                            await Provider.of<RegimentViewModel>(context,
+                                    listen: false)
                                 .fetchRegimentData();
                           }
                         },
@@ -906,9 +915,12 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                           child: RaisedButton(
                             onPressed: () async {
-                              Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
+                              Provider.of<RegimentViewModel>(Get.context,
+                                      listen: false)
+                                  .cachedEvents = [];
                               Get.back();
-                              await Provider.of<RegimentViewModel>(context, listen: false)
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
                                   .fetchRegimentData();
                             },
                             color: Color(CommonUtil().getMyPrimaryColor()),
@@ -942,10 +954,10 @@ class RegimentDataCard extends StatelessWidget {
           ),
         ),
       );
-    }else{
-      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents = [];
-      LoaderClass.hideLoadingDialog(
-          Get.context);
+    } else {
+      Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+          [];
+      LoaderClass.hideLoadingDialog(Get.context);
     }
   }
 }
