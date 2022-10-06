@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -235,7 +236,7 @@ class SheelaAIController extends GetxController {
           KIOSK_isSheela: arguments.isSheelaFollowup,
         };
         arguments.isSheelaFollowup = false;
-      } else if (arguments?.eId != null) {
+      } else if (arguments?.eId != '' && arguments?.eId != null) {
         reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments.eId};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.eId = null;
@@ -283,6 +284,7 @@ class SheelaAIController extends GetxController {
             conversationFlag = currentResponse.conversationFlag;
           }
           if (currentResponse.endOfConv ?? false) {
+            QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
             sessionToken = const Uuid().v1();
             relationshipId = userId;
