@@ -63,7 +63,8 @@ class QurhomeDashboardController extends GetxController {
   }
 
   getHubDetails() {
-    hubController = Get.find<HubListController>();
+    //hubController = Get.find<HubListController>();
+    hubController = Get.put(HubListController());
     hubController.getHubList();
   }
 
