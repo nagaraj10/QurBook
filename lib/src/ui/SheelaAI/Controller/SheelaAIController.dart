@@ -55,6 +55,7 @@ class SheelaAIController extends GetxController {
   String relationshipId;
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
+  AudioCache _audioCache;
 
   @override
   void onInit() {
@@ -63,6 +64,10 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
+    if (Platform.isIOS) {
+      _audioCache = AudioCache();
+      _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
+    }
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -73,6 +78,16 @@ class SheelaAIController extends GetxController {
     conversationFlag = null;
     player = AudioPlayer();
     listnerForAudioPlayer();
+    if (Platform.isIOS) {
+      tts_platform.setMethodCallHandler(
+        (call) {
+          if (call.method == tts_platform_closeMic) {
+            isMicListening.value = false;
+            _audioCache.play('raw/Negative.mp3');
+          }
+        },
+      );
+    }
   }
 
   listnerForAudioPlayer() {
@@ -501,6 +516,10 @@ class SheelaAIController extends GetxController {
       if (micStatus) {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
+          if (Platform.isIOS) {
+            await _audioCache.play('raw/Positive.mp3');
+            await Future.delayed(Duration(seconds: 1));
+          }
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
