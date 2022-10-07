@@ -57,7 +57,7 @@ import CoreBluetooth
     var idForBP :UUID?
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
-   
+    
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -156,9 +156,9 @@ import CoreBluetooth
                                                                         intentIdentifiers: [],
                                                                         options: [])
         let viewDetailButtonCategory = UNNotificationCategory(identifier: viewDetailsButton,
-                                                                        actions:  [viewDetailsAction],
-                                                                        intentIdentifiers: [],
-                                                                        options: [])
+                                                              actions:  [viewDetailsAction],
+                                                              intentIdentifiers: [],
+                                                              options: [])
         notificationCenter.setNotificationCategories([showBothButtonscategory,
                                                       showSingleButtonCategory,
                                                       planRenewButtonCategory,
@@ -166,7 +166,7 @@ import CoreBluetooth
                                                       showViewMemberAndCommunicationButtonscategory,
                                                       esclateButtonscategory,
                                                       chatCCAndViewrecordButtonsCategory,
-                                                     viewDetailButtonCategory])
+                                                      viewDetailButtonCategory])
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -272,7 +272,7 @@ import CoreBluetooth
         // Initialization
         audioEngine = AVAudioEngine()
         recognitionTask = SFSpeechRecognitionTask()
-
+        
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
@@ -295,44 +295,54 @@ import CoreBluetooth
         }
         print(recognitionRequest)
         print(Constants.recogEntered)
-                Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { time in
-                    if(self.message.count == 0){
-                        Loading.sharedInstance.hideLoader()
-                        self.stopRecording()
-                        self.detectionTimer?.invalidate()
-                        self.STT_Result!("")
-                    }
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { time in
+            if(self.message.count == 0){
+                if let controller = self.navigationController?.children.first as? FlutterViewController{
+                    let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
+                    notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
                 }
+                Loading.sharedInstance.hideLoader()
+                self.stopRecording()
+                self.detectionTimer?.invalidate()
+                self.STT_Result!("")
+            }
+        }
+        
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
-                
                 self.message = result.bestTranscription.formattedString
                 self.detectionTimer?.invalidate()
-                
                 print(result.bestTranscription.formattedString as Any)
                 print(result.isFinal)
-
                 if let timer = self.detectionTimer, timer.isValid, result.isFinal {
-                        // pull out the best transcription...
-                        print(result.bestTranscription.formattedString as Any)
-                        print(result.isFinal)
-                        timer.invalidate()
-                        self.stopRecording()
-                       if(self.message.count > 0){
-                    self.startTheVC(currentmessage: self.message)
+                    // pull out the best transcription...
+                    print(result.bestTranscription.formattedString as Any)
+                    print(result.isFinal)
+                    timer.invalidate()
+                    self.stopRecording()
+                    if(self.message.count > 0){
+                        if let controller = self.navigationController?.children.first as? FlutterViewController{
+                           let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
+                            notificationChannel.invokeMethod(Constants.closeMicMethod, arguments: nil)
+                       }
+                        self.startTheVC(currentmessage: self.message)
                     }
-                        self.message = "";
-                    }
-                 else {
+                    self.message = "";
+                }
+                else {
                     self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
                         print(self.message)
                         timer.invalidate()
                         self.stopRecording()
-                       if(self.message.count > 0){
-                    self.startTheVC(currentmessage: self.message)
-                    }
+                        if(self.message.count > 0){
+                            if let controller = self.navigationController?.children.first as? FlutterViewController{
+                                let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
+                                notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
+                            }
+                            self.startTheVC(currentmessage: self.message)
+                        }
                         self.message = "";
                         
                     })
@@ -344,7 +354,7 @@ import CoreBluetooth
             }
         }
     }
-
+    
     func startTheVC(currentmessage:String){
         let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
         if let container = storyboard.instantiateViewController(withIdentifier: "SheelaAIVC") as? SheelaAIVC {
@@ -658,19 +668,19 @@ import CoreBluetooth
             notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: Constants.appointmentDetailsMethodAndChannel)
             completionHandler([])
             
-//        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
-//                 let type = userInfo["isSheela"] as? String,
-//                 let controller = navigationController?.children.first as? FlutterViewController,
-//                 UIApplication.shared.applicationState == .active{
-//            if(type.lowercased() == "true"){
-//                if (ResponseNotificationChannel == nil){
-//                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-//                }
-//                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
-//                completionHandler([])
-//            }else{
-//                completionHandler([.alert, .sound])
-//            }
+            //        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
+            //                 let type = userInfo["isSheela"] as? String,
+            //                 let controller = navigationController?.children.first as? FlutterViewController,
+            //                 UIApplication.shared.applicationState == .active{
+            //            if(type.lowercased() == "true"){
+            //                if (ResponseNotificationChannel == nil){
+            //                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+            //                }
+            //                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
+            //                completionHandler([])
+            //            }else{
+            //                completionHandler([.alert, .sound])
+            //            }
         }else{
             if let userInfo = notification.request.content.userInfo as? NSDictionary,
                let type = userInfo["NotificationType"] as? String,
