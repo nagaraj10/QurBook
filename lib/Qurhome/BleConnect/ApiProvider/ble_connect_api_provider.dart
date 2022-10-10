@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
-import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
-import 'package:myfhb/Qurhome/BpScan/model/ble_bp_data_model.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+import '../../../common/CommonUtil.dart';
+import '../../../constants/HeaderRequest.dart';
+import '../../../constants/fhb_query.dart';
+import '../../../constants/variable_constant.dart';
+import '../../../src/resources/network/AppException.dart';
+import '../../../src/resources/network/api_services.dart';
+import '../../BpScan/model/QurHomeBpScanResult.dart';
+import '../Models/ble_data_model.dart';
 
 class BleConnectApiProvider {
   Future<dynamic> saveDevice(

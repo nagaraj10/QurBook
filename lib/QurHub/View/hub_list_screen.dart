@@ -16,8 +16,6 @@ import 'add_device_screen.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 class HubListScreen extends StatefulWidget {
-  const HubListScreen({Key key}) : super(key: key);
-
   @override
   _HubListScreenState createState() => _HubListScreenState();
 }
@@ -306,136 +304,14 @@ class _HubListScreenState extends State<HubListScreen> {
   Widget listContent(Result result) {
     return Column(
       children: [
-        /*Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Column(
-                    children: [
-                      Image.asset(
-                        'assets/ur_hub.png',
-                        height: 40,
-                        width: 40,
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        validString(result.nickName),
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Hub Id',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 13),
-                                ),
-                              ),
-                              Text(
-                                validString(result.hub.serialNumber),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 13),
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'Paired On',
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 13),
-                                ),
-                              ),
-                              Text(
-                                changeDateFormat(validString(result.createdOn)),
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 13),
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      unPairDialog(
-                          type: 'hub',
-                          hubId: validString(result.id),
-                          idName: validString(result.hub.name));
-                    },
-                    child: Card(
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          'Unpair',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),*/
         result.userDeviceCollection.length != 0
             ? Column(
                 children: [
-                  /*Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      'Connected Devices',
-                      style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor()),
-                          fontSize: 16),
-                    ),
-                  ),*/
                   ListView.builder(
                       itemCount: result.userDeviceCollection.length,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        /*String strNickName = CommonUtil().validString(result
-                      .userDeviceCollection[index]
-                      .device
-                      .name);*/
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
@@ -443,31 +319,6 @@ class _HubListScreenState extends State<HubListScreen> {
                               padding: EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
-                                  /*ClipOval(
-                                child: result.userDeviceCollection[
-                                index] !=
-                                    null
-                                    ? getProfilePicWidget(
-                                    CommonUtil().validString(result
-                                        .userDeviceCollection[index]
-                                        .user
-                                        .profilePicThumbnailUrl),
-                                    CommonUtil().validString(result
-                                        .userDeviceCollection[index]
-                                        .user
-                                        .firstName),
-                                    CommonUtil().validString(result
-                                        .userDeviceCollection[index]
-                                        .user
-                                        .lastName),
-                                    Color(CommonUtil()
-                                        .getMyPrimaryColor()))
-                                    : Container(
-                                    width: 50.0.h,
-                                    height: 50.0.h,
-                                    padding: EdgeInsets.all(12),
-                                    color: Color(
-                                        fhbColors.bgColorContainer))),*/
                                   SizedBox(
                                     width: 10,
                                   ),
@@ -485,11 +336,10 @@ class _HubListScreenState extends State<HubListScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        /*strNickName.trim().isNotEmpty?strNickName:*/ CommonUtil()
-                                            .validString(result
-                                                .userDeviceCollection[index]
-                                                .user
-                                                .firstName),
+                                        CommonUtil().validString(result
+                                            .userDeviceCollection[index]
+                                            .user
+                                            .firstName),
                                         style: TextStyle(color: Colors.black),
                                       ),
                                       Row(
@@ -561,12 +411,6 @@ class _HubListScreenState extends State<HubListScreen> {
                                           ),
                                         ],
                                       ),
-                                      /*Text(
-                                      'Connected ${changeDateFormat(CommonUtil().validString(result.userDeviceCollection[index].createdOn))}',
-                                      style: TextStyle(
-                                          color: */ /*Colors.grey[600],*/ /*Colors.black,
-                                          fontSize: 12),
-                                    )*/
                                     ],
                                   )),
                                   InkWell(
@@ -629,7 +473,7 @@ class _HubListScreenState extends State<HubListScreen> {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: /*Color(CommonUtil().getMyPrimaryColor())*/ Colors.grey[200],
+        color: Colors.grey[200],
       ),
       height: 60,
       width: 60,
