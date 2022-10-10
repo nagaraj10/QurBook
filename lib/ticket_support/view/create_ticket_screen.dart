@@ -719,7 +719,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                                       context, CommonConstants.keyLabs,
                                       setState: setState);
                                 } catch (e) {
-                                  print(e);
+                                  //print(e);
                                 }
                               },
                               child: getIconButton()),
@@ -734,7 +734,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
     // widgetForColumn.add(getWidgetForLab());
 
@@ -1299,7 +1299,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       }
     } catch (error) {
       Navigator.of(context, rootNavigator: true).pop();
-      print('Catch Error Occured : $error');
+      //print('Catch Error Occured : $error');
     }
   }
 
@@ -2173,7 +2173,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   .getToast('Ticket Created Successfully', Colors.grey);
               Navigator.of(context).pop();
               Navigator.of(context).pop();
-              print('Hitting API .. : ${value.toJson()}');
+              //print('Hitting API .. : ${value.toJson()}');
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
@@ -2434,7 +2434,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               imagePaths.removeAt(index);
 
                               setState(() {
-                                print('set new state of images');
+                                //print('set new state of images');
                               });
                             },
                             child: Icon(
@@ -2675,7 +2675,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           final bytes = request.bodyBytes; //close();
           await file.writeAsBytes(bytes);
 
-          print("file.path" + file.path);
+          //print("file.path" + file.path);
           filePathist.add(file.path);
         });
       } catch (e) {
