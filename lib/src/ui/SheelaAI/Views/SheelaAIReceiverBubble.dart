@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
@@ -13,6 +15,7 @@ import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
 import 'CommonUitls.dart';
 import 'youtube_player.dart';
+import '../../../../constants/fhb_constants.dart' as Constants;
 
 class SheelaAIReceiverBubble extends StatelessWidget {
   final SheelaResponse chat;
@@ -100,6 +103,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                                 : Colors.white,
                                           ),
                                     ),
+                                    if ((chat.imageURL ?? []).isNotEmpty)
+                                      getImageFromUrl(),
                                     buttonWidgets()
                                   ],
                                 ),
@@ -150,7 +155,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       .apply(color: Colors.grey),
                 ),
               //need to add the video links here
-              if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets()
+              if ((chat.videoLinks ?? []).isNotEmpty) videoWidgets(),
             ],
           ),
         ),
@@ -324,5 +329,36 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     } else {
       return const SizedBox.shrink();
     }
+  }
+
+  Widget getImageFromUrl() {
+    return Container(
+        constraints: BoxConstraints(
+          maxWidth: 1.sw,
+        ),
+        padding: const EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          color: PreferenceUtil.getIfQurhomeisAcive()
+              ? Color(
+                  CommonUtil().getQurhomeGredientColor(),
+                )
+              : Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        child: Image.network(
+          chat.imageURL,
+          fit: BoxFit.fill,
+          width: 200.0.h,
+          height: 200.0.h,
+          headers: {
+            HttpHeaders.authorizationHeader:
+                PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+            Constants.KEY_OffSet: CommonUtil().setTimeZone()
+          },
+        ));
   }
 }
