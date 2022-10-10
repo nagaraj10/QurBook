@@ -15,6 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
@@ -465,6 +466,8 @@ class _MyFHBState extends State<MyFHB> {
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
     Get.put(SheelaAIController());
+    Get.put(SheelaBLEController());
+
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);

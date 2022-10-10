@@ -6,27 +6,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
+import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
 import '../../../model/user/MyProfileModel.dart';
 import '../../../resources/repository/health/HealthReportListForUserRepository.dart';
-import '../Models/sheela_arguments.dart';
 import '../Models/DeviceStatus.dart';
 import '../Models/GoogleTTSRequestModel.dart';
 import '../Models/GoogleTTSResponseModel.dart';
 import '../Models/SheelaRequest.dart';
 import '../Models/SheelaResponse.dart';
+import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
 
@@ -167,12 +167,9 @@ class SheelaAIController extends GetxController {
     conversations = [];
     sessionToken = const Uuid().v1();
     if (PreferenceUtil.getIfQurhomeisAcive() &&
-        (arguments?.isJumperDevice ||
-            arguments?.takeActiveDeviceReadings ||
-            arguments?.isFromBpReading)) {
+        (arguments?.takeActiveDeviceReadings ?? false)) {
       //BLE devices handling
-      bleController = SheelaBLEController();
-      bleController.startSheelaBLEDeviceReadings();
+      bleController = Get.find();
       isLoading(true);
     } else {
       var msg = strhiMaya;

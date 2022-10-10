@@ -24,7 +24,6 @@ import '../../../constants/variable_constant.dart' as variable;
 import '../../../authentication/constants/constants.dart';
 import '../../../constants/router_variable.dart' as router;
 
-
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer(
       {@required this.myProfile,
@@ -42,7 +41,9 @@ class NavigationDrawer extends StatelessWidget {
     print('*********************************');
     print(userChangedbool);
     return Container(
-       width: CommonUtil().isTablet ? MediaQuery.of(context).size.width * 0.75 : null,
+      width: CommonUtil().isTablet
+          ? MediaQuery.of(context).size.width * 0.75
+          : null,
       child: Drawer(
         child: Container(
           color: Colors.white,
@@ -187,7 +188,9 @@ class NavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
-                            Get.to(() => HubListScreen());
+                            Get.to(
+                              () => const HubListScreen(),
+                            );
                           } catch (e) {
                             //print(e);
                           }
@@ -308,7 +311,8 @@ class NavigationDrawer extends StatelessWidget {
                               }
                             },
                           ),
-                          visible: userChangedbool&&CommonUtil.REGION_CODE == 'IN'),
+                          visible: userChangedbool &&
+                              CommonUtil.REGION_CODE == 'IN'),
                       DrawerTile(
                         title: variable.strLogout,
                         iconWidget: SvgPicture.asset(
@@ -333,7 +337,6 @@ class NavigationDrawer extends StatelessWidget {
   }
 
   Widget getNameWidget() {
-
     MyProfileModel myProfile;
     var name = "";
     var phoneNumber = "";
@@ -341,16 +344,15 @@ class NavigationDrawer extends StatelessWidget {
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
       name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-                  myProfile?.result?.name != '')
-              ? myProfile?.result?.name?.capitalizeFirstofEach
-              : myProfile?.result?.firstName != null &&
-                      myProfile?.result?.lastName != null
-                  ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
-                  : '');
-      phoneNumber =
-              (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-                  ? myProfile?.result?.userContactCollection3[0].phoneNumber
-                  : '';
+              myProfile?.result?.name != '')
+          ? myProfile?.result?.name?.capitalizeFirstofEach
+          : myProfile?.result?.firstName != null &&
+                  myProfile?.result?.lastName != null
+              ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+              : '');
+      phoneNumber = (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
+          ? myProfile?.result?.userContactCollection3[0].phoneNumber
+          : '';
     } catch (e) {
       //print(e);
     }

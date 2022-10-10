@@ -378,10 +378,13 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     Get.back();
                     PreferenceUtil.saveString(SHEELA_LANG,
                         CommonUtil.langaugeCodes[value ?? 'undef']);
-                    controller.getDeviceSelectionValues(
+                    controller
+                        .getDeviceSelectionValues(
                       preferredLanguage: value,
-                    ).then((value1) {
-                      controller.updateDeviceSelectionModel(preferredLanguage: value);
+                    )
+                        .then((value1) {
+                      controller.updateDeviceSelectionModel(
+                          preferredLanguage: value);
                     });
                   },
                 ),

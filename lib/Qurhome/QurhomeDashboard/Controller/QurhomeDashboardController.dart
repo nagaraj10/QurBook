@@ -40,7 +40,7 @@ class QurhomeDashboardController extends GetxController {
   var regController;
   QurHomeBpScanResult qurHomeBpScanResultModel;
   var qurHomeBpScanResult = [].obs;
-  BleConnectController bleController = Get.put(BleConnectController());
+  // BleConnectController bleController = Get.put(BleConnectController());
 
   @override
   void onInit() {
@@ -57,7 +57,7 @@ class QurhomeDashboardController extends GetxController {
     PreferenceUtil.saveIfQurhomeisAcive(
       qurhomeStatus: false,
     );
-    _disableTimer();
+    // _disableTimer();
     //bleController.stopBleScan();
     super.onClose();
   }
@@ -67,284 +67,284 @@ class QurhomeDashboardController extends GetxController {
     hubController.getHubList();
   }
 
-  void _disableTimer() {
-    if (_timerSubscription != null) {
-      _timerSubscription.cancel();
-      _timerSubscription = null;
-    }
-    if (_bpPressureSubscription != null) {
-      _bpPressureSubscription.cancel();
-      _bpPressureSubscription = null;
-    }
-    if (_appointmentSubscription != null) {
-      _appointmentSubscription.cancel();
-      _appointmentSubscription = null;
-    }
-  }
+  // void _disableTimer() {
+  //   if (_timerSubscription != null) {
+  //     _timerSubscription.cancel();
+  //     _timerSubscription = null;
+  //   }
+  //   if (_bpPressureSubscription != null) {
+  //     _bpPressureSubscription.cancel();
+  //     _bpPressureSubscription = null;
+  //   }
+  //   if (_appointmentSubscription != null) {
+  //     _appointmentSubscription.cancel();
+  //     _appointmentSubscription = null;
+  //   }
+  // }
 
-  void _enableTimer(bool isFromVitalsList) {
-    _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
-      // int milliSeconds = 100;
-      print(val);
-      List<String> receivedValues = val.split('|');
-      if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues.first ?? "")) {
-          case "enablebluetooth":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          case "permissiondenied":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          case "scanstarted":
-            /*FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);*/
-            break;
-          case "connectionfailed":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          case "macid":
-            bleMacId = CommonUtil().validString(receivedValues.last);
-            hubController.bleMacId.value = bleMacId;
-            break;
-          case "bleDeviceType":
-            hubController.bleDeviceType.value =
-                CommonUtil().validString(receivedValues.last);
-            break;
-          case "connected":
-            if (hubController.bleDeviceType.value.toLowerCase() ==
-                "SPO2".toLowerCase()) {
-              foundBLE.value = true;
-              movedToNextScreen = true;
-              _disableTimer();
-              bleController.stopBleScan();
-              if (checkForParedDevice(isFromBp: false)) {
-                if (isDialogShowing.value) {
-                  Get.back();
-                }
-                Get.toNamed(
-                  rt_Sheela,
-                  arguments: SheelaArgument(
-                    takeActiveDeviceReadings: true,
-                  ),
-                ).then((_) async {
-                  if (isFromVitalsList) {
-                    await Future.delayed(Duration(seconds: 2));
-                    VitalDetailController vitalController = Get.find();
-                    vitalController.fetchOXYDetailsQurHome(
-                      filter: filterApiDay,
-                      isLoading: true,
-                    );
-                  } else {
-                    regController.getRegimenList();
-                  }
-                });
-              } else {
-                Get.back();
-                FlutterToast().getToastForLongTime(
-                  'No device found',
-                  Colors.red,
-                );
-              }
-            }
-            break;
-          case "measurement":
-            if (hubController.bleDeviceType.value.toLowerCase() ==
-                "BP".toLowerCase()) {
-              try {
-                _disableTimer();
-                var josnResult = convert.jsonDecode(receivedValues.last);
-                qurHomeBpScanResultModel =
-                    QurHomeBpScanResult.fromJson(josnResult);
-                qurHomeBpScanResultModel.deviceAddress = bleMacId;
-                qurHomeBpScanResultModel?.measurementRecords;
-                if ((qurHomeBpScanResultModel?.measurementRecords ?? [])
-                        .length >
-                    0) {
-                  if (checkForParedDevice()) {
-                    Get.back();
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: SheelaArgument(
-                        takeActiveDeviceReadings: false,
-                        isFromBpReading: true,
-                      ),
-                    ).then((_) async {
-                      if (isFromVitalsList) {
-                        try {
-                          await Future.delayed(Duration(seconds: 2));
-                          VitalDetailController vitalController = Get.find();
-                          vitalController.fetchBPDetailsQurHome(
-                            filter: filterApiDay,
-                            isLoading: true,
-                          );
-                        } catch (e) {
-                          print(e.toString());
-                        }
-                      } else {
-                        regController.getRegimenList();
-                      }
-                    });
-                  } else {
-                    Get.back();
-                    FlutterToast().getToastForLongTime(
-                      'No device found',
-                      Colors.red,
-                    );
-                  }
-                }
-              } catch (e) {
-                printError(info: e.toString());
-              }
-            }
-            break;
-          case "disconnected":
-            // FlutterToast()
-            //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
+  // void _enableTimer(bool isFromVitalsList) {
+  //   _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
+  //     // int milliSeconds = 100;
+  //     print(val);
+  //     List<String> receivedValues = val.split('|');
+  //     if ((receivedValues ?? []).length > 0) {
+  //       switch ((receivedValues.first ?? "")) {
+  //         case "enablebluetooth":
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
+  //         case "permissiondenied":
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
+  //         case "scanstarted":
+  //           /*FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);*/
+  //           break;
+  //         case "connectionfailed":
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
+  //         case "macid":
+  //           bleMacId = CommonUtil().validString(receivedValues.last);
+  //           hubController.bleMacId.value = bleMacId;
+  //           break;
+  //         case "bleDeviceType":
+  //           hubController.bleDeviceType.value =
+  //               CommonUtil().validString(receivedValues.last);
+  //           break;
+  //         case "connected":
+  //           if (hubController.bleDeviceType.value.toLowerCase() ==
+  //               "SPO2".toLowerCase()) {
+  //             foundBLE.value = true;
+  //             movedToNextScreen = true;
+  //             _disableTimer();
+  //             bleController.stopBleScan();
+  //             if (checkForParedDevice(isFromBp: false)) {
+  //               if (isDialogShowing.value) {
+  //                 Get.back();
+  //               }
+  //               Get.toNamed(
+  //                 rt_Sheela,
+  //                 arguments: SheelaArgument(
+  //                   takeActiveDeviceReadings: true,
+  //                 ),
+  //               ).then((_) async {
+  //                 if (isFromVitalsList) {
+  //                   await Future.delayed(Duration(seconds: 2));
+  //                   VitalDetailController vitalController = Get.find();
+  //                   vitalController.fetchOXYDetailsQurHome(
+  //                     filter: filterApiDay,
+  //                     isLoading: true,
+  //                   );
+  //                 } else {
+  //                   regController.getRegimenList();
+  //                 }
+  //               });
+  //             } else {
+  //               Get.back();
+  //               FlutterToast().getToastForLongTime(
+  //                 'No device found',
+  //                 Colors.red,
+  //               );
+  //             }
+  //           }
+  //           break;
+  //         case "measurement":
+  //           if (hubController.bleDeviceType.value.toLowerCase() ==
+  //               "BP".toLowerCase()) {
+  //             try {
+  //               _disableTimer();
+  //               var josnResult = convert.jsonDecode(receivedValues.last);
+  //               qurHomeBpScanResultModel =
+  //                   QurHomeBpScanResult.fromJson(josnResult);
+  //               qurHomeBpScanResultModel.deviceAddress = bleMacId;
+  //               qurHomeBpScanResultModel?.measurementRecords;
+  //               if ((qurHomeBpScanResultModel?.measurementRecords ?? [])
+  //                       .length >
+  //                   0) {
+  //                 if (checkForParedDevice()) {
+  //                   Get.back();
+  //                   Get.toNamed(
+  //                     rt_Sheela,
+  //                     arguments: SheelaArgument(
+  //                       takeActiveDeviceReadings: false,
+  //                       isFromBpReading: true,
+  //                     ),
+  //                   ).then((_) async {
+  //                     if (isFromVitalsList) {
+  //                       try {
+  //                         await Future.delayed(Duration(seconds: 2));
+  //                         VitalDetailController vitalController = Get.find();
+  //                         vitalController.fetchBPDetailsQurHome(
+  //                           filter: filterApiDay,
+  //                           isLoading: true,
+  //                         );
+  //                       } catch (e) {
+  //                         print(e.toString());
+  //                       }
+  //                     } else {
+  //                       regController.getRegimenList();
+  //                     }
+  //                   });
+  //                 } else {
+  //                   Get.back();
+  //                   FlutterToast().getToastForLongTime(
+  //                     'No device found',
+  //                     Colors.red,
+  //                   );
+  //                 }
+  //               }
+  //             } catch (e) {
+  //               printError(info: e.toString());
+  //             }
+  //           }
+  //           break;
+  //         case "disconnected":
+  //           // FlutterToast()
+  //           //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
 
-          default:
-          // FlutterToast()
-          //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-        }
-      }
-    });
-  }
+  //         default:
+  //         // FlutterToast()
+  //         //     .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //       }
+  //     }
+  //   });
+  // }
 
-  bool checkForParedDevice({bool isFromBp, String bleBPMacId}) {
-    try {
-      var userDeviceCollection =
-          hubController.hubListResponse.result.userDeviceCollection;
-      //var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
-      var index = -1;
-      if (Platform.isAndroid) {
-        index = userDeviceCollection.indexWhere((element) => (CommonUtil()
-                    .validString(element.device.serialNumber) ==
-                (isFromBp
-                    ? bleBPMacId
-                    : bleMacId)) /*&&
-            ((element.userId ?? '') == activeUser)*/
-            );
-      } else {
-        index = userDeviceCollection.indexWhere((element) => (CommonUtil()
-                    .validString(element.device.serialNumber) ==
-                bleMacId) /*&&
-            ((element.userId ?? '') == activeUser)*/
-            );
-      }
+  // bool checkForParedDevice({bool isFromBp, String bleBPMacId}) {
+  //   try {
+  //     var userDeviceCollection =
+  //         hubController.hubListResponse.result.userDeviceCollection;
+  //     //var activeUser = PreferenceUtil.getStringValue(KEY_USERID);
+  //     var index = -1;
+  //     if (Platform.isAndroid) {
+  //       index = userDeviceCollection.indexWhere((element) => (CommonUtil()
+  //                   .validString(element.device.serialNumber) ==
+  //               (isFromBp
+  //                   ? bleBPMacId
+  //                   : bleMacId)) /*&&
+  //           ((element.userId ?? '') == activeUser)*/
+  //           );
+  //     } else {
+  //       index = userDeviceCollection.indexWhere((element) => (CommonUtil()
+  //                   .validString(element.device.serialNumber) ==
+  //               bleMacId) /*&&
+  //           ((element.userId ?? '') == activeUser)*/
+  //           );
+  //     }
 
-      return index >= 0;
-    } catch (e) {
-      return false;
-    }
-  }
+  //     return index >= 0;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
 
-  checkForConnectedDevices(
-    bool isFromVitalsList, {
-    String eid,
-    String uid,
-  }) async {
-    if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
-        .isEmpty) {
-      if (!isFromVitalsList) {
-        //Device Not Connected
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(
-            eId: eid,
-          ),
-        ).then(
-          (_) async {
-            if (isFromVitalsList) {
-              try {
-                await Future.delayed(Duration(seconds: 2));
-                VitalDetailController vitalController = Get.find();
-                vitalController.fetchOXYDetailsQurHome(
-                  filter: filterApiDay,
-                  isLoading: true,
-                );
-              } catch (e) {
-                print(e.toString());
-              }
-            } else {
-              regController.getRegimenList();
-            }
-          },
-        );
-      }
-    } else {
-      try {
-        if (Platform.isAndroid) {
-          bool serviceEnabled = await CommonUtil().checkGPSIsOn();
-          bool isBluetoothEnable = false;
-          isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
-          if (!isBluetoothEnable) {
-            FlutterToast().getToast(
-                'Please turn on your bluetooth and try again', Colors.red);
-            return;
-          } else if (!serviceEnabled) {
-            FlutterToast().getToast(
-                'Please turn on your GPS location services and try again',
-                Colors.red);
-            return;
-          }
-        }
-        regController = Get.find<QurhomeRegimenController>();
-        isDialogShowing.value = true;
-        CommonUtil().dialogForScanDevices(
-          Get.context,
-          onPressCancel: () {
-            foundBLE.value = false;
-            movedToNextScreen = false;
-            _disableTimer();
-            bleController.stopBleScan();
-            Get.back();
-            isDialogShowing.value = false;
-          },
-          onPressManual: () {
-            _disableTimer();
-            bleController.stopBleScan();
-            Get.back();
-            isDialogShowing.value = false;
-            if (!isFromVitalsList) {
-              //Device Not Connected
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  eId: eid,
-                ),
-              ).then(
-                (_) async {
-                  if (isFromVitalsList) {
-                    await Future.delayed(Duration(seconds: 2));
-                    VitalDetailController vitalController = Get.find();
-                    vitalController.fetchOXYDetailsQurHome(
-                      filter: filterApiDay,
-                      isLoading: true,
-                    );
-                  } else {
-                    regController.getRegimenList();
-                  }
-                },
-              );
-            }
-          },
-          title: strConnectPulseMeter,
-          isFromVital: isFromVitalsList,
-        );
-        foundBLE.value = false;
-        movedToNextScreen = false;
-        _enableTimer(isFromVitalsList);
-        hubController.eid = eid;
-        hubController.uid = uid;
-        bleController.getBleConnectData(Get.context);
-      } catch (e) {
-        print(e);
-      }
-    }
-  }
+  // checkForConnectedDevices(
+  //   bool isFromVitalsList, {
+  //   String eid,
+  //   String uid,
+  // }) async {
+  //   if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
+  //       .isEmpty) {
+  //     if (!isFromVitalsList) {
+  //       //Device Not Connected
+  //       Get.toNamed(
+  //         rt_Sheela,
+  //         arguments: SheelaArgument(
+  //           eId: eid,
+  //         ),
+  //       ).then(
+  //         (_) async {
+  //           if (isFromVitalsList) {
+  //             try {
+  //               await Future.delayed(Duration(seconds: 2));
+  //               VitalDetailController vitalController = Get.find();
+  //               vitalController.fetchOXYDetailsQurHome(
+  //                 filter: filterApiDay,
+  //                 isLoading: true,
+  //               );
+  //             } catch (e) {
+  //               print(e.toString());
+  //             }
+  //           } else {
+  //             regController.getRegimenList();
+  //           }
+  //         },
+  //       );
+  //     }
+  //   } else {
+  //     try {
+  //       if (Platform.isAndroid) {
+  //         bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+  //         bool isBluetoothEnable = false;
+  //         isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
+  //         if (!isBluetoothEnable) {
+  //           FlutterToast().getToast(
+  //               'Please turn on your bluetooth and try again', Colors.red);
+  //           return;
+  //         } else if (!serviceEnabled) {
+  //           FlutterToast().getToast(
+  //               'Please turn on your GPS location services and try again',
+  //               Colors.red);
+  //           return;
+  //         }
+  //       }
+  //       regController = Get.find<QurhomeRegimenController>();
+  //       isDialogShowing.value = true;
+  //       CommonUtil().dialogForScanDevices(
+  //         Get.context,
+  //         onPressCancel: () {
+  //           foundBLE.value = false;
+  //           movedToNextScreen = false;
+  //           _disableTimer();
+  //           bleController.stopBleScan();
+  //           Get.back();
+  //           isDialogShowing.value = false;
+  //         },
+  //         onPressManual: () {
+  //           _disableTimer();
+  //           bleController.stopBleScan();
+  //           Get.back();
+  //           isDialogShowing.value = false;
+  //           if (!isFromVitalsList) {
+  //             //Device Not Connected
+  //             Get.toNamed(
+  //               rt_Sheela,
+  //               arguments: SheelaArgument(
+  //                 eId: eid,
+  //               ),
+  //             ).then(
+  //               (_) async {
+  //                 if (isFromVitalsList) {
+  //                   await Future.delayed(Duration(seconds: 2));
+  //                   VitalDetailController vitalController = Get.find();
+  //                   vitalController.fetchOXYDetailsQurHome(
+  //                     filter: filterApiDay,
+  //                     isLoading: true,
+  //                   );
+  //                 } else {
+  //                   regController.getRegimenList();
+  //                 }
+  //               },
+  //             );
+  //           }
+  //         },
+  //         title: strConnectPulseMeter,
+  //         isFromVital: isFromVitalsList,
+  //       );
+  //       foundBLE.value = false;
+  //       movedToNextScreen = false;
+  //       _enableTimer(isFromVitalsList);
+  //       hubController.eid = eid;
+  //       hubController.uid = uid;
+  //       bleController.getBleConnectData(Get.context);
+  //     } catch (e) {
+  //       print(e);
+  //     }
+  //   }
+  // }
 
   void updateTabIndex(int newIndex) {
     currentSelectedIndex.value = newIndex;
@@ -374,87 +374,87 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  Future<void> checkForBpConnection({bool isFromVitals}) async {
-    if ((hubController.hubListResponse?.result?.userDeviceCollection ?? [])
-        .isEmpty) {
-      Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(
-          eId: hubController.eid,
-        ),
-      ).then((_) async {
-        if (isFromVitals) {
-          await Future.delayed(Duration(seconds: 2));
-          VitalDetailController vitalController = Get.find();
-          vitalController.fetchBPDetailsQurHome(
-            filter: filterApiDay,
-            isLoading: true,
-          );
-        } else {
-          regController.getRegimenList();
-        }
-      });
-    } else {
-      if (Platform.isAndroid) {
-        _getPermissionValuesNative();
-        callNativeBpValues(isFromVitals: isFromVitals);
-      } else {
-        _enableTimer(isFromVitals);
-        foundBLE.value = false;
-        movedToNextScreen = false;
-      }
-      CommonUtil().dialogForScanDevices(
-        Get.context,
-        onPressManual: () {
-          stopBpScan();
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: hubController.eid,
-            ),
-          ).then((_) async {
-            if (isFromVitals) {
-              await Future.delayed(Duration(seconds: 2));
-              VitalDetailController vitalController = Get.find();
-              vitalController.fetchBPDetailsQurHome(
-                filter: filterApiDay,
-                isLoading: true,
-              );
-            } else {
-              regController.getRegimenList();
-            }
-          });
-        },
-        onPressCancel: () async {
-          stopBpScan();
-        },
-        title: strConnectBpMeter,
-        isFromVital: isFromVitals,
-      );
-    }
-  }
+  // Future<void> checkForBpConnection({bool isFromVitals}) async {
+  //   if ((hubController.hubListResponse?.result?.userDeviceCollection ?? [])
+  //       .isEmpty) {
+  //     Get.toNamed(
+  //       rt_Sheela,
+  //       arguments: SheelaArgument(
+  //         eId: hubController.eid,
+  //       ),
+  //     ).then((_) async {
+  //       if (isFromVitals) {
+  //         await Future.delayed(Duration(seconds: 2));
+  //         VitalDetailController vitalController = Get.find();
+  //         vitalController.fetchBPDetailsQurHome(
+  //           filter: filterApiDay,
+  //           isLoading: true,
+  //         );
+  //       } else {
+  //         regController.getRegimenList();
+  //       }
+  //     });
+  //   } else {
+  //     if (Platform.isAndroid) {
+  //       _getPermissionValuesNative();
+  //       callNativeBpValues(isFromVitals: isFromVitals);
+  //     } else {
+  //       _enableTimer(isFromVitals);
+  //       foundBLE.value = false;
+  //       movedToNextScreen = false;
+  //     }
+  //     CommonUtil().dialogForScanDevices(
+  //       Get.context,
+  //       onPressManual: () {
+  //         stopBpScan();
+  //         Get.toNamed(
+  //           rt_Sheela,
+  //           arguments: SheelaArgument(
+  //             eId: hubController.eid,
+  //           ),
+  //         ).then((_) async {
+  //           if (isFromVitals) {
+  //             await Future.delayed(Duration(seconds: 2));
+  //             VitalDetailController vitalController = Get.find();
+  //             vitalController.fetchBPDetailsQurHome(
+  //               filter: filterApiDay,
+  //               isLoading: true,
+  //             );
+  //           } else {
+  //             regController.getRegimenList();
+  //           }
+  //         });
+  //       },
+  //       onPressCancel: () async {
+  //         stopBpScan();
+  //       },
+  //       title: strConnectBpMeter,
+  //       isFromVital: isFromVitals,
+  //     );
+  //   }
+  // }
 
-  void _getPermissionValuesNative() {
-    _bpPressureSubscription ??= streamBp.receiveBroadcastStream().listen((val) {
-      print(val);
-      List<String> receivedValues = val.split('|');
-      if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues.first ?? "")) {
-          case "enablebluetooth":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          case "permissiondenied":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          default:
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-        }
-      }
-    });
-  }
+  // void _getPermissionValuesNative() {
+  //   _bpPressureSubscription ??= streamBp.receiveBroadcastStream().listen((val) {
+  //     print(val);
+  //     List<String> receivedValues = val.split('|');
+  //     if ((receivedValues ?? []).length > 0) {
+  //       switch ((receivedValues.first ?? "")) {
+  //         case "enablebluetooth":
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
+  //         case "permissiondenied":
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //           break;
+  //         default:
+  //           FlutterToast()
+  //               .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
+  //       }
+  //     }
+  //   });
+  // }
 
   void getValuesNativeAppointment() {
     _appointmentSubscription ??=
@@ -483,89 +483,89 @@ class QurhomeDashboardController extends GetxController {
     }
   }
 
-  callNativeBpValues({bool isFromVitals}) async {
-    try {
-      const platform = MethodChannel(ISBPCONNECT);
-      var result = await platform.invokeMethod(ISBPCONNECT);
-      var josnResult = convert.jsonDecode(result.toString());
-      qurHomeBpScanResultModel = QurHomeBpScanResult.fromJson(josnResult);
-      qurHomeBpScanResult.value = qurHomeBpScanResultModel?.measurementRecords;
-      if (qurHomeBpScanResultModel != null) {
-        if (qurHomeBpScanResultModel?.measurementRecords != null) {
-          if (qurHomeBpScanResultModel?.measurementRecords?.length > 0 ?? 0) {
-            if (checkForParedDevice(
-                isFromBp: true,
-                bleBPMacId: qurHomeBpScanResultModel?.deviceAddress)) {
-              Get.back();
-              Get.toNamed(
-                rt_Sheela,
-                arguments: SheelaArgument(
-                  takeActiveDeviceReadings: false,
-                  isFromBpReading: true,
-                ),
-              ).then((_) async {
-                if (isFromVitals) {
-                  await Future.delayed(Duration(seconds: 2));
-                  VitalDetailController vitalController = Get.find();
-                  vitalController.fetchBPDetailsQurHome(
-                    filter: filterApiDay,
-                    isLoading: true,
-                  );
-                } else {
-                  regController.getRegimenList();
-                }
-              });
-            } else {
-              Get.back();
-              FlutterToast().getToastForLongTime(
-                'No device found',
-                Colors.red,
-              );
-            }
-          }
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  // callNativeBpValues({bool isFromVitals}) async {
+  //   try {
+  //     const platform = MethodChannel(ISBPCONNECT);
+  //     var result = await platform.invokeMethod(ISBPCONNECT);
+  //     var josnResult = convert.jsonDecode(result.toString());
+  //     qurHomeBpScanResultModel = QurHomeBpScanResult.fromJson(josnResult);
+  //     qurHomeBpScanResult.value = qurHomeBpScanResultModel?.measurementRecords;
+  //     if (qurHomeBpScanResultModel != null) {
+  //       if (qurHomeBpScanResultModel?.measurementRecords != null) {
+  //         if (qurHomeBpScanResultModel?.measurementRecords?.length > 0 ?? 0) {
+  //           if (checkForParedDevice(
+  //               isFromBp: true,
+  //               bleBPMacId: qurHomeBpScanResultModel?.deviceAddress)) {
+  //             Get.back();
+  //             Get.toNamed(
+  //               rt_Sheela,
+  //               arguments: SheelaArgument(
+  //                 takeActiveDeviceReadings: false,
+  //                 isFromBpReading: true,
+  //               ),
+  //             ).then((_) async {
+  //               if (isFromVitals) {
+  //                 await Future.delayed(Duration(seconds: 2));
+  //                 VitalDetailController vitalController = Get.find();
+  //                 vitalController.fetchBPDetailsQurHome(
+  //                   filter: filterApiDay,
+  //                   isLoading: true,
+  //                 );
+  //               } else {
+  //                 regController.getRegimenList();
+  //               }
+  //             });
+  //           } else {
+  //             Get.back();
+  //             FlutterToast().getToastForLongTime(
+  //               'No device found',
+  //               Colors.red,
+  //             );
+  //           }
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  scanBpSessionStart({bool isFromVitals}) async {
-    if (Platform.isIOS) {
-      checkForBpConnection(isFromVitals: isFromVitals);
-    } else {
-      bool serviceEnabled = await CommonUtil().checkGPSIsOn();
-      bool isBluetoothEnable = false;
-      bool isLocationGranted = false;
-      isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
-      /*var permissionStatus =
-      await CommonUtil.askPermissionForLocation(isLocation: false);*/
-      if (!isBluetoothEnable) {
-        FlutterToast().getToast(
-            'Please turn on your bluetooth and try again', Colors.red);
-        return;
-      } else if (!serviceEnabled) {
-        FlutterToast().getToast(
-            'Please turn on your GPS location services and try again',
-            Colors.red);
-        return;
-      } else {
-        checkForBpConnection(isFromVitals: isFromVitals);
-      }
-    }
-  }
+  // scanBpSessionStart({bool isFromVitals}) async {
+  //   if (Platform.isIOS) {
+  //     checkForBpConnection(isFromVitals: isFromVitals);
+  //   } else {
+  //     bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+  //     bool isBluetoothEnable = false;
+  //     bool isLocationGranted = false;
+  //     isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
+  //     /*var permissionStatus =
+  //     await CommonUtil.askPermissionForLocation(isLocation: false);*/
+  //     if (!isBluetoothEnable) {
+  //       FlutterToast().getToast(
+  //           'Please turn on your bluetooth and try again', Colors.red);
+  //       return;
+  //     } else if (!serviceEnabled) {
+  //       FlutterToast().getToast(
+  //           'Please turn on your GPS location services and try again',
+  //           Colors.red);
+  //       return;
+  //     } else {
+  //       checkForBpConnection(isFromVitals: isFromVitals);
+  //     }
+  //   }
+  // }
 
-  stopBpScan() async {
-    Get.back();
-    if (Platform.isIOS) {
-      _disableTimer();
-      //need to cancel the session
-    } else {
-      const platform = MethodChannel(IS_BP_SCAN_CANCEL);
-      var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
-      print("scan_cancel_result$result");
-    }
-  }
+  // stopBpScan() async {
+  //   Get.back();
+  //   if (Platform.isIOS) {
+  //     _disableTimer();
+  //     //need to cancel the session
+  //   } else {
+  //     const platform = MethodChannel(IS_BP_SCAN_CANCEL);
+  //     var result = await platform.invokeMethod(IS_BP_SCAN_CANCEL);
+  //     print("scan_cancel_result$result");
+  //   }
+  // }
 
   void redirectToSheelaScheduleAppointment() {
     Get.toNamed(

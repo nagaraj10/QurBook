@@ -101,8 +101,8 @@ class _VitalsDetailsState extends State<VitalsDetails>
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   var commonConstants = CommonConstants();
   final controllerGetx = Get.put(VitalDetailController());
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
-  var hubController;
+  // var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  // var hubController;
 
   AnimationController animationController;
 
@@ -132,19 +132,19 @@ class _VitalsDetailsState extends State<VitalsDetails>
       });
 
       controllerGetx.onTapFilterBtn(0);
-      hubController = Get.find<HubListController>();
-      initGetX().then((value) {
-        if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
-                .length >
-            0) {
-          controllerGetx.updateisShowTimerDialog(true);
-          if (widget.device_name == strOxgenSaturation) {
-            initBleTimer();
-          } else if (widget.device_name == strDataTypeBP) {
-            initBpScan();
-          }
-        }
-      });
+      // hubController = Get.find<HubListController>();
+      // initGetX().then((value) {
+      //   if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
+      //           .length >
+      //       0) {
+      //     controllerGetx.updateisShowTimerDialog(true);
+      //     if (widget.device_name == strOxgenSaturation) {
+      //       initBleTimer();
+      //     } else if (widget.device_name == strDataTypeBP) {
+      //       initBpScan();
+      //     }
+      //   }
+      // });
     } catch (e) {
       print(e);
     }
@@ -182,25 +182,25 @@ class _VitalsDetailsState extends State<VitalsDetails>
     }
   }
 
-  void initBleTimer() async {
-    try {
-      qurhomeDashboardController.checkForConnectedDevices(true);
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void initBleTimer() async {
+  //   try {
+  //     qurhomeDashboardController.checkForConnectedDevices(true);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  void initBpScan() {
-    qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
-  }
+  // void initBpScan() {
+  //   qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
+  // }
 
   void notify() {
     try {
       if (_counter == 0) {
         closeDialog();
-        if (!qurhomeDashboardController.foundBLE.value) {
-          toast.getToast(NoDeviceFound, Colors.red);
-        }
+        // if (!qurhomeDashboardController.foundBLE.value) {
+        //   toast.getToast(NoDeviceFound, Colors.red);
+        // }
       }
     } catch (e) {
       print(e);

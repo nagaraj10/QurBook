@@ -52,7 +52,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   String snoozeValue = "5 mins";
   List<RegimentDataModel> regimenList = [];
 
-  var hubController = Get.find<HubListController>();
+  // var hubController = Get.find<HubListController>();
   var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
   var chatGetXController = Get.find<ChatUserListController>();
 
@@ -857,12 +857,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
         if (checkCanEdit(regimen)) {
-          var dashboardController = Get.find<QurhomeDashboardController>();
-          dashboardController.checkForConnectedDevices(
-            false,
-            eid: regimen.eid,
-            uid: regimen.uid,
-          );
+          // var dashboardController = Get.find<QurhomeDashboardController>();
+          // dashboardController.checkForConnectedDevices(
+          //   false,
+          //   eid: regimen.eid,
+          //   uid: regimen.uid,
+          // );
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -877,9 +877,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           (removeAllWhitespaces(regimen.title).toLowerCase() ==
               "bloodpressure")) {
         if (checkCanEdit(regimen)) {
-          hubController.eid = regimen.eid;
-          hubController.uid = regimen.uid;
-          qurhomeDashboardController.scanBpSessionStart(isFromVitals: false);
+          // hubController.eid = regimen.eid;
+          // hubController.uid = regimen.uid;
+          // qurhomeDashboardController.scanBpSessionStart(isFromVitals: false);
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
