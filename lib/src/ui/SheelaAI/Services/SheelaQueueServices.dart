@@ -8,35 +8,12 @@ class SheelaQueueServices {
 
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<SheelaQueueModel> postNotificationQueue() async {
+  Future<SheelaQueueModel> postNotificationQueue(String userId,String jsonBody) async {
     var body;
       body = {
-        "userId": "03ae3077-4980-4120-9cb0-f1954a956415",
-        "payload": {
-          "source": "qurplan-dashboard",
-          "content": {
-            "messageBody": "Sheela has a new message for you",
-            "messageTitle": "Hi Seenivasan S"
-          },
-          "payload": {
-            "type": "ack",
-            "priority": "high",
-            "redirectTo": "sheela|pushMessage",
-            "notificationListId": "ab8d9ed3-66d8-4495-9f33-6f729a415cf6"
-          },
-          "rawMessage": {
-            "messageBody": "Please take BP reading",
-            "messageTitle": ""
-          },
-          "messageContent": {
-            "messageBody": "Sheela has a new message for you",
-            "messageTitle": "Hi Seenivasan S",
-            "rawMessageBody": "Please take BP reading",
-            "rawMessageTitle": ""
-          }
-        }
+        "userId": userId,
+        "payload": jsonBody
       };
-
 
     var jsonString = convert.jsonEncode(body);
     final response =
