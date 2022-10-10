@@ -6,6 +6,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:html_unescape/html_unescape.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -127,8 +128,6 @@ import '../../authentication/constants/constants.dart';
 import 'package:myfhb/widgets/checkout_page.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
-import 'package:html_unescape/html_unescape.dart';
-
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
 
@@ -4895,11 +4894,9 @@ class CommonUtil {
       strName = field;
       if (strName.contains("_")) {
         strName = strName.replaceAll('_', '');
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       } else {
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
     } catch (e) {}
@@ -5096,8 +5093,8 @@ class CommonUtil {
       isTablet = false;
       isPhone = true;
     }*/
-    print("<<<<<<");
-    print(Device.get().isTablet);
+    // print("<<<<<<");
+    // print(Device.get().isTablet);
     return Device.get().isTablet;
   }
 

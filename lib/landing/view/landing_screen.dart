@@ -802,9 +802,6 @@ class _LandingScreenState extends State<LandingScreen> {
               Get.lazyPut(
                 () => QurhomeDashboardController(),
               );
-              Get.lazyPut(
-                () => HubListController(),
-              );
             },
           ),
         );

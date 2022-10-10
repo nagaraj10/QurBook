@@ -1,27 +1,17 @@
 import 'dart:async';
-import 'dart:convert' as convert;
-import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
-import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
-import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
-import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
-import 'package:myfhb/src/ui/loader_class.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/CommonUtil.dart';
+import '../../../QurHub/Controller/hub_list_controller.dart';
+import '../../BpScan/model/QurHomeBpScanResult.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/router_variable.dart';
+import '../../../src/ui/SheelaAI/Models/sheela_arguments.dart';
+import '../../../common/PreferenceUtil.dart';
+import '../../../src/model/user/MyProfileModel.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
+import '../../../common/CommonUtil.dart';
 
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
@@ -40,15 +30,13 @@ class QurhomeDashboardController extends GetxController {
   var regController;
   QurHomeBpScanResult qurHomeBpScanResultModel;
   var qurHomeBpScanResult = [].obs;
-  // BleConnectController bleController = Get.put(BleConnectController());
 
   @override
   void onInit() {
-    getHubDetails();
     PreferenceUtil.saveIfQurhomeisAcive(
       qurhomeStatus: true,
     );
-
+    Future.delayed(const Duration(seconds: 2)).then((value) => getHubDetails());
     super.onInit();
   }
 

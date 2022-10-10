@@ -70,9 +70,6 @@ class _HomeWidgetState extends State<HomeWidget> {
           Get.lazyPut(
             () => QurhomeDashboardController(),
           );
-          Get.lazyPut(
-            () => HubListController(),
-          );
         },
       ),
     );
@@ -177,8 +174,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                         icon: variable.icon_my_plan,
                         color: Color(CommonConstants.bplightColor),
                         onPressed: () async {
-                          var firebase=FirebaseAnalyticsService();
-                          firebase.trackEvent("on_plan_button_click",{"user_id" : PreferenceUtil.getStringValue(KEY_USERID_MAIN)});
+                          var firebase = FirebaseAnalyticsService();
+                          firebase.trackEvent("on_plan_button_click", {
+                            "user_id":
+                                PreferenceUtil.getStringValue(KEY_USERID_MAIN)
+                          });
                           await Get.toNamed(rt_MyPlans);
                           await landingViewModel.getQurPlanDashBoard();
                         },

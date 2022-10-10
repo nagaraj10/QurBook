@@ -38,8 +38,8 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('*********************************');
-    print(userChangedbool);
+    // print('*********************************');
+    // print(userChangedbool);
     return Container(
       width: CommonUtil().isTablet
           ? MediaQuery.of(context).size.width * 0.75

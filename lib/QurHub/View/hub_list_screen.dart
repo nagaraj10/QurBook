@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import '../Models/hub_list_response.dart';
-import 'add_network_view.dart';
 import '../Controller/hub_list_controller.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart';
@@ -131,8 +130,8 @@ class _HubListScreenState extends State<HubListScreen> {
                                             ),
                                           )
                                         ])
-                                      : pairNewDeviveBtn()
-                                  : pairNewDeviveBtn(),
+                                      : Container()
+                                  : Container(),
                             )
                           : Container(
                               child: val.hubListResponse.isSuccess
@@ -234,69 +233,11 @@ class _HubListScreenState extends State<HubListScreen> {
                                             ),
                                           )
                                         ])
-                                      : pairNewVirtualHubBtn()
-                                  : pairNewVirtualHubBtn(),
+                                      : Container()
+                                  : Container(),
                             );
                 })),
       );
-
-  Widget pairNewDeviveBtn() {
-    final pairNewDeviveWithGesture = InkWell(
-      onTap: () async {
-        try {
-          if (Platform.isIOS) {
-            Get.to(
-              () => AddNetWorkView(),
-            );
-          } else {
-            bool serviceEnabled = await CommonUtil().checkGPSIsOn();
-            /*var permissionStatus =
-                await CommonUtil.askPermissionForLocation(isLocation: false);*/
-            if (!serviceEnabled) {
-              FlutterToast().getToast(
-                  'Please turn on your GPS location services and try again',
-                  Colors.red);
-              return;
-            } else {
-              Get.to(
-                () => AddNetWorkView(),
-              );
-            }
-          }
-        } catch (e) {
-          print(e);
-        }
-      },
-      child: Container(
-        width: 250.0.w,
-        height: 48.0.h,
-        decoration: BoxDecoration(
-          color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Color.fromARGB(15, 0, 0, 0),
-              offset: Offset(0, 2),
-              blurRadius: 5,
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            "Pair New Hub",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0.sp,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      ),
-    );
-    return Center(
-      child: pairNewDeviveWithGesture,
-    );
-  }
 
   Widget pairNewVirtualHubBtn() {
     final pairNewVirtualHubWithGesture = InkWell(

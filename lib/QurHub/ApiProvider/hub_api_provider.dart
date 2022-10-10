@@ -1,7 +1,6 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -119,46 +118,6 @@ class HubApiProvider {
       throw FetchDataException(strNoInternet);
     } catch (e) {
       return null;
-    }
-  }
-
-  Future<dynamic> callConnectWifi(String wifiName, String password) async {
-    try {
-      final AddNetworkController addNetworkController = Get.find();
-      http.Response responseJson;
-
-      responseJson = await ApiServices.post(
-        "http://${addNetworkController.strIpAddress.value}/save?J=1&A=$wifiName&K=$password&Action=Save",
-        timeOutSeconds: 50,
-      );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
-    } catch (e) {}
-  }
-
-  Future<dynamic> callHubId() async {
-    try {
-      http.Response responseJson;
-      if (Platform.isIOS) {
-        responseJson = await ApiServices.get(
-          GET_HUB_ID,
-        );
-      } else {
-        final AddNetworkController addNetworkController = Get.find();
-        var headers = {"accept-content": "application/json"};
-        responseJson = await ApiServices.get(
-          "http://${addNetworkController.strIpAddress.value}/gethubid",
-          headers: headers,
-        );
-      }
-      return responseJson;
-    } catch (e) {
-      print(e.toString());
-      return "";
     }
   }
 

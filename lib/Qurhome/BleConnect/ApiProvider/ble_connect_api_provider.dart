@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
 import 'package:myfhb/Qurhome/BleConnect/Models/ble_data_model.dart';
 import 'package:myfhb/Qurhome/BpScan/model/QurHomeBpScanResult.dart';
 import 'package:myfhb/Qurhome/BpScan/model/ble_bp_data_model.dart';
@@ -16,21 +15,19 @@ import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
 class BleConnectApiProvider {
-  final String _baseUrl = BASE_URL;
-
   Future<dynamic> saveDevice(
-      String hubId, String deviceId, String nickName, String userId) async {
+    String hubId,
+    String deviceId,
+    String nickName,
+    String userId,
+  ) async {
     http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    // var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data = {
+    final data = {
       "deviceId": deviceId,
       "userHubId": hubId,
       "userId": userId,
       "additionalDetails": {}
     };
-
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
@@ -52,12 +49,9 @@ class BleConnectApiProvider {
 
   Future<dynamic> unPairHub(String hubId) async {
     http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    var data = {"userHubId": hubId};
     try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final data = {"userHubId": hubId};
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
         headers: header,
@@ -77,12 +71,8 @@ class BleConnectApiProvider {
 
   Future<dynamic> unPairDevice(String deviceId) async {
     http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID);
-
     try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
         '${CommonUtil.BASE_URL_QURHUB}user-device/' + deviceId,
         headers: header,
@@ -96,46 +86,6 @@ class BleConnectApiProvider {
       throw FetchDataException(strNoInternet);
     } catch (e) {
       return null;
-    }
-  }
-
-  Future<dynamic> callConnectWifi(String wifiName, String password) async {
-    try {
-      final AddNetworkController addNetworkController = Get.find();
-      http.Response responseJson;
-
-      responseJson = await ApiServices.post(
-        "http://${addNetworkController.strIpAddress.value}/save?J=1&A=$wifiName&K=$password&Action=Save",
-        timeOutSeconds: 50,
-      );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
-    } catch (e) {}
-  }
-
-  Future<dynamic> callHubId() async {
-    try {
-      http.Response responseJson;
-      if (Platform.isIOS) {
-        responseJson = await ApiServices.get(
-          GET_HUB_ID,
-        );
-      } else {
-        final AddNetworkController addNetworkController = Get.find();
-        var headers = {"accept-content": "application/json"};
-        responseJson = await ApiServices.get(
-          "http://${addNetworkController.strIpAddress.value}/gethubid",
-          headers: headers,
-        );
-      }
-      return responseJson;
-    } catch (e) {
-      print(e.toString());
-      return "";
     }
   }
 
@@ -156,10 +106,10 @@ class BleConnectApiProvider {
       }
     } on SocketException {
       throw FetchDataException(strNoInternet);
-      return false;
     } catch (e) {
-      return false;
+      printError(info: e.toString());
     }
+    return false;
   }
 
   Future<bool> uploadBleBPDataReadings(
