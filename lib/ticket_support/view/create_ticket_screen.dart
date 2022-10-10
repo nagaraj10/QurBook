@@ -1172,6 +1172,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   void _validateAndCreateTicket(var context, var ticketListData)
   {
     try {
+      String strName =
+          CommonUtil().validString(ticketListData.name ?? "").toLowerCase();
       controller.dynamicTextFiledObj  = {};
       if (widget.ticketList != null) {
         if (widget.ticketList.additionalInfo != null)
@@ -1245,20 +1247,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           }
       }
 
-      if (CommonUtil()
-          .validString(ticketListData.name)
-          .toLowerCase()
-          .contains("doctor appointment")) {
-        controller.dynamicTextFiledObj["description"] =
-            descController.text.toString();
-        controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
-        controller.dynamicTextFiledObj["healthOrgTypeId"] =
-            widget.ticketList.additionalInfo.healthOrgTypeId ?? "";
-        commonMethodToCreateTicket(ticketListData);
-      } else if (CommonUtil()
-          .validString(ticketListData.name)
-          .toLowerCase()
-          .contains("lab appointment")) {
+      if (strName.contains("doctor appointment") ||
+          strName.contains("lab appointment")) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
         controller.dynamicTextFiledObj["description"] =
@@ -1267,17 +1257,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         controller.dynamicTextFiledObj["healthOrgTypeId"] =
             widget.ticketList.additionalInfo.healthOrgTypeId ?? "";
         commonMethodToCreateTicket(ticketListData);
-      } else if (CommonUtil()
-          .validString(ticketListData.name)
-          .toLowerCase()
-          .contains("general health")) {
+      } else if (strName.contains("general health")) {
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
 
         commonMethodToCreateTicket(ticketListData);
-      } else if (CommonUtil()
-          .validString(ticketListData.name)
-          .toLowerCase()
-          .contains("order prescription")) {
+      } else if (strName.contains("order prescription")) {
         if (imagePaths.length > 0) {
           controller.dynamicTextFiledObj["serviceType"] =
               widget.ticketList.name;
@@ -1285,10 +1269,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         } else {
           showAlertMsg(CommonConstants.ticketFile);
         }
-      } else if (CommonUtil()
-          .validString(ticketListData.name)
-          .toLowerCase()
-          .contains("care/diet plan")) {
+      } else if (strName.contains("care/diet plan")) {
         if (dropdownValue != null) {
           tckConstants.tckSelectedCategory = dropdownValue.title;
           if (package_title_ctrl.text != null &&
@@ -1303,18 +1284,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         } else {
           showAlertMsg(CommonConstants.ticketCategory);
         }
-      } else if (CommonUtil()
-              .validString(ticketListData.name)
-              .toLowerCase()
-              .contains("transportation") ||
-          CommonUtil()
-              .validString(ticketListData.name)
-              .toLowerCase()
-              .contains("homecare services") ||
-          CommonUtil()
-              .validString(ticketListData.name)
-              .toLowerCase()
-              .contains("food delivery")) {
+      } else if (strName.contains("transportation") ||
+          strName.contains("homecare services") ||
+          strName.contains("food delivery")) {
         controller.dynamicTextFiledObj["title"] =
             titleController.text.toString();
         controller.dynamicTextFiledObj["description"] =
@@ -2211,7 +2183,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
-            print('Hitting API .. : ${value.toJson()}');
+            //print('Hitting API .. : ${value.toJson()}');
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
@@ -2230,7 +2202,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         }
       }).catchError((error) {
         Navigator.of(context, rootNavigator: true).pop();
-        print('API Error Occured : $error');
+        //print('API Error Occured : $error');
       });
     } catch (e) {
       //print(e);
