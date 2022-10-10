@@ -189,7 +189,7 @@ class NavigationDrawer extends StatelessWidget {
                           try {
                             Get.back();
                             Get.to(
-                              () => const HubListScreen(),
+                              () => HubListScreen(),
                             );
                           } catch (e) {
                             //print(e);

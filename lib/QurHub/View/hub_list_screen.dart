@@ -259,8 +259,8 @@ class _HubListScreenState extends State<HubListScreen> {
         height: 48.0.h,
         decoration: BoxDecoration(
           color: Color(CommonUtil().getMyPrimaryColor()),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-          boxShadow: <BoxShadow>[
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          boxShadow: const <BoxShadow>[
             BoxShadow(
               color: Color.fromARGB(15, 0, 0, 0),
               offset: Offset(0, 2),
@@ -450,7 +450,7 @@ class _HubListScreenState extends State<HubListScreen> {
   }
 
   Widget getDeviceImage(String deviceCode) {
-    String path = '';
+    var path;
     switch (deviceCode) {
       case 'BPMONT':
         path = 'assets/devices/bp_dashboard.png';
@@ -478,23 +478,27 @@ class _HubListScreenState extends State<HubListScreen> {
       height: 60,
       width: 60,
       child: Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(12.0),
         child: Center(
           child: Image.asset(
             path,
             height: 60,
             width: 60,
-            color:
-                /*hexToColor('#8600bd')*/ Color(
-                    CommonUtil().getMyPrimaryColor()),
+            color: Color(
+              CommonUtil().getMyPrimaryColor(),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<Widget> unPairDialog(
-          {String type, String deviceId, String hubId, String idName}) =>
+  Future<Widget> unPairDialog({
+    String type,
+    String deviceId,
+    String hubId,
+    String idName,
+  }) =>
       showDialog(
           context: context,
           builder: (BuildContext context) {

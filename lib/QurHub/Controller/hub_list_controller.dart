@@ -10,8 +10,6 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 
 import '../../constants/fhb_constants.dart';
-import '../../feedback/Model/FeedbackCategoriesTypeModel.dart';
-import '../../feedback/Model/FeedbackTypeModel.dart';
 import '../ApiProvider/hub_api_provider.dart';
 import '../Models/add_network_model.dart';
 import '../Models/hub_list_response.dart';
@@ -22,10 +20,7 @@ class HubListController extends GetxController {
   final _apiProvider = HubApiProvider();
   var loadingData = false.obs;
   var searchingBleDevice = false.obs;
-  FeedbackTypeModel feedbackType;
   HubListResponse hubListResponse;
-  FeedbackCategoryModel selectedType;
-  var catSelected = false.obs;
   var isFromQurHomeinQurBook = true.obs;
   FlutterToast toast = FlutterToast();
   static const stream = EventChannel('QurbookBLE/stream');
@@ -97,17 +92,6 @@ class HubListController extends GetxController {
       print(e.toString());
       loadingData.value = false;
     }
-  }
-
-  setRecordType(FeedbackCategoryModel selected) {
-    catSelected.value = false;
-    selectedType = selected;
-    catSelected.value = true;
-  }
-
-  removeSelectedType() {
-    selectedType = null;
-    catSelected.value = false;
   }
 
   Future<bool> callCreateVirtualHub() async {

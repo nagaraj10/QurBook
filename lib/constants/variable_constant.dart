@@ -46,7 +46,10 @@ const String strLastName = 'lastName';
 const String strRelation = 'relation';
 const String strDisableTeleconsulting =
     "Provider that you selected hasn't enrolled for teleconsulting service, we will onboard your doctor shortly";
-
+const String unPairingHub =
+    'Unmapping your QurHub router will lose connection to all your mapped devices and you\'ll not be able to connect again. Are you sure you want to do this?';
+const String unPairDevice =
+    'Are you sure you want to unpair this device from the hub?';
 //for the class add_family_user_info
 const String strFetchRoles = 'Fetching Custom Roles';
 const String strFetchProfile = 'Fetching User Profile';
