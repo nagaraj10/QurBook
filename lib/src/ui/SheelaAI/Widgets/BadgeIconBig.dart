@@ -28,25 +28,28 @@ class BadgeIconBig extends StatelessWidget {
   }
 
   Widget badge(int count) => Positioned(
-    right: 0,
-    top: 0,
+    right: 43,
+    top: 43,
     child: new Container(
       padding: EdgeInsets.all(0),
       decoration: new BoxDecoration(
         color: badgeColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(20),
       ),
       constraints: BoxConstraints(
-        minWidth: 34.0.w,
-        minHeight: 28.0.h,
+        minWidth: 42.0.w,
+        minHeight: 38.0.h,
       ),
-      child: Text(
-        count.toString(),
-        style: new TextStyle(
-          color: Colors.white,
-          fontSize: 22.0.sp,
+      child: Center(
+        child: Text(
+          count.toString(),
+          style: new TextStyle(
+            color: Colors.white,
+            fontSize: 22.0.sp,
+            fontWeight: FontWeight.w500
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       ),
     ),
   );

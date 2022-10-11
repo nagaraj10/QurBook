@@ -5016,8 +5016,8 @@ class CommonUtil {
                         badgeColor: ColorUtils.badgeQueue,
                         icon: AssetImageWidget(
                           icon: icon_sheela_queue,
-                          height: 160.h,
-                          width: 160.w,
+                          height: 280.h,
+                          width: 280.w,
                         ),
                       )
                     ],
