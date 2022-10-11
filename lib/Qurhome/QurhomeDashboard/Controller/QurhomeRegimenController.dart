@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,6 +15,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/soscallagentnumberdata.dart
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -27,6 +29,7 @@ import 'QurhomeDashboardController.dart';
 class QurhomeRegimenController extends GetxController {
   final _apiProvider = QurHomeApiProvider();
   var loadingData = false.obs;
+  var loadingDataWithoutProgress = false.obs;
 
   // QurHomeRegimenResponseModel qurHomeRegimenResponseModel;
   RegimentResponseModel qurHomeRegimenResponseModel;
@@ -54,25 +57,44 @@ class QurhomeRegimenController extends GetxController {
   var isSOSAgentCallDialogOpen = false.obs;
   var SOSAgentNumber = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;
+  var currLoggedEID = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
 
   Location locationModel;
 
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  var qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
-  getRegimenList() async {
+  Timer timer;
+
+  getRegimenList({bool isLoading = true}) async {
     try {
+      if (!isLoading) {
+        loadingDataWithoutProgress.value = true;
+      }
       loadingData.value = true;
       qurHomeRegimenResponseModel = await _apiProvider.getRegimenList("");
       loadingData.value = false;
-      qurHomeRegimenResponseModel.regimentsList
-          .removeWhere((element) => element?.isEventDisabled&&!element?.isSymptom||!element?.scheduled);
+      loadingDataWithoutProgress.value = false;
+      qurHomeRegimenResponseModel.regimentsList.removeWhere((element) =>
+          element?.isEventDisabled && !element?.isSymptom ||
+          !element?.scheduled);
       for (int i = 0;
           i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0;
           i++) {
-        if (DateTime.now()
+        String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
+        String strCurrRegimenEID = CommonUtil().validString(
+            qurHomeRegimenResponseModel?.regimentsList[i]?.eid ?? "");
+        if (strCurrLoggedEID.trim().isNotEmpty &&
+            strCurrLoggedEID.contains(strCurrRegimenEID)) {
+          nextRegimenPosition = i;
+          currentIndex = i;
+          currLoggedEID.value = "";
+          restartTimer();
+          break;
+        } else if (DateTime.now()
             .isBefore(qurHomeRegimenResponseModel?.regimentsList[i]?.estart)) {
           if (qurHomeRegimenResponseModel?.regimentsList[i]?.ack_local !=
               null) {
@@ -124,12 +146,14 @@ class QurhomeRegimenController extends GetxController {
     } catch (e) {
       print(e.toString());
       loadingData.value = false;
+      loadingDataWithoutProgress.value = false;
     }
   }
 
   @override
   void onClose() {
     try {
+      timer?.cancel();
       super.onClose();
     } catch (e) {
       print(e);
@@ -322,7 +346,7 @@ class QurhomeRegimenController extends GetxController {
               .validString(prof.result.userContactCollection3[0].phoneNumber)
           : '';
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 
@@ -352,7 +376,7 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
@@ -360,8 +384,38 @@ class QurhomeRegimenController extends GetxController {
     try {
       isSOSAgentCallDialogOpen.value = newStatus;
     } catch (e) {
-      print(e);
+      //print(e);
     }
 
+  }
+
+  void startTimer()
+  {
+    try {
+      //30 seconds API calling
+      timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+        getRegimenList(isLoading: false);
+      });
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  void restartTimer() {
+    try {
+      timer?.cancel();
+      startTimer();
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  showCurrLoggedRegimen(RegimentDataModel regimen) {
+    try {
+      currLoggedEID.value = CommonUtil().validString(regimen.eid.toString());
+      getRegimenList();
+    } catch (e) {
+      //print(e);
+    }
   }
 }

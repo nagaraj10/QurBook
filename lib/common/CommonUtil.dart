@@ -4889,6 +4889,23 @@ class CommonUtil {
     return "";
   }
 
+  String getFieldName(String field) {
+    String strName = "";
+    try {
+      strName = field;
+      if (strName.contains("_")) {
+        strName = strName.replaceAll('_', '');
+        strName = CommonUtil()
+            .titleCase(strName.toLowerCase());
+      } else {
+        strName = CommonUtil()
+            .titleCase(strName.toLowerCase());
+      }
+      return strName;
+    } catch (e) {}
+    return strName;
+  }
+
   String getFormattedDateTime(String datetime) {
     DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate =

@@ -338,16 +338,17 @@ class FHBBasicWidget {
   }
 
   Widget getTextFiledWithHintAndSuffixText(
-      BuildContext context,
-      String hintTextValue,
-      String suffixTextValue,
-      TextEditingController controllerValue,
-      Function(String) onTextChanged,
-      String error,
-      String unitsTosearch,
-      {String range,
-      String device,
-      bool showLabel}) {
+    BuildContext context,
+    String hintTextValue,
+    String suffixTextValue,
+    TextEditingController controllerValue,
+    Function(String) onTextChanged,
+    String error,
+    String unitsTosearch, {
+    String range,
+    String device,
+    bool showLabel,
+  }) {
     var errorValue = error;
     if (showLabel == null) {
       showLabel = true;
@@ -356,15 +357,24 @@ class FHBBasicWidget {
 
     return Container(
         width: 1.sw - 60,
-        child: TextField(
+        child: TextFormField(
           onTap: () {},
           controller: controllerValue,
+          inputFormatters: (device == Constants.STR_THERMOMETER ||
+                  device == Constants.STR_WEIGHING_SCALE)
+              ? [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))]
+              : [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+          keyboardType: (device == Constants.STR_THERMOMETER ||
+                  device == Constants.STR_WEIGHING_SCALE)
+              ? TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.number,
           decoration: InputDecoration(
               hintText: hintTextValue,
               suffixText: showLabel ? suffixTextValue : '',
               errorText: errorValue == '' ? null : errorValue,
               errorMaxLines: 2),
-          keyboardType: TextInputType.number,
           onChanged: (value) {
             commonConstants
                 .getValuesForUnit(unitsTosearch, range)
@@ -372,7 +382,7 @@ class FHBBasicWidget {
               unitsMesurements = unitsMesurementsClone;
 
               var number;
-              if (device == "Temp") {
+              if (device == Constants.STR_THERMOMETER) {
                 number = double.parse(value);
               } else {
                 number = int.parse(value);
@@ -837,7 +847,7 @@ class FHBBasicWidget {
     var errorValue = error;
     return Container(
         width: 50.0.w,
-        child: TextField(
+        child: TextFormField(
           textAlign: TextAlign.center,
           maxLength: deviceName == Constants.STR_THERMOMETER
               ? 4
@@ -884,11 +894,15 @@ class FHBBasicWidget {
               hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0.sp),
               contentPadding: EdgeInsets.zero),
           cursorColor: getColorBasedOnDevice(deviceName, unitsTosearch, ''),
-          inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+          inputFormatters: (deviceName == Constants.STR_THERMOMETER ||
+                  deviceName == Constants.STR_WEIGHING_SCALE)
+              ? [FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*'))]
+              : [FilteringTextInputFormatter.digitsOnly],
           keyboardType: (deviceName == Constants.STR_THERMOMETER ||
                   deviceName == Constants.STR_WEIGHING_SCALE)
               ? TextInputType.numberWithOptions(decimal: true)
               : TextInputType.number,
+
           cursorWidth: 0.5.w,
           onChanged: (value) {
             //setValues(unitsTosearch,range);

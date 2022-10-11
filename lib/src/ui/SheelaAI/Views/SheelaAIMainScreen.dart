@@ -359,8 +359,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     controller.stopTTS();
     controller.isMicListening.value = false;
     final List<PopupMenuItem<String>> languagesMenuList = [];
-    final String currentLanguage = '';
-    final lan = controller.getCurrentLanCode(splittedCode: true);
+    final currentLanguage = controller.getCurrentLanCode(splittedCode: true);
     CommonUtil.supportedLanguages.forEach(
       (
         language,
@@ -381,7 +380,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         CommonUtil.langaugeCodes[value ?? 'undef']);
                     controller.getDeviceSelectionValues(
                       preferredLanguage: value,
-                    );
+                    ).then((value1) {
+                      controller.updateDeviceSelectionModel(preferredLanguage: value);
+                    });
                   },
                 ),
                 Text(

@@ -147,7 +147,8 @@ class _TicketsList extends State<TicketsList> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedTicketView(ticketList[i])),
+                builder: (context) => DetailedTicketView(
+                    ticketList[i], false, ticketList[i].uid.toString())),
           );
         },
         child: Container(
@@ -238,7 +239,23 @@ class _TicketsList extends State<TicketsList> {
                                 maxLines: 2,
                               ),
                               Text(
-                                ticketList[i].status == 0 ? 'Open' : 'Closed',
+                                (ticketList[i]
+                                                .additionalInfo
+                                                ?.ticketStatus
+                                                ?.name !=
+                                            null &&
+                                        ticketList[i]
+                                                .additionalInfo
+                                                ?.ticketStatus
+                                                ?.name !=
+                                            '')
+                                    ? ticketList[i]
+                                        .additionalInfo
+                                        ?.ticketStatus
+                                        ?.name
+                                    : ticketList[i].status == 0
+                                        ? 'Open'
+                                        : 'Closed',
                                 style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w600,
@@ -292,7 +309,10 @@ class _TicketsList extends State<TicketsList> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            DetailedTicketView(ticketList[i])),
+                                            DetailedTicketView(
+                                                ticketList[i],
+                                                false,
+                                                ticketList[i].uid.toString())),
                                   );
                                 },
                                 child: Container(

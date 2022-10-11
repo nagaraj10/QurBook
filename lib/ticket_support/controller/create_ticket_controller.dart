@@ -5,6 +5,7 @@ import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/User.dart';
+import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 
 class CreateTicketController extends GetxController {
   List<Hospitals> labsList = [];
@@ -22,6 +23,9 @@ class CreateTicketController extends GetxController {
   var doctorBookAppointment = false.obs;
   var selPrefDoctor = "Select".obs;
   var selPrefDoctorId = "".obs;
+
+  //List<FieldData> modeOfServiceList = [];
+  var dynamicTextFiledObj  = {};
 
   @override
   void onClose() {

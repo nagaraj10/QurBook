@@ -70,6 +70,7 @@ class Ticket {
   int iV;
   String preferredLabName;
   AdditionalInfo additionalInfo;
+  var dataFields;
 
   Ticket(
       {this.deleted,
@@ -93,68 +94,73 @@ class Ticket {
       this.uid,
       this.iV,
       this.preferredLabName,
-      this.additionalInfo});
+      this.additionalInfo,this.dataFields});
 
   Ticket.fromJson(Map<String, dynamic> json) {
-    deleted = json['deleted'];
-    status = json['status'];
-    if (json['tags'] != null) {
-      tags = new List<Tags>();
-      json['tags'].forEach((v) {
-        tags.add(new Tags.fromJson(v));
-      });
+    try {
+      deleted = json['deleted'];
+      status = json['status'];
+      if (json['tags'] != null) {
+            tags = new List<Tags>();
+            json['tags'].forEach((v) {
+              tags.add(new Tags.fromJson(v));
+            });
+          }
+      if (json['subscribers'] != null) {
+            subscribers = new List<Subscribers>();
+            json['subscribers'].forEach((v) {
+              subscribers.add(new Subscribers.fromJson(v));
+            });
+          }
+      sId = json['_id'];
+      owner =
+              json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
+      subject = json['subject'];
+      group = json['group'] != null ? new Group.fromJson(json['group']) : null;
+      type = json['type'] != null ? new Type.fromJson(json['type']) : null;
+      priority = json['priority'] != null
+              ? new Priorities.fromJson(json['priority'])
+              : null;
+      issue = json['issue'];
+      assignee = json['assignee'] != null
+              ? new Subscribers.fromJson(json['assignee'])
+              : null;
+      date = json['date'];
+      preferredDate = json['preferredDate'];
+      if (json['comments'] != null) {
+            comments = <Comments>[];
+            json['comments'].forEach((v) {
+              comments.add(new Comments.fromJson(v));
+            });
+          }
+      if (json['notes'] != null) {
+            notes = new List<Null>();
+            json['notes'].forEach((v) {
+              notes.add(new Notes.fromJson(v));
+            });
+          }
+      if (json['attachments'] != null) {
+            attachments = new List<Attachments>();
+            json['attachments'].forEach((v) {
+              attachments.add(new Attachments.fromJson(v));
+            });
+          }
+      if (json['history'] != null) {
+            history = new List<History>();
+            json['history'].forEach((v) {
+              history.add(new History.fromJson(v));
+            });
+          }
+      additionalInfo = json['additionalInfo'] != null
+              ? new AdditionalInfo.fromJson(json['additionalInfo'])
+              : null;
+      uid = json['uid'];
+      iV = json['__v'];
+      preferredLabName = json['preferredLabName'];
+      dataFields =json['additionalInfo'];
+    } catch (e) {
+      //print(e);
     }
-    if (json['subscribers'] != null) {
-      subscribers = new List<Subscribers>();
-      json['subscribers'].forEach((v) {
-        subscribers.add(new Subscribers.fromJson(v));
-      });
-    }
-    sId = json['_id'];
-    owner =
-        json['owner'] != null ? new Subscribers.fromJson(json['owner']) : null;
-    subject = json['subject'];
-    group = json['group'] != null ? new Group.fromJson(json['group']) : null;
-    type = json['type'] != null ? new Type.fromJson(json['type']) : null;
-    priority = json['priority'] != null
-        ? new Priorities.fromJson(json['priority'])
-        : null;
-    issue = json['issue'];
-    assignee = json['assignee'] != null
-        ? new Subscribers.fromJson(json['assignee'])
-        : null;
-    date = json['date'];
-    preferredDate = json['preferredDate'];
-    if (json['comments'] != null) {
-      comments = <Comments>[];
-      json['comments'].forEach((v) {
-        comments.add(new Comments.fromJson(v));
-      });
-    }
-    if (json['notes'] != null) {
-      notes = new List<Null>();
-      json['notes'].forEach((v) {
-        notes.add(new Notes.fromJson(v));
-      });
-    }
-    if (json['attachments'] != null) {
-      attachments = new List<Attachments>();
-      json['attachments'].forEach((v) {
-        attachments.add(new Attachments.fromJson(v));
-      });
-    }
-    if (json['history'] != null) {
-      history = new List<History>();
-      json['history'].forEach((v) {
-        history.add(new History.fromJson(v));
-      });
-    }
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    uid = json['uid'];
-    iV = json['__v'];
-    preferredLabName = json['preferredLabName'];
   }
 
   Map<String, dynamic> toJson() {
@@ -558,29 +564,44 @@ class Type {
   String sId;
   String name;
   int iV;
+  AdditionalInfoType additionalInfo;
 
-  Type({this.priorities, this.sId, this.name, this.iV});
+  Type({this.priorities, this.sId, this.name, this.iV,this.additionalInfo});
 
   Type.fromJson(Map<String, dynamic> json) {
-    if (json['priorities'] != null) {
-      priorities = new List<Priorities>();
-      json['priorities'].forEach((v) {
-        priorities.add(new Priorities.fromJson(v));
-      });
+    try {
+      if (json['priorities'] != null) {
+        priorities = new List<Priorities>();
+        json['priorities'].forEach((v) {
+          priorities.add(new Priorities.fromJson(v));
+        });
+      }
+      sId = json['_id'];
+      name = json['name'];
+      iV = json['__v'];
+      additionalInfo = json['additionalInfo'] != null
+          ? new AdditionalInfoType.fromJson(json['additionalInfo'])
+          : null;
+    } catch (e) {
+      //print(e);
     }
-    sId = json['_id'];
-    name = json['name'];
-    iV = json['__v'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.priorities != null) {
-      data['priorities'] = this.priorities.map((v) => v.toJson()).toList();
+    try {
+      if (this.priorities != null) {
+        data['priorities'] = this.priorities.map((v) => v.toJson()).toList();
+      }
+      data['_id'] = this.sId;
+      data['name'] = this.name;
+      data['__v'] = this.iV;
+      if (this.additionalInfo != null) {
+        data['additionalInfo'] = this.additionalInfo.toJson();
+      }
+    } catch (e) {
+      //print(e);
     }
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['__v'] = this.iV;
     return data;
   }
 }
@@ -661,6 +682,146 @@ class History {
       data['owner'] = this.owner.toJson();
     }
     data['date'] = this.date;
+    return data;
+  }
+}
+
+
+class AdditionalInfoType {
+  List<Field> field;
+  String healthOrgTypeId;
+
+  AdditionalInfoType({this.field,this.healthOrgTypeId});
+
+  AdditionalInfoType.fromJson(Map<String, dynamic> json) {
+    try {
+      if (json['field'] != null) {
+        field = <Field>[];
+        json['field'].forEach((v) {
+          field.add(new Field.fromJson(v));
+        });
+      }
+      healthOrgTypeId = json['healthOrgTypeId'];
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      if (this.field != null) {
+        data['field'] = this.field.map((v) => v.toJson()).toList();
+      }
+      data['healthOrgTypeId'] = this.healthOrgTypeId;
+    } catch (e) {
+      //print(e);
+    }
+    return data;
+  }
+}
+
+class Field {
+  String name;
+  String type;
+  String field;
+  bool isDoctor;
+  bool isHospital;
+  bool isCategory;
+  bool isLab;
+  bool isRequired;
+  List<FieldData> fieldData;
+  String displayName;
+  String placeholder;
+  FieldData selValueDD;
+  String isVisible;
+
+  Field(
+      {this.name,
+        this.type,
+        this.field,
+        this.isDoctor = false,
+        this.isHospital = false,
+        this.isCategory = false,
+        this.isLab = false,
+        this.isRequired = false,
+        this.fieldData,this.displayName, this.placeholder,this.selValueDD=null,this.isVisible});
+
+  Field.fromJson(Map<String, dynamic> json) {
+    try {
+      name = json['name'];
+      type = json['type'];
+      field = json['field'];
+      isDoctor = json['isDoctor'] ?? false;
+      isHospital = json['isHospital'] ?? false;
+      isCategory = json['isCategory'] ?? false;
+      isLab = json['isLab'] ?? false;
+      isRequired = json['is_required']?? false;
+      if (json['data'] != null) {
+        fieldData = <FieldData>[];
+        json['data'].forEach((v) {
+          fieldData.add(new FieldData.fromJson(v));
+        });
+      }
+      displayName = json['display_name'];
+      placeholder = json['placeholder'];
+      selValueDD = null;
+      isVisible = json['is_visible'];
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['name'] = this.name;
+      data['type'] = this.type;
+      data['field'] = this.field;
+      data['isDoctor'] = this.isDoctor;
+      data['isHospital'] = this.isHospital;
+      data['isCategory'] = this.isCategory;
+      data['isLab'] = this.isLab;
+      data['is_required'] = this.isRequired;
+      if (this.fieldData != null) {
+        data['data'] = this.fieldData.map((v) => v.toJson()).toList();
+      }
+      data['display_name'] = this.displayName;
+      data['placeholder'] = this.placeholder;
+      data['is_visible'] = this.isVisible;
+    } catch (e) {
+      //print(e);
+    }
+
+    return data;
+  }
+}
+
+class FieldData {
+  String id;
+  String name;
+  String fieldName;
+
+  FieldData({this.id, this.name,this.fieldName=null});
+
+  FieldData.fromJson(Map<String, dynamic> json) {
+    try {
+      id = json['id'];
+      name = json['name'];
+      fieldName = null;
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    try {
+      data['id'] = this.id;
+      data['name'] = this.name;
+    } catch (e) {
+      //print(e);
+    }
     return data;
   }
 }

@@ -469,8 +469,11 @@ class _ChatUserListState extends State<ChatUserList> {
                             Expanded(
                               child: Text(
                                 fulName != null
-                                    ? CommonUtil()
-                                        .titleCase(fulName.toLowerCase())
+                                    ? CommonUtil().titleCase(
+                                    fulName.toLowerCase()) +
+                                    (data?.isCarecoordinator
+                                        ? CARE_COORDINATOR_STRING
+                                        : '')
                                     : '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -480,21 +483,22 @@ class _ChatUserListState extends State<ChatUserList> {
                                 // overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            data?.isCarecoordinator
-                                ? Expanded(
-                                  child: Text(
-                                    CARE_COORDINATOR_STRING,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 16.0.sp,
-                                      ),
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                )
-                                : SizedBox.shrink(),
+
                           ],
                         ),
+                        // data?.isCarecoordinator
+                        //     ? Expanded(
+                        //   child: Text(
+                        //     CARE_COORDINATOR_STRING,
+                        //     style: TextStyle(
+                        //       fontWeight: FontWeight.w500,
+                        //       fontSize: 16.0.sp,
+                        //     ),
+                        //     // softWrap: false,
+                        //     // overflow: TextOverflow.ellipsis,
+                        //   ),
+                        // )
+                        //     : SizedBox.shrink(),
                         SizedBox(
                           height: 2.0.h,
                         ),
@@ -510,8 +514,8 @@ class _ChatUserListState extends State<ChatUserList> {
                                     fontSize: 14.0.sp,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
+                                // softWrap: false,
+                                // overflow: TextOverflow.ellipsis,
                               )
                             : Text(
                                 (data?.relationshipName != null &&
@@ -711,29 +715,19 @@ class _ChatUserListState extends State<ChatUserList> {
                           padding: const EdgeInsets.only(bottom: 4),
                           child: Row(
                             children: [
-                              Text(
-                                CommonUtil().capitalizeFirstofEach(
-                                    getDocName(userChatList)),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 15.0.sp,
-                                    fontFamily: variable.font_poppins),
+                              Expanded(
+                                child :Text(
+                                  CommonUtil().capitalizeFirstofEach(
+                                      getDocName(userChatList))+(userChatList?.isFamilyUserCareCoordinator
+                                      ?CARE_COORDINATOR_STRING:''),
+                                  // overflow: TextOverflow.ellipsis,
+                                  // softWrap: true,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 15.0.sp,
+                                      fontFamily: variable.font_poppins),
+                                ),
                               ),
-                              userChatList?.isFamilyUserCareCoordinator
-                                  ? Expanded(
-                                    child: Text(
-                                      CARE_COORDINATOR_STRING,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 16.0.sp,
-                                        ),
-                                        softWrap: false,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                  )
-                                  : SizedBox.shrink(),
                             ],
                           ),
                         ),

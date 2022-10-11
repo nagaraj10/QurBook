@@ -47,9 +47,12 @@ class QurPlanReminders {
       data.forEach((element) {
         var newData = Reminder.fromMap(element);
         if (!newData?.evDisabled) {
-          reminders.add(newData);
+          if (newData?.ack_local == '' || newData?.ack_local == null)
+            reminders.add(newData);
         }
       });
+      print(reminders.toString());
+
       await updateReminderswithLocal(reminders);
     } catch (e) {
       print(e.toString());

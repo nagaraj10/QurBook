@@ -55,10 +55,14 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    Provider.of<AppointmentsListViewModel>(context, listen: false)
-        .fetchAppointments();
-    super.initState();
+    try {
+      mInitialTime = DateTime.now();
+      Provider.of<AppointmentsListViewModel>(context, listen: false)
+              .fetchAppointments();
+      super.initState();
+    } catch (e) {
+      //print(e);
+    }
   }
 
   @override
@@ -149,22 +153,26 @@ class _AppointmentsState extends State<Appointments> {
                       fontSize: 16.0.sp,
                     ),
                     onChanged: (value) {
-                      if (value.trim().length > 1) {
-                        setState(() {
-                          isSearch = true;
-                          upcomingInfo = appointmentsViewModel
-                              .filterSearchResults(value)
-                              .upcoming;
-                          historyInfo = appointmentsViewModel
-                              .filterSearchResults(value)
-                              .past;
-                        });
-                      } else {
-                        setState(() {
-                          isSearch = false;
-                          upcomingInfo.clear();
-                          historyInfo.clear();
-                        });
+                      try {
+                        if (value.trim().length > 1) {
+                          setState(() {
+                            isSearch = true;
+                            upcomingInfo = appointmentsViewModel
+                                .filterSearchResults(value)
+                                .upcoming;
+                            historyInfo = appointmentsViewModel
+                                .filterSearchResults(value)
+                                .past;
+                          });
+                        } else {
+                          setState(() {
+                            isSearch = false;
+                            upcomingInfo.clear();
+                            historyInfo.clear();
+                          });
+                        }
+                      } catch (e) {
+                        //print(e);
                       }
                     },
                   ),

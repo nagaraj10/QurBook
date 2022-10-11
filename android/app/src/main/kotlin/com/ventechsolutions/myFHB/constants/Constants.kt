@@ -114,4 +114,6 @@ object Constants {
     val CRITICAL_APP_STOPPED="⚠️ CRITICAL - App Stopped";
     val CRITICAL_APP_STOPPED_DESCRIPTION="The app must be running in the background to receive alerts. Tap to re-open the app";
 
+    val PROP_UUID ="uid"
+
 }

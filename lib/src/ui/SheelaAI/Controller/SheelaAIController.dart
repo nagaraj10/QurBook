@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,6 +44,7 @@ class SheelaAIController extends GetxController {
   int indexOfCurrentPlayingConversation;
   AudioPlayer player;
   ScrollController scrollController = ScrollController();
+
   //Just make it true for using local tts,
   //rest of the cases will be auto handled .
   bool useLocalTTSEngine = false;
@@ -53,6 +55,8 @@ class SheelaAIController extends GetxController {
   String relationshipId;
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
+  AudioCache _audioCache;
+
   @override
   void onInit() {
     super.onInit();
@@ -60,6 +64,10 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
+    if (Platform.isIOS) {
+      _audioCache = AudioCache();
+      _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
+    }
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -70,6 +78,16 @@ class SheelaAIController extends GetxController {
     conversationFlag = null;
     player = AudioPlayer();
     listnerForAudioPlayer();
+    if (Platform.isIOS) {
+      tts_platform.setMethodCallHandler(
+        (call) {
+          if (call.method == tts_platform_closeMic) {
+            isMicListening.value = false;
+            _audioCache.play('raw/Negative.mp3');
+          }
+        },
+      );
+    }
   }
 
   listnerForAudioPlayer() {
@@ -89,8 +107,12 @@ class SheelaAIController extends GetxController {
             }
           } else {
             stopTTS();
-            if (conversations.last.isEndOfConv) {
-              gettingReposnseFromNative();
+            try {
+              if (!conversations.last.endOfConv) {
+                gettingReposnseFromNative();
+              }
+            } catch (e) {
+              //gettingReposnseFromNative();
             }
           }
         }
@@ -133,10 +155,11 @@ class SheelaAIController extends GetxController {
   startSheelaFromButton({
     String buttonText,
     String payload,
+    Buttons buttons,
   }) async {
     stopTTS();
     conversations.add(SheelaResponse(text: buttonText));
-    getAIAPIResponseFor(payload);
+    getAIAPIResponseFor(payload, buttons);
   }
 
   startSheelaConversation() {
@@ -155,18 +178,23 @@ class SheelaAIController extends GetxController {
       var msg = strhiMaya;
       if ((arguments?.rawMessage ?? '').isNotEmpty) {
         msg = arguments.rawMessage;
-        getAIAPIResponseFor(msg);
+        getAIAPIResponseFor(msg, null);
       } else if ((arguments?.sheelaInputs ?? '').isNotEmpty) {
         msg = arguments.sheelaInputs;
         conversations.add(SheelaResponse(text: msg));
-        getAIAPIResponseFor(msg);
+        getAIAPIResponseFor(msg, null);
+      } else if ((arguments?.eId ?? '').isNotEmpty ||
+          (arguments?.scheduleAppointment ?? false) ||
+          (arguments?.showUnreadMessage ?? false)) {
+        msg = KIOSK_SHEELA;
+        getAIAPIResponseFor(msg, null);
       } else {
         gettingReposnseFromNative();
       }
     }
   }
 
-  getAIAPIResponseFor(String message) async {
+  getAIAPIResponseFor(String message, Buttons buttonsList) async {
     try {
       isLoading.value = true;
       conversations.add(SheelaResponse(loading: true));
@@ -183,7 +211,11 @@ class SheelaAIController extends GetxController {
         timezone:
             splitedArr.isNotEmpty ? '${splitedArr[0]}:${splitedArr[1]}' : '',
         deviceType: Platform.isAndroid ? 'android' : 'ios',
-        relationshipId: lastMsgIsOfButtons ? message : relationshipId,
+        relationshipId: lastMsgIsOfButtons
+            ? buttonsList?.relationshipIdNotRequired ?? false
+                ? userId
+                : message
+            : relationshipId,
         conversationFlag: conversationFlag,
         localDateTime:
             CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
@@ -204,7 +236,7 @@ class SheelaAIController extends GetxController {
           KIOSK_isSheela: arguments.isSheelaFollowup,
         };
         arguments.isSheelaFollowup = false;
-      } else if (arguments?.eId != null) {
+      } else if (arguments?.eId != '' && arguments?.eId != null) {
         reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments.eId};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.eId = null;
@@ -252,6 +284,7 @@ class SheelaAIController extends GetxController {
             conversationFlag = currentResponse.conversationFlag;
           }
           if (currentResponse.endOfConv ?? false) {
+            QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
             sessionToken = const Uuid().v1();
             relationshipId = userId;
@@ -320,8 +353,12 @@ class SheelaAIController extends GetxController {
             gettingReposnseFromNative();
           } else {
             stopTTS();
-            if (conversations.last?.isEndOfConv ?? false) {
-              gettingReposnseFromNative();
+            try {
+              if (!conversations.last.endOfConv) {
+                gettingReposnseFromNative();
+              }
+            } catch (e) {
+              //gettingReposnseFromNative();
             }
           }
         }
@@ -479,6 +516,10 @@ class SheelaAIController extends GetxController {
       if (micStatus) {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
+          if (Platform.isIOS) {
+            await _audioCache.play('raw/Positive.mp3');
+            await Future.delayed(Duration(seconds: 1));
+          }
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {
@@ -499,20 +540,20 @@ class SheelaAIController extends GetxController {
                           responseRecived);
                   if (button != null) {
                     startSheelaFromButton(
-                      buttonText: button.title,
-                      payload: button.payload,
-                    );
+                        buttonText: button.title,
+                        payload: button.payload,
+                        buttons: button);
                   } else {
                     conversations.add(newConversation);
-                    getAIAPIResponseFor(response);
+                    getAIAPIResponseFor(response, button);
                   }
                 } catch (e) {
                   conversations.add(newConversation);
-                  getAIAPIResponseFor(response);
+                  getAIAPIResponseFor(response, null);
                 }
               } else {
                 conversations.add(newConversation);
-                getAIAPIResponseFor(response);
+                getAIAPIResponseFor(response, null);
               }
             }
             scrollToEnd();
@@ -566,6 +607,7 @@ class SheelaAIController extends GetxController {
 
   DeviceStatus currentDeviceStatus = DeviceStatus();
   CreateDeviceSelectionModel createDeviceSelectionModel;
+
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     final selection = getDeviceSelectionModel.result[0];
     final prof = selection.profileSetting;
@@ -623,7 +665,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getDeviceSelectionValues({String preferredLanguage}) async {
+  Future getDeviceSelectionValues({String preferredLanguage}) async {
     final GetDeviceSelectionModel selectionResult =
         await HealthReportListForUserRepository().getDeviceSelection();
     if (selectionResult.isSuccess) {
@@ -656,7 +698,7 @@ class SheelaAIController extends GetxController {
         currentDeviceStatus.isOxyActive,
         currentDeviceStatus.isThActive,
         currentDeviceStatus.isWsActive,
-        currentDeviceStatus.preferred_language,
+        preferredLanguage ?? currentDeviceStatus.preferred_language,
         currentDeviceStatus.qa_subscription,
         currentDeviceStatus.preColor,
         currentDeviceStatus.greColor,

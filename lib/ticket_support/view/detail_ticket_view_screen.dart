@@ -5,20 +5,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
-import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
-import 'package:myfhb/src/ui/audio/AudioScreenArguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
@@ -30,7 +27,6 @@ import 'package:path/path.dart' as p;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
-import 'package:myfhb/colors/fhb_colors.dart' as colors;
 import '../../widgets/GradientAppBar.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
@@ -41,9 +37,11 @@ import '../../constants/variable_constant.dart' as variable;
 var fullName, date, isUser;
 
 class DetailedTicketView extends StatefulWidget {
-  DetailedTicketView(this.ticket);
+  DetailedTicketView(this.ticket, this.isFromNotification, this.ticketId);
 
   final Tickets ticket;
+  final bool isFromNotification;
+  final String ticketId;
   @override
   State createState() {
     return _DetailedTicketViewState();
@@ -78,11 +76,14 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   String authToken = '';
   @override
   void initState() {
-    super.initState();
-    _controller = TabController(vsync: this, length: 3);
-    _controller.addListener(_handleTabSelection);
-    callTicketDetailsApi();
-
+    try {
+      super.initState();
+      _controller = TabController(vsync: this, length: 3);
+      _controller.addListener(_handleTabSelection);
+      callTicketDetailsApi();
+    } catch (e) {
+      //print(e);
+    }
     // _getHistoryData(widget.ticketUid);
   }
 
@@ -90,7 +91,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     var token = await PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     setState(() {
       authToken = token;
-      future = ticketViewModel.getTicketDetail(widget.ticket.uid.toString());
+      future = ticketViewModel.getTicketDetail(widget.isFromNotification
+          ? widget.ticketId.toString()
+          : widget.ticket.uid.toString());
     });
   }
 
@@ -106,7 +109,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           colors: Colors.white,
           size: 24.0.sp,
           onTap: () {
-            Navigator.pop(context);
+            if (widget.isFromNotification) {
+              Get.offAll(NotificationMain());
+            } else {
+              Navigator.pop(context);
+            }
           },
         ),
         title: Text(strConstants.strMyTickets),
@@ -143,6 +150,104 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget detailView(Ticket ticket) {
+    List<Widget> widgetForColumn = List();
+    String strName = "";
+    try {
+      strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
+      final dataFields = ticket.dataFields;
+      if (strName.contains("transportation") ||
+          strName.contains("homecare services") ||
+          strName.contains("food delivery") ||
+          strName.contains("doctor appointment") ||
+          strName.contains("lab appointment")) {
+        if (ticket.type.additionalInfo != null && dataFields != null) {
+          for (int i = 0; i < ticket.type.additionalInfo?.field.length; i++) {
+            Field field = ticket.type.additionalInfo?.field[i];
+            List<FieldData> fieldData = field.fieldData;
+            String fieldName = CommonUtil().validString(field.name ?? "");
+            String displayName = CommonUtil().validString(field.displayName);
+            displayName = displayName.trim().isNotEmpty
+                ? displayName
+                : CommonUtil().getFieldName(field.name);
+            for (final name in dataFields.keys) {
+              String LabelName = CommonUtil().validString(name.toString());
+              var value = dataFields[LabelName];
+              if (value != null && value.toString().trim() != "") {
+                if ((fieldName.contains("mode_of_service") ||
+                        fieldName.contains("modeOfService")) &&
+                    (LabelName.contains("mode_of_service") ||
+                        LabelName.contains("modeOfService"))) {
+                  widgetForColumn.add(
+                      (ticket?.additionalInfo?.modeOfService != null &&
+                              ticket?.additionalInfo?.modeOfService.name != "")
+                          ? commonWidgetForDropDownValue("Mode Of Service",
+                              ticket?.additionalInfo?.modeOfService.name)
+                          : SizedBox.shrink());
+                  break;
+                } else if ((fieldName.contains("preferredDate") ||
+                        fieldName.contains("preferred_date")) &&
+                    (LabelName.contains("preferredDate") ||
+                        LabelName.contains("preferred_date"))) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Date",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if ((fieldName.contains("preferredTime") ||
+                        fieldName.contains("preferred_time")) &&
+                    (LabelName.contains("preferredTime") ||
+                        LabelName.contains("preferred_time"))) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Time",
+                      CommonUtil().validString(value.toString()),
+                      isTime: true));
+                  break;
+                } else if ((fieldName.contains("preferred_lab") ||
+                        fieldName.contains("preferredLabName")) &&
+                    (LabelName.contains("preferred_lab") ||
+                        LabelName.contains("preferredLabName"))) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Lab Name",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if (fieldName.contains("choose_doctor") &&
+                    LabelName.contains("choose_doctor")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Doctor Name",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if (fieldName.contains("choose_hospital") &&
+                    LabelName.contains("choose_hospital")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Hospital Name",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if (fieldName.contains(LabelName)) {
+                  if (fieldData != null &&
+                      fieldData.length > 0 &&
+                      value is! String) {
+                    try {
+                      final strText = value['name'] as String;
+                      widgetForColumn.add(commonWidgetForDropDownValue(
+                          displayName, CommonUtil().validString(strText)));
+                    } catch (e) {
+                      //print(e);
+                    }
+                    break;
+                  } else {
+                    widgetForColumn.add(commonWidgetForDropDownValue(
+                        displayName,
+                        CommonUtil().validString(value.toString())));
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      //print(e);
+    }
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -168,7 +273,17 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             maxLines: 2,
                           ),
                           Text(
-                            widget.ticket.status == 0 ? 'Open' : 'Closed',
+                            widget.isFromNotification
+                                ? ticket.additionalInfo?.ticketStatus.name
+                                : (ticket.additionalInfo?.ticketStatus?.name !=
+                                            null &&
+                                        ticket.additionalInfo?.ticketStatus
+                                                ?.name !=
+                                            '')
+                                    ? ticket.additionalInfo?.ticketStatus?.name
+                                    : widget.ticket.status == 0
+                                        ? 'Open'
+                                        : 'Closed',
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,
@@ -192,7 +307,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                   maxLines: 2,
                                 ),
                                 Text(
-                                  ' #${widget.ticket.uid.toString()}',
+                                  widget.isFromNotification
+                                      ? '#${widget.ticketId}'
+                                      : ' #${widget.ticket.uid.toString()}',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
@@ -207,60 +324,85 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         ],
                       ),
                       SizedBox(height: 5.0),
-                      Text(
-                        ticket?.subject?.toString().capitalizeFirstofEach,
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.start,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      ticket.preferredDate != null
-                          ? Text(
-                              constants.notificationDate(
-                                  '${ticket.preferredDate.toString()}'),
-                              style: TextStyle(
-                                fontSize: 16.0.sp,
-                                fontWeight: FontWeight.w100,
-                              ),
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            )
-                          : SizedBox(),
-                      CommonUtil()
-                              .validString(ticket?.preferredLabName ?? '')
-                              .trim()
-                              .isNotEmpty
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Lab Name",
-                              CommonUtil().parseHtmlString(
-                                  ticket.preferredLabName ?? ''))
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseCategory != null &&
-                              ticket?.additionalInfo?.chooseCategory != "")
-                          ? commonWidgetForDropDownValue("Category Name",
-                              ticket?.additionalInfo?.chooseCategory ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.packageName != null &&
-                              ticket?.additionalInfo?.packageName != "")
-                          ? commonWidgetForDropDownValue("Package Name",
-                              ticket?.additionalInfo?.packageName ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseDoctor != null &&
-                              ticket?.additionalInfo?.chooseDoctor != "")
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Doctor Name",
-                              ticket?.additionalInfo?.chooseDoctor ?? '')
-                          : SizedBox.shrink(),
-                      (ticket?.additionalInfo?.chooseHospital != null &&
-                              ticket?.additionalInfo?.chooseHospital != "")
-                          ? commonWidgetForDropDownValue(
-                              "Preferred Hospital Name",
-                              ticket?.additionalInfo?.chooseHospital)
-                          : SizedBox.shrink(),
+                      (strName.contains("transportation") ||
+                              strName.contains("homecare services") ||
+                              strName.contains("food delivery") ||
+                              strName.contains("doctor appointment") ||
+                              strName.contains("lab appointment"))
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: widgetForColumn)
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  ticket?.subject
+                                      ?.toString()
+                                      .capitalizeFirstofEach,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                ticket.preferredDate != null
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            constants.notificationDate(
+                                                '${ticket.preferredDate.toString()}'),
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                              fontWeight: FontWeight.w100,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                          (ticket?.additionalInfo
+                                                          ?.preferredTime !=
+                                                      null &&
+                                                  ticket?.additionalInfo
+                                                          ?.preferredTime !=
+                                                      "")
+                                              ? Text(
+                                                  ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                                                  style: TextStyle(
+                                                    fontSize: 16.0.sp,
+                                                    fontWeight: FontWeight.w100,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                )
+                                              : SizedBox.shrink(),
+                                        ],
+                                      )
+                                    : SizedBox(),
+                                (ticket?.additionalInfo?.chooseCategory !=
+                                            null &&
+                                        ticket?.additionalInfo
+                                                ?.chooseCategory !=
+                                            "")
+                                    ? commonWidgetForDropDownValue(
+                                        "Category Name",
+                                        ticket?.additionalInfo
+                                                ?.chooseCategory ??
+                                            '')
+                                    : SizedBox.shrink(),
+                                (ticket?.additionalInfo?.packageName != null &&
+                                        ticket?.additionalInfo?.packageName !=
+                                            "")
+                                    ? commonWidgetForDropDownValue(
+                                        "Package Name",
+                                        ticket?.additionalInfo?.packageName ??
+                                            '')
+                                    : SizedBox.shrink(),
+                              ],
+                            ),
                       Row(
                         children: [
                           Spacer(
@@ -1074,7 +1216,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return file.path.toString();
   }
 
-  commonWidgetForDropDownValue(String header, String value) {
+  commonWidgetForDropDownValue(String header, String value,{bool isTime = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1092,7 +1234,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         Expanded(
           flex: 1,
           child: Text(
-            CommonUtil().capitalizeFirstofEach(value),
+            isTime?value.toUpperCase():CommonUtil().capitalizeFirstofEach(value),
             style: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,

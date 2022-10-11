@@ -104,14 +104,18 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           children: <Widget>[
                             commonWidget.docName(
                                 context,
-                                widget?.doc?.doctor?.user?.firstName
+                                widget.doc.doctorSessionId == null
+                                    ? widget?.doc?.healthOrganization?.name
+                                    ?.capitalizeFirstofEach
+                                    : widget?.doc?.doctor?.user?.firstName
                                         ?.capitalizeFirstofEach +
                                     ' ' +
                                     widget?.doc?.doctor?.user?.lastName
                                         ?.capitalizeFirstofEach),
                             SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                            widget.doc?.doctor?.specialization == null
-                                ? Container()
+                            widget.doc.doctorSessionId == null ||
+                                widget.doc?.doctor?.specialization == null
+                                ? SizedBox.shrink()
                                 : Container(
                                     width: 1.sw / 2,
                                     child: Text(
@@ -158,12 +162,31 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
-                            widget.doc.doctor.specialization == null
-                                ? Container()
+                            widget.doc.doctorSessionId == null ||
+                                widget.doc?.doctor?.specialization == null
+                                ? SizedBox.shrink()
                                 : SizedBox(height: 3.0.h),
                             commonWidget.docLoc(
                                 context,
-                                widget
+                                widget.doc.doctorSessionId == null &&
+                                    widget?.doc?.healthOrganization
+                                        ?.healthOrganizationAddressCollection !=
+                                        null &&
+                                    widget
+                                        ?.doc
+                                        ?.healthOrganization
+                                        ?.healthOrganizationAddressCollection
+                                        .length >
+                                        0
+                                    ? widget
+                                    ?.doc
+                                    ?.healthOrganization
+                                    ?.healthOrganizationAddressCollection[
+                                0]
+                                    ?.city
+                                    ?.name ??
+                                    ''
+                                    : widget
                                         .doc
                                         ?.doctor
                                         ?.user
@@ -173,7 +196,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ''),
                             SizedBoxWidget(height: 5.0.h),
                             SizedBoxWidget(height: 15.0.h),
-                            commonWidget.docIcons(false, doc, context, () {})
+                            widget.doc.doctorSessionId == null
+                                ? SizedBox.shrink()
+                                : commonWidget.docIcons(false, doc, context, () {})
                           ],
                         ),
                       ],
@@ -184,11 +209,13 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                         children: [
                           //joinCallIcon(doc),
                           SizedBoxWidget(
-                            height: widget.doc?.doctor?.specialization == null
+                            height: widget.doc?.doctor?.specialization == null||widget.doc.doctorSessionId == null
                                 ? 30.0.h
                                 : 40.0.h,
                           ),
-                          commonWidget.count(doc.slotNumber),
+                          widget.doc.doctorSessionId == null
+                              ? SizedBox.shrink()
+                              : commonWidget.count(doc.slotNumber),
                           doc.plannedFollowupDate == null
                               ? TextWidget(
                                   fontsize: 12.0.sp,
@@ -250,7 +277,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
             SizedBoxWidget(height: 5.0.h),
             Container(height: 1.0.h, color: Colors.black26),
 //            SizedBoxWidget(height: 10.0),
-            Container(
+            widget.doc.doctorSessionId == null
+                ? SizedBox.shrink()
+                : Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
               child: Row(
