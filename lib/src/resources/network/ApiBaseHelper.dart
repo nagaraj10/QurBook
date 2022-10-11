@@ -2383,14 +2383,14 @@ class ApiBaseHelper {
               : '', "name": Constants.tckSelectedHospital != 'Hospital'
               ? Constants.tckSelectedHospital
               : ''},
-          "modeOfService": {
+          /*"modeOfService": {
             "id": Constants.tckPrefMOSId != 'pref_mos_id'
                 ? Constants.tckPrefMOSId
                 : '',
             "name": Constants.tckPrefMOSName != 'pref_mos_name'
                 ? Constants.tckPrefMOSName
                 : ''
-          },
+          },*/
 
         },
       };
@@ -2763,6 +2763,22 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return UnitConfiguration.fromJson(responseJson);
+  }
+
+  Future<dynamic> postNotificationSheelaQueue(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
   }
 
   Future<dynamic> getSheelaBadgeCount(String url) async {

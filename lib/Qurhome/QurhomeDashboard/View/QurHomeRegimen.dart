@@ -204,18 +204,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               ),
             ),
           ),
-          Obx(() =>
-          controller.loadingData.isTrue
-              ? controller.loadingDataWithoutProgress.isTrue ? getDataFromAPI(
-              controller, isPortrait) : Center(
-            child: CircularProgressIndicator(),
-          )
+          Obx(() => controller.loadingData.isTrue
+              ? controller.loadingDataWithoutProgress.isTrue
+                  ? getDataFromAPI(controller, isPortrait)
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    )
               : GetBuilder<QurhomeRegimenController>(
-              id: "newUpdate",
-              builder: (val) {
-                print("working builder");
-                return getDataFromAPI(val, isPortrait);
-              })),
+                  id: "newUpdate",
+                  builder: (val) {
+                    print("working builder");
+                    return getDataFromAPI(val, isPortrait);
+                  })),
         ],
       ),
     );
@@ -224,48 +224,43 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   getDataFromAPI(QurhomeRegimenController val, var isPortrait) {
     return val.qurHomeRegimenResponseModel == null
         ? const Center(
-      child: Text(
-        'Please re-try after some time',
-      ),
-    )
-        : val.qurHomeRegimenResponseModel.regimentsList
-        .length !=
-        0
-        ? Padding(
-      padding:
-      const EdgeInsets.symmetric(vertical: 50.0),
-      child: Container(
-        child: PageView.builder(
-          itemCount: val.qurHomeRegimenResponseModel
-              .regimentsList.length,
-          scrollDirection: Axis.vertical,
-          onPageChanged: (int index) {
-            setState(() {
-              controller.currentIndex = index;
-            });
-          },
-          controller: PageController(
-              initialPage: val.nextRegimenPosition,
-              viewportFraction:
-              1 / (isPortrait == true ? 5 : 3)),
-          itemBuilder:
-              (BuildContext context, int itemIndex) {
-            return _buildCarouselItem(
-                context,
-                itemIndex,
-                val.qurHomeRegimenResponseModel
-                    .regimentsList[itemIndex],
-                val.nextRegimenPosition,
-                isPortrait);
-          },
-        ),
-      ),
-    )
-        : const Center(
-      child: Text(
-        'No activities scheduled today',
-      ),
-    );
+            child: Text(
+              'Please re-try after some time',
+            ),
+          )
+        : val.qurHomeRegimenResponseModel.regimentsList.length != 0
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 50.0),
+                child: Container(
+                  child: PageView.builder(
+                    itemCount:
+                        val.qurHomeRegimenResponseModel.regimentsList.length,
+                    scrollDirection: Axis.vertical,
+                    onPageChanged: (int index) {
+                      setState(() {
+                        controller.currentIndex = index;
+                      });
+                    },
+                    controller: PageController(
+                        initialPage: val.nextRegimenPosition,
+                        viewportFraction: 1 / (isPortrait == true ? 5 : 3)),
+                    itemBuilder: (BuildContext context, int itemIndex) {
+                      return _buildCarouselItem(
+                          context,
+                          itemIndex,
+                          val.qurHomeRegimenResponseModel
+                              .regimentsList[itemIndex],
+                          val.nextRegimenPosition,
+                          isPortrait);
+                    },
+                  ),
+                ),
+              )
+            : const Center(
+                child: Text(
+                  'No activities scheduled today',
+                ),
+              );
   }
 
   getCurrentRatio(int itemIndex) {
@@ -903,7 +898,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {
+                /*controller.getRegimenList()*/ controller
+                    .showCurrLoggedRegimen(regimen)
+              });
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -922,7 +920,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {
+                /*controller.getRegimenList()*/ controller
+                    .showCurrLoggedRegimen(regimen)
+              });
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -942,7 +943,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.getRegimenList()});
+          ).then((value) => {
+                /*controller.getRegimenList()*/ controller
+                    .showCurrLoggedRegimen(regimen)
+              });
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -991,8 +995,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           //       .fetchRegimentData();
           //   LoaderClass.hideLoadingDialog(Get.context);
           // });
+          FlutterToast().getToast(
+            'Logged Successfully',
+            Colors.red,
+          );
           controller.showCurrLoggedRegimen(regimen);
         }
+        QurPlanReminders.getTheRemindersFromAPI();
 
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
@@ -1106,7 +1115,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         eid: regimen.eid,
       );
       if (saveResponse?.isSuccess ?? false) {
-
         FlutterToast().getToast(
           'Logged Successfully',
           Colors.red,

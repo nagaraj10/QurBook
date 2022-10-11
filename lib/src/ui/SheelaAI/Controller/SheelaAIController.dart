@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -55,6 +56,7 @@ class SheelaAIController extends GetxController {
   String relationshipId;
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
+  AudioCache _audioCache;
 
   var sheelaIconBadgeCount = 0.obs;
 
@@ -67,6 +69,10 @@ class SheelaAIController extends GetxController {
   }
 
   setDefaultValues() async {
+    if (Platform.isIOS) {
+      _audioCache = AudioCache();
+      _audioCache.loadAll(['raw/Negative.mp3', 'raw/Positive.mp3']);
+    }
     profile = PreferenceUtil.getProfileData(KEY_PROFILE);
     authToken = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
     userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -77,6 +83,16 @@ class SheelaAIController extends GetxController {
     conversationFlag = null;
     player = AudioPlayer();
     listnerForAudioPlayer();
+    if (Platform.isIOS) {
+      tts_platform.setMethodCallHandler(
+        (call) {
+          if (call.method == tts_platform_closeMic) {
+            isMicListening.value = false;
+            _audioCache.play('raw/Negative.mp3');
+          }
+        },
+      );
+    }
   }
 
   listnerForAudioPlayer() {
@@ -225,7 +241,7 @@ class SheelaAIController extends GetxController {
           KIOSK_isSheela: arguments.isSheelaFollowup,
         };
         arguments.isSheelaFollowup = false;
-      } else if (arguments?.eId != null) {
+      } else if (arguments?.eId != '' && arguments?.eId != null) {
         reqJson = {KIOSK_task: KIOSK_remind, KIOSK_eid: arguments.eId};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.eId = null;
@@ -273,6 +289,7 @@ class SheelaAIController extends GetxController {
             conversationFlag = currentResponse.conversationFlag;
           }
           if (currentResponse.endOfConv ?? false) {
+            QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
             sessionToken = const Uuid().v1();
             relationshipId = userId;
@@ -504,6 +521,10 @@ class SheelaAIController extends GetxController {
       if (micStatus) {
         if (isMicListening.isFalse) {
           isMicListening.value = true;
+          if (Platform.isIOS) {
+            await _audioCache.play('raw/Positive.mp3');
+            await Future.delayed(Duration(seconds: 1));
+          }
           await voice_platform.invokeMethod(
             strspeakAssistant,
             {

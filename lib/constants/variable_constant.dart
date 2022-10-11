@@ -141,6 +141,7 @@ const String strCallLab = 'laboratories/';
 //ForIcons
 
 const String icon_camera_image = 'assets/icons/camera_image.png';
+const String icon_sheela_queue = 'assets/icons/sheela_queue.gif';
 const String icon_delete_image = 'assets/icons/delete_image.png';
 const String icon_edit_image = 'assets/icons/edit.png';
 const String icon_photo_image = 'assets/icons/photo_image.png';
@@ -528,6 +529,7 @@ const String strEnterLastName = 'Enter LastName';
 const voice_platform = MethodChannel('flutter.native/voiceIntent');
 const version_platform = MethodChannel('flutter.native/versioncode');
 const tts_platform = MethodChannel('flutter.native/textToSpeech');
+const tts_platform_closeMic = 'CloseMic';
 const security = MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
@@ -542,7 +544,8 @@ const String requestSheelaForpo = 'Record my Pulse oximeter readings';
 const String requestSheelaForweight = 'Record my Weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
-const String strQurbookSheela = 'SHEELA'; // For lex to be done for seperation lex and rasa
+const String strQurbookSheela =
+    'SHEELA'; // For lex to be done for seperation lex and rasa
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
