@@ -374,11 +374,14 @@ class CommonUtil {
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
       heightObj = new Height(
-          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
+          unitCode: Constants.STR_VAL_HEIGHT_IND,
+          unitName: variable.str_centi.toLowerCase());
       weightObj = new Height(
-          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+          unitCode: Constants.STR_VAL_WEIGHT_IND,
+          unitName: variable.str_Kilogram.toLowerCase());
       tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
+          unitCode: Constants.STR_VAL_TEMP_IND,
+          unitName: variable.str_far.toLowerCase());
       isKg = false;
       isPounds = true;
 
