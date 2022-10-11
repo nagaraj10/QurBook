@@ -1825,7 +1825,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         } else if (redirect_to == "claimList") {
             sharedValue = "${redirect_to}&${claimId}&${userId}"
         } else if (redirect_to == "isSheelaFollowup") {
-            sharedValue = "${redirect_to}&${message}"
+            sharedValue = "${redirect_to}&${message}&$rawBody"
         } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
@@ -1991,7 +1991,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             val redirectTo = data.getStringExtra(Constants.PROP_REDIRECT_TO)
             if(redirectTo!=null&&redirectTo.equals("isSheelaFollowup")){
                 val message = data.getStringExtra("message")
-                mEventChannel.success("isSheelaFollowup&${message}")
+                val rawMessage = data.getStringExtra("rawMessage")
+                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}")
             }else{
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")

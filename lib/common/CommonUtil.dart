@@ -14,6 +14,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -4913,11 +4914,9 @@ class CommonUtil {
       strName = field;
       if (strName.contains("_")) {
         strName = strName.replaceAll('_', '');
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       } else {
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
     } catch (e) {}
@@ -5009,6 +5008,43 @@ class CommonUtil {
         ),
       ),
     );
+  }
+
+  void dialogForSheelaQueue(BuildContext context, int count) async {
+    showGeneralDialog(
+        context: context,
+        barrierColor: Colors.black38,
+        barrierLabel: 'Label',
+        barrierDismissible: false,
+        pageBuilder: (_, __, ___) {
+          Future.delayed(Duration(seconds: 2), () {
+            Get.back();
+          });
+          return Center(
+            child: Container(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent.withOpacity(0.8),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BadgeIconBig(
+                        badgeCount: count ?? 0,
+                        badgeColor: ColorUtils.badgeQueue,
+                        icon: AssetImageWidget(
+                          icon: icon_sheela_queue,
+                          height: 250.h,
+                          width: 250.w,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   void initPortraitMode() async {
@@ -5231,7 +5267,8 @@ class VideoCallCommonUtils {
         patientPicture: patientPicUrl != null ? patientPicUrl : '',
         userName: regController.userName.value,
         callType: callType,
-        isWeb: 'false', // this will be always false when sent from mobile
+        isWeb: 'false',
+        // this will be always false when sent from mobile
         patientPhoneNumber: regController.userMobNo.value);
 
     Content _content = Content(
