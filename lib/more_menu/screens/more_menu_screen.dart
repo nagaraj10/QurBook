@@ -1,10 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
@@ -291,6 +295,29 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               MaterialPageRoute(
                 builder: (context) =>
                     MySettings(priColor: preColor, greColor: greColor),
+              ),
+            ).then((value) {
+              if (value) {
+                setState(() {});
+              }
+            });
+            //PageNavigator.goTo(context, router.rt_AppSettings);
+          },
+        ),
+        Divider(),
+        ListTile(
+          title: Text(variable.strDexcomConnect,
+              style: TextStyle(fontWeight: FontWeight.w500)),
+          trailing: Icon(
+            Icons.arrow_forward_ios,
+            size: 16.0.sp,
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    DexComWebScreen(),
               ),
             ).then((value) {
               if (value) {
@@ -884,45 +911,73 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             future: _handleGoogleFit(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return ListTile(
-                                  leading: ImageIcon(
-                                    AssetImage(variable.icon_digit_googleFit),
-                                    //size: 30,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(variable.strGoogleFit),
-                                  subtitle: Text(
-                                    variable.strAllowGoogle,
-                                    style: TextStyle(fontSize: 12.0.sp),
-                                  ),
-                                  trailing: Wrap(
-                                    children: <Widget>[
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: IconButton(
-                                          icon: Icon(Icons.sync),
-                                          onPressed: () {
-                                            _deviceDataHelper.syncGoogleFit();
-                                          },
-                                        ),
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: ImageIcon(
+                                        AssetImage(variable.icon_digit_googleFit),
+                                        //size: 30,
+                                        color: Colors.black,
                                       ),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          value: _isGFActive,
-                                          activeColor: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          onChanged: (bool newValue) {
-                                            setState(() {
-                                              //isTouched = true;
-                                              _isGFActive = newValue;
-                                              isIntegration = true;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                      title: Text(variable.strGoogleFit),
+                                      subtitle: Text(
+                                        variable.strAllowGoogle,
+                                        style: TextStyle(fontSize: 12.0.sp),
+                                      ),
+                                      trailing: Wrap(
+                                        children: <Widget>[
+                                          Transform.scale(
+                                            scale: 0.8,
+                                            child: IconButton(
+                                              icon: Icon(Icons.sync),
+                                              onPressed: () {
+                                                _deviceDataHelper.syncGoogleFit();
+                                              },
+                                            ),
+                                          ),
+                                          Transform.scale(
+                                            scale: 0.8,
+                                            child: Switch(
+                                              value: _isGFActive,
+                                              activeColor: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()),
+                                              onChanged: (bool newValue) {
+                                                setState(() {
+                                                  //isTouched = true;
+                                                  _isGFActive = newValue;
+                                                  isIntegration = true;
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    DrawerTile(
+                                      title: variable.strDexcomConnect,
+                                      iconWidget: SvgPicture.asset(
+                                        variable.icon_my_family_menu,
+                                        color: Colors.black54,
+                                      ),
+                                      onPressed: () async {
+                                        try {
+                                          Get.back();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DexComWebScreen(),
+                                            ),
+                                          ).then((value) {
+
+                                          });
+                                        } catch (e) {
+                                          //print(e);
+                                        }
+                                      },
+                                    ),
+
+                                  ],
                                 );
                               } else {
                                 return Container();

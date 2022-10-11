@@ -324,6 +324,7 @@ List<int> myGradient = [
 ];
 
 const String strSettings = 'Settings';
+const String strDexcomConnect = 'Dexcom Connect';
 const String strReports = 'My Reports';
 const String strMyOrders = 'My Orders';
 const String strHelp = 'Help and support';
