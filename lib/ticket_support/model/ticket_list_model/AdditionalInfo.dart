@@ -21,8 +21,8 @@ class AdditionalInfo {
     _preferredLabId = json['preferredLabId'];
     _preferredLabName = json['preferredLabName'];
     _preferredTime = json['preferredTime'];
-    _modeOfService = json['modeOfService'] != null
-        ? new FieldData.fromJson(json['modeOfService'])
+    _modeOfService = json['modeOfService'] != null||json['mode_of_service']!= null
+        ? new FieldData.fromJson(json['modeOfService'] == null?json['mode_of_service']:json['modeOfService'])
         : null;
     _ticketStatus = json['ticketStatus'] != null
         ? new Data.fromJson(json['ticketStatus'])

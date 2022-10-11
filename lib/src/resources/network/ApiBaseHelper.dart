@@ -2383,14 +2383,14 @@ class ApiBaseHelper {
               : '', "name": Constants.tckSelectedHospital != 'Hospital'
               ? Constants.tckSelectedHospital
               : ''},
-          "modeOfService": {
+          /*"modeOfService": {
             "id": Constants.tckPrefMOSId != 'pref_mos_id'
                 ? Constants.tckPrefMOSId
                 : '',
             "name": Constants.tckPrefMOSName != 'pref_mos_name'
                 ? Constants.tckPrefMOSName
                 : ''
-          },
+          },*/
 
         },
       };

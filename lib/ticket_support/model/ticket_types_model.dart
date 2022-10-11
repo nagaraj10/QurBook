@@ -168,6 +168,10 @@ class Field {
   bool isLab;
   bool isRequired;
   List<FieldData> fieldData;
+  String displayName;
+  String placeholder;
+  FieldData selValueDD;
+  String isVisible;
 
   Field(
       {this.name,
@@ -178,7 +182,7 @@ class Field {
       this.isCategory = false,
       this.isLab = false,
       this.isRequired = false,
-      this.fieldData});
+      this.fieldData,this.displayName, this.placeholder,this.selValueDD=null,this.isVisible});
 
   Field.fromJson(Map<String, dynamic> json) {
     try {
@@ -196,6 +200,10 @@ class Field {
           fieldData.add(new FieldData.fromJson(v));
         });
       }
+      displayName = json['display_name'];
+      placeholder = json['placeholder'];
+      selValueDD = null;
+      isVisible = json['is_visible'];
     } catch (e) {
       //print(e);
     }
@@ -215,6 +223,9 @@ class Field {
       if (this.fieldData != null) {
             data['data'] = this.fieldData.map((v) => v.toJson()).toList();
           }
+      data['display_name'] = this.displayName;
+      data['placeholder'] = this.placeholder;
+      data['is_visible'] = this.isVisible;
     } catch (e) {
       //print(e);
     }
@@ -226,13 +237,15 @@ class Field {
 class FieldData {
   String id;
   String name;
+  String fieldName;
 
-  FieldData({this.id, this.name});
+  FieldData({this.id, this.name,this.fieldName=null});
 
   FieldData.fromJson(Map<String, dynamic> json) {
     try {
       id = json['id'];
       name = json['name'];
+      fieldName = null;
     } catch (e) {
       //print(e);
     }
