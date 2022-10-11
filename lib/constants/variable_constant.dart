@@ -721,7 +721,7 @@ const String str_centi = 'Centimeters';
 
 const String str_Temp = 'Temperature';
 const String str_celesius = 'Celsius';
-const String str_far = 'Farenheit';
+const String str_far = 'Fahrenheit';
 
 //Reminders
 //
