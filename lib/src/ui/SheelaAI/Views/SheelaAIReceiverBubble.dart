@@ -11,6 +11,7 @@ import '../../../../common/PreferenceUtil.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart';
 import '../../../utils/screenutils/size_extensions.dart';
+import '../../imageSlider.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
 import 'CommonUitls.dart';
@@ -349,16 +350,25 @@ class SheelaAIReceiverBubble extends StatelessWidget {
             Radius.circular(10),
           ),
         ),
-        child: Image.network(
-          chat.imageURL,
-          fit: BoxFit.fill,
-          width: 200.0.h,
-          height: 200.0.h,
-          headers: {
-            HttpHeaders.authorizationHeader:
-                PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
-            Constants.KEY_OffSet: CommonUtil().setTimeZone()
-          },
-        ));
+        child: InkWell(
+            onTap: () {
+              Navigator.push(
+                  Get.context,
+                  MaterialPageRoute(
+                      builder: (context) => ImageSlider(
+                            imageURl: chat.imageURL,
+                          )));
+            },
+            child: Image.network(
+              chat.imageURL,
+              fit: BoxFit.fill,
+              width: 200.0.h,
+              height: 200.0.h,
+              headers: {
+                HttpHeaders.authorizationHeader:
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                Constants.KEY_OffSet: CommonUtil().setTimeZone()
+              },
+            )));
   }
 }
