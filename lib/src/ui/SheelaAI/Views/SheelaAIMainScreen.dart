@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -28,6 +29,7 @@ class SheelaAIMainScreen extends StatefulWidget {
 class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   SheelaAIController controller = Get.find();
+  SheelaQueueServices servicesQueue  = SheelaQueueServices();
   AnimationController animationController;
   Animation<double> _animation;
   @override
@@ -97,7 +99,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               controller.stopTTS();
               controller.canSpeak = false;
               controller.isSheelaScreenActive = false;
-
+              controller.getSheelaBadgeCount();
               Get.back();
               return true;
             }
@@ -120,7 +122,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           controller.stopTTS();
                           controller.canSpeak = false;
                           controller.isSheelaScreenActive = false;
-
+                          controller.getSheelaBadgeCount();
                           Get.back();
                         }
                       },
@@ -314,7 +316,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             controller.stopTTS();
             controller.canSpeak = false;
             controller.isSheelaScreenActive = false;
-
+            controller.getSheelaBadgeCount();
             Get.back();
           },
           child: CommonUtil().isTablet

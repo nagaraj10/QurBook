@@ -706,6 +706,7 @@ class _LandingScreenState extends State<LandingScreen> {
       fontSize: 12.sp,
       badgeColor: ColorUtils.countColor,
       badgeCount: sheelBadgeController.sheelaIconBadgeCount.value,
+      isForSheelaQueue: true,
     );
   }
 

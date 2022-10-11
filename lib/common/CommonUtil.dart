@@ -4833,7 +4833,7 @@ class CommonUtil {
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+        .map((str) => str?.length>0?'${str[0]?.toUpperCase()}${str.substring(1)}':'')
         .join(' ');
   }
 

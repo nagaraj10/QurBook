@@ -225,15 +225,24 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   onPressed: () {
-                    String sheela_lang =
-                        PreferenceUtil.getStringValue(SHEELA_LANG);
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: SheelaArgument(
-                        isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
-                        langCode: (sheela_lang ?? ''),
-                      ),
-                    );
+                    if(sheelBadgeController?.sheelaIconBadgeCount?.value>0){
+                      Get.toNamed(
+                        rt_Sheela,
+                        arguments: SheelaArgument(
+                          sheelaInputs: sheelaQueueShowRemind,
+                        ),
+                      );
+                    }else{
+                      String sheela_lang =
+                      PreferenceUtil.getStringValue(SHEELA_LANG);
+                      Get.toNamed(
+                        rt_Sheela,
+                        arguments: SheelaArgument(
+                          isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
+                          langCode: (sheela_lang ?? ''),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     height: buttonSize,
@@ -414,7 +423,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       size: 18.h,
       fontSize: 14.sp,
       badgeColor: ColorUtils.countColor,
-      badgeCount: sheelBadgeController.sheelaIconBadgeCount.value,
+      badgeCount: sheelBadgeController?.sheelaIconBadgeCount?.value??0,
+      isForSheelaQueue: true,
     );
   }
 }
