@@ -177,7 +177,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   createTicketController.doctorsList = [];
                 }
 
-                try {
+                /*try {
                   final index = ticketList[i].additionalInfo.field.indexWhere(
                       (element) => element.name == "mode_of_service");
                   if (index >= 0) {
@@ -190,7 +190,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                   }
                 } catch (e) {
                   //print(e);
-                }
+                }*/
 
                 ticketList[i].additionalInfo != null
                     ? Navigator.pushReplacement(

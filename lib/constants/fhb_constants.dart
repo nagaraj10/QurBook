@@ -694,6 +694,7 @@ var tckPackageName = '';
 var tckTypeTitle = 'text';
 var tckTypeDescription = 'text_area';
 var tckTypeDropdown = 'dropdown';
+var tckTypeLookUp = 'lookup';
 var tckTypeDate = 'date';
 var tckTypeTime = 'time';
 var tckTypeFile = "file";
