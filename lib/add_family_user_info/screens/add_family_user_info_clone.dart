@@ -2045,7 +2045,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   unitCode: Constants.STR_VAL_WEIGHT_IND,
                   unitName: 'kilograms');
               var tempObj = new Height(
-                  unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                  unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
 
               var preferredMeasurementNew = new PreferredMeasurement(
                   height: heightObj, weight: weightObj, temperature: tempObj);
@@ -2078,7 +2078,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var weightObj = new Height(
                 unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
@@ -2110,7 +2110,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var weightObj = new Height(
                 unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);

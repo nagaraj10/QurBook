@@ -400,7 +400,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                             isFaren = true;
                             tempObj = new Height(
                                 unitCode: Constants.STR_VAL_TEMP_IND,
-                                unitName: 'farenheit');
+                                unitName: 'fahrenheit');
                           });
                         }
                       },
@@ -555,7 +555,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
                     isCele = false;
                     tempObj = new Height(
                         unitCode: Constants.STR_VAL_TEMP_IND,
-                        unitName: 'farenheit');
+                        unitName: 'fahrenheit');
                   }
                 }
 
@@ -608,7 +608,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
       weightObj = new Height(
           unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
       tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
       isKg = false;
       isPounds = true;
 

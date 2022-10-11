@@ -377,7 +377,7 @@ class CommonUtil {
       weightObj = new Height(
           unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
       tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'fahrenheit');
       isKg = false;
       isPounds = true;
 
@@ -4895,11 +4895,9 @@ class CommonUtil {
       strName = field;
       if (strName.contains("_")) {
         strName = strName.replaceAll('_', '');
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       } else {
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
     } catch (e) {}

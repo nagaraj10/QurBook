@@ -502,7 +502,7 @@ const String strTemperature = 'Body Temperature';
 const String strParamTemp = 'temperature';
 const String strParamTempUnit = 'temperatureUnit';
 const String strParamUnitCelsius = 'Celsius';
-const String strParamUnitFarenheit = 'Farenheit';
+const String strParamUnitFarenheit = 'Fahrenheit';
 //Weight
 const String strWeighingScale = 'Weighing Scale';
 const String strWeight = 'Weight';
@@ -710,7 +710,7 @@ const String associationNotificationToCaregiver =
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
 const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
-    const String strQurbookServiceRequestStatusUpdate =
+const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
