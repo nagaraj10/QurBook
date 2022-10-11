@@ -28,8 +28,8 @@ class BadgeIconBig extends StatelessWidget {
   }
 
   Widget badge(int count) => Positioned(
-    right: 43,
-    top: 43,
+    right: 37,
+    top: 37,
     child: new Container(
       padding: EdgeInsets.all(0),
       decoration: new BoxDecoration(
@@ -45,7 +45,7 @@ class BadgeIconBig extends StatelessWidget {
           count.toString(),
           style: new TextStyle(
             color: Colors.white,
-            fontSize: 22.0.sp,
+            fontSize: 20.0.sp,
             fontWeight: FontWeight.w500
           ),
           textAlign: TextAlign.center,
