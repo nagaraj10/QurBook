@@ -12,9 +12,9 @@ import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<HealthRecordCollection> imageList;
+  final String imageURl;
 
-  ImageSlider({this.imageList});
-
+  ImageSlider({this.imageList, this.imageURl});
   @override
   _ImageSliderState createState() => _ImageSliderState();
 }
@@ -39,13 +39,16 @@ class _ImageSliderState extends State<ImageSlider> {
                   borderSide: BorderSide(color: Colors.white70),
                   onPressed: Navigator.of(context).pop),
             ),
-            Expanded(flex: 7, child: showPhotoView(widget.imageList)),
+            Expanded(
+                flex: 7,
+                child: widget.imageURl != null
+                    ? ImageWidget(widget.imageURl)
+                    : showPhotoView(widget.imageList)),
           ],
         ),
       ),
     );
   }
-
 
   showPhotoView(List<HealthRecordCollection> imageList) {
     return Container(
@@ -71,5 +74,9 @@ class _ImageSliderState extends State<ImageSlider> {
         ),
       ),
     ));
+  }
+
+  Widget ImageWidget(String imageURL) {
+    return PhotoView(imageProvider: NetworkImage(imageURL));
   }
 }

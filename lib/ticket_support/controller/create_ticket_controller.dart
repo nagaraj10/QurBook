@@ -24,7 +24,7 @@ class CreateTicketController extends GetxController {
   var selPrefDoctor = "Select".obs;
   var selPrefDoctorId = "".obs;
 
-  List<FieldData> modeOfServiceList = [];
+  //List<FieldData> modeOfServiceList = [];
   var dynamicTextFiledObj  = {};
 
   @override

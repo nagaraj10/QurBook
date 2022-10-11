@@ -64,7 +64,8 @@ class QurhomeRegimenController extends GetxController {
 
   Location locationModel;
 
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  //var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  var qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
   Timer timer;
 
