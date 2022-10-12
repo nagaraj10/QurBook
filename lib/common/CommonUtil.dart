@@ -4833,7 +4833,7 @@ class CommonUtil {
     );
   }
 
-  void callQueueNotificationPostApi(String json) {
+  void callQueueNotificationPostApi(var json) {
     //if (avoidExtraNotification) {
     //avoidExtraNotification = false;
     queueServices
