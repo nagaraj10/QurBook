@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:provider/provider.dart';
 
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
@@ -43,7 +45,7 @@ class IosNotificationHandler {
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
   bool viewRecordAction, chatWithCC = false;
-
+  SheelaAIController sheelaAIController = Get.find();
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
       (call) async {
@@ -91,12 +93,20 @@ class IosNotificationHandler {
           CommonUtil().listenToCallStatus(data);
         } else if (call.method == variable.navigateToSheelaReminderMethod) {
           if ((call.arguments["eid"] ?? '').isNotEmpty && isAlreadyLoaded) {
-            Get.toNamed(
-              rt_Sheela,
-              arguments: SheelaArgument(
-                eId: call.arguments["eid"],
-              ),
-            );
+            if (sheelaAIController.isSheelaScreenActive) {
+              var reqJson = {
+                KIOSK_task: KIOSK_remind,
+                KIOSK_eid: call.arguments["eid"],
+              };
+              CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+            } else {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  eId: call.arguments["eid"],
+                ),
+              );
+            }
           }
         }
       },
@@ -168,7 +178,7 @@ class IosNotificationHandler {
         phoneNumber: model.patientPhoneNumber,
         code: model.verificationCode,
       );
-    } else if (viewMemberAction &&
+    } else if ((viewMemberAction ?? false) &&
         (model.caregiverRequestor ?? '').isNotEmpty) {
       Get.to(
         MyFamilyDetailScreen(
@@ -179,14 +189,23 @@ class IosNotificationHandler {
       );
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
-    } else if (model.isSheela && (model.message ?? '').isNotEmpty) {
-      Get.toNamed(
-        rt_Sheela,
-        arguments: SheelaArgument(
-          isSheelaFollowup: true,
-          message: model.message,
-        ),
-      );
+    } else if (model.isSheela) {
+      if (sheelaAIController.isSheelaScreenActive &&
+          (model.rawBody ?? '').isNotEmpty) {
+        var reqJson = {
+          KIOSK_task: KIOSK_read,
+          KIOSK_message_api: model.rawBody,
+        };
+        CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+      } else if ((model.message ?? '').isNotEmpty) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            isSheelaFollowup: true,
+            message: model.message,
+          ),
+        );
+      }
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
         chatWithCC) {
