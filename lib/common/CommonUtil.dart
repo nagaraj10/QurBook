@@ -14,6 +14,8 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
+import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -213,6 +215,7 @@ class CommonUtil {
 
   Height heightObj, weightObj, tempObj;
   String userMappingId = '';
+  SheelaQueueServices queueServices = SheelaQueueServices();
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -373,11 +376,14 @@ class CommonUtil {
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
       heightObj = new Height(
-          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
+          unitCode: Constants.STR_VAL_HEIGHT_IND,
+          unitName: variable.str_centi.toLowerCase());
       weightObj = new Height(
-          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+          unitCode: Constants.STR_VAL_WEIGHT_IND,
+          unitName: variable.str_Kilogram.toLowerCase());
       tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+          unitCode: Constants.STR_VAL_TEMP_IND,
+          unitName: variable.str_far.toLowerCase());
       isKg = false;
       isPounds = true;
 
@@ -4827,12 +4833,31 @@ class CommonUtil {
     );
   }
 
+  void callQueueNotificationPostApi(var json) {
+    //if (avoidExtraNotification) {
+    //avoidExtraNotification = false;
+    queueServices
+        .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID), json)
+        .then((value) {
+      if (value != null && value?.isSuccess) {
+        if (value?.result != null) {
+          if (value?.result?.queueCount != null &&
+              value?.result?.queueCount > 0) {
+            CommonUtil().dialogForSheelaQueue(
+                Get.context, value?.result?.queueCount ?? 0);
+          }
+        }
+      }
+    });
+    //}
+  }
+
   String capitalizeFirstofEach(String data) {
     return data
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((str) => '${str[0].toUpperCase()}${str.substring(1)}')
+        .map((str) => str?.length>0?'${str[0]?.toUpperCase()}${str.substring(1)}':'')
         .join(' ');
   }
 
@@ -4889,17 +4914,33 @@ class CommonUtil {
     return "";
   }
 
+  enableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  disableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
   String getFieldName(String field) {
     String strName = "";
     try {
       strName = field;
       if (strName.contains("_")) {
         strName = strName.replaceAll('_', '');
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       } else {
-        strName = CommonUtil()
-            .titleCase(strName.toLowerCase());
+        strName = CommonUtil().titleCase(strName.toLowerCase());
       }
       return strName;
     } catch (e) {}
@@ -4991,6 +5032,43 @@ class CommonUtil {
         ),
       ),
     );
+  }
+
+  void dialogForSheelaQueue(BuildContext context, int count) async {
+    showGeneralDialog(
+        context: context,
+        barrierColor: Colors.black38,
+        barrierLabel: 'Label',
+        barrierDismissible: false,
+        pageBuilder: (_, __, ___) {
+          Future.delayed(Duration(seconds: 2), () {
+            Get.back();
+          });
+          return Center(
+            child: Container(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent.withOpacity(0.8),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      BadgeIconBig(
+                        badgeCount: count ?? 0,
+                        badgeColor: ColorUtils.badgeQueue,
+                        icon: AssetImageWidget(
+                          icon: icon_sheela_queue,
+                          height: 250.h,
+                          width: 250.w,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
   }
 
   void initPortraitMode() async {
@@ -5213,7 +5291,8 @@ class VideoCallCommonUtils {
         patientPicture: patientPicUrl != null ? patientPicUrl : '',
         userName: regController.userName.value,
         callType: callType,
-        isWeb: 'false', // this will be always false when sent from mobile
+        isWeb: 'false',
+        // this will be always false when sent from mobile
         patientPhoneNumber: regController.userMobNo.value);
 
     Content _content = Content(

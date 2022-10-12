@@ -102,11 +102,13 @@ const String KIOSK_data = 'kiosk_data';
 const String KIOSK_task = 'task';
 const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
+const String KIOSK_read = 'read';
 const String KIOSK_appointment_avail = 'availability';
 const String KIOSK_eid = 'eid';
 const String KIOSK_action = 'Action';
 const String KIOSK_activityName = 'ActivityName';
 const String KIOSK_message = 'Message';
+const String KIOSK_message_api = 'message';
 const String KIOSK_isSheela = 'isSheela';
 const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
@@ -502,7 +504,7 @@ const String strTemperature = 'Body Temperature';
 const String strParamTemp = 'temperature';
 const String strParamTempUnit = 'temperatureUnit';
 const String strParamUnitCelsius = 'Celsius';
-const String strParamUnitFarenheit = 'Farenheit';
+const String strParamUnitFarenheit = 'Fahrenheit';
 //Weight
 const String strWeighingScale = 'Weighing Scale';
 const String strWeight = 'Weight';
@@ -710,7 +712,7 @@ const String associationNotificationToCaregiver =
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
 const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
-    const String strQurbookServiceRequestStatusUpdate =
+const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
 
 const String patientPhoneNumber = 'patientPhoneNumber';

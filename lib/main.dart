@@ -15,6 +15,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
@@ -30,6 +31,7 @@ import 'claim/screen/ClaimRecordDisplay.dart';
 import 'common/firebase_analytics_service.dart';
 import 'constants/fhb_parameters.dart';
 import 'constants/router_variable.dart';
+import 'constants/variable_constant.dart';
 import 'device_integration/viewModel/Device_model.dart';
 import 'myPlan/view/myPlanDetail.dart';
 import 'my_family_detail/models/my_family_detail_arguments.dart';
@@ -407,6 +409,7 @@ class MyFHB extends StatefulWidget {
 }
 
 class _MyFHBState extends State<MyFHB> {
+  final SheelaAIController sheelaAIController = Get.put(SheelaAIController());
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   int myPrimaryColor = CommonUtil().getMyPrimaryColor();
   static const platform = variable.version_platform;
@@ -434,6 +437,7 @@ class _MyFHBState extends State<MyFHB> {
   ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
   var apiBaseHelper = ApiBaseHelper();
+  bool avoidExtraNotification = true;
 
   @override
   void initState() {
@@ -464,7 +468,7 @@ class _MyFHBState extends State<MyFHB> {
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
-    Get.put(SheelaAIController());
+    //Get.put(SheelaAIController());
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
@@ -535,22 +539,37 @@ class _MyFHBState extends State<MyFHB> {
         });
       }
       if (passedValArr[0] == 'activityRemainderInvokeSheela') {
-        print("eid: " + passedValArr[1].toString());
-        Get.toNamed(
-          rt_Sheela,
-          arguments: SheelaArgument(eId: passedValArr[1].toString()),
-        );
-      }
-      if (passedValArr[0] == 'isSheelaFollowup') {
-        Future.delayed(Duration(milliseconds: 500), () async {
+        if (sheelaAIController.isSheelaScreenActive) {
+          var reqJson = {
+            KIOSK_task: KIOSK_remind,
+            KIOSK_eid: passedValArr[1].toString()
+          };
+          CommonUtil().callQueueNotificationPostApi(reqJson);
+        } else {
           Get.toNamed(
             rt_Sheela,
-            arguments: SheelaArgument(
-              isSheelaFollowup: true,
-              message: passedValArr[1],
-            ),
+            arguments: SheelaArgument(eId: passedValArr[1].toString()),
           );
-        });
+        }
+      }
+      if (passedValArr[0] == 'isSheelaFollowup') {
+        if (sheelaAIController.isSheelaScreenActive) {
+          var reqJson = {
+            KIOSK_task: KIOSK_read,
+            KIOSK_message_api: passedValArr[2].toString()
+          };
+          CommonUtil().callQueueNotificationPostApi(reqJson);
+        } else {
+          Future.delayed(Duration(milliseconds: 500), () async {
+            Get.toNamed(
+              rt_Sheela,
+              arguments: SheelaArgument(
+                isSheelaFollowup: true,
+                message: passedValArr[1],
+              ),
+            );
+          });
+        }
       }
       if (passedValArr[0] == 'ack') {
         final temp = passedValArr[1].split('|');
@@ -1051,57 +1070,59 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
-      } else if (passedValArr[4] == 'call') {
-        try {
-          doctorPic = passedValArr[3];
-          patientPic = passedValArr[7];
-          callType = passedValArr[8];
-          var isWeb = passedValArr[9] == null
-              ? false
-              : passedValArr[9] == 'true'
-                  ? true
-                  : false;
-          if (doctorPic.isNotEmpty) {
-            try {
-              doctorPic = json.decode(doctorPic);
-            } catch (e) {}
-          } else {
-            doctorPic = '';
-          }
-          if (patientPic.isNotEmpty) {
-            try {
-              patientPic = json.decode(patientPic);
-            } catch (e) {}
-          } else {
-            patientPic = '';
-          }
+      } else if (passedValArr?.asMap()?.containsKey('call')) {
+        if (passedValArr[4] == 'call') {
+          try {
+            doctorPic = passedValArr[3];
+            patientPic = passedValArr[7];
+            callType = passedValArr[8];
+            var isWeb = passedValArr[9] == null
+                ? false
+                : passedValArr[9] == 'true'
+                    ? true
+                    : false;
+            if (doctorPic.isNotEmpty) {
+              try {
+                doctorPic = json.decode(doctorPic);
+              } catch (e) {}
+            } else {
+              doctorPic = '';
+            }
+            if (patientPic.isNotEmpty) {
+              try {
+                patientPic = json.decode(patientPic);
+              } catch (e) {}
+            } else {
+              patientPic = '';
+            }
 
-          fbaLog(eveParams: {
-            'eventTime': '${DateTime.now()}',
-            'ns_type': 'call',
-            'navigationPage': 'TeleHelath Call screen',
-          });
-          if (callType.toLowerCase() == 'audio') {
-            Provider.of<AudioCallProvider>(Get.context, listen: false)
-                .enableAudioCall();
-          } else if (callType.toLowerCase() == 'video') {
-            Provider.of<AudioCallProvider>(Get.context, listen: false)
-                .disableAudioCall();
-          }
+            fbaLog(eveParams: {
+              'eventTime': '${DateTime.now()}',
+              'ns_type': 'call',
+              'navigationPage': 'TeleHelath Call screen',
+            });
+            if (callType.toLowerCase() == 'audio') {
+              Provider.of<AudioCallProvider>(Get.context, listen: false)
+                  .enableAudioCall();
+            } else if (callType.toLowerCase() == 'video') {
+              Provider.of<AudioCallProvider>(Get.context, listen: false)
+                  .disableAudioCall();
+            }
 
-          Get.to(CallMain(
-            doctorName: passedValArr[1],
-            doctorId: passedValArr[2],
-            doctorPic: doctorPic,
-            patientId: passedValArr[5],
-            patientName: passedValArr[6],
-            patientPicUrl: patientPic,
-            channelName: passedValArr[0],
-            role: ClientRole.Broadcaster,
-            isAppExists: true,
-            isWeb: isWeb,
-          ));
-        } catch (e) {}
+            Get.to(CallMain(
+              doctorName: passedValArr[1],
+              doctorId: passedValArr[2],
+              doctorPic: doctorPic,
+              patientId: passedValArr[5],
+              patientName: passedValArr[6],
+              patientPicUrl: patientPic,
+              channelName: passedValArr[0],
+              role: ClientRole.Broadcaster,
+              isAppExists: true,
+              isWeb: isWeb,
+            ));
+          } catch (e) {}
+        }
       }
     }
   }

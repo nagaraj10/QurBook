@@ -2790,6 +2790,37 @@ class ApiBaseHelper {
     return UnitConfiguration.fromJson(responseJson);
   }
 
+  Future<dynamic> postNotificationSheelaQueue(String url, String jsonString) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonString);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> getSheelaBadgeCount(String url) async {
+    var responseJson;
+
+    try {
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
 /*
   Future<dynamic> getMemberShipDetails(String url) async {
     MemberShipDetails responseJson;
