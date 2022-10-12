@@ -361,6 +361,10 @@ const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 
 const String qr_chat_socket_history = 'chat/get-message-history';
 
+//sheela bagde
+
+const String qr_sheela_badge_icon_count = 'notification-log/sheela-pending-queue/';
+
 // family list mapping
 
 const String qr_chat_family_mapping =

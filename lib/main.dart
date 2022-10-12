@@ -544,7 +544,7 @@ class _MyFHBState extends State<MyFHB> {
             KIOSK_task: KIOSK_remind,
             KIOSK_eid: passedValArr[1].toString()
           };
-          CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+          CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
           Get.toNamed(
             rt_Sheela,
@@ -558,7 +558,7 @@ class _MyFHBState extends State<MyFHB> {
             KIOSK_task: KIOSK_read,
             KIOSK_message_api: passedValArr[2].toString()
           };
-          CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+          CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
           Future.delayed(Duration(milliseconds: 500), () async {
             Get.toNamed(
