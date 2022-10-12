@@ -437,7 +437,6 @@ class _MyFHBState extends State<MyFHB> {
   ChatViewModel chatViewModel = ChatViewModel();
   bool isFirstTime;
   var apiBaseHelper = ApiBaseHelper();
-  SheelaQueueServices queueServices = SheelaQueueServices();
   bool avoidExtraNotification = true;
 
   @override
@@ -545,7 +544,7 @@ class _MyFHBState extends State<MyFHB> {
             KIOSK_task: KIOSK_remind,
             KIOSK_eid: passedValArr[1].toString()
           };
-          callQueueNotificationPostApi(reqJson.toString());
+          CommonUtil().callQueueNotificationPostApi(reqJson.toString());
         } else {
           Get.toNamed(
             rt_Sheela,
@@ -559,7 +558,7 @@ class _MyFHBState extends State<MyFHB> {
             KIOSK_task: KIOSK_read,
             KIOSK_message_api: passedValArr[2].toString()
           };
-          callQueueNotificationPostApi(reqJson.toString());
+          CommonUtil().callQueueNotificationPostApi(reqJson.toString());
         } else {
           Future.delayed(Duration(milliseconds: 500), () async {
             Get.toNamed(
@@ -1072,7 +1071,7 @@ class _MyFHBState extends State<MyFHB> {
           //       backgroundColor: Colors.green.shade500);
         }
       } else if (passedValArr?.asMap()?.containsKey('call')) {
-        if(passedValArr[4] == 'call'){
+        if (passedValArr[4] == 'call') {
           try {
             doctorPic = passedValArr[3];
             patientPic = passedValArr[7];
@@ -1080,8 +1079,8 @@ class _MyFHBState extends State<MyFHB> {
             var isWeb = passedValArr[9] == null
                 ? false
                 : passedValArr[9] == 'true'
-                ? true
-                : false;
+                    ? true
+                    : false;
             if (doctorPic.isNotEmpty) {
               try {
                 doctorPic = json.decode(doctorPic);
@@ -1124,7 +1123,6 @@ class _MyFHBState extends State<MyFHB> {
             ));
           } catch (e) {}
         }
-
       }
     }
   }
@@ -1655,25 +1653,5 @@ class _MyFHBState extends State<MyFHB> {
       categoryType, List<String> hrmId, bool isTerminate) async {
     await CommonUtil().getCategoryListPos(categoryType).then(
         (value) => CommonUtil().goToMyRecordsScreen(value, hrmId, isTerminate));
-  }
-
-  void callQueueNotificationPostApi(String json) {
-    //if (avoidExtraNotification) {
-      //avoidExtraNotification = false;
-      queueServices
-          .postNotificationQueue(
-              PreferenceUtil.getStringValue(KEY_USERID), json)
-          .then((value) {
-        if (value != null && value?.isSuccess) {
-          if (value?.result != null) {
-            if (value?.result?.queueCount != null &&
-                value?.result?.queueCount > 0) {
-              CommonUtil().dialogForSheelaQueue(
-                  Get.context, value?.result?.queueCount ?? 0);
-            }
-          }
-        }
-      });
-    //}
   }
 }
