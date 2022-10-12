@@ -370,10 +370,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         for(int i = 0; i < ticketTypesResult.additionalInfo?.field.length; i++)
         {
           Field field = ticketTypesResult.additionalInfo?.field[i];
-          String displayName = CommonUtil()
-              .validString(field.displayName);
-          //print("displayName1 $displayName");
-          displayName = displayName.trim().isNotEmpty?displayName:CommonUtil().getFieldName(field.name);
+          String displayName = displayFieldName(field);
           String placeHolderName = CommonUtil()
               .validString(field.placeholder);
           placeHolderName = placeHolderName.trim().isNotEmpty?placeHolderName:displayName;
@@ -2058,9 +2055,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   ? CommonUtil().validString(field.selValueDD.id)
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
-              controller.dynamicTextFiledObj[field.name] = field.selValueDD;
+              if (field.name.contains("mode_of_service")) {
+                controller.dynamicTextFiledObj["modeOfService"] =
+                    field.selValueDD;
+              } else {
+                controller.dynamicTextFiledObj[field.name] = field.selValueDD;
+              }
             } else if (field.isRequired) {
-              showAlertMsg(CommonConstants.ticketModeOfService);
+              showAlertMsg("Please choose " + displayFieldName(field));
               return;
             }
           }
@@ -2084,7 +2086,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if(field.isRequired) {
-              showAlertMsg("Please fill " + CommonUtil().getFieldName(field.name));
+              showAlertMsg("Please fill " + displayFieldName(field));
               return;
             }
           }
@@ -2101,7 +2103,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
                 showAlertMsg(
-                    "Please fill " + CommonUtil().getFieldName(field.name));
+                    "Please fill " + displayFieldName(field));
                 return;
               }
             }
@@ -2115,7 +2117,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
             } else if(field.isRequired) {
-              showAlertMsg("Please fill " + CommonUtil().getFieldName(field.name));
+              showAlertMsg("Please fill " + displayFieldName(field));
               return;
             }
           }
@@ -2131,7 +2133,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
                 showAlertMsg(
-                    "Please fill " + CommonUtil().getFieldName(field.name));
+                    "Please fill " + displayFieldName(field));
                 return;
               }
             }
@@ -2800,6 +2802,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     } catch (e) {
       //print(e);
     }
+  }
+
+  String displayFieldName(Field field)
+  {
+    String displayName = "";
+    try {
+      displayName = CommonUtil()
+          .validString(field.displayName);
+      displayName = displayName.trim().isNotEmpty?displayName:CommonUtil().getFieldName(field.name);
+      return displayName;
+    } catch (e) {}
+    return displayName;
   }
 }
 
