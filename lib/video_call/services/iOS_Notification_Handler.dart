@@ -98,7 +98,7 @@ class IosNotificationHandler {
                 KIOSK_task: KIOSK_remind,
                 KIOSK_eid: call.arguments["eid"],
               };
-              CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+              CommonUtil().callQueueNotificationPostApi(reqJson);
             } else {
               Get.toNamed(
                 rt_Sheela,
@@ -196,7 +196,7 @@ class IosNotificationHandler {
           KIOSK_task: KIOSK_read,
           KIOSK_message_api: model.rawBody,
         };
-        CommonUtil().callQueueNotificationPostApi(reqJson.toString());
+        CommonUtil().callQueueNotificationPostApi(reqJson);
       } else if ((model.message ?? '').isNotEmpty) {
         Get.toNamed(
           rt_Sheela,

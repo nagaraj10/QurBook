@@ -6,7 +6,10 @@ class BadgeIcon extends StatelessWidget {
       {this.icon,
       this.badgeCount = 0,
       this.showIfZero = false,
+      this.isForSheelaQueue = false,
       this.badgeColor = Colors.red,
+      this.size = 15,
+      this.fontSize = 12,
       TextStyle badgeTextStyle})
       : this.badgeTextStyle = badgeTextStyle ??
             TextStyle(
@@ -16,7 +19,10 @@ class BadgeIcon extends StatelessWidget {
   final Widget icon;
   final int badgeCount;
   final bool showIfZero;
+  final bool isForSheelaQueue;
   final Color badgeColor;
+  double size;
+  double fontSize;
   final TextStyle badgeTextStyle;
 
   @override
@@ -31,23 +37,35 @@ class BadgeIcon extends StatelessWidget {
         right: 0,
         top: 0,
         child: new Container(
-          padding: EdgeInsets.all(0),
-          decoration: new BoxDecoration(
-            color: badgeColor,
-            borderRadius: BorderRadius.circular(8.5),
-          ),
-          constraints: BoxConstraints(
-            minWidth: 15.0.h,
-            minHeight: 15.0.h,
-          ),
-          child: Text(
+            padding: EdgeInsets.all(0),
+            decoration: new BoxDecoration(
+              color: badgeColor,
+              borderRadius: BorderRadius.circular(9.5),
+            ),
+            constraints: BoxConstraints(
+              minWidth: size.h,
+              minHeight: size.h,
+            ),
+            child: getText(isForSheelaQueue, count)),
+      );
+
+  getText(bool isForSheelaQueueBadge, int count) {
+    return isForSheelaQueueBadge
+        ? Text(
+            count > 9 ? '9+' : count.toString(),
+            style: new TextStyle(
+              color: Colors.white,
+              fontSize: fontSize.sp,
+            ),
+            textAlign: TextAlign.center,
+          )
+        : Text(
             count.toString(),
             style: new TextStyle(
               color: Colors.white,
-              fontSize: 12.0.sp,
+              fontSize: fontSize.sp,
             ),
             textAlign: TextAlign.center,
-          ),
-        ),
-      );
+          );
+  }
 }

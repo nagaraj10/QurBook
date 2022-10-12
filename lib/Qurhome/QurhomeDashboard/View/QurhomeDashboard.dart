@@ -9,7 +9,10 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import '../../../common/PreferenceUtil.dart';
 import '../../../constants/router_variable.dart';
 import '../../../common/CommonUtil.dart';
@@ -30,6 +33,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
+
+  final sheelBadgeController = Get.put(SheelaAIController());
 
   @override
   void initState() {
@@ -220,15 +225,24 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   onPressed: () {
-                    String sheela_lang =
-                        PreferenceUtil.getStringValue(SHEELA_LANG);
-                    Get.toNamed(
-                      rt_Sheela,
-                      arguments: SheelaArgument(
-                        isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
-                        langCode: (sheela_lang ?? ''),
-                      ),
-                    );
+                    if(sheelBadgeController?.sheelaIconBadgeCount?.value>0){
+                      Get.toNamed(
+                        rt_Sheela,
+                        arguments: SheelaArgument(
+                          sheelaInputs: sheelaQueueShowRemind,
+                        ),
+                      );
+                    }else{
+                      String sheela_lang =
+                      PreferenceUtil.getStringValue(SHEELA_LANG);
+                      Get.toNamed(
+                        rt_Sheela,
+                        arguments: SheelaArgument(
+                          isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
+                          langCode: (sheela_lang ?? ''),
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                     height: buttonSize,
@@ -246,11 +260,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       shape: BoxShape.circle,
                       color: Colors.white,
                     ),
-                    child: Image.asset(
-                      icon_mayaMain,
-                      height: buttonSize,
-                      width: buttonSize,
-                    ),
+                    child: getSheelaIcon(),
                   ),
                 ),
               ),
@@ -401,5 +411,20 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   String getFormatedDate() {
     DateTime now = DateTime.now();
     return DateFormat('dd MMM yyyy').format(now);
+  }
+
+  Widget getSheelaIcon() {
+    return BadgeIcon(
+      icon: Image.asset(
+        icon_mayaMain,
+        height: buttonSize,
+        width: buttonSize,
+      ),
+      size: 18.h,
+      fontSize: 14.sp,
+      badgeColor: ColorUtils.countColor,
+      badgeCount: sheelBadgeController?.sheelaIconBadgeCount?.value??0,
+      isForSheelaQueue: true,
+    );
   }
 }

@@ -8,7 +8,7 @@ class SheelaQueueServices {
 
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<SheelaQueueModel> postNotificationQueue(String userId,String jsonBody) async {
+  Future<SheelaQueueModel> postNotificationQueue(String userId,var jsonBody) async {
     var body;
       body = {
         "userId": userId,
