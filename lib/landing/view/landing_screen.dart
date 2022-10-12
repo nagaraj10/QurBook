@@ -794,7 +794,7 @@ class _LandingScreenState extends State<LandingScreen> {
             qurhomeStatus: true,
           );
         }
-        enableBackgroundNotification();
+        CommonUtil().enableBackgroundNotification();
         Get.to(
           () => QurhomeDashboard(),
           binding: BindingsBuilder(
@@ -809,22 +809,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         );
       } else if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
-        disableBackgroundNotification();
+        CommonUtil().disableBackgroundNotification();
         PreferenceUtil.saveQurhomeAsDefaultUI(
           qurhomeStatus: false,
         );
       }
     }
-  }
-
-  void enableBackgroundNotification() {
-    const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
-    platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-  }
-
-  void disableBackgroundNotification() {
-    const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
-    platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
   }
 
   void dbInitialize() {

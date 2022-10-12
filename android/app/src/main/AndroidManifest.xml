@@ -159,6 +159,8 @@
 
         <service android:name=".services.AVServices" />
 
+        <service android:name=".services.CriticalAlertServices" />
+
         <receiver android:name=".services.DismissReceiver" />
         <receiver android:name=".services.NoReceiver" />
         <receiver android:name=".services.SnoozeReceiver" />
