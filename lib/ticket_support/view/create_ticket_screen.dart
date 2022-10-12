@@ -677,54 +677,56 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
-          ((field.type == tckConstants.tckTypeDropdown||field.type == tckConstants.tckTypeLookUp) && field.isLab)
-              ? widgetForColumn.add(Column(
-                  children: [
-                    getWidgetForTitleText(
-                        title: displayName,
-                        isRequired: field.isRequired ?? false),
-                    SizedBox(height: 10.h),
-                    Row(
+          ((field.type == tckConstants.tckTypeDropdown ||
+                      field.type == tckConstants.tckTypeLookUp) &&
+                  field.isLab)
+              ? CommonUtil.REGION_CODE == "IN"
+                  ? widgetForColumn.add(Column(
                       children: [
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: fhbBasicWidget.getTextFiledWithHint(
-                              context,
-                              '$placeHolderName',
-                              lab,
-                              enabled: false),
-                        ),
-                        Container(
-                          height: 50,
-                          child: GestureDetector(
-                              onTap: () async {
-                                try {
-                                  //Navigator.pop(context);
-                                  bool serviceEnabled =
-                                      await CommonUtil().checkGPSIsOn();
-                                  if (!serviceEnabled) {
-                                    FlutterToast().getToast(
-                                        'Please turn on your GPS location services and try again',
-                                        Colors.red);
-                                    return;
-                                  }
-                                  await regController.getCurrentLocation();
-                                  moveToSearchScreen(
-                                      context, CommonConstants.keyLabs,
-                                      setState: setState);
-                                } catch (e) {
-                                  //print(e);
-                                }
-                              },
-                              child: getIconButton()),
+                        getWidgetForTitleText(
+                            title: displayName,
+                            isRequired: field.isRequired ?? false),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: fhbBasicWidget.getTextFiledWithHint(
+                                  context, '$placeHolderName', lab,
+                                  enabled: false),
+                            ),
+                            Container(
+                              height: 50,
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    try {
+                                      //Navigator.pop(context);
+                                      bool serviceEnabled =
+                                          await CommonUtil().checkGPSIsOn();
+                                      if (!serviceEnabled) {
+                                        FlutterToast().getToast(
+                                            'Please turn on your GPS location services and try again',
+                                            Colors.red);
+                                        return;
+                                      }
+                                      await regController.getCurrentLocation();
+                                      moveToSearchScreen(
+                                          context, CommonConstants.keyLabs,
+                                          setState: setState);
+                                    } catch (e) {
+                                      //print(e);
+                                    }
+                                  },
+                                  child: getIconButton()),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                ))
+                    ))
+                  : widgetForColumn.add(getWidgetForLab())
               : SizedBox.shrink();
 
           isFirstTym = false;
@@ -1223,12 +1225,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if ((field.type == tckConstants.tckTypeDropdown ||
                     field.type == tckConstants.tckTypeLookUp) &&
                 field.isLab) {
-              if (lab.text.isNotEmpty) {
-                /*tckConstants.tckSelectedHospital = hospital.text;
-                tckConstants.tckSelectedHospitalId = hosId;*/
-              } else if (field.isRequired) {
-                showAlertMsg(CommonConstants.ticketLab);
-                return;
+              if (CommonUtil.REGION_CODE == "IN") {
+                if (lab.text.isNotEmpty) {
+                  /*tckConstants.tckSelectedHospital = hospital.text;
+                                tckConstants.tckSelectedHospitalId = hosId;*/
+                } else if (field.isRequired) {
+                  showAlertMsg(CommonConstants.ticketLab);
+                  return;
+                }
               }
             }
 
@@ -1324,6 +1328,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             selectedLab = selHospitals;
             controller.selPrefLabId.value =
                 CommonUtil().validString(selHospitals.id);
+            controller.selPrefLab.value =
+                CommonUtil().validString(selHospitals.name);
           }
         }
       }
