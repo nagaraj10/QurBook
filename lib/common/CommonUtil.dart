@@ -4914,6 +4914,24 @@ class CommonUtil {
     return "";
   }
 
+  enableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  disableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
   String getFieldName(String field) {
     String strName = "";
     try {
