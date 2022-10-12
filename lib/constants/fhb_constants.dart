@@ -528,6 +528,10 @@ const String scheduledActivities = 'Scheduled';
 const String asNeededActivities = 'As Needed';
 const String missedActivities = 'Missed';
 
+const String autoCloseForm = 'Closing in (';
+
+const String autoCloseFormSec = ') Seconds';
+
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
 const strPdfDot = '.pdf';
