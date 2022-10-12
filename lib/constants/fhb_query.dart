@@ -175,6 +175,7 @@ const String qr_myconnection = 'myconnection/';
 
 const String qr_id = '?id=';
 const String qr_user = 'user/';
+const String qr_userId = 'userId=';
 const String qr_section = '?section=';
 const String qr_myOrders = 'my-orders';
 const String qr_approve_caregiver = '/approve-caregiver';
@@ -239,6 +240,8 @@ const String qr_shareFromUser = 'shareFromUser';
 const String qr_shareToProvider = 'shareToProvider';
 const String qr_metadata = 'metadata';
 
+const String external_available_device = 'external-integration-api/available-service?';
+const String unpair_dexcomm = 'external-integration-api/unpair-device';
 const String qr_user_profile = 'user-profile-setting/';
 const String qr_my_profile = 'my-profile';
 const String qr_member_id = '?memberId=';

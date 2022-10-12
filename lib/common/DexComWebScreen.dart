@@ -6,22 +6,24 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DexComWebScreen extends StatefulWidget {
-  const DexComWebScreen({Key key}) : super(key: key);
-
+  DexComWebScreen({Key key,this.baseUrl, this.clientId,  this.redirectUrl,  this.state}) : super(key: key);
+  String baseUrl='';
+  String clientId='';
+  String redirectUrl='';
+  String state='';
   @override
   State<DexComWebScreen> createState() => _DexComWebScreenState();
 }
 
 class _DexComWebScreenState extends State<DexComWebScreen> {
   WebViewController _controller;
-  String baseUrl='';
-  String clientId='';
-  String redirectUrl='';
-  String state='';
+
 
   @override
   void initState() {
     // callAuthApi();
+    print('URL: ${widget.baseUrl}/v2/oauth2/login?client_id=${widget.clientId}&redirect_uri=${widget.redirectUrl}&response_type=code&scope=offline_access&state=${widget.state}',
+    );
     super.initState();
   }
 
@@ -33,7 +35,7 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
         onWebViewCreated: (controller) {
           _controller = controller;
         },
-        initialUrl: 'https://sandbox-api.dexcom.com/v2/oauth2/login?client_id=k8y4DPCxKRs5AI3JGc1v7OhgvQH5oVQa&redirect_uri=https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/external-integration-api&response_type=code&scope=offline_access&state=Dexcom/e5ec4a8d-36a9-4ac9-b0a7-98d728d53dd4',
+        initialUrl: '${widget.baseUrl}/v2/oauth2/login?client_id=${widget.clientId}&redirect_uri=${widget.redirectUrl}&response_type=code&scope=offline_access&state=${widget.state}',
         javascriptMode: JavascriptMode.unrestricted,
         onPageFinished: (_) {
           readResponse();
@@ -46,8 +48,14 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
   {
     if(_controller!=null){
       _controller.evaluateJavascript("document.documentElement.innerHTML").then((value) async {
-        if(value.contains("success")&&value.contains("true")){
+        print('=============value========');
+        print(value);
+
+        if(value.contains("isSuccess")&&value.contains("true")){
           Fluttertoast.showToast(msg: 'Authorized successfully');
+          Future.delayed(Duration(milliseconds: 500),(){
+            Navigator.pop(context);
+          });
         }
       });
       }

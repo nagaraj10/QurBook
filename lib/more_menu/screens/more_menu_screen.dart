@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -94,7 +95,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   String version = '';
   List<Tags> tagsList = new List<Tags>();
-
+  List<Widget> devices = [];
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
@@ -112,7 +113,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isDisplayPreference = false;
   bool isIntegration = false;
   bool isColorPallete = false;
-
+  bool loading = false;
   PreferredMeasurement preferredMeasurement;
 
   @override
@@ -120,6 +121,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     mInitialTime = DateTime.now();
     //getProfileImage();
     //getAppColorValues();
+    if( CommonUtil.REGION_CODE == 'US'){
+      getAvailableDevices();
+    }
     PackageInfo.fromPlatform().then((packageInfo) {
       version = packageInfo.version;
     });
@@ -304,29 +308,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             //PageNavigator.goTo(context, router.rt_AppSettings);
           },
         ),
-        Divider(),
-        ListTile(
-          title: Text(variable.strDexcomConnect,
-              style: TextStyle(fontWeight: FontWeight.w500)),
-          trailing: Icon(
-            Icons.arrow_forward_ios,
-            size: 16.0.sp,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    DexComWebScreen(),
-              ),
-            ).then((value) {
-              if (value) {
-                setState(() {});
-              }
-            });
-            //PageNavigator.goTo(context, router.rt_AppSettings);
-          },
-        ),
         isCareGiver ? Divider() : Container(),
         isCareGiver
             ? Theme(
@@ -450,6 +431,78 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         )),
       ],
     );
+  }
+
+  void unPairDexCom(String externalSourceId) async {
+    setState(() {
+      loading = true;
+    });
+    await healthReportListForUserRepository.unPairDexcomm(externalSourceId).then((value) {
+      setState(() {
+        loading = false;
+      });
+      if (value.isSuccess) {
+        getAvailableDevices();
+      }
+    });
+  }
+
+  getAvailableDevices() async {
+    setState(() {
+      loading = true;
+    });
+    await healthReportListForUserRepository.getAvailableDevices().then((value) {
+      if (value.isSuccess) {
+        devices.clear();
+        value.result.forEach((element) {
+          devices.add(ListTile(
+            title: Text(element.name,
+                style: TextStyle(fontWeight: FontWeight.w500)),
+            trailing: Text((element.isPaired ? 'Un Pair' : 'Pair'),style: TextStyle(color:element.isPaired ? Colors.red : Colors.green ,fontWeight: FontWeight.bold),),
+            onTap: () {
+              if (element.isPaired) {
+                unPairDexCom(element.externalSourceId);
+              } else {
+                String baseUrl='';
+                String clientId='';
+                String redirectUrl='';
+                String state='';
+                element.systemConfiguration.forEach((config) {
+                  if(config.name=="clientId"){
+                    clientId=config.value;
+                  }
+                  if(config.name=="redirectUrl"){
+                    redirectUrl=config.value;
+                  }
+                  if(config.name=="baseurl"){
+                    baseUrl=config.value;
+                  }
+                });
+                var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+                state='Dexcom/${userId}';
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DexComWebScreen(baseUrl: baseUrl,redirectUrl: redirectUrl,clientId: clientId,state: state,),
+                  ),
+                ).then((value) {
+                  getAvailableDevices();
+                });
+              }
+            },
+          ));
+          devices.add(Divider());
+        });
+        setState(() {
+          loading = false;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    });
   }
 
   Future<GetDeviceSelectionModel> getAppColorValues() async {
@@ -915,7 +968,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                   children: [
                                     ListTile(
                                       leading: ImageIcon(
-                                        AssetImage(variable.icon_digit_googleFit),
+                                        AssetImage(
+                                            variable.icon_digit_googleFit),
                                         //size: 30,
                                         color: Colors.black,
                                       ),
@@ -931,7 +985,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                             child: IconButton(
                                               icon: Icon(Icons.sync),
                                               onPressed: () {
-                                                _deviceDataHelper.syncGoogleFit();
+                                                _deviceDataHelper
+                                                    .syncGoogleFit();
                                               },
                                             ),
                                           ),
@@ -939,8 +994,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                             scale: 0.8,
                                             child: Switch(
                                               value: _isGFActive,
-                                              activeColor: Color(new CommonUtil()
-                                                  .getMyPrimaryColor()),
+                                              activeColor: Color(
+                                                  new CommonUtil()
+                                                      .getMyPrimaryColor()),
                                               onChanged: (bool newValue) {
                                                 setState(() {
                                                   //isTouched = true;
@@ -953,30 +1009,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                         ],
                                       ),
                                     ),
-                                    DrawerTile(
-                                      title: variable.strDexcomConnect,
-                                      iconWidget: SvgPicture.asset(
-                                        variable.icon_my_family_menu,
-                                        color: Colors.black54,
-                                      ),
-                                      onPressed: () async {
-                                        try {
-                                          Get.back();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DexComWebScreen(),
-                                            ),
-                                          ).then((value) {
-
-                                          });
-                                        } catch (e) {
-                                          //print(e);
-                                        }
-                                      },
-                                    ),
-
+                                    !loading
+                                        ? ListView.builder(
+                                      shrinkWrap: true,
+                                            itemCount: devices.length,
+                                            itemBuilder: (context, index) {
+                                              return devices[index];
+                                            })
+                                        : CircularProgressIndicator(),
                                   ],
                                 );
                               } else {
