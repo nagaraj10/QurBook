@@ -141,6 +141,7 @@ const String strCallLab = 'laboratories/';
 //ForIcons
 
 const String icon_camera_image = 'assets/icons/camera_image.png';
+const String icon_sheela_queue = 'assets/icons/sheela_queue.gif';
 const String icon_delete_image = 'assets/icons/delete_image.png';
 const String icon_edit_image = 'assets/icons/edit.png';
 const String icon_photo_image = 'assets/icons/photo_image.png';
@@ -324,6 +325,7 @@ List<int> myGradient = [
 ];
 
 const String strSettings = 'Settings';
+const String strDexcomConnect = 'Dexcom Connect';
 const String strReports = 'My Reports';
 const String strMyOrders = 'My Orders';
 const String strHelp = 'Help and support';
@@ -720,7 +722,7 @@ const String str_centi = 'Centimeters';
 
 const String str_Temp = 'Temperature';
 const String str_celesius = 'Celsius';
-const String str_far = 'Farenheit';
+const String str_far = 'Fahrenheit';
 
 //Reminders
 //

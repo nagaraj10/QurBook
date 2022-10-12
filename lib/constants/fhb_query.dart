@@ -175,6 +175,7 @@ const String qr_myconnection = 'myconnection/';
 
 const String qr_id = '?id=';
 const String qr_user = 'user/';
+const String qr_userId = 'userId=';
 const String qr_section = '?section=';
 const String qr_myOrders = 'my-orders';
 const String qr_approve_caregiver = '/approve-caregiver';
@@ -239,6 +240,8 @@ const String qr_shareFromUser = 'shareFromUser';
 const String qr_shareToProvider = 'shareToProvider';
 const String qr_metadata = 'metadata';
 
+const String external_available_device = 'external-integration-api/available-service?';
+const String unpair_dexcomm = 'external-integration-api/unpair-device';
 const String qr_user_profile = 'user-profile-setting/';
 const String qr_my_profile = 'my-profile';
 const String qr_member_id = '?memberId=';
@@ -361,6 +364,10 @@ const String qr_healthRecordMetaIds = 'healthRecordMetaIds';
 
 const String qr_chat_socket_history = 'chat/get-message-history';
 
+//sheela bagde
+
+const String qr_sheela_badge_icon_count = 'notification-log/sheela-pending-queue/';
+
 // family list mapping
 
 const String qr_chat_family_mapping =
@@ -391,3 +398,7 @@ const String qr_symp_date = '?date=';
 const String qr_is_symptom =
     '&isSymptom=true&asNeeded=false&providerId=null&page=1&size=50&searchText=&sorts=activity|ASC';
 const String qr_delink_check = "user-relationship/check-caregiver-association";
+
+//sheela queue
+
+const String qr_sheela_post_queue = 'notification-log/sheela-queue-insert';

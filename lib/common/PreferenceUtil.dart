@@ -481,18 +481,28 @@ class PreferenceUtil {
   static Future<bool> saveQurhomeAsDefaultUI({
     bool qurhomeStatus = false,
   }) async {
-    CommonUtil.updateDefaultUIStatus(qurhomeStatus);
-    if (Platform.isIOS) {
-      reponseToRemoteNotificationMethodChannel.invokeListMethod(
-        QurhomeDefaultUI,
-        {'status': (qurhomeStatus)},
+    try {
+      CommonUtil.updateDefaultUIStatus(qurhomeStatus);
+      if (Platform.isIOS) {
+        reponseToRemoteNotificationMethodChannel.invokeListMethod(
+          QurhomeDefaultUI,
+          {'status': (qurhomeStatus)},
+        );
+      } else {
+        if (qurhomeStatus) {
+          CommonUtil().enableBackgroundNotification();
+        } else {
+          CommonUtil().disableBackgroundNotification();
+        }
+      }
+      final instance = await _prefs;
+      return instance.setBool(
+        Constants.QurhomeDefaultUI,
+        qurhomeStatus,
       );
+    } catch (e) {
+      //print(e);
     }
-    final instance = await _prefs;
-    return instance.setBool(
-      Constants.QurhomeDefaultUI,
-      qurhomeStatus,
-    );
   }
 
   static save(String key, value) async {

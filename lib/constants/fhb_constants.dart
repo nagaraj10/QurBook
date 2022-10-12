@@ -743,6 +743,9 @@ const String filterApiMonth = 'month';
 
 const String UnitPreference = 'Unit Preferences';
 
+// sheela queue
+const String sheelaQueueShowRemind = 'My reminders';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
