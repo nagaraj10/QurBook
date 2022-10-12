@@ -2552,6 +2552,20 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         width: 32.0.h,
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
+    }else if(type.toLowerCase().contains("dexcom")){
+      return Image.network(
+        'https://fhb-static-resources-p.s3.ap-south-1.amazonaws.com/logos/dexcom.png',
+        height: 32.0.h,
+        width: 32.0.h,
+        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+          return Image.asset(
+            'assets/icons/myfhb_source.png',
+            height: 32.0.h,
+            width: 32.0.h,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          );
+        },
+      );
     } else {
       return Image.asset(
         'assets/icons/myfhb_source.png',
