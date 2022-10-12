@@ -21,9 +21,6 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
 
   @override
   void initState() {
-    // callAuthApi();
-    print('URL: ${widget.baseUrl}/v2/oauth2/login?client_id=${widget.clientId}&redirect_uri=${widget.redirectUrl}&response_type=code&scope=offline_access&state=${widget.state}',
-    );
     super.initState();
   }
 
@@ -48,8 +45,6 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
   {
     if(_controller!=null){
       _controller.evaluateJavascript("document.documentElement.innerHTML").then((value) async {
-        print('=============value========');
-        print(value);
 
         if(value.contains("isSuccess")&&value.contains("true")){
           Fluttertoast.showToast(msg: 'Authorized successfully');
@@ -61,11 +56,4 @@ class _DexComWebScreenState extends State<DexComWebScreen> {
       }
   }
 
-
-    void callAuthApi() async {
-      var regimentsData = await RegimentService.getExternalLinks();
-      if(regimentsData.isSuccess){
-
-      }
-  }
 }

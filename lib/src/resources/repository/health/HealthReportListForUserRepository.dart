@@ -295,7 +295,6 @@ class HealthReportListForUserRepository {
         'id' : userId.toString()
       }
     });
-    // final body=json.encode(temp);
     final response = await _helper.unPairDexcomm(query.unpair_dexcomm,temp);
     return CommonResponse.fromJson(response);
   }

@@ -1728,7 +1728,6 @@ class ApiBaseHelper {
   }
   Future<dynamic> unPairDexcomm(String url,Object jsonBody) async {
     var responseJson;
-    print(jsonBody);
     try {
       var response = await ApiServices.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(),
