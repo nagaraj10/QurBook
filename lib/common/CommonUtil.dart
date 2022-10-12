@@ -14,6 +14,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
@@ -214,6 +215,7 @@ class CommonUtil {
 
   Height heightObj, weightObj, tempObj;
   String userMappingId = '';
+  SheelaQueueServices queueServices = SheelaQueueServices();
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -374,11 +376,14 @@ class CommonUtil {
           Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_IND);
 
       heightObj = new Height(
-          unitCode: Constants.STR_VAL_HEIGHT_IND, unitName: 'centimeters');
+          unitCode: Constants.STR_VAL_HEIGHT_IND,
+          unitName: variable.str_centi.toLowerCase());
       weightObj = new Height(
-          unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+          unitCode: Constants.STR_VAL_WEIGHT_IND,
+          unitName: variable.str_Kilogram.toLowerCase());
       tempObj = new Height(
-          unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+          unitCode: Constants.STR_VAL_TEMP_IND,
+          unitName: variable.str_far.toLowerCase());
       isKg = false;
       isPounds = true;
 
@@ -4826,6 +4831,25 @@ class CommonUtil {
         width: 32.h,
       ),
     );
+  }
+
+  void callQueueNotificationPostApi(String json) {
+    //if (avoidExtraNotification) {
+    //avoidExtraNotification = false;
+    queueServices
+        .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID), json)
+        .then((value) {
+      if (value != null && value?.isSuccess) {
+        if (value?.result != null) {
+          if (value?.result?.queueCount != null &&
+              value?.result?.queueCount > 0) {
+            CommonUtil().dialogForSheelaQueue(
+                Get.context, value?.result?.queueCount ?? 0);
+          }
+        }
+      }
+    });
+    //}
   }
 
   String capitalizeFirstofEach(String data) {
