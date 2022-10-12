@@ -14,6 +14,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
@@ -214,6 +215,7 @@ class CommonUtil {
 
   Height heightObj, weightObj, tempObj;
   String userMappingId = '';
+  SheelaQueueServices queueServices = SheelaQueueServices();
 
   Future<GetDeviceSelectionModel> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -4831,6 +4833,25 @@ class CommonUtil {
     );
   }
 
+  void callQueueNotificationPostApi(String json) {
+    //if (avoidExtraNotification) {
+    //avoidExtraNotification = false;
+    queueServices
+        .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID), json)
+        .then((value) {
+      if (value != null && value?.isSuccess) {
+        if (value?.result != null) {
+          if (value?.result?.queueCount != null &&
+              value?.result?.queueCount > 0) {
+            CommonUtil().dialogForSheelaQueue(
+                Get.context, value?.result?.queueCount ?? 0);
+          }
+        }
+      }
+    });
+    //}
+  }
+
   String capitalizeFirstofEach(String data) {
     return data
         .trim()
@@ -4891,6 +4912,24 @@ class CommonUtil {
         return strText.trim();
     } catch (e) {}
     return "";
+  }
+
+  enableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  disableBackgroundNotification() {
+    try {
+      const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
+      platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
+    } catch (e) {
+      //print(e);
+    }
   }
 
   String getFieldName(String field) {
