@@ -710,7 +710,7 @@ const String associationNotificationToCaregiver =
 const String strCaregiverAppointmentPayment = 'caregiverAppointmentPayment';
 const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
-    const String strQurbookServiceRequestStatusUpdate =
+const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
@@ -812,3 +812,7 @@ const String strMultipart = 'multipart/form-data';
 const String qurHealthLogo = 'assets/launcher/myfhb.png';
 
 const String errNoRecordsSelected = 'No Records Selected';
+
+const String strCopyVitalsMsg =
+    'A matching activity is found your regimen, do you want to copy the values?';
+const String strglucose = 'SP02';
