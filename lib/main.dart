@@ -1070,7 +1070,7 @@ class _MyFHBState extends State<MyFHB> {
           //       duration: Duration(seconds: 3),
           //       backgroundColor: Colors.green.shade500);
         }
-      } else if (passedValArr?.asMap()?.containsKey('call')) {
+      } else if (passedValArr?.asMap()?.containsKey(4)) {
         if (passedValArr[4] == 'call') {
           try {
             doctorPic = passedValArr[3];
