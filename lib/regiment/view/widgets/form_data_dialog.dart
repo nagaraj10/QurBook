@@ -108,6 +108,12 @@ class FormDataDialogState extends State<FormDataDialog> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -1077,11 +1083,6 @@ class FormDataDialogState extends State<FormDataDialog> {
           context: context,
           barrierDismissible: false,
           builder: (context) {
-            if (returnAction?.eid == null) {
-              Future.delayed(Duration(seconds: 5), () {
-                Get.back();
-              });
-            }
             return WillPopScope(
               onWillPop: () {
                 Provider.of<RegimentViewModel>(Get.context, listen: false)
