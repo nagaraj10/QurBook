@@ -1449,7 +1449,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
-    selectedActivity = getActivityFromDeviceName(getStringValue());
+    selectedActivity = getActivityFromDeviceName(getDeviceName());
     switch (widget.device_name) {
       case strDataTypeBP:
         {
@@ -2566,12 +2566,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         width: 32.0.h,
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
-    }else if(type.toLowerCase().contains("dexcom")){
+    } else if (type.toLowerCase().contains("dexcom")) {
       return Image.network(
         'https://fhb-static-resources-p.s3.ap-south-1.amazonaws.com/logos/dexcom.png',
         height: 32.0.h,
         width: 32.0.h,
-        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
           return Image.asset(
             'assets/icons/myfhb_source.png',
             height: 32.0.h,
@@ -2795,7 +2796,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       print(element.activityname);
       print(element.uformname1);
       if (element.activityOrgin == 'Vitals' &&
-          element.uformname1 == getStringValue().toLowerCase()) {
+          element.uformname1 == device_name.toLowerCase()) {
         selectedActivity = element;
       }
     });
@@ -2818,11 +2819,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         case strDataTypeBP:
           {
             if (saveMap == null)
-              saveMap['pf_${fields.title}'] = deviceController.text;
+              saveMap['pf_${fields.title}'] = pulse.text;
             else if (saveMap.length == 1)
               saveMap['pf_${fields.title}'] = diaStolicPressure.text;
             else
-              saveMap['pf_${fields.title}'] = pulse.text;
+              saveMap['pf_${fields.title}'] = deviceController.text;
           }
           break;
         case strGlusoceLevel:
@@ -2833,9 +2834,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         case strOxgenSaturation:
           {
             if (saveMap == null)
-              saveMap['pf_${fields.title}'] = deviceController.text;
-            else if (saveMap.length == 1)
               saveMap['pf_${fields.title}'] = pulse.text;
+            else if (saveMap.length == 1)
+              saveMap['pf_${fields.title}'] = deviceController.text;
           }
           break;
         case strWeight:
