@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 
@@ -191,6 +192,16 @@ class NavigationDrawer extends StatelessWidget {
                             Get.back();
                             Get.to(
                               () => HubListView(),
+                              binding: BindingsBuilder(
+                                () {
+                                  if (!Get.isRegistered<
+                                      HubListViewController>()) {
+                                    Get.lazyPut(
+                                      () => HubListViewController(),
+                                    );
+                                  }
+                                },
+                              ),
                             );
                           } catch (e) {
                             //print(e);

@@ -12,6 +12,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
@@ -467,7 +468,7 @@ class _MyFHBState extends State<MyFHB> {
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
     Get.put(
-      HubListController(),
+      HubListViewController(),
     );
     Get.lazyPut(
       () => SheelaAIController(),

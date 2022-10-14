@@ -1,50 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/telehealth/features/Notifications/model/variables.dart';
+import '../Controller/HubListViewController.dart';
+import '../../constants/fhb_constants.dart';
 
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../telehealth/features/Notifications/constants/notification_constants.dart';
-import '../Controller/hub_list_controller.dart';
 
-class HubListView extends GetView<HubListController> {
+class HubListView extends GetView<HubListViewController> {
   @override
   Widget build(BuildContext context) {
     controller.getHubList();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(
-          CommonUtil().getMyPrimaryColor(),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 24.0.sp,
+    return Obx(
+      () {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color(
+              CommonUtil().getMyPrimaryColor(),
+            ),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 24.0.sp,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            title: Text(
+              strConnectedDevices,
+            ),
+            centerTitle: false,
+            elevation: 0,
           ),
-          onPressed: () {
-            Get.back();
-          },
-        ),
-        title: Text(
-          strConnectedDevices,
-        ),
-        centerTitle: false,
-        elevation: 0,
-      ),
-      body: Obx(
-        () {
-          return controller.loadingData.isTrue
+          body: controller.loadingData.isTrue
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : getListWidget();
-        },
-      ),
-      floatingActionButton: addNewDevice(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              : getListWidget(),
+          floatingActionButton: addNewDevice(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+        );
+      },
     );
   }
 
@@ -56,7 +56,9 @@ class HubListView extends GetView<HubListController> {
         ),
       );
     }
-    if (controller.hubListResponse.result?.hub == null) {
+    if ((controller.hubListResponse.result?.hub == null) ||
+        ((controller.hubListResponse?.result?.userDeviceCollection ?? [])
+            .isEmpty)) {
       return pairNewVirtualHubBtn();
     }
     if (((controller.hubListResponse.result.userDeviceCollection.length ?? 0) >
@@ -68,6 +70,11 @@ class HubListView extends GetView<HubListController> {
   }
 
   Widget addNewDevice() {
+    if ((controller.hubListResponse?.result?.userDeviceCollection ?? [])
+            .length ==
+        0) {
+      return Container();
+    }
     return Padding(
       padding: const EdgeInsets.only(bottom: 20.0),
       child: Obx(
@@ -88,18 +95,29 @@ class HubListView extends GetView<HubListController> {
               ],
             );
           }
+          if ((controller.bleMacId ?? '').isNotEmpty &&
+              (controller.bleDeviceType ?? '').isNotEmpty) {
+            printInfo(
+              info: "Found the devices",
+            );
+          }
           return InkWell(
             onTap: () {
-              controller.hubId.value = controller.hubListResponse.result.id;
               controller.checkForConnectedDevices();
             },
             child: Card(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
               ),
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
+              color: Color(
+                CommonUtil().getMyPrimaryColor(),
+              ),
+              child: const Padding(
+                padding: EdgeInsets.all(
+                  10.0,
+                ),
                 child: Text(
                   strAddNewDevice,
                   style: TextStyle(
@@ -129,37 +147,46 @@ class HubListView extends GetView<HubListController> {
                 ),
                 FittedBox(
                   child: Text(
-                    controller.searchingBleDeviceMsg.value,
+                    ScanningForDevices,
                   ),
                 )
               ],
             );
           }
+          if ((controller.bleMacId ?? '').isNotEmpty &&
+              (controller.bleDeviceType ?? '').isNotEmpty) {
+            printInfo(
+              info: "Found the devices",
+            );
+          }
           return InkWell(
             onTap: () async {
-              try {
-                if (controller.hubListResponse.result?.hub.additionalDetails
-                        .isVirtualHub ??
-                    false) {
-                  controller.hubId.value = controller.hubListResponse.result.id;
-                  controller.checkForConnectedDevices();
-                } else {
-                  controller.checkForConnectedDevices(isHaveVirtualHub: false);
-                }
-              } catch (e) {
-                print(e);
-              }
+              controller.checkForConnectedDevices();
             },
             child: Container(
               width: 260.0.w,
               height: 48.0.h,
               decoration: BoxDecoration(
-                color: Color(CommonUtil().getMyPrimaryColor()),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+                borderRadius: const BorderRadius.all(
+                  Radius.circular(
+                    10,
+                  ),
+                ),
                 boxShadow: const <BoxShadow>[
                   BoxShadow(
-                    color: Color.fromARGB(15, 0, 0, 0),
-                    offset: Offset(0, 2),
+                    color: Color.fromARGB(
+                      15,
+                      0,
+                      0,
+                      0,
+                    ),
+                    offset: Offset(
+                      0,
+                      2,
+                    ),
                     blurRadius: 5,
                   ),
                 ],
@@ -419,11 +446,11 @@ class HubListView extends GetView<HubListController> {
                           children: [
                             InkWell(
                               onTap: () {
-                                if (type == 'hub') {
-                                  controller.unPairHub(hubId);
-                                } else {
-                                  controller.unPairDevice(deviceId);
-                                }
+                                // if (type == 'hub') {
+                                //   controller.unPairHub(hubId);
+                                // } else {
+                                //   controller.unPairDevice(deviceId);
+                                // }
                                 Get.back();
                               },
                               child: Card(
