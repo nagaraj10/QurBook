@@ -16,11 +16,10 @@ class HubApiProvider {
   final String _baseUrl = BASE_URL;
 
   Future<dynamic> getHubList() async {
-    http.Response responseJson;
-    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.get(
+      final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final responseJson = await ApiServices.get(
         '${CommonUtil.BASE_URL_QURHUB}user-hub/$userId',
         headers: header,
       );
@@ -36,8 +35,34 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> saveDevice(String hubId, String deviceId, String nickName,
-      String userId, String deviceType) async {
+  Future<dynamic> saveNewDevice(Map data) async {
+    try {
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final responseJson = await ApiServices.post(
+        '${CommonUtil.BASE_URL_QURHUB}user-device',
+        headers: header,
+        body: json.encode(
+          data,
+        ),
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      }
+      return null;
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> saveDevice(
+    String hubId,
+    String deviceId,
+    String nickName,
+    String userId,
+    String deviceType,
+  ) async {
     http.Response responseJson;
     final data = {
       DEVICE_ID: deviceId,
@@ -66,28 +91,28 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> unPairHub(String hubId) async {
-    http.Response responseJson;
-    try {
-      final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-      final data = {"userHubId": hubId};
-      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
-        '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
-        headers: header,
-        body: json.encode(data),
-      );
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return null;
-      }
-    } on SocketException {
-      throw FetchDataException(strNoInternet);
-    } catch (e) {
-      return null;
-    }
-  }
+  // Future<dynamic> unPairHub(String hubId) async {
+  //   http.Response responseJson;
+  //   try {
+  //     final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+  //     final data = {"userHubId": hubId};
+  //     final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+  //     responseJson = await ApiServices.post(
+  //       '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
+  //       headers: header,
+  //       body: json.encode(data),
+  //     );
+  //     if (responseJson.statusCode == 200) {
+  //       return responseJson;
+  //     } else {
+  //       return null;
+  //     }
+  //   } on SocketException {
+  //     throw FetchDataException(strNoInternet);
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
   Future<dynamic> unPairDevice(String deviceId) async {
     http.Response responseJson;

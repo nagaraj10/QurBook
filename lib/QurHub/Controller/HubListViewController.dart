@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:myfhb/QurHub/View/AddDeviceView.dart';
+import 'package:myfhb/QurHub/View/add_device_screen.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../Models/add_network_model.dart';
@@ -12,6 +14,7 @@ import '../../common/CommonUtil.dart';
 import '../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import '../ApiProvider/hub_api_provider.dart';
 import '../Models/hub_list_response.dart';
+import 'AddDeviceViewController.dart';
 
 class HubListViewController extends GetxController {
   RxBool loadingData = false.obs;
@@ -145,6 +148,23 @@ class HubListViewController extends GetxController {
     } catch (e) {
       printError(info: e.toString());
       searchingBleDevice.value = false;
+    }
+  }
+
+  navigateToAddDeviceScreen() {
+    if (searchingBleDevice.isFalse &&
+        (bleMacId ?? '').isNotEmpty &&
+        (bleDeviceType ?? '').isNotEmpty) {
+      Get.to(
+        () => AddDeviceView(),
+        binding: BindingsBuilder(
+          () => Get.lazyPut(
+            () => AddDeviceViewController(),
+          ),
+        ),
+      ).then(
+        (value) => getHubList(),
+      );
     }
   }
 }

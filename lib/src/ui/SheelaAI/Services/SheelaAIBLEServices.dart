@@ -127,6 +127,7 @@ class SheelaBLEController extends GetxController {
               );
               if (addingDevicesInHublist) {
                 hublistController.searchingBleDevice(false);
+                hublistController.navigateToAddDeviceScreen();
                 _disableTimer();
                 return;
               }

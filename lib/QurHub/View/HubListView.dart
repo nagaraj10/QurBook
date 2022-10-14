@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import '../Controller/AddDeviceViewController.dart';
+import 'AddDeviceView.dart';
 import '../Controller/HubListViewController.dart';
 import '../../constants/fhb_constants.dart';
 
@@ -95,12 +97,7 @@ class HubListView extends GetView<HubListViewController> {
               ],
             );
           }
-          if ((controller.bleMacId ?? '').isNotEmpty &&
-              (controller.bleDeviceType ?? '').isNotEmpty) {
-            printInfo(
-              info: "Found the devices",
-            );
-          }
+
           return InkWell(
             onTap: () {
               controller.checkForConnectedDevices();
@@ -153,12 +150,7 @@ class HubListView extends GetView<HubListViewController> {
               ],
             );
           }
-          if ((controller.bleMacId ?? '').isNotEmpty &&
-              (controller.bleDeviceType ?? '').isNotEmpty) {
-            printInfo(
-              info: "Found the devices",
-            );
-          }
+
           return InkWell(
             onTap: () async {
               controller.checkForConnectedDevices();

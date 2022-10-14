@@ -21,7 +21,6 @@ class AddDeviceController extends GetxController {
   CommonResponseModel commonResponse;
   final HubListController hubListController = Get.find();
 
-
   getFamilyMembers() async {
     try {
       loadingData.value = true;
@@ -78,8 +77,4 @@ class AddDeviceController extends GetxController {
       }
     }
   }
-
-
-
-
 }

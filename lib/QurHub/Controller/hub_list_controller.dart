@@ -63,19 +63,19 @@ class HubListController extends GetxController {
   }
 
   unPairHub(String hubId) async {
-    try {
-      loadingData.value = true;
-      http.Response response = await _apiProvider.unPairHub(hubId);
-      if (response == null) {
-        FlutterToast().getToast('Oops Something went wrong', Colors.red);
-      } else {
-        getHubList();
-      }
-      loadingData.value = false;
-    } catch (e) {
-      print(e.toString());
-      loadingData.value = false;
-    }
+    // try {
+    //   loadingData.value = true;
+    //   // http.Response response = await _apiProvider.unPairHub(hubId);
+    //   if (response == null) {
+    //     FlutterToast().getToast('Oops Something went wrong', Colors.red);
+    //   } else {
+    //     getHubList();
+    //   }
+    //   loadingData.value = false;
+    // } catch (e) {
+    //   print(e.toString());
+    //   loadingData.value = false;
+    // }
   }
 
   unPairDevice(String deviceId) async {
