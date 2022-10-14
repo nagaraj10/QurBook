@@ -518,10 +518,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               PreferenceUtil.saveCompleteData(KEY_COMPLETE_DATA, value);
               Navigator.of(context).pop(true);
 
-              if (selectedActivity != null) {
-                openCopyVitalsAlert();
+              if (widget.device_name == strGlusoceLevel) {
+                if (isSelected[0] == true) {
+                  alertDialogToCopyRegimenValues();
+                } else {
+                  refreshData();
+                }
               } else {
-                refreshData();
+                alertDialogToCopyRegimenValues();
               }
             });
           } else {
@@ -2732,6 +2736,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           actions: <Widget>[
             FlatButton(
               onPressed: () {
+                refreshData();
                 Navigator.pop(context);
               },
               child: Text(
@@ -2818,7 +2823,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       switch (device_name) {
         case strDataTypeBP:
           {
-            if (saveMap == null)
+            if (saveMap.isEmpty)
               saveMap['pf_${fields.title}'] = pulse.text;
             else if (saveMap.length == 1)
               saveMap['pf_${fields.title}'] = diaStolicPressure.text;
@@ -2833,10 +2838,10 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           break;
         case strOxgenSaturation:
           {
-            if (saveMap == null)
-              saveMap['pf_${fields.title}'] = pulse.text;
-            else if (saveMap.length == 1)
+            if (saveMap.isEmpty)
               saveMap['pf_${fields.title}'] = deviceController.text;
+            else if (saveMap.length == 1)
+              saveMap['pf_${fields.title}'] = pulse.text;
           }
           break;
         case strWeight:
@@ -2899,12 +2904,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         break;
       case strGlusoceLevel:
         {
-          return strglucose;
+          return strBloodSugar;
         }
         break;
       case strOxgenSaturation:
         {
-          return strParamOxygen;
+          return strglucose;
         }
         break;
       case strWeight:
@@ -2922,6 +2927,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           //statements;
         }
         break;
+    }
+  }
+
+  void alertDialogToCopyRegimenValues() {
+    if (selectedActivity != null) {
+      openCopyVitalsAlert();
+    } else {
+      refreshData();
     }
   }
 }

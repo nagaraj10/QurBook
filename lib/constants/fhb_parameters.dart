@@ -817,4 +817,5 @@ const String errNoRecordsSelected = 'No Records Selected';
 
 const String strCopyVitalsMsg =
     'A matching activity is found your regimen, do you want to copy the values?';
-const String strglucose = 'SP02';
+const String strglucose = 'SPO2';
+const String strBloodSugar = 'BloodSugar';
