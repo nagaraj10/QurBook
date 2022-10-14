@@ -56,10 +56,12 @@ class HubListView extends GetView<HubListController> {
         ),
       );
     }
-
+    if (controller.hubListResponse.result?.hub == null) {
+      return pairNewVirtualHubBtn();
+    }
     if (((controller.hubListResponse.result.userDeviceCollection.length ?? 0) >
             0) &&
-        (controller.hubListResponse.result.hub.additionalDetails != null)) {
+        (controller.hubListResponse.result.hub?.additionalDetails != null)) {
       return listContent();
     }
     return Container();

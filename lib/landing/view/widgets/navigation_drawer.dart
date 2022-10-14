@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
@@ -189,7 +190,7 @@ class NavigationDrawer extends StatelessWidget {
                           try {
                             Get.back();
                             Get.to(
-                              () => HubListScreen(),
+                              () => HubListView(),
                             );
                           } catch (e) {
                             //print(e);
