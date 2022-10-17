@@ -428,7 +428,7 @@ class HubListView extends GetView<HubListViewController> {
                           height: 15,
                         ),
                         Text(
-                          'hub',
+                          unPairDevice,
                         ),
                         const SizedBox(
                           height: 15,
@@ -438,11 +438,9 @@ class HubListView extends GetView<HubListViewController> {
                           children: [
                             InkWell(
                               onTap: () {
-                                // if (type == 'hub') {
-                                //   controller.unPairHub(hubId);
-                                // } else {
-                                //   controller.unPairDevice(deviceId);
-                                // }
+                                controller.unPairDevice(
+                                  deviceId,
+                                );
                                 Get.back();
                               },
                               child: Card(
@@ -466,7 +464,7 @@ class HubListView extends GetView<HubListViewController> {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pop(context);
+                                Get.back();
                               },
                               child: Card(
                                 color: Colors.green,

@@ -5,6 +5,7 @@ import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/QurHub/View/hub_list_screen.dart';
 
@@ -190,6 +191,19 @@ class NavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
+                            // Get.to(
+                            //   () => HubListScreen(),
+                            //   binding: BindingsBuilder(
+                            //     () {
+                            //       if (!Get.isRegistered<
+                            //           HubListController>()) {
+                            //         Get.lazyPut(
+                            //           () => HubListController(),
+                            //         );
+                            //       }
+                            //     },
+                            //   ),
+                            // );
                             Get.to(
                               () => HubListView(),
                               binding: BindingsBuilder(
@@ -198,6 +212,9 @@ class NavigationDrawer extends StatelessWidget {
                                       HubListViewController>()) {
                                     Get.lazyPut(
                                       () => HubListViewController(),
+                                    );
+                                    Get.lazyPut(
+                                      () => HubListController(),
                                     );
                                   }
                                 },

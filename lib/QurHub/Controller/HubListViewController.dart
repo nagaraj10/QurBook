@@ -1,19 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
-import 'package:get/get.dart';
-import 'package:myfhb/QurHub/View/AddDeviceView.dart';
-import 'package:myfhb/QurHub/View/add_device_screen.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
-import '../Models/add_network_model.dart';
+
 import '../../common/CommonUtil.dart';
+import '../../constants/fhb_constants.dart';
+import '../../src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import '../../src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import '../ApiProvider/hub_api_provider.dart';
+import '../Models/add_network_model.dart';
 import '../Models/hub_list_response.dart';
+import '../View/AddDeviceView.dart';
 import 'AddDeviceViewController.dart';
 
 class HubListViewController extends GetxController {
@@ -42,13 +42,16 @@ class HubListViewController extends GetxController {
     _bleController = Get.find();
     try {
       loadingData.value = true;
+      hubListResponse = null;
       http.Response response = await _apiProvider.getHubList();
-      loadingData.value = false;
       if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
         hubListResponse = null;
         return;
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
+      printInfo(
+          info: hubListResponse.result.userDeviceCollection.length.toString());
+      loadingData.value = false;
     } catch (e) {
       hubListResponse = null;
       print(e.toString());
@@ -148,6 +151,23 @@ class HubListViewController extends GetxController {
     } catch (e) {
       printError(info: e.toString());
       searchingBleDevice.value = false;
+    }
+  }
+
+  unPairDevice(String deviceId) async {
+    try {
+      loadingData.value = true;
+      http.Response response = await _apiProvider.unPairDevice(deviceId);
+      if (response == null) {
+        FlutterToast().getToast('Oops Something went wrong', Colors.red);
+      }
+      loadingData.value = false;
+      Future.delayed(const Duration(microseconds: 10)).then((value) {
+        getHubList();
+      });
+    } catch (e) {
+      printError(info: e.toString());
+      loadingData.value = false;
     }
   }
 

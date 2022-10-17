@@ -23,6 +23,7 @@ class HubApiProvider {
         '${CommonUtil.BASE_URL_QURHUB}user-hub/$userId',
         headers: header,
       );
+      printInfo(info: responseJson.body);
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -38,12 +39,12 @@ class HubApiProvider {
   Future<dynamic> saveNewDevice(Map data) async {
     try {
       final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final body = json.encode(data);
+      printInfo(info: body);
       final responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
-        body: json.encode(
-          data,
-        ),
+        body: body,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
@@ -74,10 +75,12 @@ class HubApiProvider {
     };
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final body = json.encode(data);
+      printInfo(info: body);
       responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
-        body: json.encode(data),
+        body: body,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
