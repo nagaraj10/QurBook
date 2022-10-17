@@ -93,7 +93,7 @@ class SheelaBLEController extends GetxController {
     }
 
     _timerSubscription = stream.listen(
-      (val) {
+      (val) async {
         final List<String> receivedValues = val.split('|');
         if ((receivedValues ?? []).length > 0) {
           switch (receivedValues.first ?? "") {
@@ -164,10 +164,28 @@ class SheelaBLEController extends GetxController {
               }
               break;
             case "measurement":
-              receivedData = true;
-              updateUserData(
-                data: receivedValues.last,
-              );
+              if (hublistController.bleDeviceType.toLowerCase() ==
+                  "BP".toLowerCase()) {
+                //show next method
+                Get.to(
+                  SheelaAIMainScreen(
+                    arguments: SheelaArgument(
+                      takeActiveDeviceReadings: true,
+                    ),
+                  ),
+                );
+                await Future.delayed(const Duration(seconds: 4));
+                receivedData = true;
+                updateUserData(
+                  data: receivedValues.last,
+                );
+              } else {
+                receivedData = true;
+                updateUserData(
+                  data: receivedValues.last,
+                );
+              }
+
               break;
             case "disconnected":
               FlutterToast().getToast(
@@ -320,6 +338,23 @@ class SheelaBLEController extends GetxController {
                 recipientId: conversationType,
                 text:
                     "Thank you. Your last reading for SPO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (model.deviceType == "BP") {
+          if ((model.data.systolic ?? '').isNotEmpty &&
+              (model.data.diastolic ?? '').isNotEmpty &&
+              (model.data.pulse ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: "Thank you. Your BP systolic is ${model.data.systolic} "
+                    ", Diastolic is ${model.data.diastolic} "
+                    "and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));

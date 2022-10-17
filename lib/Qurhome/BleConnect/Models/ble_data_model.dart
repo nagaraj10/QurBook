@@ -49,13 +49,24 @@ class BleDataModel {
 class Data {
   String sPO2;
   String pulse;
-
-  Data({this.sPO2, this.pulse});
+  String systolic;
+  String diastolic;
+  String weight;
+  Data({
+    this.sPO2,
+    this.pulse,
+    this.systolic,
+    this.diastolic,
+    this.weight,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     try {
-      sPO2 = json['SPO2'];
-      pulse = json['Pulse'];
+      sPO2 = json['SPO2'].toString();
+      pulse = json['Pulse'].toString();
+      systolic = json['Systolic'].toString();
+      diastolic = json['Diastolic'].toString();
+      weight = json['Weight'].toString();
     } catch (e) {
       print(e);
     }
@@ -66,6 +77,9 @@ class Data {
     try {
       data['SPO2'] = this.sPO2;
       data['Pulse'] = this.pulse;
+      data['Systolic'] = this.systolic;
+      data['Diastolic'] = this.diastolic;
+      data['Weight'] = this.weight;
     } catch (e) {
       print(e);
     }

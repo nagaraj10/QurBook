@@ -872,29 +872,48 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                 if (self.idForBP) != nil{
                     OHQDeviceManager.shared().startSession(withDevice: self.idForBP!, usingDataObserver: { dataType, data in
                         if let ArrayData =  data as? NSArray,ArrayData.count > 0,let lastObj = ArrayData.lastObject as? NSDictionary{
+//                            let lsOBj : [String:Any] = [
+//                                "BloodPressureMeasurementStatusKey" : lastObj["bloodPressureMeasurementStatus"],
+//                                "BloodPressureUnitKey" : lastObj["bloodPressureUnit"],
+//                                "DiastolicKey" : lastObj["diastolic"],
+//                                "MeanArterialPressureKey" : lastObj["meanArterialPressure"],
+//                                "PulseRateKey" : lastObj["pulseRate"],
+//                                "SystolicKey" : lastObj["systolic"],
+//                                // "timeStamp" : lastObj["timeStamp"],
+//                                "UserIndexKey" : lastObj["userIndex"]
+//                            ];
                             let lsOBj : [String:Any] = [
-                                "BloodPressureMeasurementStatusKey" : lastObj["bloodPressureMeasurementStatus"],
-                                "BloodPressureUnitKey" : lastObj["bloodPressureUnit"],
-                                "DiastolicKey" : lastObj["diastolic"],
-                                "MeanArterialPressureKey" : lastObj["meanArterialPressure"],
-                                "PulseRateKey" : lastObj["pulseRate"],
-                                "SystolicKey" : lastObj["systolic"],
-                                // "timeStamp" : lastObj["timeStamp"],
-                                "UserIndexKey" : lastObj["userIndex"]
+                                "Status" : "Measurement",
+                                "deviceType" : "BP",
+                                "Data" : [
+                                    "Systolic" :  lastObj["systolic"],
+                                    "Diastolic" : lastObj["diastolic"],
+                                    "Pulse" :  lastObj["pulseRate"]
+                                ]
                             ];
-                            do {
-                                let jsonData = try JSONSerialization.data(withJSONObject: ["measurementRecords" : [lsOBj
-                                                                                                                  ]], options: JSONSerialization.WritingOptions.prettyPrinted)
-                                let jsonString = String(data: jsonData, encoding: .utf8)
-                                self.eventSink?("measurement|" + (jsonString ?? ""))
+                            if let serlized = lsOBj.jsonStringRepresentation{
+                                print(serlized)
+                                self.eventSink?("measurement|"+serlized)
+                                self.eventSink = nil
                                 if self.idForBP != nil {
                                     OHQDeviceManager.shared().cancelSession(withDevice: self.idForBP!)
                                     self.idForBP = nil
                                 }
                             }
-                            catch let err {
-                                print(err)
-                            }
+//                            do {
+//                                let jsonData = try JSONSerialization.data(withJSONObject: ["measurementRecords" : [lsOBj
+//                                                                                                                  ]], options: JSONSerialization.WritingOptions.prettyPrinted)
+//                                let jsonString = String(data: jsonData, encoding: .utf8)
+//                                self.eventSink?("measurement|" + (jsonString ?? ""))
+//                                if self.idForBP != nil {
+//                                    OHQDeviceManager.shared().cancelSession(withDevice: self.idForBP!)
+//                                    self.idForBP = nil
+//                                }
+//                            }
+                        
+//                            catch let err {
+//                                print(err)
+//                            }
                         }
                     }, connectionObserver: {[weak self] state in
                         guard let self = self else { return }
