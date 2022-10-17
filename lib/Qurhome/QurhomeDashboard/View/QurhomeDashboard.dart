@@ -229,7 +229,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       Get.toNamed(
                         rt_Sheela,
                         arguments: SheelaArgument(
-                          sheelaInputs: sheelaQueueShowRemind,
+                          rawMessage: sheelaQueueShowRemind,
                         ),
                       );
                     }else{
