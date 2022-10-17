@@ -177,7 +177,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                       Get.toNamed(
                                         rt_Sheela,
                                         arguments: SheelaArgument(
-                                          sheelaInputs: sheelaQueueShowRemind,
+                                          rawMessage: sheelaQueueShowRemind,
                                         ),
                                       );
                                     } else {
