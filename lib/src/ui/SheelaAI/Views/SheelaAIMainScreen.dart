@@ -63,6 +63,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     animationController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     controller.stopTTS();
+    controller.isSheelaScreenActive = false;
+    if (controller.bleController != null) {
+      controller.bleController.stopTTS();
+      controller.bleController.stopScanning();
+      controller.bleController = null;
+    }
     super.dispose();
   }
 

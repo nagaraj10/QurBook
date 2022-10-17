@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import '../../../QurHub/Controller/hub_list_controller.dart';
 import '../../BpScan/model/QurHomeBpScanResult.dart';
 import '../../../constants/fhb_constants.dart';
@@ -16,27 +19,48 @@ import '../../../common/CommonUtil.dart';
 class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
-  static const stream = EventChannel('QurbookBLE/stream');
-  static const streamAppointment = EventChannel('ScheduleAppointment/stream');
-  static const streamBp = EventChannel('QurbookBLE/stream');
-  StreamSubscription _timerSubscription;
+  // static const stream = EventChannel('QurbookBLE/stream');
+  // static const streamAppointment = EventChannel('ScheduleAppointment/stream');
+  // static const streamBp = EventChannel('QurbookBLE/stream');
+  // StreamSubscription _timerSubscription;
   StreamSubscription _appointmentSubscription;
-  StreamSubscription _bpPressureSubscription;
-  var foundBLE = false.obs;
-  var movedToNextScreen = false;
+  // StreamSubscription _bpPressureSubscription;
+  // var foundBLE = false.obs;
+  // var movedToNextScreen = false;
   var isDialogShowing = false.obs;
-  String bleMacId;
-  HubListController hubController;
+  // String bleMacId;
+  HubListViewController hubController;
   var regController;
-  QurHomeBpScanResult qurHomeBpScanResultModel;
-  var qurHomeBpScanResult = [].obs;
+  // QurHomeBpScanResult qurHomeBpScanResultModel;
+  // var qurHomeBpScanResult = [].obs;
+  SheelaBLEController _sheelaBLEController;
+  Timer _bleTimer;
 
   @override
   void onInit() {
     PreferenceUtil.saveIfQurhomeisAcive(
       qurhomeStatus: true,
     );
-    Future.delayed(const Duration(seconds: 2)).then((value) => getHubDetails());
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    if (!Get.isRegistered<SheelaBLEController>()) {
+      Get.put(SheelaBLEController());
+    }
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
+    }
+    _sheelaBLEController = Get.find();
+    getHubDetails();
+    _bleTimer = Timer.periodic(
+        const Duration(
+          seconds: 20,
+        ), (time) {
+      if (Get.find<SheelaAIController>().isSheelaScreenActive) {
+        return;
+      }
+      _sheelaBLEController.setupListenerForReadings();
+    });
     super.onInit();
   }
 
@@ -47,12 +71,17 @@ class QurhomeDashboardController extends GetxController {
     );
     // _disableTimer();
     //bleController.stopBleScan();
+    _sheelaBLEController.stopScanning();
+    _sheelaBLEController.stopTTS();
+    _bleTimer.cancel();
+    _bleTimer = null;
     super.onClose();
   }
 
-  getHubDetails() {
-    hubController = Get.find<HubListController>();
-    hubController.getHubList();
+  getHubDetails() async {
+    hubController = Get.find<HubListViewController>();
+    await hubController.getHubList();
+    _sheelaBLEController.setupListenerForReadings();
   }
 
   // void _disableTimer() {
@@ -444,32 +473,32 @@ class QurhomeDashboardController extends GetxController {
   //   });
   // }
 
-  void getValuesNativeAppointment() {
-    _appointmentSubscription ??=
-        streamAppointment.receiveBroadcastStream().listen((val) {
-      print(val);
-      List<String> receivedValues = val.split('|');
-      if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues.first ?? "")) {
-          case "scheduleAppointment":
-            if (PreferenceUtil.getIfQurhomeisAcive()) {
-              redirectToSheelaScheduleAppointment();
-            }
-            break;
-        }
-      }
-    });
-    if (Platform.isIOS) {
-      const platform = MethodChannel(APPOINTMENT_DETAILS);
-      platform.setMethodCallHandler((call) {
-        if (call.method == APPOINTMENT_DETAILS) {
-          if (PreferenceUtil.getIfQurhomeisAcive()) {
-            redirectToSheelaScheduleAppointment();
-          }
-        }
-      });
-    }
-  }
+  // void getValuesNativeAppointment() {
+  //   _appointmentSubscription ??=
+  //       streamAppointment.receiveBroadcastStream().listen((val) {
+  //     print(val);
+  //     List<String> receivedValues = val.split('|');
+  //     if ((receivedValues ?? []).length > 0) {
+  //       switch ((receivedValues.first ?? "")) {
+  //         case "scheduleAppointment":
+  //           if (PreferenceUtil.getIfQurhomeisAcive()) {
+  //             redirectToSheelaScheduleAppointment();
+  //           }
+  //           break;
+  //       }
+  //     }
+  //   });
+  //   if (Platform.isIOS) {
+  //     const platform = MethodChannel(APPOINTMENT_DETAILS);
+  //     platform.setMethodCallHandler((call) {
+  //       if (call.method == APPOINTMENT_DETAILS) {
+  //         if (PreferenceUtil.getIfQurhomeisAcive()) {
+  //           redirectToSheelaScheduleAppointment();
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
 
   // callNativeBpValues({bool isFromVitals}) async {
   //   try {

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Views/SheelaAIMainScreen.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../QurHub/Controller/hub_list_controller.dart';
@@ -35,7 +36,9 @@ class SheelaBLEController extends GetxController {
   bool isCompleted = false;
   bool isFromVitals = false;
   bool addingDevicesInHublist = false;
+  bool receivedData = false;
   AudioPlayer player;
+  int randomNum = 0;
 
   @override
   void onInit() {
@@ -68,18 +71,27 @@ class SheelaBLEController extends GetxController {
 
   setupListenerForReadings() async {
     _enableTimer();
-    // timeOutTimer = Timer(
-    //   const Duration(seconds: 120),
-    //   () {
-    //     showFailure();
-    //   },
-    // );
+  }
+
+  refreshTimeoutTimer() {
+    removeTimeOutTimer();
+    if (timeOutTimer == null) {
+      timeOutTimer = Timer(
+        const Duration(
+          seconds: 180,
+        ),
+        () {
+          showFailure();
+        },
+      );
+    }
   }
 
   void _enableTimer() {
     if (_timerSubscription != null) {
       return;
     }
+
     _timerSubscription = stream.listen(
       (val) {
         final List<String> receivedValues = val.split('|');
@@ -119,41 +131,40 @@ class SheelaBLEController extends GetxController {
               hublistController.bleDeviceType = CommonUtil().validString(
                 receivedValues.last,
               );
-              break;
-            case "connected":
-              FlutterToast().getToast(
-                receivedValues.last,
-                Colors.red,
-              );
               if (addingDevicesInHublist) {
                 hublistController.searchingBleDevice(false);
                 hublistController.navigateToAddDeviceScreen();
                 _disableTimer();
                 return;
               }
+              break;
+            case "connected":
+              receivedData = false;
+              FlutterToast().getToast(
+                receivedValues.last,
+                Colors.red,
+              );
 
-              if (checkForParedDevice()) {
-                //found paired device
-                if (hublistController.bleDeviceType.toLowerCase() ==
-                    "SPO2".toLowerCase()) {
-                  _disableTimer();
-
-                  Get.toNamed(
-                    rt_Sheela,
+              if (!checkForParedDevice()) {
+                _disableTimer();
+                return;
+              }
+              if (hublistController.bleDeviceType.toLowerCase() ==
+                      "SPO2".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "BP".toLowerCase()) {
+                //show next method
+                Get.to(
+                  SheelaAIMainScreen(
                     arguments: SheelaArgument(
                       takeActiveDeviceReadings: true,
                     ),
-                  );
-                }
-              } else {
-                FlutterToast().getToastForLongTime(
-                  'No device found',
-                  Colors.red,
+                  ),
                 );
               }
-
               break;
             case "measurement":
+              receivedData = true;
               updateUserData(
                 data: receivedValues.last,
               );
@@ -173,47 +184,45 @@ class SheelaBLEController extends GetxController {
 
   bool checkForParedDevice() {
     try {
-      var userDeviceCollection =
-          hublistController.hubListResponse.result.userDeviceCollection;
+      final devicesList =
+          (hublistController.hubListResponse.result.userDeviceCollection ?? []);
+      if (devicesList.isEmpty) {
+        //no paired devices
+        return false;
+      }
       var index = -1;
-      index = userDeviceCollection.indexWhere(
+      index = devicesList.indexWhere(
         (element) => (CommonUtil().validString(element.device.serialNumber) ==
             hublistController.bleMacId),
       );
       return index >= 0;
     } catch (e) {
+      printError(info: e.toString());
       return false;
     }
   }
 
-  checkForConnectedDevices(
-    bool isFromVitalsList, {
-    String eid,
-    String uid,
-  }) async {
-    if ((hublistController.hubListResponse.result.userDeviceCollection ?? [])
-        .isEmpty) {
-      if (!isFromVitalsList) {}
-    } else {
-      try {
-        if (Platform.isAndroid) {
-          bool serviceEnabled = await CommonUtil().checkGPSIsOn();
-          bool isBluetoothEnable = false;
-          isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
-          if (!isBluetoothEnable) {
-            FlutterToast().getToast(
-                'Please turn on your bluetooth and try again', Colors.red);
-            return;
-          } else if (!serviceEnabled) {
-            FlutterToast().getToast(
-                'Please turn on your GPS location services and try again',
-                Colors.red);
-            return;
-          }
+  checkForBLEEnableConditions() async {
+    try {
+      if (Platform.isAndroid) {
+        bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+        bool isBluetoothEnable = false;
+        isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
+        if (!isBluetoothEnable) {
+          FlutterToast().getToast(
+              'Please turn on your bluetooth and try again', Colors.red);
+          return false;
+        } else if (!serviceEnabled) {
+          FlutterToast().getToast(
+              'Please turn on your GPS location services and try again',
+              Colors.red);
+          return false;
         }
-      } catch (e) {
-        print(e);
-      }
+        return true;
+      } else {}
+    } catch (e) {
+      printError(info: e.toString());
+      return false;
     }
   }
 
@@ -221,23 +230,29 @@ class SheelaBLEController extends GetxController {
     final arguments = SheelaController.arguments;
     isCompleted = false;
     var msg = '';
-    if (arguments.isJumperDevice && (arguments.deviceType ?? '').isNotEmpty) {
-      String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText.toLowerCase() == "weight") {
-        strText = "Weighing scale";
-      }
-      msg = "Your $strText is connected & reading values. Please wait";
-      setupListenerForReadings();
-    } else if (arguments.takeActiveDeviceReadings) {
-      msg = "Your SPO2 device is connected & reading values. Please wait";
-      setupListenerForReadings();
-    } else if (arguments.isFromBpReading) {
-      msg:
-      "Your BP device is connected & reading values. Please wait..";
-    }
+    // if (arguments.isJumperDevice && (arguments.deviceType ?? '').isNotEmpty) {
+    //   String strText = CommonUtil().validString(arguments.deviceType);
+    //   if (strText.toLowerCase() == "weight") {
+    //     strText = "Weighing scale";
+    //   }
+    //   msg = "Your $strText is connected & reading values. Please wait";
+    //   setupListenerForReadings();
+    // } else if (arguments.takeActiveDeviceReadings) {
+    msg =
+        "Your ${hublistController.bleDeviceType} device is connected & reading values. Please wait";
+    // setupListenerForReadings();
+    // } else if (arguments.isFromBpReading) {
+    //   msg:
+    //   "Your BP device is connected & reading values. Please wait..";
+    // }
     if (msg.isNotEmpty) {
       addToConversationAndPlay(
-          SheelaResponse(recipientId: conversationType, text: msg));
+        SheelaResponse(
+          recipientId: conversationType,
+          text: msg,
+        ),
+      );
+      refreshTimeoutTimer();
     }
   }
 
@@ -247,17 +262,26 @@ class SheelaBLEController extends GetxController {
   }
 
   showFailure() async {
-    addToConversationAndPlay(
-      SheelaResponse(
-        recipientId: conversationType,
-        text: "Failed to save the values, Please try again",
-      ),
-    );
-    isCompleted = true;
-    await Future.delayed(const Duration(seconds: 2));
+    if (SheelaController.isSheelaScreenActive &&
+        !isCompleted &&
+        !receivedData) {
+      addToConversationAndPlay(
+        SheelaResponse(
+          recipientId: conversationType,
+          text: "Failed to save the values, Please try again",
+        ),
+      );
+      isCompleted = true;
+      await Future.delayed(const Duration(seconds: 2));
+    }
   }
 
   updateUserData({String data = ''}) async {
+    await Future.delayed(
+      const Duration(
+        seconds: 2,
+      ),
+    );
     if ((data ?? '').isNotEmpty && SheelaController.canSpeak) {
       // _disableTimer();
       try {
@@ -278,6 +302,7 @@ class SheelaBLEController extends GetxController {
           model,
         );
         if (!response) {
+          receivedData = false;
           showFailure();
         } else if (model.deviceType == "SPO2") {
           if ((model.data.sPO2 ?? '').isNotEmpty &&
@@ -299,12 +324,13 @@ class SheelaBLEController extends GetxController {
             );
             await Future.delayed(const Duration(seconds: 2));
           } else {
+            receivedData = false;
             showFailure();
           }
         }
-
         isCompleted = true;
       } catch (e) {
+        receivedData = false;
         showFailure();
       }
     }
@@ -351,17 +377,24 @@ class SheelaBLEController extends GetxController {
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = const Base64Decoder().convert(textForPlaying);
+          final bytes = base64Decode(textForPlaying);
           if (bytes != null) {
             final dir = await getTemporaryDirectory();
-            final file = File('${dir.path}/tempAudioFile.mp3');
-            await file.writeAsBytes(bytes);
-            final path = "${dir.path}/tempAudioFile.mp3";
+            randomNum++;
+            if (randomNum > 4) {
+              randomNum = 0;
+            }
+            final tempFile =
+                await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
+            await tempFile.writeAsBytesSync(
+              bytes,
+            );
             SheelaController.conversations.add(currentPlayingConversation);
             SheelaController.isMicListening.toggle();
             currentPlayingConversation.isPlaying.value = true;
             isPlaying = true;
-            await player.play(path, isLocal: true);
+            await player.play('${dir.path}/tempAudioFile$randomNum.mp3',
+                isLocal: true);
           }
         } catch (e) {
           //failed play the audio
@@ -391,14 +424,18 @@ class SheelaBLEController extends GetxController {
     _disableTimer();
   }
 
+  removeTimeOutTimer() {
+    if (timeOutTimer != null) {
+      timeOutTimer.cancel();
+      timeOutTimer = null;
+    }
+  }
+
   void _disableTimer() {
     if (_timerSubscription != null) {
       _timerSubscription.cancel();
       _timerSubscription = null;
     }
-    if (timeOutTimer != null) {
-      timeOutTimer.cancel();
-      timeOutTimer = null;
-    }
+    removeTimeOutTimer();
   }
 }

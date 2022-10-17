@@ -137,7 +137,7 @@ class QurhomeRegimenController extends GetxController {
         }
       }
 
-      qurhomeDashboardController.getValuesNativeAppointment();
+      // qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
       getUserDetails();
@@ -197,8 +197,8 @@ class QurhomeRegimenController extends GetxController {
         }
       } else {
         Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.best,
-            forceAndroidLocationManager: true)
+                desiredAccuracy: LocationAccuracy.best,
+                forceAndroidLocationManager: true)
             .then((Position position) {
           getAddressFromLatLng(position.latitude, position.longitude);
         }).catchError((e) {
@@ -240,7 +240,6 @@ class QurhomeRegimenController extends GetxController {
       print(e);
     }
   }
-
 
   getCareCoordinatorId() async {
     try {
@@ -351,27 +350,23 @@ class QurhomeRegimenController extends GetxController {
 
   getSOSAgentNumber(bool isLoading) async {
     try {
-      if(isLoading)
-      {
+      if (isLoading) {
         loadingData.value = true;
       }
       SOSAgentNumber = "".obs;
       http.Response response = await _apiProvider.getSOSAgentNumber();
-      if(isLoading)
-      {
+      if (isLoading) {
         loadingData.value = false;
       }
-      if (response == null)
-      {
+      if (response == null) {
         SOSAgentNumber.value = "";
       } else {
         SOSCallAgentNumberData sosCallAgentNumberData =
-        SOSCallAgentNumberData.fromJson(json.decode(response.body));
+            SOSCallAgentNumberData.fromJson(json.decode(response.body));
         if (sosCallAgentNumberData.result != null &&
             sosCallAgentNumberData.isSuccess) {
           SOSAgentNumber.value = CommonUtil()
               .validString(sosCallAgentNumberData.result.exoPhoneNumber);
-
         }
       }
     } catch (e) {
@@ -385,11 +380,9 @@ class QurhomeRegimenController extends GetxController {
     } catch (e) {
       //print(e);
     }
-
   }
 
-  void startTimer()
-  {
+  void startTimer() {
     try {
       //30 seconds API calling
       timer = Timer.periodic(Duration(seconds: 30), (Timer t) {

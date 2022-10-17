@@ -170,6 +170,7 @@ class SheelaAIController extends GetxController {
         (arguments?.takeActiveDeviceReadings ?? false)) {
       //BLE devices handling
       bleController = Get.find();
+      bleController.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {
       var msg = strhiMaya;

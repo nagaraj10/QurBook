@@ -213,9 +213,6 @@ class NavigationDrawer extends StatelessWidget {
                                     Get.lazyPut(
                                       () => HubListViewController(),
                                     );
-                                    Get.lazyPut(
-                                      () => HubListController(),
-                                    );
                                   }
                                 },
                               ),
