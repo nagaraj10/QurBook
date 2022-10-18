@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -74,6 +73,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   TabController _controller;
   int selectedTab = 0;
   String authToken = '';
+  bool isHideInputTextBox = false;
+
   @override
   void initState() {
     try {
@@ -153,6 +154,16 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     List<Widget> widgetForColumn = List();
     String strName = "";
     try {
+      if (ticket.additionalInfo?.ticketStatus?.name != null &&
+          ticket.additionalInfo?.ticketStatus?.name != '') {
+        String strStatus = CommonUtil()
+            .validString(ticket.additionalInfo?.ticketStatus?.name)
+            .toLowerCase();
+        if (strStatus.contains("cancelled") ||
+            strStatus.contains("completed")) {
+          isHideInputTextBox = true;
+        }
+      }
       strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
       final dataFields = ticket.dataFields;
       if (strName.contains("transportation") ||
@@ -634,140 +645,147 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                           ),
                               ),
                             ),
-                            Row(
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 4,
-                                  child: Container(
-                                    height: 58.0.h,
-                                    child: TextField(
-                                      controller: addCommentController,
-                                      style: TextStyle(fontSize: 16.0.sp),
-                                      focusNode: focusNode,
-                                      //controller: textEditingController,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(
-                                            "\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
-                                      ],
-                                      decoration: InputDecoration(
-                                        suffixIcon: SizedBoxWithChild(
-                                          width: 50.0.h,
-                                          height: 50.0.h,
-                                          child: FlatButton(
-                                              onPressed: () async {
-                                                FilePickerResult result =
-                                                    await FilePicker.platform
-                                                        .pickFiles(
-                                                  type: FileType.custom,
-                                                  allowedExtensions: [
-                                                    'jpg',
-                                                    'pdf'
-                                                  ],
-                                                );
-                                                if (result != null) {
-                                                  File file = File(
-                                                      result.files.single.path);
-                                                  uploadFile(
-                                                      widget.ticket.sId, file);
-                                                }
-                                              },
-                                              child: new Icon(
-                                                Icons.attach_file,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                                size: 24,
-                                              )),
-                                        ),
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.only(
-                                            bottom: -10.0, left: 8),
-                                        hintText: "Type your message here",
-                                        hintStyle: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16.0.sp,
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white70,
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              width: 2),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.transparent),
-                                        ),
-                                      ),
-                                      /*onChanged: (text){
+                            !isHideInputTextBox
+                                ? Row(
+                                    children: <Widget>[
+                                      Flexible(
+                                        flex: 4,
+                                        child: Container(
+                                          height: 58.0.h,
+                                          child: TextField(
+                                            controller: addCommentController,
+                                            style: TextStyle(fontSize: 16.0.sp),
+                                            focusNode: focusNode,
+                                            //controller: textEditingController,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                      "\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
+                                            ],
+                                            decoration: InputDecoration(
+                                              suffixIcon: SizedBoxWithChild(
+                                                width: 50.0.h,
+                                                height: 50.0.h,
+                                                child: FlatButton(
+                                                    onPressed: () async {
+                                                      FilePickerResult result =
+                                                          await FilePicker
+                                                              .platform
+                                                              .pickFiles(
+                                                        type: FileType.custom,
+                                                        allowedExtensions: [
+                                                          'jpg',
+                                                          'pdf'
+                                                        ],
+                                                      );
+                                                      if (result != null) {
+                                                        File file = File(result
+                                                            .files.single.path);
+                                                        uploadFile(
+                                                            widget.ticket.sId,
+                                                            file);
+                                                      }
+                                                    },
+                                                    child: new Icon(
+                                                      Icons.attach_file,
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      size: 24,
+                                                    )),
+                                              ),
+                                              isDense: true,
+                                              contentPadding: EdgeInsets.only(
+                                                  bottom: -10.0, left: 8),
+                                              hintText:
+                                                  "Type your message here",
+                                              hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                              filled: true,
+                                              fillColor: Colors.white70,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12.0)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 2),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent),
+                                              ),
+                                            ),
+                                            /*onChanged: (text){
                     final val = TextSelection.collapsed(offset: textEditingController.text.length);
                     textEditingController.selection = val;
                     */ /*textEditingController.text = '~$text~';*/ /*
                   },*/
-                                      /*onSubmitted: (value) =>*/
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: new Container(
-                                    child: RawMaterialButton(
-                                      onPressed: () {
-                                        onSendMessage(addCommentController.text,
-                                            widget.ticket);
-                                      },
-                                      elevation: 2.0,
-                                      fillColor: Colors.white,
-                                      child: Icon(Icons.send,
-                                          size: 25.0,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                      padding: EdgeInsets.all(12.0),
-                                      shape: CircleBorder(),
-                                    ),
-                                  ),
-                                ),
-                                // Flexible(
-                                //   flex: 1,
-                                //   child: new Container(
-                                //     child: RawMaterialButton(
-                                //       onPressed: () {
-                                //         Navigator.of(context)
-                                //             .push(
-                                //           MaterialPageRoute(
-                                //             builder: (context) => AudioRecorder(
-                                //               arguments: AudioScreenArguments(
-                                //                 fromVoice: false,
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         )
-                                //             .then((results) {
-                                //           /*String audioPath = results[Constants.keyAudioFile];
-                                //         if (audioPath != null && audioPath != '') {
-                                //           setState(() {
-                                //             isLoading = true;
-                                //           });
-                                //           uploadFile(audioPath);
-                                //         }*/
-                                //         });
-                                //       },
-                                //       elevation: 2.0,
-                                //       fillColor: Colors.white,
-                                //       child: Icon(Icons.mic,
-                                //           size: 25.0,
-                                //           color: Color(CommonUtil()
-                                //               .getMyPrimaryColor())),
-                                //       padding: EdgeInsets.all(12.0),
-                                //       shape: CircleBorder(),
-                                //     ),
-                                //   ),
-                                // )
-                              ],
-                            ),
+                                            /*onSubmitted: (value) =>*/
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: new Container(
+                                          child: RawMaterialButton(
+                                            onPressed: () {
+                                              onSendMessage(
+                                                  addCommentController.text,
+                                                  widget.ticket);
+                                            },
+                                            elevation: 2.0,
+                                            fillColor: Colors.white,
+                                            child: Icon(Icons.send,
+                                                size: 25.0,
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                            padding: EdgeInsets.all(12.0),
+                                            shape: CircleBorder(),
+                                          ),
+                                        ),
+                                      ),
+                                      // Flexible(
+                                      //   flex: 1,
+                                      //   child: new Container(
+                                      //     child: RawMaterialButton(
+                                      //       onPressed: () {
+                                      //         Navigator.of(context)
+                                      //             .push(
+                                      //           MaterialPageRoute(
+                                      //             builder: (context) => AudioRecorder(
+                                      //               arguments: AudioScreenArguments(
+                                      //                 fromVoice: false,
+                                      //               ),
+                                      //             ),
+                                      //           ),
+                                      //         )
+                                      //             .then((results) {
+                                      //           /*String audioPath = results[Constants.keyAudioFile];
+                                      //         if (audioPath != null && audioPath != '') {
+                                      //           setState(() {
+                                      //             isLoading = true;
+                                      //           });
+                                      //           uploadFile(audioPath);
+                                      //         }*/
+                                      //         });
+                                      //       },
+                                      //       elevation: 2.0,
+                                      //       fillColor: Colors.white,
+                                      //       child: Icon(Icons.mic,
+                                      //           size: 25.0,
+                                      //           color: Color(CommonUtil()
+                                      //               .getMyPrimaryColor())),
+                                      //       padding: EdgeInsets.all(12.0),
+                                      //       shape: CircleBorder(),
+                                      //     ),
+                                      //   ),
+                                      // )
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       ),
