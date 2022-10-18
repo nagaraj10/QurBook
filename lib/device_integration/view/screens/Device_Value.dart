@@ -7,6 +7,9 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/regiment/models/regiment_data_model.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
@@ -122,6 +125,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Height heightObj, weightObj, tempObj;
   String userMappingId = '';
+  List<RegimentDataModel> activitiesFilteredList = [];
+  RegimentDataModel selectedActivity;
+  String vitalDevices;
 
   @override
   void initState() {
@@ -153,6 +159,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     } catch (e) {
       //print(e);
     }
+
+    Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
+      isInitial: true,
+    );
+
+    Provider.of<RegimentViewModel>(
+      context,
+      listen: false,
+    ).updateTabIndex(currentIndex: 3);
   }
 
   onInit() async {
@@ -178,7 +193,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         Container(child: getAddDeviceReadings()),
         SizedBoxWidget(height: 5.0.h),
         Expanded(
-          child: getValues(context, devicesmodel),
+          child: getMasterRegimenList(context, devicesmodel),
         ),
       ],
     );
@@ -503,14 +518,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
               PreferenceUtil.saveCompleteData(KEY_COMPLETE_DATA, value);
               Navigator.of(context).pop(true);
 
-              setState(() {
-                deviceController.text = '';
-                pulse.text = '';
-                diaStolicPressure.text = '';
-                isSelected[0] = null;
-                isSelected[1] = null;
-                isSelected[2] = null;
-              });
+              if (widget.device_name == strGlusoceLevel) {
+                if (isSelected[0] == true) {
+                  alertDialogToCopyRegimenValues();
+                } else {
+                  refreshData();
+                }
+              } else {
+                alertDialogToCopyRegimenValues();
+              }
             });
           } else {
             errorMsg = '';
@@ -710,7 +726,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                           fontWeight: FontWeight.w500,
                                           color: Color(
                                               CommonConstants.bpDarkColor)),
-                                      decoration: InputDecoration(
+                                  decoration: InputDecoration(
                                           border: UnderlineInputBorder(
                                             borderSide: BorderSide(
                                                 color: Color(CommonConstants
@@ -813,7 +829,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       controller: pulse,
                                       style: TextStyle(
                                           fontSize: 15.0.sp,
-                                          fontWeight: FontWeight.w500,
+                               
+                fontWeight: FontWeight.w500,
                                           color: Color(
                                               CommonConstants.bpDarkColor)),
                                       decoration: InputDecoration(
@@ -1436,6 +1453,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
+    selectedActivity = getActivityFromDeviceName(getDeviceName());
     switch (widget.device_name) {
       case strDataTypeBP:
         {
@@ -2555,12 +2573,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         width: 32.0.h,
         color: Color(CommonUtil().getMyPrimaryColor()),
       );
-    }else if(type.toLowerCase().contains("dexcom")){
+    } else if (type.toLowerCase().contains("dexcom")) {
       return Image.network(
         'https://fhb-static-resources-p.s3.ap-south-1.amazonaws.com/logos/dexcom.png',
         height: 32.0.h,
         width: 32.0.h,
-        errorBuilder: (BuildContext context, Object exception, StackTrace stackTrace) {
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace stackTrace) {
           return Image.asset(
             'assets/icons/myfhb_source.png',
             height: 32.0.h,
@@ -2703,6 +2722,231 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           }
         }
       }
+    }
+  }
+
+  openCopyVitalsAlert() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            variable.strAlert,
+            style: TextStyle(
+              fontSize: 20.0.sp,
+            ),
+          ),
+          content: Container(
+              width: 1.sw,
+              height: 0.2.sh / 2.2,
+              child: Text(
+                strCopyVitalsMsg,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              )),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                refreshData();
+                Navigator.pop(context);
+              },
+              child: Text(
+                'No',
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(context);
+                createActivityMethod(widget.device_name);
+              },
+              child: Text(
+                'Yes',
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Widget getMasterRegimenList(
+      BuildContext context, DevicesViewModel devicesmodel) {
+    return new FutureBuilder<List<RegimentDataModel>>(
+      future: new CommonUtil().getMasterData(context, ''),
+      builder: (BuildContext context, snapshot) {
+        if (!snapshot.hasData) {
+          return CommonCircularIndicator();
+        }
+        if (snapshot.hasError) {
+          return ErrorsWidget();
+        } else {
+          if (snapshot.hasData) {
+            if (snapshot?.data != null) {
+              if (snapshot?.data?.length > 0) {
+                activitiesFilteredList = snapshot?.data;
+
+                return getValues(context, devicesmodel);
+              } else {
+                return SizedBox.shrink();
+              }
+            } else {
+              return SizedBox.shrink();
+            }
+          } else {
+            return SizedBox.shrink();
+          }
+        }
+      },
+    );
+  }
+
+  RegimentDataModel getActivityFromDeviceName(String device_name) {
+    selectedActivity = null;
+    activitiesFilteredList.forEach((element) {
+      print(element.activityname);
+      print(element.uformname1);
+      if (element.activityOrgin == 'Vitals' &&
+          element.uformname1 == device_name.toLowerCase()) {
+        selectedActivity = element;
+      }
+    });
+
+    return selectedActivity;
+  }
+
+  void createActivityMethod(String device_name) async {
+    Map<String, dynamic> saveMap = {};
+
+    DateTime initDate =
+        DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    TimeOfDay _currentTime = new TimeOfDay.now();
+    final fieldsResponseModel =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .getFormData(eid: selectedActivity.eid);
+    print(fieldsResponseModel);
+    fieldsResponseModel.result.fields.forEach((fields) {
+      switch (device_name) {
+        case strDataTypeBP:
+          {
+            if (saveMap.isEmpty)
+              saveMap['pf_${fields.title}'] = pulse.text;
+            else if (saveMap.length == 1)
+              saveMap['pf_${fields.title}'] = diaStolicPressure.text;
+            else
+              saveMap['pf_${fields.title}'] = deviceController.text;
+          }
+          break;
+        case strGlusoceLevel:
+          {
+            saveMap['pf_${fields.title}'] = deviceController.text;
+          }
+          break;
+        case strOxgenSaturation:
+          {
+            if (saveMap.isEmpty)
+              saveMap['pf_${fields.title}'] = deviceController.text;
+            else if (saveMap.length == 1)
+              saveMap['pf_${fields.title}'] = pulse.text;
+          }
+          break;
+        case strWeight:
+          {
+            saveMap['pf_${fields.title}'] = deviceController.text;
+          }
+          break;
+        case strTemperature:
+          {
+            saveMap['pf_${fields.title}'] = deviceController.text;
+          }
+          break;
+        default:
+          {
+            //statements;
+          }
+          break;
+      }
+    });
+
+    var events = '';
+    saveMap.forEach((key, value) {
+      events += '&$key=$value';
+      var provider = Provider.of<RegimentViewModel>(context, listen: false);
+      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents.add('&$key=$value'.toString());
+    });
+    final saveResponse =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .saveFormData(
+      eid: selectedActivity.eid,
+      events: events,
+      isFollowEvent: false,
+      followEventContext: '',
+      selectedDate: initDate,
+      selectedTime: _currentTime,
+    );
+    if (saveResponse?.isSuccess ?? false) {
+      refreshData();
+    }
+  }
+
+  void refreshData() {
+    setState(() {
+      deviceController.text = '';
+      pulse.text = '';
+      diaStolicPressure.text = '';
+      isSelected[0] = null;
+      isSelected[1] = null;
+      isSelected[2] = null;
+    });
+  }
+
+  getDeviceName() {
+    switch (widget.device_name) {
+      case strDataTypeBP:
+        {
+          return parameters.strBP;
+        }
+        break;
+      case strGlusoceLevel:
+        {
+          return strBloodSugar;
+        }
+        break;
+      case strOxgenSaturation:
+        {
+          return strglucose;
+        }
+        break;
+      case strWeight:
+        {
+          return strParamWeight;
+        }
+        break;
+      case strTemperature:
+        {
+          return strParamTemp;
+        }
+        break;
+      default:
+        {
+          //statements;
+        }
+        break;
+    }
+  }
+
+  void alertDialogToCopyRegimenValues() {
+    if (selectedActivity != null) {
+      openCopyVitalsAlert();
+    } else {
+      refreshData();
     }
   }
 }
