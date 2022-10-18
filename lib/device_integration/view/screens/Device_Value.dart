@@ -2727,12 +2727,21 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          content: Text(
-            strCopyVitalsMsg,
+          title: Text(
+            variable.strAlert,
             style: TextStyle(
-              fontSize: 16.0.sp,
+              fontSize: 20.0.sp,
             ),
           ),
+          content: Container(
+              width: 1.sw,
+              height: 0.2.sh / 2.2,
+              child: Text(
+                strCopyVitalsMsg,
+                style: TextStyle(
+                  fontSize: 16.0.sp,
+                ),
+              )),
           actions: <Widget>[
             FlatButton(
               onPressed: () {
