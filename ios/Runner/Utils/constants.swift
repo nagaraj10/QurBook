@@ -59,5 +59,11 @@ static let navigateToSheelaReminderMethod = "navigateToSheelaReminderMethod"
     static let BLENameData = "kCBAdvDataLocalName";
     static let BLEAdvDataServiceUUIDs = "kCBAdvDataServiceUUIDs";
     static let QurhomeDefaultUI = "QurhomeDefaultUI";
-
+    static let Mike = "Mike";
+    static let WOWGOSPO2 = "GSH601";
+    static let WOWGOBP = "GSH862";
+    static let WOWGOBPB = "GSH_862B";
+    static let WOWGOWT1 = "GSH-202";
+    static let WOWGOWT2 = "GSH-231";
+    static let WOWGOWT3 = "0202B-0001";
 }

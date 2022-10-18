@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -28,6 +28,15 @@
 		54C199672848883D00BC3B10 /* NSDate+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */; };
 		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
 		54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 54DE86992861E78A0005B940 /* beep_beep.mp3 */; };
+		54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; };
+		54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */; platformFilter = ios; };
+		54FE478F28FEE33200B8564F /* DB62M_DeviceManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54FE479028FEE33400B8564F /* GSH601_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478728FEE31000B8564F /* GSH601_DeviceManager.framework */; platformFilter = ios; };
+		54FE479128FEE33400B8564F /* GSH601_DeviceManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478728FEE31000B8564F /* GSH601_DeviceManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54FE479228FEE33600B8564F /* LS202_DeviceManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */; platformFilter = ios; };
+		54FE479328FEE33600B8564F /* LS202_DeviceManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		54FE479528FEF04300B8564F /* AppDelegateBLE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FE479428FEF04300B8564F /* AppDelegateBLE.swift */; };
 		80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 996E3B725118A754721F1163 /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -88,6 +97,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				54FE478F28FEE33200B8564F /* DB62M_DeviceManager.framework in Embed Frameworks */,
+				54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */,
+				54FE479328FEE33600B8564F /* LS202_DeviceManager.framework in Embed Frameworks */,
+				54FE479128FEE33400B8564F /* GSH601_DeviceManager.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -105,7 +118,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0C30CAB0B84F80F4EB2FBE82 /* Pods_AwesomeServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AwesomeServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		23C7516BAA1D1D1AEE419B38 /* Pods-AwesomeContentExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeContentExtension.debug.xcconfig"; path = "Target Support Files/Pods-AwesomeContentExtension/Pods-AwesomeContentExtension.debug.xcconfig"; sourceTree = "<group>"; };
@@ -144,6 +156,11 @@
 		54C199682848885200BC3B10 /* BSOSessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSOSessionData.m; sourceTree = "<group>"; };
 		54C199692848885200BC3B10 /* BSOSessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSOSessionData.h; sourceTree = "<group>"; };
 		54DE86992861E78A0005B940 /* beep_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep_beep.mp3; sourceTree = "<group>"; };
+		54FE478428FEE31000B8564F /* BleManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BleManager.framework; sourceTree = "<group>"; };
+		54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DB62M_DeviceManager.framework; sourceTree = "<group>"; };
+		54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = LS202_DeviceManager.framework; sourceTree = "<group>"; };
+		54FE478728FEE31000B8564F /* GSH601_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GSH601_DeviceManager.framework; sourceTree = "<group>"; };
+		54FE479428FEF04300B8564F /* AppDelegateBLE.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegateBLE.swift; sourceTree = "<group>"; };
 		6E0A76D1D8ADFDBB286AD081 /* Pods-AwesomeServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		73D8D04941CB079C61DFA273 /* Pods-AwesomeServiceExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AwesomeServiceExtension.profile.xcconfig"; path = "Target Support Files/Pods-AwesomeServiceExtension/Pods-AwesomeServiceExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -207,7 +224,6 @@
 		9C50E04E24E5381500CC5B0E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9C50E04F24E5381500CC5B0E /* iPHONE RINGTONE.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = "iPHONE RINGTONE.aiff"; sourceTree = "<group>"; };
 		9C94B21D24EEB1AA00DAF4D0 /* ringtone.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = ringtone.aiff; sourceTree = "<group>"; };
-		9DEF4D6B8BE6A0A348E4839D /* Pods_AwesomeContentExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AwesomeContentExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C185534C79C1EADAAC60D6A5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D66AF159257766330057F96C /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		D66AF15B257766330057F96C /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
@@ -219,7 +235,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */,
+				54FE478E28FEE33200B8564F /* DB62M_DeviceManager.framework in Frameworks */,
+				54FE479028FEE33400B8564F /* GSH601_DeviceManager.framework in Frameworks */,
 				80C941095C6CF7AF9EE96CDA /* Pods_Runner.framework in Frameworks */,
+				54FE479228FEE33600B8564F /* LS202_DeviceManager.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,8 +252,6 @@
 				996E3B725118A754721F1163 /* Pods_Runner.framework */,
 				D66AF159257766330057F96C /* UserNotifications.framework */,
 				D66AF15B257766330057F96C /* UserNotificationsUI.framework */,
-				9DEF4D6B8BE6A0A348E4839D /* Pods_AwesomeContentExtension.framework */,
-				0C30CAB0B84F80F4EB2FBE82 /* Pods_AwesomeServiceExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -328,6 +346,10 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				54FE478428FEE31000B8564F /* BleManager.framework */,
+				54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */,
+				54FE478728FEE31000B8564F /* GSH601_DeviceManager.framework */,
+				54FE478628FEE31000B8564F /* LS202_DeviceManager.framework */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
@@ -382,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				9C07AB8024F394B500DCE725 /* AppDelegate.swift */,
+				54FE479428FEF04300B8564F /* AppDelegateBLE.swift */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -869,6 +892,7 @@
 				9C07AB7A24F3948900DCE725 /* NVActivityIndicatorAnimationCubeTransition.swift in Sources */,
 				54952BF22834E7C600F8C975 /* ext.swift in Sources */,
 				9C07AB6C24F3948900DCE725 /* NVActivityIndicatorAnimationBallClipRotatePulse.swift in Sources */,
+				54FE479528FEF04300B8564F /* AppDelegateBLE.swift in Sources */,
 				9C07AB7724F3948900DCE725 /* NVActivityIndicatorAnimationBallScaleRippleMultiple.swift in Sources */,
 				54C1995B2848805100BC3B10 /* OHQDefines.m in Sources */,
 				9C07AB6324F3948900DCE725 /* NVActivityIndicatorAnimationBallDoubleBounce.swift in Sources */,
@@ -981,7 +1005,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -991,10 +1014,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1109,7 +1136,8 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1119,7 +1147,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -1129,10 +1156,23 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"PB_FIELD_32BIT=1",
+					"PB_NO_PACKED_STRUCTS=1",
+					"PB_ENABLE_MALLOC=1",
+					"SDK=1",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1152,7 +1192,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
@@ -1162,10 +1201,23 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)",
 				);
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"$(inherited)",
+					"PB_FIELD_32BIT=1",
+					"PB_NO_PACKED_STRUCTS=1",
+					"PB_ENABLE_MALLOC=1",
+					"SDK=1",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
