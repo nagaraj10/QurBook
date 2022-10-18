@@ -13,6 +13,9 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/model/calldata.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/regiment/models/regiment_response_model.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
+import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
@@ -5223,6 +5226,45 @@ class CommonUtil {
         return mainValue;
       }
     });
+  }
+
+  Future<List<RegimentDataModel>> getMasterData(
+      BuildContext context, String searchText) async {
+    RegimentResponseModel regimentsData;
+    Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
+        RegimentFilter.Missed;
+
+    Provider.of<RegimentViewModel>(context, listen: false)
+        .changeFilter(RegimentFilter.Missed);
+
+    regimentsData = await RegimentService.getRegimentData(
+      dateSelected: CommonUtil.dateConversionToApiFormat(
+        Provider.of<RegimentViewModel>(context, listen: false)
+            .selectedRegimenDate,
+        isIndianTime: true,
+      ),
+      isSymptoms:
+          Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
+                  RegimentMode.Symptoms
+              ? 1
+              : 0,
+      isForMasterData: true,
+      searchText: searchText,
+    );
+    List<RegimentDataModel> missedActvities = [];
+    regimentsData.regimentsList.forEach((regimenData) {
+      if (!(regimenData?.asNeeded ?? false) &&
+          (regimenData?.estart
+                  ?.difference(DateTime.now())
+                  ?.inMinutes
+                  ?.isNegative ??
+              false) &&
+          regimenData.ack == null) {
+        missedActvities.add(regimenData);
+      }
+    });
+
+    return missedActvities;
   }
 }
 
