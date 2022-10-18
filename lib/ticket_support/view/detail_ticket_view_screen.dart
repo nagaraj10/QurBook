@@ -154,22 +154,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     List<Widget> widgetForColumn = List();
     String strName = "";
     try {
-      try {
-        if (ticket.additionalInfo?.ticketStatus?.name !=
-            null &&
-            ticket.additionalInfo?.ticketStatus
-                ?.name !=
-                '') {
-          String strStatus = CommonUtil().validString(
-              ticket.additionalInfo?.ticketStatus
-                  ?.name).toLowerCase();
-          if (strStatus.contains("cancelled") ||
-              strStatus.contains("completed")) {
-            isHideInputTextBox = true;
-          }
+      if (ticket.additionalInfo?.ticketStatus?.name != null &&
+          ticket.additionalInfo?.ticketStatus?.name != '') {
+        String strStatus = CommonUtil()
+            .validString(ticket.additionalInfo?.ticketStatus?.name)
+            .toLowerCase();
+        if (strStatus.contains("cancelled") ||
+            strStatus.contains("completed")) {
+          isHideInputTextBox = true;
         }
-      } catch (e) {
-        //print(e);
       }
       strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
       final dataFields = ticket.dataFields;
