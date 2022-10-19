@@ -8,24 +8,21 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
-import 'package:myfhb/constants/router_variable.dart';
-import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
-import 'package:myfhb/src/ui/SheelaAI/Views/SheelaAIMainScreen.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../../../QurHub/Controller/hub_list_controller.dart';
+import '../../../../QurHub/Controller/HubListViewController.dart';
 import '../../../../Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import '../../../../Qurhome/BleConnect/Models/ble_data_model.dart';
-import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../../Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import '../../../../common/CommonUtil.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
+import '../Models/sheela_arguments.dart';
+import '../Views/SheelaAIMainScreen.dart';
 
 class SheelaBLEController extends GetxController {
   SheelaAIController SheelaController;
   HubListViewController hublistController;
-
   Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
   StreamSubscription _timerSubscription;
 
@@ -144,7 +141,6 @@ class SheelaBLEController extends GetxController {
                 receivedValues.last,
                 Colors.red,
               );
-
               if (!checkForParedDevice()) {
                 _disableTimer();
                 return;
@@ -154,6 +150,9 @@ class SheelaBLEController extends GetxController {
                   hublistController.bleDeviceType.toLowerCase() ==
                       "BP".toLowerCase()) {
                 //show next method
+                if (isFromVitals) {
+                  Get.back();
+                }
                 Get.to(
                   SheelaAIMainScreen(
                     arguments: SheelaArgument(
@@ -164,9 +163,19 @@ class SheelaBLEController extends GetxController {
               }
               break;
             case "measurement":
+              receivedData = true;
               if (hublistController.bleDeviceType.toLowerCase() ==
                   "BP".toLowerCase()) {
                 //show next method
+                if (SheelaController.isSheelaScreenActive) {
+                  updateUserData(
+                    data: receivedValues.last,
+                  );
+                  return;
+                }
+                if (isFromVitals) {
+                  Get.back();
+                }
                 Get.to(
                   SheelaAIMainScreen(
                     arguments: SheelaArgument(
@@ -175,17 +184,10 @@ class SheelaBLEController extends GetxController {
                   ),
                 );
                 await Future.delayed(const Duration(seconds: 4));
-                receivedData = true;
-                updateUserData(
-                  data: receivedValues.last,
-                );
-              } else {
-                receivedData = true;
-                updateUserData(
-                  data: receivedValues.last,
-                );
               }
-
+              updateUserData(
+                data: receivedValues.last,
+              );
               break;
             case "disconnected":
               FlutterToast().getToast(
@@ -319,6 +321,7 @@ class SheelaBLEController extends GetxController {
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
+
         if (!response) {
           receivedData = false;
           showFailure();
@@ -392,6 +395,7 @@ class SheelaBLEController extends GetxController {
           isPlaying = false;
           if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
+
             stopTTS();
           }
           if ((playConversations ?? []).isNotEmpty) {
@@ -451,6 +455,11 @@ class SheelaBLEController extends GetxController {
     SheelaController.isMicListening(false);
     SheelaController.bleController = null;
     if (SheelaController.isSheelaScreenActive) {
+      if (isFromVitals) {
+        Future.delayed(const Duration(microseconds: 10)).then((value) {
+          Get.find<VitalDetailController>().getData();
+        });
+      }
       Get.back();
     }
   }

@@ -629,6 +629,8 @@ const String strConnectBpMeter =
     'Please connect your BP device and start recording';
 const String strConnectPulseMeter =
     'Please connect your pulse oximeter and start recording';
+    const String strConnectWeighingScale =
+    'Please connect your weighing scale and start recording';
 
 //introslider
 

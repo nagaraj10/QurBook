@@ -27,10 +27,10 @@ class QurhomeDashboardController extends GetxController {
   // StreamSubscription _bpPressureSubscription;
   // var foundBLE = false.obs;
   // var movedToNextScreen = false;
-  var isDialogShowing = false.obs;
+  // var isDialogShowing = false.obs;
   // String bleMacId;
   HubListViewController hubController;
-  var regController;
+  // var regController;
   // QurHomeBpScanResult qurHomeBpScanResultModel;
   // var qurHomeBpScanResult = [].obs;
   SheelaBLEController _sheelaBLEController;
