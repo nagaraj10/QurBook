@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -36,6 +37,7 @@ import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import 'dart:convert' as convert;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   const QurHomeRegimenScreen({Key key}) : super(key: key);
@@ -767,6 +769,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       reminder.remindin = regimen.remindin.toString();
                       reminder.remindbefore = regimen.remindin.toString();
                       List<Reminder> data = [reminder];
+                      String snoozedText =
+                          "Snoozed for ${int.parse(time[0]).toString()} minutes";
+                      final snoozedBody = {};
+                      snoozedBody['eid'] = regimen.eid.toString();
+                      snoozedBody['snoozeText'] = snoozedText;
+                      final jsonString = convert.jsonEncode(snoozedBody);
+
+                      QurHomeApiProvider.snoozeEvent(jsonString);
                       QurPlanReminders.updateReminderswithLocal(data);
                       Navigator.pop(context);
                     },
