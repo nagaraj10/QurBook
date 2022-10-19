@@ -543,7 +543,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   showRegimenDialog(RegimentDataModel regimen, int index) {
-    if (regimen.ack == null)
+    if (regimen?.ack == null)
       showDialog(
           context: context,
           builder: (__) {
@@ -778,8 +778,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                         snoozedBody['eid'] = regimen.eid.toString();
                         snoozedBody['snoozeText'] = snoozedText;
                         final jsonString = convert.jsonEncode(snoozedBody);
-
-                        QurHomeApiProvider.snoozeEvent(jsonString);
+                        try {
+                          QurHomeApiProvider.snoozeEvent(jsonString);
+                        } catch (e) {}
                         QurPlanReminders.updateReminderswithLocal(data);
                         Navigator.pop(context);
                       },

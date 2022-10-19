@@ -340,8 +340,6 @@ class QurHomeApiProvider {
     try {
       HeaderRequest headerRequest = HeaderRequest();
 
-      print(Constants.BASE_URL + qurPlanNode + updateSnoozeEvent);
-      print(jsonBody);
       var response = await ApiServices.put(
           Constants.BASE_URL + qurPlanNode + updateSnoozeEvent,
           headers: await headerRequest.getRequestHeader(),
