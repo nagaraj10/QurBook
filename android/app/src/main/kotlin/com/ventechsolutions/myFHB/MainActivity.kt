@@ -59,6 +59,10 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.gsh.api.BluetoothStatus
+import com.gsh.spo2.api.GoldenBLEDeviceManager
+import com.gsh.spo2.api.GoldenBLEDeviceManagerCallback
+import com.gsh.weightscale.api.WeightData
 import com.neovisionaries.bluetooth.ble.advertising.ADStructure
 import com.ventechsolutions.myFHB.bloodpressure.controller.BluetoothPowerController
 import com.ventechsolutions.myFHB.bloodpressure.controller.ScanController
@@ -253,6 +257,12 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     var mLocationManager: LocationManager? = null
     private val lbm by lazy { LocalBroadcastManager.getInstance(this) }
 
+    //Wow Bluetooth
+    private var gManager: GoldenBLEDeviceManager? = null
+    private var gManagerBP: com.gsh.bloodpressure.api.GoldenBLEDeviceManager? = null
+    private var gManagerFat: com.gsh.weightscale.api.GoldenBLEDeviceManager? = null
+    private var selectedBle=""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
@@ -392,12 +402,230 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     }
 
 
+    var gCallbackFat:com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback = object : com.gsh.weightscale.api.GoldenBLEDeviceManagerCallback{
+        override fun onSupootBluetooth(p0: Boolean) {
+
+        }
+
+        override fun onBluetoothAvailable(p0: Boolean) {
+
+        }
+
+        override fun onDiscoverDevice(p0: BluetoothDevice?) {
+            runOnUiThread {
+                Toast.makeText(applicationContext, "Weight: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
+            runOnUiThread {
+                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
+                bleName = p0?.name
+                var bleMacId: String
+                bleMacId = p0?.address.toString()
+                var bleDeviceType: String
+                bleDeviceType = "weight"
+                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("macid|" + bleMacId)
+                    }
+                    sendPost("Connected", DEVICE_WT, 0, 0, 0,)
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }else if(p1== BluetoothStatus.BLE_STATUS_CONNECTING){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("scanstarted|connection started")
+                    }
+                }
+
+            }
+        }
+
+        override fun onReceiveMeasurementData(p0: BluetoothDevice?, p1: WeightData?) {
+            try {
+                runOnUiThread {
+                    if (p1 != null) {
+                        Toast.makeText(applicationContext, "Weight: "+p1.weight.toString(), Toast.LENGTH_SHORT).show()
+                        uploaded = 1
+                        sendPost("Measurement", DEVICE_WT, 0, 0, 0, weight = p1.weight)
+                        if (::BLEEventChannel.isInitialized) {
+                            BLEEventChannel.success("measurement|" + postBleData)
+                        }
+                    }
+                }
+            }catch (e:Exception){
+                Toast.makeText(
+                    applicationContext,
+                    "try catch in onReceiveMeasurementData weight",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+
+        override fun showLogMessage(p0: String?) {
+
+        }
+
+    }
+
+    var gCallBackBP:com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback = object : com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback{
+        override fun onDiscoverDevice(p0: BluetoothDevice?) {
+            runOnUiThread {
+                Toast.makeText(applicationContext, "BP: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
+            runOnUiThread {
+                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
+
+                bleName = p0?.name
+                var bleMacId: String
+                bleMacId = p0?.address.toString()
+                var bleDeviceType: String
+                bleDeviceType = "BP"
+                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("macid|" + bleMacId)
+                    }
+                    sendPost("Connected", DEVICE_BP, 0, 0, 0)
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("scanstarted|connection started")
+                    }
+                }
+
+            }
+        }
+
+        override fun onReceiveMeasurementData(p0: BluetoothDevice?, dia: Int, sis: Int, pulse: Int) {
+            try {
+                runOnUiThread {
+                    uploaded = 1
+                    sendPost("Measurement", DEVICE_BP, sis, dia, pulse)
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("measurement|" + postBleData)
+                    }
+                    Toast.makeText(applicationContext, "BP: dia: "+dia.toString()+" sis: "+sis.toString()+" pulse: "+pulse.toString(), Toast.LENGTH_SHORT).show()
+
+                }
+            }catch(e:Exception) {
+                Toast.makeText(
+                    applicationContext,
+                    "try catch in onReceiveMeasurementData bp",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+
+        }
+
+        override fun showLogMessage(p0: String?) {
+
+        }
+    }
+
+    var gCallback: GoldenBLEDeviceManagerCallback =object : GoldenBLEDeviceManagerCallback{
+
+        override fun onDiscoverDevice(p0: BluetoothDevice?) {
+            runOnUiThread {
+                Toast.makeText(applicationContext, "SPO2: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+            }
+
+//            if (p0?.name.equals("My Oximeter",true))
+//            {
+//                gManager?.scanLeDevice(true)
+//            }
+        }
+
+        override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
+            runOnUiThread {
+
+                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
+
+                bleName = p0?.name
+                var bleMacId: String
+                bleMacId = p0?.address.toString()
+                var bleDeviceType: String
+                bleDeviceType = "SPO2"
+                if(p1==BluetoothStatus.BLE_STATUS_CONNECTED){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("macid|" + bleMacId)
+                    }
+                    //Toast.makeText(applicationContext, "" + bleName + " connected successfully!!!" , Toast.LENGTH_LONG).show();
+                    sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                    }
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
+                    }
+                }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
+                    if (::BLEEventChannel.isInitialized) {
+                        BLEEventChannel.success("scanstarted|connection started")
+                    }
+                }
+
+            }
+
+
+        }
+
+        override fun onReceiveSPO2MeasurementData(p0: BluetoothDevice?, spo2: Int, pulseRate: Int) {
+            try{
+                runOnUiThread {
+                    if(spo2 < 101 && pulseRate != 127 && pulseRate != 255 ) {
+                        uploaded = 1
+
+                        sendPost(
+                            "Measurement",
+                            DEVICE_SPO2,
+                            spo2,
+                            pulseRate,
+                            0
+                        )
+                        if (::BLEEventChannel.isInitialized) {
+
+                            BLEEventChannel.success("measurement|" + postBleData)
+                            BLEEventChannel.endOfStream()
+                        }
+                    }
+                    Toast.makeText(applicationContext, "SPO2: spo2: "+spo2.toString()+" pulse: "+pulseRate.toString(), Toast.LENGTH_SHORT).show()
+                }
+
+            }catch (e:Exception){
+                Toast.makeText(applicationContext, "try catch in onReceiveSPO2MeasurementData", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        override fun onReceiveSPO2PlethWave(p0: Int) {
+
+        }
+
+        override fun showLogMessage(p0: String?) {
+//            Log.e("bleman: ",p0.toString())
+        }
+    }
+
+
     /* override fun onStop() {
          super.onStop()
          unregisterReceiver(smsBroadcastReceiver)
      }*/
 
-    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int): String? {
+    fun GetDeviceDataJson(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int,weight : Double): String? {
         var DataToPost = ""
         val DevSeq = "03" // Kiran
         //String DevSeq="02";//Kunduru
@@ -569,9 +797,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
 
     var uploaded = 0
-    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int) {
+    fun sendPost(Status: String, deviceType: Int, v1: Int, v2: Int, v3: Int,weight : Double=0.0) {
         try {
-            postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3)
+            postBleData = GetDeviceDataJson(Status, deviceType, v1, v2, v3,weight)
         } catch (ex: Exception) {
             Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
@@ -712,26 +940,55 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (bleDevice.name == null) return
                     val DevName: String = bleDevice.name
                     Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
-                    if (DevName == "GSH601" || DevName == "Mike") {
+                    if (/*DevName == "GSH601" ||*/ DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
                     }
-                    if (DevName == "GSH_862B") {
+
+                    if(DevName=="GSH601"){
                         stopScan()
-                        connectToBP(bleDevice)
+                        Handler().postDelayed({
+                            selectedBle="spo2"
+                            gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
+                            gManager?.scanLeDevice(true)
+                        }, 1500)
+
                     }
-                    if (DevName == "GSH230") {
+                    if(DevName=="GSH862"||DevName=="GSH_862B"){
                         stopScan()
-                        connectToWT(bleDevice)
+                        Handler().postDelayed({
+                            selectedBle="bp"
+                            gManagerBP = com.gsh.bloodpressure.api.GoldenBLEDeviceManager(applicationContext, gCallBackBP)
+                            gManagerBP?.scanLeDevice(true)
+                        }, 1500)
+
                     }
-                    if (DevName == "GSH BH") {
+                    if(DevName=="GSH-202"||DevName=="GSH-231"||DevName=="0202B-0001"){
                         stopScan()
-                        connectToTEMP(bleDevice)
+                        Handler().postDelayed({
+                            selectedBle="weight"
+                            gManagerFat = com.gsh.weightscale.api.GoldenBLEDeviceManager(applicationContext, gCallbackFat)
+                            gManagerFat?.scanLeDevice(true)
+                        }, 1500)
+
                     }
-                    if (DevName == "GSH_BGM902") {
-                        stopScan()
-                        connectToBGL(bleDevice)
-                    }
+
+//                    if (DevName == "GSH_862B") {
+//                        stopScan()
+//                        connectToBP(bleDevice)
+//                    }
+//                    if (DevName == "GSH230") {
+//                        stopScan()
+//                        connectToWT(bleDevice)
+//                    }
+//                    if (DevName == "GSH BH") {
+//                        stopScan()
+//                        connectToTEMP(bleDevice)
+//                    }
+//                    if (DevName == "GSH_BGM902") {
+//                        stopScan()
+//                        connectToBGL(bleDevice)
+//                    }
 
                     // BP DEVICE SCANNING
                     if (DevName.lowercase(Locale.getDefault()).contains("blesmart")) {
@@ -1416,6 +1673,24 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             if (call.method == "bleScanCancel") {
                 Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
                 stopScan()
+                when (selectedBle) {
+                    "spo2" -> {
+                        gManager?.scanLeDevice(false)
+                        gManager?.disconnect()
+                        gManager?.destroy()
+                    }
+                    "weight" ->{
+                        gManagerFat?.scanLeDevice(false)
+                        gManagerFat?.disconnect()
+                        gManagerFat?.destroy()
+                    }
+                    "bp" ->{
+                        gManagerBP?.scanLeDevice(false)
+                        gManagerBP?.disconnect()
+                        gManagerBP?.destroy()
+                    }
+                }
+                selectedBle=""
             }
         }
 
