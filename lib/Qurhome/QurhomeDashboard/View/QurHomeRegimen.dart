@@ -884,13 +884,6 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           );
           _sheelaBLEController.isFromRegiment = true;
           _sheelaBLEController.setupListenerForReadings();
-
-          // var dashboardController = Get.find<QurhomeDashboardController>();
-          // dashboardController.checkForConnectedDevices(
-          //   false,
-          //   eid: regimen.eid,
-          //   uid: regimen.uid,
-          // );
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)

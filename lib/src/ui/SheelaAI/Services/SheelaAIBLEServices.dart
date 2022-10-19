@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../QurHub/Controller/HubListViewController.dart';
@@ -150,7 +150,9 @@ class SheelaBLEController extends GetxController {
               if (hublistController.bleDeviceType.toLowerCase() ==
                       "SPO2".toLowerCase() ||
                   hublistController.bleDeviceType.toLowerCase() ==
-                      "BP".toLowerCase()) {
+                      "BP".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "weight".toLowerCase()) {
                 //show next method
                 if (isFromVitals || isFromRegiment) {
                   Get.back();
@@ -158,6 +160,7 @@ class SheelaBLEController extends GetxController {
                 Get.to(
                   SheelaAIMainScreen(
                     arguments: SheelaArgument(
+                      deviceType: hublistController.bleDeviceType,
                       takeActiveDeviceReadings: true,
                     ),
                   ),
@@ -252,21 +255,14 @@ class SheelaBLEController extends GetxController {
     final arguments = SheelaController.arguments;
     isCompleted = false;
     var msg = '';
-    // if (arguments.isJumperDevice && (arguments.deviceType ?? '').isNotEmpty) {
-    //   String strText = CommonUtil().validString(arguments.deviceType);
-    //   if (strText.toLowerCase() == "weight") {
-    //     strText = "Weighing scale";
-    //   }
-    //   msg = "Your $strText is connected & reading values. Please wait";
-    //   setupListenerForReadings();
-    // } else if (arguments.takeActiveDeviceReadings) {
-    msg =
-        "Your ${hublistController.bleDeviceType} device is connected & reading values. Please wait";
-    // setupListenerForReadings();
-    // } else if (arguments.isFromBpReading) {
-    //   msg:
-    //   "Your BP device is connected & reading values. Please wait..";
-    // }
+    if ((arguments.deviceType ?? '').isNotEmpty) {
+      String strText = CommonUtil().validString(arguments.deviceType);
+      if (strText.toLowerCase() == "weight") {
+        strText = "Weighing scale";
+      }
+      msg = "Your $strText device is connected & reading values. Please wait";
+    }
+
     if (msg.isNotEmpty) {
       addToConversationAndPlay(
         SheelaResponse(
@@ -458,12 +454,12 @@ class SheelaBLEController extends GetxController {
     SheelaController.bleController = null;
     if (SheelaController.isSheelaScreenActive) {
       if (isFromVitals) {
-        Future.delayed(const Duration(microseconds: 10)).then((value) {
+        Future.delayed(const Duration(microseconds: 30)).then((value) {
           Get.find<VitalDetailController>().getData();
         });
       }
       if (isFromRegiment) {
-        Future.delayed(const Duration(microseconds: 10)).then((value) {
+        Future.delayed(const Duration(microseconds: 30)).then((value) {
           Get.find<QurhomeRegimenController>().currLoggedEID.value =
               hublistController.eid;
           Get.find<QurhomeRegimenController>().getRegimenList();
@@ -485,6 +481,9 @@ class SheelaBLEController extends GetxController {
   }
 
   void _disableTimer() {
+    isFromRegiment = false;
+    addingDevicesInHublist = false;
+    isFromVitals = false;
     if (_timerSubscription != null) {
       _timerSubscription.cancel();
       _timerSubscription = null;
