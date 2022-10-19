@@ -134,6 +134,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   String docId = "";
   String hosId= "";
 
+
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
         initialDatePickerMode: DatePickerMode.day,
@@ -496,6 +497,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
               ? widgetForColumn.add(Column(
                 children: [
+                  SizedBox(height: 10.h),
                   getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
                   SizedBox(height: 10.h),
                   Row(
@@ -533,16 +535,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                       ],
                     ),
+                  SizedBox(height: 10.h),
                 ],
               ))
               //widgetForColumn.add(getWidgetForDoctors())
               : SizedBox();
-          widgetForColumn.add(SizedBox(
+          /*widgetForColumn.add(SizedBox(
             height: 10,
-          ));
+          ));*/
           (field.type == tckConstants.tckTypeDropdown && field.isHospital)
               ? widgetForColumn.add(Column(
                 children: [
+                  SizedBox(height: 10.h),
                   getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
                   SizedBox(height: 10.h),
                   Row(
@@ -578,13 +582,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                       ],
                     ),
+                  SizedBox(height: 10.h),
                 ],
               ))
               : SizedBox.shrink();
 
-          widgetForColumn.add(SizedBox(
+          /*widgetForColumn.add(SizedBox(
             height: 10,
-          ));
+          ));*/
 
           (field.type == tckConstants.tckTypeDropdown &&
                   /*field.name == tckConstants.tckTypeModeOfService &&*/
@@ -592,6 +597,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   field.fieldData.length > 0)
               ? widgetForColumn.add(Column(
                 children: [
+                  SizedBox(height: 10.h),
                   getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
                   SizedBox(height: 10.h),
                   Row(
@@ -615,6 +621,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                       ],
                     ),
+                  SizedBox(height: 10.h),
                 ],
               ))
               : SizedBox.shrink();
@@ -622,10 +629,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeDate)
               ? widgetForColumn.add(Column(
                   children: [
+                    SizedBox(height: 10.h),
                     getWidgetForPreferredDate(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredDateValue(),
-                    SizedBox(height: 25.h),
+                    //SizedBox(height: 25.h),
                   ],
                 ))
               : SizedBox.shrink();
@@ -633,10 +641,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeTime)
               ? widgetForColumn.add(Column(
                   children: [
+                    SizedBox(height: 10.h),
                     getWidgetForPreferredTime(isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredTimeValue(),
-                    SizedBox(height: 25.h),
+                    //SizedBox(height: 25.h),
                   ],
                 ))
               : SizedBox.shrink();
@@ -667,12 +676,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           (field.type == tckConstants.tckTypeDropdown && field.isCategory)
               ? widgetForColumn.add(Column(
                   children: [
+                    SizedBox(height: 10.h),
                     getWidgetForTitleText(title: "Category",isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     healthConditionsResult != null
                         ? getDropDownForPlanCategory(
                             healthConditionsResult) //getDropDownForPlanCategory(healthConditionsResult)
                         : getExpandedDropdownForCategory(),
+                    SizedBox(height: 10.h),
                   ],
                 ))
               : SizedBox.shrink();
@@ -683,6 +694,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? CommonUtil.REGION_CODE == "IN"
                   ? widgetForColumn.add(Column(
                       children: [
+                        SizedBox(height: 10.h),
                         getWidgetForTitleText(
                             title: displayName,
                             isRequired: field.isRequired ?? false),
@@ -724,6 +736,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                             ),
                           ],
                         ),
+                        SizedBox(height: 10.h),
                       ],
                     ))
                   : widgetForColumn.add(getWidgetForLab())
@@ -770,6 +783,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             lab.text = labData[parameters.strHealthOrganizationName];
             controller.selPrefLab.value = labData[parameters.strHealthOrganizationName];
             controller.selPrefLabId.value = labData[parameters.strHealthOrganizationId];
+            controller.strAddressLine.value =
+                CommonUtil().validString(labData[parameters.strAddressLine1]);
+            controller.strCityName.value =
+                CommonUtil().validString(labData[parameters.strcityName]);
+            controller.strPincode.value =
+                CommonUtil().validString(labData[parameters.strpincode]);
           }
         }
       });
@@ -809,6 +828,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
+
+        controller.labBookAppointment.value
+            ? SizedBox(height: 10.h)
+            : SizedBox.shrink(),
+
         controller.labBookAppointment.value
             ? Row(
                 children: [
@@ -856,7 +880,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             : SizedBox.shrink(),
 
         controller.labBookAppointment.value
-            ? SizedBox(height: 20.h)
+            ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
       ],
     );
@@ -2734,6 +2758,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       Constants.tckSelectedHospitalId = 'HospitalId';
       Constants.tckSelectedCategory = 'Category';
       Constants.tckPackageName = 'Package Name';
+      controller.strAddressLine.value = "";
+      controller.strCityName.value = "";
+      controller.strPincode.value = "";
     } catch (e) {
       //print(e);
     }

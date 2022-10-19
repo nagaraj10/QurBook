@@ -27,6 +27,11 @@ class CreateTicketController extends GetxController {
   //List<FieldData> modeOfServiceList = [];
   var dynamicTextFiledObj  = {};
 
+  //populateAddressForPrefLab
+  var strAddressLine = "".obs;
+  var strCityName = "".obs;
+  var strPincode = "".obs;
+
   @override
   void onClose() {
     try {
