@@ -20,7 +20,7 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   // static const stream = EventChannel('QurbookBLE/stream');
-  // static const streamAppointment = EventChannel('ScheduleAppointment/stream');
+  static const streamAppointment = EventChannel('ScheduleAppointment/stream');
   // static const streamBp = EventChannel('QurbookBLE/stream');
   // StreamSubscription _timerSubscription;
   StreamSubscription _appointmentSubscription;
@@ -473,32 +473,32 @@ class QurhomeDashboardController extends GetxController {
   //   });
   // }
 
-  // void getValuesNativeAppointment() {
-  //   _appointmentSubscription ??=
-  //       streamAppointment.receiveBroadcastStream().listen((val) {
-  //     print(val);
-  //     List<String> receivedValues = val.split('|');
-  //     if ((receivedValues ?? []).length > 0) {
-  //       switch ((receivedValues.first ?? "")) {
-  //         case "scheduleAppointment":
-  //           if (PreferenceUtil.getIfQurhomeisAcive()) {
-  //             redirectToSheelaScheduleAppointment();
-  //           }
-  //           break;
-  //       }
-  //     }
-  //   });
-  //   if (Platform.isIOS) {
-  //     const platform = MethodChannel(APPOINTMENT_DETAILS);
-  //     platform.setMethodCallHandler((call) {
-  //       if (call.method == APPOINTMENT_DETAILS) {
-  //         if (PreferenceUtil.getIfQurhomeisAcive()) {
-  //           redirectToSheelaScheduleAppointment();
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
+  void getValuesNativeAppointment() {
+    _appointmentSubscription ??=
+        streamAppointment.receiveBroadcastStream().listen((val) {
+      print(val);
+      List<String> receivedValues = val.split('|');
+      if ((receivedValues ?? []).length > 0) {
+        switch ((receivedValues.first ?? "")) {
+          case "scheduleAppointment":
+            if (PreferenceUtil.getIfQurhomeisAcive()) {
+              redirectToSheelaScheduleAppointment();
+            }
+            break;
+        }
+      }
+    });
+    if (Platform.isIOS) {
+      const platform = MethodChannel(APPOINTMENT_DETAILS);
+      platform.setMethodCallHandler((call) {
+        if (call.method == APPOINTMENT_DETAILS) {
+          if (PreferenceUtil.getIfQurhomeisAcive()) {
+            redirectToSheelaScheduleAppointment();
+          }
+        }
+      });
+    }
+  }
 
   // callNativeBpValues({bool isFromVitals}) async {
   //   try {

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../../QurHub/Controller/HubListViewController.dart';
@@ -32,6 +33,7 @@ class SheelaBLEController extends GetxController {
   bool isPlaying = false;
   bool isCompleted = false;
   bool isFromVitals = false;
+  bool isFromRegiment = false;
   bool addingDevicesInHublist = false;
   bool receivedData = false;
   AudioPlayer player;
@@ -150,7 +152,7 @@ class SheelaBLEController extends GetxController {
                   hublistController.bleDeviceType.toLowerCase() ==
                       "BP".toLowerCase()) {
                 //show next method
-                if (isFromVitals) {
+                if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
                 Get.to(
@@ -173,7 +175,7 @@ class SheelaBLEController extends GetxController {
                   );
                   return;
                 }
-                if (isFromVitals) {
+                if (isFromVitals || isFromRegiment) {
                   Get.back();
                 }
                 Get.to(
@@ -458,6 +460,13 @@ class SheelaBLEController extends GetxController {
       if (isFromVitals) {
         Future.delayed(const Duration(microseconds: 10)).then((value) {
           Get.find<VitalDetailController>().getData();
+        });
+      }
+      if (isFromRegiment) {
+        Future.delayed(const Duration(microseconds: 10)).then((value) {
+          Get.find<QurhomeRegimenController>().currLoggedEID.value =
+              hublistController.eid;
+          Get.find<QurhomeRegimenController>().getRegimenList();
         });
       }
       Get.back();

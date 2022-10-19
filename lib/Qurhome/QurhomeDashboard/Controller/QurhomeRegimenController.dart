@@ -137,7 +137,7 @@ class QurhomeRegimenController extends GetxController {
         }
       }
 
-      // qurhomeDashboardController.getValuesNativeAppointment();
+      qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
       getUserDetails();
