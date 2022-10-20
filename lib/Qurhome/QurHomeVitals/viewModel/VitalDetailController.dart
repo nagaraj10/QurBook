@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/DeviceIntervalData.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
@@ -14,23 +18,142 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 
 class VitalDetailController extends GetxController {
   final GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
   var loadingData = false.obs;
   var filterBtnOnTap = 0.obs;
-
+  SheelaBLEController _sheelaBLEController;
+  HubListViewController _hubController;
   var bpList = [].obs;
   var gulList = [].obs;
   var oxyList = [].obs;
   var tempList = [].obs;
   var weightList = [].obs;
+  String deviceName;
 
   var timerProgress = 1.0.obs;
   var isShowTimerDialog = true.obs;
 
+  String getFilterData(int selectedIndex) {
+    String filterData;
+
+    switch (selectedIndex) {
+      case 0:
+        return filterData = filterApiDay;
+        break;
+      case 1:
+        return filterData = filterApiWeek;
+        break;
+      case 2:
+        return filterData = filterApiMonth;
+        break;
+      default:
+        return filterData = '';
+        break;
+    }
+  }
+
   void onTapFilterBtn(int index) {
     filterBtnOnTap.value = index;
+    getData();
+  }
+
+  Future<void> getData() async {
+    switch (deviceName) {
+      case strDataTypeBP:
+        {
+          fetchBPDetailsQurHome(
+            filter: getFilterData(filterBtnOnTap.value),
+            isLoading: true,
+          );
+        }
+        break;
+      case strGlusoceLevel:
+        {
+          fetchGLDetailsQurHome(
+            filter: getFilterData(filterBtnOnTap.value),
+            isLoading: true,
+          );
+        }
+        break;
+      case strOxgenSaturation:
+        {
+          fetchOXYDetailsQurHome(
+            filter: getFilterData(filterBtnOnTap.value),
+            isLoading: true,
+          );
+        }
+        break;
+      case strWeight:
+        {
+          fetchWVDetailsQurHome(
+            filter: getFilterData(filterBtnOnTap.value),
+            isLoading: true,
+          );
+        }
+        break;
+      case strTemperature:
+        {
+          fetchTMPDetailsQurHome(
+            filter: getFilterData(filterBtnOnTap.value),
+            isLoading: true,
+          );
+        }
+        break;
+      default:
+        {
+          //statements;
+        }
+        break;
+    }
+  }
+
+  checkForBleDevices() async {
+    var device = "";
+    if (deviceName == strOxgenSaturation) {
+      device = strConnectPulseMeter;
+    } else if (deviceName == strDataTypeBP) {
+      device = strConnectBpMeter;
+    } else if (deviceName == strWeight) {
+      device = strConnectWeighingScale;
+    }
+    if (device.isEmpty) {
+      return;
+    }
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    if (!Get.isRegistered<SheelaBLEController>()) {
+      Get.put(SheelaBLEController());
+    }
+    if (!Get.isRegistered<HubListViewController>()) {
+      Get.put(HubListViewController());
+    }
+    _hubController = Get.find();
+    _sheelaBLEController = Get.find();
+    await _hubController.getHubList();
+    if ((_hubController.hubListResponse.result.userDeviceCollection ?? [])
+            .length >
+        0) {
+      _sheelaBLEController.isFromVitals = true;
+      _sheelaBLEController.setupListenerForReadings();
+      CommonUtil().dialogForScanDevices(
+        Get.context,
+        onPressManual: () {
+          Get.back();
+          _sheelaBLEController.stopTTS();
+        },
+        onPressCancel: () async {
+          Get.back();
+          _sheelaBLEController.stopTTS();
+        },
+        title: device,
+        isFromVital: true,
+      );
+    }
   }
 
   Future<List<dynamic>> fetchBPDetailsQurHome(
@@ -363,14 +486,6 @@ class VitalDetailController extends GetxController {
   updateTimerValue(double value) async {
     try {
       timerProgress.value = value;
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  updateisShowTimerDialog(bool value) async {
-    try {
-      isShowTimerDialog.value = value;
     } catch (e) {
       print(e);
     }

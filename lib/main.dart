@@ -22,8 +22,6 @@ import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.da
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
-import 'QurHub/Controller/hub_list_controller.dart';
-import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'caregiverAssosication/caregiverAPIProvider.dart';
 import 'chat_socket/view/ChatDetail.dart';

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import '../../src/model/common_response_model.dart';
 import 'HubListViewController.dart';
-import 'hub_list_controller.dart';
 import '../ApiProvider/hub_api_provider.dart';
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart';
