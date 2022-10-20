@@ -78,6 +78,7 @@ class CommonConstants {
   static String doctors = 'Doctors';
   static String hospitals = 'Hospitals';
   static String labs = 'Labs';
+  static String lab = 'Lab';
 
   static String my_providers_plan = 'My Providers Plan';
   static String all_free_plans = 'All Free Plans';
