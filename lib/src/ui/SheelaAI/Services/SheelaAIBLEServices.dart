@@ -454,12 +454,12 @@ class SheelaBLEController extends GetxController {
     SheelaController.bleController = null;
     if (SheelaController.isSheelaScreenActive) {
       if (isFromVitals) {
-        Future.delayed(const Duration(microseconds: 30)).then((value) {
+        Future.delayed(const Duration(seconds: 2)).then((value) {
           Get.find<VitalDetailController>().getData();
         });
       }
       if (isFromRegiment) {
-        Future.delayed(const Duration(microseconds: 30)).then((value) {
+        Future.delayed(const Duration(seconds: 2)).then((value) {
           Get.find<QurhomeRegimenController>().currLoggedEID.value =
               hublistController.eid;
           Get.find<QurhomeRegimenController>().getRegimenList();

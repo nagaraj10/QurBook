@@ -3,10 +3,7 @@ package com.ventechsolutions.myFHB
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.*
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothGatt
-import android.bluetooth.BluetoothGattCharacteristic
-import android.bluetooth.BluetoothGattService
+import android.bluetooth.*
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
@@ -92,10 +89,7 @@ import jp.co.ohq.ble.OHQConfig
 import jp.co.ohq.ble.OHQDeviceManager
 import jp.co.ohq.ble.OHQDeviceManager.CompletionBlock
 import jp.co.ohq.ble.OHQDeviceManager.ScanObserverBlock
-import jp.co.ohq.ble.enumerate.OHQConnectionState
-import jp.co.ohq.ble.enumerate.OHQDeviceCategory
-import jp.co.ohq.ble.enumerate.OHQDeviceInfoKey
-import jp.co.ohq.ble.enumerate.OHQSessionOptionKey
+import jp.co.ohq.ble.enumerate.*
 import jp.co.ohq.utility.Bundler
 import jp.co.ohq.utility.Types
 import java.security.SecureRandom
@@ -535,6 +529,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         }
     }
+    var WOWGoDataUpload = 0
 
     var gCallback: GoldenBLEDeviceManagerCallback =object : GoldenBLEDeviceManagerCallback{
 
@@ -551,9 +546,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
-
                 Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
-
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -568,7 +561,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                     }
-                    if (::BLEEventChannel.isInitialized) {
+
+                    if (::BLEEventChannel.isInitialized && WOWGoDataUpload == 0) {
                         BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                     }
                 }else if(p1==BluetoothStatus.BLE_STATUS_CONNECTING){
@@ -585,9 +579,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         override fun onReceiveSPO2MeasurementData(p0: BluetoothDevice?, spo2: Int, pulseRate: Int) {
             try{
                 runOnUiThread {
-                    if(spo2 < 101 && pulseRate != 127 && pulseRate != 255 ) {
-                        uploaded = 1
+                    if(spo2 < 101 && pulseRate != 127 && pulseRate != 255 && WOWGoDataUpload == 0 ) {
 
+WOWGoDataUpload = 1
                         sendPost(
                             "Measurement",
                             DEVICE_SPO2,
@@ -598,7 +592,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                         if (::BLEEventChannel.isInitialized) {
 
                             BLEEventChannel.success("measurement|" + postBleData)
-                            BLEEventChannel.endOfStream()
+
                         }
                     }
                     Toast.makeText(applicationContext, "SPO2: spo2: "+spo2.toString()+" pulse: "+pulseRate.toString(), Toast.LENGTH_SHORT).show()
@@ -659,7 +653,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceId\" : \"DV:WG:WT:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceType\" : \"WEIGHT\" , \"unit\" : \"lbs\" , \"Data\" : {"
-                DataToPost += " \"Weight\" : \""
+                DataToPost += " \"weight\" : \""
                 DataToPost += v1
                 DataToPost += "\" "
                 DataToPost += " }}"
@@ -940,9 +934,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (bleDevice.name == null) return
                     val DevName: String = bleDevice.name
                     Log.d("startScan", "Found " + DevName + " " + bleDevice.mac)
-                    if (/*DevName == "GSH601" ||*/ DevName == "Mike") {
+                    if ( DevName == "Mike") {
                         stopScan()
                         connectToSPO2(bleDevice)
+                    }
+// BP DEVICE SCANNING
+                    if (DevName.lowercase(Locale.getDefault()).contains("blesmart")) {
+                        stopScan()
+                        getBpAddress(bleDevice.mac);
                     }
 
                     if(DevName=="GSH601"){
@@ -951,6 +950,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                             selectedBle="spo2"
                             gManager = GoldenBLEDeviceManager(applicationContext, gCallback)
                             gManager?.scanLeDevice(true)
+                            WOWGoDataUpload = 0
                         }, 1500)
 
                     }
@@ -990,11 +990,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 //                        connectToBGL(bleDevice)
 //                    }
 
-                    // BP DEVICE SCANNING
-                    if (DevName.lowercase(Locale.getDefault()).contains("blesmart")) {
-                        stopScan()
-                        getBpAddress(bleDevice.mac);
-                    }
+
                 }
 
 
@@ -1030,6 +1026,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                 private val UUID_SERVICE_DATA_SPO2 = "49535343-fe7d-4ae5-8fa9-9fafd205e455"
                 private val UUID_CHARACTER_NOTIFY_SPO2 = "49535343-1e4d-4bd9-ba61-23c647249616"
                 var SPO2_ReadingCount = 0
+
                 private fun connectToSPO2(bleDevice: BleDevice) {
                     BleManager.getInstance().connect(bleDevice, object : BleGattCallback() {
 
@@ -1079,6 +1076,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                             sendPost("deviceConnected", DEVICE_SPO2, 0, 0, 0)
                             if (::BLEEventChannel.isInitialized) {
                                 BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
+                            }
+                            if (::BLEEventChannel.isInitialized) {
+                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
                             }
                             SPO2_ReadingCount = 0
                             val services =
@@ -1207,9 +1207,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                                         }
                                     }
                                 })
-                            if (::BLEEventChannel.isInitialized) {
-                                BLEEventChannel.success("connected|" + bleName + " connected successfully!!!")
-                            }
+
                             //bluetoothFlutterResult.success("connected|"+bleName+" connected successfully!!!")
                         }
 
@@ -1472,9 +1470,37 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventSink?) {
                     BLEEventChannel = events!!
+                    Log.d("BLE VITALS", "StartingPoint")
+                    BleManager.getInstance().init(application)
+                    BleManager.getInstance()
+                        .enableLog(true)
+                        .setReConnectCount(1, 5000)
+                        .setConnectOverTime(20000).operateTimeout = 5000
+//                    val temp = checkPermissionStartScan(false)
+                    startScanTimer()
                 }
 
                 override fun onCancel(arguments: Any?) {
+                    Log.d("BLE_SCAN_CANCEL", "bleScanCancel")
+                    stopScan()
+                    when (selectedBle) {
+                        "spo2" -> {
+                            gManager?.scanLeDevice(false)
+                            gManager?.disconnect()
+                            gManager?.destroy()
+                        }
+                        "weight" ->{
+                            gManagerFat?.scanLeDevice(false)
+                            gManagerFat?.disconnect()
+                            gManagerFat?.destroy()
+                        }
+                        "bp" ->{
+                            gManagerBP?.scanLeDevice(false)
+                            gManagerBP?.disconnect()
+                            gManagerBP?.destroy()
+                        }
+                    }
+                    selectedBle=""
                 }
             }
         )
@@ -3234,12 +3260,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         mSessionData = sessionData
         mSessionData.setCompletionReason(sessionData.completionReason)
         mSessionData.deviceAddress = mAddress
-        Log.e("outputNative", "" + mSessionData.toString());
-        if (mSessionData != null && mSessionData.measurementRecords != null && mSessionData.measurementRecords!!.size > 0) {
-            _resultBp.success(mSessionData.toString())
-            return
-        }
-
         if (::BLEEventChannel.isInitialized) {
             BLEEventChannel.success("macid|" + mAddress)
         }
@@ -3247,6 +3267,21 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         if (::BLEEventChannel.isInitialized) {
             BLEEventChannel.success("bleDeviceType|" + "BP")
         }
+        Log.e("outputNative", "" + mSessionData.toString());
+        if (mSessionData != null && mSessionData.measurementRecords != null && mSessionData.measurementRecords!!.size > 0) {
+//            _resultBp.success(mSessionData.toString())
+//
+          var sys:Int =  mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.SystolicKey).toString().toDouble().toInt()
+         var dia:Int =   mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.DiastolicKey).toString().toDouble().toInt()
+          var pul:Int =  mSessionData.measurementRecords!!.last().get(OHQMeasurementRecordKey.PulseRateKey).toString().toDouble().toInt()
+
+            sendPost("Measurement", DEVICE_BP, sys,  dia,  pul)
+            if (::BLEEventChannel.isInitialized) {
+                BLEEventChannel.success("measurement|" + postBleData)
+            }
+        }
+
+
         /*if (sessionData.completionReason!!.name == "Disconnected") {
             if (sessionData.measurementRecords!!.size > 0) {
 
