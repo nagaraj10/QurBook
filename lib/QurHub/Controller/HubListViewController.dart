@@ -175,6 +175,13 @@ class HubListViewController extends GetxController {
     if (searchingBleDevice.isFalse &&
         (bleMacId ?? '').isNotEmpty &&
         (bleDeviceType ?? '').isNotEmpty) {
+      if (_bleController.checkForParedDevice()) {
+        FlutterToast().getToast(
+          DeviceAlreadyMapped,
+          Colors.red,
+        );
+        return;
+      }
       Get.to(
         () => AddDeviceView(),
         binding: BindingsBuilder(
