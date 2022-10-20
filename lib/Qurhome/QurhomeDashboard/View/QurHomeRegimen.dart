@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -37,6 +38,7 @@ import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
+import 'dart:convert' as convert;
 
 class QurHomeRegimenScreen extends StatefulWidget {
   const QurHomeRegimenScreen({Key key}) : super(key: key);
@@ -542,279 +544,292 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   showRegimenDialog(RegimentDataModel regimen, int index) {
-    showDialog(
-        context: context,
-        builder: (__) {
-          return StatefulBuilder(builder: (_, setState) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.all(0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      IconButton(
-                          padding: EdgeInsets.all(8.0),
-                          icon: Icon(
-                            Icons.close,
-                            size: 30.0.sp,
-                          ),
-                          onPressed: () {
-                            try {
-                              Navigator.pop(context);
-                            } catch (e) {
-                              print(e);
-                            }
-                          })
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 15.0,
-                      right: 15.0,
-                      bottom: 15.0,
+    if (regimen?.ack == null)
+      showDialog(
+          context: context,
+          builder: (__) {
+            return StatefulBuilder(builder: (_, setState) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(0),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                            padding: EdgeInsets.all(8.0),
+                            icon: Icon(
+                              Icons.close,
+                              size: 30.0.sp,
+                            ),
+                            onPressed: () {
+                              try {
+                                Navigator.pop(context);
+                              } catch (e) {
+                                print(e);
+                              }
+                            })
+                      ],
                     ),
-                    child: Row(
-                      children: [
-                        getIcon(regimen.activityname, regimen.uformname,
-                            regimen.metadata, index, 0,
-                            sizeOfIcon: 30),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Column(children: [
-                          Center(
-                            child: Text(
-                              regimen.title.toString().trim(),
-                              style: TextStyle(
-                                  color: Color(
-                                    CommonUtil().getQurhomeGredientColor(),
-                                  ),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 15.0,
+                        right: 15.0,
+                        bottom: 15.0,
+                      ),
+                      child: Row(
+                        children: [
+                          getIcon(regimen.activityname, regimen.uformname,
+                              regimen.metadata, index, 0,
+                              sizeOfIcon: 30),
+                          SizedBox(
+                            width: 10,
                           ),
-                          Center(
-                            child: Text(
-                              regimen.estart != null
-                                  ? DateFormat('hh:mm a').format(regimen.estart)
-                                  : '',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                          Expanded(
+                              child: Column(children: [
+                            Center(
+                              child: Text(
+                                regimen.title.toString().trim(),
+                                style: TextStyle(
+                                    color: Color(
+                                      CommonUtil().getQurhomeGredientColor(),
+                                    ),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400),
+                              ),
                             ),
-                          ),
-                        ])),
-                        if (regimen?.activityOrgin != strAppointmentRegimen)
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10.0,
+                            Center(
+                              child: Text(
+                                regimen.estart != null
+                                    ? DateFormat('hh:mm a')
+                                        .format(regimen.estart)
+                                    : '',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
                             ),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () async {
-                                  if (regimen.isPlaying.value) {
-                                    stopRegimenTTS();
-                                    regimen.isPlaying.value = false;
-                                    setState(() {});
-                                  } else {
-                                    stopRegimenTTS();
-                                    regimen.isPlaying.value = true;
-                                    setState(() {});
-                                    final status = await sheelaController
-                                        .playTTS(regimen?.title ?? '', () {
-                                      sheelaController.stopTTS();
+                          ])),
+                          if (regimen?.activityOrgin != strAppointmentRegimen)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: 10.0,
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () async {
+                                    if (regimen.isPlaying.value) {
+                                      stopRegimenTTS();
                                       regimen.isPlaying.value = false;
                                       setState(() {});
-                                    });
-                                  }
-                                },
-                                child: Obx(() {
-                                  return Icon(
-                                    (regimen.isPlaying.value ?? false)
-                                        ? Icons.stop_circle_outlined
-                                        : Icons.play_circle_fill_rounded,
-                                    size: 30.0,
-                                    color: Color(
-                                        CommonUtil().getQurhomePrimaryColor()),
-                                  );
-                                }),
+                                    } else {
+                                      stopRegimenTTS();
+                                      regimen.isPlaying.value = true;
+                                      setState(() {});
+                                      final status = await sheelaController
+                                          .playTTS(regimen?.title ?? '', () {
+                                        sheelaController.stopTTS();
+                                        regimen.isPlaying.value = false;
+                                        setState(() {});
+                                      });
+                                    }
+                                  },
+                                  child: Obx(() {
+                                    return Icon(
+                                      (regimen.isPlaying.value ?? false)
+                                          ? Icons.stop_circle_outlined
+                                          : Icons.play_circle_fill_rounded,
+                                      size: 30.0,
+                                      color: Color(CommonUtil()
+                                          .getQurhomePrimaryColor()),
+                                    );
+                                  }),
+                                ),
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 1,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: Center(
-                              child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                          if (regimen.hasform) {
-                            onCardPressed(context, regimen,
-                                aid: regimen.aid,
-                                uid: regimen.uid,
-                                formId: regimen.uformid,
-                                formName: regimen.uformname);
-                          } else {
-                            callLogApi(regimen);
-                          }
-                        },
-                        child: Image.asset(
-                          'assets/Qurhome/accept.png',
-                          height: 50,
-                          width: 50,
-                        ),
-                      ))),
-                      Expanded(
-                        child: Center(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Image.asset(
-                              'assets/Qurhome/remove.png',
-                              height: 50,
-                              width: 50,
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Column(
-                          children: [
-                            Text('Remind me in'),
-                            // Container(
-                            //   color: Colors.grey,
-                            //   height: 1,
-                            //   width: 110,
-                            // )
-                          ],
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Stack(
-                          children: [
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: snoozeValue,
-                                elevation: 16,
-                                onChanged: (String newValue) {
-                                  setState(() {
-                                    snoozeValue = newValue;
-                                  });
-                                },
-                                items: <String>[
-                                  '5 mins',
-                                  '10 mins',
-                                  '15 mins',
-                                  '20 mins'
-                                ].map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 36.0),
-                              child: Container(
-                                color: Colors.grey,
-                                height: 1,
-                                width: 78,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      var time = snoozeValue.split(" ");
-                      Reminder reminder = Reminder();
-                      reminder.uformname = regimen.uformname.toString();
-                      reminder.activityname = regimen.activityname.toString();
-                      reminder.title = regimen.title.toString();
-                      reminder.description = regimen.description.toString();
-                      reminder.eid = regimen.eid.toString();
-                      reminder.estart = regimen.estart
-                          .add(Duration(minutes: int.parse(time[0])))
-                          .toString();
-                      reminder.remindin = regimen.remindin.toString();
-                      reminder.remindbefore = regimen.remindin.toString();
-                      List<Reminder> data = [reminder];
-                      QurPlanReminders.updateReminderswithLocal(data);
-                      Navigator.pop(context);
-                    },
-                    child: Text('Snooze'),
-                    style: ElevatedButton.styleFrom(
-                        primary: Color(CommonUtil().getQurhomePrimaryColor())),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Visibility(
-                    visible: regimen.hashtml,
-                    child: Column(
+                    Container(
+                      height: 1,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
                       children: [
-                        InkWell(
+                        Expanded(
+                            child: Center(
+                                child: InkWell(
                           onTap: () {
-                            Get.to(
-                              RegimentWebView(
-                                title: regimen.title.toString().trim(),
-                                selectedUrl: regimen?.htmltemplate,
-                              ),
-                            );
+                            Navigator.pop(context);
+                            if (regimen.hasform) {
+                              onCardPressed(context, regimen,
+                                  aid: regimen.aid,
+                                  uid: regimen.uid,
+                                  formId: regimen.uformid,
+                                  formName: regimen.uformname);
+                            } else {
+                              callLogApi(regimen);
+                            }
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              strAdditionalInstructions,
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 13.h,
-                                fontStyle: FontStyle.italic,
-                                decoration: TextDecoration.underline,
+                          child: Image.asset(
+                            'assets/Qurhome/accept.png',
+                            height: 50,
+                            width: 50,
+                          ),
+                        ))),
+                        Expanded(
+                          child: Center(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                'assets/Qurhome/remove.png',
+                                height: 50,
+                                width: 50,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 15,
-                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-            );
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            children: [
+                              Text('Remind me in'),
+                              // Container(
+                              //   color: Colors.grey,
+                              //   height: 1,
+                              //   width: 110,
+                              // )
+                            ],
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Stack(
+                            children: [
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  value: snoozeValue,
+                                  elevation: 16,
+                                  onChanged: (String newValue) {
+                                    setState(() {
+                                      snoozeValue = newValue;
+                                    });
+                                  },
+                                  items: <String>[
+                                    '5 mins',
+                                    '10 mins',
+                                    '15 mins',
+                                    '20 mins'
+                                  ].map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 36.0),
+                                child: Container(
+                                  color: Colors.grey,
+                                  height: 1,
+                                  width: 78,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        var time = snoozeValue.split(" ");
+                        Reminder reminder = Reminder();
+                        reminder.uformname = regimen.uformname.toString();
+                        reminder.activityname = regimen.activityname.toString();
+                        reminder.title = regimen.title.toString();
+                        reminder.description = regimen.description.toString();
+                        reminder.eid = regimen.eid.toString();
+                        reminder.estart = regimen.estart
+                            .add(Duration(minutes: int.parse(time[0])))
+                            .toString();
+                        reminder.remindin = regimen.remindin.toString();
+                        reminder.remindbefore = regimen.remindin.toString();
+                        List<Reminder> data = [reminder];
+                        String snoozedText =
+                            "Snoozed for ${int.parse(time[0]).toString()} minutes";
+                        final snoozedBody = {};
+                        snoozedBody['eid'] = regimen.eid.toString();
+                        snoozedBody['snoozeText'] = snoozedText;
+                        final jsonString = convert.jsonEncode(snoozedBody);
+                        try {
+                          QurHomeApiProvider.snoozeEvent(jsonString);
+                        } catch (e) {}
+                        QurPlanReminders.updateReminderswithLocal(data);
+                        Navigator.pop(context);
+                      },
+                      child: Text('Snooze'),
+                      style: ElevatedButton.styleFrom(
+                          primary:
+                              Color(CommonUtil().getQurhomePrimaryColor())),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                      visible: regimen.hashtml,
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Get.to(
+                                RegimentWebView(
+                                  title: regimen.title.toString().trim(),
+                                  selectedUrl: regimen?.htmltemplate,
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                strAdditionalInstructions,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 13.h,
+                                  fontStyle: FontStyle.italic,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
           });
-        });
   }
 
   String removeAllWhitespaces(String string) {

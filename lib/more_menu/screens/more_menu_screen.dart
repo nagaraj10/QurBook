@@ -1,15 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/landing/view/widgets/drawer_tile.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/Tags.dart';
 import 'package:myfhb/src/ui/settings/AppleHealthSettings.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/src/ui/settings/NonAdheranceSettingsScreen.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -90,7 +95,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   String version = '';
   List<Tags> tagsList = new List<Tags>();
-
+  List<Widget> devices = [];
   bool allowAppointmentNotification = true;
   bool allowVitalNotification = true;
   bool allowSymptomsNotification = true;
@@ -108,7 +113,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isDisplayPreference = false;
   bool isIntegration = false;
   bool isColorPallete = false;
-
+  bool loading = false;
   PreferredMeasurement preferredMeasurement;
 
   @override
@@ -116,6 +121,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     mInitialTime = DateTime.now();
     //getProfileImage();
     //getAppColorValues();
+    if( CommonUtil.REGION_CODE == 'US'){
+      getAvailableDevices();
+    }
     PackageInfo.fromPlatform().then((packageInfo) {
       version = packageInfo.version;
     });
@@ -423,6 +431,78 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
         )),
       ],
     );
+  }
+
+  void unPairDexCom(String externalSourceId) async {
+    setState(() {
+      loading = true;
+    });
+    await healthReportListForUserRepository.unPairDexcomm(externalSourceId).then((value) {
+      setState(() {
+        loading = false;
+      });
+      if (value.isSuccess) {
+        getAvailableDevices();
+      }
+    });
+  }
+
+  getAvailableDevices() async {
+    setState(() {
+      loading = true;
+    });
+    await healthReportListForUserRepository.getAvailableDevices().then((value) {
+      if (value.isSuccess) {
+        devices.clear();
+        value.result.forEach((element) {
+          devices.add(ListTile(
+            title: Text(element.name,
+                style: TextStyle(fontWeight: FontWeight.w500)),
+            trailing: Text((element.isPaired ? 'Un Pair' : 'Pair'),style: TextStyle(color:element.isPaired ? Colors.red : Colors.green ,fontWeight: FontWeight.bold),),
+            onTap: () {
+              if (element.isPaired) {
+                unPairDexCom(element.externalSourceId);
+              } else {
+                String baseUrl='';
+                String clientId='';
+                String redirectUrl='';
+                String state='';
+                element.systemConfiguration.forEach((config) {
+                  if(config.name=="clientId"){
+                    clientId=config.value;
+                  }
+                  if(config.name=="redirectUrl"){
+                    redirectUrl=config.value;
+                  }
+                  if(config.name=="baseurl"){
+                    baseUrl=config.value;
+                  }
+                });
+                var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+                state='Dexcom/${userId}';
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DexComWebScreen(baseUrl: baseUrl,redirectUrl: redirectUrl,clientId: clientId,state: state,),
+                  ),
+                ).then((value) {
+                  getAvailableDevices();
+                });
+              }
+            },
+          ));
+          devices.add(Divider());
+        });
+        setState(() {
+          loading = false;
+        });
+      } else {
+        setState(() {
+          loading = false;
+        });
+      }
+    });
   }
 
   Future<GetDeviceSelectionModel> getAppColorValues() async {
@@ -884,45 +964,60 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             future: _handleGoogleFit(),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                return ListTile(
-                                  leading: ImageIcon(
-                                    AssetImage(variable.icon_digit_googleFit),
-                                    //size: 30,
-                                    color: Colors.black,
-                                  ),
-                                  title: Text(variable.strGoogleFit),
-                                  subtitle: Text(
-                                    variable.strAllowGoogle,
-                                    style: TextStyle(fontSize: 12.0.sp),
-                                  ),
-                                  trailing: Wrap(
-                                    children: <Widget>[
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: IconButton(
-                                          icon: Icon(Icons.sync),
-                                          onPressed: () {
-                                            _deviceDataHelper.syncGoogleFit();
-                                          },
-                                        ),
+                                return Column(
+                                  children: [
+                                    ListTile(
+                                      leading: ImageIcon(
+                                        AssetImage(
+                                            variable.icon_digit_googleFit),
+                                        //size: 30,
+                                        color: Colors.black,
                                       ),
-                                      Transform.scale(
-                                        scale: 0.8,
-                                        child: Switch(
-                                          value: _isGFActive,
-                                          activeColor: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          onChanged: (bool newValue) {
-                                            setState(() {
-                                              //isTouched = true;
-                                              _isGFActive = newValue;
-                                              isIntegration = true;
-                                            });
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                      title: Text(variable.strGoogleFit),
+                                      subtitle: Text(
+                                        variable.strAllowGoogle,
+                                        style: TextStyle(fontSize: 12.0.sp),
+                                      ),
+                                      trailing: Wrap(
+                                        children: <Widget>[
+                                          Transform.scale(
+                                            scale: 0.8,
+                                            child: IconButton(
+                                              icon: Icon(Icons.sync),
+                                              onPressed: () {
+                                                _deviceDataHelper
+                                                    .syncGoogleFit();
+                                              },
+                                            ),
+                                          ),
+                                          Transform.scale(
+                                            scale: 0.8,
+                                            child: Switch(
+                                              value: _isGFActive,
+                                              activeColor: Color(
+                                                  new CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                              onChanged: (bool newValue) {
+                                                setState(() {
+                                                  //isTouched = true;
+                                                  _isGFActive = newValue;
+                                                  isIntegration = true;
+                                                });
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    !loading
+                                        ? ListView.builder(
+                                      shrinkWrap: true,
+                                            itemCount: devices.length,
+                                            itemBuilder: (context, index) {
+                                              return devices[index];
+                                            })
+                                        : CircularProgressIndicator(),
+                                  ],
                                 );
                               } else {
                                 return Container();

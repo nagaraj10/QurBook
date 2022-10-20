@@ -6,6 +6,7 @@ import 'package:myfhb/claim/model/claimmodel/ClaimSuccess.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
+import 'package:myfhb/more_menu/models/available_devices/AvailableDevicesResponseModel.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
@@ -21,6 +22,7 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
+import 'package:myfhb/src/model/common_response.dart';
 
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
@@ -277,6 +279,26 @@ class HealthReportListForUserRepository {
     return GetDeviceSelectionModel.fromJson(response);
   }
 
+  Future<AvailableDevicesResponseModel> getAvailableDevices() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final response = await _helper.getAvailableDevices(
+        query.external_available_device + query.qr_userId + userId);
+    return AvailableDevicesResponseModel.fromJson(response);
+  }
+
+  Future<CommonResponse> unPairDexcomm(String externalId) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var temp = json.encode({
+      'id': externalId.toString(),
+      'user' : {
+        'id' : userId.toString()
+      }
+    });
+    final response = await _helper.unPairDexcomm(query.unpair_dexcomm,temp);
+    return CommonResponse.fromJson(response);
+  }
+
   Future<CreateDeviceSelectionModel> createDeviceSelection(
       bool allowDigit,
       bool allowDevice,
@@ -369,16 +391,16 @@ class HealthReportListForUserRepository {
         'qurhome_ui': PreferenceUtil.getIfQurhomeisDefaultUI(),
         'preferred_measurement': {
           'height': {
-            'unitCode': preferredMeasurement?.height?.unitCode??'',
-            'unitName': preferredMeasurement?.height?.unitName??''
+            'unitCode': preferredMeasurement?.height?.unitCode ?? '',
+            'unitName': preferredMeasurement?.height?.unitName ?? ''
           },
           'weight': {
-            'unitCode': preferredMeasurement?.weight?.unitCode??'',
-            'unitName': preferredMeasurement?.weight?.unitName??''
+            'unitCode': preferredMeasurement?.weight?.unitCode ?? '',
+            'unitName': preferredMeasurement?.weight?.unitName ?? ''
           },
           'temperature': {
-            'unitCode': preferredMeasurement?.temperature?.unitCode??'',
-            'unitName': preferredMeasurement?.temperature?.unitName??''
+            'unitCode': preferredMeasurement?.temperature?.unitCode ?? '',
+            'unitName': preferredMeasurement?.temperature?.unitName ?? ''
           },
         },
         'caregiverCommunicationSetting': {

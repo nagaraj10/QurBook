@@ -50,6 +50,7 @@ class CommonConstants {
   static String keyDoctor = 'Doctors';
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
+  static String keyLabs = 'Labs';
 
   /// Following are the constants string used as hint text for the pop
   /// box that appears when a card is saved
@@ -77,6 +78,7 @@ class CommonConstants {
   static String doctors = 'Doctors';
   static String hospitals = 'Hospitals';
   static String labs = 'Labs';
+  static String lab = 'Lab';
 
   static String my_providers_plan = 'My Providers Plan';
   static String all_free_plans = 'All Free Plans';
@@ -321,6 +323,7 @@ class CommonConstants {
   static String ticketDesc = 'Please fill Description';
   static String ticketDoctor = 'Please Select Doctor';
   static String ticketHospital = 'Please Select Hospital';
+  static String ticketLab = 'Please Select Lab';
   static String ticketModeOfService = 'Please Select mode of service';
   static String ticketFile = 'Please Attach Files';
   static String ticketDate = 'Please Select Preferred Date';

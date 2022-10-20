@@ -13,20 +13,33 @@ String createTicketModelToJson(CreateTicketModel data) =>
 class CreateTicketModel {
   CreateTicketModel({
     this.isSuccess,
+    this.message,
     this.result,
   });
 
   bool isSuccess;
+  String message;
   Result result;
 
-  factory CreateTicketModel.fromJson(Map<String, dynamic> json) =>
+  /*factory CreateTicketModel.fromJson(Map<String, dynamic> json) =>
       CreateTicketModel(
         isSuccess: json["isSuccess"],
         result: Result.fromJson(json["result"]),
-      );
+      );*/
+
+  CreateTicketModel.fromJson(Map<String, dynamic> json) {
+    try {
+      isSuccess = json['isSuccess'];
+      message = json['message'];
+      result = json['result'];
+    } catch (e) {
+      //print(e);
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         "isSuccess": isSuccess,
+        "message": message,
         "result": result.toJson(),
       };
 }

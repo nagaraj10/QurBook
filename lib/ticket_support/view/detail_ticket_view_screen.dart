@@ -73,6 +73,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   TabController _controller;
   int selectedTab = 0;
   String authToken = '';
+  bool isHideInputTextBox = false;
+
   @override
   void initState() {
     try {
@@ -149,80 +151,105 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget detailView(Ticket ticket) {
-    String strDesc = "";
-    String strTitle = "";
-    String strDate = "";
-    String strTime = "";
     List<Widget> widgetForColumn = List();
     String strName = "";
     try {
+      if (ticket.additionalInfo?.ticketStatus?.name != null &&
+          ticket.additionalInfo?.ticketStatus?.name != '') {
+        String strStatus = CommonUtil()
+            .validString(ticket.additionalInfo?.ticketStatus?.name)
+            .toLowerCase();
+        if (strStatus.contains("cancelled") ||
+            strStatus.contains("completed")) {
+          isHideInputTextBox = true;
+        }
+      }
       strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
-      //print("strName $strName");
+      final dataFields = ticket.dataFields;
       if (strName.contains("transportation") ||
           strName.contains("homecare services") ||
-          strName.contains("food delivery")) {
-        final dataFields = ticket.dataFields;
-        if (dataFields != null) {
-          for (final name in dataFields.keys) {
-            String LabelName = CommonUtil().validString(name.toString());
-            if (!LabelName.contains("preferredLabName") &&
-                !LabelName.contains("preferredLabId") &&
-                !LabelName.contains("ticketStatus") &&
-                !LabelName.contains("choose_doctor") &&
-                !LabelName.contains("choose_hospital") &&
-                !LabelName.contains("choose_category") &&
-                !LabelName.contains("package_name") &&
-                !LabelName.contains("hospital") &&
-                !LabelName.contains("healthOrgTypeId") &&
-                !LabelName.contains("doctor")) {
+          strName.contains("food delivery") ||
+          strName.contains("doctor appointment") ||
+          strName.contains("lab appointment")) {
+        if (ticket.type.additionalInfo != null && dataFields != null) {
+          for (int i = 0; i < ticket.type.additionalInfo?.field.length; i++) {
+            Field field = ticket.type.additionalInfo?.field[i];
+            List<FieldData> fieldData = field.fieldData;
+            String fieldName = CommonUtil().validString(field.name ?? "");
+            String displayName = CommonUtil().validString(field.displayName);
+            displayName = displayName.trim().isNotEmpty
+                ? displayName
+                : CommonUtil().getFieldName(field.name);
+            for (final name in dataFields.keys) {
+              String LabelName = CommonUtil().validString(name.toString());
               var value = dataFields[LabelName];
-
               if (value != null && value.toString().trim() != "") {
-                if (LabelName.contains("modeOfService")) {
+                if ((fieldName.contains("mode_of_service") ||
+                        fieldName.contains("modeOfService")) &&
+                    (LabelName.contains("mode_of_service") ||
+                        LabelName.contains("modeOfService"))) {
                   widgetForColumn.add(
                       (ticket?.additionalInfo?.modeOfService != null &&
                               ticket?.additionalInfo?.modeOfService.name != "")
                           ? commonWidgetForDropDownValue("Mode Of Service",
                               ticket?.additionalInfo?.modeOfService.name)
                           : SizedBox.shrink());
-                } else if (LabelName.contains("preferredDate")) {
+                  break;
+                } else if ((fieldName.contains("preferredDate") ||
+                        fieldName.contains("preferred_date")) &&
+                    (LabelName.contains("preferredDate") ||
+                        LabelName.contains("preferred_date"))) {
                   widgetForColumn.add(commonWidgetForDropDownValue(
                       "Preferred Date",
                       CommonUtil().validString(value.toString())));
-                } else if (LabelName.contains("preferredTime")) {
+                  break;
+                } else if ((fieldName.contains("preferredTime") ||
+                        fieldName.contains("preferred_time")) &&
+                    (LabelName.contains("preferredTime") ||
+                        LabelName.contains("preferred_time"))) {
                   widgetForColumn.add(commonWidgetForDropDownValue(
                       "Preferred Time",
-                      CommonUtil().validString(value.toString()),isTime: true));
-                } else {
+                      CommonUtil().validString(value.toString()),
+                      isTime: true));
+                  break;
+                } else if ((fieldName.contains("preferred_lab") ||
+                        fieldName.contains("preferredLabName")) &&
+                    (LabelName.contains("preferred_lab") ||
+                        LabelName.contains("preferredLabName"))) {
                   widgetForColumn.add(commonWidgetForDropDownValue(
-                      CommonUtil().getFieldName(LabelName),
+                      "Preferred Lab Name",
                       CommonUtil().validString(value.toString())));
-                }
-              }
-            }
-          }
-        }
-      } else if (strName.contains("doctor appointment") ||
-          strName.contains("lab appointment")) {
-        final dataFields = ticket.dataFields;
-        if (dataFields != null) {
-          for (final name in dataFields.keys) {
-            String LabelName = CommonUtil().validString(name.toString());
-            if (LabelName.contains("description") ||
-                LabelName.contains("preferredDate") ||
-                LabelName.contains("preferredTime") ||
-                LabelName.contains("title")) {
-              var value = dataFields[LabelName];
-
-              if (value != null && value.toString().trim() != "") {
-                if (LabelName.contains("description")) {
-                  strDesc = value;
-                } else if (LabelName.contains("preferredDate")) {
-                  strDate = value;
-                } else if (LabelName.contains("preferredTime")) {
-                  strTime = value;
-                } else {
-                  strTitle = value;
+                  break;
+                } else if (fieldName.contains("choose_doctor") &&
+                    LabelName.contains("choose_doctor")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Doctor Name",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if (fieldName.contains("choose_hospital") &&
+                    LabelName.contains("choose_hospital")) {
+                  widgetForColumn.add(commonWidgetForDropDownValue(
+                      "Preferred Hospital Name",
+                      CommonUtil().validString(value.toString())));
+                  break;
+                } else if (fieldName.contains(LabelName)) {
+                  if (fieldData != null &&
+                      fieldData.length > 0 &&
+                      value is! String) {
+                    try {
+                      final strText = value['name'] as String;
+                      widgetForColumn.add(commonWidgetForDropDownValue(
+                          displayName, CommonUtil().validString(strText)));
+                    } catch (e) {
+                      //print(e);
+                    }
+                    break;
+                  } else {
+                    widgetForColumn.add(commonWidgetForDropDownValue(
+                        displayName,
+                        CommonUtil().validString(value.toString())));
+                    break;
+                  }
                 }
               }
             }
@@ -310,102 +337,62 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       SizedBox(height: 5.0),
                       (strName.contains("transportation") ||
                               strName.contains("homecare services") ||
-                              strName.contains("food delivery"))
+                              strName.contains("food delivery") ||
+                              strName.contains("doctor appointment") ||
+                              strName.contains("lab appointment"))
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: widgetForColumn)
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? SizedBox.shrink()
-                                    : Text(
-                                        ticket?.subject
-                                            ?.toString()
-                                            .capitalizeFirstofEach,
-                                        style: TextStyle(
-                                          fontSize: 16.0.sp,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
-                                      ),
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? CommonUtil()
-                                            .validString(strTitle ?? '')
-                                            .trim()
-                                            .isNotEmpty
-                                        ? commonWidgetForDropDownValue(
-                                            "Title",
-                                            CommonUtil().parseHtmlString(
-                                                strTitle ?? ''))
-                                        : SizedBox.shrink()
-                                    : SizedBox.shrink(),
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? CommonUtil()
-                                            .validString(strDesc ?? '')
-                                            .trim()
-                                            .isNotEmpty
-                                        ? commonWidgetForDropDownValue(
-                                            "Description",
-                                            CommonUtil()
-                                                .parseHtmlString(strDesc ?? ''))
-                                        : SizedBox.shrink()
-                                    : SizedBox.shrink(),
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? SizedBox.shrink()
-                                    : ticket.preferredDate != null
-                                        ? Row(
-                                            children: [
-                                              Text(
-                                                constants.notificationDate(
-                                                    '${ticket.preferredDate.toString()}'),
-                                                style: TextStyle(
-                                                  fontSize: 16.0.sp,
-                                                  fontWeight: FontWeight.w100,
-                                                ),
-                                                textAlign: TextAlign.start,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 2,
-                                              ),
-                                              (ticket?.additionalInfo
-                                                              ?.preferredTime !=
-                                                          null &&
-                                                      ticket?.additionalInfo
-                                                              ?.preferredTime !=
-                                                          "")
-                                                  ? Text(
-                                                      ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
-                                                      style: TextStyle(
-                                                        fontSize: 16.0.sp,
-                                                        fontWeight:
-                                                            FontWeight.w100,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      maxLines: 2,
-                                                    )
-                                                  : SizedBox.shrink(),
-                                            ],
-                                          )
-                                        : SizedBox(),
-                                CommonUtil()
-                                        .validString(
-                                            ticket?.preferredLabName ?? '')
-                                        .trim()
-                                        .isNotEmpty
-                                    ? commonWidgetForDropDownValue(
-                                        "Preferred Lab Name",
-                                        CommonUtil().parseHtmlString(
-                                            ticket.preferredLabName ?? ''))
-                                    : SizedBox.shrink(),
+                                Text(
+                                  ticket?.subject
+                                      ?.toString()
+                                      .capitalizeFirstofEach,
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                ticket.preferredDate != null
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            constants.notificationDate(
+                                                '${ticket.preferredDate.toString()}'),
+                                            style: TextStyle(
+                                              fontSize: 16.0.sp,
+                                              fontWeight: FontWeight.w100,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                          (ticket?.additionalInfo
+                                                          ?.preferredTime !=
+                                                      null &&
+                                                  ticket?.additionalInfo
+                                                          ?.preferredTime !=
+                                                      "")
+                                              ? Text(
+                                                  ", ${ticket?.additionalInfo?.preferredTime ?? ''}",
+                                                  style: TextStyle(
+                                                    fontSize: 16.0.sp,
+                                                    fontWeight: FontWeight.w100,
+                                                  ),
+                                                  textAlign: TextAlign.start,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                )
+                                              : SizedBox.shrink(),
+                                        ],
+                                      )
+                                    : SizedBox(),
                                 (ticket?.additionalInfo?.chooseCategory !=
                                             null &&
                                         ticket?.additionalInfo
@@ -424,58 +411,6 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         "Package Name",
                                         ticket?.additionalInfo?.packageName ??
                                             '')
-                                    : SizedBox.shrink(),
-                                (ticket?.additionalInfo?.chooseDoctor != null &&
-                                        ticket?.additionalInfo?.chooseDoctor !=
-                                            "")
-                                    ? commonWidgetForDropDownValue(
-                                        "Preferred Doctor Name",
-                                        ticket?.additionalInfo?.chooseDoctor ??
-                                            '')
-                                    : SizedBox.shrink(),
-                                (ticket?.additionalInfo?.chooseHospital !=
-                                            null &&
-                                        ticket?.additionalInfo
-                                                ?.chooseHospital !=
-                                            "")
-                                    ? commonWidgetForDropDownValue(
-                                        "Preferred Hospital Name",
-                                        ticket?.additionalInfo?.chooseHospital)
-                                    : SizedBox.shrink(),
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? CommonUtil()
-                                            .validString(strDate ?? '')
-                                            .trim()
-                                            .isNotEmpty
-                                        ? commonWidgetForDropDownValue(
-                                            "Preferred Date",
-                                            CommonUtil()
-                                                .parseHtmlString(strDate ?? ''))
-                                        : SizedBox.shrink()
-                                    : SizedBox.shrink(),
-                                strName.contains("doctor appointment") ||
-                                        strName.contains("lab appointment")
-                                    ? CommonUtil()
-                                            .validString(strTime ?? '')
-                                            .trim()
-                                            .isNotEmpty
-                                        ? commonWidgetForDropDownValue(
-                                            "Preferred Time",
-                                            CommonUtil()
-                                                .parseHtmlString(strTime ?? ''),
-                                            isTime: true)
-                                        : SizedBox.shrink()
-                                    : SizedBox.shrink(),
-                                (ticket?.additionalInfo?.modeOfService !=
-                                            null &&
-                                        ticket?.additionalInfo?.modeOfService
-                                                .name !=
-                                            "")
-                                    ? commonWidgetForDropDownValue(
-                                        "Mode Of Service",
-                                        ticket?.additionalInfo?.modeOfService
-                                            .name)
                                     : SizedBox.shrink(),
                               ],
                             ),
@@ -710,140 +645,147 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                           ),
                               ),
                             ),
-                            Row(
-                              children: <Widget>[
-                                Flexible(
-                                  flex: 4,
-                                  child: Container(
-                                    height: 58.0.h,
-                                    child: TextField(
-                                      controller: addCommentController,
-                                      style: TextStyle(fontSize: 16.0.sp),
-                                      focusNode: focusNode,
-                                      //controller: textEditingController,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(
-                                            "\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
-                                      ],
-                                      decoration: InputDecoration(
-                                        suffixIcon: SizedBoxWithChild(
-                                          width: 50.0.h,
-                                          height: 50.0.h,
-                                          child: FlatButton(
-                                              onPressed: () async {
-                                                FilePickerResult result =
-                                                    await FilePicker.platform
-                                                        .pickFiles(
-                                                  type: FileType.custom,
-                                                  allowedExtensions: [
-                                                    'jpg',
-                                                    'pdf'
-                                                  ],
-                                                );
-                                                if (result != null) {
-                                                  File file = File(
-                                                      result.files.single.path);
-                                                  uploadFile(
-                                                      widget.ticket.sId, file);
-                                                }
-                                              },
-                                              child: new Icon(
-                                                Icons.attach_file,
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                                size: 24,
-                                              )),
-                                        ),
-                                        isDense: true,
-                                        contentPadding: EdgeInsets.only(
-                                            bottom: -10.0, left: 8),
-                                        hintText: "Type your message here",
-                                        hintStyle: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 16.0.sp,
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white70,
-                                        enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(12.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.transparent,
-                                              width: 2),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.transparent),
-                                        ),
-                                      ),
-                                      /*onChanged: (text){
+                            !isHideInputTextBox
+                                ? Row(
+                                    children: <Widget>[
+                                      Flexible(
+                                        flex: 4,
+                                        child: Container(
+                                          height: 58.0.h,
+                                          child: TextField(
+                                            controller: addCommentController,
+                                            style: TextStyle(fontSize: 16.0.sp),
+                                            focusNode: focusNode,
+                                            //controller: textEditingController,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
+                                                      "\[[ A-Za-z0-9#+-.@&?!{}():'%/=-]\]*")),
+                                            ],
+                                            decoration: InputDecoration(
+                                              suffixIcon: SizedBoxWithChild(
+                                                width: 50.0.h,
+                                                height: 50.0.h,
+                                                child: FlatButton(
+                                                    onPressed: () async {
+                                                      FilePickerResult result =
+                                                          await FilePicker
+                                                              .platform
+                                                              .pickFiles(
+                                                        type: FileType.custom,
+                                                        allowedExtensions: [
+                                                          'jpg',
+                                                          'pdf'
+                                                        ],
+                                                      );
+                                                      if (result != null) {
+                                                        File file = File(result
+                                                            .files.single.path);
+                                                        uploadFile(
+                                                            widget.ticket.sId,
+                                                            file);
+                                                      }
+                                                    },
+                                                    child: new Icon(
+                                                      Icons.attach_file,
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      size: 24,
+                                                    )),
+                                              ),
+                                              isDense: true,
+                                              contentPadding: EdgeInsets.only(
+                                                  bottom: -10.0, left: 8),
+                                              hintText:
+                                                  "Type your message here",
+                                              hintStyle: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 16.0.sp,
+                                              ),
+                                              filled: true,
+                                              fillColor: Colors.white70,
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12.0)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 2),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(10.0)),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent),
+                                              ),
+                                            ),
+                                            /*onChanged: (text){
                     final val = TextSelection.collapsed(offset: textEditingController.text.length);
                     textEditingController.selection = val;
                     */ /*textEditingController.text = '~$text~';*/ /*
                   },*/
-                                      /*onSubmitted: (value) =>*/
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: new Container(
-                                    child: RawMaterialButton(
-                                      onPressed: () {
-                                        onSendMessage(addCommentController.text,
-                                            widget.ticket);
-                                      },
-                                      elevation: 2.0,
-                                      fillColor: Colors.white,
-                                      child: Icon(Icons.send,
-                                          size: 25.0,
-                                          color: Color(CommonUtil()
-                                              .getMyPrimaryColor())),
-                                      padding: EdgeInsets.all(12.0),
-                                      shape: CircleBorder(),
-                                    ),
-                                  ),
-                                ),
-                                // Flexible(
-                                //   flex: 1,
-                                //   child: new Container(
-                                //     child: RawMaterialButton(
-                                //       onPressed: () {
-                                //         Navigator.of(context)
-                                //             .push(
-                                //           MaterialPageRoute(
-                                //             builder: (context) => AudioRecorder(
-                                //               arguments: AudioScreenArguments(
-                                //                 fromVoice: false,
-                                //               ),
-                                //             ),
-                                //           ),
-                                //         )
-                                //             .then((results) {
-                                //           /*String audioPath = results[Constants.keyAudioFile];
-                                //         if (audioPath != null && audioPath != '') {
-                                //           setState(() {
-                                //             isLoading = true;
-                                //           });
-                                //           uploadFile(audioPath);
-                                //         }*/
-                                //         });
-                                //       },
-                                //       elevation: 2.0,
-                                //       fillColor: Colors.white,
-                                //       child: Icon(Icons.mic,
-                                //           size: 25.0,
-                                //           color: Color(CommonUtil()
-                                //               .getMyPrimaryColor())),
-                                //       padding: EdgeInsets.all(12.0),
-                                //       shape: CircleBorder(),
-                                //     ),
-                                //   ),
-                                // )
-                              ],
-                            ),
+                                            /*onSubmitted: (value) =>*/
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        flex: 1,
+                                        child: new Container(
+                                          child: RawMaterialButton(
+                                            onPressed: () {
+                                              onSendMessage(
+                                                  addCommentController.text,
+                                                  widget.ticket);
+                                            },
+                                            elevation: 2.0,
+                                            fillColor: Colors.white,
+                                            child: Icon(Icons.send,
+                                                size: 25.0,
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor())),
+                                            padding: EdgeInsets.all(12.0),
+                                            shape: CircleBorder(),
+                                          ),
+                                        ),
+                                      ),
+                                      // Flexible(
+                                      //   flex: 1,
+                                      //   child: new Container(
+                                      //     child: RawMaterialButton(
+                                      //       onPressed: () {
+                                      //         Navigator.of(context)
+                                      //             .push(
+                                      //           MaterialPageRoute(
+                                      //             builder: (context) => AudioRecorder(
+                                      //               arguments: AudioScreenArguments(
+                                      //                 fromVoice: false,
+                                      //               ),
+                                      //             ),
+                                      //           ),
+                                      //         )
+                                      //             .then((results) {
+                                      //           /*String audioPath = results[Constants.keyAudioFile];
+                                      //         if (audioPath != null && audioPath != '') {
+                                      //           setState(() {
+                                      //             isLoading = true;
+                                      //           });
+                                      //           uploadFile(audioPath);
+                                      //         }*/
+                                      //         });
+                                      //       },
+                                      //       elevation: 2.0,
+                                      //       fillColor: Colors.white,
+                                      //       child: Icon(Icons.mic,
+                                      //           size: 25.0,
+                                      //           color: Color(CommonUtil()
+                                      //               .getMyPrimaryColor())),
+                                      //       padding: EdgeInsets.all(12.0),
+                                      //       shape: CircleBorder(),
+                                      //     ),
+                                      //   ),
+                                      // )
+                                    ],
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                       ),

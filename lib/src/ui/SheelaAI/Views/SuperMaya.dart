@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../../../colors/fhb_colors.dart' as fhbColors;
@@ -33,6 +34,7 @@ class SuperMaya extends StatefulWidget {
 class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
   BuildContext _myContext;
+  final sheelBadgeController = Get.put(SheelaAIController());
 
   // PermissionStatus permissionStatus = PermissionStatus.undetermined;
   // final Permission _micpermission = Permission.microphone;
@@ -72,7 +74,7 @@ class _SuperMayaState extends State<SuperMaya> {
 /* Future<PermissionStatus> requestPermission(Permission micPermission) async {
    final status = await micPermission.request();
     setState(() {
-      
+
       permissionStatus = status;
     });
     return status;
@@ -169,57 +171,37 @@ class _SuperMayaState extends State<SuperMaya> {
                                     ],
                                   ),
                                   onPressed: () {
-                                    String sheela_lang =
-                                        PreferenceUtil.getStringValue(
-                                            Constants.SHEELA_LANG);
-                                    if (sheela_lang != null &&
-                                        sheela_lang != '') {
+                                    if (sheelBadgeController
+                                            ?.sheelaIconBadgeCount?.value >
+                                        0) {
                                       Get.toNamed(
                                         rt_Sheela,
                                         arguments: SheelaArgument(
-                                          isSheelaAskForLang: false,
-                                          langCode: sheela_lang,
+                                          rawMessage: sheelaQueueShowRemind,
                                         ),
                                       );
-                                      /*  Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return ChatScreen(
-                                              arguments: SheelaArgument(
-                                                isSheelaAskForLang: false,
-                                                langCode: sheela_lang,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ); */
                                     } else {
-                                      Get.toNamed(
-                                        rt_Sheela,
-                                        arguments: SheelaArgument(
-                                          isSheelaAskForLang: true,
-                                        ),
-                                      );
-
-                                      /* Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return ChatScreen(
-                                              arguments: SheelaArgument(
-                                                isSheelaAskForLang: true,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ); */
-                                    }
-
-                                    /* requestPermission(_micpermission)
-                                        .then((status) {
-                                      if (status == PermissionStatus.granted) {
-
+                                      String sheela_lang =
+                                          PreferenceUtil.getStringValue(
+                                              Constants.SHEELA_LANG);
+                                      if (sheela_lang != null &&
+                                          sheela_lang != '') {
+                                        Get.toNamed(
+                                          rt_Sheela,
+                                          arguments: SheelaArgument(
+                                            isSheelaAskForLang: false,
+                                            langCode: sheela_lang,
+                                          ),
+                                        );
+                                      } else {
+                                        Get.toNamed(
+                                          rt_Sheela,
+                                          arguments: SheelaArgument(
+                                            isSheelaAskForLang: true,
+                                          ),
+                                        );
                                       }
-                                    });*/
+                                    }
                                   }),
                               variable.strMaya)),
                     ],

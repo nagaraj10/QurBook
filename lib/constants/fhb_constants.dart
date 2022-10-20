@@ -528,6 +528,10 @@ const String scheduledActivities = 'Scheduled';
 const String asNeededActivities = 'As Needed';
 const String missedActivities = 'Missed';
 
+const String autoCloseForm = 'Closing in (';
+
+const String autoCloseFormSec = ') Seconds';
+
 const strJpgDot = '.jpg';
 const strJpegDot = '.jpeg';
 const strPdfDot = '.pdf';
@@ -691,6 +695,7 @@ var tckPackageName = '';
 var tckTypeTitle = 'text';
 var tckTypeDescription = 'text_area';
 var tckTypeDropdown = 'dropdown';
+var tckTypeLookUp = 'lookup';
 var tckTypeDate = 'date';
 var tckTypeTime = 'time';
 var tckTypeFile = "file";
@@ -741,6 +746,9 @@ const String filterApiWeek = 'week';
 const String filterApiMonth = 'month';
 
 const String UnitPreference = 'Unit Preferences';
+
+// sheela queue
+const String sheelaQueueShowRemind = 'My reminders';
 
 double height = 0.0;
 double width = 0.0;

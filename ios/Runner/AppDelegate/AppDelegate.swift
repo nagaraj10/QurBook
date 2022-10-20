@@ -329,9 +329,9 @@ import LS202_DeviceManager
                     self.stopRecording()
                     if(self.message.count > 0){
                         if let controller = self.navigationController?.children.first as? FlutterViewController{
-                           let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
+                            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
                             notificationChannel.invokeMethod(Constants.closeMicMethod, arguments: nil)
-                       }
+                        }
                         self.startTheVC(currentmessage: self.message)
                     }
                     self.message = "";
@@ -675,19 +675,19 @@ import LS202_DeviceManager
             notificationChannel.invokeMethod(Constants.appointmentDetailsMethodAndChannel, arguments: Constants.appointmentDetailsMethodAndChannel)
             completionHandler([])
             
-            //        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
-            //                 let type = userInfo["isSheela"] as? String,
-            //                 let controller = navigationController?.children.first as? FlutterViewController,
-            //                 UIApplication.shared.applicationState == .active{
-            //            if(type.lowercased() == "true"){
-            //                if (ResponseNotificationChannel == nil){
-            //                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
-            //                }
-            //                ResponseNotificationChannel.invokeMethod(Constants.reponseToRemoteNotificationMethodChannel, arguments: userInfo)
-            //                completionHandler([])
-            //            }else{
-            //                completionHandler([.alert, .sound])
-            //            }
+        }else if let userInfo = notification.request.content.userInfo as? NSDictionary,
+                 let type = userInfo["isSheela"] as? String,
+                 let controller = navigationController?.children.first as? FlutterViewController,
+                 UIApplication.shared.applicationState == .active{
+            if(type.lowercased() == "true"){
+                if (ResponseNotificationChannel == nil){
+                    ResponseNotificationChannel = FlutterMethodChannel.init(name: Constants.reponseToRemoteNotificationMethodChannel, binaryMessenger: controller.binaryMessenger)
+                }
+                ResponseNotificationChannel.invokeMethod(Constants.notificationResponseMethod, arguments: userInfo)
+                completionHandler([])
+            }else{
+                completionHandler([.alert, .sound])
+            }
         }else{
             if let userInfo = notification.request.content.userInfo as? NSDictionary,
                let type = userInfo["NotificationType"] as? String,

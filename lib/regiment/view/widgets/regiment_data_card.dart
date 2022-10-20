@@ -440,6 +440,19 @@ class RegimentDataCard extends StatelessWidget {
         imageUrl = vital.photo?.url;
       }
     });
+    if (regimentData?.ack == null) if (mediaData.snoozeText != null &&
+        mediaData.snoozeText.length > 0) {
+      fieldWidgets.add(Padding(
+        padding: EdgeInsets.all(5.0.sp),
+        child: Text(
+          mediaData.snoozeText,
+          style: TextStyle(
+              fontSize: 16.0.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[500]),
+        ),
+      ));
+    }
     if (mediaData != null || (regimentData?.hashtml ?? false)) {
       fieldWidgets.add(
         Padding(
