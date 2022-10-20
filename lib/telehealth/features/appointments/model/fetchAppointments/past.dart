@@ -210,6 +210,7 @@ class AdditionalInfo {
   String Address;
   String description;
   String serviceType;
+  String lab_name;
 
   int fee;
 
@@ -218,6 +219,8 @@ class AdditionalInfo {
     Address = json.containsKey('Address') ? json["Address"] : '';
     description = json.containsKey('description') ? json["description"] : '';
     serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
+    lab_name = json.containsKey('lab_name') ? json["lab_name"] : '';
+
     fee = json.containsKey('fee') ? json["fee"] : 0;
   }
   Map<String, dynamic> toJson() {
@@ -226,6 +229,8 @@ class AdditionalInfo {
     data['Address'] = Address;
     data['description'] = description;
     data['serviceType'] = serviceType;
+    data['lab_name'] = lab_name;
+
     data['fee'] = fee;
   }
 }

@@ -601,7 +601,12 @@ class AppointmentsCommonWidget {
           (doc?.additionalinfo?.title != null &&
                   doc?.additionalinfo?.title != '')
               ? doc?.additionalinfo?.title[0].toUpperCase() ?? ''
-              : '',
+              : (doc?.serviceCategory?.code == 'LAB')
+                  ? (doc?.additionalinfo?.lab_name != null &&
+                          doc?.additionalinfo?.lab_name != '')
+                      ? doc?.additionalinfo?.lab_name[0].toUpperCase()
+                      : ''
+                  : '',
           style: TextStyle(
             color: Color(new CommonUtil().getMyPrimaryColor()),
             fontSize: 16.0.sp,
@@ -693,6 +698,12 @@ class AppointmentsCommonWidget {
               ' ' +
               doc?.doctor?.user?.lastName?.capitalizeFirstofEach
           : '';
+    }
+
+    if (name == '') {
+      if (doc?.serviceCategory?.code == 'LAB') {
+        name = doc?.additionalinfo?.lab_name ?? '';
+      }
     }
 
     return name;
