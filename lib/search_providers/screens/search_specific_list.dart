@@ -146,7 +146,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
           _hospitalListBlock
               .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
-        } else if (widget.arguments.searchWord == CommonConstants.labs) {
+        } else if (widget.arguments.searchWord == CommonConstants.labs ||
+            widget.arguments.searchWord == CommonConstants.lab) {
           _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
         }
       }
