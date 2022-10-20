@@ -4935,6 +4935,41 @@ class CommonUtil {
     }
   }
 
+  commonWidgetForTitleValue(String title, String value) {
+    return Column(
+      children: [
+        SizedBox(height: 10.h),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                flex: 1,
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w100,
+                  ),
+                  textAlign: TextAlign.start,
+                )),
+            Expanded(
+              flex: 1,
+              child: Text(
+                value,
+                style: TextStyle(
+                    fontSize: 16.0.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black),
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   String getFieldName(String field) {
     String strName = "";
     try {
