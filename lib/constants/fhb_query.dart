@@ -240,7 +240,8 @@ const String qr_shareFromUser = 'shareFromUser';
 const String qr_shareToProvider = 'shareToProvider';
 const String qr_metadata = 'metadata';
 
-const String external_available_device = 'external-integration-api/available-service?';
+const String external_available_device =
+    'external-integration-api/available-service?';
 const String unpair_dexcomm = 'external-integration-api/unpair-device';
 const String qr_user_profile = 'user-profile-setting/';
 const String qr_my_profile = 'my-profile';
@@ -331,7 +332,7 @@ const String qr_add_cart = 'cart/add-product';
 const String qr_code_tags = 'TAGS';
 
 const String retry_payment = 'appointment/check-retry-appointment?id=';
-const String appointmentUsingId='appointment/get/';
+const String appointmentUsingId = 'appointment/get/';
 
 // True desk
 
@@ -366,7 +367,8 @@ const String qr_chat_socket_history = 'chat/get-message-history';
 
 //sheela bagde
 
-const String qr_sheela_badge_icon_count = 'notification-log/sheela-pending-queue/';
+const String qr_sheela_badge_icon_count =
+    'notification-log/sheela-pending-queue/';
 
 // family list mapping
 
@@ -402,3 +404,5 @@ const String qr_delink_check = "user-relationship/check-caregiver-association";
 //sheela queue
 
 const String qr_sheela_post_queue = 'notification-log/sheela-queue-insert';
+const String qurPlanNode = 'qurplan-node-mysql';
+const String updateSnoozeEvent = '/update-snoozed-event';
