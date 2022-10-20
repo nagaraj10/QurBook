@@ -12,6 +12,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardContro
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurhomeDashboard.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/SuperMaya.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import '../../chat_socket/view/ChatDetail.dart';
@@ -99,6 +100,7 @@ class _LandingScreenState extends State<LandingScreen> {
   var userId;
 
   final controller = Get.put(ChatUserListController());
+  final sheelBadgeController = Get.put(SheelaAIController());
 
   @override
   void initState() {
@@ -148,6 +150,7 @@ class _LandingScreenState extends State<LandingScreen> {
       });
 
       initSocket();
+      sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
       print(e);
     }
@@ -431,112 +434,110 @@ class _LandingScreenState extends State<LandingScreen> {
               userChanged: userChanged,
             ),
           ),
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
+          bottomNavigationBar: Obx(
+            () => Container(
+              decoration: const BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 1,
+                  ),
+                ],
+              ),
+              child: BottomNavigationBar(
+                currentIndex: landingViewModel.currentTabIndex,
+                type: BottomNavigationBarType.fixed,
+                selectedFontSize: 10.sp,
+                unselectedFontSize: 10.sp,
+                selectedLabelStyle: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                ),
+                unselectedLabelStyle: const TextStyle(
                   color: Colors.black54,
-                  blurRadius: 1,
                 ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              currentIndex: landingViewModel.currentTabIndex,
-              type: BottomNavigationBarType.fixed,
-              selectedFontSize: 10.sp,
-              unselectedFontSize: 10.sp,
-              selectedLabelStyle: TextStyle(
-                color: Color(CommonUtil().getMyPrimaryColor()),
+                selectedIconTheme: IconThemeData(
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                unselectedIconTheme: const IconThemeData(
+                  color: Colors.black54,
+                ),
+                items: [
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      AssetImage(
+                        variable.icon_home,
+                      ),
+                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                    ),
+                    title: Text(
+                      variable.strhome,
+                      style: TextStyle(
+                        color: landingViewModel.currentTabIndex == 0
+                            ? Color(
+                                CommonUtil().getMyPrimaryColor(),
+                              )
+                            : Colors.black54,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: getChatSocketIcon(),
+                    title: Text(
+                      variable.strChat,
+                      style: TextStyle(
+                        color: landingViewModel.currentTabIndex == 1
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: getSheelaIcon(),
+                    title: Text(
+                      variable.strMaya,
+                      style: TextStyle(
+                        color: landingViewModel.currentTabIndex == 2
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      AssetImage(variable.icon_th),
+                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                    ),
+                    title: Text(
+                      constants.strAppointment,
+                      style: TextStyle(
+                        color: landingViewModel.currentTabIndex == 3
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54,
+                      ),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
+                    icon: ImageIcon(
+                      AssetImage(variable.icon_records),
+                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                    ),
+                    title: Text(
+                      variable.strMyRecords,
+                      style: TextStyle(
+                        color: landingViewModel.currentTabIndex == 4
+                            ? Color(CommonUtil().getMyPrimaryColor())
+                            : Colors.black54,
+                      ),
+                    ),
+                  )
+                ],
+                //backgroundColor: Colors.grey[200],
+                onTap: (index) {
+                  landingViewModel.updateTabIndex(index);
+                },
               ),
-              unselectedLabelStyle: const TextStyle(
-                color: Colors.black54,
-              ),
-              selectedIconTheme: IconThemeData(
-                color: Color(
-                  CommonUtil().getMyPrimaryColor(),
-                ),
-              ),
-              unselectedIconTheme: const IconThemeData(
-                color: Colors.black54,
-              ),
-              items: [
-                BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage(
-                      variable.icon_home,
-                    ),
-                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
-                  ),
-                  title: Text(
-                    variable.strhome,
-                    style: TextStyle(
-                      color: landingViewModel.currentTabIndex == 0
-                          ? Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            )
-                          : Colors.black54,
-                    ),
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  icon: getChatSocketIcon(),
-                  title: Text(
-                    variable.strChat,
-                    style: TextStyle(
-                      color: landingViewModel.currentTabIndex == 1
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.black54,
-                    ),
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  icon: Image.asset(
-                    variable.icon_mayaMain,
-                    height: CommonUtil().isTablet ? 33.0.sp : 25.0.sp,
-                    width: CommonUtil().isTablet ? 33.0.sp : 25.0.sp,
-                  ),
-                  title: Text(
-                    variable.strMaya,
-                    style: TextStyle(
-                      color: landingViewModel.currentTabIndex == 2
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.black54,
-                    ),
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage(variable.icon_th),
-                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
-                  ),
-                  title: Text(
-                    constants.strAppointment,
-                    style: TextStyle(
-                      color: landingViewModel.currentTabIndex == 3
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.black54,
-                    ),
-                  ),
-                ),
-                BottomNavigationBarItem(
-                  icon: ImageIcon(
-                    AssetImage(variable.icon_records),
-                    size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
-                  ),
-                  title: Text(
-                    variable.strMyRecords,
-                    style: TextStyle(
-                      color: landingViewModel.currentTabIndex == 4
-                          ? Color(CommonUtil().getMyPrimaryColor())
-                          : Colors.black54,
-                    ),
-                  ),
-                )
-              ],
-              //backgroundColor: Colors.grey[200],
-              onTap: (index) {
-                landingViewModel.updateTabIndex(index);
-              },
             ),
           ),
         );
@@ -693,6 +694,21 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
+  Widget getSheelaIcon() {
+    return BadgeIcon(
+      icon: Image.asset(
+        variable.icon_mayaMain,
+        height: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+        width: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+      ),
+      size: 14.h,
+      fontSize: 12.sp,
+      badgeColor: ColorUtils.countColor,
+      badgeCount: sheelBadgeController.sheelaIconBadgeCount.value,
+      isForSheelaQueue: true,
+    );
+  }
+
   Future<MyProfileModel> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     final userIdMain =
@@ -793,7 +809,7 @@ class _LandingScreenState extends State<LandingScreen> {
             qurhomeStatus: true,
           );
         }
-        enableBackgroundNotification();
+        CommonUtil().enableBackgroundNotification();
         Get.to(
           () => QurhomeDashboard(),
           binding: BindingsBuilder(
@@ -805,22 +821,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         );
       } else if (PreferenceUtil.getIfQurhomeisDefaultUI()) {
-        disableBackgroundNotification();
+        CommonUtil().disableBackgroundNotification();
         PreferenceUtil.saveQurhomeAsDefaultUI(
           qurhomeStatus: false,
         );
       }
     }
-  }
-
-  void enableBackgroundNotification() {
-    const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
-    platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-  }
-
-  void disableBackgroundNotification() {
-    const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
-    platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
   }
 
   void dbInitialize() {

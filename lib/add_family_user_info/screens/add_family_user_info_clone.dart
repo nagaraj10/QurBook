@@ -2045,7 +2045,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   unitCode: Constants.STR_VAL_WEIGHT_IND,
                   unitName: 'kilograms');
               var tempObj = new Height(
-                  unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                  unitCode: Constants.STR_VAL_TEMP_IND,
+                  unitName: variable.str_far.toLowerCase());
 
               var preferredMeasurementNew = new PreferredMeasurement(
                   height: heightObj, weight: weightObj, temperature: tempObj);
@@ -2076,20 +2077,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 unitCode: Constants.STR_VAL_HEIGHT_IND,
                 unitName: 'feet/Inches');
             var weightObj = new Height(
-                unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+                unitCode: Constants.STR_VAL_WEIGHT_IND,
+                unitName: variable.str_Kilogram.toLowerCase());
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                unitCode: Constants.STR_VAL_TEMP_IND,
+                unitName: variable.str_far.toLowerCase());
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           } else {
             var heightObj = new Height(
-                unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'centimeters');
+                unitCode: Constants.STR_VAL_HEIGHT_US,
+                unitName: variable.str_centi.toLowerCase());
             var weightObj = new Height(
-                unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+                unitCode: Constants.STR_VAL_WEIGHT_US,
+                unitName: variable.str_Pounds.toLowerCase());
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+                unitCode: Constants.STR_VAL_TEMP_US,
+                unitName: variable.str_celesius.toLowerCase());
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
@@ -2108,20 +2114,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 unitCode: Constants.STR_VAL_HEIGHT_IND,
                 unitName: 'feet/Inches');
             var weightObj = new Height(
-                unitCode: Constants.STR_VAL_WEIGHT_IND, unitName: 'kilograms');
+                unitCode: Constants.STR_VAL_WEIGHT_IND,
+                unitName: variable.str_Kilogram.toLowerCase());
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_IND, unitName: 'farenheit');
+                unitCode: Constants.STR_VAL_TEMP_IND,
+                unitName: variable.str_far.toLowerCase());
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);
             profileSetting.preferredMeasurement = preferredMeasurementNew;
           } else {
             var heightObj = new Height(
-                unitCode: Constants.STR_VAL_HEIGHT_US, unitName: 'centimeters');
+                unitCode: Constants.STR_VAL_HEIGHT_US,
+                unitName: variable.str_centi.toLowerCase());
             var weightObj = new Height(
-                unitCode: Constants.STR_VAL_WEIGHT_US, unitName: 'pounds');
+                unitCode: Constants.STR_VAL_WEIGHT_US,
+                unitName: variable.str_Pounds.toLowerCase());
             var tempObj = new Height(
-                unitCode: Constants.STR_VAL_TEMP_US, unitName: 'celsius');
+                unitCode: Constants.STR_VAL_TEMP_US,
+                unitName: variable.str_celesius.toLowerCase());
 
             var preferredMeasurementNew = new PreferredMeasurement(
                 height: heightObj, weight: weightObj, temperature: tempObj);

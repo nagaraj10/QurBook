@@ -22,6 +22,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/loader_class.dart';
+import '../../../constants/variable_constant.dart' as variable;
 
 class QurHomeApiProvider {
   DateTime selectedRegimenDate = DateTime.now();
@@ -332,5 +333,31 @@ class QurHomeApiProvider {
           CommonUtil().validString(e.toString());
       return null;
     }
+  }
+
+  static Future<dynamic> snoozeEvent(String jsonBody) async {
+    var responseJson;
+    try {
+      HeaderRequest headerRequest = HeaderRequest();
+
+      var response = await ApiServices.put(
+          Constants.BASE_URL + qurPlanNode + updateSnoozeEvent,
+          headers: await headerRequest.getRequestHeader(),
+          body: jsonBody);
+
+      if (response.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(response.body));
+
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error = CallLogErrorResponseModel.fromJson(
+            convert.json.decode(response.body));
+        return error.isSuccess;
+      }
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
 }

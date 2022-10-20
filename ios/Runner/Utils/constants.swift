@@ -22,7 +22,7 @@ struct Constants {
     static let TSS = "TTS : ";
     static let errorIs = "error is";
     static let reponseToRemoteNotificationMethodChannel =
-        "flutter.native.QurBook/notificationResponse";
+    "flutter.native.QurBook/notificationResponse";
     static let notificationResponseMethod = "notificationResponse";
     static let devicesEventChannel = "QurbookBLE/stream"
     static let reminderMethodChannel = "flutter.native/reminder"
@@ -33,7 +33,7 @@ struct Constants {
     static let removeAllReminderMethod = "removeAllReminder"
     static let navigateToRegimentMethod = "navigateToRegiment"
     static let listenToCallStatusMethod = "listenToCallStatus"
-static let navigateToSheelaReminderMethod = "navigateToSheelaReminderMethod"
+    static let navigateToSheelaReminderMethod = "navigateToSheelaReminderMethod"
     static let title = "title";
     static let description = "description";
     static let notification = "notification";
@@ -66,4 +66,5 @@ static let navigateToSheelaReminderMethod = "navigateToSheelaReminderMethod"
     static let WOWGOWT1 = "GSH-202";
     static let WOWGOWT2 = "GSH-231";
     static let WOWGOWT3 = "0202B-0001";
+    
 }

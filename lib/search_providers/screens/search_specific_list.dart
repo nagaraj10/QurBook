@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
@@ -48,9 +51,10 @@ class SearchSpecificList extends StatefulWidget {
 
   bool toPreviousScreen;
   bool isSkipUnknown;
+  bool isFromCreateTicket;
 
   SearchSpecificList(
-      {this.arguments, this.toPreviousScreen, this.isSkipUnknown});
+      {this.arguments, this.toPreviousScreen, this.isSkipUnknown,this.isFromCreateTicket = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -111,40 +115,47 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   UpdateProvidersBloc updateProvidersBloc;
   bool teleHealthAlertShown = false;
 
+  var regController = Get.put(QurhomeRegimenController());
+
   @override
   void initState() {
-    mInitialTime = DateTime.now();
-    super.initState();
-    USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    switchedUserId = USERID;
-    _doctorsListBlock = DoctorsListBlock();
-    _hospitalListBlock = HospitalListBlock();
-    _labsListBlock = LabsListBlock();
+    try {
+      mInitialTime = DateTime.now();
+      super.initState();
+      USERID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      switchedUserId = USERID;
+      _doctorsListBlock = DoctorsListBlock();
+      _hospitalListBlock = HospitalListBlock();
+      _labsListBlock = LabsListBlock();
 
-    updateProvidersBloc = UpdateProvidersBloc();
+      updateProvidersBloc = UpdateProvidersBloc();
 
-    _healthReportListForUserBlock = HealthReportListForUserBlock();
+      _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    value = _textFieldController.text.toString();
+      value = _textFieldController.text.toString();
 
-    _familyListBloc = FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();
+      _familyListBloc = FamilyListBloc();
+      _familyListBloc.getFamilyMembersListNew();
 
-    if (value != '') {
-      _doctorsListBlock.getDoctorsListNew(
-          _textFieldController.text.toString() ?? '', widget.isSkipUnknown);
-    } else {
-      if (widget.arguments.searchWord == CommonConstants.doctors) {
-        _doctorsListBlock.getExistingDoctorList('40');
-      } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
-        _hospitalListBlock
-            .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
-      } else if (widget.arguments.searchWord == CommonConstants.labs) {
-        _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
+      if (value != '') {
+        _doctorsListBlock.getDoctorsListNew(
+            _textFieldController.text.toString() ?? '', widget.isSkipUnknown);
+      } else {
+        if (widget.arguments.searchWord == CommonConstants.doctors) {
+          _doctorsListBlock.getExistingDoctorList('40');
+        } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
+          _hospitalListBlock
+              .getExistingHospitalListNew(Constants.STR_HEALTHORG_HOSPID);
+        } else if (widget.arguments.searchWord == CommonConstants.labs ||
+            widget.arguments.searchWord == CommonConstants.lab) {
+          _labsListBlock.getExistingLabsListNew(Constants.STR_HEALTHORG_LABID);
+        }
       }
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => _refreshIndicatorKey.currentState?.show());
+    } catch (e) {
+      //print(e);
     }
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
   }
 
   @override
@@ -648,6 +659,72 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getAllDatasInLabsList(List<LabListResult> data) {
+    try {
+      if (widget.isFromCreateTicket) {
+        Location locationModel = regController.locationModel;
+
+        List<LabListResult> tempLabListResult = data;
+
+        //print("tempLabListResult length ${tempLabListResult.length}");
+
+        List<LabListResult> subLocalBasedLabListResult = [];
+        List<LabListResult> cityBasedLabListResult = [];
+        List<LabListResult> otherLabListResult = [];
+
+        //finalSortList
+        List<LabListResult> finalLabListResult = [];
+
+        if (tempLabListResult != null && tempLabListResult.length > 0) {
+          if (locationModel != null && locationModel.locality != null) {
+            subLocalBasedLabListResult = tempLabListResult
+                .where((item) =>
+                    CommonUtil()
+                        .validString(item.addressLine1)
+                        .trim()
+                        .isNotEmpty &&
+                    CommonUtil().validString(item.addressLine1).contains(
+                        CommonUtil().validString(locationModel.locality)))
+                .toList();
+          }
+          if (locationModel != null && locationModel.subAdminArea != null) {
+            cityBasedLabListResult = tempLabListResult
+                .where((item) =>
+                    CommonUtil().validString(item.cityName).trim().isNotEmpty &&
+                    CommonUtil().validString(item.cityName).contains(
+                        CommonUtil().validString(locationModel.subAdminArea)))
+                .toList();
+          }
+
+          otherLabListResult = tempLabListResult
+              .where((item) =>
+                  !CommonUtil().validString(item.addressLine1).contains(
+                      locationModel != null && locationModel.locality != null
+                          ? CommonUtil().validString(locationModel.locality)
+                          : "") ||
+                  !CommonUtil().validString(item.cityName).contains(
+                      locationModel != null &&
+                              locationModel.subAdminArea != null
+                          ? CommonUtil().validString(locationModel.subAdminArea)
+                          : ""))
+              .toList();
+
+          otherLabListResult.sort((a, b) => CommonUtil()
+              .validString(a.healthOrganizationName.toString())
+              .toLowerCase()
+              .compareTo(CommonUtil()
+                  .validString(b.healthOrganizationName.toString())
+                  .toLowerCase()));
+
+          finalLabListResult = subLocalBasedLabListResult +
+              cityBasedLabListResult +
+              otherLabListResult;
+          finalLabListResult = finalLabListResult.toSet().toList();
+          data = finalLabListResult;
+        }
+      }
+    } catch (e) {
+      //print(e);
+    }
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,

@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -56,6 +59,10 @@ class SheelaAIController extends GetxController {
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
   AudioCache _audioCache;
+
+  var sheelaIconBadgeCount = 0.obs;
+
+  SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
   @override
   void onInit() {
@@ -711,6 +718,31 @@ class SheelaAIController extends GetxController {
     } else {
       //failed to update
 
+    }
+  }
+
+  getSheelaBadgeCount() async {
+    sheelaIconBadgeCount.value = 0;
+    try {
+      sheelaBadgeServices.getSheelaBadgeCount().then((value) {
+        if (value != null) {
+          if (value?.isSuccess) {
+            if (value?.result != null) {
+              sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
+              print(
+                  '----***count' + (value?.result?.queueCount ?? 0).toString());
+            } else {
+              sheelaIconBadgeCount.value = 0;
+            }
+          } else {
+            sheelaIconBadgeCount.value = 0;
+          }
+        } else {
+          sheelaIconBadgeCount.value = 0;
+        }
+      });
+    } catch (e) {
+      sheelaIconBadgeCount.value = 0;
     }
   }
 }

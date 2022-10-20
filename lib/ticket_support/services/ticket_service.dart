@@ -60,8 +60,8 @@ class UserTicketService {
   Future<CreateTicketModel> createTicket() async {
     final response = await _helper.createTicket(query.qr_create_ticket);
     _createTicketModel = CreateTicketModel.fromJson(response);
-    print(
-        'User Create Ticket Reponse : ${_createTicketModel.result.ticket.toJson()}');
+    /*print(
+        'User Create Ticket Reponse : ${_createTicketModel.result.ticket.toJson()}');*/
     return _createTicketModel;
   }
 

@@ -1,32 +1,35 @@
+import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
+import 'package:provider/provider.dart';
+
+import '../../../common/CommonUtil.dart';
 import '../../../common/PreferenceUtil.dart';
+import '../../../constants/fhb_constants.dart';
+import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../constants/fhb_query.dart';
-import '../../view_model/AddRegimentModel.dart';
-import '../../view_model/pickImageController.dart';
 import '../../../src/resources/network/ApiBaseHelper.dart';
 import '../../../src/ui/audio/AudioScreenArguments.dart';
-import '../../../src/ui/audio/audio_record_screen.dart';
-import '../../../src/utils/screenutils/size_extensions.dart';
-import '../../../common/CommonUtil.dart';
-import '../../models/regiment_data_model.dart';
-import '../../../constants/fhb_constants.dart';
-import 'form_field_widget.dart';
-import '../../view_model/regiment_view_model.dart';
-import '../../models/field_response_model.dart';
-import '../../models/save_response_model.dart';
-import 'package:provider/provider.dart';
-import 'media_icon_widget.dart';
-import '../../../constants/fhb_constants.dart' as Constants;
 import '../../../src/ui/loader_class.dart';
-import 'package:get/get.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
+import '../../models/field_response_model.dart';
+import '../../models/regiment_data_model.dart';
+import '../../models/save_response_model.dart';
+import '../../view_model/AddRegimentModel.dart';
+import '../../view_model/pickImageController.dart';
+import '../../view_model/regiment_view_model.dart';
+import 'AutoCloseText.dart';
+import 'form_field_widget.dart';
+import 'media_icon_widget.dart';
 
 class FormDataDialog extends StatefulWidget {
   FormDataDialog(
@@ -103,6 +106,12 @@ class FormDataDialogState extends State<FormDataDialog> {
     mediaData = widget.mediaData;
     providerId = widget.providerId;
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -1071,107 +1080,79 @@ class FormDataDialogState extends State<FormDataDialog> {
     if ((returnAction?.action ?? '').isNotEmpty &&
         (returnAction?.message ?? '').isNotEmpty) {
       await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => WillPopScope(
-          onWillPop: () {
-            Provider.of<RegimentViewModel>(Get.context, listen: false)
-                .cachedEvents = [];
-            Get.back();
-          },
-          child: AlertDialog(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      size: 24.0.sp,
-                    ),
-                    onPressed: () {
-                      Provider.of<RegimentViewModel>(Get.context, listen: false)
-                          .cachedEvents = [];
-                      Navigator.pop(context);
-                    }),
-              ],
-            ),
-            titlePadding: EdgeInsets.only(
-              top: 10.0.h,
-              right: 5.0.w,
-              left: 15.0.w,
-            ),
-            content: Container(
-              width: 0.75.sw,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      bottom: 10.0.h,
-                    ),
-                    child: Text(
-                      returnAction?.message ?? '',
-                      style: TextStyle(
-                        fontSize: 16.0.sp,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RaisedButton(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return WillPopScope(
+              onWillPop: () {
+                Provider.of<RegimentViewModel>(Get.context, listen: false)
+                    .cachedEvents = [];
+                Get.back();
+              },
+              child: AlertDialog(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          size: 24.0.sp,
+                        ),
                         onPressed: () {
-                          if (returnAction?.eid != null &&
-                              (returnAction?.action ?? '') == startActivity) {
-                            if (returnAction?.activityName == '' ||
-                                returnAction?.activityName == null) {
-                              Provider.of<RegimentViewModel>(Get.context,
-                                      listen: false)
-                                  .cachedEvents = [];
-                            }
-                            widget.triggerAction(
-                              returnAction?.eid,
-                              returnAction?.context,
-                              returnAction?.activityName,
-                            );
-                          } else {
-                            Provider.of<RegimentViewModel>(Get.context,
-                                    listen: false)
-                                .cachedEvents = [];
-                            Get.back();
-                          }
-                        },
-                        color: widget.isFromQurHomeSymptom ||
-                                widget.isFromQurHomeRegimen
-                            ? Color(CommonUtil().getQurhomePrimaryColor())
-                            : Color(CommonUtil().getMyPrimaryColor()),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              5.0.sp,
-                            ),
-                          ),
+                          Provider.of<RegimentViewModel>(Get.context,
+                                  listen: false)
+                              .cachedEvents = [];
+                          Navigator.pop(context);
+                        }),
+                  ],
+                ),
+                titlePadding: EdgeInsets.only(
+                  top: 10.0.h,
+                  right: 5.0.w,
+                  left: 15.0.w,
+                ),
+                content: Container(
+                  width: 0.75.sw,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 10.0.h,
                         ),
                         child: Text(
-                          okButton,
+                          returnAction?.message ?? '',
                           style: TextStyle(
                             fontSize: 16.0.sp,
-                            color: Colors.white,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      if (returnAction?.action == startActivity)
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 20.0.w,
-                          ),
-                          child: RaisedButton(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
                             onPressed: () {
-                              Provider.of<RegimentViewModel>(Get.context,
-                                      listen: false)
-                                  .cachedEvents = [];
-                              Get.back();
+                              if (returnAction?.eid != null &&
+                                  (returnAction?.action ?? '') ==
+                                      startActivity) {
+                                if (returnAction?.activityName == '' ||
+                                    returnAction?.activityName == null) {
+                                  Provider.of<RegimentViewModel>(Get.context,
+                                          listen: false)
+                                      .cachedEvents = [];
+                                }
+                                widget.triggerAction(
+                                  returnAction?.eid,
+                                  returnAction?.context,
+                                  returnAction?.activityName,
+                                );
+                              } else {
+                                Provider.of<RegimentViewModel>(Get.context,
+                                        listen: false)
+                                    .cachedEvents = [];
+                                Get.back();
+                              }
                             },
                             color: widget.isFromQurHomeSymptom ||
                                     widget.isFromQurHomeRegimen
@@ -1185,31 +1166,73 @@ class FormDataDialogState extends State<FormDataDialog> {
                               ),
                             ),
                             child: Text(
-                              laterButton,
+                              okButton,
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                                 color: Colors.white,
                               ),
                             ),
                           ),
-                        ),
+                          getLaterButton(returnAction),
+                        ],
+                      ),
+                      SizedBox(height: 5.h),
+                      if ((returnAction?.eid == null) &&
+                          (returnAction?.activityName == ''))
+                        AutoCloseText(),
                     ],
                   ),
-                ],
+                ),
+                contentPadding: EdgeInsets.only(
+                  top: 0.0.h,
+                  left: 10.0.w,
+                  right: 10.0.w,
+                  bottom: 10.0.w,
+                ),
               ),
-            ),
-            contentPadding: EdgeInsets.only(
-              top: 0.0.h,
-              left: 10.0.w,
-              right: 10.0.w,
-              bottom: 10.0.w,
-            ),
-          ),
-        ),
-      );
+            );
+          });
     } else {
       Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
           [];
+    }
+  }
+
+  Widget getLaterButton(ReturnModel returnAction) {
+    if ((returnAction?.eid != null) && (returnAction?.activityName != '')) {
+      if (returnAction?.action == startActivity) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20.0.w,
+          ),
+          child: RaisedButton(
+            onPressed: () {
+              Provider.of<RegimentViewModel>(Get.context, listen: false)
+                  .cachedEvents = [];
+              Get.back();
+            },
+            color: widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen
+                ? Color(CommonUtil().getQurhomePrimaryColor())
+                : Color(CommonUtil().getMyPrimaryColor()),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(
+                  5.0.sp,
+                ),
+              ),
+            ),
+            child: Text(
+              laterButton,
+              style: TextStyle(
+                fontSize: 16.0.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    } else {
+      return SizedBox.shrink();
     }
   }
 

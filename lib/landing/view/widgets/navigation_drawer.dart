@@ -8,6 +8,7 @@ import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/QurHub/View/HubListView.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
+import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
@@ -155,6 +156,7 @@ class NavigationDrawer extends StatelessWidget {
                           }
                         },
                       ),
+
                       DrawerTile(
                         title: variable.strMyFamily,
                         iconWidget: SvgPicture.asset(

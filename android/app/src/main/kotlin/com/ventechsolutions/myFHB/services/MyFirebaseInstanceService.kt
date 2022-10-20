@@ -284,7 +284,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         print(data[Constants.PROP_REDIRECT_TO])
 
         if (data["isSheela"] != null && data["isSheela"] == "true") {
-//            createNotificationForSheela(data)
+            createNotificationForSheela(data)
         } else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
         }
@@ -478,10 +478,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                     .build()
             nsManager.notify(NS_ID, notification)
 
-        } else {
+        }
+        else {
             val intent = Intent("remainderSheelaInvokeEvent")
             intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
             intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
             this.sendBroadcast(intent)
         }
     }

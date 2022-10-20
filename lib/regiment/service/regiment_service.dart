@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/models/ExternalLinksResponseModel.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
@@ -79,6 +80,30 @@ class RegimentService {
       return RegimentResponseModel(
         regimentsList: [],
       );
+    }
+  }
+
+  static Future<ExternalLinksResponseModel> getExternalLinks() async {
+    var response;
+    final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+        response = await ApiServices.post(
+          urlForRegiment,
+          headers: headerRequest,
+        );
+
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return ExternalLinksResponseModel.fromJson(json.decode(response.body));
+      } else {
+        return ExternalLinksResponseModel(
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+      return ExternalLinksResponseModel( );
     }
   }
 
