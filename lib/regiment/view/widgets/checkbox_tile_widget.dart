@@ -30,6 +30,8 @@ class _CheckboxTileWidgetState extends State<CheckboxTileWidget> {
     if (dataList.length == 2) {
       imagePath = dataList[0];
       titleText = dataList[1];
+    }else{
+      titleText = widget.title;
     }
     return Padding(
       padding: EdgeInsets.symmetric(

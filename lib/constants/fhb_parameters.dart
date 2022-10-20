@@ -814,3 +814,8 @@ const String strMultipart = 'multipart/form-data';
 const String qurHealthLogo = 'assets/launcher/myfhb.png';
 
 const String errNoRecordsSelected = 'No Records Selected';
+
+const String strCopyVitalsMsg =
+    'Matching activity is found in your regimen, do you want to copy the values?';
+const String strglucose = 'SPO2';
+const String strBloodSugar = 'BloodSugar';
