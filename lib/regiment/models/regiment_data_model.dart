@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/regiment/models/Status.dart';
 import 'package:myfhb/regiment/models/field_response_model.dart';
 
 class RegimentDataModel {
@@ -55,7 +56,10 @@ class RegimentDataModel {
       this.healthOrgName,
       this.activityOrgin,
       this.duration,
-      this.seq});
+      this.seq,
+      this.doctorSessionId,
+      this.serviceCategory,
+      this.modeOfService});
 
   final dynamic eid;
   final dynamic providerid;
@@ -108,6 +112,9 @@ class RegimentDataModel {
   final dynamic activityOrgin;
   final int duration;
   String seq;
+  final dynamic doctorSessionId;
+  final ServiceCategory serviceCategory;
+  final ServiceCategory modeOfService;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -175,6 +182,14 @@ class RegimentDataModel {
         activityOrgin: json['activityname_orig'],
         duration: json['duration'],
         seq: json['seq'],
+        doctorSessionId:
+            json.containsKey('doctorSessionId') ? json['doctorSessionId'] : '',
+        serviceCategory: json['serviceCategory'] != null
+            ? new ServiceCategory.fromJson(json['serviceCategory'])
+            : null,
+        modeOfService: json['modeOfService'] != null
+            ? new ServiceCategory.fromJson(json['modeOfService'])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -221,7 +236,10 @@ class RegimentDataModel {
         'healthorganizationname': healthOrgName,
         'activityname_orig': activityOrgin,
         'duration': duration,
-        'seq': seq
+        'seq': seq,
+        'doctorSessionId': doctorSessionId,
+        'serviceCategory': serviceCategory.toJson(),
+        'modeOfService': modeOfService.toJson(),
       };
 }
 

@@ -6,37 +6,40 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/d
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/feeDetails.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/status.dart';
+import 'package:myfhb/regiment/models/Status.dart';
 
 class Past {
-  Past({
-    this.id,
-    this.bookingId,
-    this.doctorSessionId,
-    this.plannedStartDateTime,
-    this.plannedEndDateTime,
-    this.actualStartDateTime,
-    this.actualEndDateTime,
-    this.slotNumber,
-    this.isHealthRecordShared,
-    this.plannedFollowupDate,
-    this.isRefunded,
-    this.isFollowupFee,
-    this.isFollowup,
-    this.isActive,
-    this.createdOn,
-    this.lastModifiedOn,
-    this.bookedFor,
-    this.bookedBy,
-    this.status,
-    this.prescriptionCollection,
-    this.healthRecord,
-    this.doctorFollowUpFee,
-    this.healthOrganization,
-    this.feeDetails,
-    this.doctor,
-    this.chatListId,
-    this.chatMessage,
-  });
+  Past(
+      {this.id,
+      this.bookingId,
+      this.doctorSessionId,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.slotNumber,
+      this.isHealthRecordShared,
+      this.plannedFollowupDate,
+      this.isRefunded,
+      this.isFollowupFee,
+      this.isFollowup,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.bookedFor,
+      this.bookedBy,
+      this.status,
+      this.prescriptionCollection,
+      this.healthRecord,
+      this.doctorFollowUpFee,
+      this.healthOrganization,
+      this.feeDetails,
+      this.doctor,
+      this.chatListId,
+      this.chatMessage,
+      this.serviceCategory,
+      this.modeOfService,
+      this.additionalinfo});
 
   String id;
   String bookingId;
@@ -66,6 +69,9 @@ class Past {
   bool isFollowUpTaken;
   String chatListId;
   ChatMessage chatMessage;
+  ServiceCategory serviceCategory;
+  ServiceCategory modeOfService;
+  AdditionalInfo additionalinfo;
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -115,10 +121,21 @@ class Past {
     isFollowUpTaken = json[parameters.strIsFollowUpTaken] != null
         ? json[parameters.strIsFollowUpTaken]
         : null;
-    chatListId = json[parameters.strChatListId]==null?null:json[parameters.strChatListId];
+    chatListId = json[parameters.strChatListId] == null
+        ? null
+        : json[parameters.strChatListId];
     chatMessage = json["chatMessage"] == null
         ? null
         : ChatMessage.fromJson(json["chatMessage"]);
+    serviceCategory = json["serviceCategory"] == null
+        ? null
+        : ServiceCategory.fromJson(json["serviceCategory"]);
+    modeOfService = json["modeOfService"] == null
+        ? null
+        : ServiceCategory.fromJson(json["modeOfService"]);
+    additionalinfo = json["additionalInfo"] == null
+        ? null
+        : AdditionalInfo.fromJson(json["additionalInfo"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -154,6 +171,10 @@ class Past {
     data[parameters.strdoctor] = doctor.toJson();
     data[parameters.strHealthOrganization] = this.healthOrganization.toJson();
     data[parameters.strChatListId] = chatListId;
+    data['additionalInfo'] = this.additionalinfo.toJson();
+    data['modeOfService'] = this.modeOfService.toJson();
+    data['serviceCategory'] = this.serviceCategory.toJson();
+
     return data;
   }
 }
@@ -169,11 +190,42 @@ class ChatMessage {
   String documentId;
   String chatMessageId;
 
-
   ChatMessage.fromJson(Map<String, dynamic> json) {
     deliveredOn = json["deliveredOn"];
     documentId = json["documentId"];
     chatMessageId = json["chatMessageId"];
   }
+}
 
+class AdditionalInfo {
+  AdditionalInfo({
+    this.title,
+    this.Address,
+    this.description,
+    this.serviceType,
+    this.fee,
+  });
+
+  String title;
+  String Address;
+  String description;
+  String serviceType;
+
+  int fee;
+
+  AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    title = json.containsKey('title') ? json["title"] : '';
+    Address = json.containsKey('Address') ? json["Address"] : '';
+    description = json.containsKey('description') ? json["description"] : '';
+    serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
+    fee = json.containsKey('fee') ? json["fee"] : 0;
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['title'] = title;
+    data['Address'] = Address;
+    data['description'] = description;
+    data['serviceType'] = serviceType;
+    data['fee'] = fee;
+  }
 }

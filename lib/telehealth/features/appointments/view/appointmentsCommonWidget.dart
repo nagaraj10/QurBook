@@ -19,7 +19,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/asso
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_update_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
-as Constants;
+    as Constants;
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -76,21 +76,23 @@ class AppointmentsCommonWidget {
   }
 
   Widget docLoc(BuildContext context, doc) {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 1.sw / 2.5),
-      child: TextWidget(
-        text: doc == null ? '' : doc,
-        overflow: TextOverflow.ellipsis,
-        softwrap: false,
-        fontWeight: FontWeight.w200,
-        colors: Colors.black87,
-        fontsize: fhbStyles.fnt_city,
-      ),
-    );
+    return doc != null && doc != ''
+        ? Container(
+            constraints: BoxConstraints(maxWidth: 1.sw / 2.5),
+            child: TextWidget(
+              text: doc == null ? '' : doc,
+              overflow: TextOverflow.ellipsis,
+              softwrap: false,
+              fontWeight: FontWeight.w200,
+              colors: Colors.black87,
+              fontsize: fhbStyles.fnt_city,
+            ),
+          )
+        : SizedBox.shrink();
   }
 
-  Widget docIcons(bool isUpcoming, Past doc, BuildContext context,
-      Function refresh) {
+  Widget docIcons(
+      bool isUpcoming, Past doc, BuildContext context, Function refresh) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
@@ -99,13 +101,13 @@ class AppointmentsCommonWidget {
     bool containsNotes, containsVoice, containsRecord;
 
     String notesCount =
-    doc.healthRecord.notes == null || doc.healthRecord.notes == ''
-        ? 0.toString()
-        : 1.toString();
+        doc.healthRecord.notes == null || doc.healthRecord.notes == ''
+            ? 0.toString()
+            : 1.toString();
     String voiceNotesCount =
-    doc.healthRecord.voice == null || doc.healthRecord.voice == ''
-        ? 0.toString()
-        : 1.toString();
+        doc.healthRecord.voice == null || doc.healthRecord.voice == ''
+            ? 0.toString()
+            : 1.toString();
     int healthRecord = doc.healthRecord.associatedRecords == null
         ? 0
         : doc.healthRecord.associatedRecords.length;
@@ -137,11 +139,10 @@ class AppointmentsCommonWidget {
           }
         }
         containsRecord = true;
-
       } else {
         containsRecord = false;
       }
-    }else {
+    } else {
       containsRecord = false;
     }
 
@@ -160,19 +161,18 @@ class AppointmentsCommonWidget {
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
-            builder: (context) =>
-                MyRecords(
-                    argument: MyRecordsArgument(
-                        categoryPosition: position,
-                        allowSelect: false,
-                        isAudioSelect: false,
-                        isNotesSelect: isUpcoming ? true : false,
-                        selectedMedias: notesId,
-                        isFromChat: false,
-                        showDetails: false,
-                        isAssociateOrChat: isUpcoming ? true : false,
-                        fromAppointments: true,
-                        fromClass: 'appointments')),
+            builder: (context) => MyRecords(
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: false,
+                    isNotesSelect: isUpcoming ? true : false,
+                    selectedMedias: notesId,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
@@ -181,8 +181,8 @@ class AppointmentsCommonWidget {
 
                 //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
                 //metaIds = json.decode(results['selectedResult']);
-                if(metaIds!=null){
-                  containsNotes=true;
+                if (metaIds != null) {
+                  containsNotes = true;
                 }
 
                 if (containsNotes) {
@@ -192,13 +192,12 @@ class AppointmentsCommonWidget {
                       refresh();
                     } else {
                       //pr.hide();
-                      toast.getToast(parameters.errAssociateRecords,
-                          Colors.red);
+                      toast.getToast(
+                          parameters.errAssociateRecords, Colors.red);
                     }
                   });
                 } else {
-                  toast.getToast(
-                      parameters.errNoRecordsSelected, Colors.red);
+                  toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
             } catch (e) {}
@@ -214,47 +213,43 @@ class AppointmentsCommonWidget {
 
           await Navigator.of(context)
               .push(MaterialPageRoute(
-            builder: (context) =>
-                MyRecords(
-                    argument: MyRecordsArgument(
-                        categoryPosition: position,
-                        allowSelect: false,
-                        isAudioSelect: isUpcoming ? true : false,
-                        isNotesSelect: false,
-                        selectedMedias: voiceIds,
-                        isFromChat: false,
-                        showDetails: false,
-                        isAssociateOrChat: isUpcoming ? true : false,
-                        fromAppointments: true,
-                        fromClass: 'appointments')),
+            builder: (context) => MyRecords(
+                argument: MyRecordsArgument(
+                    categoryPosition: position,
+                    allowSelect: false,
+                    isAudioSelect: isUpcoming ? true : false,
+                    isNotesSelect: false,
+                    selectedMedias: voiceIds,
+                    isFromChat: false,
+                    showDetails: false,
+                    isAssociateOrChat: isUpcoming ? true : false,
+                    fromAppointments: true,
+                    fromClass: 'appointments')),
           ))
               .then((results) {
             try {
               if (results.containsKey('selectedResult')) {
                 HealthResult metaIds = results['selectedResult'];
 
-
                 //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
                 //metaIds = json.decode(results['selectedResult']);
 
-                if(metaIds!=null){
-                  containsVoice=true;
+                if (metaIds != null) {
+                  containsVoice = true;
                 }
-                if (containsVoice)
-                 {
+                if (containsVoice) {
                   associateUpdateRecords(doc.id, metaIds).then((value) {
                     if (value != null && value.isSuccess) {
                       toast.getToast('Success', Colors.green);
                       refresh();
                     } else {
                       //pr.hide();
-                      toast.getToast(parameters.errAssociateRecords,
-                          Colors.red);
+                      toast.getToast(
+                          parameters.errAssociateRecords, Colors.red);
                     }
                   });
                 } else {
-                  toast.getToast(
-                      parameters.errNoRecordsSelected, Colors.red);
+                  toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                 }
               }
             } catch (e) {}
@@ -267,38 +262,35 @@ class AppointmentsCommonWidget {
             TranslationConstants.records.t(), () async {
           if (rxCount != null /*&& isUpcoming*/) {
             FocusManager.instance.primaryFocus.unfocus();
-            int position =
-            await getCategoryPosition(AppConstants.prescription);
+            int position = await getCategoryPosition(AppConstants.prescription);
 
             await Navigator.of(context)
                 .push(MaterialPageRoute(
-                builder: (context) =>
-                    MyRecords(
-                      argument: MyRecordsArgument(
-                          categoryPosition: position,
-                          allowSelect: isUpcoming ? true : false,
-                          isAudioSelect: false,
-                          isNotesSelect: false,
-                          selectedMedias: recordIds,
-                          isFromChat: false,
-                          showDetails: false,
-                          isAssociateOrChat: isUpcoming ? true : false,
-                          fromClass: 'appointments'),
-                    )))
+                    builder: (context) => MyRecords(
+                          argument: MyRecordsArgument(
+                              categoryPosition: position,
+                              allowSelect: isUpcoming ? true : false,
+                              isAudioSelect: false,
+                              isNotesSelect: false,
+                              selectedMedias: recordIds,
+                              isFromChat: false,
+                              showDetails: false,
+                              isAssociateOrChat: isUpcoming ? true : false,
+                              fromClass: 'appointments'),
+                        )))
                 .then((results) {
               try {
                 if (results.containsKey('metaId')) {
                   var metaIds = results['metaId'];
 
-
                   recordIds = metaIds.cast<String>();
-                  if(recordIds.length>0){
-                    containsRecord=true;
+                  if (recordIds.length > 0) {
+                    containsRecord = true;
                   }
 
                   if (containsRecord) {
                     associateRecords(
-                        doc.doctor.user.id, doc.bookedFor.id, recordIds)
+                            doc.doctor.user.id, doc.bookedFor.id, recordIds)
                         .then((value) {
                       if (value != null && value.isSuccess) {
                         toast.getToast('Success', Colors.green);
@@ -310,8 +302,7 @@ class AppointmentsCommonWidget {
                       }
                     });
                   } else {
-                    toast.getToast(
-                        parameters.errNoRecordsSelected, Colors.red);
+                    toast.getToast(parameters.errNoRecordsSelected, Colors.red);
                   }
                 }
               } catch (e) {}
@@ -322,8 +313,8 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Future<AssociateSuccessResponse> associateRecords(String doctorId,
-      String userId, List<String> healthRecords) async {
+  Future<AssociateSuccessResponse> associateRecords(
+      String doctorId, String userId, List<String> healthRecords) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
     AssociateSuccessResponse associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
@@ -331,8 +322,8 @@ class AppointmentsCommonWidget {
     return associateResponseList;
   }
 
-  Widget iconWithText(String imageText, Color color, String text, onTap,
-      count) {
+  Widget iconWithText(
+      String imageText, Color color, String text, onTap, count) {
     return InkWell(
       onTap: onTap,
       child: Column(
@@ -351,9 +342,9 @@ class AppointmentsCommonWidget {
               (count == null || count == 0 || count == '' || count == '0')
                   ? Container()
                   : BadgesBlue(
-                backColor: Color(new CommonUtil().getMyPrimaryColor()),
-                badgeValue: count,
-              )
+                      backColor: Color(new CommonUtil().getMyPrimaryColor()),
+                      badgeValue: count,
+                    )
             ],
           ),
           SizedBoxWidget(
@@ -402,7 +393,7 @@ class AppointmentsCommonWidget {
         child: OutlineButton(
           shape: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
           borderSide:
-          BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
+              BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
           onPressed: () {},
           child: TextWidget(
             text: TranslationConstants.joinCall.t(),
@@ -443,7 +434,8 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget floatingButton(BuildContext context, {
+  Widget floatingButton(
+    BuildContext context, {
     bool isHome = false,
   }) {
     return FloatingActionButton(
@@ -519,8 +511,8 @@ class AppointmentsCommonWidget {
     List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
     for (int i = 0;
-    i < (categoryDataList == null ? 0 : categoryDataList.length);
-    i++) {
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         position = i;
       }
@@ -571,31 +563,7 @@ class AppointmentsCommonWidget {
         child: ClipOval(
           child: Container(
             child: //Container(color: Color(fhbColors.bgColorContainer)),
-            doc.doctorSessionId == null && doc.healthOrganization != null
-                    ? Container(
-                        height: 50.0.h,
-                        width: 50.0.h,
-                        color: Colors.grey[200],
-                        child: Center(
-                          child: getFirstLastNameText(doc),
-                        ),
-                      )
-                    : doc?.doctor?.user?.profilePicThumbnailUrl == null
-                ? Container(color: Color(fhbColors.bgColorContainer))
-                : Image.network(doc.doctor.user.profilePicThumbnailUrl,
-                fit: BoxFit.cover,
-                height: 40.0.h,
-                width: 40.0.h, errorBuilder: (BuildContext context,
-                    Object exception, StackTrace stackTrace) {
-                  return Container(
-                    height: 50.0.h,
-                    width: 50.0.h,
-                    color: Colors.grey[200],
-                    child: Center(
-                      child: getFirstLastNameText(doc),
-                    ),
-                  );
-                }),
+                getImageForAppointment(doc),
             color: Color(fhbColors.bgColorContainer),
             height: 50.0.h,
             width: 50.0.h,
@@ -603,8 +571,7 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  Widget getFirstLastNameText(Past doc)
-  {
+  Widget getFirstLastNameText(Past doc) {
     if (doc.doctorSessionId == null && doc.healthOrganization != null) {
       String strName = doc.healthOrganization.name ?? "";
       String strName1 = "";
@@ -629,6 +596,17 @@ class AppointmentsCommonWidget {
           fontWeight: FontWeight.w400,
         ),
       );
+    } else if (doc.doctorSessionId == null && doc.healthOrganization == null) {
+      return Text(
+          (doc?.additionalinfo?.title != null &&
+                  doc?.additionalinfo?.title != '')
+              ? doc?.additionalinfo?.title[0].toUpperCase() ?? ''
+              : '',
+          style: TextStyle(
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+            fontSize: 16.0.sp,
+            fontWeight: FontWeight.w400,
+          ));
     } else if (doc != null &&
         doc.doctor.user.firstName != null &&
         doc.doctor.user.lastName != null) {
@@ -666,8 +644,95 @@ class AppointmentsCommonWidget {
       String bookingID, HealthResult healthResult) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
     AssociateUpdateSuccessResponse associateResponseList =
-    await providerViewModel.associateUpdateRecords(bookingID, healthResult);
+        await providerViewModel.associateUpdateRecords(bookingID, healthResult);
 
     return associateResponseList;
+  }
+
+  getImageForAppointment(Past doc) {
+    if (doc.doctorSessionId == null &&
+        (doc.healthOrganization != null || doc.healthOrganization == null))
+      return Container(
+        height: 50.0.h,
+        width: 50.0.h,
+        color: Colors.grey[200],
+        child: Center(
+          child: getFirstLastNameText(doc),
+        ),
+      );
+    else if (doc?.doctor?.user?.profilePicThumbnailUrl == null)
+      return Container(color: Color(fhbColors.bgColorContainer));
+    else
+      return Image.network(doc.doctor.user.profilePicThumbnailUrl,
+          fit: BoxFit.cover, height: 40.0.h, width: 40.0.h, errorBuilder:
+              (BuildContext context, Object exception, StackTrace stackTrace) {
+        return Container(
+          height: 50.0.h,
+          width: 50.0.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: getFirstLastNameText(doc),
+          ),
+        );
+      });
+  }
+
+  getDoctorAndHealthOrganizationName(Past doc) {
+    String name = '';
+    if (doc.doctorSessionId == null && doc?.healthOrganization != null) {
+      name = doc?.healthOrganization?.name?.capitalizeFirstofEach != null
+          ? doc?.healthOrganization?.name?.capitalizeFirstofEach
+          : '';
+    } else if (doc.doctorSessionId == null && doc?.healthOrganization == null) {
+      name = doc?.additionalinfo?.title ?? '';
+    } else if (doc.doctorSessionId != null &&
+        doc?.doctor != null &&
+        doc?.doctor?.user != null) {
+      name = doc?.doctor?.user?.firstName != null
+          ? doc?.doctor?.user?.firstName?.capitalizeFirstofEach +
+              ' ' +
+              doc?.doctor?.user?.lastName?.capitalizeFirstofEach
+          : '';
+    }
+
+    return name;
+  }
+
+  getLocation(Past doc) {
+    String location = '';
+    if (doc.doctorSessionId == null &&
+        doc?.healthOrganization != null &&
+        doc?.healthOrganization?.healthOrganizationAddressCollection != null &&
+        doc?.healthOrganization?.healthOrganizationAddressCollection?.length >
+            0) {
+      location = doc?.healthOrganization?.healthOrganizationAddressCollection[0]
+              .city?.name ??
+          '';
+    } else if (doc.doctorSessionId != null &&
+        doc?.doctor != null &&
+        doc?.doctor?.user != null &&
+        doc?.doctor?.user?.userAddressCollection3 != null &&
+        doc?.doctor?.user?.userAddressCollection3.length > 0) {
+      location = doc?.doctor?.user?.userAddressCollection3[0]?.city.name;
+    }
+
+    return location;
+  }
+
+  getServiceCategory(Past doc) {
+    String serviceCategory = '';
+
+    if (doc.serviceCategory != null) {
+      serviceCategory = doc?.serviceCategory?.name ?? '';
+    }
+    return serviceCategory;
+  }
+
+  getModeOfService(Past doc) {
+    String modeOfService = '';
+    if (doc.modeOfService != null) {
+      modeOfService = doc?.modeOfService?.name ?? '';
+    }
+    return modeOfService;
   }
 }
