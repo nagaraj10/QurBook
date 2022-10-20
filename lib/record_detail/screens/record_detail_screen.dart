@@ -337,7 +337,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   });
                                 }),
                           if (widget.data.metadata.sourceName ==
-                              strsourceCARGIVER)
+                                  strsourceCARGIVER ||
+                              widget.data?.healthRecordCollection.length == 0)
                             IconButton(
                                 icon: ImageIcon(
                               AssetImage(variable.icon_edit),
