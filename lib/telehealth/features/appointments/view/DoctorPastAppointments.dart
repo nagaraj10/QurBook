@@ -104,17 +104,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           children: <Widget>[
                             commonWidget.docName(
                                 context,
-                                widget.doc.doctorSessionId == null
-                                    ? widget?.doc?.healthOrganization?.name
-                                    ?.capitalizeFirstofEach
-                                    : widget?.doc?.doctor?.user?.firstName
-                                        ?.capitalizeFirstofEach +
-                                    ' ' +
-                                    widget?.doc?.doctor?.user?.lastName
-                                        ?.capitalizeFirstofEach),
+                                commonWidget.getDoctorAndHealthOrganizationName(
+                                    widget.doc)),
                             SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                             widget.doc.doctorSessionId == null ||
-                                widget.doc?.doctor?.specialization == null
+                                    widget.doc?.doctor?.specialization == null
                                 ? SizedBox.shrink()
                                 : Container(
                                     width: 1.sw / 2,
@@ -163,42 +157,33 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ),
                                   ),
                             widget.doc.doctorSessionId == null ||
-                                widget.doc?.doctor?.specialization == null
+                                    widget.doc?.doctor?.specialization == null
                                 ? SizedBox.shrink()
                                 : SizedBox(height: 3.0.h),
                             commonWidget.docLoc(
-                                context,
-                                widget.doc.doctorSessionId == null &&
-                                    widget?.doc?.healthOrganization
-                                        ?.healthOrganizationAddressCollection !=
-                                        null &&
-                                    widget
-                                        ?.doc
-                                        ?.healthOrganization
-                                        ?.healthOrganizationAddressCollection
-                                        .length >
-                                        0
-                                    ? widget
-                                    ?.doc
-                                    ?.healthOrganization
-                                    ?.healthOrganizationAddressCollection[
-                                0]
-                                    ?.city
-                                    ?.name ??
-                                    ''
-                                    : widget
-                                        .doc
-                                        ?.doctor
-                                        ?.user
-                                        ?.userAddressCollection3[0]
-                                        ?.city
-                                        ?.name ??
-                                    ''),
+                                context, commonWidget.getLocation(widget.doc)),
+                            widget.doc.doctorSessionId == null ||
+                                    widget.doc?.doctor?.specialization == null
+                                ? SizedBox.shrink()
+                                : SizedBox(height: 3.0),
+                            widget.doc.doctorSessionId == null
+                                ? commonWidget.docLoc(context,
+                                    commonWidget.getServiceCategory(widget.doc))
+                                : SizedBox.shrink(),
+                            widget.doc.doctorSessionId == null ||
+                                    widget.doc?.doctor?.specialization == null
+                                ? SizedBox.shrink()
+                                : SizedBox(height: 3.0),
+                            widget.doc.doctorSessionId == null
+                                ? commonWidget.docLoc(context,
+                                    commonWidget.getModeOfService(widget.doc))
+                                : SizedBox.shrink(),
                             SizedBoxWidget(height: 5.0.h),
                             SizedBoxWidget(height: 15.0.h),
                             widget.doc.doctorSessionId == null
                                 ? SizedBox.shrink()
-                                : commonWidget.docIcons(false, doc, context, () {})
+                                : commonWidget.docIcons(
+                                    false, doc, context, () {})
                           ],
                         ),
                       ],
@@ -209,9 +194,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                         children: [
                           //joinCallIcon(doc),
                           SizedBoxWidget(
-                            height: widget.doc?.doctor?.specialization == null||widget.doc.doctorSessionId == null
-                                ? 30.0.h
-                                : 40.0.h,
+                            height:
+                                widget.doc?.doctor?.specialization == null ||
+                                        widget.doc.doctorSessionId == null
+                                    ? 30.0.h
+                                    : 40.0.h,
                           ),
                           widget.doc.doctorSessionId == null
                               ? SizedBox.shrink()
@@ -280,91 +267,95 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
             widget.doc.doctorSessionId == null
                 ? SizedBox.shrink()
                 : Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
-              child: Row(
-                children: [
-                  commonWidget.iconWithText(Constants.Appointments_chatImage,
-                      Colors.black38, TranslationConstants.chats.t(), () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    goToChatIntegration(doc);
-                  }, null),
-                  SizedBoxWidget(width: 15.0),
-                  /*commonWidget.iconWithText(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
+                    child: Row(
+                      children: [
+                        commonWidget.iconWithText(
+                            Constants.Appointments_chatImage,
+                            Colors.black38,
+                            TranslationConstants.chats.t(), () {
+                          FocusManager.instance.primaryFocus.unfocus();
+                          goToChatIntegration(doc);
+                        }, null),
+                        SizedBoxWidget(width: 15.0),
+                        /*commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
                       AppConstants.prescription,
                       () {},
                       null),*/
-                  commonWidget.iconWithText(
-                      Constants.Appointments_prescriptionImage,
-                      Colors.black38,
-                      AppConstants.prescription, () async {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    if (healthRecord > 0) {
-                      int position =
-                          await getCategoryPosition(AppConstants.prescription);
+                        commonWidget.iconWithText(
+                            Constants.Appointments_prescriptionImage,
+                            Colors.black38,
+                            AppConstants.prescription, () async {
+                          FocusManager.instance.primaryFocus.unfocus();
+                          if (healthRecord > 0) {
+                            int position = await getCategoryPosition(
+                                AppConstants.prescription);
 
-                      await Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => MyRecords(
-                            argument: MyRecordsArgument(
-                                categoryPosition: position,
-                                allowSelect: false,
-                                isAudioSelect: false,
-                                isNotesSelect: true,
-                                selectedMedias: recordIds,
-                                isFromChat: false,
-                                showDetails: true,
-                                isAssociateOrChat: false,
-                                fromClass: 'appointments')),
-                      ));
-                    }
-                  }, healthRecord.toString()),
-                  SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      TranslationConstants.receipt.t(), () async {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    List<String> paymentID = new List();
-                    if (doc.healthRecord != null &&
-                        doc.healthRecord.bills != null &&
-                        doc.healthRecord.bills.length > 0) {
-                      for (int i = 0; i < doc.healthRecord.bills.length; i++) {
-                        paymentID.add(doc.healthRecord.bills[i]);
-                      }
-                    }
-                    int position =
-                        await getCategoryPosition(AppConstants.bills);
-                    print("position" + position.toString());
-                    await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => MyRecords(
-                          argument: MyRecordsArgument(
-                              categoryPosition: position,
-                              allowSelect: true,
-                              isAudioSelect: false,
-                              isNotesSelect: false,
-                              selectedMedias: paymentID,
-                              isFromChat: false,
-                              showDetails: true,
-                              isAssociateOrChat: false,
-                              fromClass: 'appointments')),
-                    ));
-                  }, null),
-                  SizedBoxWidget(width: 15.0),
-                  GestureDetector(
-                    onTap: () {
-                      FocusManager.instance.primaryFocus.unfocus();
-                      navigateToProviderScreen(doc, false);
-                    },
-                    child: commonWidget.svgWithText(
-                        Constants.Appointments_newAppoinmentImage,
-                        Colors.black38,
-                        TranslationConstants.newAppointment.t()),
-                  ),
-                ],
-              ),
-            )
+                            await Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => MyRecords(
+                                  argument: MyRecordsArgument(
+                                      categoryPosition: position,
+                                      allowSelect: false,
+                                      isAudioSelect: false,
+                                      isNotesSelect: true,
+                                      selectedMedias: recordIds,
+                                      isFromChat: false,
+                                      showDetails: true,
+                                      isAssociateOrChat: false,
+                                      fromClass: 'appointments')),
+                            ));
+                          }
+                        }, healthRecord.toString()),
+                        SizedBoxWidget(width: 15.0),
+                        commonWidget.iconWithText(
+                            Constants.Appointments_receiptImage,
+                            Colors.black38,
+                            TranslationConstants.receipt.t(), () async {
+                          FocusManager.instance.primaryFocus.unfocus();
+                          List<String> paymentID = new List();
+                          if (doc.healthRecord != null &&
+                              doc.healthRecord.bills != null &&
+                              doc.healthRecord.bills.length > 0) {
+                            for (int i = 0;
+                                i < doc.healthRecord.bills.length;
+                                i++) {
+                              paymentID.add(doc.healthRecord.bills[i]);
+                            }
+                          }
+                          int position =
+                              await getCategoryPosition(AppConstants.bills);
+                          print("position" + position.toString());
+                          await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => MyRecords(
+                                argument: MyRecordsArgument(
+                                    categoryPosition: position,
+                                    allowSelect: true,
+                                    isAudioSelect: false,
+                                    isNotesSelect: false,
+                                    selectedMedias: paymentID,
+                                    isFromChat: false,
+                                    showDetails: true,
+                                    isAssociateOrChat: false,
+                                    fromClass: 'appointments')),
+                          ));
+                        }, null),
+                        SizedBoxWidget(width: 15.0),
+                        GestureDetector(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus.unfocus();
+                            navigateToProviderScreen(doc, false);
+                          },
+                          child: commonWidget.svgWithText(
+                              Constants.Appointments_newAppoinmentImage,
+                              Colors.black38,
+                              TranslationConstants.newAppointment.t()),
+                        ),
+                      ],
+                    ),
+                  )
           ],
         ));
   }
