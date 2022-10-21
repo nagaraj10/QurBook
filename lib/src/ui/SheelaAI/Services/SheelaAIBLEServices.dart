@@ -251,7 +251,9 @@ class SheelaBLEController extends GetxController {
           return false;
         }
         return true;
-      } else {}
+      } else {
+        return true;
+      }
     } catch (e) {
       printError(info: e.toString());
       return false;
