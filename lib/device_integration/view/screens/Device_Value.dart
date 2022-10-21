@@ -7,6 +7,7 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/common/errors_widget.dart';
+import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
@@ -128,6 +129,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   List<RegimentDataModel> activitiesFilteredList = [];
   RegimentDataModel selectedActivity;
   String vitalDevices;
+  Map<String, dynamic> saveMap = {};
 
   @override
   void initState() {
@@ -506,7 +508,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         final params = json.encode(postMediaData);
 
         await _healthReportListForUserBlock
-            .createHealtRecords(params.toString(), imagePathMain, '')
+            .createHealtRecords(params.toString(), imagePathMain, '',
+                isVital: true)
             .then((value) {
           if (value != null && value.isSuccess) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
@@ -2794,13 +2797,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 return getValues(context, devicesmodel);
               } else {
-                return SizedBox.shrink();
+                return getValues(context, devicesmodel);
               }
             } else {
-              return SizedBox.shrink();
+              return getValues(context, devicesmodel);
             }
           } else {
-            return SizedBox.shrink();
+            return getValues(context, devicesmodel);
           }
         }
       },
@@ -2822,8 +2825,6 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   void createActivityMethod(String device_name) async {
-    Map<String, dynamic> saveMap = {};
-
     DateTime initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     TimeOfDay _currentTime = new TimeOfDay.now();
@@ -2835,12 +2836,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       switch (device_name) {
         case strDataTypeBP:
           {
-            if (saveMap.isEmpty)
-              saveMap['pf_${fields.title}'] = pulse.text;
-            else if (saveMap.length == 1)
-              saveMap['pf_${fields.title}'] = diaStolicPressure.text;
-            else
-              saveMap['pf_${fields.title}'] = deviceController.text;
+            if (saveMap.isEmpty) {
+              setValuesInForm(fields);
+            } else if (saveMap.length == 1) {
+              setValuesInForm(fields);
+            } else {
+              setValuesInForm(fields);
+            }
           }
           break;
         case strGlusoceLevel:
@@ -2851,9 +2853,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         case strOxgenSaturation:
           {
             if (saveMap.isEmpty)
-              saveMap['pf_${fields.title}'] = deviceController.text;
-            else if (saveMap.length == 1)
-              saveMap['pf_${fields.title}'] = pulse.text;
+              setValuesInForm(fields);
+            else if (saveMap.length == 1) setValuesInForm(fields);
           }
           break;
         case strWeight:
@@ -2884,13 +2885,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     final saveResponse =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .saveFormData(
-      eid: selectedActivity.eid,
-      events: events,
-      isFollowEvent: false,
-      followEventContext: '',
-      selectedDate: initDate,
-      selectedTime: _currentTime,
-    );
+                eid: selectedActivity.eid,
+                events: events,
+                isFollowEvent: false,
+                followEventContext: '',
+                selectedDate: initDate,
+                selectedTime: _currentTime,
+                isVitals: true);
     if (saveResponse?.isSuccess ?? false) {
       refreshData();
     }
@@ -2947,6 +2948,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       openCopyVitalsAlert();
     } else {
       refreshData();
+    }
+  }
+
+  void setValuesInForm(FieldModel fields) {
+    if (fields.title == 'Pulse') {
+      saveMap['pf_${fields.title}'] = pulse.text;
+    } else if (fields.title == 'Diastolic') {
+      saveMap['pf_${fields.title}'] = diaStolicPressure.text;
+    } else if (fields.title == 'Systolic') {
+      saveMap['pf_${fields.title}'] = deviceController.text;
+    } else if (fields.title == 'Oxygen') {
+      saveMap['pf_${fields.title}'] = deviceController.text;
     }
   }
 }
