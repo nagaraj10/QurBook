@@ -285,7 +285,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         if (data["isSheela"] != null && data["isSheela"] == "true") {
             createNotificationForSheela(data)
-        } else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
+        }
+        else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
         }
 //        else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
@@ -330,7 +331,27 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         } else if (data[Constants.PROP_TEMP_NAME] == "qurbookServiceRequestStatusUpdate") {
             createNotificationForPartnerServiceTicketDetail(data)
         } else {
-            val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+             getRegularNotification(data)
+        }
+    }
+
+    private fun createNotificationForSheela(data: Map<String, String>) {
+
+        if (!Constants.foregroundActivityRef) {
+            getRegularNotification(data)
+        }
+        else {
+            getRegularNotification(data)
+            val intent = Intent("remainderSheelaInvokeEvent")
+            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
+            this.sendBroadcast(intent)
+        }
+    }
+
+    private  fun getRegularNotification(data: Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
 //            if (nsManager != null) {
 //                val channelList: List<NotificationChannel> =
 //                    nsManager.getNotificationChannels()
@@ -342,150 +363,82 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 //                    i++
 //                }
 //            }
-            val NS_ID = System.currentTimeMillis().toInt()
-            val MEETING_ID = data[getString(R.string.meetid)]
-            val USER_NAME = data[getString(R.string.username)]
-            val notificationListId = data[getString(R.string.notificationListId)]
-            //val PAT_NAME = data[getString(R.string.pat_name)]
-            var ack_sound: Uri
-            var channelId = "";
-            var channelName = "";
+        val NS_ID = System.currentTimeMillis().toInt()
+        val MEETING_ID = data[getString(R.string.meetid)]
+        val USER_NAME = data[getString(R.string.username)]
+        val notificationListId = data[getString(R.string.notificationListId)]
+        //val PAT_NAME = data[getString(R.string.pat_name)]
+        var ack_sound: Uri
+        var channelId = "";
+        var channelName = "";
 //            if(data[Constants.ACTIVITY_NAME]!=null&&data[Constants.ACTIVITY_NAME].equals("Mandatory",ignoreCase = true)){
 ////                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.beep_beep)
 //                ack_sound=Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/raw/beep_beep")
 //                channelId="mandatory_a_"+CHANNEL_ACK
 //                channelName=getString(R.string.mandatory_channel_ack)
 //            }else{
-            ack_sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
-            channelId = CHANNEL_ACK
-            channelName = getString(R.string.channel_ack)
+        ack_sound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        channelId = CHANNEL_ACK
+        channelName = getString(R.string.channel_ack)
 //            }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val manager = getSystemService(NotificationManager::class.java)
-                val channelAck = NotificationChannel(
-                        channelId,
-                        channelName,
-                        NotificationManager.IMPORTANCE_HIGH
-                )
-                channelAck.description = getString(R.string.channel_ack_desc)
-                val attributes = AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-                channelAck.setSound(ack_sound, attributes)
-                manager.createNotificationChannel(channelAck)
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channelAck.description = getString(R.string.channel_ack_desc)
+            val attributes = AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelAck.setSound(ack_sound, attributes)
+            manager.createNotificationChannel(channelAck)
+        }
 
-            val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
-            onTapNS.putExtra(getString(R.string.nsid), NS_ID)
-            onTapNS.putExtra(getString(R.string.meetid), "$MEETING_ID")
-            onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
-            onTapNS.putExtra(getString(R.string.notificationListId), "$notificationListId")
-            //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
-            onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
-            onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
-            onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
-            onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
-            onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
-            onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(getString(R.string.meetid), "$MEETING_ID")
+        onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+        onTapNS.putExtra(getString(R.string.notificationListId), "$notificationListId")
+        //onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+        onTapNS.putExtra(Constants.PROP_DATA, data[Constants.PROP_DATA])
+        onTapNS.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_REDIRECT_TO])
+        onTapNS.putExtra(Constants.PROP_HRMID, data[Constants.PROP_HRMID])
+        onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
+        onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+        onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
-            val onTapPendingIntent = PendingIntent.getBroadcast(
-                    applicationContext,
-                    NS_ID,
-                    onTapNS,
-                    PendingIntent.FLAG_CANCEL_CURRENT
-            )
+        val onTapPendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NS_ID,
+            onTapNS,
+            PendingIntent.FLAG_CANCEL_CURRENT
+        )
 
 
-            var notification = NotificationCompat.Builder(this, channelId)
-                    .setSmallIcon(R.mipmap.app_ns_icon)
-                    .setLargeIcon(
-                            BitmapFactory.decodeResource(
-                                    applicationContext.resources,
-                                    R.mipmap.ic_launcher
-                            )
-                    )
-                    .setContentTitle(data[getString(R.string.pro_ns_title)])
-                    .setContentText(data[getString(R.string.pro_ns_body)])
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .setContentIntent(onTapPendingIntent)
-                    .setStyle(
-                            NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
-                    )
-                    .setSound(ack_sound)
-                    .setAutoCancel(true)
-                    .build()
-            nsManager.notify(NS_ID, notification)
-        }
-    }
-
-    private fun createNotificationForSheela(data: Map<String, String>) {
-
-        if (!Constants.foregroundActivityRef) {
-            val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-            val NS_ID = System.currentTimeMillis().toInt()
-            val ack_sound: Uri =
-                    Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val manager = getSystemService(NotificationManager::class.java)
-                val channelAck = NotificationChannel(
-                        CHANNEL_ACK,
-                        getString(R.string.channel_ack),
-                        NotificationManager.IMPORTANCE_DEFAULT
+        var notification = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.mipmap.app_ns_icon)
+            .setLargeIcon(
+                BitmapFactory.decodeResource(
+                    applicationContext.resources,
+                    R.mipmap.ic_launcher
                 )
-                channelAck.description = getString(R.string.channel_ack_desc)
-                val attributes = AudioAttributes.Builder()
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-                channelAck.setSound(ack_sound, attributes)
-                manager.createNotificationChannel(channelAck)
-            }
-
-            val sheelaIntent = Intent(applicationContext, SheelaFollowReceiver::class.java)
-            sheelaIntent.putExtra(getString(R.string.nsid), NS_ID)
-            sheelaIntent.putExtra("message", data[getString(R.string.pro_ns_body)])
-
-
-            val sheelaPendingIntent = PendingIntent.getBroadcast(
-                    applicationContext,
-                    NS_ID,
-                    sheelaIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
             )
-
-            var notification = NotificationCompat.Builder(this, CHANNEL_CANCEL_APP)
-                    .setSmallIcon(R.mipmap.app_ns_icon)
-                    .setLargeIcon(
-                            BitmapFactory.decodeResource(
-                                    applicationContext.resources,
-                                    R.mipmap.ic_launcher
-                            )
-                    )
-                    .setContentTitle(data[getString(R.string.pro_ns_title)])
-                    .setContentText(data[getString(R.string.pro_ns_body)])
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setWhen(0)
-                    .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                    .setContentIntent(sheelaPendingIntent)
-                    .setStyle(
-                            NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
-                    )
-                    .setSound(ack_sound)
-                    .setAutoCancel(true)
-                    .build()
-            nsManager.notify(NS_ID, notification)
-
-        }
-        else {
-            val intent = Intent("remainderSheelaInvokeEvent")
-            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
-            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
-            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
-            this.sendBroadcast(intent)
-        }
+            .setContentTitle(data[getString(R.string.pro_ns_title)])
+            .setContentText(data[getString(R.string.pro_ns_body)])
+            .setPriority(NotificationCompat.PRIORITY_MAX)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setContentIntent(onTapPendingIntent)
+            .setStyle(
+                NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)])
+            )
+            .setSound(ack_sound)
+            .setAutoCancel(true)
+            .build()
+        nsManager.notify(NS_ID, notification)
     }
 
     private fun showViewMemberAndCommunicationButtonNotification(data: Map<String, String> = HashMap()) {

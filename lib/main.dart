@@ -570,7 +570,7 @@ class _MyFHBState extends State<MyFHB> {
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
-          Future.delayed(Duration(milliseconds: 500), () async {
+         /* Future.delayed(Duration(milliseconds: 500), () async {
             Get.toNamed(
               rt_Sheela,
               arguments: SheelaArgument(
@@ -578,7 +578,7 @@ class _MyFHBState extends State<MyFHB> {
                 message: passedValArr[1],
               ),
             );
-          });
+          });*/
         }
       }
       if (passedValArr[0] == 'ack') {

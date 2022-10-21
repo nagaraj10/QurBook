@@ -298,9 +298,7 @@ class RegimentDataCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          (regimentData?.activityOrgin == strAppointmentRegimen)
-                              ? 'Dr. ' + title?.trim()
-                              : title?.trim(),
+                          getNameFromTitle(regimentData),
                           style: TextStyle(
                             fontSize: 16.0.sp,
                             fontWeight: FontWeight.w500,
@@ -315,7 +313,21 @@ class RegimentDataCard extends StatelessWidget {
                             regimentData?.healthOrgName != strSelfRegimen &&
                             regimentData?.activityOrgin ==
                                 strAppointmentRegimen)
-                          getHealthOrgName(regimentData),
+                          if (regimentData?.doctorSessionId != null)
+                            getHealthOrgName(regimentData),
+                        if (regimentData?.doctorSessionId == null)
+                          Text(
+                            regimentData?.serviceCategory?.name ?? '',
+                            style: getTextStyle(),
+                          ),
+                        if (regimentData?.doctorSessionId == null &&
+                            regimentData?.modeOfService?.name != null)
+                          Text(
+                            regimentData?.modeOfService?.name ?? '',
+                            style: getTextStyle(),
+                          )
+                        else
+                          SizedBox(),
                         if (regimentData?.estart != null &&
                             regimentData?.estart != '' &&
                             regimentData?.eend != null &&
@@ -440,8 +452,8 @@ class RegimentDataCard extends StatelessWidget {
         imageUrl = vital.photo?.url;
       }
     });
-    if (regimentData?.ack == null) if (mediaData.snoozeText != null &&
-        mediaData.snoozeText.length > 0) {
+    if (regimentData?.ack == null) if (mediaData?.snoozeText != null &&
+        mediaData?.snoozeText.length > 0) {
       fieldWidgets.add(Padding(
         padding: EdgeInsets.all(5.0.sp),
         child: Text(
@@ -754,6 +766,15 @@ class RegimentDataCard extends StatelessWidget {
     }
   }
 
+  TextStyle getTextStyle() {
+    return TextStyle(
+        fontSize: 16.0.sp,
+        fontWeight: FontWeight.w500,
+        color: regimentData?.activityOrgin == strAppointmentRegimen
+            ? Colors.white
+            : Colors.black);
+  }
+
   getStartEndTime(RegimentDataModel regimen) {
     if (regimentData?.estart != null &&
         regimentData?.estart != '' &&
@@ -972,5 +993,16 @@ class RegimentDataCard extends StatelessWidget {
           [];
       LoaderClass.hideLoadingDialog(Get.context);
     }
+  }
+
+  String getNameFromTitle(RegimentDataModel regimentData) {
+    String name = '';
+    name = (regimentData?.activityOrgin == strAppointmentRegimen)
+        ? regimentData?.doctorSessionId != null
+            ? 'Dr. ' + title?.trim()
+            : title?.trim()
+        : title?.trim();
+
+    return name;
   }
 }

@@ -100,14 +100,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             children: <Widget>[
                               commonWidget.docName(
                                   context,
-                                  widget.doc.doctorSessionId == null
-                                      ? widget?.doc?.healthOrganization?.name
-                                          ?.capitalizeFirstofEach
-                                      : widget?.doc?.doctor?.user?.firstName
-                                              ?.capitalizeFirstofEach +
-                                          ' ' +
-                                          widget?.doc?.doctor?.user?.lastName
-                                              ?.capitalizeFirstofEach),
+                                  commonWidget
+                                      .getDoctorAndHealthOrganizationName(
+                                          widget.doc)),
                               SizedBoxWidget(height: 3.0.h, width: 0.0.h),
                               widget.doc.doctorSessionId == null ||
                                       widget.doc?.doctor?.specialization == null
@@ -159,37 +154,29 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                       ),
                                     ),
                               widget.doc.doctorSessionId == null ||
-                                  widget.doc?.doctor?.specialization == null
+                                      widget.doc?.doctor?.specialization == null
                                   ? SizedBox.shrink()
                                   : SizedBox(height: 3.0),
-                              commonWidget.docLoc(
-                                  context,
-                                  widget.doc.doctorSessionId == null &&
-                                          widget?.doc?.healthOrganization
-                                                  ?.healthOrganizationAddressCollection !=
-                                              null &&
-                                          widget
-                                                  ?.doc
-                                                  ?.healthOrganization
-                                                  ?.healthOrganizationAddressCollection
-                                                  .length >
-                                              0
-                                      ? widget
-                                              ?.doc
-                                              ?.healthOrganization
-                                              ?.healthOrganizationAddressCollection[
-                                                  0]
-                                              ?.city
-                                              ?.name ??
-                                          ''
-                                      : widget
-                                              .doc
-                                              ?.doctor
-                                              ?.user
-                                              ?.userAddressCollection3[0]
-                                              ?.city
-                                              ?.name ??
-                                          ''),
+                              commonWidget.docLoc(context,
+                                  commonWidget.getLocation(widget.doc)),
+                              widget.doc.doctorSessionId == null ||
+                                      widget.doc?.doctor?.specialization == null
+                                  ? SizedBox.shrink()
+                                  : SizedBox(height: 3.0),
+                              widget.doc.doctorSessionId == null
+                                  ? commonWidget.docLoc(
+                                      context,
+                                      commonWidget
+                                          .getServiceCategory(widget.doc))
+                                  : SizedBox.shrink(),
+                              widget.doc.doctorSessionId == null ||
+                                      widget.doc?.doctor?.specialization == null
+                                  ? SizedBox.shrink()
+                                  : SizedBox(height: 3.0),
+                              widget.doc.doctorSessionId == null
+                                  ? commonWidget.docLoc(context,
+                                      commonWidget.getModeOfService(widget.doc))
+                                  : SizedBox.shrink(),
                               SizedBox(height: 5.0),
                               widget.doc.doctorSessionId == null
                                   ? SizedBox.shrink()
@@ -219,12 +206,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           widget.doc.doctorSessionId == null
                               ? SizedBox.shrink()
                               : IconButton(
-                              icon: ImageIcon(
-                                  AssetImage(Constants.Appointments_chatImage)),
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus.unfocus();
-                                goToChatIntegration(widget.doc);
-                              }),
+                                  icon: ImageIcon(AssetImage(
+                                      Constants.Appointments_chatImage)),
+                                  onPressed: () {
+                                    FocusManager.instance.primaryFocus
+                                        .unfocus();
+                                    goToChatIntegration(widget.doc);
+                                  }),
 //                          SizedBoxWidget(
 //                            height: (widget.hour == Constants.STATIC_HOUR ||
 //                                widget.minute == Constants.STATIC_HOUR)
@@ -232,9 +220,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 //                                : 15,
 //                          ),
                           SizedBoxWidget(
-                            height: widget.doc?.doctor?.specialization == null||widget.doc.doctorSessionId == null
-                                ? 10
-                                : 20,
+                            height:
+                                widget.doc?.doctor?.specialization == null ||
+                                        widget.doc.doctorSessionId == null
+                                    ? 10
+                                    : 20,
                           ),
                           widget.doc.doctorSessionId == null
                               ? SizedBox.shrink()
@@ -272,45 +262,49 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
             widget.doc.doctorSessionId == null
                 ? SizedBox.shrink()
                 : Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
-              child: Row(
-                children: [
-                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, TranslationConstants.receipt.t(), () {
-                    moveToBilsPage(widget.doc.healthRecord);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_resheduleImage,
-                      Colors.black38,
-                      TranslationConstants.reschedule.t(), () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    (widget.doc.status != null &&
-                            widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(
-                            TranslationConstants.dnaAppointment.t(), Colors.red)
-                        : navigateToProviderScreen(widget.doc, true);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                  commonWidget.iconWithText(Constants.Appointments_cancelImage,
-                      Colors.black38, TranslationConstants.cancel.t(), () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    (widget.doc.status != null &&
-                            widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(
-                            TranslationConstants.dnaAppointment.t(), Colors.red)
-                        : _displayDialog(context, [widget.doc]);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                ],
-              ),
-            )
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
+                    child: Row(
+                      children: [
+                        commonWidget.iconWithText(
+                            Constants.Appointments_receiptImage,
+                            Colors.black38,
+                            TranslationConstants.receipt.t(), () {
+                          moveToBilsPage(widget.doc.healthRecord);
+                        }, null),
+                        SizedBoxWidget(width: 15.0.w),
+                        commonWidget.iconWithText(
+                            Constants.Appointments_resheduleImage,
+                            Colors.black38,
+                            TranslationConstants.reschedule.t(), () {
+                          FocusManager.instance.primaryFocus.unfocus();
+                          (widget.doc.status != null &&
+                                  widget.doc.status.code == Constants.PATDNA)
+                              ? toast.getToast(
+                                  TranslationConstants.dnaAppointment.t(),
+                                  Colors.red)
+                              : navigateToProviderScreen(widget.doc, true);
+                        }, null),
+                        SizedBoxWidget(width: 15.0.w),
+                        commonWidget.iconWithText(
+                            Constants.Appointments_cancelImage,
+                            Colors.black38,
+                            TranslationConstants.cancel.t(), () {
+                          FocusManager.instance.primaryFocus.unfocus();
+                          (widget.doc.status != null &&
+                                  widget.doc.status.code == Constants.PATDNA)
+                              ? toast.getToast(
+                                  TranslationConstants.dnaAppointment.t(),
+                                  Colors.red)
+                              : _displayDialog(context, [widget.doc]);
+                        }, null),
+                        SizedBoxWidget(width: 15.0.w),
+                      ],
+                    ),
+                  )
           ],
         ));
   }
-
-
 
   void goToChatIntegration(Past doc) {
     //chat integration start
@@ -320,9 +314,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     String chatListId = doc?.chatListId;
     String strLastDate = doc?.chatMessage?.deliveredOn != null &&
-        doc?.chatMessage?.deliveredOn != ''
-        ? CommonUtil().getFormattedDateTime(
-        doc?.chatMessage?.deliveredOn): '';
+            doc?.chatMessage?.deliveredOn != ''
+        ? CommonUtil().getFormattedDateTime(doc?.chatMessage?.deliveredOn)
+        : '';
     /* chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/
     Navigator.push(
@@ -337,7 +331,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 patientName: '',
                 patientPicture: '',
                 isFromVideoCall: false,
-                isCareGiver: false,lastDate: strLastDate)));
+                isCareGiver: false,
+                lastDate: strLastDate)));
   }
 
   void navigateToProviderScreen(Past doc, isReshedule) async {
