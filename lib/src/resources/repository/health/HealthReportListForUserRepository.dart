@@ -178,7 +178,8 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordSuccess> createMediaData(
-      String jsonString, List<String> imagePaths, String audioPath) async {
+      String jsonString, List<String> imagePaths, String audioPath,
+      {bool isVital = false}) async {
     String id;
 
     try {
@@ -194,7 +195,8 @@ class HealthReportListForUserRepository {
     }
 
     var response = await _helper.createMediaData(
-        query.qr_health_record, jsonString, imagePaths, audioPath, id);
+        query.qr_health_record, jsonString, imagePaths, audioPath, id,
+        isVital: isVital);
     return HealthRecordSuccess.fromJson(response.data);
   }
 
@@ -291,11 +293,9 @@ class HealthReportListForUserRepository {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var temp = json.encode({
       'id': externalId.toString(),
-      'user' : {
-        'id' : userId.toString()
-      }
+      'user': {'id': userId.toString()}
     });
-    final response = await _helper.unPairDexcomm(query.unpair_dexcomm,temp);
+    final response = await _helper.unPairDexcomm(query.unpair_dexcomm, temp);
     return CommonResponse.fromJson(response);
   }
 
