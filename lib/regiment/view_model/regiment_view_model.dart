@@ -425,16 +425,17 @@ class RegimentViewModel extends ChangeNotifier {
       bool isFollowEvent,
       String followEventContext,
       DateTime selectedDate,
-      TimeOfDay selectedTime}) async {
+      TimeOfDay selectedTime,
+      bool isVitals = false}) async {
     updateInitialShowIndex(isDone: true);
     return await RegimentService.saveFormData(
-      eid: eid,
-      events: events,
-      isFollowEvent: isFollowEvent,
-      followEventContext: followEventContext,
-      selectedDate: selectedDate ?? DateTime.now(),
-      selectedTime: selectedTime ?? TimeOfDay.now(),
-    );
+        eid: eid,
+        events: events,
+        isFollowEvent: isFollowEvent,
+        followEventContext: followEventContext,
+        selectedDate: selectedDate ?? DateTime.now(),
+        selectedTime: selectedTime ?? TimeOfDay.now(),
+        isVitals: isVitals);
   }
 
   Future<SaveResponseModel> deletMedia({String eid}) async {

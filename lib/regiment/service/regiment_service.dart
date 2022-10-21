@@ -89,21 +89,20 @@ class RegimentService {
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     try {
       var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
-        response = await ApiServices.post(
-          urlForRegiment,
-          headers: headerRequest,
-        );
+      response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+      );
 
       if (response != null && response.statusCode == 200) {
         print(response.body);
         return ExternalLinksResponseModel.fromJson(json.decode(response.body));
       } else {
-        return ExternalLinksResponseModel(
-        );
+        return ExternalLinksResponseModel();
       }
     } catch (e) {
       print(e.toString());
-      return ExternalLinksResponseModel( );
+      return ExternalLinksResponseModel();
     }
   }
 
@@ -113,7 +112,8 @@ class RegimentService {
       bool isFollowEvent,
       String followEventContext,
       DateTime selectedDate,
-      TimeOfDay selectedTime}) async {
+      TimeOfDay selectedTime,
+      bool isVitals = false}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     var localTime;
@@ -147,6 +147,7 @@ class RegimentService {
             'method': 'post',
             'data':
                 "Action=SaveFormForEvent&eid=$eid&ack_local=$localTime${(isFollowEvent ?? false) ? Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents?.reduce((value, element) => value + element) : events ?? ''}${variable.qr_patientEqaul}$userId$followEventParams&source=QURBOOK",
+            'isVitalSave': isVitals
           },
         ),
       );
@@ -169,7 +170,7 @@ class RegimentService {
     }
   }
 
-   static getProviderFromTriggerInputs(String response){
+  static getProviderFromTriggerInputs(String response) {
     var data;
     var data1;
     var data2;
@@ -188,7 +189,7 @@ class RegimentService {
         final value = data2[name];
         if (name.contains('pf_')) {
           var provider =
-          Provider.of<RegimentViewModel>(Get.context, listen: false);
+              Provider.of<RegimentViewModel>(Get.context, listen: false);
           provider.cachedEvents
               ?.removeWhere((element) => element?.contains(name));
           provider.cachedEvents.add('&$name=$value'.toString());
