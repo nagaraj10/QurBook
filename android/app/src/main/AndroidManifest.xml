@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.MICROPHONE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" tools:node="remove"/>
 <!--    <uses-feature android:name="android.hardware.audio.low_latency" />-->
 <!--    <uses-feature android:name="android.hardware.audio.pro" />-->
 
