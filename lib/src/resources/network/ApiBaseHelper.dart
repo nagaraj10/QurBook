@@ -799,10 +799,9 @@ class ApiBaseHelper {
       {Map<String, String> headers, int timeout = 20}) async {
     var responseJson;
     try {
-      var response = await ApiServices.get(path,
-          headers: headers,timeout:timeout);
-      if (response.statusCode != 200)
-      {
+      var response =
+          await ApiServices.get(path, headers: headers, timeout: timeout);
+      if (response.statusCode != 200) {
         await _returnResponse(response);
       }
       responseJson = response;
@@ -1348,7 +1347,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> createMediaData(String url, String payload,
-      List<String> imagePaths, String audioPath, String id) async {
+      List<String> imagePaths, String audioPath, String id,
+      {bool isVital = false}) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
@@ -1364,6 +1364,7 @@ class ApiBaseHelper {
         'metadata': payload,
         'userId': id,
         'isBookmarked': false,
+        'isVitalSave': isVital
       });
 
       for (final image in imagePaths) {
@@ -1384,8 +1385,12 @@ class ApiBaseHelper {
         ]);
       }
     } else {
-      formData = FormData.fromMap(
-          {'metadata': payload, 'userId': id, 'isBookmarked ': false});
+      formData = FormData.fromMap({
+        'metadata': payload,
+        'userId': id,
+        'isBookmarked ': false,
+        'isVitalSave': isVital
+      });
 
       if (audioPath != null && audioPath != '') {
         var fileName = File(audioPath);
@@ -1726,12 +1731,12 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-  Future<dynamic> unPairDexcomm(String url,Object jsonBody) async {
+
+  Future<dynamic> unPairDexcomm(String url, Object jsonBody) async {
     var responseJson;
     try {
       var response = await ApiServices.post(_baseUrl + url,
-          headers: await headerRequest.getRequestHeader(),
-          body: jsonBody);
+          headers: await headerRequest.getRequestHeader(), body: jsonBody);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -2370,14 +2375,11 @@ class ApiBaseHelper {
             Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
         'patientUserId': userid,
         'additionalInfo': {
-
           ...createTicketController.dynamicTextFiledObj,
-
           'preferredDate':
-          Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
+              Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
           'preferredTime':
-          Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
-
+              Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
           'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
               ? Constants.tckPrefLab
               : "",
@@ -2396,17 +2398,22 @@ class ApiBaseHelper {
           "package_name": Constants.tckPackageName != 'Package Name'
               ? Constants.tckPackageName
               : '',
-
-          "doctor": {"id": Constants.tckSelectedDoctorId != 'DoctorId'
-              ? Constants.tckSelectedDoctorId
-              : '', "name": Constants.tckSelectedDoctor != 'Doctor'
-              ? Constants.tckSelectedDoctor
-              : ''},
-          "hospital": {"id": Constants.tckSelectedHospitalId != 'HospitalId'
-              ? Constants.tckSelectedHospitalId
-              : '', "name": Constants.tckSelectedHospital != 'Hospital'
-              ? Constants.tckSelectedHospital
-              : ''},
+          "doctor": {
+            "id": Constants.tckSelectedDoctorId != 'DoctorId'
+                ? Constants.tckSelectedDoctorId
+                : '',
+            "name": Constants.tckSelectedDoctor != 'Doctor'
+                ? Constants.tckSelectedDoctor
+                : ''
+          },
+          "hospital": {
+            "id": Constants.tckSelectedHospitalId != 'HospitalId'
+                ? Constants.tckSelectedHospitalId
+                : '',
+            "name": Constants.tckSelectedHospital != 'Hospital'
+                ? Constants.tckSelectedHospital
+                : ''
+          },
           /*"modeOfService": {
             "id": Constants.tckPrefMOSId != 'pref_mos_id'
                 ? Constants.tckPrefMOSId
@@ -2415,7 +2422,6 @@ class ApiBaseHelper {
                 ? Constants.tckPrefMOSName
                 : ''
           },*/
-
         },
       };
       var response = await ApiServices.post(_baseUrl + url,
@@ -2789,7 +2795,8 @@ class ApiBaseHelper {
     return UnitConfiguration.fromJson(responseJson);
   }
 
-  Future<dynamic> postNotificationSheelaQueue(String url, String jsonString) async {
+  Future<dynamic> postNotificationSheelaQueue(
+      String url, String jsonString) async {
     var responseJson;
 
     try {
