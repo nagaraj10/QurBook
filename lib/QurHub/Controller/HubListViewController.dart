@@ -49,8 +49,6 @@ class HubListViewController extends GetxController {
         return;
       }
       hubListResponse = HubListResponse.fromJson(json.decode(response.body));
-      printInfo(
-          info: hubListResponse.result.userDeviceCollection.length.toString());
       loadingData.value = false;
     } catch (e) {
       hubListResponse = null;
@@ -125,6 +123,7 @@ class HubListViewController extends GetxController {
         if (!response) {
           return;
         }
+        await getHubList();
       }
       _bleController.addingDevicesInHublist = true;
       searchingBleDevice.value = true;
