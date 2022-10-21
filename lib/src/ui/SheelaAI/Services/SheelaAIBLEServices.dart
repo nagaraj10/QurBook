@@ -69,7 +69,14 @@ class SheelaBLEController extends GetxController {
   }
 
   setupListenerForReadings() async {
-    _enableTimer();
+    try {
+      if (Platform.isAndroid && !checkForBLEEnableConditions()) {
+        return;
+      }
+      _enableTimer();
+    } catch (e) {
+      //print(e);
+    }
   }
 
   refreshTimeoutTimer() {
