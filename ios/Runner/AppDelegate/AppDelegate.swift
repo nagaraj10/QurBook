@@ -8,6 +8,10 @@ import IQKeyboardManagerSwift
 import SystemConfiguration.CaptiveNetwork
 import CoreLocation
 import CoreBluetooth
+import BleManager
+import GSH601_DeviceManager
+import DB62M_DeviceManager
+import LS202_DeviceManager
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate, SFSpeechRecognizerDelegate {
@@ -50,6 +54,9 @@ import CoreBluetooth
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
     var poPeripheral: CBPeripheral!
+    var SPO2Manager : GoldenSPO2Manager!
+    var BloodpressureManager : GoldenBloodpressureManager!
+    var LS202DeviceManager : GoldenLS202DeviceManager!
     var navigationController: UINavigationController?
     var resultForMethodChannel : FlutterResult!
     var locationManager: CLLocationManager?
@@ -838,190 +845,6 @@ extension AppDelegate: AVSpeechSynthesizerDelegate,MessagingDelegate {
     
 }
 
-extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripheralDelegate{
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-        case .unknown:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .resetting:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .unsupported:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .unauthorized:
-            eventSink?("permissiondenied|no permission granted")
-        case .poweredOff:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        case .poweredOn:
-            eventSink?("scanstarted|connection started")
-            centralManager.scanForPeripherals(withServices: [])
-        default:
-            eventSink?("enablebluetooth|please enable bluetooth")
-        }
-    }
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                        advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        
-        if let name =  advertisementData[Constants.BLENameData] as? String, name.lowercased().contains("blesmart"){
-            centralManager.stopScan()
-            let tempMacId = String(name.suffix(12))
-            let macID = tempMacId.inserting(reverse: false)
-            OHQDeviceManager.shared().scanForDevices(with: OHQDeviceCategory.any) {[weak self] deviceInfoKeys in
-                guard let self = self else { return  }
-                OHQDeviceManager.shared().stopScan()
-                self.idForBP = deviceInfoKeys[OHQDeviceInfoKey.identifierKey] as? UUID
-                if (self.idForBP) != nil{
-                    OHQDeviceManager.shared().startSession(withDevice: self.idForBP!, usingDataObserver: { dataType, data in
-                        if let ArrayData =  data as? NSArray,ArrayData.count > 0,let lastObj = ArrayData.lastObject as? NSDictionary{
-                            let lsOBj : [String:Any] = [
-                                "BloodPressureMeasurementStatusKey" : lastObj["bloodPressureMeasurementStatus"],
-                                "BloodPressureUnitKey" : lastObj["bloodPressureUnit"],
-                                "DiastolicKey" : lastObj["diastolic"],
-                                "MeanArterialPressureKey" : lastObj["meanArterialPressure"],
-                                "PulseRateKey" : lastObj["pulseRate"],
-                                "SystolicKey" : lastObj["systolic"],
-                                // "timeStamp" : lastObj["timeStamp"],
-                                "UserIndexKey" : lastObj["userIndex"]
-                            ];
-                            do {
-                                let jsonData = try JSONSerialization.data(withJSONObject: ["measurementRecords" : [lsOBj
-                                                                                                                  ]], options: JSONSerialization.WritingOptions.prettyPrinted)
-                                let jsonString = String(data: jsonData, encoding: .utf8)
-                                self.eventSink?("measurement|" + (jsonString ?? ""))
-                                if self.idForBP != nil {
-                                    OHQDeviceManager.shared().cancelSession(withDevice: self.idForBP!)
-                                    self.idForBP = nil
-                                }
-                            }
-                            catch let err {
-                                print(err)
-                            }
-                        }
-                    }, connectionObserver: {[weak self] state in
-                        guard let self = self else { return }
-                        if (state == OHQConnectionState.connected){
-                            self.eventSink?("macid|"+macID)
-                            self.eventSink?("bleDeviceType|BP")
-                        }
-                    }, completion: { completionReason in
-                        if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 10) { [self] in
-                                print("restarted");
-                                self.centralManager = CBCentralManager(delegate: self, queue: nil)
-                                self.centralManager.scanForPeripherals(withServices: [])
-                            }
-                        }
-                        
-                    }, options: [
-                        OHQSessionOptionKey.readMeasurementRecordsKey : true,
-                        OHQSessionOptionKey.connectionWaitTimeKey : 60
-                    ])
-                }
-            } completion: { completionReason in
-                if (completionReason == OHQCompletionReason.busy || completionReason == OHQCompletionReason.poweredOff){
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [self] in
-                        print("restarted");
-                        self.centralManager = CBCentralManager(delegate: self, queue: nil)
-                        self.centralManager.scanForPeripherals(withServices: [])
-                    }
-                }
-            }
-        }else if let newdata =  advertisementData[Constants.BLEManuData] as? Data,let serviceIdArray =  advertisementData[Constants.BLEAdvDataServiceUUIDs] as? NSArray,serviceIdArray.count > 0, let serviceId = serviceIdArray.firstObject as? CBUUID{
-            if serviceId == Constants.poServiceCBUUID{
-                let decodedString = newdata.hexEncodedString()
-                let macID = decodedString.inserting()
-                eventSink?("macid|"+macID)
-                eventSink?("bleDeviceType|SPO2")
-                poPeripheral = peripheral
-                poPeripheral.delegate = self
-                centralManager.stopScan()
-                centralManager.connect(poPeripheral)
-                
-            }
-        }
-    }
-    
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        eventSink?("connected|connected successfully!!!")
-        poPeripheral.discoverServices([Constants.poServiceCBUUID])
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
-        for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        guard let characteristics = service.characteristics else { return }
-        for characteristic in characteristics {
-            if characteristic.properties.contains(.read) {
-                peripheral.readValue(for: characteristic)
-            }
-            if characteristic.properties.contains(.notify) {
-                peripheral.setNotifyValue(true, for: characteristic)
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        switch characteristic.uuid {
-        case Constants.poMeasurementCharacteristicCBUUID:
-            spoReading(from: characteristic,peripheral:peripheral)
-        default:
-            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
-        }
-    }
-    
-    func spoReading(from characteristic: CBCharacteristic, peripheral: CBPeripheral)  {
-        guard let characteristicData = characteristic.value else { return  }
-        var index = 0
-        let byteArray = [UInt8](characteristicData)
-        while(index<byteArray.count){
-            let fingure = byteArray[index+2] & Constants.BIT_FINGER
-            var pulse = byteArray[index+2] & Constants.BIT_PLUSE_RATE_BIT7 << 1
-            pulse += byteArray[index+3] & Constants.BIT_PLUSE_RATE_BIT0_6
-            let spo = byteArray[index+4] & Constants.BIT_SPO2
-            if(fingure == 0 && spo < 101 && pulse != 127 && pulse != 255){
-                let data : [String:Any] = [
-                    "Status" : "Measurement",
-                    "deviceType" : "SPO2",
-                    "Data" : [
-                        "SPO2" : String(describing: spo),
-                        "Pulse" : String(describing: pulse)
-                    ]
-                ]
-                if let serlized = data.jsonStringRepresentation{
-                    print(serlized)
-                    eventSink?("measurement|"+serlized)
-                    eventSink = nil
-                    centralManager.stopScan()
-                    if( characteristic.isNotifying){
-                        peripheral.setNotifyValue(false, for: characteristic)
-                    }
-                }
-            }
-            index += 5
-        }
-    }
-    
-    func onListen(withArguments arguments: Any?,
-                  eventSink: @escaping FlutterEventSink) -> FlutterError? {
-        self.eventSink = eventSink
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        return nil
-    }
-    
-    func onCancel(withArguments arguments: Any?) -> FlutterError? {
-        eventSink = nil
-        centralManager.stopScan()
-        if idForBP != nil {
-            OHQDeviceManager.shared().cancelSession(withDevice: idForBP!)
-            idForBP = nil
-        }
-        return nil
-    }
-    
-}
+
 
 

@@ -12,22 +12,24 @@ import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../../common/keysofmodel.dart';
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/fhb_parameters.dart';
 import '../../../../constants/variable_constant.dart';
+import '../../../../reminders/QurPlanReminders.dart';
 import '../../../blocs/health/HealthReportListForUserBlock.dart';
 import '../../../model/CreateDeviceSelectionModel.dart';
 import '../../../model/GetDeviceSelectionModel.dart';
 import '../../../model/user/MyProfileModel.dart';
 import '../../../resources/repository/health/HealthReportListForUserRepository.dart';
-import '../Models/sheela_arguments.dart';
 import '../Models/DeviceStatus.dart';
 import '../Models/GoogleTTSRequestModel.dart';
 import '../Models/GoogleTTSResponseModel.dart';
 import '../Models/SheelaRequest.dart';
 import '../Models/SheelaResponse.dart';
+import '../Models/sheela_arguments.dart';
 import '../Services/SheelaAIAPIServices.dart';
 import '../Services/SheelaAIBLEServices.dart';
 
@@ -172,11 +174,9 @@ class SheelaAIController extends GetxController {
     conversations = [];
     sessionToken = const Uuid().v1();
     if (PreferenceUtil.getIfQurhomeisAcive() &&
-        (arguments?.isJumperDevice ||
-            arguments?.takeActiveDeviceReadings ||
-            arguments?.isFromBpReading)) {
+        (arguments?.takeActiveDeviceReadings ?? false)) {
       //BLE devices handling
-      bleController = SheelaBLEController();
+      bleController = Get.find();
       bleController.startSheelaBLEDeviceReadings();
       isLoading(true);
     } else {
@@ -721,22 +721,23 @@ class SheelaAIController extends GetxController {
     }
   }
 
-   getSheelaBadgeCount() async {
+  getSheelaBadgeCount() async {
     sheelaIconBadgeCount.value = 0;
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
-        if(value!=null){
-          if(value?.isSuccess){
-            if(value?.result!=null){
-              sheelaIconBadgeCount.value = value?.result?.queueCount??0;
-              print('----***count'+(value?.result?.queueCount??0).toString());
-            }else{
+        if (value != null) {
+          if (value?.isSuccess) {
+            if (value?.result != null) {
+              sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
+              print(
+                  '----***count' + (value?.result?.queueCount ?? 0).toString());
+            } else {
               sheelaIconBadgeCount.value = 0;
             }
-          }else{
+          } else {
             sheelaIconBadgeCount.value = 0;
           }
-        }else{
+        } else {
           sheelaIconBadgeCount.value = 0;
         }
       });
@@ -744,5 +745,4 @@ class SheelaAIController extends GetxController {
       sheelaIconBadgeCount.value = 0;
     }
   }
-
 }

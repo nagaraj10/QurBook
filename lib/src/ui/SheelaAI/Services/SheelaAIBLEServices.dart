@@ -8,59 +8,44 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../../../QurHub/Controller/hub_list_controller.dart';
+import '../../../../QurHub/Controller/HubListViewController.dart';
 import '../../../../Qurhome/BleConnect/ApiProvider/ble_connect_api_provider.dart';
 import '../../../../Qurhome/BleConnect/Models/ble_data_model.dart';
-import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
+import '../../../../Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import '../../../../common/CommonUtil.dart';
 import '../Controller/SheelaAIController.dart';
 import '../Models/SheelaResponse.dart';
+import '../Models/sheela_arguments.dart';
+import '../Views/SheelaAIMainScreen.dart';
 
-class SheelaBLEController {
-  SheelaAIController controller = Get.find<SheelaAIController>();
-  static const stream = EventChannel('QurbookBLE/stream');
+class SheelaBLEController extends GetxController {
+  SheelaAIController SheelaController;
+  HubListViewController hublistController;
+  Stream stream = EventChannel('QurbookBLE/stream').receiveBroadcastStream();
   StreamSubscription _timerSubscription;
-  HubListController hublistController;
-  QurhomeDashboardController qurhomeController;
+
   Timer timeOutTimer;
   final String conversationType = "BLESheelaConversations";
   List<SheelaResponse> playConversations = [];
   bool isPlaying = false;
   bool isCompleted = false;
+  bool isFromVitals = false;
+  bool isFromRegiment = false;
+  bool addingDevicesInHublist = false;
+  bool receivedData = false;
   AudioPlayer player;
+  int randomNum = 0;
 
-  startSheelaBLEDeviceReadings() {
-    final arguments = controller.arguments;
+  @override
+  void onInit() {
+    super.onInit();
     player = AudioPlayer();
     listnerForAudioPlayer();
-    isCompleted = false;
-    var msg = '';
-    if (arguments.isJumperDevice && (arguments.deviceType ?? '').isNotEmpty) {
-      String strText = CommonUtil().validString(arguments.deviceType);
-      if (strText.toLowerCase() == "weight") {
-        strText = "Weighing scale";
-      }
-      msg = "Your $strText is connected & reading values. Please wait";
-      setupListenerForReadings();
-    } else if (arguments.takeActiveDeviceReadings) {
-      msg = "Your SPO2 device is connected & reading values. Please wait";
-      setupListenerForReadings();
-    } else if (arguments.isFromBpReading) {
-      msg:
-      "Your BP device is connected & reading values. Please wait..";
-      updateBPUserData();
-    }
-    if (msg.isNotEmpty) {
-      addToConversationAndPlay(
-          SheelaResponse(recipientId: conversationType, text: msg));
-    }
-  }
-
-  addToConversationAndPlay(SheelaResponse conv) {
-    playConversations.add(conv);
-    playTTS();
+    SheelaController = Get.find();
+    hublistController = Get.find();
   }
 
   listnerForAudioPlayer() {
@@ -83,64 +68,246 @@ class SheelaBLEController {
     );
   }
 
-  setupListenerForReadings({bool forJumperDevices = false}) async {
+  setupListenerForReadings() async {
     _enableTimer();
-    timeOutTimer = Timer(
-      const Duration(seconds: 60),
-      () {
-        showFailure();
+  }
+
+  refreshTimeoutTimer() {
+    removeTimeOutTimer();
+    if (timeOutTimer == null) {
+      timeOutTimer = Timer(
+        const Duration(
+          seconds: 180,
+        ),
+        () {
+          showFailure();
+        },
+      );
+    }
+  }
+
+  void _enableTimer() {
+    if (_timerSubscription != null) {
+      return;
+    }
+
+    _timerSubscription = stream.listen(
+      (val) async {
+        final List<String> receivedValues = val.split('|');
+        if ((receivedValues ?? []).length > 0) {
+          switch (receivedValues.first ?? "") {
+            case "enablebluetooth":
+              FlutterToast().getToast(
+                receivedValues.last ?? 'Please enable the Bluetooth and re-try',
+                Colors.red,
+              );
+              if (addingDevicesInHublist)
+                hublistController.searchingBleDevice(false);
+              break;
+            case "permissiondenied":
+              FlutterToast().getToast(
+                receivedValues.last ??
+                    'Please enable the Bluetooth Permission and re-try',
+                Colors.red,
+              );
+              if (addingDevicesInHublist)
+                hublistController.searchingBleDevice(false);
+              break;
+            case "macid":
+              FlutterToast().getToast(
+                receivedValues.last,
+                Colors.red,
+              );
+              hublistController.bleMacId = CommonUtil().validString(
+                receivedValues.last,
+              );
+              break;
+            case "bleDeviceType":
+              FlutterToast().getToast(
+                receivedValues.last,
+                Colors.red,
+              );
+              hublistController.bleDeviceType = CommonUtil().validString(
+                receivedValues.last,
+              );
+              if (addingDevicesInHublist) {
+                hublistController.searchingBleDevice(false);
+                hublistController.navigateToAddDeviceScreen();
+                _disableTimer();
+                return;
+              }
+              break;
+            case "connected":
+              receivedData = false;
+              FlutterToast().getToast(
+                receivedValues.last,
+                Colors.red,
+              );
+              if (!checkForParedDevice()) {
+                _disableTimer();
+                return;
+              }
+              if (hublistController.bleDeviceType.toLowerCase() ==
+                      "SPO2".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "BP".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "weight".toLowerCase()) {
+                //show next method
+                if (isFromVitals || isFromRegiment) {
+                  Get.back();
+                }
+                Get.to(
+                  SheelaAIMainScreen(
+                    arguments: SheelaArgument(
+                      deviceType: hublistController.bleDeviceType,
+                      takeActiveDeviceReadings: true,
+                    ),
+                  ),
+                );
+              }
+              break;
+            case "measurement":
+              receivedData = true;
+              if (hublistController.bleDeviceType.toLowerCase() ==
+                  "BP".toLowerCase()) {
+                //show next method
+                if (SheelaController.isSheelaScreenActive) {
+                  updateUserData(
+                    data: receivedValues.last,
+                  );
+                  return;
+                }
+                if (isFromVitals || isFromRegiment) {
+                  Get.back();
+                }
+                Get.to(
+                  SheelaAIMainScreen(
+                    arguments: SheelaArgument(
+                      takeActiveDeviceReadings: true,
+                    ),
+                  ),
+                );
+                await Future.delayed(const Duration(seconds: 4));
+              }
+              updateUserData(
+                data: receivedValues.last,
+              );
+              break;
+            case "disconnected":
+              FlutterToast().getToast(
+                "Bluetooth Disconnected",
+                Colors.red,
+              );
+              break;
+            default:
+          }
+        }
       },
     );
   }
 
-  showFailure() async {
-    addToConversationAndPlay(
-      SheelaResponse(
-        recipientId: conversationType,
-        text: "Failed to save the values, Please try again",
-      ),
-    );
-    isCompleted = true;
-    await Future.delayed(const Duration(seconds: 2));
+  bool checkForParedDevice() {
+    try {
+      final devicesList =
+          (hublistController.hubListResponse.result.userDeviceCollection ?? []);
+      if (devicesList.isEmpty) {
+        //no paired devices
+        return false;
+      }
+      var index = -1;
+      index = devicesList.indexWhere(
+        (element) => (CommonUtil().validString(element.device.serialNumber) ==
+            hublistController.bleMacId),
+      );
+      return index >= 0;
+    } catch (e) {
+      printError(info: e.toString());
+      return false;
+    }
   }
 
-  void _enableTimer() {
-    _timerSubscription ??= stream.receiveBroadcastStream().listen((val) {
-      final List<String> receivedValues = val.split('|');
-      if ((receivedValues ?? []).length > 0) {
-        switch (receivedValues.first ?? "") {
-          case "enablebluetooth":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            break;
-          case "permissiondenied":
-            FlutterToast()
-                .getToast(receivedValues.last ?? 'Request Timeout', Colors.red);
-            showFailure();
-            break;
-          case "measurement":
-            updateUserData(data: receivedValues.last);
-            break;
-          case "disconnected":
-            FlutterToast().getToast("Disconnected", Colors.red);
-            showFailure();
-            break;
-          default:
+  checkForBLEEnableConditions() async {
+    try {
+      if (Platform.isAndroid) {
+        bool serviceEnabled = await CommonUtil().checkGPSIsOn();
+        bool isBluetoothEnable = false;
+        isBluetoothEnable = await CommonUtil().checkBluetoothIsOn();
+        if (!isBluetoothEnable) {
+          FlutterToast().getToast(
+              'Please turn on your bluetooth and try again', Colors.red);
+          return false;
+        } else if (!serviceEnabled) {
+          FlutterToast().getToast(
+              'Please turn on your GPS location services and try again',
+              Colors.red);
+          return false;
         }
+        return true;
+      } else {}
+    } catch (e) {
+      printError(info: e.toString());
+      return false;
+    }
+  }
+
+  startSheelaBLEDeviceReadings() {
+    final arguments = SheelaController.arguments;
+    isCompleted = false;
+    var msg = '';
+    if ((arguments.deviceType ?? '').isNotEmpty) {
+      String strText = CommonUtil().validString(arguments.deviceType);
+      if (strText.toLowerCase() == "weight") {
+        strText = "Weighing scale";
       }
-    });
+      msg = "Your $strText device is connected & reading values. Please wait";
+    }
+
+    if (msg.isNotEmpty) {
+      addToConversationAndPlay(
+        SheelaResponse(
+          recipientId: conversationType,
+          text: msg,
+        ),
+      );
+      refreshTimeoutTimer();
+    }
+  }
+
+  addToConversationAndPlay(SheelaResponse conv) {
+    playConversations.add(conv);
+    playTTS();
+  }
+
+  showFailure() async {
+    if (SheelaController.isSheelaScreenActive &&
+        !isCompleted &&
+        !receivedData) {
+      addToConversationAndPlay(
+        SheelaResponse(
+          recipientId: conversationType,
+          text: "Failed to save the values, Please try again",
+        ),
+      );
+      isCompleted = true;
+      await Future.delayed(const Duration(seconds: 2));
+    }
   }
 
   updateUserData({String data = ''}) async {
-    if ((data ?? '').isNotEmpty && controller.canSpeak) {
-      _disableTimer();
+    await Future.delayed(
+      const Duration(
+        seconds: 2,
+      ),
+    );
+    if ((data ?? '').isNotEmpty && SheelaController.canSpeak) {
+      // _disableTimer();
       try {
-        hublistController = Get.find<HubListController>();
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
-        model.hubId = hublistController.virtualHubId;
-        model.deviceId = hublistController.bleMacId.value;
+        // model.hubId = hublistController.virtualHubId;
+        model.deviceId = hublistController.bleMacId;
         model.eid = hublistController.eid;
         model.uid = hublistController.uid;
         final DateFormat formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
@@ -152,7 +319,9 @@ class SheelaBLEController {
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
         );
+
         if (!response) {
+          receivedData = false;
           showFailure();
         } else if (model.deviceType == "SPO2") {
           if ((model.data.sPO2 ?? '').isNotEmpty &&
@@ -174,38 +343,30 @@ class SheelaBLEController {
             );
             await Future.delayed(const Duration(seconds: 2));
           } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (model.deviceType == "BP") {
+          if ((model.data.systolic ?? '').isNotEmpty &&
+              (model.data.diastolic ?? '').isNotEmpty &&
+              (model.data.pulse ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text: "Thank you. Your BP systolic is ${model.data.systolic} "
+                    ", Diastolic is ${model.data.diastolic} "
+                    "and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
             showFailure();
           }
         }
-        // else if (model.deviceType.toLowerCase() == "weight") {
-        //   if ((model.data.weight ?? '').isNotEmpty) {
-        //     addToConversationAndPlay(
-        //       SheelaResponse(
-        //         recipientId: conversationType,
-        //         text:
-        //             "Thank you. Your Weight is  ${model.data.weight} kilograms is successfully recorded, Bye!",
-        //       ),
-        //     );
-        //   } else {
-        //     showFailure();
-        //   }
-        // } else if (model.deviceType == "BP") {
-        //   if ((model.data.systolic ?? '').isNotEmpty &&
-        //       (model.data.diastolic ?? '').isNotEmpty &&
-        //       (model.data.pulse ?? '').isNotEmpty) {
-        //     addToConversationAndPlay(
-        //       SheelaResponse(
-        //         recipientId: conversationType,
-        //         text:
-        //             "Thank you. Your Systolic is ${model.data.systolic},Diastolic is ${model.data.diastolic} and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
-        //       ),
-        //     );
-        //   } else {
-        //     showFailure();
-        //   }
-        // }
         isCompleted = true;
       } catch (e) {
+        receivedData = false;
         showFailure();
       }
     }
@@ -216,22 +377,23 @@ class SheelaBLEController {
       return;
     }
     final currentPlayingConversation = playConversations.first;
-    if (!controller.canSpeak) {
+    if (!SheelaController.canSpeak) {
       stopTTS();
       return;
     }
-    if (controller.useLocalTTSEngine) {
+    if (SheelaController.useLocalTTSEngine) {
       try {
         if ((currentPlayingConversation.text ?? '').isNotEmpty) {
-          controller.conversations.add(currentPlayingConversation);
-          controller.isMicListening.toggle();
+          SheelaController.conversations.add(currentPlayingConversation);
+          SheelaController.isMicListening.toggle();
           isPlaying = true;
-          final status = await controller
-              .playUsingLocalTTSEngineFor(currentPlayingConversation.text);
+          final status = await SheelaController.playUsingLocalTTSEngineFor(
+              currentPlayingConversation.text);
           playConversations.removeAt(0);
           isPlaying = false;
           if (isCompleted) {
             await Future.delayed(const Duration(seconds: 4));
+
             stopTTS();
           }
           if ((playConversations ?? []).isNotEmpty) {
@@ -239,31 +401,37 @@ class SheelaBLEController {
           }
         }
       } catch (e) {
-        //failed to play in local tts
         stopTTS();
       }
     } else {
       String textForPlaying;
       if ((currentPlayingConversation.text ?? '').isNotEmpty) {
-        final result = await controller
-            .getGoogleTTSForText(currentPlayingConversation.text);
+        final result = await SheelaController.getGoogleTTSForText(
+            currentPlayingConversation.text);
         if ((result.payload?.audioContent ?? '').isNotEmpty) {
           textForPlaying = result.payload.audioContent;
         }
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = const Base64Decoder().convert(textForPlaying);
+          final bytes = base64Decode(textForPlaying);
           if (bytes != null) {
             final dir = await getTemporaryDirectory();
-            final file = File('${dir.path}/tempAudioFile.mp3');
-            await file.writeAsBytes(bytes);
-            final path = "${dir.path}/tempAudioFile.mp3";
-            controller.conversations.add(currentPlayingConversation);
-            controller.isMicListening.toggle();
+            randomNum++;
+            if (randomNum > 4) {
+              randomNum = 0;
+            }
+            final tempFile =
+                await File('${dir.path}/tempAudioFile$randomNum.mp3').create();
+            await tempFile.writeAsBytesSync(
+              bytes,
+            );
+            SheelaController.conversations.add(currentPlayingConversation);
+            SheelaController.isMicListening.toggle();
             currentPlayingConversation.isPlaying.value = true;
             isPlaying = true;
-            await player.play(path, isLocal: true);
+            await player.play('${dir.path}/tempAudioFile$randomNum.mp3',
+                isLocal: true);
           }
         } catch (e) {
           //failed play the audio
@@ -276,66 +444,50 @@ class SheelaBLEController {
 
   stopTTS() {
     player.stop();
-    if (controller.useLocalTTSEngine) {
-      controller.playUsingLocalTTSEngineFor("", close: true);
+    if (SheelaController.useLocalTTSEngine) {
+      SheelaController.playUsingLocalTTSEngineFor("", close: true);
     }
     playConversations = [];
     isPlaying = false;
     _disableTimer();
-    controller.isMicListening(false);
-    controller.bleController = null;
-    if (controller.isSheelaScreenActive) {
+    SheelaController.isMicListening(false);
+    SheelaController.bleController = null;
+    if (SheelaController.isSheelaScreenActive) {
+      if (isFromVitals) {
+        Future.delayed(const Duration(seconds: 1)).then((value) {
+          Get.find<VitalDetailController>().getData();
+        });
+      }
+      if (isFromRegiment) {
+        Future.delayed(const Duration(seconds: 1)).then((value) {
+          Get.find<QurhomeRegimenController>().currLoggedEID.value =
+              hublistController.eid;
+          Get.find<QurhomeRegimenController>().getRegimenList();
+        });
+      }
       Get.back();
     }
   }
 
-  void _disableTimer() {
-    if (_timerSubscription != null) {
-      _timerSubscription.cancel();
-      _timerSubscription = null;
-    }
+  void stopScanning() {
+    _disableTimer();
+  }
+
+  removeTimeOutTimer() {
     if (timeOutTimer != null) {
       timeOutTimer.cancel();
       timeOutTimer = null;
     }
   }
 
-  updateBPUserData() async {
-    try {
-      hublistController = Get.find<HubListController>();
-      qurhomeController = Get.find<QurhomeDashboardController>();
-      final now = DateTime.now();
-      final formatterDateTime = DateFormat('yyyy-MM-dd HH:mm:ss');
-      final String actualDateTime = formatterDateTime.format(now);
-
-      final bool response = await BleConnectApiProvider()
-          .uploadBleBPDataReadings(
-              ackLocal: actualDateTime,
-              hubId: hublistController.virtualHubId,
-              eId: hublistController.eid,
-              uId: hublistController.uid,
-              qurHomeBpScanResult: qurhomeController?.qurHomeBpScanResultModel);
-      if (response &&
-          qurhomeController
-                  ?.qurHomeBpScanResultModel?.measurementRecords.first !=
-              null) {
-        final data = qurhomeController
-            ?.qurHomeBpScanResultModel?.measurementRecords.first;
-        addToConversationAndPlay(
-          SheelaResponse(
-            recipientId: conversationType,
-            text: "Thank you. Your BP systolic is ${data.systolicKey} "
-                ", Diastolic is ${data.diastolicKey} "
-                "and Pulse is ${data.pulseRateKey} is successfully recorded, Bye!",
-          ),
-        );
-      } else {
-        showFailure();
-      }
-
-      isCompleted = true;
-    } catch (e) {
-      showFailure();
+  void _disableTimer() {
+    isFromRegiment = false;
+    addingDevicesInHublist = false;
+    isFromVitals = false;
+    if (_timerSubscription != null) {
+      _timerSubscription.cancel();
+      _timerSubscription = null;
     }
+    removeTimeOutTimer();
   }
 }

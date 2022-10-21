@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/Qurhome/BleConnect/Controller/ble_connect_controller.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';

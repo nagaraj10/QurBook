@@ -12,16 +12,17 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_logs/flutter_logs.dart' as applog;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/UnitConfiguration.dart';
 import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
-import 'QurHub/View/hub_list_screen.dart';
 import 'add_provider_plan/service/PlanProviderViewModel.dart';
 import 'caregiverAssosication/caregiverAPIProvider.dart';
 import 'chat_socket/view/ChatDetail.dart';
@@ -468,7 +469,16 @@ class _MyFHBState extends State<MyFHB> {
     //gettingResponseFromNative();
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
-    //Get.put(SheelaAIController());
+    Get.put(
+      HubListViewController(),
+    );
+    Get.lazyPut(
+      () => SheelaAIController(),
+    );
+    Get.lazyPut(
+      () => SheelaBLEController(),
+    );
+
     //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);

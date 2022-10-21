@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/Orders/View/OrdersView.dart';
-import 'package:myfhb/QurHub/View/hub_list_screen.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 
 import 'package:myfhb/claim/screen/ClaimList.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
@@ -25,7 +26,6 @@ import '../../../constants/variable_constant.dart' as variable;
 import '../../../authentication/constants/constants.dart';
 import '../../../constants/router_variable.dart' as router;
 
-
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer(
       {@required this.myProfile,
@@ -40,10 +40,12 @@ class NavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('*********************************');
-    print(userChangedbool);
+    // print('*********************************');
+    // print(userChangedbool);
     return Container(
-       width: CommonUtil().isTablet ? MediaQuery.of(context).size.width * 0.75 : null,
+      width: CommonUtil().isTablet
+          ? MediaQuery.of(context).size.width * 0.75
+          : null,
       child: Drawer(
         child: Container(
           color: Colors.white,
@@ -189,7 +191,32 @@ class NavigationDrawer extends StatelessWidget {
                         onPressed: () async {
                           try {
                             Get.back();
-                            Get.to(() => HubListScreen());
+                            // Get.to(
+                            //   () => HubListScreen(),
+                            //   binding: BindingsBuilder(
+                            //     () {
+                            //       if (!Get.isRegistered<
+                            //           HubListController>()) {
+                            //         Get.lazyPut(
+                            //           () => HubListController(),
+                            //         );
+                            //       }
+                            //     },
+                            //   ),
+                            // );
+                            Get.to(
+                              () => HubListView(),
+                              binding: BindingsBuilder(
+                                () {
+                                  if (!Get.isRegistered<
+                                      HubListViewController>()) {
+                                    Get.lazyPut(
+                                      () => HubListViewController(),
+                                    );
+                                  }
+                                },
+                              ),
+                            );
                           } catch (e) {
                             //print(e);
                           }
@@ -310,7 +337,8 @@ class NavigationDrawer extends StatelessWidget {
                               }
                             },
                           ),
-                          visible: userChangedbool&&CommonUtil.REGION_CODE == 'IN'),
+                          visible: userChangedbool &&
+                              CommonUtil.REGION_CODE == 'IN'),
                       DrawerTile(
                         title: variable.strLogout,
                         iconWidget: SvgPicture.asset(
@@ -335,7 +363,6 @@ class NavigationDrawer extends StatelessWidget {
   }
 
   Widget getNameWidget() {
-
     MyProfileModel myProfile;
     var name = "";
     var phoneNumber = "";
@@ -343,16 +370,15 @@ class NavigationDrawer extends StatelessWidget {
     try {
       myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
       name = toBeginningOfSentenceCase((myProfile?.result?.name != null &&
-                  myProfile?.result?.name != '')
-              ? myProfile?.result?.name?.capitalizeFirstofEach
-              : myProfile?.result?.firstName != null &&
-                      myProfile?.result?.lastName != null
-                  ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
-                  : '');
-      phoneNumber =
-              (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
-                  ? myProfile?.result?.userContactCollection3[0].phoneNumber
-                  : '';
+              myProfile?.result?.name != '')
+          ? myProfile?.result?.name?.capitalizeFirstofEach
+          : myProfile?.result?.firstName != null &&
+                  myProfile?.result?.lastName != null
+              ? ('${myProfile?.result?.firstName?.capitalizeFirstofEach ?? ''} ${myProfile?.result?.lastName?.capitalizeFirstofEach}')
+              : '');
+      phoneNumber = (myProfile?.result?.userContactCollection3?.length ?? 0) > 0
+          ? myProfile?.result?.userContactCollection3[0].phoneNumber
+          : '';
     } catch (e) {
       //print(e);
     }

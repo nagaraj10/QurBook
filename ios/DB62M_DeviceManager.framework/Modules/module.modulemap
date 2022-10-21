@@ -1,0 +1,6 @@
+framework module DB62M_DeviceManager {
+  umbrella header "DB62M_DeviceManager.h"
+
+  export *
+  module * { export * }
+}

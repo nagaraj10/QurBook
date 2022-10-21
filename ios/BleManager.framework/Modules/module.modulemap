@@ -1,0 +1,6 @@
+framework module BleManager {
+  umbrella header "BleManager.h"
+
+  export *
+  module * { export * }
+}
