@@ -104,8 +104,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                                 : Colors.white,
                                           ),
                                     ),
-                                    if ((chat.imageURL ?? []).isNotEmpty)
-                                      getImageFromUrl(),
+                                    getImageURLFromCondition(),
                                     buttonWidgets()
                                   ],
                                 ),
@@ -332,7 +331,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     }
   }
 
-  Widget getImageFromUrl() {
+  Widget getImageFromUrl(String url) {
     return Container(
         constraints: BoxConstraints(
           maxWidth: 1.sw,
@@ -356,11 +355,11 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   Get.context,
                   MaterialPageRoute(
                       builder: (context) => ImageSlider(
-                            imageURl: chat.imageURL,
+                            imageURl: url,
                           )));
             },
             child: Image.network(
-              chat.imageURL,
+              url,
               fit: BoxFit.fill,
               width: 200.0.h,
               height: 200.0.h,
@@ -370,5 +369,33 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                 Constants.KEY_OffSet: CommonUtil().setTimeZone()
               },
             )));
+  }
+
+  getImageURLFromCondition() {
+    List<Widget> column = [];
+    try {
+      if ((chat.imageURL ?? []).isNotEmpty)
+        return getImageFromUrl(chat.imageURL);
+    } catch (e) {}
+
+    if (chat.imageURLS != null) {
+      if (chat.imageURLS.length > 0) {
+        for (String imgURL in chat.imageURLS) {
+          if (imgURL != null && imgURL != '') {
+            column.add(getImageFromUrl(imgURL));
+          }
+        }
+        if (column.length > 0) {
+          return Container(
+              child: Column(
+            children: column,
+          ));
+        } else {
+          return SizedBox.shrink();
+        }
+      }
+    } else {
+      return SizedBox.shrink();
+    }
   }
 }
