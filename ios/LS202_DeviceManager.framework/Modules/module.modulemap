@@ -1,0 +1,6 @@
+framework module LS202_DeviceManager {
+  umbrella header "LS202_DeviceManager.h"
+
+  export *
+  module * { export * }
+}

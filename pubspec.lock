@@ -43,13 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.6.1"
-  audioplayer:
+  audioplayers:
     dependency: "direct main"
     description:
-      name: audioplayer
+      name: audioplayers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.1"
+    version: "0.20.1"
   auto_size_text:
     dependency: "direct main"
     description:
@@ -330,13 +330,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  esptouch_flutter:
-    dependency: "direct main"
-    description:
-      name: esptouch_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   expandable:
     dependency: "direct main"
     description:
@@ -344,6 +337,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.1"
+  facebook_app_events:
+    dependency: "direct main"
+    description:
+      name: facebook_app_events
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.16.0"
   fake_async:
     dependency: transitive
     description:
@@ -524,13 +524,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.6"
-  flutter_arc_speed_dial:
-    dependency: "direct main"
-    description:
-      name: flutter_arc_speed_dial
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   flutter_blurhash:
     dependency: transitive
     description:
@@ -636,13 +629,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.3+1"
-  flutter_mdns_plugin:
-    dependency: "direct main"
-    description:
-      name: flutter_mdns_plugin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -768,8 +754,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "C:\\\\FlutterProjects\\\\myfhb-flutter-common"
-      relative: false
+      path: "../fhbCommon"
+      relative: true
     source: path
     version: "0.0.1"
   google_maps_flutter:
@@ -807,13 +793,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0"
-  gradient_bottom_navigation_bar:
-    dependency: "direct main"
-    description:
-      name: gradient_bottom_navigation_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+4"
   group_list_view:
     dependency: "direct main"
     description:
@@ -842,6 +821,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.0"
+  html_unescape:
+    dependency: "direct main"
+    description:
+      name: html_unescape
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   http:
     dependency: "direct main"
     description:
@@ -996,6 +982,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.0"
+  mime_type:
+    dependency: "direct main"
+    description:
+      name: mime_type
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   money_formatter:
     dependency: "direct main"
     description:
@@ -1547,13 +1540,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.10"
-  wifi_iot:
-    dependency: "direct main"
-    description:
-      name: wifi_iot
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.15"
   win32:
     dependency: transitive
     description:

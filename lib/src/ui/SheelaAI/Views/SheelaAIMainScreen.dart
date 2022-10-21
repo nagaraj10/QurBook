@@ -65,6 +65,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     animationController?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     controller.stopTTS();
+    controller.isSheelaScreenActive = false;
+    if (controller.bleController != null) {
+      controller.bleController.stopTTS();
+      controller.bleController.stopScanning();
+      controller.bleController.isFromRegiment = false;
+      controller.bleController.addingDevicesInHublist = false;
+      controller.bleController.isFromVitals = false;
+      controller.bleController = null;
+    }
     super.dispose();
   }
 
@@ -380,10 +389,13 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     Get.back();
                     PreferenceUtil.saveString(SHEELA_LANG,
                         CommonUtil.langaugeCodes[value ?? 'undef']);
-                    controller.getDeviceSelectionValues(
+                    controller
+                        .getDeviceSelectionValues(
                       preferredLanguage: value,
-                    ).then((value1) {
-                      controller.updateDeviceSelectionModel(preferredLanguage: value);
+                    )
+                        .then((value1) {
+                      controller.updateDeviceSelectionModel(
+                          preferredLanguage: value);
                     });
                   },
                 ),

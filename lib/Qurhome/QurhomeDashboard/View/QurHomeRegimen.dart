@@ -9,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
@@ -24,6 +24,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/regiment/view/widgets/regiment_webview.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
+import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAICommonTTSServices.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -54,8 +55,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   String snoozeValue = "5 mins";
   List<RegimentDataModel> regimenList = [];
 
-  var hubController = Get.find<HubListController>();
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
+  HubListViewController hubController = Get.find();
+  SheelaBLEController _sheelaBLEController;
   var chatGetXController = Get.find<ChatUserListController>();
 
   AnimationController animationController;
@@ -867,17 +868,37 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             regimen.otherinfo.toJson().toString().contains('1')) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
-      var dashboardController = Get.find<QurhomeDashboardController>();
+      if (!Get.isRegistered<SheelaBLEController>()) {
+        Get.put(SheelaBLEController());
+      }
+      _sheelaBLEController = Get.find();
       if (((regimen.title ?? '').isNotEmpty) &&
           ((removeAllWhitespaces(regimen.title).toLowerCase() == "spo2") ||
               (removeAllWhitespaces(regimen.title).toLowerCase() == "pulse"))) {
         if (checkCanEdit(regimen)) {
-          var dashboardController = Get.find<QurhomeDashboardController>();
-          dashboardController.checkForConnectedDevices(
-            false,
-            eid: regimen.eid,
-            uid: regimen.uid,
+          hubController.eid = regimen.eid;
+          hubController.uid = regimen.uid;
+          CommonUtil().dialogForScanDevices(
+            Get.context,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  eId: regimen.eid,
+                ),
+              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+            },
+            onPressCancel: () async {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+            },
+            title: strConnectPulseMeter,
+            isFromVital: false,
           );
+          _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -894,7 +915,27 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         if (checkCanEdit(regimen)) {
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
-          qurhomeDashboardController.scanBpSessionStart(isFromVitals: false);
+          CommonUtil().dialogForScanDevices(
+            Get.context,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  eId: regimen.eid,
+                ),
+              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+            },
+            onPressCancel: () async {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+            },
+            title: strConnectBpMeter,
+            isFromVital: false,
+          );
+          _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -908,15 +949,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       } else if (((regimen.title ?? '').isNotEmpty) &&
           (removeAllWhitespaces(regimen.title).toLowerCase() == "weight")) {
         if (checkCanEdit(regimen)) {
-          Get.toNamed(
-            rt_Sheela,
-            arguments: SheelaArgument(
-              eId: regimen.eid,
-            ),
-          ).then((value) => {
-                /*controller.getRegimenList()*/ controller
-                    .showCurrLoggedRegimen(regimen)
-              });
+          hubController.eid = regimen.eid;
+          hubController.uid = regimen.uid;
+          CommonUtil().dialogForScanDevices(
+            Get.context,
+            onPressManual: () {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  eId: regimen.eid,
+                ),
+              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+            },
+            onPressCancel: () async {
+              Get.back();
+              _sheelaBLEController.stopTTS();
+            },
+            title: strConnectBpMeter,
+            isFromVital: false,
+          );
+          _sheelaBLEController.isFromRegiment = true;
+          _sheelaBLEController.setupListenerForReadings();
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -935,10 +990,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {
-                /*controller.getRegimenList()*/ controller
-                    .showCurrLoggedRegimen(regimen)
-              });
+          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)

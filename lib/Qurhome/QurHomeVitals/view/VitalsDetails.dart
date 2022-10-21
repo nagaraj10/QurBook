@@ -9,7 +9,6 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/QurHub/Controller/hub_list_controller.dart';
 import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalDetailController.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/viewModel/VitalListController.dart';
@@ -101,8 +100,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   var commonConstants = CommonConstants();
   final controllerGetx = Get.put(VitalDetailController());
-  var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
-  var hubController;
+  // var qurhomeDashboardController = Get.find<QurhomeDashboardController>();
 
   AnimationController animationController;
 
@@ -130,21 +128,9 @@ class _VitalsDetailsState extends State<VitalsDetails>
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
       });
-
+      controllerGetx.deviceName = widget.device_name;
       controllerGetx.onTapFilterBtn(0);
-      hubController = Get.find<HubListController>();
-      initGetX().then((value) {
-        if ((hubController.hubListResponse.result.userDeviceCollection ?? [])
-                .length >
-            0) {
-          controllerGetx.updateisShowTimerDialog(true);
-          if (widget.device_name == strOxgenSaturation) {
-            initBleTimer();
-          } else if (widget.device_name == strDataTypeBP) {
-            initBpScan();
-          }
-        }
-      });
+      controllerGetx.checkForBleDevices();
     } catch (e) {
       print(e);
     }
@@ -182,25 +168,25 @@ class _VitalsDetailsState extends State<VitalsDetails>
     }
   }
 
-  void initBleTimer() async {
-    try {
-      qurhomeDashboardController.checkForConnectedDevices(true);
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void initBleTimer() async {
+  //   try {
+  //     qurhomeDashboardController.checkForConnectedDevices(true);
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  void initBpScan() {
-    qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
-  }
+  // void initBpScan() {
+  //   qurhomeDashboardController.scanBpSessionStart(isFromVitals: true);
+  // }
 
   void notify() {
     try {
       if (_counter == 0) {
         closeDialog();
-        if (!qurhomeDashboardController.foundBLE.value) {
-          toast.getToast(NoDeviceFound, Colors.red);
-        }
+        // if (!qurhomeDashboardController.foundBLE.value) {
+        //   toast.getToast(NoDeviceFound, Colors.red);
+        // }
       }
     } catch (e) {
       print(e);
@@ -352,83 +338,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
     );
   }
 
-  Future<void> initGetX() async {
-    switch (widget.device_name) {
-      case strDataTypeBP:
-        {
-          controllerGetx.fetchBPDetailsQurHome(
-              filter: getFilterData(0), isLoading: true);
-        }
-        break;
-      case strGlusoceLevel:
-        {
-          controllerGetx.fetchGLDetailsQurHome(
-              filter: getFilterData(0), isLoading: true);
-        }
-        break;
-      case strOxgenSaturation:
-        {
-          controllerGetx.fetchOXYDetailsQurHome(
-              filter: getFilterData(0), isLoading: true);
-        }
-        break;
-      case strWeight:
-        {
-          controllerGetx.fetchWVDetailsQurHome(
-              filter: getFilterData(0), isLoading: true);
-        }
-        break;
-      case strTemperature:
-        {
-          controllerGetx.fetchTMPDetailsQurHome(
-              filter: getFilterData(0), isLoading: true);
-        }
-        break;
-      default:
-        {
-          //statements;
-        }
-        break;
-    }
-  }
-
-  void filterRefresh(int selected) {
-    switch (widget.device_name) {
-      case strDataTypeBP:
-        {
-          controllerGetx.fetchBPDetailsQurHome(filter: getFilterData(selected));
-        }
-        break;
-      case strGlusoceLevel:
-        {
-          controllerGetx.fetchGLDetailsQurHome(filter: getFilterData(selected));
-        }
-        break;
-      case strOxgenSaturation:
-        {
-          controllerGetx.fetchOXYDetailsQurHome(
-              filter: getFilterData(selected));
-        }
-        break;
-      case strWeight:
-        {
-          controllerGetx.fetchWVDetailsQurHome(filter: getFilterData(selected));
-        }
-        break;
-      case strTemperature:
-        {
-          controllerGetx.fetchTMPDetailsQurHome(
-              filter: getFilterData(selected));
-        }
-        break;
-      default:
-        {
-          //statements;
-        }
-        break;
-    }
-  }
-
   @override
   void dispose() {
     try {
@@ -500,7 +409,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
                           Color(CommonUtil().getQurhomePrimaryColor()),
                       onTab: (selected) {
                         controllerGetx.onTapFilterBtn(selected);
-                        filterRefresh(selected);
                       },
                     ),
                   ],
@@ -533,7 +441,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
             ),
           ).then((value) {
             controllerGetx.onTapFilterBtn(0);
-            filterRefresh(0);
           });
           /* Navigator.of(context).push(
             MaterialPageRoute(
@@ -644,25 +551,6 @@ class _VitalsDetailsState extends State<VitalsDetails>
         toast.getToast('Unable to delete the record', Colors.red);
       }
     });
-  }
-
-  String getFilterData(int selectedIndex) {
-    String filterData;
-
-    switch (selectedIndex) {
-      case 0:
-        return filterData = filterApiDay;
-        break;
-      case 1:
-        return filterData = filterApiWeek;
-        break;
-      case 2:
-        return filterData = filterApiMonth;
-        break;
-      default:
-        return filterData = '';
-        break;
-    }
   }
 
   void createDeviceRecords(String deviceName) async {

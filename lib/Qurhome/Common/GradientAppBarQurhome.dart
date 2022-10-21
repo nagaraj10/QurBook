@@ -11,17 +11,20 @@ class _GradientAppBarState extends State<GradientAppBarQurhome> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[
-                Color(new CommonUtil().getQurhomePrimaryColor()),
-                Color(new CommonUtil().getQurhomeGredientColor())
-              ],
-              stops: [
-                0.3,
-                1.0
-              ])),
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: <Color>[
+            Color(
+              CommonUtil().getQurhomePrimaryColor(),
+            ),
+            Color(
+              CommonUtil().getQurhomeGredientColor(),
+            )
+          ],
+          stops: [0.3, 1.0],
+        ),
+      ),
     );
   }
 }

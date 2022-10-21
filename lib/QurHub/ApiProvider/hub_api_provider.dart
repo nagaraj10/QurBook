@@ -1,15 +1,14 @@
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
-import 'package:myfhb/QurHub/Controller/add_network_controller.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/HeaderRequest.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/src/resources/network/api_services.dart';
+import '../../common/CommonUtil.dart';
+import '../../common/PreferenceUtil.dart';
+import '../../constants/HeaderRequest.dart';
+import '../../constants/fhb_constants.dart';
+import '../../constants/fhb_query.dart';
+import '../../constants/variable_constant.dart';
+import '../../src/resources/network/AppException.dart';
+import '../../src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
@@ -17,16 +16,14 @@ class HubApiProvider {
   final String _baseUrl = BASE_URL;
 
   Future<dynamic> getHubList() async {
-    http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
     try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.get(
+      final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final responseJson = await ApiServices.get(
         '${CommonUtil.BASE_URL_QURHUB}user-hub/$userId',
         headers: header,
       );
+      printInfo(info: responseJson.body);
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
@@ -39,13 +36,36 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> saveDevice(String hubId, String deviceId, String nickName,
-      String userId, String deviceType) async {
+  Future<dynamic> saveNewDevice(Map data) async {
+    try {
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final body = json.encode(data);
+      printInfo(info: body);
+      final responseJson = await ApiServices.post(
+        '${CommonUtil.BASE_URL_QURHUB}user-device',
+        headers: header,
+        body: body,
+      );
+      if (responseJson.statusCode == 200) {
+        return responseJson;
+      }
+      return null;
+    } on SocketException {
+      throw FetchDataException(strNoInternet);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<dynamic> saveDevice(
+    String hubId,
+    String deviceId,
+    String nickName,
+    String userId,
+    String deviceType,
+  ) async {
     http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    // var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    var data = {
+    final data = {
       DEVICE_ID: deviceId,
       DEVICE_TYPE: deviceType,
       USER_HUB_ID: hubId,
@@ -53,13 +73,14 @@ class HubApiProvider {
       DEVICE_NAME: nickName,
       ADDITION_DETAILS: {}
     };
-
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final body = json.encode(data);
+      printInfo(info: body);
       responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-device',
         headers: header,
-        body: json.encode(data),
+        body: body,
       );
       if (responseJson.statusCode == 200) {
         return responseJson;
@@ -73,37 +94,31 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> unPairHub(String hubId) async {
-    http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    var data = {"userHubId": hubId};
-    try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      responseJson = await ApiServices.post(
-        '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
-        headers: header,
-        body: json.encode(data),
-      );
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return null;
-      }
-    } on SocketException {
-      throw FetchDataException(strNoInternet);
-    } catch (e) {
-      return null;
-    }
-  }
+  // Future<dynamic> unPairHub(String hubId) async {
+  //   http.Response responseJson;
+  //   try {
+  //     final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+  //     final data = {"userHubId": hubId};
+  //     final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+  //     responseJson = await ApiServices.post(
+  //       '${CommonUtil.BASE_URL_QURHUB}user-hub/unpair-hub',
+  //       headers: header,
+  //       body: json.encode(data),
+  //     );
+  //     if (responseJson.statusCode == 200) {
+  //       return responseJson;
+  //     } else {
+  //       return null;
+  //     }
+  //   } on SocketException {
+  //     throw FetchDataException(strNoInternet);
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 
   Future<dynamic> unPairDevice(String deviceId) async {
     http.Response responseJson;
-    final url = qr_hub + '/';
-    await PreferenceUtil.init();
-    var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-
     try {
       var header = await HeaderRequest().getRequestHeadersWithoutOffset();
       responseJson = await ApiServices.delete(
@@ -122,97 +137,23 @@ class HubApiProvider {
     }
   }
 
-  Future<dynamic> callConnectWifi(String wifiName, String password) async {
-    try {
-      final AddNetworkController addNetworkController = Get.find();
-      http.Response responseJson;
-
-      responseJson = await ApiServices.post(
-        "http://${addNetworkController.strIpAddress.value}/save?J=1&A=$wifiName&K=$password&Action=Save",
-        timeOutSeconds: 50,
-      );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
-    } catch (e) {}
-  }
-
-  Future<dynamic> callHubId() async {
-    try {
-      http.Response responseJson;
-      if (Platform.isIOS) {
-        responseJson = await ApiServices.get(
-          GET_HUB_ID,
-        );
-      } else {
-        final AddNetworkController addNetworkController = Get.find();
-        var headers = {"accept-content": "application/json"};
-        responseJson = await ApiServices.get(
-          "http://${addNetworkController.strIpAddress.value}/gethubid",
-          headers: headers,
-        );
-      }
-      return responseJson;
-    } catch (e) {
-      print(e.toString());
-      return "";
-    }
-  }
-
-  Future<dynamic> callHubIdConfig(String hubId, String nickName) async {
-    http.Response responseJson;
-    await PreferenceUtil.init();
-    try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      var data = {
-        SERIAL_NUMBER: hubId,
-        NICK_NAME: nickName,
-        ADDITION_DETAILS: {},
-      };
-      responseJson = await ApiServices.post(
-        '${CommonUtil.BASE_URL_QURHUB}user-hub',
-        headers: header,
-        body: json.encode(data),
-        timeOutSeconds: 50,
-      );
-
-      if (responseJson.statusCode == 200) {
-        return responseJson;
-      } else {
-        return responseJson;
-      }
-    } on SocketException {
-      throw FetchDataException(strNoInternet);
-    } catch (e) {
-      return null;
-    }
-  }
-
   Future<dynamic> callCreateVirtualHub() async {
-    http.Response responseJson;
-    await PreferenceUtil.init();
     try {
-      var header = await HeaderRequest().getRequestHeadersWithoutOffset();
-      var data = {
+      final header = await HeaderRequest().getRequestHeadersWithoutOffset();
+      final data = {
         ISVIRTUALHUB: true,
       };
-      responseJson = await ApiServices.post(
+      final responseJson = await ApiServices.post(
         '${CommonUtil.BASE_URL_QURHUB}user-hub',
         headers: header,
         body: json.encode(data),
         timeOutSeconds: 50,
       );
-
       if (responseJson.statusCode == 200) {
         return responseJson;
       } else {
         return responseJson;
       }
-    } on SocketException {
-      throw FetchDataException(strNoInternet);
     } catch (e) {
       return null;
     }

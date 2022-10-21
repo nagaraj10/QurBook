@@ -1,0 +1,6 @@
+framework module GSH601_DeviceManager {
+  umbrella header "GSH601_DeviceManager.h"
+
+  export *
+  module * { export * }
+}
