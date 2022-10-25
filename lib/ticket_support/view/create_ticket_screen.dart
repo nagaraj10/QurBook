@@ -1269,11 +1269,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 field.isLab) {
               if (CommonUtil.REGION_CODE == "IN") {
                 if (lab.text.isNotEmpty) {
-                  /*tckConstants.tckSelectedHospital = hospital.text;
-                                tckConstants.tckSelectedHospitalId = hosId;*/
+                  controller.dynamicTextFiledObj[field.name] =
+                      lab.text.toString();
                 } else if (field.isRequired) {
                   showAlertMsg(CommonConstants.ticketLab);
                   return;
+                }
+              } else {
+                if (controller.selPrefLab.value != "Select") {
+                  controller.dynamicTextFiledObj[field.name] =
+                      controller.selPrefLab.value;
                 }
               }
             }
@@ -1281,6 +1286,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (field.type == tckConstants.tckTypeDate && field.isRequired) {
               if (preferredDateController.text.isNotEmpty) {
                 tckConstants.tckPrefDate =
+                    preferredDateController.text.toString();
+                controller.dynamicTextFiledObj[field.name] =
                     preferredDateController.text.toString();
               } else if (field.isRequired) {
                 showAlertMsg(CommonConstants.ticketDate);
@@ -2103,12 +2110,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   ? CommonUtil().validString(field.selValueDD.id)
                   : "";
               tckConstants.tckPrefMOSName = strMOS;
-              if (field.name.contains("mode_of_service")) {
-                controller.dynamicTextFiledObj["modeOfService"] =
-                    field.selValueDD;
-              } else {
-                controller.dynamicTextFiledObj[field.name] = field.selValueDD;
-              }
+              controller.dynamicTextFiledObj[field.name] = field.selValueDD;
             } else if (field.isRequired) {
               showAlertMsg("Please choose " + displayFieldName(field));
               return;
@@ -2120,6 +2122,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 CommonUtil().validString(preferredTimeController.text);
             if (strTime.isNotEmpty) {
               tckConstants.tckPrefTime = strTime;
+              controller.dynamicTextFiledObj[field.name] = strTime;
             } else if(field.isRequired) {
               showAlertMsg(CommonConstants.ticketTime);
               return;
