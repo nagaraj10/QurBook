@@ -378,23 +378,27 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         return getImageFromUrl(chat.imageURL);
     } catch (e) {}
 
-    if (chat.imageURLS != null) {
-      if (chat.imageURLS.length > 0) {
-        for (String imgURL in chat.imageURLS) {
-          if (imgURL != null && imgURL != '') {
-            column.add(getImageFromUrl(imgURL));
+    try {
+      if (chat.imageURLS != null) {
+        if (chat.imageURLS.length > 0) {
+          for (String imgURL in chat.imageURLS) {
+            if (imgURL != null && imgURL != '' && imgURL != 'null') {
+              column.add(getImageFromUrl(imgURL));
+            }
+          }
+          if (column.length > 0) {
+            return Container(
+                child: Column(
+              children: column,
+            ));
+          } else {
+            return SizedBox.shrink();
           }
         }
-        if (column.length > 0) {
-          return Container(
-              child: Column(
-            children: column,
-          ));
-        } else {
-          return SizedBox.shrink();
-        }
+      } else {
+        return SizedBox.shrink();
       }
-    } else {
+    } catch (e) {
       return SizedBox.shrink();
     }
   }
