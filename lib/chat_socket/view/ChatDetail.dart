@@ -16,6 +16,7 @@ import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
 import 'package:myfhb/chat_socket/model/EmitAckResponse.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -46,6 +47,9 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
+
+import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 
 class ChatDetail extends StatefulWidget {
   final String patientId;
@@ -206,6 +210,11 @@ class ChatState extends State<ChatDetail> {
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   String audioPath;
+  final controller = Get.put(ChatUserListController());
+  CaregiverPatientChatModel familyListModel;
+
+  String lastReceived = '';
+  String lastReceivedFuture = '';
 
   @override
   void initState() {
@@ -248,6 +257,8 @@ class ChatState extends State<ChatDetail> {
     initLoader();
 
     getPatientDetails();
+    lastReceived = widget.lastDate;
+    getLastReceivedDate();
     set_up_audios();
 
     if (isForGetUserId) {
@@ -1044,17 +1055,9 @@ class ChatState extends State<ChatDetail> {
                             fontSize: 16.0.sp,
                             color: Colors.white)),
                     getTopBookingDetail(),
-                    widget.lastDate != null
-                        ? Text(
-                            LAST_RECEIVED + widget.lastDate,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: font_poppins,
-                                fontSize: 12.0.sp,
-                                color: Colors.white),
-                          )
-                        : SizedBox.shrink()
+                    lastReceived != null && lastReceived != 'null'
+                        ? getWidgetTextForLastReceivedDate()
+                        : getLastReceivedDateWidget()
                   ],
                 ),
               ))
@@ -2312,6 +2315,56 @@ class ChatState extends State<ChatDetail> {
         }
       }
     });
+  }
+
+  Future<String> getLastReceivedDate() async {
+    var familyListModel = await controller.getFamilyMappingList();
+    if (familyListModel != null) {
+      if (familyListModel?.result != null) {
+        if (familyListModel?.result?.isNotEmpty) {
+          if (familyListModel?.result?.length > 0) {
+            for (Result data in familyListModel.result) {
+              if (widget.peerName.contains(data.firstName)) {
+                lastReceived = data?.chatListItem?.deliveredOn != null &&
+                        data?.chatListItem?.deliveredOn != ''
+                    ? CommonUtil()
+                        .getFormattedDateTime(data?.chatListItem?.deliveredOn)
+                    : '';
+                lastReceivedFuture = lastReceived;
+              }
+            }
+          }
+        }
+      }
+    }
+    return lastReceivedFuture;
+  }
+
+  Widget getLastReceivedDateWidget() {
+    return new FutureBuilder<String>(
+      future: getLastReceivedDate(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return SizedBox.shrink();
+        } else if (snapshot.hasData &&
+            snapshot.data != '' &&
+            snapshot.data != null) {
+          return getWidgetTextForLastReceivedDate();
+        }
+      },
+    );
+  }
+
+  Widget getWidgetTextForLastReceivedDate() {
+    return Text(
+      LAST_RECEIVED + lastReceived,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(
+          fontFamily: font_poppins, fontSize: 12.0.sp, color: Colors.white),
+    );
   }
 }
 
