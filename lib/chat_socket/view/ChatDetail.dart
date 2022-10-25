@@ -1056,7 +1056,8 @@ class ChatState extends State<ChatDetail> {
                             color: Colors.white)),
                     getTopBookingDetail(),
                     lastReceived != null && lastReceived != 'null'
-                        ? getWidgetTextForLastReceivedDate()
+                        ? getWidgetTextForLastReceivedDate(
+                            LAST_RECEIVED + lastReceived)
                         : getLastReceivedDateWidget()
                   ],
                 ),
@@ -2330,14 +2331,13 @@ class ChatState extends State<ChatDetail> {
                     ? CommonUtil()
                         .getFormattedDateTime(data?.chatListItem?.deliveredOn)
                     : '';
-                lastReceivedFuture = lastReceived;
               }
             }
           }
         }
       }
     }
-    return lastReceivedFuture;
+    return lastReceived;
   }
 
   Widget getLastReceivedDateWidget() {
@@ -2345,21 +2345,21 @@ class ChatState extends State<ChatDetail> {
       future: getLastReceivedDate(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return getWidgetTextForLastReceivedDate('Loading');
         } else if (snapshot.hasError) {
           return SizedBox.shrink();
         } else if (snapshot.hasData &&
             snapshot.data != '' &&
             snapshot.data != null) {
-          return getWidgetTextForLastReceivedDate();
+          return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived);
         }
       },
     );
   }
 
-  Widget getWidgetTextForLastReceivedDate() {
+  Widget getWidgetTextForLastReceivedDate(String value) {
     return Text(
-      LAST_RECEIVED + lastReceived,
+      value,
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: TextStyle(
