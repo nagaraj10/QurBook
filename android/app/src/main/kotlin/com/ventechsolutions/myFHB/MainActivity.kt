@@ -409,13 +409,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         override fun onDiscoverDevice(p0: BluetoothDevice?) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "Weight: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "Weight: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
             }
         }
 
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "Weight: "+p1?.toString(), Toast.LENGTH_SHORT).show()
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -445,7 +445,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             try {
                 runOnUiThread {
                     if (p1 != null) {
-                        Toast.makeText(applicationContext, "Weight: "+p1.weight.toString(), Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(applicationContext, "Weight: "+p1.weight.toString(), Toast.LENGTH_SHORT).show()
                         uploaded = 1
                         sendPost("Measurement", DEVICE_WT, 0, 0, 0, weight = p1.weight)
                         if (::BLEEventChannel.isInitialized) {
@@ -454,11 +454,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     }
                 }
             }catch (e:Exception){
-                Toast.makeText(
-                    applicationContext,
-                    "try catch in onReceiveMeasurementData weight",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext,
+//                    "try catch in onReceiveMeasurementData weight",
+//                    Toast.LENGTH_SHORT
+//                ).show()
             }
 
         }
@@ -472,13 +472,13 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     var gCallBackBP:com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback = object : com.gsh.bloodpressure.api.GoldenBLEDeviceManagerCallback{
         override fun onDiscoverDevice(p0: BluetoothDevice?) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "BP: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "BP: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
             }
         }
 
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "BP: "+p1.toString(), Toast.LENGTH_SHORT).show()
 
                 bleName = p0?.name
                 var bleMacId: String
@@ -513,15 +513,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("measurement|" + postBleData)
                     }
-                    Toast.makeText(applicationContext, "BP: dia: "+dia.toString()+" sis: "+sis.toString()+" pulse: "+pulse.toString(), Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(applicationContext, "BP: dia: "+dia.toString()+" sis: "+sis.toString()+" pulse: "+pulse.toString(), Toast.LENGTH_SHORT).show()
 
                 }
             }catch(e:Exception) {
-                Toast.makeText(
-                    applicationContext,
-                    "try catch in onReceiveMeasurementData bp",
-                    Toast.LENGTH_SHORT
-                ).show()
+//                Toast.makeText(
+//                    applicationContext,
+//                    "try catch in onReceiveMeasurementData bp",
+//                    Toast.LENGTH_SHORT
+//                ).show()
             }
 
 
@@ -537,7 +537,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         override fun onDiscoverDevice(p0: BluetoothDevice?) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "SPO2: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "SPO2: "+p0?.name.toString(), Toast.LENGTH_SHORT).show()
             }
 
 //            if (p0?.name.equals("My Oximeter",true))
@@ -548,7 +548,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         override fun onConnectStatusChange(p0: BluetoothDevice?, p1: BluetoothStatus?, p2: Int) {
             runOnUiThread {
-                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "SPO2: "+p1.toString(), Toast.LENGTH_SHORT).show()
                 bleName = p0?.name
                 var bleMacId: String
                 bleMacId = p0?.address.toString()
@@ -582,6 +582,8 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             try{
                 runOnUiThread {
                     if(spo2 < 101 && pulseRate != 127 && pulseRate != 255 && WOWGoDataUpload == 0 ) {
+                        gManager?.scanLeDevice(false)
+                        gManager?.disconnect()
 
 WOWGoDataUpload = 1
                         sendPost(
@@ -597,11 +599,11 @@ WOWGoDataUpload = 1
 
                         }
                     }
-                    Toast.makeText(applicationContext, "SPO2: spo2: "+spo2.toString()+" pulse: "+pulseRate.toString(), Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(applicationContext, "SPO2: spo2: "+spo2.toString()+" pulse: "+pulseRate.toString(), Toast.LENGTH_SHORT).show()
                 }
 
             }catch (e:Exception){
-                Toast.makeText(applicationContext, "try catch in onReceiveSPO2MeasurementData", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(applicationContext, "try catch in onReceiveSPO2MeasurementData", Toast.LENGTH_SHORT).show()
             }
 
         }
