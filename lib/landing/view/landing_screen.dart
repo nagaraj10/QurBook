@@ -102,13 +102,18 @@ class _LandingScreenState extends State<LandingScreen> {
   final controller = Get.put(ChatUserListController());
   final sheelBadgeController = Get.put(SheelaAIController());
 
+  double selOption = 30.0.sp;
+  double unSelOption = 28.0.sp;
+
+  double selSheelaOption = 36.0;
+
   @override
   void initState() {
     try {
       super.initState();
       onInit();
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 
@@ -446,8 +451,9 @@ class _LandingScreenState extends State<LandingScreen> {
               ),
               child: BottomNavigationBar(
                 currentIndex: landingViewModel.currentTabIndex,
-                type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10.sp,
+                //type: BottomNavigationBarType.fixed,
+                type: BottomNavigationBarType.shifting,
+                selectedFontSize: 12.sp,
                 unselectedFontSize: 10.sp,
                 selectedLabelStyle: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
@@ -469,7 +475,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       AssetImage(
                         variable.icon_home,
                       ),
-                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 0
+                              ? selOption
+                              : unSelOption,
                     ),
                     title: Text(
                       variable.strhome,
@@ -507,7 +515,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_th),
-                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 3
+                              ? selOption
+                              : unSelOption,
                     ),
                     title: Text(
                       constants.strAppointment,
@@ -521,7 +531,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_records),
-                      size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 4
+                          ? selOption
+                          : unSelOption,
                     ),
                     title: Text(
                       variable.strMyRecords,
@@ -683,7 +695,9 @@ class _LandingScreenState extends State<LandingScreen> {
       icon: GestureDetector(
         child: ImageIcon(
           const AssetImage(variable.icon_chat),
-          size: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+          size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 1
+              ? selOption
+              : unSelOption,
           color: landingViewModel.currentTabIndex == 1
               ? Color(CommonUtil().getMyPrimaryColor())
               : Colors.black54,
@@ -698,8 +712,12 @@ class _LandingScreenState extends State<LandingScreen> {
     return BadgeIcon(
       icon: Image.asset(
         variable.icon_mayaMain,
-        height: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
-        width: CommonUtil().isTablet ? 33.0.sp : 30.0.sp,
+        height: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 2
+                ? selSheelaOption
+                : unSelOption,
+        width: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 2
+                ? selSheelaOption
+                : unSelOption,
       ),
       size: 14.h,
       fontSize: 12.sp,
