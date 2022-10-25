@@ -70,12 +70,13 @@ class SheelaBLEController extends GetxController {
 
   setupListenerForReadings() async {
     try {
-      if (Platform.isAndroid && !checkForBLEEnableConditions()) {
+      bool status = await checkForBLEEnableConditions();
+      if (!status) {
         return;
       }
       _enableTimer();
     } catch (e) {
-      //print(e);
+      print(e.toString());
     }
   }
 
@@ -121,19 +122,19 @@ class SheelaBLEController extends GetxController {
                 hublistController.searchingBleDevice(false);
               break;
             case "macid":
-              FlutterToast().getToast(
-                receivedValues.last,
-                Colors.red,
-              );
+              // FlutterToast().getToast(
+              //   receivedValues.last,
+              //   Colors.red,
+              // );
               hublistController.bleMacId = CommonUtil().validString(
                 receivedValues.last,
               );
               break;
             case "bleDeviceType":
-              FlutterToast().getToast(
-                receivedValues.last,
-                Colors.red,
-              );
+              // FlutterToast().getToast(
+              //   receivedValues.last,
+              //   Colors.red,
+              // );
               hublistController.bleDeviceType = CommonUtil().validString(
                 receivedValues.last,
               );
@@ -146,10 +147,10 @@ class SheelaBLEController extends GetxController {
               break;
             case "connected":
               receivedData = false;
-              FlutterToast().getToast(
-                receivedValues.last,
-                Colors.red,
-              );
+              // FlutterToast().getToast(
+              //   receivedValues.last,
+              //   Colors.red,
+              // );
               if (!checkForParedDevice()) {
                 _disableTimer();
                 return;
@@ -171,7 +172,16 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                );
+                ).then((_) {
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    Get.find<VitalDetailController>().getData();
+                  });
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                        hublistController.eid;
+                    Get.find<QurhomeRegimenController>().getRegimenList();
+                  });
+                });
               }
               break;
             case "measurement":
@@ -194,7 +204,16 @@ class SheelaBLEController extends GetxController {
                       takeActiveDeviceReadings: true,
                     ),
                   ),
-                );
+                ).then((_) {
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    Get.find<VitalDetailController>().getData();
+                  });
+                  Future.delayed(const Duration(seconds: 1)).then((value) {
+                    Get.find<QurhomeRegimenController>().currLoggedEID.value =
+                        hublistController.eid;
+                    Get.find<QurhomeRegimenController>().getRegimenList();
+                  });
+                });
                 await Future.delayed(const Duration(seconds: 4));
               }
               updateUserData(
@@ -202,10 +221,10 @@ class SheelaBLEController extends GetxController {
               );
               break;
             case "disconnected":
-              FlutterToast().getToast(
-                "Bluetooth Disconnected",
-                Colors.red,
-              );
+              // FlutterToast().getToast(
+              //   "Bluetooth Disconnected",
+              //   Colors.red,
+              // );
               break;
             default:
           }
