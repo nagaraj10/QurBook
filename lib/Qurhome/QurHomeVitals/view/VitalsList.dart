@@ -767,7 +767,9 @@ class _VitalsListState extends State<VitalsList> {
                               device_icon: Devices_BP_Tool,
                               deviceNameForAdding: Constants.STR_BP_MONITOR,
                             )),
-                  );
+                  ).then((value) {
+                    setState(() {});
+                  });
                 },
                 child: Container(
                   // height: 170.0.h,
@@ -1124,7 +1126,9 @@ class _VitalsListState extends State<VitalsList> {
                                   deviceNameForAdding: Constants.STR_GLUCOMETER,
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1508,7 +1512,9 @@ class _VitalsListState extends State<VitalsList> {
                                       Constants.STR_THERMOMETER,
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1844,7 +1850,9 @@ class _VitalsListState extends State<VitalsList> {
                                         deviceNameForAdding:
                                             Constants.STR_PULSE_OXIMETER,
                                       )),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -2194,7 +2202,9 @@ class _VitalsListState extends State<VitalsList> {
                                           device_icon: Devices_WS_Tool,
                                           deviceNameForAdding:
                                               Constants.STR_WEIGHING_SCALE,
-                                        )));
+                                        ))).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
