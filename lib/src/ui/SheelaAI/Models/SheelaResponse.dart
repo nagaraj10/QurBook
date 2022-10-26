@@ -31,6 +31,7 @@ class SheelaResponse {
   bool endOfConv = true;
   List<Buttons> buttons;
   var imageURL;
+  List<String> imageURLS;
   var searchURL;
   String lang;
   var postId;
@@ -54,31 +55,31 @@ class SheelaResponse {
   String sessionId;
   String relationshipId;
 
-  SheelaResponse({
-    this.recipientId,
-    this.text,
-    this.endOfConv,
-    this.buttons,
-    this.imageURL,
-    this.searchURL,
-    this.lang,
-    this.postId,
-    this.matchedQuestion,
-    this.videoLinks,
-    this.translatedUserText,
-    this.redirect,
-    this.enableMic,
-    this.providerMsg,
-    this.redirectTo,
-    this.singleuse,
-    this.isActionDone,
-    this.eid,
-    this.ttsResponse,
-    this.loading,
-    this.conversationFlag,
-    this.sessionId,
-    this.relationshipId,
-  });
+  SheelaResponse(
+      {this.recipientId,
+      this.text,
+      this.endOfConv,
+      this.buttons,
+      this.imageURL,
+      this.searchURL,
+      this.lang,
+      this.postId,
+      this.matchedQuestion,
+      this.videoLinks,
+      this.translatedUserText,
+      this.redirect,
+      this.enableMic,
+      this.providerMsg,
+      this.redirectTo,
+      this.singleuse,
+      this.isActionDone,
+      this.eid,
+      this.ttsResponse,
+      this.loading,
+      this.conversationFlag,
+      this.sessionId,
+      this.relationshipId,
+      this.imageURLS});
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
@@ -90,7 +91,11 @@ class SheelaResponse {
         buttons?.add(Buttons.fromJson(v));
       });
     }
-    imageURL = json['imageURL'];
+    if (json['imageURL'] is List) {
+      imageURLS = json['imageURL'].cast<String>();
+    } else if (json['imageURL'] is String) {
+      imageURL = json['imageURL'];
+    }
     searchURL = json['searchURL'];
     lang = json['lang'];
     postId = json['postId'];
