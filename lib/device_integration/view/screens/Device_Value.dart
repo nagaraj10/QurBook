@@ -2822,6 +2822,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   void createActivityMethod(String device_name) async {
+    saveMap = {};
     DateTime initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     TimeOfDay _currentTime = new TimeOfDay.now();
