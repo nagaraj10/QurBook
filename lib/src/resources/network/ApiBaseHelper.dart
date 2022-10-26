@@ -2376,13 +2376,13 @@ class ApiBaseHelper {
         'patientUserId': userid,
         'additionalInfo': {
           ...createTicketController.dynamicTextFiledObj,
-          'preferredDate':
+          /*'preferredDate':
               Constants.tckPrefDate != 'pref_date' ? Constants.tckPrefDate : '',
           'preferredTime':
               Constants.tckPrefTime != 'pref_time' ? Constants.tckPrefTime : '',
           'preferredLabName': Constants.tckPrefLab.trim().isNotEmpty
               ? Constants.tckPrefLab
-              : "",
+              : "",*/
           'preferredLabId': Constants.tckPrefLabId.trim().isNotEmpty
               ? Constants.tckPrefLabId
               : "",
