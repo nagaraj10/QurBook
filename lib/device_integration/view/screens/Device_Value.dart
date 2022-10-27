@@ -177,6 +177,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       if (profileSetting == null) {
         await getProfileSetings();
       }
+
+      activitiesFilteredList =
+          await CommonUtil().getMasterData(Get.context, '');
     } catch (e) {
       //print(e);
     }
@@ -195,7 +198,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         Container(child: getAddDeviceReadings()),
         SizedBoxWidget(height: 5.0.h),
         Expanded(
-          child: getMasterRegimenList(context, devicesmodel),
+          child: getValues(context, devicesmodel),
         ),
       ],
     );
@@ -402,6 +405,15 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      }
+      if (activitiesFilteredList == null && selectedActivity==null) {
+        activitiesFilteredList =
+            await CommonUtil().getMasterData(Get.context, '');
+            if(activitiesFilteredList!=null && activitiesFilteredList.length>0){
+                selectedActivity = getActivityFromDeviceName(getDeviceName());
+
+            }
+
       }
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce);
@@ -1213,12 +1225,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          weightUnit,
+                          weightUnit.toLowerCase(),
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, weightUnit, deviceName, range: ""),
+                      }, errorMsg, weightUnit.toLowerCase(), deviceName,
+                          range: ""),
                     ],
                   ),
                   Column(

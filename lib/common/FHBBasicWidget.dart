@@ -935,8 +935,8 @@ class FHBBasicWidget {
                     onTextChanged(errorValue);
                   }
                 } else if (number is double) {
-                  if (number < ((unitsMesurements.minValue).toDouble()) ||
-                      number > ((unitsMesurements.maxValue).toDouble())) {
+                  if (number < ((unitsMesurements?.minValue).toDouble()) ||
+                      number > ((unitsMesurements?.maxValue).toDouble())) {
                     errorValue = CommonConstants.strErrorStringForDevices +
                         ' ' +
                         unitsMesurements.minValue.toString() +
