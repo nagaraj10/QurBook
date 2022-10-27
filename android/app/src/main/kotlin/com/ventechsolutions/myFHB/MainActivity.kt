@@ -126,6 +126,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private val DISABLE_BACKGROUND_NOTIFICATION = Constants.DISABLE_BACKGROUND_NOTIFICATION
     private val GET_CURRENT_LOCATION = Constants.GET_CURRENT_LOCATION
     private val APPOINTMENT_TIME = Constants.APPOINTMENT_DETAILS
+    private val CLOSE_SHEELA_DIALOG = Constants.CLOSE_SHEELA_DIALOG
     private var sharedValue: String? = null
     private var username: String? = null
     private var templateName: String? = null
@@ -327,19 +328,23 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         })
 
         close.setOnClickListener {
-            speechRecognizer?.cancel()
-            if (dialog.isShowing) {
-                try {
-                    _result.let {
-                        _result?.error("","","")
+            try {
+                speechRecognizer?.cancel()
+                if (dialog.isShowing) {
+                    try {
+                        _result.let {
+                            _result?.error("", "", "")
+                        }
+                        _result = null
+                    } catch (e: Exception) {
+                        print(e.printStackTrace())
                     }
-                    _result=null
-                } catch (e: Exception) {
-                    print(e.printStackTrace())
+                    finalWords = ""
+                    dialog.dismiss()
+                    spin_kit.visibility = View.VISIBLE
                 }
-                finalWords=""
-                dialog.dismiss()
-                spin_kit.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                Log.d("Catch", "" + e.toString())
             }
         }
         //builder.show()
@@ -1831,6 +1836,21 @@ WOWGoDataUpload = 1
                     scheduleAppointment(retMap)
                     result.success("success")
 
+                } catch (e: Exception) {
+                    Log.d("Catch", "" + e.toString())
+                }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CLOSE_SHEELA_DIALOG
+        ).setMethodCallHandler { call, result ->
+            if (call.method == CLOSE_SHEELA_DIALOG) {
+                Log.d("CLOSE_SHEELA_DIALOG", "CLOSE_SHEELA_DIALOG")
+                try {
+                    close.performClick()
+                    result.success("success")
                 } catch (e: Exception) {
                     Log.d("Catch", "" + e.toString())
                 }
