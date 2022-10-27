@@ -550,6 +550,7 @@ const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strvalidateMicAvailablity = 'validateMicAvailability';
 const String strQurbookSheela =
     'SHEELA'; // For lex to be done for seperation lex and rasa
+const String strCloseSheelaDialog = 'closeSheelaDialog';
 
 const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
