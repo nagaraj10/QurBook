@@ -4934,6 +4934,15 @@ class CommonUtil {
     }
   }
 
+  closeSheelaDialog() {
+    try {
+      const platform = MethodChannel(strCloseSheelaDialog);
+      platform.invokeMethod(strCloseSheelaDialog);
+    } catch (e) {
+      //print(e);
+    }
+  }
+
   commonWidgetForTitleValue(String title, String value) {
     return Column(
       children: [

@@ -445,6 +445,7 @@ class SheelaAIController extends GetxController {
     }
     if (isMicListening.isTrue) {
       isMicListening(false);
+      CommonUtil().closeSheelaDialog();
     }
     if (currentPlayingConversation != null) {
       currentPlayingConversation.isPlaying.value = false;
