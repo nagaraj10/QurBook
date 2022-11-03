@@ -7,14 +7,11 @@ import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
 import com.ventechsolutions.myFHB.SharedPrefUtils
@@ -72,7 +69,13 @@ class SnoozeReceiver : BroadcastReceiver() {
         reminderBroadcaster.putExtra("isCancel", false)
 
         val alarmMgr = p0?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
+        var pendingIntent: PendingIntent? = null
+        pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getBroadcast(p0, 1, reminderBroadcaster, PendingIntent.FLAG_ONE_SHOT)
+
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             currentMillis.let { alarmMgr.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, it, pendingIntent) }
