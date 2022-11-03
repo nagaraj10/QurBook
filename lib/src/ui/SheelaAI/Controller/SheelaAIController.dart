@@ -211,7 +211,7 @@ class SheelaAIController extends GetxController {
         name: userName,
         message: message,
         sessionId: sessionToken,
-        authToken: authToken,
+        // authToken: authToken,
         lang: getCurrentLanCode(),
         timezone:
             splitedArr.isNotEmpty ? '${splitedArr[0]}:${splitedArr[1]}' : '',

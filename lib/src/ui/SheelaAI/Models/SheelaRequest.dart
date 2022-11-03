@@ -7,7 +7,7 @@ class SheelaRequestModel {
   String message;
   String source;
   String sessionId;
-  String authToken;
+  //String authToken;
   String timezone;
   String lang;
   String deviceType;
@@ -23,7 +23,7 @@ class SheelaRequestModel {
     this.message,
     this.source = strQurbookSheela,
     this.sessionId,
-    this.authToken,
+    //this.authToken,
     this.timezone,
     this.lang,
     this.deviceType,
@@ -40,7 +40,7 @@ class SheelaRequestModel {
     name = json['Name'];
     message = json['message'];
     sessionId = json['sessionId'];
-    authToken = json['authToken'];
+    //authToken = json['authToken'];
     timezone = json['timezone'];
     lang = json['lang'];
     deviceType = json['device_type'];
@@ -55,7 +55,7 @@ class SheelaRequestModel {
     data['message'] = this.message;
     data['source'] = this.source;
     data['sessionId'] = this.sessionId;
-    data['authToken'] = this.authToken;
+    // data['authToken'] = this.authToken;
     data['timezone'] = this.timezone;
     data['lang'] = this.lang;
     data['device_type'] = this.deviceType;
