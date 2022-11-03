@@ -17,17 +17,17 @@ class SheelAIAPIService {
       String jsonString = jsonEncode(reqJson);
       Map<String, dynamic> headerRequest =
           await HeaderRequest().getRequestHeader();
-      print("-----------------Sheela request---------------------");
-      print(reqJson);
-      print("-----------------Sheela Header---------------------");
-      print(headerRequest);
+      // print("-----------------Sheela request---------------------");
+      // print(reqJson);
+      // print("-----------------Sheela Header---------------------");
+      // print(headerRequest);
       var response = await ApiServices.post(
         mayaUrl,
         body: jsonString,
         headers: headerRequest,
       );
-      print("-----------------Sheela response---------------------");
-      print(response.body);
+      // print("-----------------Sheela response---------------------");
+      // print(response.body);
       return response;
     } catch (e) {
       throw Exception('$e was thrown');
@@ -39,17 +39,17 @@ class SheelAIAPIService {
     try {
       final jsonString = jsonEncode(reqJson);
       final headerRequest = await HeaderRequest().getRequestHeader();
-      print("-----------------Sheela request---------------------");
-      print(reqJson);
-      print("-----------------Sheela Header---------------------");
-      print(headerRequest);
+      // print("-----------------Sheela request---------------------");
+      // print(reqJson);
+      // print("-----------------Sheela Header---------------------");
+      // print(headerRequest);
       final response = await ApiServices.post(
         urlForTTS,
         body: jsonString,
         headers: headerRequest,
       );
-      print("-----------------Sheela response---------------------");
-      print(response.body);
+      // print("-----------------Sheela response---------------------");
+      // print(response.body);
       return response;
     } catch (e) {
       throw Exception('$e was thrown');
