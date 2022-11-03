@@ -16,7 +16,7 @@ class SheelAIAPIService {
     try {
       String jsonString = jsonEncode(reqJson);
       Map<String, dynamic> headerRequest =
-          await HeaderRequest().getRequesHeaderWithoutToken();
+          await HeaderRequest().getRequestHeader();
       print("-----------------Sheela request---------------------");
       print(reqJson);
       print("-----------------Sheela Header---------------------");
@@ -38,8 +38,7 @@ class SheelAIAPIService {
     final urlForTTS = BASE_URL + qr_Google_TTS_Proxy_URL;
     try {
       final jsonString = jsonEncode(reqJson);
-      final headerRequest =
-          await HeaderRequest().getRequestHeadersAuthContent();
+      final headerRequest = await HeaderRequest().getRequestHeader();
       print("-----------------Sheela request---------------------");
       print(reqJson);
       print("-----------------Sheela Header---------------------");
