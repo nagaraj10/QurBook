@@ -563,14 +563,21 @@ class _MyFHBState extends State<MyFHB> {
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        if (sheelaAIController.isSheelaScreenActive) {
+        if ((passedValArr[3].toString() ?? '').isNotEmpty) {
+          Get.toNamed(
+            router.rt_Sheela,
+            arguments: SheelaArgument(
+              audioMessage: passedValArr[3].toString(),
+            ),
+          );
+        } else if (sheelaAIController.isSheelaScreenActive) {
           var reqJson = {
             KIOSK_task: KIOSK_read,
             KIOSK_message_api: passedValArr[2].toString()
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
-         /* Future.delayed(Duration(milliseconds: 500), () async {
+          /* Future.delayed(Duration(milliseconds: 500), () async {
             Get.toNamed(
               rt_Sheela,
               arguments: SheelaArgument(

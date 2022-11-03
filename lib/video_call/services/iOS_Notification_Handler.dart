@@ -205,6 +205,13 @@ class IosNotificationHandler {
             message: model.message,
           ),
         );
+      } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+        Get.toNamed(
+          router.rt_Sheela,
+          arguments: SheelaArgument(
+            audioMessage: model.sheelaAudioMsgUrl,
+          ),
+        );
       }
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
