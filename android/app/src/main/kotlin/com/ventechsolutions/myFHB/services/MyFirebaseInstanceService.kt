@@ -346,6 +346,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
             intent.putExtra("message", data[getString(R.string.pro_ns_body)])
             intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
+                        intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+
             this.sendBroadcast(intent)
         }
     }
@@ -409,6 +411,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
         onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
         onTapNS.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+                onTapNS.putExtra(Constants.PROP_sheelaAudioMsgUrl, data[Constants.PROP_sheelaAudioMsgUrl])
+
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
         val onTapPendingIntent = PendingIntent.getBroadcast(

@@ -302,7 +302,7 @@ import LS202_DeviceManager
         }
         print(recognitionRequest)
         print(Constants.recogEntered)
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { time in
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { time in
             if(self.message.count == 0){
                 if let controller = self.navigationController?.children.first as? FlutterViewController{
                     let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
@@ -783,20 +783,20 @@ import LS202_DeviceManager
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
-        //        let appState =  UIApplication.shared.applicationState
-        //        if(appState == .inactive || appState == .active){
-        //            responsdToNotificationTap(response: response)
-        //            completionHandler()
-        //        }else{
-        let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
-        navigationController?.children.first?.present(alert, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
-            alert.dismiss(animated: true)
-            self.responsdToNotificationTap(response: response)
-            completionHandler()
-        }
-        
-        //        }
+//        let appState =  UIApplication.shared.applicationState
+//        if( appState == .active){
+//            responsdToNotificationTap(response: response)
+//            completionHandler()
+//        }else{
+            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+            navigationController?.children.first?.present(alert, animated: true)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
+                alert.dismiss(animated: true)
+                self.responsdToNotificationTap(response: response)
+                completionHandler()
+            }
+            
+//        }
     }
     
     override func applicationWillTerminate(_ application: UIApplication) {
@@ -823,6 +823,7 @@ import LS202_DeviceManager
             let notificationContent = UNMutableNotificationContent()
             notificationContent.title = "CRITICAL-App Stopped"
             notificationContent.body = "The app must be running in the background to receive alerts. Tap to re-open the app."
+            notificationContent.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: Constants.beepSound))
             let notificationTrigger = UNCalendarNotificationTrigger(dateMatching: dateComponent, repeats: false)
             let notificationRequest = UNNotificationRequest(identifier: "criticalappnotification", content: notificationContent, trigger: notificationTrigger)
             UNUserNotificationCenter.current().add(notificationRequest) { (error) in

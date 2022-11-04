@@ -193,6 +193,12 @@ class SheelaAIController extends GetxController {
           (arguments?.showUnreadMessage ?? false)) {
         msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
+      } else if ((arguments?.audioMessage ?? '').isNotEmpty) {
+        isLoading(true);
+        SheelaResponse audioResponse = SheelaResponse();
+        audioResponse.recipientId = sheelaAudioMsgUrl;
+        audioResponse.audioFile = arguments.audioMessage;
+        conversations.add(audioResponse);
       } else {
         gettingReposnseFromNative();
       }

@@ -2131,6 +2131,8 @@ WOWGoDataUpload = 1
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
         val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
+                val audioURL = intent.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
+
         val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
         val eid = intent.getStringExtra("eid")
         val task = intent.getStringExtra("task")
@@ -2145,10 +2147,12 @@ WOWGoDataUpload = 1
             sharedValue =
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
-            sharedValue = "${redirect_to}&${claimId}&${userId}"
-        } else if (redirect_to == "isSheelaFollowup") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
-        } else if (redirect_to?.contains("myRecords") == true) {
+        } else if (redirect_to == "sheela|pushMessage") {
+            sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL"
+        } else if (redirect_to == "isSheelaFollowup") {
+        sharedValue = "${redirect_to}&${message}&$rawBody"
+    } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {
@@ -2348,17 +2352,17 @@ WOWGoDataUpload = 1
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
 
-//        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 5000)
-//        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.example.android.voicerecognitionservice");
-//        intent.putExtra(
-//            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
-//            2000
-//        )
-//        intent.putExtra(
-//            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
-//            2000
-//        )
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000)
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.example.android.voicerecognitionservice");
+        intent.putExtra(
+            RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS,
+            2000
+        )
+        intent.putExtra(
+            RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS,
+            2000
+        )
 
 
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
