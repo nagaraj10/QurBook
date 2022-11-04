@@ -206,7 +206,7 @@ class IosNotificationHandler {
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 5));
         Get.toNamed(
           router.rt_Sheela,
           arguments: SheelaArgument(
