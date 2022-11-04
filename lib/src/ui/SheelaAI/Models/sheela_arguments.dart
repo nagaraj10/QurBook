@@ -15,6 +15,7 @@ class SheelaArgument {
   String task;
   String action;
   String activityName;
+  String audioMessage;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -33,5 +34,6 @@ class SheelaArgument {
     this.task,
     this.action,
     this.activityName,
+    this.audioMessage,
   });
 }

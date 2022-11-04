@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:myfhb/common/AudioWidget.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -77,73 +78,80 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                 )
                               : Colors.white,
                         )
-                      : Obx(() {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      PreferenceUtil.getIfQurhomeisAcive()
-                                          ? CrossAxisAlignment.start
-                                          : CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      chat.text,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2
-                                          .apply(
-                                            fontSizeFactor:
-                                                CommonUtil().isTablet
-                                                    ? 1.6
-                                                    : 1.0,
-                                            color: PreferenceUtil
-                                                    .getIfQurhomeisAcive()
-                                                ? Colors.black
-                                                : Colors.white,
-                                          ),
-                                    ),
-                                    getImageURLFromCondition(),
-                                    buttonWidgets()
-                                  ],
-                                ),
-                              ),
-                              Visibility(
-                                visible: controller.bleController == null,
-                                child: Container(
-                                  width: 36.0,
-                                  height: 30.0,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (controller.isLoading.isTrue) {
-                                        return;
-                                      }
-                                      if (chat.isPlaying.isTrue) {
-                                        controller.stopTTS();
-                                      } else {
-                                        controller.stopTTS();
-                                        controller.currentPlayingConversation =
-                                            chat;
-                                        controller.playTTS();
-                                      }
-                                    },
-                                    child: Icon(
-                                      chat.isPlaying.isTrue
-                                          ? Icons.pause
-                                          : Icons.play_arrow,
-                                      size: 24.0.sp,
-                                      color:
+                      : (chat.audioFile ?? '').isNotEmpty
+                          ? AudioWidget(
+                              chat.audioFile,
+                              null,
+                              isFromSheela: true,
+                            )
+                          : Obx(() {
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
                                           PreferenceUtil.getIfQurhomeisAcive()
-                                              ? Colors.black
-                                              : Colors.white,
+                                              ? CrossAxisAlignment.start
+                                              : CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          chat.text,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .apply(
+                                                fontSizeFactor:
+                                                    CommonUtil().isTablet
+                                                        ? 1.6
+                                                        : 1.0,
+                                                color: PreferenceUtil
+                                                        .getIfQurhomeisAcive()
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                              ),
+                                        ),
+                                        getImageURLFromCondition(),
+                                        buttonWidgets()
+                                      ],
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
-                          );
-                        }),
+                                  Visibility(
+                                    visible: controller.bleController == null,
+                                    child: Container(
+                                      width: 36.0,
+                                      height: 30.0,
+                                      child: InkWell(
+                                        onTap: () {
+                                          if (controller.isLoading.isTrue) {
+                                            return;
+                                          }
+                                          if (chat.isPlaying.isTrue) {
+                                            controller.stopTTS();
+                                          } else {
+                                            controller.stopTTS();
+                                            controller
+                                                    .currentPlayingConversation =
+                                                chat;
+                                            controller.playTTS();
+                                          }
+                                        },
+                                        child: Icon(
+                                          chat.isPlaying.isTrue
+                                              ? Icons.pause
+                                              : Icons.play_arrow,
+                                          size: 24.0.sp,
+                                          color: PreferenceUtil
+                                                  .getIfQurhomeisAcive()
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            }),
                 ),
               ),
               if (!PreferenceUtil.getIfQurhomeisAcive())

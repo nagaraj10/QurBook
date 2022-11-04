@@ -123,6 +123,7 @@ const String strSheela = 'sheela';
 const String strsingleuse = 'singleuse';
 const String strisActionDone = 'isActionDone';
 const String strRedirectTo = 'redirectTo';
+const String sheelaAudioMsgUrl = 'sheelaAudioMsgUrl';
 
 // sheel lex
 const String strBotaliasid = 'botAliasId';
@@ -649,6 +650,8 @@ const String GCMUserId = 'gcm.notification.userId';
 const String strgcmAppointmentId = 'gcm.notification.appointmentId';
 const String gcmExternalLink = 'gcm.notification.externalLink';
 const String gcmClaimId = 'gcm.notification.claimId';
+const String gcmsheelaAudioMsgUrl = 'gcm.notification.sheelaAudioMsgUrl';
+
 const String gcmtemplateName = 'gcm.notification.templateName';
 const String gcmpatientPhoneNumber = 'gcm.notification.patientPhoneNumber';
 const String gcmverificationCode = 'gcm.notification.verificationCode';

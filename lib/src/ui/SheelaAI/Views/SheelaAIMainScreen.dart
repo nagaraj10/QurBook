@@ -29,7 +29,7 @@ class SheelaAIMainScreen extends StatefulWidget {
 class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   SheelaAIController controller = Get.find();
-  SheelaQueueServices servicesQueue  = SheelaQueueServices();
+  SheelaQueueServices servicesQueue = SheelaQueueServices();
   AnimationController animationController;
   Animation<double> _animation;
   @override
@@ -87,6 +87,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         controller.bleController = null;
       }
       controller.stopTTS();
+      if ((controller.arguments.audioMessage ?? '').isNotEmpty) {
+        Get.back();
+      }
     } else if (state == AppLifecycleState.resumed) {
       controller.canSpeak = true;
     }
@@ -104,7 +107,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         }
         return WillPopScope(
           onWillPop: () async {
-            if (controller.isLoading.isFalse) {
+            if (controller.isLoading.isFalse ||
+                (controller.arguments.audioMessage ?? '').isNotEmpty) {
               controller.stopTTS();
               controller.canSpeak = false;
               controller.isSheelaScreenActive = false;
@@ -127,7 +131,9 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                         color: Colors.white,
                       ),
                       onPressed: () {
-                        if (controller.isLoading.isFalse) {
+                        if (controller.isLoading.isFalse ||
+                            (controller.arguments.audioMessage ?? '')
+                                .isNotEmpty) {
                           controller.stopTTS();
                           controller.canSpeak = false;
                           controller.isSheelaScreenActive = false;
