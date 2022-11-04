@@ -550,14 +550,17 @@ class SheelaAIController extends GetxController {
                         payload: button.payload,
                         buttons: button);
                   } else {
+                    lastMsgIsOfButtons = false;
                     conversations.add(newConversation);
                     getAIAPIResponseFor(response, button);
                   }
                 } catch (e) {
+                  lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
                   getAIAPIResponseFor(response, null);
                 }
               } else {
+                lastMsgIsOfButtons = false;
                 conversations.add(newConversation);
                 getAIAPIResponseFor(response, null);
               }
