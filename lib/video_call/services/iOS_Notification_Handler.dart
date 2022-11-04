@@ -52,7 +52,7 @@ class IosNotificationHandler {
         if (call.method == variable.notificationResponseMethod) {
           if (!isAlreadyLoaded) {
             notificationReceivedFromKilledState = true;
-            await 4.seconds;
+            await Future.delayed(const Duration(seconds: 5));
             isAlreadyLoaded = true;
           }
           final data = Map<String, dynamic>.from(call.arguments);
@@ -203,6 +203,14 @@ class IosNotificationHandler {
           arguments: SheelaArgument(
             isSheelaFollowup: true,
             message: model.message,
+          ),
+        );
+      } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+        await Future.delayed(const Duration(seconds: 5));
+        Get.toNamed(
+          router.rt_Sheela,
+          arguments: SheelaArgument(
+            audioMessage: model.sheelaAudioMsgUrl,
           ),
         );
       }

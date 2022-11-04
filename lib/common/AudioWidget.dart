@@ -10,6 +10,8 @@ import 'package:path/path.dart';
 import 'CommonUtil.dart';
 import '../constants/variable_constant.dart' as variable;
 import '../src/utils/screenutils/size_extensions.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 
 enum t_MEDIA {
   FILE,
@@ -22,9 +24,16 @@ class AudioWidget extends StatefulWidget {
   String audioFile;
   String audioUrl;
   bool isFromChat;
+  bool isFromSheela;
+
   Function(bool, String) deleteAudioFile;
 
-  AudioWidget(this.audioFile, this.deleteAudioFile,{this.isFromChat=false});
+  AudioWidget(
+    this.audioFile,
+    this.deleteAudioFile, {
+    this.isFromChat = false,
+    this.isFromSheela = false,
+  });
 
   @override
   AudioWidgetState createState() => AudioWidgetState();
@@ -48,6 +57,7 @@ class AudioWidgetState extends State<AudioWidget> {
   final Codec _codec = Codec.aacADTS;
 
   bool isPlaying = false;
+  SheelaAIController _sheelaAIController;
 
   String audioUrl = '';
 
@@ -58,12 +68,17 @@ class AudioWidgetState extends State<AudioWidget> {
     initializeDateFormatting();
     _pathOfFile = widget.audioFile;
     audioUrl = widget.audioUrl;
+    if (widget.isFromSheela) {
+      _sheelaAIController = Get.find();
+      Future.delayed(const Duration(milliseconds: 5))
+          .then((value) => onStartPlayerPressed());
+    }
   }
 
   set_up_audios() async {
     flutterSound = FlutterSoundPlayer();
     flutterSound.openAudioSession().then(
-          (value) {
+      (value) {
         flutterSound.setSubscriptionDuration(
           Duration(
             seconds: 1,
@@ -83,12 +98,101 @@ class AudioWidgetState extends State<AudioWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return getAudioWidgetWithPlayer();
+    return widget.isFromSheela
+        ? getAudioWidgetWithPlayerForSheela()
+        : getAudioWidgetWithPlayer();
+  }
+
+  Widget getAudioWidgetWithPlayerForSheela() {
+    return Container(
+      width: 1.sw,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(
+          4,
+        ),
+      ),
+      padding: const EdgeInsets.all(
+        5,
+      ),
+      child: Row(
+        children: <Widget>[
+          Container(
+            child: Row(
+              children: [
+                IconButton(
+                  iconSize: 24,
+                  onPressed: () {
+                    isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
+                    if (isPlaying) {
+                      _sheelaAIController.isLoading.value = true;
+                    }
+                  },
+                  icon: !isPlaying
+                      ? Icon(
+                          Icons.play_arrow,
+                        )
+                      : Icon(
+                          Icons.pause,
+                        ),
+                ),
+                IconButton(
+                  iconSize: 24,
+                  onPressed: () {
+                    onStopPlayerPressed();
+                    setState(() {});
+                    startPlayer();
+                  },
+                  icon: Icon(
+                    Icons.repeat,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 7,
+            child: Container(
+              height: 30.0.h,
+              child: Slider(
+                activeColor: Color(CommonUtil().getMyPrimaryColor()),
+                inactiveColor: Colors.grey,
+                value: sliderCurrentPosition,
+                min: 0,
+                max: maxDuration,
+                onChanged: (value) async {
+                  await flutterSound.seekToPlayer(
+                    Duration(
+                      seconds: value.round(),
+                    ),
+                  );
+                },
+                divisions: maxDuration.toInt(),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Text(
+                _playerTxt,
+                style: TextStyle(
+                  fontSize: 14.0.sp,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+      ),
+    );
   }
 
   Widget getAudioWidgetWithPlayer() {
     return Container(
-      width: widget.isFromChat?1.sw/1.7:1.sw,
+      width: widget.isFromChat ? 1.sw / 1.7 : 1.sw,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
@@ -97,13 +201,14 @@ class AudioWidgetState extends State<AudioWidget> {
             height: 24,
             width: 24,
             child: IconButton(
-              onPressed:
-              isPlaying ? onPausePlayerPressed() : onStartPlayerPressed(),
+              onPressed: () {
+                isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
+              },
               padding: EdgeInsets.all(2),
               icon: !isPlaying
                   ? Icon(
-                Icons.play_arrow,
-              )
+                      Icons.play_arrow,
+                    )
                   : Icon(Icons.pause),
             ),
           ),
@@ -140,31 +245,32 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          if (!widget.isFromChat) Expanded(
-            child: IconButton(
-              icon: Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
-              padding: EdgeInsets.only(right: 2),
-              onPressed: () {
-                widget.audioFile = '';
+          if (!widget.isFromChat)
+            Expanded(
+              child: IconButton(
+                icon: Icon(Icons.delete, size: 20.0.sp, color: Colors.red[600]),
+                padding: EdgeInsets.only(right: 2),
+                onPressed: () {
+                  widget.audioFile = '';
 
-                if (flutterSound.playerState == PlayerState.isPlaying ||
-                    flutterSound.playerState == PlayerState.isPaused) {
-                  flutterSound.stopPlayer();
-                  setState(
-                        () {
-                      widget.deleteAudioFile(false, widget.audioFile);
-                    },
-                  );
-                } else {
-                  setState(
-                        () {
-                      widget.deleteAudioFile(false, widget.audioFile);
-                    },
-                  );
-                }
-              },
-            ),
-          )
+                  if (flutterSound.playerState == PlayerState.isPlaying ||
+                      flutterSound.playerState == PlayerState.isPaused) {
+                    flutterSound.stopPlayer();
+                    setState(
+                      () {
+                        widget.deleteAudioFile(false, widget.audioFile);
+                      },
+                    );
+                  } else {
+                    setState(
+                      () {
+                        widget.deleteAudioFile(false, widget.audioFile);
+                      },
+                    );
+                  }
+                },
+              ),
+            )
         ],
         mainAxisAlignment: MainAxisAlignment.center,
       ),
@@ -173,12 +279,16 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onStartPlayerPressed() {
     return flutterSound.playerState == PlayerState.isPaused
-        ? pausePlayer
-        : startPlayer;
+        ? pausePlayer()
+        : startPlayer();
   }
 
   void startPlayer() async {
     isPlaying = true;
+    if (widget.isFromSheela) {
+      _sheelaAIController.isLoading.value = true;
+    }
+
     try {
       var path = widget.audioFile;
       final file = File(path);
@@ -246,10 +356,12 @@ class AudioWidgetState extends State<AudioWidget> {
       await flutterSound.setVolume(1.0);
 
       _playerSubscription = flutterSound.onProgress.listen(
-            (e) {
+        (e) {
           if (e != null) {
             setState(
-                  () {
+              () {
+                isPlaying = true;
+
                 sliderCurrentPosition = e.position.inSeconds.toDouble();
                 print(sliderCurrentPosition);
                 _playerTxt = _printDuration(e.position);
@@ -264,7 +376,7 @@ class AudioWidgetState extends State<AudioWidget> {
     }
 
     setState(
-          () {},
+      () {},
     );
   }
 
@@ -294,9 +406,9 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onPausePlayerPressed() {
     return flutterSound.playerState == PlayerState.isPlaying ||
-        flutterSound.playerState == PlayerState.isPaused
-        ? pausePlayer
-        : startPlayer;
+            flutterSound.playerState == PlayerState.isPaused
+        ? pausePlayer()
+        : startPlayer();
   }
 
   void pausePlayer() async {
@@ -304,10 +416,18 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       if (flutterSound.playerState == PlayerState.isPaused) {
         await flutterSound.resumePlayer();
+        if (widget.isFromSheela) {
+          _sheelaAIController.isLoading.value = true;
+        }
+
         print("Inside pause player resume");
         isPlaying = true;
       } else {
         await flutterSound.pausePlayer();
+        if (widget.isFromSheela) {
+          _sheelaAIController.isLoading.value = false;
+        }
+
         print("Inside pause player pause");
 
         isPlaying = false;
@@ -319,13 +439,17 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onStopPlayerPressed() {
     return flutterSound.playerState == PlayerState.isPlaying ||
-        flutterSound.playerState == PlayerState.isPaused
-        ? stopPlayer
+            flutterSound.playerState == PlayerState.isPaused
+        ? stopPlayer()
         : null;
   }
 
   void stopPlayer() async {
     try {
+      if (widget.isFromSheela) {
+        _sheelaAIController.isLoading.value = false;
+      }
+
       await flutterSound.stopPlayer();
       if (_playerSubscription != null) {
         await _playerSubscription.cancel();
