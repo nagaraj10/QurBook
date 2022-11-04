@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/models/ExternalLinksResponseModel.dart';
+import 'package:myfhb/regiment/models/ActivityStatusModel.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:provider/provider.dart';
@@ -454,4 +455,34 @@ class RegimentService {
       throw Exception('$e was thrown');
     }
   }
+
+  static Future<ActivityStatusModel> getActivityStatus({
+    String eid,
+  }) async {
+    var urlForRegiment = Constants.BASE_URL + variable.regiment;
+    try {
+      var headerRequest = await HeaderRequest().getRequestHeadersAuthContent();
+      var currentDate = CommonUtil().getCurrentDateForStatusActivity();
+      var response = await ApiServices.post(
+        urlForRegiment,
+        headers: headerRequest,
+        body: json.encode(
+          {
+            'method': 'post',
+            'data':
+            "Action=GetUserActivityStatus&eid=$eid&date=$currentDate",
+          },
+        ),
+      );
+      if (response != null && response.statusCode == 200) {
+        print(response.body);
+        return ActivityStatusModel.fromJson(json.decode(response.body));
+      } else {
+        return ActivityStatusModel();
+      }
+    } catch (e) {
+      throw Exception('$e was thrown');
+    }
+  }
+
 }

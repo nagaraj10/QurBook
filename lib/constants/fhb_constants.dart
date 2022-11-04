@@ -750,6 +750,14 @@ const String UnitPreference = 'Unit Preferences';
 // sheela queue
 const String sheelaQueueShowRemind = 'My reminders';
 
+//activtiy status
+
+const String UnSubscribed = 'UnSubscribed';
+
+const String Expired = 'Expired';
+
+const String msgData = 'Values will not have an impact. Are you sure you want to update?';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
