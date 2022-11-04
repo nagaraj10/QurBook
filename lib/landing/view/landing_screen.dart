@@ -111,6 +111,14 @@ class _LandingScreenState extends State<LandingScreen> {
   void initState() {
     try {
       super.initState();
+
+      SystemChannels.lifecycle.setMessageHandler((msg) {
+        if (msg == AppLifecycleState.resumed.toString()) {
+          imageCache.clear();
+          imageCache.clearLiveImages();
+          profileData = getMyProfile();
+        }
+      });
       onInit();
     } catch (e) {
       //print(e);
@@ -300,6 +308,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   Widget build(BuildContext context) {
     landingViewModel = Provider.of<LandingViewModel>(context);
+
     if (landingViewModel.isURLCome) {
       landingViewModel.isURLCome = false;
       Future.delayed(Duration(seconds: 2), () {
@@ -393,24 +402,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-                              SwitchProfile().buildActions(
-                                context,
-                                _key,
-                                () {
-                                  profileData = getMyProfile();
-                                  checkIfUserIdSame();
-                                  landingViewModel.getQurPlanDashBoard(
-                                      needNotify: true);
-                                  landingViewModel
-                                      .checkIfUserIdSame()
-                                      .then((value) {
-                                    isUserMainId = value;
-                                  });
-                                  setState(() {});
-                                  (context as Element).markNeedsBuild();
-                                },
-                                true,
-                              ),
+                              getSwitchProfileWidget(),
                             ],
                           ),
                         ),
@@ -475,7 +467,9 @@ class _LandingScreenState extends State<LandingScreen> {
                       AssetImage(
                         variable.icon_home,
                       ),
-                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 0
+                      size: CommonUtil().isTablet
+                          ? 33.0.sp
+                          : landingViewModel.currentTabIndex == 0
                               ? selOption
                               : unSelOption,
                     ),
@@ -515,7 +509,9 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_th),
-                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 3
+                      size: CommonUtil().isTablet
+                          ? 33.0.sp
+                          : landingViewModel.currentTabIndex == 3
                               ? selOption
                               : unSelOption,
                     ),
@@ -531,9 +527,11 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_records),
-                      size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 4
-                          ? selOption
-                          : unSelOption,
+                      size: CommonUtil().isTablet
+                          ? 33.0.sp
+                          : landingViewModel.currentTabIndex == 4
+                              ? selOption
+                              : unSelOption,
                     ),
                     title: Text(
                       variable.strMyRecords,
@@ -695,9 +693,11 @@ class _LandingScreenState extends State<LandingScreen> {
       icon: GestureDetector(
         child: ImageIcon(
           const AssetImage(variable.icon_chat),
-          size: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 1
-              ? selOption
-              : unSelOption,
+          size: CommonUtil().isTablet
+              ? 33.0.sp
+              : landingViewModel.currentTabIndex == 1
+                  ? selOption
+                  : unSelOption,
           color: landingViewModel.currentTabIndex == 1
               ? Color(CommonUtil().getMyPrimaryColor())
               : Colors.black54,
@@ -712,10 +712,14 @@ class _LandingScreenState extends State<LandingScreen> {
     return BadgeIcon(
       icon: Image.asset(
         variable.icon_mayaMain,
-        height: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 2
+        height: CommonUtil().isTablet
+            ? 33.0.sp
+            : landingViewModel.currentTabIndex == 2
                 ? selSheelaOption
                 : unSelOption,
-        width: CommonUtil().isTablet ? 33.0.sp : landingViewModel.currentTabIndex == 2
+        width: CommonUtil().isTablet
+            ? 33.0.sp
+            : landingViewModel.currentTabIndex == 2
                 ? selSheelaOption
                 : unSelOption,
       ),
@@ -998,6 +1002,7 @@ class _LandingScreenState extends State<LandingScreen> {
   void getProfileData() async {
     try {
       await CommonUtil().getUserProfileData();
+      profileData = getMyProfile();
     } catch (e) {}
   }
 
@@ -1035,5 +1040,32 @@ class _LandingScreenState extends State<LandingScreen> {
         controller.updateNewChatFloatShown(false);
       }
     });
+  }
+
+  Widget getSwitchProfileWidget() {
+    return FutureBuilder<MyProfileModel>(
+        future: getMyProfile(),
+        builder: (context, snapshot) {
+          if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
+            PreferenceUtil.saveProfileData(
+                Constants.KEY_PROFILE, snapshot.data);
+          imageCache.clear();
+          imageCache.clearLiveImages();
+          return SwitchProfile().buildActions(
+            context,
+            _key,
+            () {
+              profileData = getMyProfile();
+              checkIfUserIdSame();
+              landingViewModel.getQurPlanDashBoard(needNotify: true);
+              landingViewModel.checkIfUserIdSame().then((value) {
+                isUserMainId = value;
+              });
+              setState(() {});
+              (context as Element).markNeedsBuild();
+            },
+            true,
+          );
+        });
   }
 }
