@@ -302,7 +302,7 @@ import LS202_DeviceManager
         }
         print(recognitionRequest)
         print(Constants.recogEntered)
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { time in
+        Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { time in
             if(self.message.count == 0){
                 if let controller = self.navigationController?.children.first as? FlutterViewController{
                     let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
