@@ -96,10 +96,8 @@ class FormDataDialogState extends State<FormDataDialog> {
   void initState() {
     super.initState();
     try {
-      widget.fieldsData.sort((a, b) => a.seq ?? 0.compareTo(b?.seq ?? 0));
-    } catch (e) {
-      // e.printError();
-    }
+      widget.fieldsData?.sort((a, b) => (a?.seq ?? 0).compareTo(b?.seq ?? 0));
+    } catch (e) {}
     fieldsData = widget.fieldsData;
     eid = widget.eid;
     color = widget.color;
@@ -111,7 +109,6 @@ class FormDataDialogState extends State<FormDataDialog> {
   void dispose() {
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

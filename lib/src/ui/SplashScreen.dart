@@ -251,13 +251,25 @@ class _SplashScreenState extends State<SplashScreen> {
                       }
                     } else if (widget.nsRoute == 'isSheelaFollowup') {
                       final temp = widget.bundle.split('|');
-                      Get.toNamed(
-                        rt_Sheela,
-                        arguments: SheelaArgument(
-                          isSheelaFollowup: true,
-                          message: temp[1],
-                        ),
-                      );
+                      if (temp[0] == 'isSheelaFollowup' &&
+                          (temp[1].toString() ?? '').isNotEmpty) {
+                        Get.toNamed(
+                          router.rt_Sheela,
+                          arguments: SheelaArgument(
+                            audioMessage: temp[1].toString(),
+                          ),
+                        ).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
+                      } else {
+                        Get.toNamed(
+                          rt_Sheela,
+                          arguments: SheelaArgument(
+                            isSheelaFollowup: true,
+                            message: temp[1],
+                          ),
+                        ).then((value) => PageNavigator.goToPermanent(
+                            context, router.rt_Landing));
+                      }
                     } else if (widget.nsRoute ==
                         'familyMemberCaregiverRequest') {
                       final temp = widget.bundle.split('|');

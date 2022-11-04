@@ -54,32 +54,35 @@ class SheelaResponse {
   String conversationFlag;
   String sessionId;
   String relationshipId;
+  String audioFile;
 
-  SheelaResponse(
-      {this.recipientId,
-      this.text,
-      this.endOfConv,
-      this.buttons,
-      this.imageURL,
-      this.searchURL,
-      this.lang,
-      this.postId,
-      this.matchedQuestion,
-      this.videoLinks,
-      this.translatedUserText,
-      this.redirect,
-      this.enableMic,
-      this.providerMsg,
-      this.redirectTo,
-      this.singleuse,
-      this.isActionDone,
-      this.eid,
-      this.ttsResponse,
-      this.loading,
-      this.conversationFlag,
-      this.sessionId,
-      this.relationshipId,
-      this.imageURLS});
+  SheelaResponse({
+    this.recipientId,
+    this.text,
+    this.endOfConv,
+    this.buttons,
+    this.imageURL,
+    this.searchURL,
+    this.lang,
+    this.postId,
+    this.matchedQuestion,
+    this.videoLinks,
+    this.translatedUserText,
+    this.redirect,
+    this.enableMic,
+    this.providerMsg,
+    this.redirectTo,
+    this.singleuse,
+    this.isActionDone,
+    this.eid,
+    this.ttsResponse,
+    this.loading,
+    this.conversationFlag,
+    this.sessionId,
+    this.relationshipId,
+    this.imageURLS,
+    this.audioFile,
+  });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];

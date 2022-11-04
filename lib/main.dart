@@ -563,14 +563,21 @@ class _MyFHBState extends State<MyFHB> {
         }
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
-        if (sheelaAIController.isSheelaScreenActive) {
+        if ((passedValArr[3].toString() ?? '').isNotEmpty) {
+          Get.toNamed(
+            router.rt_Sheela,
+            arguments: SheelaArgument(
+              audioMessage: passedValArr[3].toString(),
+            ),
+          );
+        } else if (sheelaAIController.isSheelaScreenActive) {
           var reqJson = {
             KIOSK_task: KIOSK_read,
             KIOSK_message_api: passedValArr[2].toString()
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
         } else {
-         /* Future.delayed(Duration(milliseconds: 500), () async {
+          /* Future.delayed(Duration(milliseconds: 500), () async {
             Get.toNamed(
               rt_Sheela,
               arguments: SheelaArgument(
@@ -1268,10 +1275,17 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: '',
           );
         } else if (parsedData[0] == 'isSheelaFollowup') {
-          return SplashScreen(
-            nsRoute: 'isSheelaFollowup',
-            bundle: parsedData[0] + '|' + parsedData[1],
-          );
+          if ((parsedData[3].toString() ?? '').isNotEmpty) {
+            return SplashScreen(
+              nsRoute: 'isSheelaFollowup',
+              bundle: 'isSheelaFollowup' + '|' + parsedData[3],
+            );
+          } else {
+            return SplashScreen(
+              nsRoute: 'isSheelaFollowup',
+              bundle: parsedData[0] + '|' + parsedData[1],
+            );
+          }
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(

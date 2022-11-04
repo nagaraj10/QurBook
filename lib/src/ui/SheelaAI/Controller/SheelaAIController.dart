@@ -193,6 +193,12 @@ class SheelaAIController extends GetxController {
           (arguments?.showUnreadMessage ?? false)) {
         msg = KIOSK_SHEELA;
         getAIAPIResponseFor(msg, null);
+      } else if ((arguments?.audioMessage ?? '').isNotEmpty) {
+        isLoading(true);
+        SheelaResponse audioResponse = SheelaResponse();
+        audioResponse.recipientId = sheelaAudioMsgUrl;
+        audioResponse.audioFile = arguments.audioMessage;
+        conversations.add(audioResponse);
       } else {
         gettingReposnseFromNative();
       }
@@ -211,7 +217,7 @@ class SheelaAIController extends GetxController {
         name: userName,
         message: message,
         sessionId: sessionToken,
-        authToken: authToken,
+        // authToken: authToken,
         lang: getCurrentLanCode(),
         timezone:
             splitedArr.isNotEmpty ? '${splitedArr[0]}:${splitedArr[1]}' : '',
@@ -550,14 +556,17 @@ class SheelaAIController extends GetxController {
                         payload: button.payload,
                         buttons: button);
                   } else {
+                    lastMsgIsOfButtons = false;
                     conversations.add(newConversation);
                     getAIAPIResponseFor(response, button);
                   }
                 } catch (e) {
+                  lastMsgIsOfButtons = false;
                   conversations.add(newConversation);
                   getAIAPIResponseFor(response, null);
                 }
               } else {
+                lastMsgIsOfButtons = false;
                 conversations.add(newConversation);
                 getAIAPIResponseFor(response, null);
               }

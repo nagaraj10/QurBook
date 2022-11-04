@@ -72,6 +72,8 @@ object Constants {
     val PROP_HRMID ="healthRecordMetaIds"
     val PROP_EVEID ="eventId"
     val PROP_RAWTITLE ="rawTitle"
+        val PROP_sheelaAudioMsgUrl ="sheelaAudioMsgUrl"
+
     val PROP_RAWBODY ="rawBody"
     val PROB_EXTERNAL_LINK ="externalLink"
     val PROB_USER_ID ="userId"

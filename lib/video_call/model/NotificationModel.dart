@@ -48,6 +48,7 @@ class NotificationModel {
   String notificationListId;
   bool viewRecordAction, isSheela, chatWithCC = false;
   String message;
+  String sheelaAudioMsgUrl;
 
   NotificationModel({
     this.title,
@@ -86,6 +87,7 @@ class NotificationModel {
     this.deliveredDateTime,
     this.isFromCareCoordinator,
     this.message,
+    this.sheelaAudioMsgUrl,
   });
 
   Map<String, dynamic> toMap() {
@@ -120,6 +122,7 @@ class NotificationModel {
       'isCaregiver': isCaregiver,
       'deliveredDateTime': deliveredDateTime,
       'isFromCareCoordinator': isFromCareCoordinator,
+      'sheelaAudioMsgUrl': sheelaAudioMsgUrl,
       'viewRecordAction': viewRecordAction,
       'chatWithCC': chatWithCC,
     };
@@ -154,6 +157,8 @@ class NotificationModel {
     isCaregiver = message['isCaregiver'];
     deliveredDateTime = message['deliveredDateTime'];
     isFromCareCoordinator = message['isFromCareCoordinator'];
+    sheelaAudioMsgUrl = message['sheelaAudioMsgUrl'];
+
     viewRecordAction = message['viewRecordAction'];
     chatWithCC = message['chatWithCC'];
   }
@@ -256,6 +261,13 @@ class NotificationModel {
         if (message[parameters.gcmEventId] != null) {
           eventId = message[parameters.gcmEventId];
         }
+        if ((message[parameters.sheelaAudioMsgUrl] ?? '').isNotEmpty) {
+          sheelaAudioMsgUrl = message[parameters.sheelaAudioMsgUrl];
+        }
+        if ((message[parameters.gcmsheelaAudioMsgUrl] ?? '').isNotEmpty) {
+          sheelaAudioMsgUrl = message[parameters.gcmsheelaAudioMsgUrl];
+        }
+
         if (message[parameters.externalLink] != null) {
           externalLink = message[parameters.externalLink];
         }
@@ -413,6 +425,13 @@ class NotificationModel {
     if (message[parameters.uid] != null) {
       uid = message[parameters.uid];
     }
+    if ((message[parameters.sheelaAudioMsgUrl] ?? '').isNotEmpty) {
+      sheelaAudioMsgUrl = message[parameters.sheelaAudioMsgUrl];
+    }
+    if ((message[parameters.gcmsheelaAudioMsgUrl] ?? '').isNotEmpty) {
+      sheelaAudioMsgUrl = message[parameters.gcmsheelaAudioMsgUrl];
+    }
+
     if (message[parameters.strMessage] != null) {
       this.message = message[parameters.strMessage];
     }
