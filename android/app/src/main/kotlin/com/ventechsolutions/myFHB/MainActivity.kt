@@ -2147,10 +2147,12 @@ WOWGoDataUpload = 1
             sharedValue =
                 "${Constants.PROP_ACK}&$sharedValue&${senderId}&${senderName}&${senderProfile}&${groupId}"
         } else if (redirect_to == "claimList") {
-            sharedValue = "${redirect_to}&${message}&$rawBody&$audioURL"
-        } else if (redirect_to == "isSheelaFollowup") {
             sharedValue = "${redirect_to}&${message}&$rawBody"
-        } else if (redirect_to?.contains("myRecords") == true) {
+        } else if (redirect_to == "sheela|pushMessage") {
+            sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL"
+        } else if (redirect_to == "isSheelaFollowup") {
+        sharedValue = "${redirect_to}&${message}&$rawBody"
+    } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
         }else if (redirect_to?.contains("notifyCaregiverForMedicalRecord") == true) {

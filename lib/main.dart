@@ -1275,10 +1275,17 @@ class _MyFHBState extends State<MyFHB> {
             nsRoute: '',
           );
         } else if (parsedData[0] == 'isSheelaFollowup') {
-          return SplashScreen(
-            nsRoute: 'isSheelaFollowup',
-            bundle: parsedData[0] + '|' + parsedData[1],
-          );
+          if ((parsedData[3].toString() ?? '').isNotEmpty) {
+            return SplashScreen(
+              nsRoute: 'isSheelaFollowup',
+              bundle: 'isSheelaFollowup' + '|' + parsedData[3],
+            );
+          } else {
+            return SplashScreen(
+              nsRoute: 'isSheelaFollowup',
+              bundle: parsedData[0] + '|' + parsedData[1],
+            );
+          }
         } else if (parsedData[1] == 'appointmentList' ||
             parsedData[1] == 'appointmentHistory') {
           return SplashScreen(
