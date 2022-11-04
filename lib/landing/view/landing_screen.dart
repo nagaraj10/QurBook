@@ -1049,8 +1049,10 @@ class _LandingScreenState extends State<LandingScreen> {
           if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE, snapshot.data);
+
           imageCache.clear();
           imageCache.clearLiveImages();
+
           return SwitchProfile().buildActions(
             context,
             _key,
