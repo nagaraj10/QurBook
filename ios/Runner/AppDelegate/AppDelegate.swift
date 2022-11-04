@@ -783,20 +783,20 @@ import LS202_DeviceManager
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
-        let appState =  UIApplication.shared.applicationState
-        if(appState == .inactive || appState == .active){
-            responsdToNotificationTap(response: response)
-            completionHandler()
-        }else{
+//        let appState =  UIApplication.shared.applicationState
+//        if( appState == .active){
+//            responsdToNotificationTap(response: response)
+//            completionHandler()
+//        }else{
             let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
             navigationController?.children.first?.present(alert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+5) {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
                 alert.dismiss(animated: true)
                 self.responsdToNotificationTap(response: response)
                 completionHandler()
             }
             
-        }
+//        }
     }
     
     override func applicationWillTerminate(_ application: UIApplication) {
