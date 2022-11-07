@@ -552,6 +552,14 @@ class CommonUtil {
         .format(now);
   }
 
+  String getCurrentDateForStatusActivity() {
+    final now = DateTime.now();
+    return DateFormat(CommonUtil.REGION_CODE == 'IN'
+        ? variable.strDateYear
+        : variable.strDateYear)
+        .format(now);
+  }
+
   Future<DateTime> _selectDate(BuildContext context) async {
     DateTime date;
     final picked = await showDatePicker(
@@ -4816,6 +4824,34 @@ class CommonUtil {
                     dialogboxOpen = false;
                     Navigator.of(context).pop();
                   })
+            ],
+          );
+        });
+  }
+
+  void showDialogForActivityStatus(String msg, BuildContext context,{Function() pressOk}) {
+    // set up the buttons
+    Widget noButton = TextButton(
+      child: Text("No"),
+      onPressed:  () {
+        Get.back();
+      },
+    );
+    Widget yesButton = TextButton(
+      child: Text("Yes"),
+      onPressed:  () {
+        pressOk();
+      },
+    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(variable.strConfirm),
+            content: Text(msg),
+            actions: [
+              noButton,
+              yesButton,
             ],
           );
         });

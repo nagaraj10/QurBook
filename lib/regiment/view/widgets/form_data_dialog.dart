@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/Qurhome/Loaders/loader_qurhome.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/services/SymptomService.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,8 @@ class FormDataDialogState extends State<FormDataDialog> {
 
   final _apiProvider = SymptomService();
 
+  var actvityStatus = '';
+
   @override
   void initState() {
     super.initState();
@@ -103,6 +106,14 @@ class FormDataDialogState extends State<FormDataDialog> {
     color = widget.color;
     mediaData = widget.mediaData;
     providerId = widget.providerId;
+
+    if (eid != null && eid != '') {
+      RegimentService.getActivityStatus(eid: eid).then((value) {
+        if (value?.isSuccess ?? false) {
+          actvityStatus = value?.result[0]?.planStatus ?? '';
+        }
+      });
+    }
   }
 
   @override
@@ -950,65 +961,20 @@ class FormDataDialogState extends State<FormDataDialog> {
                             ? () async {
                                 if (widget.canEdit) {
                                   if (_formKey.currentState.validate()) {
-                                    var events = '';
-                                    saveMap.forEach((key, value) {
-                                      events += '&$key=$value';
-                                      var provider =
-                                          Provider.of<RegimentViewModel>(
-                                              context,
-                                              listen: false);
-                                      provider.cachedEvents?.removeWhere(
-                                          (element) => element?.contains(key));
-                                      provider.cachedEvents
-                                          .add('&$key=$value'.toString());
-                                    });
-                                    if (widget.isFromQurHomeSymptom ||
-                                        widget.isFromQurHomeRegimen) {
-                                      LoaderQurHome.showLoadingDialog(
-                                        Get.context,
-                                        canDismiss: false,
-                                      );
+                                    if (actvityStatus == UnSubscribed ||
+                                        actvityStatus == Expired) {
+                                      var message =
+                                          (actvityStatus == UnSubscribed)
+                                              ? UnSubscribed
+                                              : Expired;
+                                      CommonUtil().showDialogForActivityStatus(
+                                          'Plan $message, $msgData', context,
+                                          pressOk: () {
+                                        Get.back();
+                                        clickSaveButton();
+                                      });
                                     } else {
-                                      LoaderClass.showLoadingDialog(
-                                        Get.context,
-                                        canDismiss: false,
-                                      );
-                                    }
-
-                                    final saveResponse =
-                                        await Provider.of<RegimentViewModel>(
-                                                context,
-                                                listen: false)
-                                            .saveFormData(
-                                      eid: eid,
-                                      events: events,
-                                      isFollowEvent: widget.isFollowEvent,
-                                      followEventContext:
-                                          widget.followEventContext,
-                                      selectedDate: initDate,
-                                      selectedTime: _currentTime,
-                                    );
-                                    if (saveResponse?.isSuccess ?? false) {
-                                      QurPlanReminders.getTheRemindersFromAPI();
-                                      if (widget.isFromQurHomeSymptom ||
-                                          widget.isFromQurHomeRegimen) {
-                                        LoaderQurHome.hideLoadingDialog(
-                                            Get.context);
-                                      } else {
-                                        LoaderClass.hideLoadingDialog(
-                                            Get.context);
-                                      }
-                                      if (Provider.of<RegimentViewModel>(
-                                                  context,
-                                                  listen: false)
-                                              .regimentStatus ==
-                                          RegimentStatus.DialogOpened) {
-                                        Navigator.pop(context, true);
-                                      }
-                                      checkForReturnActions(
-                                        returnAction: saveResponse
-                                            ?.result?.actions?.returnData,
-                                      );
+                                      clickSaveButton();
                                     }
                                   }
                                 } else {
@@ -1046,6 +1012,54 @@ class FormDataDialogState extends State<FormDataDialog> {
         ),
       ],
     );
+  }
+
+  clickSaveButton() async {
+    var events = '';
+    saveMap.forEach((key, value) {
+      events += '&$key=$value';
+      var provider = Provider.of<RegimentViewModel>(context, listen: false);
+      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents.add('&$key=$value'.toString());
+    });
+    if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
+      LoaderQurHome.showLoadingDialog(
+        Get.context,
+        canDismiss: false,
+      );
+    } else {
+      LoaderClass.showLoadingDialog(
+        Get.context,
+        canDismiss: false,
+      );
+    }
+
+    final saveResponse =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .saveFormData(
+      eid: eid,
+      events: events,
+      isFollowEvent: widget.isFollowEvent,
+      followEventContext: widget.followEventContext,
+      selectedDate: initDate,
+      selectedTime: _currentTime,
+    );
+    if (saveResponse?.isSuccess ?? false) {
+      QurPlanReminders.getTheRemindersFromAPI();
+      if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
+        LoaderQurHome.hideLoadingDialog(Get.context);
+      } else {
+        LoaderClass.hideLoadingDialog(Get.context);
+      }
+      if (Provider.of<RegimentViewModel>(context, listen: false)
+              .regimentStatus ==
+          RegimentStatus.DialogOpened) {
+        Navigator.pop(context, true);
+      }
+      checkForReturnActions(
+        returnAction: saveResponse?.result?.actions?.returnData,
+      );
+    }
   }
 
   Widget getTitle() {
