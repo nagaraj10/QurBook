@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/ImageViewer.dart';
+import 'package:path/path.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../constants/fhb_constants.dart';
@@ -543,7 +545,6 @@ class RegimentDataCard extends StatelessWidget {
                     child: InkWell(
                       onTap: () async {
                         stopRegimenTTS();
-
                         final canEdit =
                             startTime.difference(DateTime.now()).inMinutes <=
                                     15 &&
@@ -552,50 +553,39 @@ class RegimentDataCard extends StatelessWidget {
                                         .regimentMode ==
                                     RegimentMode.Schedule;
                         if (canEdit || isValidSymptom(context)) {
-                          LoaderClass.showLoadingDialog(
-                            Get.context,
-                            canDismiss: false,
-                          );
-                          var saveResponse =
-                              await Provider.of<RegimentViewModel>(context,
-                                      listen: false)
-                                  .saveFormData(
-                            eid: eid,
-                          );
-                          if (saveResponse?.isSuccess ?? false) {
-                            if ((saveResponse?.result != null) &&
-                                (saveResponse?.result?.actions != null) &&
-                                (saveResponse?.result?.actions?.returnData !=
-                                    null) &&
-                                (saveResponse
-                                        ?.result?.actions?.returnData?.eid !=
-                                    null) &&
-                                (saveResponse?.result?.actions?.returnData
-                                        ?.activityName !=
-                                    null)) {
-                              LoaderClass.hideLoadingDialog(Get.context);
-                              checkForReturnActionsProviderForm(
-                                returnAction:
-                                    saveResponse?.result?.actions?.returnData,
-                              );
-                            } else {
-                              Future.delayed(Duration(milliseconds: 300),
-                                  () async {
-                                await Provider.of<RegimentViewModel>(context,
-                                        listen: false)
-                                    .fetchRegimentData();
-                                LoaderClass.hideLoadingDialog(Get.context);
-                              });
-                            }
-                            /* Future.delayed(Duration(milliseconds: 300),
-                                () async {
-                              await Provider.of<RegimentViewModel>(context,
-                                      listen: false)
-                                  .fetchRegimentData();
-                              LoaderClass.hideLoadingDialog(Get.context);
-                            });*/
+                          if (regimentData?.eid != null &&
+                              regimentData?.eid != '') {
+                            RegimentService.getActivityStatus(
+                                    eid: regimentData?.eid)
+                                .then((value) {
+                              if (value?.isSuccess ?? false) {
+                                if (value?.result != null) {
+                                  if (value?.result[0].planStatus ==
+                                          UnSubscribed ||
+                                      value?.result[0].planStatus == Expired) {
+                                    var message =
+                                        (value?.result[0].planStatus ==
+                                                UnSubscribed)
+                                            ? UnSubscribed
+                                            : Expired;
+                                    CommonUtil().showDialogForActivityStatus(
+                                        'Plan $message, $msgData', Get.context,
+                                        pressOk: () {
+                                      Get.back();
+                                      logRegimenActivity(Get.context);
+                                    });
+                                  } else {
+                                    logRegimenActivity(Get.context);
+                                  }
+                                } else {
+                                  logRegimenActivity(Get.context);
+                                }
+                              } else {
+                                logRegimenActivity(Get.context);
+                              }
+                            });
                           } else {
-                            LoaderClass.hideLoadingDialog(Get.context);
+                            logRegimenActivity(Get.context);
                           }
                         } else {
                           FlutterToast().getToast(
@@ -627,6 +617,45 @@ class RegimentDataCard extends StatelessWidget {
     }
 
     return fieldWidgets;
+  }
+
+  logRegimenActivity(BuildContext context) async {
+    LoaderClass.showLoadingDialog(
+      Get.context,
+      canDismiss: false,
+    );
+    var saveResponse =
+        await Provider.of<RegimentViewModel>(context, listen: false)
+            .saveFormData(
+      eid: eid,
+    );
+    if (saveResponse?.isSuccess ?? false) {
+      if ((saveResponse?.result != null) &&
+          (saveResponse?.result?.actions != null) &&
+          (saveResponse?.result?.actions?.returnData != null) &&
+          (saveResponse?.result?.actions?.returnData?.eid != null) &&
+          (saveResponse?.result?.actions?.returnData?.activityName != null)) {
+        LoaderClass.hideLoadingDialog(Get.context);
+        checkForReturnActionsProviderForm(
+          returnAction: saveResponse?.result?.actions?.returnData,
+        );
+      } else {
+        Future.delayed(Duration(milliseconds: 300), () async {
+          await Provider.of<RegimentViewModel>(context, listen: false)
+              .fetchRegimentData();
+          LoaderClass.hideLoadingDialog(Get.context);
+        });
+      }
+      /* Future.delayed(Duration(milliseconds: 300),
+                                () async {
+                              await Provider.of<RegimentViewModel>(context,
+                                      listen: false)
+                                  .fetchRegimentData();
+                              LoaderClass.hideLoadingDialog(Get.context);
+                            });*/
+    } else {
+      LoaderClass.hideLoadingDialog(Get.context);
+    }
   }
 
   bool isValidSymptom(BuildContext context) {

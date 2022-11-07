@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -59,7 +60,7 @@ class SheelaAIController extends GetxController {
   String conversationFlag;
   bool lastMsgIsOfButtons = false;
   AudioCache _audioCache;
-
+  Timer _popTimer;
   var sheelaIconBadgeCount = 0.obs;
 
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
@@ -753,6 +754,30 @@ class SheelaAIController extends GetxController {
       });
     } catch (e) {
       sheelaIconBadgeCount.value = 0;
+    }
+  }
+
+  void updateTimer({bool enable = false}) {
+    try {
+      if (_popTimer != null && _popTimer.isActive) {
+        printInfo(info: "Cancelled the timer");
+        _popTimer.cancel();
+        _popTimer = null;
+      } else if (enable) {
+        printInfo(info: "started the timer");
+        _popTimer = Timer(const Duration(minutes: 1), () {
+          if (isSheelaScreenActive && bleController == null) {
+            printInfo(info: "timeout the timer");
+            stopTTS();
+            canSpeak = false;
+            isSheelaScreenActive = false;
+            getSheelaBadgeCount();
+            Get.back();
+          }
+        });
+      }
+    } catch (e) {
+      printError(info: e.toString());
     }
   }
 }

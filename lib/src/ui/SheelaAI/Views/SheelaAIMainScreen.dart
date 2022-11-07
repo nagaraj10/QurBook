@@ -88,6 +88,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
       }
       controller.stopTTS();
       if ((controller.arguments.audioMessage ?? '').isNotEmpty) {
+        controller.isSheelaScreenActive = false;
         Get.back();
       }
     } else if (state == AppLifecycleState.resumed) {
@@ -102,8 +103,19 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         if (controller.isMicListening.isTrue) {
           animationController?.reset();
           animationController?.forward();
+          controller.updateTimer(enable: false);
         } else {
           animationController?.stop();
+          if (controller.isLoading.isTrue) {
+            controller.updateTimer(enable: false);
+          } else {
+            if (controller.currentPlayingConversation != null &&
+                controller.currentPlayingConversation.isPlaying.isTrue) {
+              controller.updateTimer(enable: false);
+            } else {
+              controller.updateTimer(enable: true);
+            }
+          }
         }
         return WillPopScope(
           onWillPop: () async {
@@ -113,6 +125,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
               controller.canSpeak = false;
               controller.isSheelaScreenActive = false;
               controller.getSheelaBadgeCount();
+              controller.updateTimer(enable: false);
               Get.back();
               return true;
             }
@@ -138,6 +151,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           controller.canSpeak = false;
                           controller.isSheelaScreenActive = false;
                           controller.getSheelaBadgeCount();
+                          controller.updateTimer(enable: false);
                           Get.back();
                         }
                       },
@@ -332,6 +346,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             controller.canSpeak = false;
             controller.isSheelaScreenActive = false;
             controller.getSheelaBadgeCount();
+            controller.updateTimer(enable: false);
             Get.back();
           },
           child: CommonUtil().isTablet
@@ -342,6 +357,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   onTap: () {
                     controller.canSpeak = false;
                     controller.stopTTS();
+                    controller.updateTimer(enable: false);
                     Get.back();
                   },
                 )
