@@ -43,8 +43,7 @@ dependencies:
   google_maps_flutter: ^2.0.6
   auto_size_text: ^2.1.0
   dio: ^4.0.0
-  flutter_sound:
-    path : flutter_sound
+  flutter_sound: ^8.1.4
 #  flutter_google_places: ^0.3.0
   geocoder: ^0.2.1
   geolocator: ^7.2.0+1
@@ -61,8 +60,7 @@ dependencies:
 #  tflite: ^1.1.2
   sqflite: ^2.0.0+3
   devicelocale: ^0.4.1
-  flutter_local_notifications:
-    path : flutter-local-notification
+  flutter_local_notifications: ^6.0.0
   random_color: ^1.0.5
   image_gallery_saver: ^1.5.0
   permission_handler: ^8.1.2
