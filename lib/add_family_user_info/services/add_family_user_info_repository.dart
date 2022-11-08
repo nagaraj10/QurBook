@@ -65,6 +65,25 @@ class AddFamilyUserInfoRepository {
       response = await _helper.getProfileInfo(
           query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
     }
+    if (response != null) {
+      await PreferenceUtil.saveProfileData(
+          Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
+
+      try {
+        if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+          await PreferenceUtil.saveProfileData(
+              Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
+        } else {
+          await PreferenceUtil.saveProfileData(
+              Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
+        }
+      } catch (e) {
+        await PreferenceUtil.saveProfileData(
+            Constants.KEY_PROFILE, MyProfileModel.fromJson(response));
+      }
+    }
+
     return MyProfileModel.fromJson(response);
   }
 
