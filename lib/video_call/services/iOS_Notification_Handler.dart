@@ -189,7 +189,7 @@ class IosNotificationHandler {
       );
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
-    } else if (model.isSheela) {
+    } else if (model.isSheela ?? false) {
       if (sheelaAIController.isSheelaScreenActive &&
           (model.rawBody ?? '').isNotEmpty) {
         var reqJson = {

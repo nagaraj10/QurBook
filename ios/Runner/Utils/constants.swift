@@ -66,5 +66,5 @@ struct Constants {
     static let WOWGOWT1 = "GSH-202";
     static let WOWGOWT2 = "GSH-231";
     static let WOWGOWT3 = "0202B-0001";
-    
+    static let closeSheelaDialog = "closeSheelaDialog"
 }

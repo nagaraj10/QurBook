@@ -225,6 +225,12 @@ import LS202_DeviceManager
             }else if call.method == self?.STT_MicavailablityMethod{
                 let audioSession = AVAudioSession.sharedInstance()
                 result(!audioSession.isOtherAudioPlaying)
+            }else if call.method == Constants.closeSheelaDialog{
+                Loading.sharedInstance.hideLoader()
+                self?.stopRecording()
+                if let viewControllers = self?.navigationController?.visibleViewController as? SheelaAIVC {
+                    viewControllers.dismiss(animated: true, completion: nil)
+                }
             }else{
                 result(FlutterMethodNotImplemented)
                 return
@@ -243,15 +249,11 @@ import LS202_DeviceManager
                 result(FlutterMethodNotImplemented)
                 return
             }
-            
             print(Constants.textToSpeech)
-            
             let argumentDic = call.arguments as! Dictionary<String, Any>
             let message = argumentDic[Constants.paramaters.message] as! String
             let isClose = argumentDic[Constants.paramaters.isClose] as! Bool
-            
             print(Constants.TSS, message)
-            
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
         })
@@ -264,11 +266,16 @@ import LS202_DeviceManager
         window?.makeKeyAndVisible()
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    
     @objc func myTapActions(recognizer: UITapGestureRecognizer) {
         STT_Result?("");
         Loading.sharedInstance.hideLoader()
         stopRecording()
+        if let viewControllers = navigationController?.visibleViewController as? SheelaAIVC {
+            viewControllers.dismiss(animated: true, completion: nil)
+        }
     }
+    
     // 2 a)
     // Speech to Text
     func startRecording() throws {
@@ -783,20 +790,20 @@ import LS202_DeviceManager
     override func userNotificationCenter(_ center: UNUserNotificationCenter,
                                          didReceive response: UNNotificationResponse,
                                          withCompletionHandler completionHandler: @escaping () -> Void) {
-//        let appState =  UIApplication.shared.applicationState
-//        if( appState == .active){
-//            responsdToNotificationTap(response: response)
-//            completionHandler()
-//        }else{
-            let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
-            navigationController?.children.first?.present(alert, animated: true)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
-                alert.dismiss(animated: true)
-                self.responsdToNotificationTap(response: response)
-                completionHandler()
-            }
-            
-//        }
+        //        let appState =  UIApplication.shared.applicationState
+        //        if( appState == .active){
+        //            responsdToNotificationTap(response: response)
+        //            completionHandler()
+        //        }else{
+        let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
+        navigationController?.children.first?.present(alert, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
+            alert.dismiss(animated: true)
+            self.responsdToNotificationTap(response: response)
+            completionHandler()
+        }
+        
+        //        }
     }
     
     override func applicationWillTerminate(_ application: UIApplication) {
