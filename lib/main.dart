@@ -405,6 +405,8 @@ Widget buildError(BuildContext context, FlutterErrorDetails error) {
 }
 
 class MyFHB extends StatefulWidget {
+  static final RouteObserver<PageRoute> routeObserver =
+      RouteObserver<PageRoute>();
   @override
   _MyFHBState createState() => _MyFHBState();
 }
@@ -1240,6 +1242,7 @@ class _MyFHBState extends State<MyFHB> {
             ),
             //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
             home: findHomeWidget(navRoute),
+            navigatorObservers: [MyFHB.routeObserver],
             routes: routes,
             debugShowCheckedModeBanner: false,
             navigatorKey: Get.key,
