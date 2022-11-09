@@ -20,7 +20,7 @@ import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:tflite/tflite.dart';
+import 'package:tflite/tflite.dart';
 
 import 'CropAndRotateScreen.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -132,8 +132,8 @@ class TakePictureScreenForDevicesState
   }
 
   loadModel() async {
-    // await Tflite.loadModel(
-    //     model: variable.strdflit, labels: variable.file_device);
+    await Tflite.loadModel(
+        model: variable.strdflit, labels: variable.file_device);
   }
 
   @override
