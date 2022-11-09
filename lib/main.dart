@@ -1146,7 +1146,7 @@ class _MyFHBState extends State<MyFHB> {
 
   getMyRoute() async {
     final route = await nav_platform.invokeMethod('getMyRoute');
-    if (route != null) {
+    if (route != null && route != 'null') {
       setState(() {
         navRoute = route;
       });
@@ -1263,7 +1263,7 @@ class _MyFHBState extends State<MyFHB> {
       return CommonUtil.REGION_CODE == 'IN'
           ? IntroductionScreen()
           : SplashScreen();
-    } else if (navRoute.isEmpty) {
+    } else if (navRoute.isEmpty && navRoute != 'null') {
       return SplashScreen();
     } else {
       try {
@@ -1274,194 +1274,203 @@ class _MyFHBState extends State<MyFHB> {
           return SplashScreen(
             nsRoute: '',
           );
-        } else if (parsedData[0] == 'isSheelaFollowup') {
-          if ((parsedData[3].toString() ?? '').isNotEmpty) {
-            return SplashScreen(
-              nsRoute: 'isSheelaFollowup',
-              bundle: 'isSheelaFollowup' + '|' + parsedData[3],
-            );
-          } else {
-            return SplashScreen(
-              nsRoute: 'isSheelaFollowup',
-              bundle: parsedData[0] + '|' + parsedData[1],
-            );
-          }
-        } else if (parsedData[1] == 'appointmentList' ||
-            parsedData[1] == 'appointmentHistory') {
-          return SplashScreen(
-            nsRoute: parsedData[1],
-          );
-        } else if (parsedData[0] == 'ack') {
-          final temp = parsedData[1].split('|');
-          if (temp[0] == 'myRecords') {
-            return SplashScreen(
-              nsRoute: 'myRecords',
-              templateName: parsedData[1],
-              bundle: parsedData[2],
-            );
-          } else if (parsedData[1] == 'notifyCaregiverForMedicalRecord') {
-            return SplashScreen(
-              nsRoute: 'notifyCaregiverForMedicalRecord',
-              templateName: parsedData[1],
-              bundle: parsedData[2] +
-                  '|' +
-                  parsedData[3] +
-                  '|' +
-                  parsedData[4] +
-                  '|' +
-                  parsedData[5] +
-                  '|' +
-                  parsedData[6] +
-                  '|' +
-                  parsedData[7] +
-                  '|' +
-                  parsedData[8],
-            );
-          } else if (parsedData[1] == 'sheela') {
-            return SplashScreen(
-              nsRoute: 'sheela',
-              bundle: parsedData[2] + '|' + parsedData[3],
-            );
-          } else if (parsedData[1] == 'profile_page' ||
-              parsedData[1] == 'profile') {
+        }
+        if (parsedData != null && parsedData.length > 0) {
+          if (parsedData[0] == 'isSheelaFollowup') {
+            if ((parsedData[3].toString() ?? '').isNotEmpty) {
+              return SplashScreen(
+                nsRoute: 'isSheelaFollowup',
+                bundle: 'isSheelaFollowup' + '|' + parsedData[3],
+              );
+            } else {
+              return SplashScreen(
+                nsRoute: 'isSheelaFollowup',
+                bundle: parsedData[0] + '|' + parsedData[1],
+              );
+            }
+          } else if (parsedData[1] == 'appointmentList' ||
+              parsedData[1] == 'appointmentHistory') {
             return SplashScreen(
               nsRoute: parsedData[1],
             );
-          } else if (parsedData[1] == 'googlefit') {
-            return SplashScreen(
-              nsRoute: 'googlefit',
-            );
-          } else if (parsedData[1] == 'familyMemberCaregiverRequest') {
-            return SplashScreen(
-              nsRoute: 'familyMemberCaregiverRequest',
-              bundle: parsedData[2] +
-                  '|' +
-                  parsedData[3] +
-                  '|' +
-                  parsedData[4] +
-                  '|' +
-                  parsedData[5] +
-                  '|' +
-                  parsedData[6],
-            );
-          } else if (parsedData[1] == 'escalateToCareCoordinatorToRegimen') {
-            return SplashScreen(
-              nsRoute: 'escalateToCareCoordinatorToRegimen',
-              bundle: parsedData[2] +
-                  '|' +
-                  parsedData[3] +
-                  '|' +
-                  parsedData[4] +
-                  '|' +
-                  parsedData[5] +
-                  '|' +
-                  parsedData[6],
-            );
-          } else if (parsedData[1] == 'appointmentPayment') {
-            return SplashScreen(
-                nsRoute: 'appointmentPayment',
-                bundle:
-                    parsedData[1] + '&' + parsedData[2] + '&' + parsedData[3]);
-          } else if (parsedData[1] == 'qurbookServiceRequestStatusUpdate') {
-            return SplashScreen(
-                nsRoute: 'qurbookServiceRequestStatusUpdate',
-                bundle: parsedData[2]);
-          } else if (parsedData[1] == 'th_provider' ||
-              parsedData[1] == 'provider') {
-            return SplashScreen(
-              nsRoute: parsedData[1],
-            );
-          } else if (parsedData[1] == 'my_record' ||
-              parsedData[1] == 'prescription_list' ||
-              parsedData[1] == 'add_doc') {
-            return SplashScreen(
-              nsRoute: parsedData[1],
-            );
-          } else if (parsedData[1] == 'regiment_screen') {
-            //this need to be navigte to Regiment screen
-            return SplashScreen(
-              nsRoute: 'regiment_screen',
-              bundle: parsedData[2],
-            );
-          } else if (parsedData[1] == 'th_provider_hospital') {
-            //this need to be navigte to TH provider screen
-            return SplashScreen(
-              nsRoute: 'th_provider_hospital',
-            );
-          } else if (parsedData[1] == 'myfamily_list') {
-            //this need to be navigte to My Family List screen
-            return SplashScreen(
-              nsRoute: 'myfamily_list',
-            );
-          } else if (parsedData[1] == 'myprovider_list' ||
-              parsedData[1] == 'profile_my_family') {
-            //this need to be navigte to My Provider screen
-            return SplashScreen(
-              nsRoute: parsedData[1],
-            );
-          } else if (parsedData[1] == 'myplans') {
-            //this need to be navigte to My Plans screen
-            return SplashScreen(
-              nsRoute: 'myplans',
-            );
-          } else if (parsedData[1] == 'devices_tab') {
-            //this need to be navigte to My Plans screen
-            return SplashScreen(
-              nsRoute: 'devices_tab',
-            );
-          } else if (parsedData[1] == 'bills') {
-            //this need to be navigte to My Plans screen
-            return SplashScreen(
-              nsRoute: 'bills',
-            );
-          } else if (parsedData[1] == 'chat') {
-            //this need to be navigte to chat detail screen
-            return SplashScreen(
-              nsRoute: 'chat',
-              bundle: navRoute,
-            );
-          } else if (parsedData[1] == 'careGiverMemberProfile') {
-            //this need to be navigte to chat detail screen
-            return SplashScreen(
-              nsRoute: 'careGiverMemberProfile',
-              bundle: parsedData[2],
-            );
-          } else if (parsedData[1] == 'communicationSetting') {
-            //this need to be navigte to chat detail screen
-            return SplashScreen(
-              nsRoute: 'communicationSetting',
-            );
-          } else if (parsedData[1] == 'mycart') {
-            //this need to be navigte to My Plans screen
-            return SplashScreen(
-                nsRoute: 'mycart',
-                bundle: parsedData[0] +
-                    '&' +
-                    parsedData[1] +
-                    '&' +
-                    parsedData[2] +
-                    '&' +
+          } else if (parsedData[0] == 'ack') {
+            final temp = parsedData[1].split('|');
+            if (temp[0] == 'myRecords') {
+              return SplashScreen(
+                nsRoute: 'myRecords',
+                templateName: parsedData[1],
+                bundle: parsedData[2],
+              );
+            } else if (parsedData[1] == 'notifyCaregiverForMedicalRecord') {
+              return SplashScreen(
+                nsRoute: 'notifyCaregiverForMedicalRecord',
+                templateName: parsedData[1],
+                bundle: parsedData[2] +
+                    '|' +
                     parsedData[3] +
-                    '&' +
+                    '|' +
                     parsedData[4] +
-                    '&' +
+                    '|' +
                     parsedData[5] +
-                    '&' +
-                    parsedData[6]);
-          } else if (parsedData[1] == 'familyProfile') {
-            return SplashScreen(
-                nsRoute: 'familyProfile',
-                bundle:
-                    parsedData[0] + '&' + parsedData[1] + '&' + parsedData[2]);
-          } else if (parsedData[1] == 'manageActivities') {
-            return SplashScreen(
-              nsRoute: 'manageActivities',
-              bundle: parsedData[2],
-            );
-          } else {
-            return SplashScreen(
-              nsRoute: '',
-            );
+                    '|' +
+                    parsedData[6] +
+                    '|' +
+                    parsedData[7] +
+                    '|' +
+                    parsedData[8],
+              );
+            } else if (parsedData[1] == 'sheela') {
+              return SplashScreen(
+                nsRoute: 'sheela',
+                bundle: parsedData[2] + '|' + parsedData[3],
+              );
+            } else if (parsedData[1] == 'profile_page' ||
+                parsedData[1] == 'profile') {
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
+            } else if (parsedData[1] == 'googlefit') {
+              return SplashScreen(
+                nsRoute: 'googlefit',
+              );
+            } else if (parsedData[1] == 'familyMemberCaregiverRequest') {
+              return SplashScreen(
+                nsRoute: 'familyMemberCaregiverRequest',
+                bundle: parsedData[2] +
+                    '|' +
+                    parsedData[3] +
+                    '|' +
+                    parsedData[4] +
+                    '|' +
+                    parsedData[5] +
+                    '|' +
+                    parsedData[6],
+              );
+            } else if (parsedData[1] == 'escalateToCareCoordinatorToRegimen') {
+              return SplashScreen(
+                nsRoute: 'escalateToCareCoordinatorToRegimen',
+                bundle: parsedData[2] +
+                    '|' +
+                    parsedData[3] +
+                    '|' +
+                    parsedData[4] +
+                    '|' +
+                    parsedData[5] +
+                    '|' +
+                    parsedData[6],
+              );
+            } else if (parsedData[1] == 'appointmentPayment') {
+              return SplashScreen(
+                  nsRoute: 'appointmentPayment',
+                  bundle: parsedData[1] +
+                      '&' +
+                      parsedData[2] +
+                      '&' +
+                      parsedData[3]);
+            } else if (parsedData[1] == 'qurbookServiceRequestStatusUpdate') {
+              return SplashScreen(
+                  nsRoute: 'qurbookServiceRequestStatusUpdate',
+                  bundle: parsedData[2]);
+            } else if (parsedData[1] == 'th_provider' ||
+                parsedData[1] == 'provider') {
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
+            } else if (parsedData[1] == 'my_record' ||
+                parsedData[1] == 'prescription_list' ||
+                parsedData[1] == 'add_doc') {
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
+            } else if (parsedData[1] == 'regiment_screen') {
+              //this need to be navigte to Regiment screen
+              return SplashScreen(
+                nsRoute: 'regiment_screen',
+                bundle: parsedData[2],
+              );
+            } else if (parsedData[1] == 'th_provider_hospital') {
+              //this need to be navigte to TH provider screen
+              return SplashScreen(
+                nsRoute: 'th_provider_hospital',
+              );
+            } else if (parsedData[1] == 'myfamily_list') {
+              //this need to be navigte to My Family List screen
+              return SplashScreen(
+                nsRoute: 'myfamily_list',
+              );
+            } else if (parsedData[1] == 'myprovider_list' ||
+                parsedData[1] == 'profile_my_family') {
+              //this need to be navigte to My Provider screen
+              return SplashScreen(
+                nsRoute: parsedData[1],
+              );
+            } else if (parsedData[1] == 'myplans') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                nsRoute: 'myplans',
+              );
+            } else if (parsedData[1] == 'devices_tab') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                nsRoute: 'devices_tab',
+              );
+            } else if (parsedData[1] == 'bills') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                nsRoute: 'bills',
+              );
+            } else if (parsedData[1] == 'chat') {
+              //this need to be navigte to chat detail screen
+              return SplashScreen(
+                nsRoute: 'chat',
+                bundle: navRoute,
+              );
+            } else if (parsedData[1] == 'careGiverMemberProfile') {
+              //this need to be navigte to chat detail screen
+              return SplashScreen(
+                nsRoute: 'careGiverMemberProfile',
+                bundle: parsedData[2],
+              );
+            } else if (parsedData[1] == 'communicationSetting') {
+              //this need to be navigte to chat detail screen
+              return SplashScreen(
+                nsRoute: 'communicationSetting',
+              );
+            } else if (parsedData[1] == 'mycart') {
+              //this need to be navigte to My Plans screen
+              return SplashScreen(
+                  nsRoute: 'mycart',
+                  bundle: parsedData[0] +
+                      '&' +
+                      parsedData[1] +
+                      '&' +
+                      parsedData[2] +
+                      '&' +
+                      parsedData[3] +
+                      '&' +
+                      parsedData[4] +
+                      '&' +
+                      parsedData[5] +
+                      '&' +
+                      parsedData[6]);
+            } else if (parsedData[1] == 'familyProfile') {
+              return SplashScreen(
+                  nsRoute: 'familyProfile',
+                  bundle: parsedData[0] +
+                      '&' +
+                      parsedData[1] +
+                      '&' +
+                      parsedData[2]);
+            } else if (parsedData[1] == 'manageActivities') {
+              return SplashScreen(
+                nsRoute: 'manageActivities',
+                bundle: parsedData[2],
+              );
+            } else {
+              return SplashScreen(
+                nsRoute: '',
+              );
+            }
           }
         } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
           return SplashScreen(
