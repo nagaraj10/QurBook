@@ -33,9 +33,6 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
-    allprojects {
-        buildDir = "${rootProject.rootDir}/build/${project.name}"
-    }
 
     lintOptions {
         disable 'InvalidPackage'
@@ -45,7 +42,7 @@ android {
 
     defaultConfig {
         applicationId "com.ventechsolutions.myFHB"
-        minSdkVersion 21
+        minSdkVersion 28
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
