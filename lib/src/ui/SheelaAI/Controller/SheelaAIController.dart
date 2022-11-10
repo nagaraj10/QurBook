@@ -454,6 +454,7 @@ class SheelaAIController extends GetxController {
       isMicListening(false);
       CommonUtil().closeSheelaDialog();
     }
+    if (Platform.isIOS) voice_platform.invokeMethod(strCloseSheelaDialog);
     if (currentPlayingConversation != null) {
       currentPlayingConversation.isPlaying.value = false;
       currentPlayingConversation.currentButtonPlayingIndex = null;

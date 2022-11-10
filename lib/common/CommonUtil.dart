@@ -555,8 +555,8 @@ class CommonUtil {
   String getCurrentDateForStatusActivity() {
     final now = DateTime.now();
     return DateFormat(CommonUtil.REGION_CODE == 'IN'
-        ? variable.strDateYear
-        : variable.strDateYear)
+            ? variable.strDateYear
+            : variable.strDateYear)
         .format(now);
   }
 
@@ -4119,7 +4119,9 @@ class CommonUtil {
   String getDoctorName(User user) {
     var doctorName = '';
 
-    if (user.firstName != null && user.firstName != '') {
+    if (user.name != null && user.name != '') {
+      doctorName = user.name;
+    } else if (user.firstName != null && user.firstName != '') {
       doctorName = user.firstName + ' ' + user.lastName;
     } else if (user.userName != null && user.userName != '') {
       doctorName = user.userName;
@@ -4829,17 +4831,18 @@ class CommonUtil {
         });
   }
 
-  void showDialogForActivityStatus(String msg, BuildContext context,{Function() pressOk}) {
+  void showDialogForActivityStatus(String msg, BuildContext context,
+      {Function() pressOk}) {
     // set up the buttons
     Widget noButton = TextButton(
       child: Text("No"),
-      onPressed:  () {
+      onPressed: () {
         Get.back();
       },
     );
     Widget yesButton = TextButton(
       child: Text("Yes"),
-      onPressed:  () {
+      onPressed: () {
         pressOk();
       },
     );
@@ -4895,7 +4898,9 @@ class CommonUtil {
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((str) => str?.length>0?'${str[0]?.toUpperCase()}${str.substring(1)}':'')
+        .map((str) => str?.length > 0
+            ? '${str[0]?.toUpperCase()}${str.substring(1)}'
+            : '')
         .join(' ');
   }
 
