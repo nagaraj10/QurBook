@@ -4,7 +4,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -46,7 +47,7 @@
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <service android:name="com.gsh.api.BLEManager" />
+        <service android:exported="false" android:name="com.gsh.api.BLEManager" />
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
 
@@ -113,75 +114,89 @@
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".NotificationActivity"
             android:excludeFromRecents="true"
             android:taskAffinity=""
+            android:exported="false"
             android:showOnLockScreen="true"
-            android:theme="@style/FullScreenTheme"></activity>
+            android:theme="@style/FullScreenTheme" />
 
-        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
-        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+        <receiver android:exported="false" tools:node="merge" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+        <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false"
+            tools:node="merge" >
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".SMSBroadcastReceiver"
-            android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
+            android:permission="com.google.android.gms.auth.api.phone.permission.SEND"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver">
+        <receiver android:name="com.appsflyer.SingleInstallBroadcastReceiver"
+            tools:node="merge"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".services.DeclineReciver" />
-        <receiver android:name=".services.AcceptReceiver" />
-        <receiver android:name=".services.CancelAppointment" />
-        <receiver android:name=".services.RescheduleAppointment" />
-        <receiver android:name=".services.OnTapNotification" />
-        <receiver android:name=".services.ChatwithCC" />
-        <receiver android:name=".services.OnTapNotificationBackground" />
-        <receiver android:name=".services.Accept" />
-        <receiver android:name=".services.EscalateCareGiver" />
-        <receiver android:name=".services.AppointmentPaymentNotification" />
-        <receiver android:name=".services.PlanPaymentNotification" />
-        <receiver android:name=".services.FamilyAdditionNotification" />
-                <receiver android:name=".services.PartnerServiceTicket" />
+        <receiver android:exported="false" android:name=".services.DeclineReciver" />
+        <receiver android:exported="false" android:name=".services.AcceptReceiver" />
+        <receiver android:exported="false" android:name=".services.CancelAppointment" />
+        <receiver android:exported="false" android:name=".services.RescheduleAppointment" />
+        <receiver android:exported="false" android:name=".services.OnTapNotification" />
+        <receiver android:exported="false" android:name=".services.ChatwithCC" />
+        <receiver android:exported="false" android:name=".services.OnTapNotificationBackground" />
+        <receiver android:exported="false" android:name=".services.Accept" />
+        <receiver android:exported="false" android:name=".services.EscalateCareGiver" />
+        <receiver android:exported="false" android:name=".services.AppointmentPaymentNotification" />
+        <receiver android:exported="false" android:name=".services.PlanPaymentNotification" />
+        <receiver android:exported="false" android:name=".services.FamilyAdditionNotification" />
+                <receiver android:exported="false" android:name=".services.PartnerServiceTicket" />
+        <receiver android:exported="false" android:name="androidx.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
+        <receiver android:exported="false" android:name=".services.SheelaFollowReceiver" />
 
-        <receiver android:name=".services.SheelaFollowReceiver" />
+        <receiver android:exported="false" android:name=".services.Renew" />
+        <receiver android:exported="false" android:name=".services.Callback" />
+        <receiver android:exported="false" android:name=".services.Decline" />
+        <receiver android:exported="false" android:name=".services.AcceptCareGiver" />
+        <receiver android:exported="false" android:name=".services.RejectCareGiver" />
 
-        <receiver android:name=".services.Renew" />
-        <receiver android:name=".services.Callback" />
-        <receiver android:name=".services.Decline" />
-        <receiver android:name=".services.AcceptCareGiver" />
-        <receiver android:name=".services.RejectCareGiver" />
+        <service android:exported="false" android:name=".services.AVServices" />
 
-        <service android:name=".services.AVServices" />
+        <service android:exported="false" android:name=".services.CriticalAlertServices" />
 
-        <service android:name=".services.CriticalAlertServices" />
-
-        <receiver android:name=".services.DismissReceiver" />
-        <receiver android:name=".services.NoReceiver" />
-        <receiver android:name=".services.SnoozeReceiver" />
-        <receiver android:name=".services.ViewMemberReceiver" />
-        <receiver android:name=".services.CommunicationSettingReceiver" />
+        <receiver android:exported="false" android:name=".services.DismissReceiver" />
+        <receiver  android:exported="false" android:name=".services.NoReceiver" />
+        <receiver android:exported="false" android:name=".services.SnoozeReceiver" />
+        <receiver android:exported="false" android:name=".services.ViewMemberReceiver" />
+        <receiver android:exported="false" android:name=".services.CommunicationSettingReceiver" />
         <receiver
+            android:exported="false"
         android:name=".services.ReminderBroadcaster"
         android:process=":remote" />
 
         <receiver
+            android:exported="false"
             android:name=".services.ScheduleAppointment"
             android:process=":remote" />
 
         <service
             android:name=".services.MyFirebaseInstanceService"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <!--<action android:name="com.google.firebase.INSTANCE_ID_EVENT" />-->
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -196,9 +211,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCQ26mjgJ8T00uCWigel-zWQKU6fkhsGX4" />
 
+        <service
+            android:exported="false"
+            android:name="com.dooboolab.TauEngine.FlautoBackgroundAudioService" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.media.browse.FlautoMediaBrowserService" />
+            </intent-filter>
+        </service>
+
+
         <provider
             android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
             android:authorities="${applicationId}.flutter_downloader.provider"
+            android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
@@ -208,10 +235,12 @@
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
+            android:exported="false"
             tools:node="remove" />
 
         <provider
             android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
+            android:exported="false"
             android:authorities="${applicationId}.flutter-downloader-init">
             <!-- changes this number to configure the maximum number of concurrent tasks -->
             <meta-data
