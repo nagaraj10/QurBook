@@ -21,8 +21,15 @@ class AVServices : Service() {
         val CHANNEL_AV = "AVServicesChannel"
         val input = intent.getStringExtra(getString(R.string.arg_name))
         val notificationIntent = Intent(this, MainActivity::class.java)
-        val pendingIntent = PendingIntent.getActivity(this,
+        var pendingIntent: PendingIntent? = null
+        pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getActivity(this,
+                0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT)
+        }
+
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build
 import com.ventechsolutions.myFHB.R
 
 
@@ -20,7 +21,12 @@ class AutoDismissNotification : BroadcastReceiver() {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmIntent = Intent(context, AutoDismissNotification::class.java)
         alarmIntent.putExtra(context.getString(R.string.nsid), notificationId)
-        val alarmPendingIntent = PendingIntent.getBroadcast(context, notificationId, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
+        var alarmPendingIntent: PendingIntent? = null
+        alarmPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(context, notificationId, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
+        } else {
+            PendingIntent.getBroadcast(context, notificationId, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
+        }
         alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, alarmPendingIntent)
     }
 }

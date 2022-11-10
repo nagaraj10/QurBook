@@ -81,8 +81,6 @@ class _CameraState extends State<Camera> {
                   imageWidth: img.width,
                   numResults: 2,
                 ).then((recognitions) {
-
-
                   widget.setRecognitions(
                       recognitions, img.height, img.width, controller);
 

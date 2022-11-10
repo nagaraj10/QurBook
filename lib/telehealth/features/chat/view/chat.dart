@@ -4,7 +4,7 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
@@ -479,19 +479,19 @@ class ChatScreenState extends State<ChatScreen> {
     try {
       File file = File(path);
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference reference =
-          FirebaseStorage.instance.ref().child(fileName + '.m4a');
-      UploadTask uploadTask = reference.putFile(file);
-
-      String url;
-      await uploadTask.whenComplete(() async {
-        url = await uploadTask.snapshot.ref.getDownloadURL();
-        imageUrl = url;
-        setState(() {
-          isLoading = false;
-          onSendMessage(imageUrl, 3);
-        });
-      });
+      // Reference reference =
+      //     FirebaseStorage.instance.ref().child(fileName + '.m4a');
+      // UploadTask uploadTask = reference.putFile(file);
+      //
+      // String url;
+      // await uploadTask.whenComplete(() async {
+      //   url = await uploadTask.snapshot.ref.getDownloadURL();
+      //   imageUrl = url;
+      //   setState(() {
+      //     isLoading = false;
+      //     onSendMessage(imageUrl, 3);
+      //   });
+      // });
     } catch (e) {
       setState(() {
         isLoading = false;
