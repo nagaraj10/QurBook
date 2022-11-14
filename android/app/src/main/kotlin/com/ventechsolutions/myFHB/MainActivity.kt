@@ -2318,7 +2318,8 @@ WOWGoDataUpload = 1
             if(redirectTo!=null&&redirectTo.equals("isSheelaFollowup")){
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
-                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}")
+                val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
+                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}")
             }else{
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")

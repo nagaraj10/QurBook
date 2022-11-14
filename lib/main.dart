@@ -1263,13 +1263,14 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Widget findHomeWidget(String navRoute) {
-    if (isFirstTime != null && !isFirstTime) {
-      return CommonUtil.REGION_CODE == 'IN'
-          ? IntroductionScreen()
-          : SplashScreen();
-    } else if (navRoute.isEmpty && navRoute != 'null') {
-      return SplashScreen();
-    } else {
+     if (navRoute.isEmpty && navRoute != 'null') {
+      // return SplashScreen();
+       if (isFirstTime != null && !isFirstTime) {
+         return CommonUtil.REGION_CODE == 'IN'
+             ? IntroductionScreen()
+             : SplashScreen();
+       }
+     } else {
       try {
         final parsedData = navRoute.split('&');
 
