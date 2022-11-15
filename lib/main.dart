@@ -1539,7 +1539,10 @@ class _MyFHBState extends State<MyFHB> {
         } else {
           return StartTheCall();
         }
-      } catch (e) {}
+      } catch (e) {
+
+      }
+      return SplashScreen();
     }
   }
 
