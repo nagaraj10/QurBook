@@ -1269,6 +1269,8 @@ class _MyFHBState extends State<MyFHB> {
          return CommonUtil.REGION_CODE == 'IN'
              ? IntroductionScreen()
              : SplashScreen();
+       }else{
+         return SplashScreen();
        }
      } else {
       try {
@@ -1542,7 +1544,6 @@ class _MyFHBState extends State<MyFHB> {
       } catch (e) {
 
       }
-      return SplashScreen();
     }
   }
 
