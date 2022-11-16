@@ -1267,14 +1267,16 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Widget findHomeWidget(String navRoute) {
-    if (navRoute.isEmpty && navRoute != 'null') {
+     if (navRoute.isEmpty && navRoute != 'null') {
       // return SplashScreen();
-      if (isFirstTime != null && !isFirstTime) {
-        return CommonUtil.REGION_CODE == 'IN'
-            ? IntroductionScreen()
-            : SplashScreen();
-      }
-    } else {
+       if (isFirstTime != null && !isFirstTime) {
+         return CommonUtil.REGION_CODE == 'IN'
+             ? IntroductionScreen()
+             : SplashScreen();
+       }else{
+         return SplashScreen();
+       }
+     } else {
       try {
         final parsedData = navRoute.split('&');
 
@@ -1546,7 +1548,6 @@ class _MyFHBState extends State<MyFHB> {
       } catch (e) {
 
       }
-      return SplashScreen();
     }
   }
 
