@@ -407,6 +407,7 @@ Widget buildError(BuildContext context, FlutterErrorDetails error) {
 class MyFHB extends StatefulWidget {
   static final RouteObserver<PageRoute> routeObserver =
       RouteObserver<PageRoute>();
+
   @override
   _MyFHBState createState() => _MyFHBState();
 }
@@ -571,24 +572,27 @@ class _MyFHBState extends State<MyFHB> {
             KIOSK_message_api: passedValArr[2].toString()
           };
           CommonUtil().callQueueNotificationPostApi(reqJson);
-        }
-         else if ((passedValArr[3].toString() ?? '').isNotEmpty) {
-          Get.toNamed(
-            router.rt_Sheela,
-            arguments: SheelaArgument(
-              audioMessage: passedValArr[3].toString(),
-            ),
-          );
-        }else {
-          /* Future.delayed(Duration(milliseconds: 500), () async {
+        } else {
+          if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
+              (passedValArr[3] != 'null')) {
             Get.toNamed(
-              rt_Sheela,
+              router.rt_Sheela,
               arguments: SheelaArgument(
-                isSheelaFollowup: true,
-                message: passedValArr[1],
+                audioMessage: passedValArr[3].toString(),
               ),
             );
-          });*/
+          } else {
+            Future.delayed(Duration(milliseconds: 500), () async {
+              Get.toNamed(
+                rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaFollowup: true,
+                  rawMessage: passedValArr[2],
+                  audioMessage: '',
+                ),
+              );
+            });
+          }
         }
       }
       if (passedValArr[0] == 'ack') {
