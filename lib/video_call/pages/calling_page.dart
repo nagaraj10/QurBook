@@ -20,6 +20,7 @@ class CallingPage extends StatefulWidget {
   User patienInfo;
   bool isFromAppointment;
   String patientPrescriptionId;
+
   CallingPage(
       {this.name,
       this.id,
@@ -52,7 +53,9 @@ class _CallingPageState extends State<CallingPage> {
       super.initState();
       name = widget.name;
       mInitialTime = DateTime.now();
-      regController.onGoingSOSCall.value = true;
+      if (regController.isFromSOS.value) {
+        regController.onGoingSOSCall.value = true;
+      }
     } catch (e) {
       print(e);
     }
@@ -81,7 +84,7 @@ class _CallingPageState extends State<CallingPage> {
       await audioPlayer.stop();
       await audioPlayer.release();
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 
@@ -155,7 +158,7 @@ class _CallingPageState extends State<CallingPage> {
                         fontSize: 30.0.sp,
                         fontWeight: FontWeight.w600,
                         /*color: Color(CommonUtil().getMyPrimaryColor()),*/
-                        color: Colors.red,
+                        color: regController.isFromSOS.value?Colors.red:Color(CommonUtil().getMyPrimaryColor()),
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -190,7 +193,9 @@ class _CallingPageState extends State<CallingPage> {
                         onPressed: () {
                           try {
                             clearAudioPlayer();
-                            regController.onGoingSOSCall.value = false;
+                            if (regController.isFromSOS.value) {
+                              regController.onGoingSOSCall.value = false;
+                            }
                             if (widget.callMetaData != null) {
                               VideoCallCommonUtils.isMissedCallNsSent = true;
                               VideoCallCommonUtils().createMissedCallNS(

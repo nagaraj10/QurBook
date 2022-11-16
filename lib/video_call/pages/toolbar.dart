@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
@@ -74,6 +76,7 @@ class _ToolbarState extends State<Toolbar> {
       Provider.of<VideoRequestProvider>(Get.context, listen: false);
 
   var rtcProvider = Provider.of<RTCEngineProvider>(Get.context, listen: false);
+  var regController = Get.find<QurhomeRegimenController>();
 
   @override
   void initState() {
@@ -349,36 +352,26 @@ class _ToolbarState extends State<Toolbar> {
     } catch (e) {}*/
   }
 
-  void callApiToUpdateNonAppointment() {
+  callApiToUpdateNonAppointment() async {
     try {
-      String nonAppointmentUrl = 'call-log/non-appointment-call';
+      final apiResponse = QurHomeApiProvider();
       Map<String, dynamic> body = new Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
-      //String userIdForNotify;
-      //PreferenceUtil prefs = new PreferenceUtil();
 
-      /* try {
-      prefs.getValueBasedOnKey(struserID).then((value) {
-        userIdForNotify = value;
-      });
-    } catch (e) {}
-*/
       body['startTime'] = widget.callStartTime;
       body['endTime'] = endTime;
-      body['callerUser'] = userIdForNotify;
-      body['recipientUser'] = widget.patId;
+      body['callerUser'] = regController.userId.value;
+      body['recipientUser'] = regController.careCoordinatorId.value;
 
-      /*new ApiResponse()
-        .putNonAppointmentCall(nonAppointmentUrl, body)
-        .then((value) {
-      if (value['isSuccess'] != null && value['isSuccess']) {
-        print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
-      }
-    });*/
+      await apiResponse.putNonAppointmentCall(body).then((value) {
+        if (value['isSuccess'] != null && value['isSuccess']) {
+          print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
+        }
+      });
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 

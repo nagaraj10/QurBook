@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
@@ -277,6 +278,27 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.recipientId ?? '').isEmpty) {
             currentResponse.recipientId = "Sheela Response";
           }
+          if ((currentResponse.directCall != null &&
+                  currentResponse.directCall) &&
+              (currentResponse.recipient != null &&
+                  currentResponse.recipient.contains("CC"))) {
+            var regController = Get.put(QurhomeRegimenController());
+            if (CommonUtil()
+                .validString(regController.careCoordinatorId.value)
+                .trim()
+                .isNotEmpty) {
+              regController.callSOSEmergencyServices(1);
+            } else {
+              regController.getUserDetails();
+              await regController.getCareCoordinatorId();
+              regController.callSOSEmergencyServices(1);
+            }
+            await Future.delayed(const Duration(seconds: 2));
+            isLoading.value = false;
+            conversations.removeLast();
+            stopTTS();
+            return;
+          }
           currentResponse = await getGoogleTTSForConversation(currentResponse);
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
@@ -452,9 +474,12 @@ class SheelaAIController extends GetxController {
     }
     if (isMicListening.isTrue) {
       isMicListening(false);
+    }
+    if (Platform.isIOS) {
+      voice_platform.invokeMethod(strCloseSheelaDialog);
+    } else {
       CommonUtil().closeSheelaDialog();
     }
-    if (Platform.isIOS) voice_platform.invokeMethod(strCloseSheelaDialog);
     if (currentPlayingConversation != null) {
       currentPlayingConversation.isPlaying.value = false;
       currentPlayingConversation.currentButtonPlayingIndex = null;

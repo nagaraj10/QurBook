@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class WaveAnimation extends StatefulWidget {
@@ -13,6 +15,7 @@ class WaveAnimation extends StatefulWidget {
 class _WaveAnimationState extends State<WaveAnimation>
     with TickerProviderStateMixin {
   AnimationController _controller;
+  var regController = Get.find<QurhomeRegimenController>();
 
   @override
   void initState() {
@@ -76,9 +79,10 @@ class _WaveAnimationState extends State<WaveAnimation>
       height: radius,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.red.withOpacity(1 - _controller.value),
-        /*color: Color(CommonUtil().getMyPrimaryColor())
-            .withOpacity(1 - _controller.value),*/
+        color: regController.isFromSOS.value
+            ? Colors.red.withOpacity(1 - _controller.value)
+            : Color(CommonUtil().getMyPrimaryColor())
+                .withOpacity(1 - _controller.value),
       ),
     );
   }
