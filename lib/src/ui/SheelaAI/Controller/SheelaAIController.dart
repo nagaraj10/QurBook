@@ -90,8 +90,10 @@ class SheelaAIController extends GetxController {
       tts_platform.setMethodCallHandler(
         (call) {
           if (call.method == tts_platform_closeMic) {
-            isMicListening.value = false;
-            _audioCache.play('raw/Negative.mp3');
+            if (isMicListening.isTrue) {
+              isMicListening.value = false;
+              _audioCache.play('raw/Negative.mp3');
+            }
           }
         },
       );
