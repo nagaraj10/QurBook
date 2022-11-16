@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -123,9 +124,71 @@
             </objects>
             <point key="canvasLocation" x="34.782608695652179" y="60.9375"/>
         </scene>
+        <!--LoaderVC-->
+        <scene sceneID="sdM-ZW-B8u">
+            <objects>
+                <viewController storyboardIdentifier="LoaderVC" id="aEW-NC-8cX" customClass="LoaderVC" customModule="myFHB" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="veM-Df-oDf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8b8-Jd-pRk" customClass="NVActivityIndicatorView" customModule="myFHB" customModuleProvider="target">
+                                <rect key="frame" x="107" y="348" width="200" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="EZ2-XG-2Cb"/>
+                                    <constraint firstAttribute="width" constant="200" id="dnS-0c-4db"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                        <color key="value" name="mainBG"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="typeName" value="ballScaleMultiple"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Listening ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N8s-VU-kSf">
+                                <rect key="frame" x="170" y="413.5" width="74.5" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4a-yO-p9H">
+                                <rect key="frame" x="80" y="438.5" width="254" height="19.5"/>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="16"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="1fe-IW-9Xn"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="v4a-yO-p9H" firstAttribute="centerX" secondItem="veM-Df-oDf" secondAttribute="centerX" id="EeJ-VU-qeO"/>
+                            <constraint firstItem="N8s-VU-kSf" firstAttribute="centerX" secondItem="veM-Df-oDf" secondAttribute="centerX" id="I4F-xO-QqG"/>
+                            <constraint firstItem="8b8-Jd-pRk" firstAttribute="centerX" secondItem="veM-Df-oDf" secondAttribute="centerX" id="YXH-kh-QuE"/>
+                            <constraint firstItem="8b8-Jd-pRk" firstAttribute="centerY" secondItem="veM-Df-oDf" secondAttribute="centerY" id="a0N-id-HSc"/>
+                            <constraint firstItem="v4a-yO-p9H" firstAttribute="centerY" secondItem="veM-Df-oDf" secondAttribute="centerY" id="fVP-aX-W5q"/>
+                            <constraint firstItem="v4a-yO-p9H" firstAttribute="top" secondItem="N8s-VU-kSf" secondAttribute="bottom" constant="8" id="g2q-Wk-13e"/>
+                            <constraint firstItem="1fe-IW-9Xn" firstAttribute="trailing" secondItem="v4a-yO-p9H" secondAttribute="trailing" constant="80" id="x1f-Kr-pIA"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="loading" destination="8b8-Jd-pRk" id="CjZ-fL-14C"/>
+                        <outlet property="timerLablel" destination="v4a-yO-p9H" id="jqh-5r-val"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p22-f2-aYl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="742" y="61"/>
+        </scene>
     </scenes>
     <resources>
         <image name="maya" width="200" height="200"/>
+        <namedColor name="mainBG">
+            <color red="0.37254901960784315" green="0.12941176470588237" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="tintColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

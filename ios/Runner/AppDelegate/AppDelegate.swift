@@ -212,10 +212,11 @@ import LS202_DeviceManager
             if call.method == self?.STT_METHOD  {
                 print(Constants.speechToText)
                 print(Constants.STT, result)
-                Loading.sharedInstance.showLoader()
-                let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(self?.myTapActions))
-                mytapGestureRecog.numberOfTapsRequired = 1
-                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
+                self?.startLoadingVC()
+//                Loading.sharedInstance.showLoader()
+//                let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(self?.myTapActions))
+//                mytapGestureRecog.numberOfTapsRequired = 1
+//                Loading.sharedInstance.bgBlurView.addGestureRecognizer(mytapGestureRecog)
                 self?.STT_Result = result;
                 do{
                     try self?.startRecording();
@@ -269,10 +270,17 @@ import LS202_DeviceManager
     
     @objc func myTapActions(recognizer: UITapGestureRecognizer) {
         STT_Result?("");
-        Loading.sharedInstance.hideLoader()
+//        Loading.sharedInstance.hideLoader()
         stopRecording()
+        if let controller = self.navigationController?.children.first as? FlutterViewController{
+            let notificationChannel = FlutterMethodChannel.init(name: Constants.TTS_CHANNEL, binaryMessenger: controller.binaryMessenger)
+            notificationChannel.invokeMethod(Constants.closeMicMethod,arguments: nil)
+        }
         if let viewControllers = navigationController?.visibleViewController as? SheelaAIVC {
             viewControllers.dismiss(animated: true, completion: nil)
+        }
+        if let viewControllers = navigationController?.visibleViewController as? LoaderVC {
+            viewControllers.dismiss(animated: false, completion: nil)
         }
     }
     
@@ -319,6 +327,8 @@ import LS202_DeviceManager
                 self.stopRecording()
                 self.detectionTimer?.invalidate()
                 self.STT_Result!("")
+            }else{
+                Loading.sharedInstance.showLoader()
             }
         }
         
@@ -326,6 +336,10 @@ import LS202_DeviceManager
             if let result = result {
                 self.message = result.bestTranscription.formattedString
                 self.detectionTimer?.invalidate()
+                if let viewControllers = self.navigationController?.visibleViewController as? LoaderVC {
+                    viewControllers.dismiss(animated: false, completion: nil)
+                    Loading.sharedInstance.showLoader()
+                }
                 print(result.bestTranscription.formattedString as Any)
                 print(result.isFinal)
                 if let timer = self.detectionTimer, timer.isValid, result.isFinal {
@@ -377,6 +391,16 @@ import LS202_DeviceManager
                 self.STT_Result!(message)
             }
             container.modalPresentationStyle = .overFullScreen
+            navigationController?.present(container, animated: false)
+        }
+    }
+    func startLoadingVC(){
+        let storyboard = UIStoryboard(name: "SheelaAI", bundle: nil)
+        if let container = storyboard.instantiateViewController(withIdentifier: "LoaderVC") as? LoaderVC {
+            container.modalPresentationStyle = .overFullScreen
+            let mytapGestureRecog = UITapGestureRecognizer(target: self, action: #selector(myTapActions))
+            mytapGestureRecog.numberOfTapsRequired = 1
+            container.view.addGestureRecognizer(mytapGestureRecog)
             navigationController?.present(container, animated: false)
         }
     }

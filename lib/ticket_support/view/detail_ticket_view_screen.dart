@@ -232,7 +232,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       "Preferred Hospital Name",
                       CommonUtil().validString(value.toString())));
                   break;
-                } else if (fieldName.contains(LabelName)) {
+                } else if (fieldName==LabelName) {
                   if (fieldData != null &&
                       fieldData.length > 0 &&
                       value is! String) {
