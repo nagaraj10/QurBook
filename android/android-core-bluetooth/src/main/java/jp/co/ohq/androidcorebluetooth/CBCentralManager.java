@@ -260,12 +260,12 @@ public class CBCentralManager extends CBManager {
 
     private void _initPeripherals() {
         mPeripherals.clear();
-        Set<BluetoothDevice> bondedDevices = getAdapter().getBondedDevices();
-        if (null != bondedDevices) {
-            for (BluetoothDevice bluetoothDevice : bondedDevices) {
-                mPeripherals.put(bluetoothDevice.getAddress(), _createBlePeripheral(bluetoothDevice));
-            }
-        }
+//        Set<BluetoothDevice> bondedDevices = getAdapter().getBondedDevices();
+//        if (null != bondedDevices) {
+//            for (BluetoothDevice bluetoothDevice : bondedDevices) {
+//                mPeripherals.put(bluetoothDevice.getAddress(), _createBlePeripheral(bluetoothDevice));
+//            }
+//        }
     }
 
     private void _deinitPeripherals() {
