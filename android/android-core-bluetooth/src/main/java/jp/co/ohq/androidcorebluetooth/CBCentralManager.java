@@ -2,6 +2,7 @@ package jp.co.ohq.androidcorebluetooth;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,15 +38,17 @@ public class CBCentralManager extends CBManager {
     private final CBCentralManagerDelegate mDelegate;
     @NonNull
     private final CBScanner mScanner;
-
+    private Activity activity;
 //    String[] LE_SCAN_PERMISSIONS=[Manifest.permission.BLUETOOTH_CONNECT];
 
     public CBCentralManager(
             @NonNull final Context context,
+            @NonNull Activity activity,
             @NonNull final CBCentralManagerDelegate delegate,
             @Nullable Looper looper) {
         super(context, looper);
         mDelegate = delegate;
+        this.activity=activity;
         CBScanner.ScanListener scanListener = new CBScanner.ScanListener() {
             @Override
             void onScan(@NonNull final BluetoothDevice bluetoothDevice, final int rssi, final @NonNull byte[] scanRecord) {
@@ -278,11 +281,8 @@ public class CBCentralManager extends CBManager {
                 // to handle the case where the user grants the permission. See the documentation
                 // for Activity#requestPermissions for more details.
                 Log.e("bluetooth", "_initPeripherals: "+"second" );
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-//                {
-//                    getContext().requestPermissions(getContext(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
-//                    return;
-//                }
+
+                CheckForPermissions.checkForLocationPermissions(activity);
                 return;
             }
         }

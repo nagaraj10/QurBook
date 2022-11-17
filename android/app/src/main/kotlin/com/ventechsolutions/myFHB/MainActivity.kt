@@ -268,6 +268,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
+        OHQDeviceManager.init(applicationContext,this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
