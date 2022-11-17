@@ -13,7 +13,7 @@ public class MyApp : Application(), Application.ActivityLifecycleCallbacks {
     @CallSuper
     override fun onCreate() {
         super.onCreate()
-        OHQDeviceManager.init(applicationContext)
+//        OHQDeviceManager.init(applicationContext,currentActivity)
         registerActivityLifecycleCallbacks(this)
         FlutterMain.startInitialization(this)
 
