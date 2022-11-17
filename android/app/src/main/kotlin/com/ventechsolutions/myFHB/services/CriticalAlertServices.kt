@@ -69,11 +69,23 @@ class CriticalAlertServices : Service() {
 
             notificationIntent.flags = (Intent.FLAG_ACTIVITY_CLEAR_TOP
                     or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val onTapPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
 
-            val onTapPendingIntent = PendingIntent.getActivity(
-                this, 0,
-                notificationIntent, 0
-            )
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
 
             //val colorRes = android.R.color.holo_red_dark
 
