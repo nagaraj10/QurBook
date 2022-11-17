@@ -19,6 +19,7 @@ import android.net.wifi.WifiManager
 import android.net.wifi.WifiNetworkSpecifier
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.provider.Settings
@@ -178,6 +179,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private var isPartialResultInvoked: Boolean? = false
     private var speechRecognizer: SpeechRecognizer? = null
     private lateinit var dialog: Dialog
+    private lateinit var countDownTimerDialog: Dialog
+
+    var countDown : CountDownTimer? = null
 
     //private lateinit var builder: AlertDialog.Builder
     internal lateinit var displayText: EditText
@@ -185,11 +189,14 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     internal lateinit var edit_view: LinearLayout
     internal lateinit var errorTxt: TextView
 
+    internal lateinit var countDownTimer: TextView
+
     //internal lateinit var errorTxt: TextView
     internal lateinit var tryMe: LinearLayout
     internal lateinit var listeningLayout: LinearLayout
     internal lateinit var tryAgain: ImageView
     internal lateinit var customLayout: View
+    internal lateinit var countDownTimerLayout: View
     internal lateinit var spin_kit: SpinKitView
     internal lateinit var close: ImageView
     internal lateinit var micOn: ImageView
@@ -296,8 +303,11 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 //        builder = AlertDialog.Builder(context)
 //        builder.setCancelable(true)
         dialog = Dialog(this)
+        countDownTimerDialog = Dialog(this)
         customLayout = layoutInflater.inflate(R.layout.progess_dialog, null)
+        countDownTimerLayout = layoutInflater.inflate(R.layout.listen_loading, null)
         displayText = customLayout.findViewById(R.id.displayTxt)
+        countDownTimer = countDownTimerLayout.findViewById(R.id.countDownTimer)
         sendBtn = customLayout.findViewById(R.id.send)
         edit_view = customLayout.findViewById(R.id.edit_view)
         errorTxt = customLayout.findViewById(R.id.errorTxt)
@@ -311,10 +321,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(customLayout)
         dialog.setCancelable(false)
+        countDownTimerDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        countDownTimerDialog.setContentView(countDownTimerLayout)
+        countDownTimerDialog.setCancelable(false)
         //dialog = builder.create()
         //dialog.setInverseBackgroundForced(true)
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        countDownTimerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        countDownTimerDialog.window?.setDimAmount(0.0f)
         displayText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -2318,7 +2333,8 @@ WOWGoDataUpload = 1
             if(redirectTo!=null&&redirectTo.equals("isSheelaFollowup")){
                 val message = data.getStringExtra("message")
                 val rawMessage = data.getStringExtra("rawMessage")
-                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}")
+                val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
+                mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}")
             }else{
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")
@@ -2366,7 +2382,22 @@ WOWGoDataUpload = 1
 
 
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
+        countDownTimerDialog.show()
 
+        countDown= object: CountDownTimer(11000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                countDownTimer.text=(millisUntilFinished/1000).toString()+" Listening"
+            }
+            override fun onFinish() {
+                countDownTimerDialog.dismiss()
+                countDown?.cancel()
+                speechRecognizer?.cancel()
+                close.performClick()
+                _result?.error("100","no response",100)
+                _result=null
+            }
+        }
+        countDown?.start()
         //Timer().schedule(100){
         try {
             //startActivityForResult(intent, REQ_CODE)
@@ -2376,7 +2407,8 @@ WOWGoDataUpload = 1
                 }
                 override fun onBeginningOfSpeech() {
                     Log.e("speechreco", "onBeginningOfSpeech: " )
-
+                    countDown?.cancel()
+                    countDownTimerDialog.dismiss()
                     if (!dialog.isShowing) {
                         this@MainActivity.runOnUiThread(
                             object : Runnable {
@@ -2442,7 +2474,9 @@ WOWGoDataUpload = 1
 
                 override fun onError(errorCode: Int) {
                     Log.e("speechreco", "onError: " )
-                    handler.postDelayed(runnable, 15000);
+                    handler.postDelayed(runnable, 10000);
+                    speechRecognizer?.cancel()
+                    speechRecognizer?.startListening(intent)
                     //close.performClick()
                     //_result?.error("100","no response",errorCode)
                     //_result=null
