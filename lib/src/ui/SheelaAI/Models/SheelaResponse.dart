@@ -55,6 +55,7 @@ class SheelaResponse {
   String sessionId;
   String relationshipId;
   String audioFile;
+  bool isButtonNumber;
 
   SheelaResponse({
     this.recipientId,
@@ -82,6 +83,7 @@ class SheelaResponse {
     this.relationshipId,
     this.imageURLS,
     this.audioFile,
+    this.isButtonNumber
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
@@ -120,6 +122,7 @@ class SheelaResponse {
     conversationFlag = json['conversationFlag'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
+    isButtonNumber = (json['IsButtonNumber']?? false);
   }
 
   Map<String, dynamic> toJson() {
@@ -149,6 +152,7 @@ class SheelaResponse {
     data['conversationFlag'] = this.conversationFlag;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
+    data['IsButtonNumber'] = this.isButtonNumber;
     return data;
   }
 }
