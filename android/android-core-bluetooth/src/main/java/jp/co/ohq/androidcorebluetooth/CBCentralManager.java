@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -266,6 +267,7 @@ public class CBCentralManager extends CBManager {
     private void _initPeripherals() {
         mPeripherals.clear();
         Set<BluetoothDevice> bondedDevices = null;
+        Log.e("bluetooth", "_initPeripherals: "+"first" );
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (getContext().checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
@@ -275,9 +277,17 @@ public class CBCentralManager extends CBManager {
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for Activity#requestPermissions for more details.
+                Log.e("bluetooth", "_initPeripherals: "+"second" );
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+//                {
+//                    getContext().requestPermissions(getContext(), new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
+//                    return;
+//                }
                 return;
             }
         }
+        Log.e("bluetooth", "_initPeripherals: "+"third" );
+
         bondedDevices = getAdapter().getBondedDevices();
         if (null != bondedDevices) {
             for (BluetoothDevice bluetoothDevice : bondedDevices) {
