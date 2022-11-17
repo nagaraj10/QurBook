@@ -1383,7 +1383,8 @@ WOWGoDataUpload = 1
                 private fun connectToBGL(bleDevice: BleDevice) {}
             })
         } catch (ex: Exception) {
-            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
+            Log.e("bleconnectstartscan", "startScan: "+ ex.localizedMessage )
+//            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
