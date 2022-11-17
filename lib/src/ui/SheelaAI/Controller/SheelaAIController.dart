@@ -554,20 +554,20 @@ class SheelaAIController extends GetxController {
 
                   var button = null;
 
-                  if (!conversations.last?.isButtonNumber) {
-                    button = conversations.last?.buttons.firstWhere((element) =>
+                  if (!conversations?.last?.isButtonNumber) {
+                    button = conversations?.last?.buttons.firstWhere((element) =>
                         (element.title ?? "").toLowerCase() == responseRecived);
-                  } else if (conversations.last?.isButtonNumber) {
+                  } else if (conversations?.last?.isButtonNumber) {
                     bool isDigit = isNumeric(responseRecived);
                     for (int i = 0;
-                        i < conversations.last?.buttons.length ?? 0;
+                        i < conversations?.last?.buttons.length ?? 0;
                         i++) {
                       var temp =
-                          conversations.last?.buttons[i].title.split(".");
+                          conversations?.last?.buttons[i].title.split(".");
                       if ((temp[isDigit ? 0 : 1].toString().trim() ?? "")
                               .toLowerCase() ==
                           responseRecived) {
-                        button = conversations.last?.buttons[i];
+                        button = conversations?.last?.buttons[i];
                         break;
                       }
                     }
