@@ -91,8 +91,10 @@ class SheelaAIController extends GetxController {
       tts_platform.setMethodCallHandler(
         (call) {
           if (call.method == tts_platform_closeMic) {
-            isMicListening.value = false;
-            _audioCache.play('raw/Negative.mp3');
+            if (isMicListening.isTrue) {
+              isMicListening.value = false;
+              _audioCache.play('raw/Negative.mp3');
+            }
           }
         },
       );
@@ -109,7 +111,7 @@ class SheelaAIController extends GetxController {
                 buttons.length) {
               final index =
                   currentPlayingConversation.currentButtonPlayingIndex ?? 0;
-              if ((index < buttons.length - 1) && buttons[index + 1].skipTts) {
+              if ((index < buttons.length - 1) && buttons[index + 1].skipTts&&!currentPlayingConversation.isButtonNumber) {
                 currentPlayingConversation.currentButtonPlayingIndex++;
               }
               checkForButtonsAndPlay();
@@ -571,12 +573,31 @@ class SheelaAIController extends GetxController {
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
                 try {
+
                   final responseRecived =
                       response.toString().toLowerCase().trim();
-                  final button = conversations.last?.buttons.firstWhere(
-                      (element) =>
-                          (element.title ?? "").toLowerCase() ==
-                          responseRecived);
+
+                  var button = null;
+
+                  if (!conversations?.last?.isButtonNumber) {
+                    button = conversations?.last?.buttons.firstWhere((element) =>
+                        (element.title ?? "").toLowerCase() == responseRecived);
+                  } else if (conversations?.last?.isButtonNumber) {
+                    bool isDigit = isNumeric(responseRecived);
+                    for (int i = 0;
+                        i < conversations?.last?.buttons.length ?? 0;
+                        i++) {
+                      var temp =
+                          conversations?.last?.buttons[i].title.split(".");
+                      if ((temp[isDigit ? 0 : 1].toString().trim() ?? "")
+                              .toLowerCase() ==
+                          responseRecived) {
+                        button = conversations?.last?.buttons[i];
+                        break;
+                      }
+                    }
+                  }
+
                   if (button != null) {
                     startSheelaFromButton(
                         buttonText: button.title,
@@ -805,5 +826,12 @@ class SheelaAIController extends GetxController {
     } catch (e) {
       printError(info: e.toString());
     }
+  }
+
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return int.tryParse(s) != null;
   }
 }

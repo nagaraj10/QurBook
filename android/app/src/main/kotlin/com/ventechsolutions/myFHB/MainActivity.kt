@@ -268,6 +268,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setAutoInitEnabled(true)
+        OHQDeviceManager.init(applicationContext,this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
@@ -1382,7 +1383,8 @@ WOWGoDataUpload = 1
                 private fun connectToBGL(bleDevice: BleDevice) {}
             })
         } catch (ex: Exception) {
-            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
+            Log.e("bleconnectstartscan", "startScan: "+ ex.localizedMessage )
+//            Toast.makeText(this@MainActivity, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -2386,7 +2388,7 @@ WOWGoDataUpload = 1
 
         countDown= object: CountDownTimer(11000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                countDownTimer.text="00:"+ (millisUntilFinished/1000)
+                countDownTimer.text=(millisUntilFinished/1000).toString()+" Listening"
             }
             override fun onFinish() {
                 countDownTimerDialog.dismiss()
@@ -2981,23 +2983,46 @@ WOWGoDataUpload = 1
 
             val dismissIntent = Intent(this, DismissReceiver::class.java)
             dismissIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
-            val dismissPendingIntent = PendingIntent.getBroadcast(
-                this,
-                nsId,
-                dismissIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val dismissPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    dismissIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    dismissIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
+
+
+
             val snoozeIntent = Intent(this, SnoozeReceiver::class.java)
             snoozeIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             snoozeIntent.putExtra(this.getString(R.string.currentMillis), currentMillis)
             snoozeIntent.putExtra(this.getString(R.string.title), title)
             snoozeIntent.putExtra(this.getString(R.string.body), body)
-            val snoozePendingIntent = PendingIntent.getBroadcast(
-                this,
-                nsId,
-                snoozeIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val snoozePendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    snoozeIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    snoozeIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
+
+
 
 
             val onTapNS = Intent(this, OnTapNotification::class.java)
@@ -3008,8 +3033,13 @@ WOWGoDataUpload = 1
             onTapNS.putExtra(Constants.PROP_DATA, "")
             onTapNS.putExtra(Constants.PROP_REDIRECT_TO, "regiment_screen")
             onTapNS.putExtra(Constants.PROP_HRMID, "")
-            val onTapPendingIntent =
+            val onTapPendingIntent =if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_IMMUTABLE)
+
+            } else {
                 PendingIntent.getBroadcast(this, nsId, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+
+            }
             val builder: NotificationCompat.Builder
             if (isButtonShown) {
                 builder = NotificationCompat.Builder(context, channelId)
@@ -3051,12 +3081,24 @@ WOWGoDataUpload = 1
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION_ID, nsId)
             notificationIntent.putExtra(ReminderBroadcaster.EID, eId)
             notificationIntent.putExtra(ReminderBroadcaster.NOTIFICATION, notification)
-            val pendingIntent = PendingIntent.getBroadcast(
-                this,
-                nsId,
-                notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
+
+
+
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 alarmManager.setExactAndAllowWhileIdle(
@@ -3083,12 +3125,23 @@ WOWGoDataUpload = 1
             val notificationIntent = Intent(this, ScheduleAppointment::class.java)
             notificationIntent.putExtra(ScheduleAppointment.NOTIFICATION_ID, nsId)
 
-            val pendingIntent = PendingIntent.getBroadcast(
-                this,
-                nsId,
-                notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
+            val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    notificationIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getBroadcast(
+                    this,
+                    nsId,
+                    notificationIntent,
+                    PendingIntent.FLAG_CANCEL_CURRENT
+                )
+            }
+
+
             val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 alarmManager.setExactAndAllowWhileIdle(
@@ -3144,12 +3197,23 @@ WOWGoDataUpload = 1
         reminderBroadcaster.putExtra("nsid", notificationAndAlarmId)
         reminderBroadcaster.putExtra("isCancel", true)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = PendingIntent.getBroadcast(
-            this,
-            notificationAndAlarmId,
-            reminderBroadcaster,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                this,
+                notificationAndAlarmId,
+                reminderBroadcaster,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                this,
+                notificationAndAlarmId,
+                reminderBroadcaster,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+
         alarmManager.cancel(pendingIntent)
         SharedPrefUtils().deleteNotificationObject(this, notificationAndAlarmId)
     }

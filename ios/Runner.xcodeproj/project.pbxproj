@@ -27,6 +27,7 @@
 		54C199662848883D00BC3B10 /* UIColor+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199632848883C00BC3B10 /* UIColor+BleSampleOmron.m */; };
 		54C199672848883D00BC3B10 /* NSDate+BleSampleOmron.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199642848883C00BC3B10 /* NSDate+BleSampleOmron.m */; };
 		54C1996A2848885200BC3B10 /* BSOSessionData.m in Sources */ = {isa = PBXBuildFile; fileRef = 54C199682848885200BC3B10 /* BSOSessionData.m */; };
+		54CE079F2923A7A800C29FFB /* LoaderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54CE079E2923A7A800C29FFB /* LoaderVC.swift */; };
 		54DE869A2861E78A0005B940 /* beep_beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 54DE86992861E78A0005B940 /* beep_beep.mp3 */; };
 		54FE478C28FEE33000B8564F /* BleManager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; };
 		54FE478D28FEE33000B8564F /* BleManager.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 54FE478428FEE31000B8564F /* BleManager.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -155,6 +156,7 @@
 		54C199652848883D00BC3B10 /* UIColor+BleSampleOmron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+BleSampleOmron.h"; sourceTree = "<group>"; };
 		54C199682848885200BC3B10 /* BSOSessionData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSOSessionData.m; sourceTree = "<group>"; };
 		54C199692848885200BC3B10 /* BSOSessionData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSOSessionData.h; sourceTree = "<group>"; };
+		54CE079E2923A7A800C29FFB /* LoaderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoaderVC.swift; sourceTree = "<group>"; };
 		54DE86992861E78A0005B940 /* beep_beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = beep_beep.mp3; sourceTree = "<group>"; };
 		54FE478428FEE31000B8564F /* BleManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BleManager.framework; sourceTree = "<group>"; };
 		54FE478528FEE31000B8564F /* DB62M_DeviceManager.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DB62M_DeviceManager.framework; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 			children = (
 				54306594271580D00009B704 /* SheelaAIVC.swift */,
 				54306595271580D00009B704 /* SheelaAI.storyboard */,
+				54CE079E2923A7A800C29FFB /* LoaderVC.swift */,
 			);
 			path = SheelaAI;
 			sourceTree = "<group>";
@@ -701,7 +704,6 @@
 				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/IQKeyboardManagerSwift/IQKeyboardManagerSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/OrderedSet/OrderedSet.framework",
 				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
@@ -723,7 +725,6 @@
 				"${BUILT_PRODUCTS_DIR}/flutter_absolute_path/flutter_absolute_path.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_country_picker/flutter_country_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_downloader/flutter_downloader.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_inappwebview/flutter_inappwebview.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_keyboard_visibility/flutter_keyboard_visibility.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework",
 				"${BUILT_PRODUCTS_DIR}/flutter_logs/flutter_logs.framework",
@@ -786,7 +787,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/IQKeyboardManagerSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OrderedSet.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
@@ -808,7 +808,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_absolute_path.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_country_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_downloader.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_inappwebview.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_keyboard_visibility.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_local_notifications.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_logs.framework",
@@ -885,6 +884,7 @@
 				54C199542848805100BC3B10 /* OHQState.m in Sources */,
 				54C1995E2848805100BC3B10 /* OHQDeviceManager.m in Sources */,
 				9C07AB7624F3948900DCE725 /* NVActivityIndicatorAnimationLineScale.swift in Sources */,
+				54CE079F2923A7A800C29FFB /* LoaderVC.swift in Sources */,
 				9C07AB7924F3948900DCE725 /* NVActivityIndicatorAnimationBallPulseSync.swift in Sources */,
 				9C07AB6524F3948900DCE725 /* NVActivityIndicatorAnimationLineSpinFadeLoader.swift in Sources */,
 				9C07AB7824F3948900DCE725 /* NVActivityIndicatorAnimationPacman.swift in Sources */,

@@ -101,8 +101,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     return Obx(
       () {
         if (controller.isMicListening.isTrue) {
-          animationController?.reset();
-          animationController?.forward();
+          // animationController?.reset();
+          // animationController?.forward();
           controller.updateTimer(enable: false);
         } else {
           animationController?.stop();
@@ -234,9 +234,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     padding: EdgeInsets.all(_animation?.value ?? 0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: controller.isMicListening.value
-                            ? Colors.redAccent.shade100
-                            : Colors.transparent,
+                        color: Colors.transparent,
                         shape: BoxShape.circle,
                       ),
                       padding: EdgeInsets.all(15.0 - (_animation?.value ?? 0)),
@@ -258,13 +256,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                     }
                   },
                   elevation: 10,
-                  backgroundColor: controller.isMicListening.value
-                      ? Colors.red
-                      : controller.isLoading.value
-                          ? Colors.black45
-                          : PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(CommonUtil().getQurhomeGredientColor())
-                              : Color(CommonUtil().getMyPrimaryColor()),
+                  backgroundColor: controller.isLoading.value
+                      ? Colors.black45
+                      : PreferenceUtil.getIfQurhomeisAcive()
+                          ? Color(CommonUtil().getQurhomeGredientColor())
+                          : Color(CommonUtil().getMyPrimaryColor()),
                   child: Icon(
                     (controller.currentPlayingConversation != null &&
                                 controller.currentPlayingConversation?.isPlaying
