@@ -230,22 +230,26 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-        </provider>
 
-        <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
-            android:exported="false"
-            tools:node="remove" />
-
-        <provider
-            android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
-            android:exported="false"
-            android:authorities="${applicationId}.flutter-downloader-init">
-            <!-- changes this number to configure the maximum number of concurrent tasks -->
             <meta-data
                 android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
                 android:value="5" />
         </provider>
+
+<!--        <provider-->
+<!--            android:name="androidx.work.impl.WorkManagerInitializer"-->
+<!--            android:authorities="${applicationId}.workmanager-init"-->
+<!--            android:exported="false"-->
+<!--            tools:node="remove" />-->
+
+<!--        <provider-->
+<!--            android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"-->
+<!--            android:exported="false"-->
+<!--            android:authorities="${applicationId}.flutter-downloader-init">-->
+<!--            &lt;!&ndash; changes this number to configure the maximum number of concurrent tasks &ndash;&gt;-->
+<!--            <meta-data-->
+<!--                android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"-->
+<!--                android:value="5" />-->
+<!--        </provider>-->
     </application>
 </manifest>

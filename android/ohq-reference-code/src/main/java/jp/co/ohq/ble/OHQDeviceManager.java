@@ -1,5 +1,6 @@
 package jp.co.ohq.ble;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.HandlerThread;
@@ -60,19 +61,19 @@ public class OHQDeviceManager {
     @Nullable
     private StateMonitor mStateMonitor;
 
-    private OHQDeviceManager(@NonNull Context context) {
+    private OHQDeviceManager(@NonNull Context context,Activity activity) {
         final HandlerThread thread = new HandlerThread(getClass().getSimpleName());
         thread.start();
         mHandler = new Handler(thread.getLooper());
-        mCBCentralManager = _initCentralManager(context, mHandler.getLooper());
+        mCBCentralManager = _initCentralManager(context,activity, mHandler.getLooper());
     }
 
     @NonNull
-    public static OHQDeviceManager init(@NonNull Context context) {
+    public static OHQDeviceManager init(@NonNull Context context, Activity activity) {
         if (null != sInstance) {
             throw new IllegalStateException("An instance has already been created.");
         }
-        return sInstance = new OHQDeviceManager(context);
+        return sInstance = new OHQDeviceManager(context,activity);
     }
 
     @NonNull
@@ -227,7 +228,7 @@ public class OHQDeviceManager {
         });
     }
 
-    private CBCentralManager _initCentralManager(@NonNull Context context, @NonNull Looper looper) {
+    private CBCentralManager _initCentralManager(@NonNull Context context,Activity activity, @NonNull Looper looper) {
         final CBCentralManagerDelegate delegate = new CBCentralManagerDelegate() {
             @Override
             public void didConnect(@NonNull CBCentralManager central, @NonNull CBPeripheral peripheral) {
@@ -296,7 +297,7 @@ public class OHQDeviceManager {
                 }
             }
         };
-        return new CBCentralManager(context, delegate, looper);
+        return new CBCentralManager(context,activity, delegate, looper);
     }
 
     private void _scanForDevicesWithCategories(
