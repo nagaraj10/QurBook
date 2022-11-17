@@ -1,5 +1,6 @@
 package jp.co.ohq.androidcorebluetooth;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -10,9 +11,11 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +36,8 @@ public class CBCentralManager extends CBManager {
     private final CBCentralManagerDelegate mDelegate;
     @NonNull
     private final CBScanner mScanner;
+
+//    String[] LE_SCAN_PERMISSIONS=[Manifest.permission.BLUETOOTH_CONNECT];
 
     public CBCentralManager(
             @NonNull final Context context,
@@ -260,7 +265,20 @@ public class CBCentralManager extends CBManager {
 
     private void _initPeripherals() {
         mPeripherals.clear();
-        Set<BluetoothDevice> bondedDevices = getAdapter().getBondedDevices();
+        Set<BluetoothDevice> bondedDevices = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (getContext().checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return;
+            }
+        }
+        bondedDevices = getAdapter().getBondedDevices();
         if (null != bondedDevices) {
             for (BluetoothDevice bluetoothDevice : bondedDevices) {
                 mPeripherals.put(bluetoothDevice.getAddress(), _createBlePeripheral(bluetoothDevice));
