@@ -2257,10 +2257,19 @@ WOWGoDataUpload = 1
                             sharedValue =
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
                         } else {
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+                                                    if(rawTitle!=null && rawTitle!="")
+
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${"rawTitle"}"
+                            else
+                                                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+
                         }
                     } else {
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+                        if(rawTitle!=null && rawTitle!="")
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${"rawTitle"}"
+                        else
+                                                                                sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+
                     }
                 }
 

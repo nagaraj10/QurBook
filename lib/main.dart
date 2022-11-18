@@ -587,7 +587,11 @@ class _MyFHBState extends State<MyFHB> {
                 rt_Sheela,
                 arguments: SheelaArgument(
                   isSheelaFollowup: true,
-                  textSpeechSheela: passedValArr[2],
+                  textSpeechSheela: (passedValArr[2] != null &&
+                          passedValArr[2] != 'null' &&
+                          passedValArr[2] != '')
+                      ? passedValArr[2]
+                      : passedValArr[1],
                   audioMessage: '',
                 ),
               );
@@ -704,22 +708,27 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'sheela',
             'navigationPage': 'Sheela Start Page',
           });
-          if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-            final rawTitle = passedValArr[2]?.split('|')[0];
-            final rawBody = passedValArr[2]?.split('|')[1];
-            if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
-              notificationListId = passedValArr[3];
-              FetchNotificationService().inAppUnreadAction(notificationListId);
-            }
+          try {
+            if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
+              final rawTitle = passedValArr[2]?.split('|')[0];
+              final rawBody = passedValArr[2]?.split('|')[1];
+              if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+                notificationListId = passedValArr[3];
+                FetchNotificationService()
+                    .inAppUnreadAction(notificationListId);
+              }
 
-            Get.toNamed(
-              routervariable.rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: true,
-                rawMessage: rawBody,
-              ),
-            );
-          } else {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: rawBody,
+                ),
+              );
+            } else {
+              Get.to(SuperMaya());
+            }
+          } catch (e) {
             Get.to(SuperMaya());
           }
         } else if (passedValArr[1] == 'profile_page' ||
@@ -1267,16 +1276,16 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Widget findHomeWidget(String navRoute) {
-     if (navRoute.isEmpty && navRoute != 'null') {
+    if (navRoute.isEmpty && navRoute != 'null') {
       // return SplashScreen();
-       if (isFirstTime != null && !isFirstTime) {
-         return CommonUtil.REGION_CODE == 'IN'
-             ? IntroductionScreen()
-             : SplashScreen();
-       }else{
-         return SplashScreen();
-       }
-     } else {
+      if (isFirstTime != null && !isFirstTime) {
+        return CommonUtil.REGION_CODE == 'IN'
+            ? IntroductionScreen()
+            : SplashScreen();
+      } else {
+        return SplashScreen();
+      }
+    } else {
       try {
         final parsedData = navRoute.split('&');
 
@@ -1333,7 +1342,7 @@ class _MyFHBState extends State<MyFHB> {
             } else if (parsedData[1] == 'sheela') {
               return SplashScreen(
                 nsRoute: 'sheela',
-                bundle: parsedData[2] + '|' + parsedData[3],
+                bundle: parsedData[2] ?? '' + '|' + parsedData[3] ?? '',
               );
             } else if (parsedData[1] == 'profile_page' ||
                 parsedData[1] == 'profile') {
@@ -1545,9 +1554,7 @@ class _MyFHBState extends State<MyFHB> {
         } else {
           return StartTheCall();
         }
-      } catch (e) {
-
-      }
+      } catch (e) {}
     }
   }
 
