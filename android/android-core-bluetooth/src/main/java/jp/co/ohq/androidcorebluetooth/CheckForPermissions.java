@@ -15,7 +15,7 @@ public class CheckForPermissions implements ActivityCompat.OnRequestPermissionsR
     public static void checkForLocationPermissions(Activity context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
         {
-            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 2);
+            ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.BLUETOOTH_CONNECT,Manifest.permission.BLUETOOTH_SCAN}, 2);
         }
     }
 

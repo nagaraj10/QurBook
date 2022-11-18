@@ -71,9 +71,11 @@ public class OHQDeviceManager {
     @NonNull
     public static OHQDeviceManager init(@NonNull Context context, Activity activity) {
         if (null != sInstance) {
-            throw new IllegalStateException("An instance has already been created.");
+            return sInstance;
+//            throw new IllegalStateException("An instance has already been created.");
+        }else{
+            return sInstance = new OHQDeviceManager(context,activity);
         }
-        return sInstance = new OHQDeviceManager(context,activity);
     }
 
     @NonNull
