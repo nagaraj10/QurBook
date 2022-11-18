@@ -295,7 +295,7 @@ class SheelaAIController extends GetxController {
               await regController.getCareCoordinatorId();
               regController.callSOSEmergencyServices(1);
             }
-            await Future.delayed(const Duration(seconds: 3));
+            await Future.delayed(const Duration(seconds: 2));
             isLoading.value = false;
             conversations.removeLast();
             stopTTS();

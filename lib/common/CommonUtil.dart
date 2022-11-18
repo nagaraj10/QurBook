@@ -5470,6 +5470,9 @@ class VideoCallCommonUtils {
       }
       regController.loadingData.value = false;
       regController.meetingId.value = CommonUtil().validString(mID.toString());
+      if (!regController.isFromSOS.value) {
+        Get.back();
+      }
       Navigator.push(
         context,
         MaterialPageRoute(
