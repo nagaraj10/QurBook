@@ -283,7 +283,7 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.directCall != null &&
                   currentResponse.directCall) &&
               (currentResponse.recipient != null &&
-                  currentResponse.recipient.contains("CC"))) {
+                  currentResponse.recipient.trim() == "CC")) {
             var regController = Get.put(QurhomeRegimenController());
             if (CommonUtil()
                 .validString(regController.careCoordinatorId.value)
@@ -295,7 +295,7 @@ class SheelaAIController extends GetxController {
               await regController.getCareCoordinatorId();
               regController.callSOSEmergencyServices(1);
             }
-            await Future.delayed(const Duration(seconds: 2));
+            await Future.delayed(const Duration(seconds: 3));
             isLoading.value = false;
             conversations.removeLast();
             stopTTS();

@@ -5867,9 +5867,11 @@ class VideoCallCommonUtils {
       String strText = "Patient";
       if (regController.isFromSOS.value) {
         strText = emergencyServices;
+      } else {
+        strText = regController.careCoordinatorName.value;
       }
       if (state == AudioRemoteState.Stopped) {
-        //FlutterToast().getToast('Patient is on Mute', Colors.red);
+        FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteMuted) {
         FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteUnmuted) {

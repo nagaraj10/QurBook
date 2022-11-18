@@ -123,7 +123,7 @@ class SheelaResponse {
     singleuse = json['singleuse'];
     isActionDone = json['isActionDone'];
     eid = json['eid'];
-    directCall = json['directCall'];
+    directCall = (json['directCall']?? false);
     recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
     sessionId = json['sessionId'];
