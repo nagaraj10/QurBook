@@ -38,8 +38,12 @@ const String qr_sortByQ = '?sortBy=';
 const String qr_getCareCoordinatorId = 'qurplan-node-mysql/get-patient-carers/';
 const String qr_getSOSAgentNumber = 'user/fetch-sos-exophone-info';
 const String qr_messaging = 'messaging';
-const String qr_triggerMissedCallNotification =
+const String qr_triggerSOSMissedCallNotification =
     'messaging/sos-missed-call-notification';
+const String qr_triggerMissedCallNotification =
+    'messaging/trigger-missed-call-notification';
+const String qr_callAppointmentUpdate = 'appointment/update?type=';
+const String qr_nonAppointmentUrl = 'call-log/non-appointment-call';
 const String qr_callLog = 'call-log/sos';
 const String qr_startRecordCallLog = 'sos/call/record/start';
 const String qr_stopRecordCallLog = 'sos/call/record/stop';

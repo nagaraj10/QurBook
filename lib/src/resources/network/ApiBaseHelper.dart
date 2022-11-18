@@ -546,6 +546,24 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> insertCallNonAppointment(String jsonBody) async {
+    var responseJson;
+
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+
+      var response = await ApiServices.post(
+          Constants.BASE_URL + qr_nonAppointmentUrl,
+          headers: header,
+          body: jsonBody);
+
+      responseJson = _returnResponse(response);
+    } catch (e) {
+      //print(e);
+    }
+    return responseJson;
+  }
+
   dynamic _returnResponse(http.Response response, {bool forDoctorSearch}) {
     print(response?.statusCode);
     print(response?.request?.url);

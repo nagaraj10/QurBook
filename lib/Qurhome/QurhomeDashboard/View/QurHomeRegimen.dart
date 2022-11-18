@@ -1319,7 +1319,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           if (CommonUtil().isTablet) {
             if (!controller.onGoingSOSCall.value) {
               VideoCallCommonUtils.callActions.value = CallActions.CALLING;
-              controller.callSOSEmergencyServices();
+              controller.callSOSEmergencyServices(0);
             }
           } else {
             await controller.getSOSAgentNumber(true);

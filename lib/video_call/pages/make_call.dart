@@ -339,7 +339,8 @@ class _MakeCallPageState extends State<MakeCallPage> {
                 if (status.isAudioCall) {
                   return Column(
                     children: [
-                      Container(
+                      regController.isFromSOS.value
+                          ? Container(
                         color: Colors.red,
                         height: 30.00,
                         child: Padding(
@@ -366,11 +367,11 @@ class _MakeCallPageState extends State<MakeCallPage> {
                             ],
                           ),
                         ),
-                      ),
+                      ):SizedBox.shrink(),
                       Expanded(
                         child: InkWell(
                           child: AudioCallScreen(
-                            patName: regController.onGoingSOSCall.value
+                            patName: regController.isFromSOS.value
                                 ? emergencyServices
                                 : widget.patName,
                           ),
@@ -381,7 +382,8 @@ class _MakeCallPageState extends State<MakeCallPage> {
                 } else {
                   return Column(
                     children: [
-                      Container(
+                      regController.isFromSOS.value
+                          ? Container(
                         color: Colors.red,
                         height: 30.00,
                         child: Padding(
@@ -408,7 +410,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
                             ],
                           ),
                         ),
-                      ),
+                      ):SizedBox.shrink(),
                       Expanded(child: _viewRows()),
                     ],
                   );
