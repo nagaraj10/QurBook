@@ -760,6 +760,8 @@ const String Expired = 'Expired';
 
 const String msgData = 'Values will not have an impact. Are you sure you want to update?';
 
+const String sheelaRecepId = 'Sheela Response';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
