@@ -5158,6 +5158,52 @@ class CommonUtil {
         });
   }
 
+  void dialogForSheelaQueueStable(BuildContext context, int count,{Function() onTapSheela}) async {
+    showGeneralDialog(
+        context: context,
+        barrierColor: Colors.black38,
+        barrierLabel: 'Label',
+        barrierDismissible: true,
+        pageBuilder: (_, __, ___) {
+          return Center(
+            child: Container(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent.withOpacity(0.8),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: (){
+                    Get.back();
+                  },
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BadgeIconBig(
+                          badgeCount: count ?? 0,
+                          badgeColor: ColorUtils.badgeQueue,
+                          icon: GestureDetector(
+                            onTap: (){
+                              onTapSheela();
+                            },
+                            child: AssetImageWidget(
+                              icon: icon_sheela_queue,
+                              height: 250.h,
+                              width: 250.w,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
   void initPortraitMode() async {
     try {
       await SystemChrome.setPreferredOrientations(
