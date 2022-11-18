@@ -45,6 +45,8 @@ class SheelaResponse {
   bool singleuse = false;
   bool isActionDone = false;
   var eid;
+  bool directCall;
+  String recipient;
   String timeStamp =
       FHBUtils().getFormattedDateString(DateTime.now().toString());
   GoogleTTSResponseModel ttsResponse;
@@ -76,6 +78,8 @@ class SheelaResponse {
     this.singleuse,
     this.isActionDone,
     this.eid,
+    this.directCall,
+    this.recipient,
     this.ttsResponse,
     this.loading,
     this.conversationFlag,
@@ -119,6 +123,8 @@ class SheelaResponse {
     singleuse = json['singleuse'];
     isActionDone = json['isActionDone'];
     eid = json['eid'];
+    directCall = (json['directCall']?? false);
+    recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
@@ -149,6 +155,8 @@ class SheelaResponse {
     data['singleuse'] = this.singleuse;
     data['isActionDone'] = this.isActionDone;
     data['eid'] = this.eid;
+    data['directCall'] = this.directCall;
+    data['recipient'] = this.recipient;
     data['conversationFlag'] = this.conversationFlag;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;

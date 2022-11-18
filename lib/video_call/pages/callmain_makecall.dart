@@ -3,9 +3,11 @@ import 'dart:io';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -50,7 +52,6 @@ class CallMainMakeCall extends StatelessWidget {
 
   User patienInfo;
   bool isFromAppointment;
-  static String nonAppointmentUrl = 'call-log/non-appointment-call';
   String startedTime;
   var isDoctor;
   CallMainMakeCall({
@@ -110,7 +111,7 @@ class CallMainMakeCall extends StatelessWidget {
                   children: [
                     Container(
                       child: Text(
-                        '${regController.onGoingSOSCall.value ? emergencyServices : patName} requesting to switch to video call',
+                        '${regController.isFromSOS.value ? emergencyServices : patName} requesting to switch to video call',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20.0.sp,
@@ -322,17 +323,19 @@ class CallMainMakeCall extends StatelessWidget {
       onWillPop: _onBackPressed,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: regController.isFromSOS.value
+              ? Colors.white:Color(CommonUtil().getMyPrimaryColor()),
           automaticallyImplyLeading: false,
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                regController.onGoingSOSCall.value
+                regController.isFromSOS.value
                     ? emergencyServices
                     : patName,
                 style: TextStyle(
-                  color: Colors.red,
+                  color: regController.isFromSOS.value
+                      ? Colors.red:Colors.white,
                   fontSize: 18.0.sp,
                 ),
               ),
@@ -346,11 +349,12 @@ class CallMainMakeCall extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
+                  regController.isFromSOS.value
+                      ? Icon(
                     Icons.radio_button_on_outlined,
                     size: 22.0.sp,
                     color: Colors.red,
-                  ),
+                  ):SizedBox.shrink(),
                   SizedBox(
                     width: 2.0.w,
                   ),
@@ -360,7 +364,8 @@ class CallMainMakeCall extends StatelessWidget {
                     running: _isTimerRun,
                     width: 50.0.w,
                     timerTextStyle: TextStyle(
-                      color: Colors.black,
+                      color: regController.isFromSOS.value
+                          ? Colors.black:Colors.white,
                       fontSize: 15.0.sp,
                     ),
                     isRaised: false,
@@ -613,32 +618,24 @@ class CallMainMakeCall extends StatelessWidget {
 
   callApiToUpdateNonAppointment() async {
     try {
+      final apiResponse = QurHomeApiProvider();
       Map<String, dynamic> body = new Map();
       final now = DateTime.now();
       String endTime =
           '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
-      String userIdForNotify;
-
-      try {
-        userIdForNotify =
-            await PreferenceUtil.getStringValue(constants.KEY_USERID);
-      } catch (e) {}
 
       body['startTime'] = startedTime;
       body['endTime'] = endTime;
-      body['callerUser'] = userIdForNotify;
-      body['recipientUser'] = patId;
+      body['callerUser'] = regController.userId.value;
+      body['recipientUser'] = regController.careCoordinatorId.value;
 
-      //TODO
-      /*new ApiResponse()
-        .putNonAppointmentCall(CallMainMakeCall.nonAppointmentUrl, body)
-        .then((value) {
-      if (value['isSuccess'] != null && value['isSuccess']) {
-        print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
-      }
-    });*/
+      await apiResponse.putNonAppointmentCall(body).then((value) {
+        if (value['isSuccess'] != null && value['isSuccess']) {
+          print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
+        }
+      });
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 }

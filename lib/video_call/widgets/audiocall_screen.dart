@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AudioCallScreen extends StatelessWidget {
   final String avatar;
   String patName;
   AudioCallScreen({this.avatar, this.patName});
+  var regController = Get.find<QurhomeRegimenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +33,8 @@ class AudioCallScreen extends StatelessWidget {
               height: 120,
               width: 120,
               decoration: BoxDecoration(
-                //color: Color(CommonUtil.secondaryGrey),
-                color: Colors.red,
+                color: regController.isFromSOS.value
+                    ? Colors.red:Color(CommonUtil.secondaryGrey),
                 borderRadius: BorderRadius.all(
                   Radius.circular(100),
                 ),

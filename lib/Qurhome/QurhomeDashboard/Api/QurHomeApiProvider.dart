@@ -8,6 +8,7 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/calllogmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/callpushmodel.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/carecoordinatordata.dart';
+import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/keysofmodel.dart';
@@ -17,15 +18,18 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/loader_class.dart';
+import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import '../../../constants/variable_constant.dart' as variable;
 
 class QurHomeApiProvider {
   DateTime selectedRegimenDate = DateTime.now();
+  final ApiBaseHelper apiBaseHelper = ApiBaseHelper();
 
   Future<dynamic> getRegimenList(String date) async {
     http.Response responseJson;
@@ -152,29 +156,6 @@ class QurHomeApiProvider {
     return isCallSent;
   }
 
-  /*Future<bool> callMissedCallNsAlertAPI({dynamic request}) async {
-    bool isCallSent = false;
-    try {
-      var header = await HeaderRequest().getRequestHeadersTimeSlot();
-      http.Response res = await ApiServices.post(
-        Constants.BASE_URL + qr_triggerMissedCallNotification,
-        headers: header,
-        body: convert.jsonEncode(request),
-      );
-
-      if (res.statusCode == 200) {
-        var response = convert.json.decode(res.body);
-        return response['isSuccess'];
-      } else {
-        var response = convert.json.decode(res.body);
-        return response['isSuccess'];
-      }
-    } on Exception catch (e) {
-      isCallSent = false;
-    }
-    return isCallSent;
-  }*/
-
   Future<dynamic> callLogData({CallLogModel request}) async {
     try {
       var regController = Get.find<QurhomeRegimenController>();
@@ -223,11 +204,97 @@ class QurHomeApiProvider {
     } catch (e) {}
   }
 
-  Future<dynamic> callMissedCallNsAlertAPI({CallLogModel request}) async {
+  Future<dynamic> callMissedCallNsAlertAPI(
+      {CallLogModel request, dynamic isFromSheelaRequest}) async {
     try {
+      var regController = Get.find<QurhomeRegimenController>();
+      var jsonString = "";
+      String strURL = "";
+      if (regController.isFromSOS.value) {
+        strURL = qr_triggerSOSMissedCallNotification;
+        jsonString = convert.jsonEncode(request.toJson());
+      } else {
+        strURL = qr_triggerMissedCallNotification;
+        jsonString = convert.jsonEncode(isFromSheelaRequest);
+      }
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       http.Response res = await ApiServices.post(
-        Constants.BASE_URL + qr_triggerMissedCallNotification,
+        Constants.BASE_URL + strURL,
+        headers: header,
+        body: jsonString,
+      );
+      if (res.statusCode == 200) {
+        CallLogResponseModel _response =
+            CallLogResponseModel.fromJson(convert.json.decode(res.body));
+
+        return _response.isSuccess;
+      } else {
+        CallLogErrorResponseModel error =
+            CallLogErrorResponseModel.fromJson(convert.json.decode(res.body));
+        return error.isSuccess;
+      }
+    } catch (e) {}
+  }
+
+  Future<dynamic> updateCallStatus(String appointmentId) async {
+    try {
+      final AuthService authService = AuthService();
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      var jsonData = {};
+      jsonData['id'] = appointmentId;
+      jsonData['statusCode'] = 'PATDNA';
+      final response = await ApiServices.put(
+          Constants.BASE_URL + qr_callAppointmentUpdate+"statusUpdate",
+          headers: header,
+          body: convert.jsonEncode(jsonData));
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+
+        return body;
+      } else {
+        return authService.createErrorJsonString(response);
+      }
+    } catch (e) {
+      //print(e);
+    }
+  }
+
+  Future<dynamic> insertCallNonAppointment(String jsonBody) async {
+    var response = await apiBaseHelper.insertCallNonAppointment(jsonBody);
+
+    return response;
+  }
+
+  Future<dynamic> putNonAppointmentCall(Map<String, dynamic> body) async {
+    var responseJson;
+    try {
+      final AuthService authService = AuthService();
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+
+      final response = await ApiServices.put(
+          Constants.BASE_URL + qr_nonAppointmentUrl,
+          headers: header,
+          body: convert.jsonEncode(body));
+      if (response.statusCode == 200) {
+        responseJson = jsonDecode(response.body);
+
+        return responseJson;
+      } else {
+        responseJson = authService.createErrorJsonString(response);
+        return responseJson;
+      }
+    } catch (e) {
+      //print(e);
+    }
+    return responseJson;
+  }
+
+  /*Future<dynamic> recordCallLogForSheelaCommand(
+      {UpdatedInfo request, String url}) async {
+    try {
+      var header = await HeaderRequest().getRequestHeadersTimeSlot();
+      http.Response res = await ApiServices.put(
+        Constants.BASE_URL + qr_callAppointmentUpdate + url,
         headers: header,
         body: convert.jsonEncode(request.toJson()),
       );
@@ -242,7 +309,7 @@ class QurHomeApiProvider {
         return error.isSuccess;
       }
     } catch (e) {}
-  }
+  }*/
 
   Future<dynamic> startRecordSOSCall() async {
     try {
