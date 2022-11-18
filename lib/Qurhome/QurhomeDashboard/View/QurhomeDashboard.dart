@@ -48,6 +48,10 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       }
 
       controller.updateTabIndex(0);
+
+      WidgetsBinding.instance?.addPostFrameCallback((_) {
+        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+      });
     } catch (e) {
       print(e);
     }
