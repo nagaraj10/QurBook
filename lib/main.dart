@@ -587,7 +587,7 @@ class _MyFHBState extends State<MyFHB> {
                 rt_Sheela,
                 arguments: SheelaArgument(
                   isSheelaFollowup: true,
-                  rawMessage: passedValArr[2],
+                  textSpeechSheela: passedValArr[2],
                   audioMessage: '',
                 ),
               );
