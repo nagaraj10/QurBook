@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:path_provider/path_provider.dart';
@@ -110,7 +111,9 @@ class SheelaAIController extends GetxController {
                 buttons.length) {
               final index =
                   currentPlayingConversation.currentButtonPlayingIndex ?? 0;
-              if ((index < buttons.length - 1) && buttons[index + 1].skipTts&&!currentPlayingConversation.isButtonNumber) {
+              if ((index < buttons.length - 1) &&
+                  buttons[index + 1].skipTts &&
+                  !currentPlayingConversation.isButtonNumber) {
                 currentPlayingConversation.currentButtonPlayingIndex++;
               }
               checkForButtonsAndPlay();
@@ -204,8 +207,7 @@ class SheelaAIController extends GetxController {
         conversations.add(audioResponse);
       } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
         msg = arguments?.textSpeechSheela;
-        var currentCon =
-            SheelaResponse(text: msg, recipientId: sheelaRecepId);
+        var currentCon = SheelaResponse(text: msg, recipientId: sheelaRecepId);
         conversations.add(currentCon);
         currentPlayingConversation = currentCon;
         playTTS();
@@ -555,15 +557,16 @@ class SheelaAIController extends GetxController {
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
                 try {
-
                   final responseRecived =
                       response.toString().toLowerCase().trim();
 
                   var button = null;
 
                   if (!conversations?.last?.isButtonNumber) {
-                    button = conversations?.last?.buttons.firstWhere((element) =>
-                        (element.title ?? "").toLowerCase() == responseRecived);
+                    button = conversations?.last?.buttons.firstWhere(
+                        (element) =>
+                            (element.title ?? "").toLowerCase() ==
+                            responseRecived);
                   } else if (conversations?.last?.isButtonNumber) {
                     bool isDigit = isNumeric(responseRecived);
                     for (int i = 0;
@@ -761,7 +764,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  getSheelaBadgeCount() async {
+  getSheelaBadgeCount({bool isNeedSheelaDialog = false}) async {
     sheelaIconBadgeCount.value = 0;
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
@@ -769,8 +772,21 @@ class SheelaAIController extends GetxController {
           if (value?.isSuccess) {
             if (value?.result != null) {
               sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
-              print(
-                  '----***count' + (value?.result?.queueCount ?? 0).toString());
+              if (isNeedSheelaDialog) {
+                if ((value?.result?.queueCount ?? 0) > 0) {
+                  CommonUtil().dialogForSheelaQueueStable(
+                      Get.context, value?.result?.queueCount ?? 0,
+                      onTapSheela: () {
+                    Get.back();
+                    Get.toNamed(
+                      rt_Sheela,
+                      arguments: SheelaArgument(
+                        rawMessage: sheelaQueueShowRemind,
+                      ),
+                    );
+                  });
+                }
+              }
             } else {
               sheelaIconBadgeCount.value = 0;
             }
