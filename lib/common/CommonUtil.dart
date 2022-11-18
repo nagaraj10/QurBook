@@ -21,6 +21,7 @@ import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
 import 'package:myfhb/video_call/model/payload.dart' as vsPayLoad;
@@ -4962,7 +4963,7 @@ class CommonUtil {
       const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -4971,7 +4972,7 @@ class CommonUtil {
       const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -4980,7 +4981,7 @@ class CommonUtil {
       const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -5150,6 +5151,52 @@ class CommonUtil {
                         ),
                       )
                     ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  void dialogForSheelaQueueStable(BuildContext context, int count,{Function() onTapSheela}) async {
+    showGeneralDialog(
+        context: context,
+        barrierColor: Colors.black38,
+        barrierLabel: 'Label',
+        barrierDismissible: true,
+        pageBuilder: (_, __, ___) {
+          return Center(
+            child: Container(
+              width: double.infinity,
+              child: Material(
+                color: Colors.transparent.withOpacity(0.8),
+                child: InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  onTap: (){
+                    Get.back();
+                  },
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BadgeIconBig(
+                          badgeCount: count ?? 0,
+                          badgeColor: ColorUtils.badgeQueue,
+                          icon: GestureDetector(
+                            onTap: (){
+                              onTapSheela();
+                            },
+                            child: AssetImageWidget(
+                              icon: icon_sheela_queue,
+                              height: 250.h,
+                              width: 250.w,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -5369,7 +5416,6 @@ class VideoCallCommonUtils {
   final myDB = FirebaseFirestore.instance;
   static bool isMissedCallNsSent = false;
 
-  static String nonAppointmentUrl = 'call-log/non-appointment-call';
   RtcEngineEventHandler rtcEngineEventHandler = RtcEngineEventHandler();
   int videoPauseResumeState = 0;
   String doctor_id, mtTitle, specialityName = null;
@@ -5401,15 +5447,16 @@ class VideoCallCommonUtils {
     //bool isCallSent = false;
     final apiResponse = QurHomeApiProvider();
     await PreferenceUtil.init();
-    var regController = Get.find<QurhomeRegimenController>();
+    //var regController = Get.put<QurhomeRegimenController>();
+    var regController = Get.put(QurhomeRegimenController());
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var docName = regController.userName.value;
     var randomMID = getMyMeetingID();
     var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
     vsPayLoad.Payload payLoad = vsPayLoad.Payload(
-        type: isFrom.contains("SOS") ? "sos" : keysConstant.c_ns_type_call,
+        type: regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
         //type: keysConstant.c_ns_type_call,
-        priority: "high",
+        priority: regController.isFromSOS.value ?"high":"",
         userId: regController.careCoordinatorId.value,
         meetingId: mID,
         patientId: patChatId != null ? patChatId : '',
@@ -5469,12 +5516,15 @@ class VideoCallCommonUtils {
       }
       regController.loadingData.value = false;
       regController.meetingId.value = CommonUtil().validString(mID.toString());
+      if (!regController.isFromSOS.value) {
+        Get.back();
+      }
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CallingPage(
             id: mID,
-            name: isFrom.contains("SOS") ? emergencyServices : patName,
+            name: regController.isFromSOS.value ? emergencyServices : regController.careCoordinatorName.value,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
             isCallActualTime: isCallActualTime,
@@ -5700,7 +5750,7 @@ class VideoCallCommonUtils {
       } else {
         try {
           if (!isFromAppointment) {
-            callApiToUpdateNonAppointment(patId);
+            callApiToUpdateNonAppointment();
           }
         } catch (e) {}
         final call_start_time =
@@ -5864,11 +5914,13 @@ class VideoCallCommonUtils {
         (uid, state, reason, elapsed) {
       var regController = Get.find<QurhomeRegimenController>();
       String strText = "Patient";
-      if (regController.onGoingSOSCall.value) {
+      if (regController.isFromSOS.value) {
         strText = emergencyServices;
+      } else {
+        strText = regController.careCoordinatorName.value;
       }
       if (state == AudioRemoteState.Stopped) {
-        //FlutterToast().getToast('Patient is on Mute', Colors.red);
+        FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteMuted) {
         FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteUnmuted) {
@@ -6051,7 +6103,7 @@ class VideoCallCommonUtils {
                 prepareMyData();
                 try {
                   if (!isFromAppointment) {
-                    callApiToUpdateNonAppointment(patId);
+                    callApiToUpdateNonAppointment();
                   }
                 } catch (e) {}
                 final call_start_time =
@@ -6126,34 +6178,30 @@ class VideoCallCommonUtils {
     } catch (e) {}
   }
 
-  void callApiToUpdateNonAppointment(String patId) {
-    Map<String, dynamic> body = new Map();
-    final now = DateTime.now();
-    String endTime =
-        '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
-    String userIdForNotify;
-    PreferenceUtil prefs = new PreferenceUtil();
-
+  callApiToUpdateNonAppointment() async {
     try {
-      /*prefs.getValueBasedOnKey(struserID).then((value) {
-        userIdForNotify = value;
-      });*/
-    } catch (e) {}
-    var startedTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
-    body['startTime'] = startedTime;
-    body['endTime'] = endTime;
-    body['callerUser'] = userIdForNotify;
-    body['recipientUser'] = patId;
+      var regController = Get.find<QurhomeRegimenController>();
+      final apiResponse = QurHomeApiProvider();
+      Map<String, dynamic> body = new Map();
+      final now = DateTime.now();
+      String endTime =
+          '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
 
-    //TODO
+      var startedTime =
+          DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+      body['startTime'] = startedTime;
+      body['endTime'] = endTime;
+      body['callerUser'] = regController.userId.value;
+      body['recipientUser'] = regController.careCoordinatorId.value;
 
-    /*new ApiResponse()
-        .putNonAppointmentCall(CallMain.nonAppointmentUrl, body)
-        .then((value) {
-      if (value['isSuccess'] != null && value['isSuccess']) {
-        print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
-      }
-    });*/
+      await apiResponse.putNonAppointmentCall(body).then((value) {
+        if (value['isSuccess'] != null && value['isSuccess']) {
+          print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
+        }
+      });
+    } catch (e) {
+      
+    }
   }
 
   Future<bool> handleCameraAndMic({bool isAudioCall = false}) async {
@@ -6257,7 +6305,9 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       Navigator.pop(context);
       var regController = Get.find<QurhomeRegimenController>();
-      regController.onGoingSOSCall.value = false;
+      if (regController.isFromSOS.value) {
+        regController.onGoingSOSCall.value = false;
+      }
     } catch (e) {}
   }
 
@@ -6300,12 +6350,14 @@ class VideoCallCommonUtils {
       dynamic isCallActualTime,
       HealthRecord healthRecord,
       User patienInfo,
-      bool isFromAppointment,
+      bool isFromAppointment,bool isFromSOS,
       dynamic isDoctor}) {
     try {
       FlutterToast toast = new FlutterToast();
+      final apiResponse = QurHomeApiProvider();
+      var regController = Get.find<QurhomeRegimenController>();
       bool callPageShouldEndAutomatically = true;
-      Future.delayed(Duration(seconds: 30), () {
+      Future.delayed(Duration(seconds: 30), () async {
         if (callPageShouldEndAutomatically) {
           String appointMentId = (callMetaData?.mappointmentId != null ||
                   callMetaData?.mappointmentId.isNotEmpty)
@@ -6328,22 +6380,15 @@ class VideoCallCommonUtils {
             }
           } else {
             if (isCallActualTime) {
-              clearAudioPlayer(audioPlayer);
-              Navigator.pop(context);
-              //TODO
-              /*new ApiResponse()
+              await apiResponse
                   .updateCallStatus((callMetaData?.mappointmentId != null ||
                           callMetaData?.mappointmentId.isNotEmpty)
                       ? callMetaData?.mappointmentId
                       : '')
                   .then((value) {
-*/ /*
-              if (value['isSuccess'] != null && value['isSuccess']) {
-*/ /*
                 clearAudioPlayer(audioPlayer);
                 Navigator.pop(context);
-                */ /* }*/ /*
-              });*/
+              });
             } else {
               //do nothing
               clearAudioPlayer(audioPlayer);
@@ -6352,8 +6397,9 @@ class VideoCallCommonUtils {
           }
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
-            var regController = Get.find<QurhomeRegimenController>();
-            regController.onGoingSOSCall.value = false;
+            if (regController.isFromSOS.value) {
+              regController.onGoingSOSCall.value = false;
+            }
             createMissedCallNS(
                 docName: regController.userName.value,
                 patId: regController.careCoordinatorId.value,
@@ -6365,7 +6411,7 @@ class VideoCallCommonUtils {
           .collection('call_log')
           .doc(cid)
           .snapshots()
-          .listen((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+          .listen((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
         Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
 
         var recStatus = firestoreInfo['call_status'];
@@ -6378,29 +6424,18 @@ class VideoCallCommonUtils {
             startedTime =
                 '${DateFormat('yyyy-MM-dd HH:mm:ss', 'en_US').format(now)}';
             var randomMID = getMyMeetingID();
-            String userIdForNotify;
-            PreferenceUtil prefs = new PreferenceUtil();
-
-            try {
-              /*prefs.getValueBasedOnKey(struserID).then((value) {
-                userIdForNotify = value;
-              });*/
-            } catch (e) {}
 
             body['startedTime'] = startedTime;
             body['appointment'] = randomMID;
-            body['callerUser'] = userIdForNotify;
-            body['recipientUser'] = callMetaData.patientPrescriptionId;
+            body['callerUser'] = regController.userId.value;
+            body['recipientUser'] = regController.careCoordinatorId.value;
             String params = json.encode(body);
 
-            //TODO
-            /*new ApiResponse()
-                .insertCallNonAppointment(nonAppointmentUrl, params)
-                .then((value) {
+            await apiResponse.insertCallNonAppointment(params).then((value) {
               if (value['isSuccess'] != null && value['isSuccess']) {
                 print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL');
               }
-            });*/
+            });
           }
           VideoCallCommonUtils().startTheCall(
               context: context,
@@ -6450,110 +6485,134 @@ class VideoCallCommonUtils {
       String bookId,
       String patName,
       String callStartTime}) async {
-    String callEndTime = '';
+    try {
+      String callEndTime = '';
 
-    ///invoke call log api when receipent join call
-    callEndTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
-    final apiResponse = QurHomeApiProvider();
-    await PreferenceUtil.init();
-    var regController = Get.find<QurhomeRegimenController>();
-    /*UpdatedInfo _updateInfo =
-        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
-    AdditionalInfo additionalInfo =
-        new AdditionalInfo(location: regController.locationModel);
+      ///invoke call log api when receipent join call
+      callEndTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+      final apiResponse = QurHomeApiProvider();
+      await PreferenceUtil.init();
+      var regController = Get.find<QurhomeRegimenController>();
+      /*UpdatedInfo _updateInfo =
+              UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
 
-    CallEndModel callLogModel = CallEndModel(
-        callerUser: regController.userId.value,
-        recipientUser: regController.careCoordinatorId.value,
-        startedTime: regController.callStartTime.value,
-        endTime: callEndTime,
-        status: "Completed",
-        id: regController.resultId.value,
-        additionalInfo: additionalInfo);
+      if (regController.isFromSOS.value) {
+        AdditionalInfo additionalInfo =
+            new AdditionalInfo(location: regController.locationModel);
 
-    var callLogResponse =
-        await apiResponse.callLogEndData(request: callLogModel);
+        CallEndModel callLogModel = CallEndModel(
+            callerUser: regController.userId.value,
+            recipientUser: regController.careCoordinatorId.value,
+            startedTime: regController.callStartTime.value,
+            endTime: callEndTime,
+            status: "Completed",
+            id: regController.resultId.value,
+            additionalInfo: additionalInfo);
 
-    var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
+        var callLogResponse =
+            await apiResponse.callLogEndData(request: callLogModel);
 
-    regController.onGoingSOSCall.value = false;
+        var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
 
-    //clear the call_log from firebase db
-    await FirebaseFirestore.instance
-        .collection('call_log')
-        .doc('$bookId')
-        .delete();
+        regController.onGoingSOSCall.value = false;
+      } /*else {
+        UpdatedInfo updateInfo = UpdatedInfo(
+            actualEndDateTime: callEndTime,
+            actualStartDateTime: callStartTime,
+            bookingId: appsID);
 
-    await Provider.of<RTCEngineProvider>(Get.context, listen: false)
-        .stopRtcEngine();
-    /*await platform.invokeMethod("startOnGoingNS", {
-      'name':
-          '${regController.onGoingSOSCall.value ? "Emergency Services" : patName}',
-      'mode': 'stop'
-    });*/
-    CommonUtil.isCallStarted = false;
-    CommonUtil.bookedForId = null;
+        var callLogForSheelaCommand =
+            await apiResponse.recordCallLogForSheelaCommand(
+                request: updateInfo, url: 'appointmentEnds');
+      }*/
+
+      //clear the call_log from firebase db
+      await FirebaseFirestore.instance
+          .collection('call_log')
+          .doc('$bookId')
+          .delete();
+
+      await Provider.of<RTCEngineProvider>(Get.context, listen: false)
+          .stopRtcEngine();
+      /*await platform.invokeMethod("startOnGoingNS", {
+            'name':
+                '${regController.onGoingSOSCall.value ? "Emergency Services" : patName}',
+            'mode': 'stop'
+          });*/
+      CommonUtil.isCallStarted = false;
+      CommonUtil.bookedForId = null;
+    } catch (e) {
+      
+    }
   }
 
   Future<void> StartTrackMyCall({
     String appsID,
   }) async {
-    String callStartTime = '';
+    try {
+      String callStartTime = '';
 
-    ///invoke call log api when receipent join call
-    callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
-    final apiResponse = QurHomeApiProvider();
-    await PreferenceUtil.init();
-    var regController = Get.find<QurhomeRegimenController>();
+      ///invoke call log api when receipent join call
+      callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
+      final apiResponse = QurHomeApiProvider();
+      await PreferenceUtil.init();
+      var regController = Get.find<QurhomeRegimenController>();
 
-    /*UpdatedInfo _updateInfo =
-        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
+      UpdatedInfo _updateInfo =
+          UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);
 
-    AdditionalInfo additionalInfo =
-        new AdditionalInfo(location: regController.locationModel);
+      if (regController.isFromSOS.value) {
 
-    CallLogModel callLogModel = CallLogModel(
-        callerUser: regController.userId.value,
-        recipientUser: regController.careCoordinatorId.value,
-        startedTime: callStartTime,
-        status: "Started",
-        additionalInfo: additionalInfo);
-    var callLogResponse = await apiResponse.callLogData(request: callLogModel);
-    var callRecordLogResponse = await apiResponse.startRecordSOSCall();
+        await apiResponse.callLogData(request: getCallLogModel(callStartTime, "", "Started",true));
+        await apiResponse.startRecordSOSCall();
+      }
+    } catch (e) {
+      
+    }
   }
 
   createMissedCallNS({String docName, String patId, String bookingId}) async {
     try {
-      /*var body = {
-        "doctorName": docName,
-        "recipientId": patId,
-        "bookingId": bookingId
-      };*/
+
       String callStartTime = '';
       callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
       final apiResponse = QurHomeApiProvider();
       await PreferenceUtil.init();
       var regController = Get.find<QurhomeRegimenController>();
 
-      /*UpdatedInfo _updateInfo =
-        UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);*/
+      if(regController.isFromSOS.value)
+      {
 
-      AdditionalInfo additionalInfo =
-          new AdditionalInfo(location: regController.locationModel);
-
-      CallLogModel callLogModel = CallLogModel(
-          callerUser: regController.userId.value,
-          recipientId: regController.careCoordinatorId.value,
-          startedTime: callStartTime,
-          endTime: callStartTime,
-          patientName: regController.userName.value,
-          status: "",
-          additionalInfo: additionalInfo);
-      var response =
-          await apiResponse.callMissedCallNsAlertAPI(request: callLogModel);
+        await apiResponse.callMissedCallNsAlertAPI(request: getCallLogModel(callStartTime, callStartTime, "",false));
+      } else {
+        var body = {
+          "doctorName": docName,
+          "recipientId": patId,
+          "bookingId": bookingId
+        };
+        await apiResponse.callMissedCallNsAlertAPI(
+            isFromSheelaRequest: body);
+      }
     } catch (e) {
-      print(e);
     }
+  }
+
+  CallLogModel getCallLogModel(String callStartTime,String callEndTime,String status,bool isCallLog)
+  {
+    var regController = Get.find<QurhomeRegimenController>();
+    AdditionalInfo additionalInfo =
+    new AdditionalInfo(location: regController.locationModel);
+
+    CallLogModel callLogModel = CallLogModel(
+        callerUser: regController.userId.value,
+        recipientId: regController.careCoordinatorId.value,
+        startedTime: callStartTime,
+        endTime: !isCallLog?callEndTime:null,
+        patientName: regController.userName.value,
+        status: status,
+        additionalInfo: additionalInfo);
+
+    return callLogModel;
   }
 
   void clearAudioPlayer(AudioPlayer audioPlayer) async {

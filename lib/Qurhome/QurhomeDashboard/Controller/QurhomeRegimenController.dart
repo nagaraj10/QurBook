@@ -40,6 +40,8 @@ class QurhomeRegimenController extends GetxController {
   var isShowTimerDialog = true.obs;
 
   var careCoordinatorId = "".obs;
+  var careCoordinatorName = "".obs;
+  var isFromSOS = true.obs;
   var careCoordinatorIdEmptyMsg = "".obs;
   var userName = "".obs;
   var userId = "".obs;
@@ -266,6 +268,8 @@ class QurhomeRegimenController extends GetxController {
           if (index >= 0) {
             careCoordinatorId.value = CommonUtil()
                 .validString(careCoordinatorData.result[index].userId);
+            careCoordinatorName.value = CommonUtil()
+                .validString(careCoordinatorData.result[index].name);
             userId.value = CommonUtil()
                 .validString(careCoordinatorData.result[index].patientId);
           }
@@ -276,9 +280,18 @@ class QurhomeRegimenController extends GetxController {
     }
   }
 
-  callSOSEmergencyServices() async {
+  callSOSEmergencyServices(int flag) async
+  {
     try {
-      if (CommonUtil().validString(careCoordinatorId.value).trim().isEmpty) {
+      //flag == 0 SOS Call
+      //flag == 1 Normal Call
+      String ccID = CommonUtil().validString(careCoordinatorId.value);
+      if (flag == 0) {
+        isFromSOS.value = true;
+      } else {
+        isFromSOS.value = false;
+      }
+      if (ccID.trim().isEmpty) {
         FlutterToast().getToast(
             '${CommonUtil().validString(careCoordinatorIdEmptyMsg.value)}',
             Colors.red);
@@ -302,7 +315,7 @@ class QurhomeRegimenController extends GetxController {
                 context: Get.context,
                 bookId: bookinId,
                 appointmentId: '',
-                patName: userName.value,
+                patName: careCoordinatorName.value,
                 patientDOB: userDOB.value,
                 patId: userId.value,
                 patChatId: userId.value,
@@ -313,7 +326,7 @@ class QurhomeRegimenController extends GetxController {
                 patienInfo: null,
                 patientPrescriptionId: userId.value,
                 callType: 'audio',
-                isFrom: "SOS")
+                isFrom: isFromSOS.value?"SOS":"")
             .then((value) {
           //onGoingSOSCall.value = true;
         });
@@ -322,7 +335,7 @@ class QurhomeRegimenController extends GetxController {
             'Could not start call due to permission issue', Colors.red);
       }
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 

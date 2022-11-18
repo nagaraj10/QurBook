@@ -41,14 +41,16 @@ class Result {
   String patientId;
   String userId;
   String userType;
+  String name;
 
-  Result({this.patientId, this.userId, this.userType});
+  Result({this.patientId, this.userId, this.userType,this.name});
 
   Result.fromJson(Map<String, dynamic> json) {
     try {
       patientId = json['patientId'];
       userId = json['userId'];
       userType = json['userType'];
+      name = json['name'];
     } catch (e) {
       print(e);
     }
@@ -60,6 +62,7 @@ class Result {
       data['patientId'] = this.patientId;
       data['userId'] = this.userId;
       data['userType'] = this.userType;
+      data['name'] = this.name;
     } catch (e) {
       print(e);
     }
