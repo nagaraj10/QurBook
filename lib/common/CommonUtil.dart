@@ -4963,7 +4963,7 @@ class CommonUtil {
       const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -4972,7 +4972,7 @@ class CommonUtil {
       const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -4981,7 +4981,7 @@ class CommonUtil {
       const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -6200,7 +6200,7 @@ class VideoCallCommonUtils {
         }
       });
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -6542,7 +6542,7 @@ class VideoCallCommonUtils {
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -6562,24 +6562,12 @@ class VideoCallCommonUtils {
           UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);
 
       if (regController.isFromSOS.value) {
-        AdditionalInfo additionalInfo =
-            new AdditionalInfo(location: regController.locationModel);
 
-        CallLogModel callLogModel = CallLogModel(
-            callerUser: regController.userId.value,
-            recipientUser: regController.careCoordinatorId.value,
-            startedTime: callStartTime,
-            status: "Started",
-            additionalInfo: additionalInfo);
-        var callLogResponse =
-            await apiResponse.callLogData(request: callLogModel);
-        var callRecordLogResponse = await apiResponse.startRecordSOSCall();
-      } /*else {
-        var callLogForSheelaCommand = await apiResponse.recordCallLogForSheelaCommand(
-            request: _updateInfo, url: 'appointmentStarts');
-      }*/
+        await apiResponse.callLogData(request: getCallLogModel(callStartTime, "", "Started",true));
+        await apiResponse.startRecordSOSCall();
+      }
     } catch (e) {
-      //print(e);
+      
     }
   }
 
@@ -6594,31 +6582,37 @@ class VideoCallCommonUtils {
 
       if(regController.isFromSOS.value)
       {
-        AdditionalInfo additionalInfo =
-        new AdditionalInfo(location: regController.locationModel);
 
-        CallLogModel callLogModel = CallLogModel(
-            callerUser: regController.userId.value,
-            recipientId: regController.careCoordinatorId.value,
-            startedTime: callStartTime,
-            endTime: callStartTime,
-            patientName: regController.userName.value,
-            status: "",
-            additionalInfo: additionalInfo);
-        var response =
-        await apiResponse.callMissedCallNsAlertAPI(request: callLogModel);
+        await apiResponse.callMissedCallNsAlertAPI(request: getCallLogModel(callStartTime, callStartTime, "",false));
       } else {
         var body = {
           "doctorName": docName,
           "recipientId": patId,
           "bookingId": bookingId
         };
-        var response = await apiResponse.callMissedCallNsAlertAPI(
+        await apiResponse.callMissedCallNsAlertAPI(
             isFromSheelaRequest: body);
       }
     } catch (e) {
-      print(e);
     }
+  }
+
+  CallLogModel getCallLogModel(String callStartTime,String callEndTime,String status,bool isCallLog)
+  {
+    var regController = Get.find<QurhomeRegimenController>();
+    AdditionalInfo additionalInfo =
+    new AdditionalInfo(location: regController.locationModel);
+
+    CallLogModel callLogModel = CallLogModel(
+        callerUser: regController.userId.value,
+        recipientId: regController.careCoordinatorId.value,
+        startedTime: callStartTime,
+        endTime: !isCallLog?callEndTime:null,
+        patientName: regController.userName.value,
+        status: status,
+        additionalInfo: additionalInfo);
+
+    return callLogModel;
   }
 
   void clearAudioPlayer(AudioPlayer audioPlayer) async {
