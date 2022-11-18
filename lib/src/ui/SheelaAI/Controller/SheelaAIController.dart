@@ -203,6 +203,13 @@ class SheelaAIController extends GetxController {
         audioResponse.recipientId = sheelaAudioMsgUrl;
         audioResponse.audioFile = arguments.audioMessage;
         conversations.add(audioResponse);
+      } else if ((arguments?.textSpeechSheela ?? '').isNotEmpty) {
+        msg = arguments?.textSpeechSheela;
+        var currentCon =
+            SheelaResponse(text: msg, recipientId: sheelaRecepId);
+        conversations.add(currentCon);
+        currentPlayingConversation = currentCon;
+        playTTS();
       } else {
         gettingReposnseFromNative();
       }
