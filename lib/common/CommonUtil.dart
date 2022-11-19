@@ -4985,6 +4985,48 @@ class CommonUtil {
     }
   }
 
+  bool isNumeric(String s) {
+    if (s == null) {
+      return false;
+    }
+    return int.tryParse(s) != null;
+  }
+  String realNumber(int number) {
+    if(number == 0) {
+      return zero;
+    }
+    return generate(number).trim();
+  }
+  String generate(int number) {
+    if(number >= 1000000000) {
+      return generate(number ~/ 1000000000) + " billion " + generate(number % 1000000000);
+    }
+    else if(number >= 1000000) {
+      return generate(number ~/ 1000000) + " million " + generate(number % 1000000);
+    }
+    else if(number >= 1000) {
+      return generate(number ~/ 1000) + " thousand " + generate(number % 1000);
+    }
+    else if(number >= 100) {
+      return generate(number ~/ 100) + " hundred " + generate(number % 100);
+    }
+    return generate1To99(number);
+  }
+  String generate1To99(int number) {
+    if (number == 0) {
+      return "";
+    }
+    else if (number <= 9) {
+      return oneToNine[number - 1];
+    }
+    else if (number <= 19) {
+      return tenToNinteen[number % 10];
+    }
+    else {
+      return dozens[number ~/ 10 - 1] + " " + generate1To99(number % 10);
+    }
+  }
+
   commonWidgetForTitleValue(String title, String value) {
     return Column(
       children: [
