@@ -61,7 +61,7 @@ class Payload {
   String deliveredDateTime;
   String senderProfilePic;
   dynamic uid;
-  String sheelaAudioMsgUrl = '';
+  String sheelaAudioMsgUrl;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
