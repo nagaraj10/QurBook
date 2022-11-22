@@ -1131,15 +1131,29 @@ class _NotificationScreen extends State<NotificationScreen> {
               'navigationPage': 'Sheela Start Page',
             });
 
-            Get.toNamed(
-              routervariable.rt_Sheela,
-              arguments: SheelaArgument(
-                isSheelaAskForLang: true,
-                rawMessage: rawBody,
-              ),
-            ).then((value) =>
-                PageNavigator.goToPermanent(context, router.rt_Landing));
-            readUnreadAction(result);
+            if (rawBody != null && rawBody != '') {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  isSheelaAskForLang: true,
+                  rawMessage: rawBody,
+                ),
+              ).then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              readUnreadAction(result);
+            } else if (result?.messageDetails?.payload?.sheelaAudioMsgUrl !=
+                    null &&
+                result?.messageDetails?.payload?.sheelaAudioMsgUrl != '') {
+              Get.toNamed(
+                routervariable.rt_Sheela,
+                arguments: SheelaArgument(
+                  audioMessage:
+                      result?.messageDetails?.payload?.sheelaAudioMsgUrl,
+                ),
+              ).then((value) =>
+                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              readUnreadAction(result);
+            }
           } else {
             Get.to(SuperMaya());
           }
