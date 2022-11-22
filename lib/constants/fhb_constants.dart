@@ -762,6 +762,9 @@ const String msgData = 'Values will not have an impact. Are you sure you want to
 
 const String sheelaRecepId = 'Sheela Response';
 
+//fetchProfilePic
+const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
