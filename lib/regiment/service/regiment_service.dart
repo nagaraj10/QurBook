@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/regiment/models/ActivityStatusModel.dart';
 import 'package:myfhb/regiment/models/GetEventIdModel.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/PreferenceUtil.dart';
@@ -157,6 +158,7 @@ class RegimentService {
         getProviderFromTriggerInputs(response.body);
         return SaveResponseModel.fromJson(json.decode(response.body));
       } else {
+        LoaderClass.hideLoadingDialog(Get.context);
         return SaveResponseModel(
           result: SaveResultModel(),
           isSuccess: false,
@@ -164,6 +166,7 @@ class RegimentService {
       }
     } catch (e) {
       print(e);
+      LoaderClass.hideLoadingDialog(Get.context);
       return SaveResponseModel(
         result: SaveResultModel(),
         isSuccess: false,
