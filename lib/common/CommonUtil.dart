@@ -18,6 +18,7 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -5516,9 +5517,6 @@ class VideoCallCommonUtils {
       }
       regController.loadingData.value = false;
       regController.meetingId.value = CommonUtil().validString(mID.toString());
-      if (!regController.isFromSOS.value) {
-        Get.back();
-      }
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -5920,7 +5918,7 @@ class VideoCallCommonUtils {
         strText = regController.careCoordinatorName.value;
       }
       if (state == AudioRemoteState.Stopped) {
-        FlutterToast().getToast('$strText is on Mute', Colors.red);
+        //FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteMuted) {
         FlutterToast().getToast('$strText is on Mute', Colors.red);
       } else if (reason == AudioRemoteStateReason.RemoteUnmuted) {
@@ -6399,6 +6397,10 @@ class VideoCallCommonUtils {
             isMissedCallNsSent = true;
             if (regController.isFromSOS.value) {
               regController.onGoingSOSCall.value = false;
+            }else{
+              var sheelaAIController = Get.find<SheelaAIController>();
+              sheelaAIController.isUnAvailableCC = true;
+              sheelaAIController.getAIAPIResponseFor("Call my CC", null);
             }
             createMissedCallNS(
                 docName: regController.userName.value,
@@ -6588,7 +6590,9 @@ class VideoCallCommonUtils {
         var body = {
           "doctorName": docName,
           "recipientId": patId,
-          "bookingId": bookingId
+          "bookingId": bookingId,
+          "patientName":regController.userName.value,
+          "isCareCoordinator": true
         };
         await apiResponse.callMissedCallNsAlertAPI(
             isFromSheelaRequest: body);
