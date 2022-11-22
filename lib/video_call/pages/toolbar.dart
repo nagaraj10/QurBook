@@ -179,6 +179,9 @@ class _ToolbarState extends State<Toolbar> {
                                         patientId: widget.patId,
                                         patientName: widget.patName,
                                         patientPicture: widget.patPicUrl,
+                                        isFromCareCoordinator: true,
+                                        carecoordinatorId: regController
+                                            .careCoordinatorId.value,
                                         isFromVideoCall: true,
                                         isCareGiver: false,
                                         isForGetUserId: true)));
