@@ -1340,9 +1340,15 @@ class _MyFHBState extends State<MyFHB> {
                     parsedData[8],
               );
             } else if (parsedData[1] == 'sheela') {
+              var bundleText;
+              if (parsedData.length == 4) {
+                bundleText = parsedData[2] + '|' + parsedData[3];
+              } else if (parsedData.length == 3) {
+                bundleText = parsedData[2] + '|' + parsedData[1];
+              }
               return SplashScreen(
                 nsRoute: 'sheela',
-                bundle: parsedData[2] ?? '' + '|' + parsedData[3] ?? '',
+                bundle: bundleText,
               );
             } else if (parsedData[1] == 'profile_page' ||
                 parsedData[1] == 'profile') {

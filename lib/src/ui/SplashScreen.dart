@@ -227,23 +227,49 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Sheela Start Page',
                       });
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
-                        var rawTitle = widget.bundle?.split('|')[0];
-                        var rawBody = widget.bundle?.split('|')[1];
-                        var notificationListId = widget.bundle?.split('|')[2];
+                        var rawTitle;
+                        var rawBody;
+                        var notificationListId;
+                        final parsedData = widget.bundle?.split('|');
+
+                        if (parsedData.length == 1) {
+                          rawTitle = parsedData[0];
+                        } else if (parsedData.length == 2) {
+                          rawTitle = parsedData[0];
+                          rawBody = parsedData[1];
+                        } else if (parsedData.length == 3) {
+                          rawTitle = parsedData[0];
+                          rawBody = parsedData[1];
+                          notificationListId = parsedData[2] ?? '';
+                        }
+
                         if (notificationListId != null &&
                             notificationListId != '') {
                           FetchNotificationService()
                               .inAppUnreadAction(notificationListId);
                         }
 
-                        Get.toNamed(
-                          rt_Sheela,
-                          arguments: SheelaArgument(
-                            isSheelaAskForLang: true,
-                            rawMessage: rawBody,
-                          ),
-                        ).then((value) => PageNavigator.goToPermanent(
-                            context, router.rt_Landing));
+                        if (rawTitle != null &&
+                            rawTitle != "" &&
+                            rawTitle != "null") {
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                              isSheelaAskForLang: true,
+                              textSpeechSheela: rawTitle,
+                            ),
+                          ).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        } else {
+                          Get.toNamed(
+                            rt_Sheela,
+                            arguments: SheelaArgument(
+                              isSheelaAskForLang: true,
+                              rawMessage: rawBody,
+                            ),
+                          ).then((value) => PageNavigator.goToPermanent(
+                              context, router.rt_Landing));
+                        }
                       } else {
                         Get.to(SuperMaya()).then((value) =>
                             PageNavigator.goToPermanent(

@@ -2148,7 +2148,7 @@ WOWGoDataUpload = 1
         val createdBy = intent.getStringExtra(Constants.CREATEDBY)
         val cartId = intent.getStringExtra(Constants.BOOKINGID)
         val senderProfilePic = intent.getStringExtra(Constants.SENDER_PROFILE_PIC)
-                val audioURL = intent.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
+        val audioURL = intent.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
 
         val paymentLinkViaPush = intent.getBooleanExtra(Constants.PAYMENTLINKVIAPUSH,false)
         val eid = intent.getStringExtra("eid")
@@ -2169,6 +2169,7 @@ WOWGoDataUpload = 1
             sharedValue = "isSheelaFollowup&${message}&$rawBody&$audioURL"
         } else if (redirect_to == "isSheelaFollowup") {
         sharedValue = "${redirect_to}&${message}&$rawBody"
+
     } else if (redirect_to?.contains("myRecords") == true) {
 
             sharedValue = "ack&${redirect_to}&${userId}&${patientName}"
@@ -2256,18 +2257,25 @@ WOWGoDataUpload = 1
                         if (redirectArray.size > 1 && redirectArray[1] == "pushMessage") {
                             sharedValue =
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
+
                         } else {
                             if(rawTitle!=null && rawTitle!="")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${"rawTitle"}"
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
+                            else if(rawBody!=null && rawBody!="")
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
                             else
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
+
 
                         }
                     } else {
                         if(rawTitle!=null && rawTitle!="")
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${"rawTitle"}"
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
+                        else if(rawBody!=null && rawBody!="")
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
                         else
-                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${""}"
+                        sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
+
 
                     }
                 }
