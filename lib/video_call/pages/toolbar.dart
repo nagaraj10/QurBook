@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/chat_socket/view/ChatDetail.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/model/videocallStatus.dart';
 import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -18,6 +18,7 @@ import 'package:myfhb/video_call/utils/videoicon_provider.dart';
 import 'package:myfhb/video_call/utils/videorequest_provider.dart';
 import 'package:provider/provider.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 // ignore: must_be_immutable
 class Toolbar extends StatefulWidget {
@@ -60,7 +61,6 @@ class _ToolbarState extends State<Toolbar> {
   String doctorPicUrl = '';
   PreferenceUtil prefs = new PreferenceUtil();
 
-  ChatViewModel chatViewModel = ChatViewModel();
   static const platform = const MethodChannel('ongoing_ns.channel');
   String callStartTime = '';
   String callEndTime = '';
@@ -156,23 +156,45 @@ class _ToolbarState extends State<Toolbar> {
                   //iconSize: 13.0,
                 ),
               ),
-              /*Padding(
-                padding: EdgeInsets.all(
-                  8.0.sp,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    */ /*chatViewModel.goToChatSocket(widget.patId, widget.patName,
-                        widget.patPicUrl, context, true, null,
-                        healthRecord: widget.healthRecords,
-                        dailyListAppointmentModel: null,
-                        patientInfo: null);*/ /*
-                  },
-                  icon: Image.asset('assets/icons/ic_chat.png'),
-                  iconSize: 24.0.sp,
-                  //iconSize: 33,
-                ),
-              ),*/
+              !regController.isFromSOS.value
+                  ? Padding(
+                      padding: EdgeInsets.all(
+                        8.0.sp,
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          try {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatDetail(
+                                        peerId: regController
+                                            .careCoordinatorId.value,
+                                        peerAvatar: Constants.BASE_URL +
+                                            Constants.FETCH_PROFILE_PIC +
+                                            regController
+                                                .careCoordinatorId.value,
+                                        peerName: regController
+                                            .careCoordinatorName.value,
+                                        patientId: widget.patId,
+                                        patientName: widget.patName,
+                                        patientPicture: widget.patPicUrl,
+                                        isFromCareCoordinator: true,
+                                        carecoordinatorId: regController
+                                            .careCoordinatorId.value,
+                                        isFromVideoCall: true,
+                                        isCareGiver: false,
+                                        isForGetUserId: true)));
+                          } catch (e) {
+                            //print(e);
+                          }
+                        },
+                        icon: Image.asset('assets/icons/ic_chat.png'),
+                        iconSize: 24.0.sp,
+                        //iconSize: 33,
+                      ),
+                    )
+                  : SizedBox.shrink(),
               Padding(
                 padding: EdgeInsets.all(
                   8.0.sp,

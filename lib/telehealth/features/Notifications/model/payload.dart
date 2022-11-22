@@ -1,34 +1,34 @@
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
-  Payload({
-    this.type,
-    this.meetingId,
-    this.priority,
-    this.appointmentDate,
-    this.userName,
-    this.doctorId,
-    this.payloadMeetingId,
-    this.templateName,
-    this.providerRequestId,
-    this.doctorSessionId,
-    this.bookingId,
-    this.healthOrganizationId,
-    this.plannedStartDateTime,
-    this.redirectTo,
-    this.healthRecordMetaIds,
-    this.planId,
-    this.userId,
-    this.patientName,
-    this.claimId,
-    this.patientPhoneNumber,
-    this.verificationCode,
-    this.caregiverRequestor,
-    this.caregiverReceiver,
-    this.appointmentId,
-    this.createdBy,
-    this.uid,
-  });
+  Payload(
+      {this.type,
+      this.meetingId,
+      this.priority,
+      this.appointmentDate,
+      this.userName,
+      this.doctorId,
+      this.payloadMeetingId,
+      this.templateName,
+      this.providerRequestId,
+      this.doctorSessionId,
+      this.bookingId,
+      this.healthOrganizationId,
+      this.plannedStartDateTime,
+      this.redirectTo,
+      this.healthRecordMetaIds,
+      this.planId,
+      this.userId,
+      this.patientName,
+      this.claimId,
+      this.patientPhoneNumber,
+      this.verificationCode,
+      this.caregiverRequestor,
+      this.caregiverReceiver,
+      this.appointmentId,
+      this.createdBy,
+      this.uid,
+      this.sheelaAudioMsgUrl});
 
   String type;
   String meetingId;
@@ -61,6 +61,7 @@ class Payload {
   String deliveredDateTime;
   String senderProfilePic;
   dynamic uid;
+  String sheelaAudioMsgUrl;
 
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
@@ -130,6 +131,9 @@ class Payload {
         planId = '$plan';
       }
     }
+
+    sheelaAudioMsgUrl =
+        json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
   }
 
   Map<String, dynamic> toJson() {
@@ -143,6 +147,7 @@ class Payload {
     data['appointmentId'] = this.appointmentId;
     data['createdBy'] = this.createdBy;
     data['uid'] = this.uid;
+    data['sheelaAudioMsgUrl'] = this.sheelaAudioMsgUrl;
 
     return data;
   }
