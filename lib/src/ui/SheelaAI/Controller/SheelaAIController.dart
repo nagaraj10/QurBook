@@ -598,15 +598,31 @@ class SheelaAIController extends GetxController {
                             (element.title ?? "").toLowerCase() ==
                             responseRecived);
                   } else if (conversations?.last?.isButtonNumber) {
-                    bool isDigit = isNumeric(responseRecived);
+                    bool isDigit = CommonUtil().isNumeric(responseRecived);
                     for (int i = 0;
                         i < conversations?.last?.buttons.length ?? 0;
                         i++) {
                       var temp =
                           conversations?.last?.buttons[i].title.split(".");
-                      if ((temp[isDigit ? 0 : 1].toString().trim() ?? "")
-                              .toLowerCase() ==
-                          responseRecived) {
+                      var realNumber = CommonUtil().realNumber(
+                          int.tryParse(temp[0].toString().trim() ?? 0));
+                      var optionWithRealNumber = "Option ${realNumber.toString().trim()}";
+                      var optionWithDigit = "Option ${temp[0].toString().trim()}";
+                      var numberWithRealNumber = "Number ${realNumber.toString().trim()}";
+                      var numberWithDigit = "Number ${temp[0].toString().trim()}";
+                      if (((temp[isDigit ? 0 : 1].toString().trim() ?? "")
+                                  .toLowerCase() ==
+                              responseRecived) ||
+                          (realNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (optionWithRealNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (optionWithDigit.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (numberWithRealNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (numberWithDigit.toString().toLowerCase().trim() ==
+                              responseRecived)) {
                         button = conversations?.last?.buttons[i];
                         break;
                       }
@@ -856,10 +872,4 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  bool isNumeric(String s) {
-    if (s == null) {
-      return false;
-    }
-    return int.tryParse(s) != null;
-  }
 }
