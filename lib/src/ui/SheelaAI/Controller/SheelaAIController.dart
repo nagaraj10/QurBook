@@ -64,6 +64,7 @@ class SheelaAIController extends GetxController {
   AudioCache _audioCache;
   Timer _popTimer;
   var sheelaIconBadgeCount = 0.obs;
+  bool isUnAvailableCC = false;
 
   SheelaBadgeServices sheelaBadgeServices = SheelaBadgeServices();
 
@@ -244,6 +245,7 @@ class SheelaAIController extends GetxController {
         localDateTime:
             CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
         endPoint: BASE_URL,
+        directCall: isUnAvailableCC?"UNAVAILABLE":null,
       );
       if (getCurrentLanCode() == 'undef') {
         sheelaRequest.message = '/provider_message';
@@ -281,6 +283,9 @@ class SheelaAIController extends GetxController {
         body,
       );
       if (response?.statusCode == 200 && (response?.body ?? '').isNotEmpty) {
+        if (isUnAvailableCC) {
+          isUnAvailableCC = false;
+        }
         final parsedResponse = jsonDecode(response.body);
         SpeechModelAPIResponse apiResponse =
             SpeechModelAPIResponse.fromJson(parsedResponse);

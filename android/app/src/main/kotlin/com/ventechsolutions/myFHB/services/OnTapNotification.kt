@@ -39,9 +39,20 @@ class OnTapNotification:BroadcastReceiver() {
         val raw_body = p1?.getStringExtra(Constants.PROP_RAWBODY)
         val user_id = p1?.getStringExtra(Constants.PROB_USER_ID)
         val claimId = p1?.getStringExtra(Constants.PROP_CLAIM_ID)
-                val audioURL = p1?.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
+        val audioURL = p1?.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
+        val message1 = p1?.getStringExtra(Constants.PROP_MSG)
+                val isSheela = p1?.getStringExtra(Constants.PROP_ISSHEELA)
+
 
         val appLog = p1?.getStringExtra(p0?.getString(R.string.ns_type_applog))
+
+        var commonMessage=""
+        if(message!=null && message!="")
+        commonMessage=message
+        else if(message1!=null && message1!="")
+         commonMessage=message1
+
+
 
         nsManager.cancel(notificationId!! as Int)
         p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))
@@ -72,7 +83,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.pat_id), pat_id)
         launchIntent?.putExtra(p0.getString(R.string.pat_pic), pat_pic)
         launchIntent?.putExtra(p0.getString(R.string.pat_name), pat_name)
-        launchIntent?.putExtra(p0.getString(R.string.message), message)
+        launchIntent?.putExtra(p0.getString(R.string.message), commonMessage)
         launchIntent?.putExtra(p0.getString(R.string.notificationListId), notificationListId)
         launchIntent?.putExtra(Constants.PROP_RAWBODY, raw_body)
         launchIntent?.putExtra(Constants.PROP_RAWTITLE, raw_title)
@@ -81,6 +92,8 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROB_USER_ID,user_id)
         launchIntent?.putExtra(Constants.PROP_CLAIM_ID,claimId)
         launchIntent?.putExtra(p0.getString(R.string.ns_type_applog),appLog)
+       
+
         p0.startActivity(launchIntent)
     }
 }

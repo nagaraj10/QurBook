@@ -376,6 +376,7 @@ enum FieldType { NUMBER, CHECKBOX, TEXT, LOOKUP, RADIO }
 final fieldTypeValues = EnumValues({
   'number': FieldType.NUMBER,
   'checkbox': FieldType.CHECKBOX,
+  'mlist': FieldType.CHECKBOX,
   'text': FieldType.TEXT,
   'lookup': FieldType.LOOKUP,
   'check': FieldType.CHECKBOX,

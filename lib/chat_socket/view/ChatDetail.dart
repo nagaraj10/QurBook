@@ -245,7 +245,8 @@ class ChatState extends State<ChatDetail> {
 
     chatById = widget.carecoordinatorId;
 
-    if (isFromCareCoordinator && isNormalChatUserList == "true") {
+    if (isFromCareCoordinator && isNormalChatUserList == "true")
+    {
       chatById = familyUserId;
     }
 
@@ -1314,7 +1315,7 @@ class ChatState extends State<ChatDetail> {
                       ),
                     ),
                   )
-                : Container()
+                : SizedBox.shrink()
           ],
         ),
       ),
@@ -2337,7 +2338,7 @@ class ChatState extends State<ChatDetail> {
         }
       }
     }
-    return lastReceived;
+    return lastReceived ?? "";
   }
 
   Widget getLastReceivedDateWidget() {
@@ -2352,6 +2353,8 @@ class ChatState extends State<ChatDetail> {
             snapshot.data != '' &&
             snapshot.data != null) {
           return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived);
+        }else{
+          return SizedBox.shrink();
         }
       },
     );
