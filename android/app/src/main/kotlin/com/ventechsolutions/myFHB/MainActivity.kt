@@ -2494,7 +2494,7 @@ WOWGoDataUpload = 1
                     //Log.e("speechreco", "onError: " )
                     //handler.postDelayed(runnable, 10000);
                     speechRecognizer?.cancel()
-                    speechRecognizer?.startListening(intent)
+//                    speechRecognizer?.startListening(intent)
                     //close.performClick()
                     //_result?.error("100","no response",errorCode)
                     //_result=null
