@@ -290,6 +290,18 @@ const String unit_preference = 'assets/settings/unit_preference.png';
 
 const String strApprovAdd = 'This provider addition needs approval';
 
+//sheela respond by number
+const zero = "zero";
+const oneToNine = [
+  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
+];
+const tenToNinteen = [
+  "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"
+];
+const dozens = [
+  "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
+];
+
 //for audioWidget
 
 List<String> assetSample = [
