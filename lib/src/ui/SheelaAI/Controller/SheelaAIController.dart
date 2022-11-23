@@ -606,10 +606,22 @@ class SheelaAIController extends GetxController {
                           conversations?.last?.buttons[i].title.split(".");
                       var realNumber = CommonUtil().realNumber(
                           int.tryParse(temp[0].toString().trim() ?? 0));
+                      var optionWithRealNumber = "Option ${realNumber.toString().trim()}";
+                      var optionWithDigit = "Option ${temp[0].toString().trim()}";
+                      var numberWithRealNumber = "Number ${realNumber.toString().trim()}";
+                      var numberWithDigit = "Number ${temp[0].toString().trim()}";
                       if (((temp[isDigit ? 0 : 1].toString().trim() ?? "")
                                   .toLowerCase() ==
                               responseRecived) ||
                           (realNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (optionWithRealNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (optionWithDigit.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (numberWithRealNumber.toString().toLowerCase().trim() ==
+                              responseRecived)||
+                          (numberWithDigit.toString().toLowerCase().trim() ==
                               responseRecived)) {
                         button = conversations?.last?.buttons[i];
                         break;
