@@ -182,6 +182,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       child: InkWell(
                           onTap: () {
                             bottomTapped(0);
+                            sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
                           },
                           child: CommonUtil().isTablet
                               ? AssetImageWidget(
@@ -235,7 +236,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         arguments: SheelaArgument(
                           rawMessage: sheelaQueueShowRemind,
                         ),
-                      );
+                      ).then((value){
+                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                      });
                     } else {
                       String sheela_lang =
                           PreferenceUtil.getStringValue(SHEELA_LANG);
@@ -245,7 +248,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
                           langCode: (sheela_lang ?? ''),
                         ),
-                      );
+                      ).then((value) {
+                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                      });
                     }
                   },
                   child: Container(
