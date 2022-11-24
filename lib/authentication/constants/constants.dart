@@ -49,6 +49,10 @@ const String strOtp = 'One Time Password';
 const String strOtpHint = 'One Time Password Here';
 const String strOtpText =
     'Enter One Time Password below which we sent to your mobile number ';
+
+const String strOtpTextVirtual =
+    ' and to your mail id';
+
 const String strOtpTextForFamilyMember = 'Please enter the One Time Password received to ';
 const String mobileNumber = "'s mobile number ";
 
@@ -132,6 +136,10 @@ const String ticketCreatedSuccessfully = 'Ticket Created Successfully';
 //Strings used in ChangePassword
 const String strChangePasswordText =
     'One Time Password has been sent to the registered mobile number, enter it below to change the password';
+
+const String strChangePasswordTextVirtual =
+    'One Time Password has been sent to the registered mobile number and to your mail id, enter it below to change the password';
+
 const String strChangeButtonText = 'Change Password';
 const String strCodeHintText = 'One Time Password';
 const String strNewPasswordHintTxt = 'New Password';
@@ -161,6 +169,7 @@ const Pattern patternEmailAdress =
 //Strings used in OtpScreenVerify
 const String strToken = 'token';
 const String strUserId = 'userId';
+const String strIsVirtualNumberUser = 'isVirtualNumberUser';
 const String strUserName = 'userName';
 const String strProviderPayLoad = 'providerPayload';
 const String strIdToken = 'IdToken';

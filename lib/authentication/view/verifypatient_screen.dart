@@ -50,7 +50,8 @@ class VerifyPatient extends StatefulWidget {
       this.dataForResendOtp,
       this.emailId,
       this.fromSignUp,
-      this.forFamilyMember});
+      this.forFamilyMember,
+      this.isVirtualNumber = false});
 
   final String PhoneNumber;
   final String from;
@@ -64,7 +65,9 @@ class VerifyPatient extends StatefulWidget {
   final String userId;
   final String emailId;
   final bool forFamilyMember;
+  final bool isVirtualNumber;
   Map<String, dynamic> dataForResendOtp;
+
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
 }
@@ -376,7 +379,9 @@ class _VerifyPatientState extends State<VerifyPatient>
     } else {
       var num = widget.PhoneNumber.replaceRange(0,
           widget.PhoneNumber.length - 4, 'x' * (widget.PhoneNumber.length - 4));
-      return strOtpText + num;
+      return (widget.isVirtualNumber ?? false)
+          ? strOtpText + num + strOtpTextVirtual
+          : strOtpText + num;
     }
   }
 

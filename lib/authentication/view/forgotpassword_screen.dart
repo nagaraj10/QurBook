@@ -32,6 +32,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   FlutterToast toast = FlutterToast();
   AuthViewModel authViewModel;
   final _ForgetPassKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -281,6 +282,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     //userName: mobileController.text,
                     userName:
                         '$strPlusSymbol${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                    isVirtualNumber: response?.result?.isVirtualNumber ?? false,
                   )));
     } else {
       toast.getToast(response.message, Colors.red);
