@@ -190,13 +190,21 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
-      if (sheelaAIController.isSheelaScreenActive &&
-          (model.rawBody ?? '').isNotEmpty) {
-        var reqJson = {
-          KIOSK_task: KIOSK_read,
-          KIOSK_message_api: model.rawBody,
-        };
-        CommonUtil().callQueueNotificationPostApi(reqJson);
+      if ((model.rawBody ?? '').isNotEmpty) {
+        if (sheelaAIController.isSheelaScreenActive) {
+          var reqJson = {
+            KIOSK_task: KIOSK_read,
+            KIOSK_message_api: model.rawBody,
+          };
+          CommonUtil().callQueueNotificationPostApi(reqJson);
+        } else {
+          Get.toNamed(
+            rt_Sheela,
+            arguments: SheelaArgument(
+              textSpeechSheela: model.rawBody,
+            ),
+          );
+        }
       } else if ((model.message ?? '').isNotEmpty) {
         Get.toNamed(
           rt_Sheela,
@@ -377,14 +385,6 @@ class IosNotificationHandler {
                 rawMessage: model.rawBody,
               ),
             );
-            /*  Get.to(
-            () => bot.ChatScreen(
-              arguments: SheelaArgument(
-                isSheelaAskForLang: false,
-                langCode: sheela_lang,
-                rawMessage: model.rawBody,
-              ),
-            )); */
           } else {
             Get.toNamed(
               rt_Sheela,
@@ -393,14 +393,6 @@ class IosNotificationHandler {
                 rawMessage: model.rawBody,
               ),
             );
-
-            /* Get.to(
-            () => bot.ChatScreen(
-              arguments: SheelaArgument(
-                isSheelaAskForLang: true,
-                rawMessage: model.rawBody,
-              ),
-            )); */
           }
         } else {
           Get.to(() => SplashScreen(
