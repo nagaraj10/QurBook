@@ -1132,14 +1132,25 @@ class _NotificationScreen extends State<NotificationScreen> {
             });
 
             if (rawBody != null && rawBody != '') {
-              Get.toNamed(
-                routervariable.rt_Sheela,
-                arguments: SheelaArgument(
-                  isSheelaAskForLang: true,
-                  rawMessage: rawBody,
-                ),
-              ).then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
+              if (result?.messageDetails?.payload?.isSheela ?? false) {
+                Get.toNamed(
+                  routervariable.rt_Sheela,
+                  arguments: SheelaArgument(
+                    textSpeechSheela: rawBody,
+                  ),
+                ).then((value) =>
+                    PageNavigator.goToPermanent(context, router.rt_Landing));
+              } else {
+                Get.toNamed(
+                  routervariable.rt_Sheela,
+                  arguments: SheelaArgument(
+                    isSheelaAskForLang: true,
+                    rawMessage: rawBody,
+                  ),
+                ).then((value) =>
+                    PageNavigator.goToPermanent(context, router.rt_Landing));
+              }
+
               readUnreadAction(result);
             } else if (result?.messageDetails?.payload?.sheelaAudioMsgUrl !=
                     null &&
