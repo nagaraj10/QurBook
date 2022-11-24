@@ -345,7 +345,9 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
 
         close.setOnClickListener {
             try {
+                speechRecognizer?.stopListening()
                 speechRecognizer?.cancel()
+                speechRecognizer?.destroy()
                 if (dialog.isShowing) {
                     try {
                         _result.let {
@@ -2381,9 +2383,9 @@ WOWGoDataUpload = 1
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         GetSrcTargetLanguages()
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
 
 //        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000)
@@ -2398,7 +2400,6 @@ WOWGoDataUpload = 1
 //            2000
 //        )
 
-
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
         countDownTimerDialog.show()
 
@@ -2409,20 +2410,33 @@ WOWGoDataUpload = 1
             override fun onFinish() {
                 countDownTimerDialog.dismiss()
                 countDown?.cancel()
+                speechRecognizer?.stopListening()
                 speechRecognizer?.cancel()
+                speechRecognizer?.destroy()
                 close.performClick()
                 _result?.error("100","no response",100)
                 _result=null
             }
         }
         countDown?.start()
+        setRecognizerListener()
         //Timer().schedule(100){
+
+//         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+//             if (status != TextToSpeech.ERROR) {
+//                 tts!!.language = Locale(langDest)
+//             }
+//         })
+    }
+
+    private fun setRecognizerListener(){
         try {
             //startActivityForResult(intent, REQ_CODE)
             speechRecognizer?.setRecognitionListener(object : RecognitionListener {
                 override fun onReadyForSpeech(bundle: Bundle) {
                     Log.e("speechreco", "onReadyForSpeech: " )
                 }
+
                 override fun onBeginningOfSpeech() {
                     Log.e("speechreco", "onBeginningOfSpeech: " )
                     countDown?.cancel()
@@ -2439,7 +2453,7 @@ WOWGoDataUpload = 1
                                 }
                             }
                         )
-             displayText?.setText("")
+                        displayText?.setText("")
 
                         dialog.show()
                     }
@@ -2448,9 +2462,11 @@ WOWGoDataUpload = 1
                 override fun onRmsChanged(v: Float) {
 //                    Log.e("speechreco", "onRmsChanged: " )
                 }
+
                 override fun onBufferReceived(bytes: ByteArray) {
                     Log.e("speechreco", "onBufferReceived: " )
                 }
+
                 override fun onEndOfSpeech() {
                     Log.e("speechreco", "onEndOfSpeech: " )
                     if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
@@ -2494,6 +2510,9 @@ WOWGoDataUpload = 1
                     //Log.e("speechreco", "onError: " )
                     //handler.postDelayed(runnable, 10000);
                     speechRecognizer?.cancel()
+                    speechRecognizer?.stopListening()
+                    speechRecognizer?.destroy()
+                    setRecognizerListener()
 //                    speechRecognizer?.startListening(intent)
                     //close.performClick()
                     //_result?.error("100","no response",errorCode)
@@ -2630,8 +2649,7 @@ WOWGoDataUpload = 1
 
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
-            speechRecognizer!!.startListening(intent)
-
+            speechRecognizer?.startListening(intent)
 
         } catch (a: ActivityNotFoundException) {
             // Toast.makeText(applicationContext,
@@ -2639,11 +2657,6 @@ WOWGoDataUpload = 1
             //         Toast.LENGTH_SHORT).show()
             //CalledFromListen = false
         }
-//         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
-//             if (status != TextToSpeech.ERROR) {
-//                 tts!!.language = Locale(langDest)
-//             }
-//         })
     }
 
     //todo this method need to remove
