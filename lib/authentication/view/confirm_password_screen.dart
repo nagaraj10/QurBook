@@ -17,8 +17,11 @@ import '../../widgets/RaisedGradientButton.dart';
 import 'package:provider/provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  ChangePasswordScreen({this.userName});
+  ChangePasswordScreen({this.userName, this.isVirtualNumber = false});
+
   String userName;
+  bool isVirtualNumber;
+
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
@@ -96,7 +99,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       height: 10.0.h,
                     ),
                     Text(
-                      strChangePasswordText,
+                      (widget.isVirtualNumber??false)
+                          ? strChangePasswordTextVirtual
+                          : strChangePasswordText,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14.0.sp,
