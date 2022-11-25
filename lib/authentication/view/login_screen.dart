@@ -50,6 +50,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   Map<String, dynamic> dataForResendOtp;
   //CommonUtil commonUtil = new CommonUtil();
   bool _isHidden = true;
+  bool isVirtualNumber = false;
 
   @override
   void initState() {
@@ -317,6 +318,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                     userConfirm: false,
                     dataForResendOtp: dataForResendOtp,
                     forFamilyMember: false,
+                    isVirtualNumber: isVirtualNumber,
                   )));
     } else {
       if (response.message == 'User is not confirmed.') {
@@ -329,6 +331,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                       userConfirm: true,
                       userId: response.diagnostics.errorData.userId,
                       forFamilyMember: false,
+                      isVirtualNumber: isVirtualNumber,
                     )));
       } else {
         toast.getToast(response.message, Colors.red);
@@ -390,10 +393,13 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       saveuser.auth_token = decodesstring;
       final bool isSkipMFA =
           parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
+      isVirtualNumber =
+      parseJwtPayLoad(decodesstring)[strToken][strIsVirtualNumberUser];
       print(isSkipMFA);
       if (isSkipMFA) {
         final String userId =
             parseJwtPayLoad(decodesstring)[strToken][strUserId];
+
         saveuser.userId = userId;
         id_token_string = parseJwtPayLoad(decodesstring)[strToken]
             [strProviderPayLoad][strIdToken];

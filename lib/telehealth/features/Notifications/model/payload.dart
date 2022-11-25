@@ -1,34 +1,37 @@
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
-  Payload(
-      {this.type,
-      this.meetingId,
-      this.priority,
-      this.appointmentDate,
-      this.userName,
-      this.doctorId,
-      this.payloadMeetingId,
-      this.templateName,
-      this.providerRequestId,
-      this.doctorSessionId,
-      this.bookingId,
-      this.healthOrganizationId,
-      this.plannedStartDateTime,
-      this.redirectTo,
-      this.healthRecordMetaIds,
-      this.planId,
-      this.userId,
-      this.patientName,
-      this.claimId,
-      this.patientPhoneNumber,
-      this.verificationCode,
-      this.caregiverRequestor,
-      this.caregiverReceiver,
-      this.appointmentId,
-      this.createdBy,
-      this.uid,
-      this.sheelaAudioMsgUrl});
+  Payload({
+    this.type,
+    this.meetingId,
+    this.priority,
+    this.appointmentDate,
+    this.userName,
+    this.doctorId,
+    this.payloadMeetingId,
+    this.templateName,
+    this.providerRequestId,
+    this.doctorSessionId,
+    this.bookingId,
+    this.healthOrganizationId,
+    this.plannedStartDateTime,
+    this.redirectTo,
+    this.healthRecordMetaIds,
+    this.planId,
+    this.userId,
+    this.patientName,
+    this.claimId,
+    this.patientPhoneNumber,
+    this.verificationCode,
+    this.caregiverRequestor,
+    this.caregiverReceiver,
+    this.appointmentId,
+    this.createdBy,
+    this.uid,
+    this.sheelaAudioMsgUrl,
+    this.isSheela,
+    this.notificationListId,
+  });
 
   String type;
   String meetingId;
@@ -62,7 +65,8 @@ class Payload {
   String senderProfilePic;
   dynamic uid;
   String sheelaAudioMsgUrl;
-
+  bool isSheela;
+  String notificationListId;
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
     isFromCareCoordinator =
@@ -131,7 +135,14 @@ class Payload {
         planId = '$plan';
       }
     }
-
+    if ((json[parameters.KIOSK_isSheela] ?? '').isNotEmpty) {
+      isSheela =
+          (json[parameters.KIOSK_isSheela] ?? '').toString().toLowerCase() ==
+              "true";
+    }
+    if ((json[parameters.notificationListId] ?? '').isNotEmpty) {
+      notificationListId = json[parameters.notificationListId];
+    }
     sheelaAudioMsgUrl =
         json["sheelaAudioMsgUrl"] == null ? null : json["sheelaAudioMsgUrl"];
   }
@@ -148,7 +159,8 @@ class Payload {
     data['createdBy'] = this.createdBy;
     data['uid'] = this.uid;
     data['sheelaAudioMsgUrl'] = this.sheelaAudioMsgUrl;
-
+    data[parameters.KIOSK_isSheela] = this.isSheela;
+    data[parameters.notificationListId] = this.notificationListId;
     return data;
   }
 }
