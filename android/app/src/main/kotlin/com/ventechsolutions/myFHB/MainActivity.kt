@@ -2405,7 +2405,7 @@ WOWGoDataUpload = 1
 
         countDown= object: CountDownTimer(11000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                countDownTimer.text=(millisUntilFinished/1000).toString()+" Seconds"
+                countDownTimer.text=(millisUntilFinished/1000).toString()+" seconds"
             }
             override fun onFinish() {
                 countDownTimerDialog.dismiss()
