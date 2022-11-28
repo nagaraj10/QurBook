@@ -245,8 +245,7 @@ class ChatState extends State<ChatDetail> {
 
     chatById = widget.carecoordinatorId;
 
-    if (isFromCareCoordinator && isNormalChatUserList == "true")
-    {
+    if (isFromCareCoordinator && isNormalChatUserList == "true") {
       chatById = familyUserId;
     }
 
@@ -971,6 +970,7 @@ class ChatState extends State<ChatDetail> {
           child: Container(
             height: 45.0.h,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(fontSize: 16.0.sp),
               decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -1186,6 +1186,7 @@ class ChatState extends State<ChatDetail> {
                   alignment: Alignment.centerRight,
                   children: [
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       focusNode: focusNode,
                       onTap: () {
@@ -2353,7 +2354,7 @@ class ChatState extends State<ChatDetail> {
             snapshot.data != '' &&
             snapshot.data != null) {
           return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived);
-        }else{
+        } else {
           return SizedBox.shrink();
         }
       },

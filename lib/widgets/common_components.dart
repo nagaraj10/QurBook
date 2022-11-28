@@ -13,6 +13,7 @@ class CommonComponents {
 
   getTextField(String hintString) {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: TextInputType.phone,
       decoration:
           InputDecoration(hintText: hintString, border: InputBorder.none),

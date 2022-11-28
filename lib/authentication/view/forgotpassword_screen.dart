@@ -144,6 +144,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           maxLength: 10,
           style: TextStyle(
             fontSize: 16.0.sp,

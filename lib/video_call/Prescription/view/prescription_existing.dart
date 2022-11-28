@@ -489,6 +489,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
 
   Widget noUnderLineTextField(medString) {
     return TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       initialValue: medString,
       autocorrect: true,
       decoration: InputDecoration(

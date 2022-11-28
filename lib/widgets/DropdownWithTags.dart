@@ -24,7 +24,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
   final nameController = TextEditingController();
   FocusNode nameFocus = FocusNode();
 
-  List<Tags> _foundUsers=[];
+  List<Tags> _foundUsers = [];
   @override
   void initState() {
     _foundUsers = widget.tags;
@@ -146,6 +146,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: nameController,
       keyboardType: TextInputType.text,
@@ -176,6 +177,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
       ),
     ));
   }
+
   void _runFilter(String enteredKeyword) {
     List<Tags> results = [];
     if (enteredKeyword.isEmpty) {
@@ -184,13 +186,14 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
     } else {
       results = widget.tags
           .where((user) =>
-          user.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
+              user.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
 
     // Refresh the UI
-    setState(() {_foundUsers = results;
+    setState(() {
+      _foundUsers = results;
     });
     widget.onChecked(_foundUsers);
   }

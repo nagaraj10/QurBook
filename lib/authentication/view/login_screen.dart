@@ -118,6 +118,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                           children: [
                             _loginTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -163,6 +165,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                             SizedBox(height: 10.0.h),
                             _loginTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -394,7 +398,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       final bool isSkipMFA =
           parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
       isVirtualNumber =
-      parseJwtPayLoad(decodesstring)[strToken][strIsVirtualNumberUser];
+          parseJwtPayLoad(decodesstring)[strToken][strIsVirtualNumberUser];
       print(isSkipMFA);
       if (isSkipMFA) {
         final String userId =

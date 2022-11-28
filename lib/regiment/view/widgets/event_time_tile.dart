@@ -105,6 +105,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
+                        textCapitalization: TextCapitalization.sentences,
                         controller: widget.controller,
                         style: TextStyle(
                           fontSize: 16.0.sp,

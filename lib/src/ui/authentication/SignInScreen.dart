@@ -150,6 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
       stream: bloc.mobileNumber,
       builder: (context, snapshot) {
         return TextField(
+          textCapitalization: TextCapitalization.sentences,
           style: TextStyle(fontSize: 16.0.sp),
           controller: textController,
           onChanged: bloc.mobileNumberChanged,

@@ -906,6 +906,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowMobileNoTextField() {
     return Expanded(
       child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           enabled: isPrimaryNoSelected ? false : true,
@@ -939,6 +940,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _ShowNameTextField() {
     return Expanded(
       child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           keyboardType: TextInputType.text,
@@ -971,6 +973,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
       keyboardType: TextInputType.text,
@@ -1004,6 +1007,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showMiddleNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: middleNameController,
       keyboardType: TextInputType.text,
@@ -1037,6 +1041,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
       keyboardType: TextInputType.text,
