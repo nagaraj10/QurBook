@@ -91,6 +91,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         child: Container(
           alignment: Alignment.center,
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -112,6 +113,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         child: Container(
           alignment: Alignment.center,
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -134,6 +136,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         child: Container(
           alignment: Alignment.center,
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -156,6 +159,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         child: Container(
           alignment: Alignment.center,
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],

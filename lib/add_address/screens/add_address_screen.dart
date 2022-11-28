@@ -91,9 +91,12 @@ class AddAddressScreenState extends State<AddAddressScreen> {
             ],
           ),
         ),
-        if (placesListArray.length > 0 && placesListArray != null) AddAddressList(
-                placesListArray: placesListArray,
-                providerType: widget.arguments.providerType) else Container()
+        if (placesListArray.length > 0 && placesListArray != null)
+          AddAddressList(
+              placesListArray: placesListArray,
+              providerType: widget.arguments.providerType)
+        else
+          Container()
       ],
     ));
   }
@@ -112,6 +115,7 @@ class AddAddressScreenState extends State<AddAddressScreen> {
         controller: searchController,
         keyboardType: TextInputType.text,
         focusNode: searchFocus,
+        textCapitalization: TextCapitalization.sentences,
         textInputAction: TextInputAction.done,
         onSubmitted: (term) {
           searchFocus.unfocus();

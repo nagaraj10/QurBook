@@ -831,6 +831,7 @@ class CommonDialogBox {
                 child: GestureDetector(
                     onTap: () => _selectDate(context, dateOfVisit),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       readOnly: true,
                       controller: dateOfVisit,
                       decoration: InputDecoration(
@@ -2649,6 +2650,7 @@ class CommonDialogBox {
       },
       child: Container(
           child: TextField(
+        textCapitalization: TextCapitalization.sentences,
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: dateOfVisit,
         readOnly: true,

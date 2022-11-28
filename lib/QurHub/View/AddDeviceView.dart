@@ -109,6 +109,7 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
     String hint,
   ) {
     return TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(
         CommonUtil().getMyPrimaryColor(),
       ),

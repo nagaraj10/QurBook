@@ -904,6 +904,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 ),
                                 /*Container(
                                   child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                       textAlign: TextAlign.center,
                                       controller: deviceController,
                                       style: TextStyle(
@@ -956,6 +957,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                           /*Container(
                                 constraints: BoxConstraints(maxWidth: 100),
                                 child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                     controller: diaStolicPressure,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -1010,6 +1012,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                                 /*Container(
                                   constraints: BoxConstraints(maxWidth: 100),
                                   child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                       textAlign: TextAlign.center,
                                       controller: pulse,
                                       style: TextStyle(
@@ -1122,6 +1125,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         width: 50,
                         constraints: BoxConstraints(maxWidth: 100),
                         child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -1290,6 +1294,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

@@ -406,14 +406,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
         metaDataFromSharedPrefernce = mediaTypesResponse.result;
       }
-      if (activitiesFilteredList == null && selectedActivity==null) {
+      if (activitiesFilteredList == null && selectedActivity == null) {
         activitiesFilteredList =
             await CommonUtil().getMasterData(Get.context, '');
-            if(activitiesFilteredList!=null && activitiesFilteredList.length>0){
-                selectedActivity = getActivityFromDeviceName(getDeviceName());
-
-            }
-
+        if (activitiesFilteredList != null &&
+            activitiesFilteredList.length > 0) {
+          selectedActivity = getActivityFromDeviceName(getDeviceName());
+        }
       }
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce);
@@ -734,6 +733,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 ),
                                 /*Container(
                                   child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                       textAlign: TextAlign.center,
                                       controller: deviceController,
                                       style: TextStyle(
@@ -786,6 +786,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           /*Container(
                                 constraints: BoxConstraints(maxWidth: 100),
                                 child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                     controller: diaStolicPressure,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
@@ -840,6 +841,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                 /*Container(
                                   constraints: BoxConstraints(maxWidth: 100),
                                   child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                       textAlign: TextAlign.center,
                                       controller: pulse,
                                       style: TextStyle(
@@ -953,6 +955,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         width: 50,
                         constraints: BoxConstraints(maxWidth: 100),
                         child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -1121,6 +1124,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

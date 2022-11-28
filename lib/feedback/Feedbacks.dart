@@ -558,6 +558,7 @@ class _FeedbacksState extends State<Feedbacks> {
         right: 16,
       ),
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: feedbackController,
         keyboardType: TextInputType.text,

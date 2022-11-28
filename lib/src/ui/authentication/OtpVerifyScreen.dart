@@ -85,6 +85,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
             alignment: Alignment.center,
             child: new TextField(
+              textCapitalization: TextCapitalization.sentences,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(1),
               ],
@@ -100,6 +101,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -117,6 +119,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -134,6 +137,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
+            textCapitalization: TextCapitalization.sentences,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -615,11 +619,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
-    var firebase=FirebaseAnalyticsService();
+    var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
-    if(widget.fromSignUp!=null&&widget.fromSignUp){
+    if (widget.fromSignUp != null && widget.fromSignUp) {
       PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
-    }else{
+    } else {
       PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
     }
     PageNavigator.goToPermanent(context, router.rt_Landing);
@@ -647,7 +651,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
                         int.parse(widget.selectedCountryCode))
                     .then((value) {
-
                   moveToDashboardScreen();
                 });
               });

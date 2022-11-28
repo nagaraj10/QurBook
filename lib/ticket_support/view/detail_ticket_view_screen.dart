@@ -232,7 +232,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       "Preferred Hospital Name",
                       CommonUtil().validString(value.toString())));
                   break;
-                } else if (fieldName==LabelName) {
+                } else if (fieldName == LabelName) {
                   if (fieldData != null &&
                       fieldData.length > 0 &&
                       value is! String) {
@@ -653,6 +653,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         child: Container(
                                           height: 58.0.h,
                                           child: TextField(
+                                            textCapitalization:
+                                                TextCapitalization.sentences,
                                             controller: addCommentController,
                                             style: TextStyle(fontSize: 16.0.sp),
                                             focusNode: focusNode,
@@ -1234,7 +1236,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return file.path.toString();
   }
 
-  commonWidgetForDropDownValue(String header, String value,{bool isTime = false}) {
+  commonWidgetForDropDownValue(String header, String value,
+      {bool isTime = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1252,7 +1255,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         Expanded(
           flex: 1,
           child: Text(
-            isTime?value.toUpperCase():CommonUtil().capitalizeFirstofEach(value),
+            isTime
+                ? value.toUpperCase()
+                : CommonUtil().capitalizeFirstofEach(value),
             style: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,

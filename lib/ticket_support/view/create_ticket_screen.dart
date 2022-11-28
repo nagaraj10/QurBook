@@ -71,7 +71,7 @@ class CreateTicketScreen extends StatefulWidget {
 class _CreateTicketScreenState extends State<CreateTicketScreen> {
   TicketViewModel ticketViewModel = TicketViewModel();
   DateTime dateTime = DateTime.now();
-  static TimeOfDay selectedTime= TimeOfDay.now();
+  static TimeOfDay selectedTime = TimeOfDay.now();
   var preferredDateStr;
   var preferredTimeStr;
 
@@ -113,7 +113,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       isPreferredDate = false,
       isFileUpload = false;
 
-
   bool isFirstTym = true;
 
   List<ImagesModel> imagePaths = [];
@@ -131,12 +130,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   //FieldData selectedModeOfService;
 
-  Map<String,TextEditingController> textEditingControllers = {};
+  Map<String, TextEditingController> textEditingControllers = {};
   String docId = "";
-  String hosId= "";
+  String hosId = "";
 
   bool isLabAddressVisible = false;
-
 
   Future<void> _selectDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -172,13 +170,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       if (pickedTime != null && pickedTime != selectedTime) {
         setState(() {
           selectedTime = pickedTime;
-          preferredTimeStr =
-              FHBUtils().formatTimeOfDay(selectedTime);
+          preferredTimeStr = FHBUtils().formatTimeOfDay(selectedTime);
           preferredTimeController.text = preferredTimeStr;
         });
       }
-
-
     } catch (e) {
       //print(e);
     }
@@ -187,7 +182,6 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   @override
   void initState() {
     try {
-
       super.initState();
 
       setDefaultValues();
@@ -202,12 +196,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               .getHealthConditions();
 
       setBooleanValues();
-
     } catch (e) {
       //print(e);
     }
-
-
   }
 
   @override
@@ -244,20 +235,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
             if (field.type == tckConstants.tckTypeTitle &&
                 (field.name != tckConstants.tckMainTitle &&
-                    field.name != tckConstants.tckPackageTitle)&&
+                    field.name != tckConstants.tckPackageTitle) &&
                 field.isVisible == null) {
               var textEditingController = new TextEditingController();
               textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name), () => textEditingController);
+                  CommonUtil().getFieldName(field.name),
+                  () => textEditingController);
             }
 
             if (field.type == tckConstants.tckTypeTitle &&
                 (field.name != tckConstants.tckMainTitle &&
-                    field.name != tckConstants.tckPackageTitle)&&
+                    field.name != tckConstants.tckPackageTitle) &&
                 field.isVisible != null) {
               var textEditingController = new TextEditingController();
               textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name), () => textEditingController);
+                  CommonUtil().getFieldName(field.name),
+                  () => textEditingController);
             }
 
             if (field.type == tckConstants.tckTypeDescription &&
@@ -265,23 +258,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               isDescription = true;
             }
             if (field.type == tckConstants.tckTypeDescription &&
-                field.name != tckConstants.tckMainDescription&&
+                field.name != tckConstants.tckMainDescription &&
                 field.isVisible == null) {
               var textEditingController = new TextEditingController();
               textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name), () => textEditingController);
+                  CommonUtil().getFieldName(field.name),
+                  () => textEditingController);
             }
 
             if (field.type == tckConstants.tckTypeDescription &&
-                field.name != tckConstants.tckMainDescription&&
+                field.name != tckConstants.tckMainDescription &&
                 field.isVisible != null) {
               var textEditingController = new TextEditingController();
               textEditingControllers.putIfAbsent(
-                  CommonUtil().getFieldName(field.name), () => textEditingController);
+                  CommonUtil().getFieldName(field.name),
+                  () => textEditingController);
             }
 
-            if (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
-            {
+            if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
               isDoctor = true;
             }
             if (field.type == tckConstants.tckTypeDropdown &&
@@ -302,10 +296,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   CommonUtil().getFieldName(field.name),
                   () => textEditingController);
             }
-
           }
       }
-
     } catch (e) {
       //print(e);
     }
@@ -365,19 +357,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               )));
   }
 
-
-
   Widget getColumnBody(TicketTypesResult ticketTypesResult) {
     List<Widget> widgetForColumn = List();
     try {
       if (ticketTypesResult.additionalInfo != null) {
-        for(int i = 0; i < ticketTypesResult.additionalInfo?.field.length; i++)
-        {
+        for (int i = 0;
+            i < ticketTypesResult.additionalInfo?.field.length;
+            i++) {
           Field field = ticketTypesResult.additionalInfo?.field[i];
           String displayName = displayFieldName(field);
-          String placeHolderName = CommonUtil()
-              .validString(field.placeholder);
-          placeHolderName = placeHolderName.trim().isNotEmpty?placeHolderName:displayName;
+          String placeHolderName = CommonUtil().validString(field.placeholder);
+          placeHolderName =
+              placeHolderName.trim().isNotEmpty ? placeHolderName : displayName;
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
@@ -409,7 +400,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
+                    getWidgetForTitleText(
+                        title: displayName,
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTitleValue()
                   ],
@@ -417,18 +410,21 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeTitle &&
-              (field.name != tckConstants.tckMainTitle &&
-                  field.name != tckConstants.tckPackageTitle)&&field.isVisible == null)
+                  (field.name != tckConstants.tckMainTitle &&
+                      field.name != tckConstants.tckPackageTitle) &&
+                  field.isVisible == null)
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
+                    getWidgetForTitleText(
+                        title: displayName,
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
-                    getWidgetForTextValue(i,CommonUtil().getFieldName(field.name)),
+                    getWidgetForTextValue(
+                        i, CommonUtil().getFieldName(field.name)),
                   ],
                 ))
               : SizedBox.shrink();
-
 
           (field.type == tckConstants.tckTypeTitle &&
                   (field.name != tckConstants.tckMainTitle &&
@@ -441,7 +437,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: /*field.isRequired*/isVisible ?? false),
+                          isRequired: /*field.isRequired*/ isVisible ?? false),
                       SizedBox(height: 10.h),
                       getWidgetForTextValue(
                           i, CommonUtil().getFieldName(field.name)),
@@ -450,12 +446,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 ))
               : SizedBox.shrink();
 
-          field.type == tckConstants.tckTypeDescription&&
-              field.name == tckConstants.tckMainDescription
+          field.type == tckConstants.tckTypeDescription &&
+                  field.name == tckConstants.tckMainDescription
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForTitleDescription(isRequired: field.isRequired ?? false),
+                    getWidgetForTitleDescription(
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForTitleDescriptionValue(),
                   ],
@@ -472,7 +469,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                       SizedBox(height: 15.h),
                       getWidgetForTitleText(
                           title: displayName,
-                          isRequired: /*field.isRequired*/isVisible ?? false),
+                          isRequired: /*field.isRequired*/ isVisible ?? false),
                       SizedBox(height: 10.h),
                       getWidgetForTextAreaValue(
                           i, CommonUtil().getFieldName(field.name)),
@@ -499,11 +496,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
           (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
               ? widgetForColumn.add(Column(
-                children: [
-                  SizedBox(height: 15.h),
-                  getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
-                  SizedBox(height: 10.h),
-                  Row(
+                  children: [
+                    SizedBox(height: 15.h),
+                    getWidgetForTitleText(
+                        title: displayName,
+                        isRequired: field.isRequired ?? false),
+                    SizedBox(height: 10.h),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -538,9 +537,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                       ],
                     ),
-                  SizedBox(height: 10.h),
-                ],
-              ))
+                    SizedBox(height: 10.h),
+                  ],
+                ))
               //widgetForColumn.add(getWidgetForDoctors())
               : SizedBox();
           /*widgetForColumn.add(SizedBox(
@@ -548,11 +547,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           ));*/
           (field.type == tckConstants.tckTypeDropdown && field.isHospital)
               ? widgetForColumn.add(Column(
-                children: [
-                  SizedBox(height: 15.h),
-                  getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
-                  SizedBox(height: 10.h),
-                  Row(
+                  children: [
+                    SizedBox(height: 15.h),
+                    getWidgetForTitleText(
+                        title: displayName,
+                        isRequired: field.isRequired ?? false),
+                    SizedBox(height: 10.h),
+                    Row(
                       children: [
                         SizedBox(
                           width: 5,
@@ -585,9 +586,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         ),
                       ],
                     ),
-                  SizedBox(height: 10.h),
-                ],
-              ))
+                    SizedBox(height: 10.h),
+                  ],
+                ))
               : SizedBox.shrink();
 
           /*widgetForColumn.add(SizedBox(
@@ -599,41 +600,46 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   field.fieldData != null &&
                   field.fieldData.length > 0)
               ? widgetForColumn.add(Column(
-                children: [
-                  SizedBox(height: 15.h),
-                  getWidgetForTitleText(title:displayName,isRequired: field.isRequired ?? false),
-                  SizedBox(height: 10.h),
-                  Row(
+                  children: [
+                    SizedBox(height: 15.h),
+                    getWidgetForTitleText(
+                        title: displayName,
+                        isRequired: field.isRequired ?? false),
+                    SizedBox(height: 10.h),
+                    Row(
                       children: [
                         SizedBox(
                           width: 5,
                         ),
                         Expanded(
                           flex: 2,
-                          child: fhbBasicWidget.getTextFiledWithHint(context,
-                              '$placeHolderName', textEditingControllers[CommonUtil().getFieldName(field.name)],
+                          child: fhbBasicWidget.getTextFiledWithHint(
+                              context,
+                              '$placeHolderName',
+                              textEditingControllers[
+                                  CommonUtil().getFieldName(field.name)],
                               enabled: false),
                         ),
                         Container(
                           height: 50,
-                          child: getDropDownFields(
-                            field
-                            /*controller.modeOfServiceList,
+                          child: getDropDownFields(field
+                              /*controller.modeOfServiceList,
                             selectedModeOfService,*/
-                          ),
+                              ),
                         ),
                       ],
                     ),
-                  SizedBox(height: 10.h),
-                ],
-              ))
+                    SizedBox(height: 10.h),
+                  ],
+                ))
               : SizedBox.shrink();
 
           (field.type == tckConstants.tckTypeDate)
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForPreferredDate(isRequired: field.isRequired ?? false),
+                    getWidgetForPreferredDate(
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredDateValue(),
                     //SizedBox(height: 25.h),
@@ -645,7 +651,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForPreferredTime(isRequired: field.isRequired ?? false),
+                    getWidgetForPreferredTime(
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getWidgetForPreferredTimeValue(),
                     //SizedBox(height: 25.h),
@@ -669,7 +676,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForTitleText(title: "Package Name",isRequired: field.isRequired ?? false),
+                    getWidgetForTitleText(
+                        title: "Package Name",
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     getTitleForPlanPackage()
                   ],
@@ -680,7 +689,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 15.h),
-                    getWidgetForTitleText(title: "Category",isRequired: field.isRequired ?? false),
+                    getWidgetForTitleText(
+                        title: "Category",
+                        isRequired: field.isRequired ?? false),
                     SizedBox(height: 10.h),
                     healthConditionsResult != null
                         ? getDropDownForPlanCategory(
@@ -783,7 +794,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     toPreviousScreen: true,
                     isSkipUnknown:
                         searchParam == CommonConstants.keyDoctor ? true : false,
-                isFromCreateTicket: true,
+                    isFromCreateTicket: true,
                   )))
           .then((results) {
         if (results != null) {
@@ -799,8 +810,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           } else if (results.containsKey(tckConstants.keyLab)) {
             labData = json.decode(results[tckConstants.keyLab]);
             lab.text = labData[parameters.strHealthOrganizationName];
-            controller.selPrefLab.value = labData[parameters.strHealthOrganizationName];
-            controller.selPrefLabId.value = labData[parameters.strHealthOrganizationId];
+            controller.selPrefLab.value =
+                labData[parameters.strHealthOrganizationName];
+            controller.selPrefLabId.value =
+                labData[parameters.strHealthOrganizationId];
             controller.strAddressLine.value =
                 CommonUtil().validString(labData[parameters.strAddressLine1]);
             controller.strCityName.value =
@@ -962,6 +975,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Widget getWidgetForPreferredDateValue() {
     return Container(
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         autofocus: false,
         enableInteractiveSelection: false,
         readOnly: true,
@@ -1011,7 +1025,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Widget getWidgetForPreferredDate({bool isRequired = false}) {
     return Row(
       children: [
-        Text("${tckConstants.strTicketPreferredDate}${isRequired?"\t*":""}",
+        Text("${tckConstants.strTicketPreferredDate}${isRequired ? "\t*" : ""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -1023,6 +1037,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Widget getWidgetForPreferredTimeValue() {
     return Container(
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         autofocus: false,
         enableInteractiveSelection: false,
         readOnly: true,
@@ -1069,11 +1084,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-
   Widget getWidgetForPreferredTime({bool isRequired = false}) {
     return Row(
       children: [
-        Text("${tckConstants.strTicketPreferredTime}${isRequired?"\t*":""}",
+        Text("${tckConstants.strTicketPreferredTime}${isRequired ? "\t*" : ""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -1082,10 +1096,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTitleText({String title, bool isbold = false,bool isRequired = false}) {
+  Widget getWidgetForTitleText(
+      {String title, bool isbold = false, bool isRequired = false}) {
     return Row(
       children: [
-        Text("${title ?? tckConstants.strTicketTitle}${isRequired?"\t*":""}",
+        Text(
+            "${title ?? tckConstants.strTicketTitle}${isRequired ? "\t*" : ""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -1096,6 +1112,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   Widget getWidgetForTitleValue() {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       autofocus: false,
       controller: titleController,
       decoration: InputDecoration(
@@ -1119,8 +1136,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextAreaValue(int index,String strName) {
+  Widget getWidgetForTextAreaValue(int index, String strName) {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: TextInputType.multiline,
       autofocus: false,
       maxLines: 6,
@@ -1146,8 +1164,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  Widget getWidgetForTextValue(int index,String strName) {
+  Widget getWidgetForTextValue(int index, String strName) {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       autofocus: false,
       controller: textEditingControllers[strName],
       decoration: InputDecoration(
@@ -1174,7 +1193,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Widget getWidgetForTitleDescription({bool isRequired = false}) {
     return Row(
       children: [
-        Text("${tckConstants.strTicketDesc}${isRequired?"\t*":""}",
+        Text("${tckConstants.strTicketDesc}${isRequired ? "\t*" : ""}",
             style: TextStyle(
                 fontSize: 18.sp,
                 color: Colors.black,
@@ -1185,6 +1204,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
   Widget getWidgetForTitleDescriptionValue() {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: TextInputType.multiline,
       autofocus: false,
       maxLines: 10,
@@ -1210,12 +1230,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  void _validateAndCreateTicket(var context, var ticketListData)
-  {
+  void _validateAndCreateTicket(var context, var ticketListData) {
     try {
       String strName =
           CommonUtil().validString(ticketListData.name ?? "").toLowerCase();
-      controller.dynamicTextFiledObj  = {};
+      controller.dynamicTextFiledObj = {};
       if (widget.ticketList != null) {
         if (widget.ticketList.additionalInfo != null)
           for (int i = 0;
@@ -1666,9 +1685,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             doctor.text = value.user != null
                 ? CommonUtil().getDoctorName(value.user)
                 : '';
-            docId = value.user != null
-                ? CommonUtil().validString(value.id)
-                : '';
+            docId =
+                value.user != null ? CommonUtil().validString(value.id) : '';
           });
         },
         child: child ?? getIconButton(),
@@ -2078,17 +2096,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     );
   }
 
-  void commonMethodToCreateTicket(var ticketListData)
-  {
+  void commonMethodToCreateTicket(var ticketListData) {
     try {
       if (ticketListData.additionalInfo != null) {
         for (Field field in widget.ticketList.additionalInfo?.field) {
-
           bool isVisible = false;
           if (CommonUtil().validString(field.isVisible).trim().isNotEmpty) {
             for (int i = 0;
-            i < widget.ticketList.additionalInfo?.field.length;
-            i++) {
+                i < widget.ticketList.additionalInfo?.field.length;
+                i++) {
               Field tempField = widget.ticketList.additionalInfo?.field[i];
               if (tempField.selValueDD != null &&
                   field.isVisible.contains(tempField.selValueDD.id) &&
@@ -2123,7 +2139,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             if (strTime.isNotEmpty) {
               tckConstants.tckPrefTime = strTime;
               controller.dynamicTextFiledObj[field.name] = strTime;
-            } else if(field.isRequired) {
+            } else if (field.isRequired) {
               showAlertMsg(CommonConstants.ticketTime);
               return;
             }
@@ -2131,12 +2147,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
           if (field.type == tckConstants.tckTypeTitle &&
               (field.name != tckConstants.tckMainTitle &&
-                  field.name != tckConstants.tckPackageTitle)&&field.isVisible == null) {
-            String strText = CommonUtil()
-                .validString(textEditingControllers[CommonUtil().getFieldName(field.name)].text);
+                  field.name != tckConstants.tckPackageTitle) &&
+              field.isVisible == null) {
+            String strText = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
+                    .text);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
-            } else if(field.isRequired) {
+            } else if (field.isRequired) {
               showAlertMsg("Please fill " + displayFieldName(field));
               return;
             }
@@ -2153,21 +2171,21 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
-                showAlertMsg(
-                    "Please fill " + displayFieldName(field));
+                showAlertMsg("Please fill " + displayFieldName(field));
                 return;
               }
             }
           }
 
           if (field.type == tckConstants.tckTypeDescription &&
-              field.name != tckConstants.tckMainDescription&&
+              field.name != tckConstants.tckMainDescription &&
               field.isVisible == null) {
-            String strText = CommonUtil()
-                .validString(textEditingControllers[CommonUtil().getFieldName(field.name)].text);
+            String strText = CommonUtil().validString(
+                textEditingControllers[CommonUtil().getFieldName(field.name)]
+                    .text);
             if (strText.isNotEmpty) {
               controller.dynamicTextFiledObj[field.name] = strText;
-            } else if(field.isRequired) {
+            } else if (field.isRequired) {
               showAlertMsg("Please fill " + displayFieldName(field));
               return;
             }
@@ -2183,8 +2201,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               if (strText.isNotEmpty) {
                 controller.dynamicTextFiledObj[field.name] = strText;
               } else if (isVisible) {
-                showAlertMsg(
-                    "Please fill " + displayFieldName(field));
+                showAlertMsg("Please fill " + displayFieldName(field));
                 return;
               }
             }
@@ -2209,7 +2226,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       ticketViewModel.createTicket().then((value) async {
-        if (value != null&&value.isSuccess) {
+        if (value != null && value.isSuccess) {
           if (CommonUtil()
                   .validString(ticketListData.name)
                   .toLowerCase()
@@ -2267,7 +2284,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: Text("Attach File${isRequired?"\t*":""}",
+          child: Text("Attach File${isRequired ? "\t*" : ""}",
               style: TextStyle(
                   fontSize: 18.sp,
                   color: Colors.black,
@@ -2787,7 +2804,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }
   }
 
-  getDropDownFields(Field field,/*List<FieldData> modeOfServiceList, FieldData modeOfServiceSample,*/
+  getDropDownFields(Field field,
+      /*List<FieldData> modeOfServiceList, FieldData modeOfServiceSample,*/
       {Widget child}) {
     if (field.selValueDD != null) {
       for (var modeOfServiceObj in field.fieldData) {
@@ -2804,32 +2822,33 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         //padding: EdgeInsets.all(20),
 
         itemBuilder: (context) => (field.fieldData != null &&
-            field.fieldData.isNotEmpty)
+                field.fieldData.isNotEmpty)
             ? field.fieldData
-            .mapIndexed((index, element) => index == field.fieldData.length - 1
-            ? PopupMenuItem<FieldData>(
-            value: element,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: 0.5.sw,
-                  child: Text(
-                      element.name != null ? element.name : ''),
-                ),
-                SizedBox(height: 10),
-              ],
-            ))
-            : PopupMenuItem<FieldData>(
-          value: element,
-          child: Container(
-            width: 0.5.sw,
-            child: Text(element.name != null ? element.name : ''),
-          ),
-        ))
-            .toList()
+                .mapIndexed((index, element) => index ==
+                        field.fieldData.length - 1
+                    ? PopupMenuItem<FieldData>(
+                        value: element,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              width: 0.5.sw,
+                              child: Text(
+                                  element.name != null ? element.name : ''),
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ))
+                    : PopupMenuItem<FieldData>(
+                        value: element,
+                        child: Container(
+                          width: 0.5.sw,
+                          child: Text(element.name != null ? element.name : ''),
+                        ),
+                      ))
+                .toList()
             : SizedBox.shrink(),
         onSelected: (value) {
           try {
@@ -2865,13 +2884,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
     }
   }
 
-  String displayFieldName(Field field)
-  {
+  String displayFieldName(Field field) {
     String displayName = "";
     try {
-      displayName = CommonUtil()
-          .validString(field.displayName);
-      displayName = displayName.trim().isNotEmpty?displayName:CommonUtil().getFieldName(field.name);
+      displayName = CommonUtil().validString(field.displayName);
+      displayName = displayName.trim().isNotEmpty
+          ? displayName
+          : CommonUtil().getFieldName(field.name);
       return displayName;
     } catch (e) {}
     return displayName;

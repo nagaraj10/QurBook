@@ -708,6 +708,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                         width: 50,
                         constraints: BoxConstraints(maxWidth: 100),
                         child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                             controller: deviceController,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -931,6 +932,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
+              textCapitalization: TextCapitalization.sentences,
                                 controller: pulse,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(

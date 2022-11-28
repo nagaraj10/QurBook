@@ -280,6 +280,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                         Container(
                           width: 1.sw,
                           child: TextField(
+                              textCapitalization: TextCapitalization.sentences,
                               maxLines: 10,
                               minLines: 1,
                               style: TextStyle(
@@ -439,6 +440,7 @@ class NewPrescriptionState extends State<NewPrescription> {
           height: 70.0.h,
           width: 1.sw * 0.9,
           child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               controller: textEditingController,
               maxLines: null,
               expands: true,
@@ -455,6 +457,7 @@ class NewPrescriptionState extends State<NewPrescription> {
     return Container(
         width: 40.0.w,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           controller: textEditingController,
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -477,6 +480,7 @@ class NewPrescriptionState extends State<NewPrescription> {
     return Container(
         width: 40.0.w,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           controller: textEditingController,
           style: TextStyle(
             color: Colors.black,
@@ -611,6 +615,7 @@ class NewPrescriptionState extends State<NewPrescription> {
 
   Widget noUnderLineTextField(hint, text) {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       controller: medicineNameTextController,
       autocorrect: true,
       maxLines: null,

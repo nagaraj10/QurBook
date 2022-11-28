@@ -82,6 +82,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         children: [
                           _changepasswordTextFields(
                             TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
@@ -109,6 +110,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           SizedBox(height: 10.0.h),
                           _changepasswordTextFields(
                             TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
@@ -137,6 +139,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           SizedBox(height: 10.0.h),
                           _changepasswordTextFields(
                             TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
