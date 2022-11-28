@@ -72,6 +72,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),
@@ -83,6 +84,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                                   : null),
                         ),
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),
@@ -157,6 +159,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                               ),
                             )),
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),

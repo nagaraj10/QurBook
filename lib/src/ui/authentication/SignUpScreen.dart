@@ -88,6 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           enabled: false,
                           controller: phoneNumber,
                           decoration: InputDecoration(
@@ -101,6 +102,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: firstName,
                           decoration: InputDecoration(
                               hintText: CommonConstants.firstName,
@@ -113,6 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: middleName,
                           decoration: InputDecoration(
                               hintText: CommonConstants.middleName,
@@ -125,6 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: lastName,
                           decoration: InputDecoration(
                               hintText: CommonConstants.lastName,
@@ -139,6 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Padding(
                         padding: EdgeInsets.all(5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           controller: email,
                           decoration: InputDecoration(
                               hintText: variable.strEmailOpt,

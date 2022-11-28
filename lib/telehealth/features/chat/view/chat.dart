@@ -1605,6 +1605,7 @@ class ChatScreenState extends State<ChatScreen> {
           child: Container(
             height: 45.0.h,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(fontSize: 16.0.sp),
               decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -1985,6 +1986,7 @@ class ChatScreenState extends State<ChatScreen> {
                   alignment: Alignment.centerRight,
                   children: [
                     TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       focusNode: focusNode,
                       onTap: () {

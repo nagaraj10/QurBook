@@ -142,6 +142,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
       width: 1.sw - 70,
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 0),
       child: TextField(
+        textCapitalization: TextCapitalization.sentences,
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: searchController,
         keyboardType: TextInputType.text,

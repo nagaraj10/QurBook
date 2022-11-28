@@ -475,6 +475,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2),
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           keyboardType: TextInputType.number,
           autovalidate: _autoValidateBool,
           obscureText: isPassword,

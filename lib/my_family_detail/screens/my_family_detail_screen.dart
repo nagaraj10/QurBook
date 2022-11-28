@@ -625,6 +625,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ? Padding(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_corp_name,
                     enabled: false,
@@ -737,6 +738,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           enabled: false,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
@@ -773,6 +775,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: nameController,
           enabled: false,
@@ -808,6 +811,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: firstNameController,
           enabled: false,
@@ -843,6 +847,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: middleNameController,
           enabled: false,
@@ -878,6 +883,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: lastNameController,
           enabled: false,
@@ -913,6 +919,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: relationShipController,
           enabled: false,
@@ -947,6 +954,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: emailController,
           enabled: false,
@@ -981,6 +989,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: genderController,
           enabled: false,
@@ -1018,6 +1027,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodGroupController,
               enabled: false,
@@ -1056,6 +1066,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: bloodRangeController,
               enabled: false,
@@ -1094,6 +1105,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: heightConroller,
               enabled: false,
@@ -1132,6 +1144,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Container(
             width: 1.sw / 2 - 40,
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               cursorColor: Color(CommonUtil().getMyPrimaryColor()),
               controller: weightController,
               enabled: false,
@@ -1173,6 +1186,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             readOnly: true,
@@ -1448,6 +1462,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         child: Column(
           children: [
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -1466,6 +1481,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               },
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -1479,6 +1495,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -1492,6 +1509,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -1505,6 +1523,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               ),
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),

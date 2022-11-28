@@ -106,6 +106,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           onTap: () {
             onTextFieldtap(context, searchParam);
           },
@@ -119,6 +120,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           enabled: isFileField ?? false,
           controller: searchController,
         ));
@@ -130,6 +132,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw,
         child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             enabled: isFileField ?? false,
             controller: searchController,
             style: getTextStyleForValue(),
@@ -168,6 +171,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           maxLength: 500,
           controller: searchController,
         ));
@@ -205,6 +209,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           onTap: () {},
           controller: dateController,
           decoration: InputDecoration(
@@ -241,6 +246,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           onTap: () {},
         ));
   }
@@ -358,6 +364,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           onTap: () {},
           controller: controllerValue,
           inputFormatters: (device == Constants.STR_THERMOMETER ||
@@ -413,6 +420,7 @@ class FHBBasicWidget {
     return Container(
         width: 1.sw - 60,
         child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             enabled: enabled ?? true,
             onTap: () {},
             controller: memoController,
@@ -805,6 +813,7 @@ class FHBBasicWidget {
     return Container(
       height: 1.sh / 5,
       child: TextField(
+        textCapitalization: TextCapitalization.sentences,
         decoration: InputDecoration(
             errorText: errorValue == '' ? null : errorValue,
             errorMaxLines: 2,
@@ -851,6 +860,7 @@ class FHBBasicWidget {
     return Container(
         width: 50.0.w,
         child: TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           textAlign: TextAlign.center,
           maxLength: deviceName == Constants.STR_THERMOMETER
               ? 4

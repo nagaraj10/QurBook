@@ -95,6 +95,7 @@ class _AddReminderState extends State<AddReminder> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),
@@ -106,6 +107,7 @@ class _AddReminderState extends State<AddReminder> {
                                   : null),
                         ),
                         TextFormField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(
                             fontSize: 16.0.sp,
                           ),

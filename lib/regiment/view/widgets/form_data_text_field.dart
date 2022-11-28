@@ -31,16 +31,15 @@ class FormDataTextField extends StatelessWidget {
             fontSize: 14.0.sp,
             fontWeight: FontWeight.w600,
             color: isFromQurHomeSymptom
-                ? Color(CommonUtil()
-                .getQurhomePrimaryColor())
-                : Color(
-                CommonUtil().getMyPrimaryColor()),
+                ? Color(CommonUtil().getQurhomePrimaryColor())
+                : Color(CommonUtil().getMyPrimaryColor()),
           ),
         ),
         SizedBox(
           height: 10.0.h,
         ),
         TextFormField(
+          textCapitalization: TextCapitalization.sentences,
           enabled: canEdit,
           style: TextStyle(
             fontSize: 16.0.sp,

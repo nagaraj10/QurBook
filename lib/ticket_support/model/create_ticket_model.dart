@@ -31,7 +31,7 @@ class CreateTicketModel {
     try {
       isSuccess = json['isSuccess'];
       message = json['message'];
-      result = json['result'];
+      result = json['result'] != null ? new Result.fromJson(json['result']) : null;
     } catch (e) {
       //print(e);
     }

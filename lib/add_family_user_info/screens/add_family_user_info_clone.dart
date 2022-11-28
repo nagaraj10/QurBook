@@ -533,6 +533,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ? Padding(
                         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 16.0.sp),
                           controller: cntrlr_corp_name,
                           enabled: false,
@@ -629,6 +630,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5),
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             cursorColor: Color(CommonUtil().getMyPrimaryColor()),
             controller: dateOfBirthController,
             readOnly: true,
@@ -718,6 +720,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           enabled: isEnabled,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: textEditingController,
@@ -776,6 +779,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: Column(
           children: [
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -795,6 +799,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               }, */
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -936,6 +941,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSaved: (value) => state = value,
             ),
             TextFormField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 16.0.sp,
               ),
@@ -1143,6 +1149,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5),
         child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           onTap: () {
             widget.arguments.fromClass == CommonConstants.my_family
                 ? relationShipResponseList != null

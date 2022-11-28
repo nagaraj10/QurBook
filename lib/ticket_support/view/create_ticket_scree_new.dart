@@ -576,6 +576,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   Widget getWidgetForPreferredDateValue() {
     return Container(
       child: TextFormField(
+        textCapitalization: TextCapitalization.sentences,
         autofocus: false,
         enableInteractiveSelection: false,
         readOnly: true,
@@ -648,6 +649,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   Widget getWidgetForTitleValue() {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       autofocus: false,
       controller: titleController,
       decoration: InputDecoration(
@@ -685,6 +687,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   Widget getWidgetForTitleDescriptionValue() {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       keyboardType: TextInputType.multiline,
       autofocus: false,
       maxLines: 10,

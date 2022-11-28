@@ -99,7 +99,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                       height: 10.0.h,
                     ),
                     Text(
-                      (widget.isVirtualNumber??false)
+                      (widget.isVirtualNumber ?? false)
                           ? strChangePasswordTextVirtual
                           : strChangePasswordText,
                       textAlign: TextAlign.center,
@@ -116,6 +116,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                           key: _otpKey,
                           child: _changepasswordTextFields(
                             TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
                               style: TextStyle(
                                 fontSize: 16.0.sp,
                               ),
@@ -154,6 +155,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                             children: [
                               _changepasswordTextFields(
                                 TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),
@@ -198,6 +201,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                               SizedBox(height: 10.0.h),
                               _changepasswordTextFields(
                                 TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                   ),

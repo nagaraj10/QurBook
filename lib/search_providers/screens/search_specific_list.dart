@@ -54,7 +54,10 @@ class SearchSpecificList extends StatefulWidget {
   bool isFromCreateTicket;
 
   SearchSpecificList(
-      {this.arguments, this.toPreviousScreen, this.isSkipUnknown,this.isFromCreateTicket = false});
+      {this.arguments,
+      this.toPreviousScreen,
+      this.isSkipUnknown,
+      this.isFromCreateTicket = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -212,6 +215,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
+                textCapitalization: TextCapitalization.sentences,
                 style: TextStyle(
                   fontSize: 16.0.sp,
                 ),
@@ -1304,6 +1308,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showFirstNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: firstNameController,
       keyboardType: TextInputType.text,
@@ -1337,6 +1342,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showLastNameTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: lastNameController,
       keyboardType: TextInputType.text,
@@ -1370,6 +1376,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _ShowMobileNoTextField() {
     return Expanded(
       child: TextField(
+          textCapitalization: TextCapitalization.sentences,
           cursorColor: Color(CommonUtil().getMyPrimaryColor()),
           controller: mobileNoController,
           enabled: true,
@@ -1403,6 +1410,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showSpecializationTextField() {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: specializationController,
       keyboardType: TextInputType.text,
@@ -1436,6 +1444,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   Widget _showHospitalNameTextField(bool condition) {
     return Expanded(
         child: TextField(
+      textCapitalization: TextCapitalization.sentences,
       cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: hospitalNameController,
       keyboardType: TextInputType.text,
@@ -1895,6 +1904,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: TextField(
+        textCapitalization: TextCapitalization.sentences,
         cursorColor: Color(CommonUtil().getMyPrimaryColor()),
         controller: doctorController,
         keyboardType: TextInputType.emailAddress,

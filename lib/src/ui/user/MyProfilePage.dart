@@ -409,6 +409,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       controller: mobile,
                       enabled: false,
@@ -422,6 +423,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       controller: firstName,
                       enabled: false,
@@ -434,6 +436,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       controller: middleName,
                       enabled: false,
@@ -447,6 +450,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      textCapitalization: TextCapitalization.sentences,
                       style: TextStyle(fontSize: 16.0.sp),
                       controller: lastName,
                       enabled: false,
@@ -462,6 +466,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     Padding(
                       padding: EdgeInsets.all(10),
                       child: TextField(
+                        textCapitalization: TextCapitalization.sentences,
                         style: TextStyle(fontSize: 16.0.sp),
                         controller: email,
                         enabled: false,
@@ -504,6 +509,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: gender,
                     enabled: false,
@@ -521,6 +527,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             style: TextStyle(fontSize: 16.0.sp),
                             controller: bloodGroupController,
                             enabled: false,
@@ -535,6 +542,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                         child: Container(
                           width: 1.sw / 2 - 40,
                           child: TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             style: TextStyle(fontSize: 16.0.sp),
                             controller: bloodRangeController,
                             enabled: false,
@@ -554,6 +562,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               child: Container(
                                 width: 0.5.sw / 2 - 20,
                                 child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(fontSize: 16.0.sp),
                                   controller: heightController,
                                   enabled: false,
@@ -570,6 +580,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               child: Container(
                                 width: 0.5.sw / 2 - 20,
                                 child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(fontSize: 16.0.sp),
                                   controller: heightInchController,
                                   enabled: false,
@@ -586,6 +598,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               child: Container(
                                 width: 1.sw / 2 - 40,
                                 child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(fontSize: 16.0.sp),
                                   controller: weightController,
                                   enabled: false,
@@ -608,6 +622,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               child: Container(
                                 width: 1.sw / 2 - 40,
                                 child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(fontSize: 16.0.sp),
                                   controller: heightController,
                                   enabled: false,
@@ -622,6 +638,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               child: Container(
                                 width: 1.sw / 2 - 40,
                                 child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
                                   style: TextStyle(fontSize: 16.0.sp),
                                   controller: weightController,
                                   enabled: false,
@@ -644,6 +662,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: dob,
                     enabled: false,
@@ -657,6 +676,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     ? Padding(
                         padding: EdgeInsets.all(10),
                         child: TextField(
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(fontSize: 16.0.sp),
                           controller: cntrlr_corp_name,
                           enabled: false,
@@ -670,6 +690,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_one,
                     enabled: false,
@@ -682,6 +703,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_two,
                     enabled: false,
@@ -694,6 +716,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_city,
                     enabled: false,
@@ -706,6 +729,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_state,
                     enabled: false,
@@ -718,12 +742,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
                 Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     style: TextStyle(fontSize: 16.0.sp),
                     controller: cntrlr_addr_zip,
                     enabled: false,
                     decoration: InputDecoration(
                       hintStyle: TextStyle(fontSize: 16.0.sp),
-                      labelText: CommonUtil.REGION_CODE == 'IN'?CommonConstants.addr_pin:CommonConstants.addr_zip,
+                      labelText: CommonUtil.REGION_CODE == 'IN'
+                          ? CommonConstants.addr_pin
+                          : CommonConstants.addr_zip,
                     ),
                   ),
                 ),
@@ -792,6 +819,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           return Padding(
             padding: EdgeInsets.all(10),
             child: TextField(
+              textCapitalization: TextCapitalization.sentences,
               style: TextStyle(fontSize: 16.0.sp),
               controller: languageController,
               enabled: false,

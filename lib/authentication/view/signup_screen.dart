@@ -106,6 +106,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                           children: [
                             _signupTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 decoration: InputDecoration(
                                   hintText: strFirstNameHint,
                                   labelText: strFirstNameHint,
@@ -139,6 +141,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             SizedBox(height: 10.0.h),
                             _signupTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -172,6 +176,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             SizedBox(height: 10.0.h),
                             _signupTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -218,6 +224,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             SizedBox(height: 10.0.h),
                             _signupTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -251,6 +259,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             SizedBox(height: 10.0.h),
                             _signupTextFields(
                               TextFormField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 style: TextStyle(
                                   fontSize: 16.0.sp,
                                 ),
@@ -419,7 +429,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                     emailId: emailController.text.trim(),
                   )));
     } else {
-      toast.getToastWithBuildContext(response.message, Colors.red,context);
+      toast.getToastWithBuildContext(response.message, Colors.red, context);
     }
   }
 

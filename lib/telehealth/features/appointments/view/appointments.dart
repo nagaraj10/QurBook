@@ -58,7 +58,7 @@ class _AppointmentsState extends State<Appointments> {
     try {
       mInitialTime = DateTime.now();
       Provider.of<AppointmentsListViewModel>(context, listen: false)
-              .fetchAppointments();
+          .fetchAppointments();
       super.initState();
     } catch (e) {
       //print(e);
@@ -84,13 +84,13 @@ class _AppointmentsState extends State<Appointments> {
     return Scaffold(
       body: body(),
       appBar: widget.isHome ? null : appBar(),
-        floatingActionButton: Visibility(
-          visible: CommonUtil.REGION_CODE == 'IN',
-          child: commonWidget.floatingButton(
+      floatingActionButton: Visibility(
+        visible: CommonUtil.REGION_CODE == 'IN',
+        child: commonWidget.floatingButton(
           context,
           isHome: widget.isHome,
-      ),
         ),
+      ),
     );
   }
 
@@ -131,6 +131,7 @@ class _AppointmentsState extends State<Appointments> {
                     ),
                   ),
                   child: TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     controller: _searchQueryController,
                     autofocus: false,
                     decoration: InputDecoration(
@@ -282,13 +283,13 @@ class _AppointmentsState extends State<Appointments> {
                         ),
                         isSearch
                             ? (historyInfo != null && historyInfo.length != 0)
-                                ? commonWidget
-                                    .title(TranslationConstants.appointmentHistory.t())
+                                ? commonWidget.title(
+                                    TranslationConstants.appointmentHistory.t())
                                 : Container()
                             : (appointmentsData.result.past != null &&
                                     appointmentsData.result.past.length != 0)
-                                ? commonWidget
-                                    .title(TranslationConstants.appointmentHistory.t())
+                                ? commonWidget.title(
+                                    TranslationConstants.appointmentHistory.t())
                                 : Container(),
                         SizedBoxWidget(
                           width: 0.0.h,
@@ -365,7 +366,7 @@ class _AppointmentsState extends State<Appointments> {
 
   Widget appBar() {
     return AppBar(
-        flexibleSpace: GradientAppBar(),
+      flexibleSpace: GradientAppBar(),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       // leading: Row(
       //     // mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -394,7 +395,7 @@ class _AppointmentsState extends State<Appointments> {
           //PageNavigator.goToPermanent(context, router.rt_Dashboard);
         },
       ),
-        title: getTitle(),
+      title: getTitle(),
     );
   }
 
