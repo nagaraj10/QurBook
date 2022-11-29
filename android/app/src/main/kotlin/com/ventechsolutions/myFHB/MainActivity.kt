@@ -35,6 +35,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
@@ -451,7 +452,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("macid|" + bleMacId)
                     }
-                    sendPost("Connected", DEVICE_WT, 0, 0, 0,)
+                    sendPost("Connected", DEVICE_WT, 0, 0, 0)
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                     }
@@ -2459,6 +2460,13 @@ WOWGoDataUpload = 1
                         displayText?.setText("")
 
                         dialog.show()
+
+                        val view: View? = getCurrentFocus()
+                        if (view != null) {
+                            val imm: InputMethodManager =
+                                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(view.windowToken, 0)
+                        }
                     }
                 }
 
