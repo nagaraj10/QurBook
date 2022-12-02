@@ -1043,7 +1043,7 @@ class ChatState extends State<ChatDetail> {
                   children: <Widget>[
                     Text(
                         widget.peerName != null && widget.peerName != ''
-                            ? isFromCareCoordinator
+                            ? isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')
                                 ? widget.peerName?.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
                                 : widget.peerName?.capitalizeFirstofEach
@@ -1072,7 +1072,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getTopBookingDetail() {
-    if (isFromCareCoordinator) {
+    if (isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')) {
       return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
@@ -1083,7 +1083,7 @@ class ChatState extends State<ChatDetail> {
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
-        if (!isFamilyPatientApi) {
+        if (!isFamilyPatientApi &&(familyUserId!=null&&familyUserId!='')) {
           return Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

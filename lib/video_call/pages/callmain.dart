@@ -173,8 +173,8 @@ class _CallMainState extends State<CallMain> {
                                     widget.role,
                                     widget.isAppExists,
                                     Platform.isIOS
-                                        ? widget.arguments.doctorId
-                                        : widget.doctorId,
+                                        ? widget.arguments.doctorId!=null?widget.arguments.doctorId:""
+                                        : widget.doctorId!=null?widget.doctorId:"",
                                     (isMute, isVideoHide) {
                                       _isMute = isMute;
                                       _isVideoHide = isVideoHide;
