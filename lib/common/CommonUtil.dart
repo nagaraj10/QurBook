@@ -6518,7 +6518,7 @@ class VideoCallCommonUtils {
           } else {
             unavailabilityOfCC();
           }
-          Future.delayed(Duration(seconds: 2), () {
+          Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context);
           });
         }
