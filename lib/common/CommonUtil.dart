@@ -6437,7 +6437,7 @@ class VideoCallCommonUtils {
           }
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
-            if (regController.isFromSOS.value) {
+            if (regController.isFromSOS.value??false) {
               regController.onGoingSOSCall.value = false;
             }else{
               unavailabilityOfCC();
@@ -6513,7 +6513,7 @@ class VideoCallCommonUtils {
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
           var regController = Get.find<QurhomeRegimenController>();
-          if (regController.isFromSOS.value) {
+          if (regController.isFromSOS.value??false) {
             regController.onGoingSOSCall.value = false;
           } else {
             unavailabilityOfCC();
@@ -6699,7 +6699,7 @@ class VideoCallCommonUtils {
     try {
       var sheelaAIController = Get.find<SheelaAIController>();
       sheelaAIController.isUnAvailableCC = true;
-      sheelaAIController.getAIAPIResponseFor("Call my CC", null);
+      sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
     } catch (e) {
       //print(e);
     }
