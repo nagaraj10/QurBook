@@ -238,6 +238,8 @@ const String strEmptyWebView = 'Plan summary will be available soon';
 const String strNoPlansCheckFree =
     'No plans found. Please check All Free Plans tab';
 
+const String strCallMyCC = 'Call my CC';
+
 void openEmail({String sub = 'App Feedback', String body = ''}) async {
   final params = Uri(
     scheme: 'mailto',
