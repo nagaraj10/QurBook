@@ -6440,9 +6440,7 @@ class VideoCallCommonUtils {
             if (regController.isFromSOS.value) {
               regController.onGoingSOSCall.value = false;
             }else{
-              var sheelaAIController = Get.find<SheelaAIController>();
-              sheelaAIController.isUnAvailableCC = true;
-              sheelaAIController.getAIAPIResponseFor("Call my CC", null);
+              unavailabilityOfCC();
             }
             createMissedCallNS(
                 docName: regController.userName.value,
@@ -6459,7 +6457,7 @@ class VideoCallCommonUtils {
         Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
 
         var recStatus = firestoreInfo['call_status'];
-        if (recStatus == "accept") {
+        if (recStatus!=null&&recStatus == "accept") {
           String startedTime = '';
           clearAudioPlayer(audioPlayer);
           if (!isFromAppointment) {
@@ -6509,13 +6507,17 @@ class VideoCallCommonUtils {
               startedTime: startedTime,
               isDoctor: isDoctor);
           callPageShouldEndAutomatically = false;
-        } else if (recStatus == "decline") {
+        } else if (recStatus!=null&&recStatus == "decline") {
           clearAudioPlayer(audioPlayer);
           callPageShouldEndAutomatically = false;
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
           var regController = Get.find<QurhomeRegimenController>();
-          regController.onGoingSOSCall.value = false;
+          if (regController.isFromSOS.value) {
+            regController.onGoingSOSCall.value = false;
+          } else {
+            unavailabilityOfCC();
+          }
           Future.delayed(Duration(seconds: 2), () {
             Navigator.pop(context);
           });
@@ -6690,6 +6692,16 @@ class VideoCallCommonUtils {
       return yearDiff.toString();
     } else {
       return '';
+    }
+  }
+
+  unavailabilityOfCC() async {
+    try {
+      var sheelaAIController = Get.find<SheelaAIController>();
+      sheelaAIController.isUnAvailableCC = true;
+      sheelaAIController.getAIAPIResponseFor("Call my CC", null);
+    } catch (e) {
+      //print(e);
     }
   }
 }
