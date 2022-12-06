@@ -38,10 +38,10 @@ class FormFieldWidget extends StatelessWidget {
         break;
       case FieldType.CHECKBOX:
         return FormDataCheckbox(
-          fieldData: fieldData,
-          updateValue: updateValue,
-          canEdit: canEdit,
-        );
+            fieldData: fieldData,
+            updateValue: updateValue,
+            isFromQurHomeSymptom: isFromQurHomeSymptom,
+            canEdit: canEdit);
         break;
       case FieldType.TEXT:
         return FormDataTextField(
