@@ -121,7 +121,7 @@ class AudioWidgetState extends State<AudioWidget> {
             child: Row(
               children: [
                 IconButton(
-                  iconSize: 24,
+                  iconSize: 30,
                   onPressed: () {
                     isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
                     if (isPlaying) {
@@ -131,13 +131,15 @@ class AudioWidgetState extends State<AudioWidget> {
                   icon: !isPlaying
                       ? Icon(
                           Icons.play_arrow,
+                          size: 30,
                         )
                       : Icon(
                           Icons.pause,
+                          size: 30,
                         ),
                 ),
                 IconButton(
-                  iconSize: 24,
+                  iconSize: 30,
                   onPressed: () {
                     onStopPlayerPressed();
                     setState(() {});
@@ -145,6 +147,7 @@ class AudioWidgetState extends State<AudioWidget> {
                   },
                   icon: Icon(
                     Icons.repeat,
+                    size: 30,
                   ),
                 ),
               ],
@@ -196,10 +199,11 @@ class AudioWidgetState extends State<AudioWidget> {
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 24,
-            width: 24,
+            height: 30,
+            width: 30,
             child: IconButton(
               onPressed: () {
                 isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
@@ -208,8 +212,12 @@ class AudioWidgetState extends State<AudioWidget> {
               icon: !isPlaying
                   ? Icon(
                       Icons.play_arrow,
+                      size: 30,
                     )
-                  : Icon(Icons.pause),
+                  : Icon(
+                      Icons.pause,
+                      size: 30,
+                    ),
             ),
           ),
           Expanded(
