@@ -18,7 +18,9 @@ const popUpChoiceDura = 'Duration';
 const popUpChoiceDefault = 'Default';
 const popUpChoiceSortLabel = 'SORT BY';
 
-const chooseYourDate = 'CLICK HERE TO SCHEDULE';
+const chooseYourDate = ' CLICK HERE TO SCHEDULE ';
+
+const chooseDirection = '  GET DIRECTIONS  ';
 
 
 
