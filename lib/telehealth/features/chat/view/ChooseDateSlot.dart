@@ -6,7 +6,10 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ChooseDateSlot extends StatefulWidget {
-  ChooseDateSlot({Key key}) : super(key: key);
+  ChooseDateSlot({Key key,this.messageContent='',this.getRefNumber}) : super(key: key);
+
+  var messageContent;
+  Function(String) getRefNumber;
 
   @override
   _ChooseDateSlotState createState() => _ChooseDateSlotState();
@@ -159,7 +162,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               ' - ' +
                               array['selectedSession'].toString());
                         }
-
+                        widget.getRefNumber(widget.messageContent??'');
                         Navigator.pop(context, appendedList.toString());
                       } else {
                         Navigator.pop(context);
