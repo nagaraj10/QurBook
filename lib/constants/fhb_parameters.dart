@@ -718,6 +718,9 @@ const String strCaregiverNotifyPlanSubscription =
 const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
 
+const String strNotifyPatientServiceTicketByCC =
+    'notifyPatientServiceTicketByCC';
+
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String uid = 'uid';
 const String verificationCode = 'verificationCode';

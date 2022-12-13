@@ -498,6 +498,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
+                          } else if (payload?.templateName ==
+                              'notifyPatientServiceTicketByCC') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else if (payload?.redirectTo ==
                                   constants.strMyCardDetails ||
                               payload?.redirectTo == 'mycartdetails') {
@@ -1003,6 +1009,13 @@ class _NotificationScreen extends State<NotificationScreen> {
       case strQurbookServiceRequestStatusUpdate:
         Get.to(DetailedTicketView(
             null, true, result?.messageDetails?.payload?.userId));
+        readUnreadAction(result);
+
+        break;
+
+      case strNotifyPatientServiceTicketByCC:
+        Get.to(DetailedTicketView(
+            null, true, result?.messageDetails?.payload?.eventId));
         readUnreadAction(result);
 
         break;

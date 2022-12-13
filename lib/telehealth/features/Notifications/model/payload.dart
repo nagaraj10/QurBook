@@ -67,6 +67,7 @@ class Payload {
   String sheelaAudioMsgUrl;
   bool isSheela;
   String notificationListId;
+  dynamic eventId;
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];
     isFromCareCoordinator =
@@ -126,6 +127,7 @@ class Payload {
         : json[parameters.verificationCode];
 
     uid = json["uid"] == null ? null : json["uid"];
+    eventId = json["eventId"] == null ? null : json["eventId"];
 
     if (json["planId"] != null) {
       var plan = json["planId"];
@@ -161,6 +163,8 @@ class Payload {
     data['sheelaAudioMsgUrl'] = this.sheelaAudioMsgUrl;
     data[parameters.KIOSK_isSheela] = this.isSheela;
     data[parameters.notificationListId] = this.notificationListId;
+    data['eventId'] = this.eventId;
+
     return data;
   }
 }

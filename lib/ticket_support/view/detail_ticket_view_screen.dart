@@ -143,8 +143,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          return SingleChildScrollView(
-              child: detailView(snapshot.data.result.ticket));
+          if (snapshot?.data != null &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.ticket != null)
+            return SingleChildScrollView(
+                child: detailView(snapshot.data.result.ticket));
+          else
+            return ErrorsWidget();
         }
       },
     );
