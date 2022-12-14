@@ -717,7 +717,7 @@ const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
 const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
-
+const String serviceRequest = "serviceRequest";
 const String strNotifyPatientServiceTicketByCC =
     'notifyPatientServiceTicketByCC';
 
