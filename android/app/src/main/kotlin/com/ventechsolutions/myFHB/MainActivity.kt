@@ -2197,11 +2197,16 @@ WOWGoDataUpload = 1
 
             sharedValue =
                 "ack&${redirect_to}&${userId}"
-        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true) {
+        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true || redirect_to?.contains("notifyPatientServiceTicketByCC") == true) {
 
-
+if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
             sharedValue =
                 "ack&${redirect_to}&${uuid}"
+                }
+                if (redirect_to?.contains("notifyPatientServiceTicketByCC") == true ){
+            sharedValue =
+                "ack&${redirect_to}&${EVEId}"
+                }
         }
          else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 

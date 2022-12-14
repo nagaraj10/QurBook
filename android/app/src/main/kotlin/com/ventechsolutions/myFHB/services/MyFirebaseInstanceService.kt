@@ -360,7 +360,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotificationForFamilyAddition(data)
         } else if (data[Constants.PROP_TEMP_NAME] == "qurbookServiceRequestStatusUpdate") {
             createNotificationForPartnerServiceTicketDetail(data)
-        } else {
+        }else if (data[Constants.PROP_TEMP_NAME] == "notifyPatientServiceTicketByCC") {
+            createNotificationForPartnerServiceTicketDetail(data)
+        }
+         else {
              getRegularNotification(data)
         }
     }
@@ -2070,6 +2073,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        acceptCareGiverIntent.putExtra(Constants.PROP_EVEID, data[Constants.PROP_EVEID])
 
         val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PendingIntent.getBroadcast(
@@ -2111,4 +2115,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID, notification)
     }
+
+
 }

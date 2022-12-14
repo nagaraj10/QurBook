@@ -667,6 +667,13 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'TicketDetails',
           });
           Get.to(DetailedTicketView(null, true, passedValArr[2]));
+        } else if (passedValArr[1] == 'notifyPatientServiceTicketByCC') {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'notifyPatientServiceTicketByCC',
+            'navigationPage': 'TicketDetails',
+          });
+          Get.to(DetailedTicketView(null, true, passedValArr[2]));
         } else if (passedValArr[1] == 'appointmentPayment') {
           var nsBody = {};
           nsBody['templateName'] = strCaregiverAppointmentPayment;
@@ -1396,6 +1403,10 @@ class _MyFHBState extends State<MyFHB> {
             } else if (parsedData[1] == 'qurbookServiceRequestStatusUpdate') {
               return SplashScreen(
                   nsRoute: 'qurbookServiceRequestStatusUpdate',
+                  bundle: parsedData[2]);
+            } else if (parsedData[1] == 'notifyPatientServiceTicketByCC') {
+              return SplashScreen(
+                  nsRoute: 'notifyPatientServiceTicketByCC',
                   bundle: parsedData[2]);
             } else if (parsedData[1] == 'th_provider' ||
                 parsedData[1] == 'provider') {

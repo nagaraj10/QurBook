@@ -143,8 +143,13 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          return SingleChildScrollView(
-              child: detailView(snapshot.data.result.ticket));
+          if (snapshot?.data != null &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.ticket != null)
+            return SingleChildScrollView(
+                child: detailView(snapshot.data.result.ticket));
+          else
+            return ErrorsWidget();
         }
       },
     );
@@ -284,17 +289,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             maxLines: 2,
                           ),
                           Text(
-                            widget.isFromNotification
-                                ? ticket.additionalInfo?.ticketStatus.name
-                                : (ticket.additionalInfo?.ticketStatus?.name !=
-                                            null &&
-                                        ticket.additionalInfo?.ticketStatus
-                                                ?.name !=
-                                            '')
-                                    ? ticket.additionalInfo?.ticketStatus?.name
-                                    : widget.ticket.status == 0
-                                        ? 'Open'
-                                        : 'Closed',
+                            getStatusName(ticket),
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,
@@ -1267,6 +1262,26 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         ),
       ],
     );
+  }
+
+  String getStatusName(Ticket ticket) {
+    String statusName = '';
+    if (widget.isFromNotification) {
+      if (ticket?.additionalInfo != null &&
+          ticket?.additionalInfo?.ticketStatus != null) {
+        if (ticket?.additionalInfo.ticketStatus?.name != null &&
+            ticket?.additionalInfo?.ticketStatus?.name != '') {
+          statusName = ticket?.additionalInfo?.ticketStatus?.name;
+        }
+      }
+    } else {
+      if (widget.ticket?.status == 0)
+        statusName = 'Open';
+      else
+        statusName = 'Closed';
+    }
+
+    return statusName;
   }
 }
 
