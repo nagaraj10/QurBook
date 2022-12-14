@@ -352,6 +352,11 @@ class _SplashScreenState extends State<SplashScreen> {
                       var passedValArr = widget.bundle?.split('&');
 
                       Get.to(DetailedTicketView(null, true, passedValArr[0]));
+                    } else if (widget.nsRoute ==
+                        'notifyPatientServiceTicketByCC') {
+                      var passedValArr = widget.bundle?.split('&');
+
+                      Get.to(DetailedTicketView(null, true, passedValArr[0]));
                     } else if (widget.nsRoute == 'profile_page' ||
                         widget.nsRoute == 'profile') {
                       fbaLog(eveParams: {

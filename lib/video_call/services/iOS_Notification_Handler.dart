@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
@@ -222,6 +223,20 @@ class IosNotificationHandler {
           ),
         );
       }
+    } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
+        (model.eventId ?? '').isNotEmpty) {
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'notifyPatientServiceTicketByCC',
+        'navigationPage': 'TicketDetails',
+      });
+      Get.to(
+        DetailedTicketView(
+          null,
+          true,
+          model.eventId,
+        ),
+      );
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
         chatWithCC) {
