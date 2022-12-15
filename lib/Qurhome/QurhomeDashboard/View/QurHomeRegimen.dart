@@ -43,7 +43,9 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
   bool addAppBar;
-  QurHomeRegimenScreen({this.addAppBar = false});
+  QurHomeRegimenScreen({
+    this.addAppBar = false,
+  });
 
   @override
   _QurHomeRegimenScreenState createState() => _QurHomeRegimenScreenState();
@@ -73,21 +75,23 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       controller.currLoggedEID.value = "";
       controller.getRegimenList();
-      chatGetXController.getUnreadCountFamily().then((value) {
-        if (value != null) {
-          if (value?.isSuccess) {
-            if (value?.result != null) {
-              if (value?.result[0]?.count != null) {
-                if (int.parse(value?.result[0]?.count ?? 0) > 0) {
-                  if (PreferenceUtil.getIfQurhomeisAcive()) {
-                    redirectToSheelaUnreadMessage();
+      chatGetXController.getUnreadCountFamily().then(
+        (value) {
+          if (value != null) {
+            if (value?.isSuccess) {
+              if (value?.result != null) {
+                if (value?.result[0]?.count != null) {
+                  if (int.parse(value?.result[0]?.count ?? 0) > 0) {
+                    if (PreferenceUtil.getIfQurhomeisAcive()) {
+                      redirectToSheelaUnreadMessage();
+                    }
                   }
                 }
               }
             }
           }
-        }
-      });
+        },
+      );
       initSocketCountUnread();
       //initGeoLocation();
       //checkMobileOrTablet();
@@ -165,86 +169,100 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   Widget build(BuildContext context) {
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        body: Stack(
-          children: [
-            if (widget.addAppBar)
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 16.0.w,
-                    vertical: 16.h,
-                  ),
-                  child: IconWidget(
-                    icon: Icons.arrow_back_ios,
-                    colors: Colors.black,
-                    size: CommonUtil().isTablet ? 38.0 : 24.0,
-                    onTap: () {
-                      Get.back();
-                    },
-                  ),
+    return Scaffold(
+      appBar: widget.addAppBar
+          ? AppBar(
+              backgroundColor: Colors.white,
+              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                strRegimen,
+                style: TextStyle(
+                  color: Colors.black,
                 ),
               ),
-            if (!widget.addAppBar)
-              GestureDetector(
+              leading: IconWidget(
+                icon: Icons.arrow_back_ios,
+                colors: Colors.black,
+                size: CommonUtil().isTablet ? 38.0 : 24.0,
                 onTap: () {
-                  try {
-                    FHBUtils().check().then((intenet) {
-                      if (intenet != null && intenet) {
-                        initSOSCall();
-                      } else {
-                        FlutterToast()
-                            .getToast(STR_NO_CONNECTIVITY, Colors.red);
-                      }
-                    });
-                  } catch (e) {
-                    print(e);
-                  }
+                  Get.back();
                 },
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: Container(
-                      height: 40.h,
-                      width: 80.h,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFFB5422),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(100),
-                          bottomRight: Radius.circular(100),
-                        ),
+              ),
+              bottom: PreferredSize(
+                child: Container(
+                  color: Color(
+                    CommonUtil().getQurhomeGredientColor(),
+                  ),
+                  height: 1.0,
+                ),
+                preferredSize: Size.fromHeight(
+                  1.0,
+                ),
+              ),
+            )
+          : null,
+      body: Stack(
+        children: [
+          if (!widget.addAppBar)
+            GestureDetector(
+              onTap: () {
+                try {
+                  FHBUtils().check().then((intenet) {
+                    if (intenet != null && intenet) {
+                      initSOSCall();
+                    } else {
+                      FlutterToast().getToast(
+                        STR_NO_CONNECTIVITY,
+                        Colors.red,
+                      );
+                    }
+                  });
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Container(
+                    height: 40.h,
+                    width: 80.h,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFB5422),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
                       ),
-                      child: Center(
-                        child: Text(
-                          'SOS',
-                          style: TextStyle(
-                              fontSize: 14.0.h,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
+                    ),
+                    child: Center(
+                      child: Text(
+                        'SOS',
+                        style: TextStyle(
+                            fontSize: 14.0.h,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                 ),
               ),
-            Obx(() => controller.loadingData.isTrue
-                ? controller.loadingDataWithoutProgress.isTrue
-                    ? getDataFromAPI(controller, isPortrait)
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      )
-                : GetBuilder<QurhomeRegimenController>(
-                    id: "newUpdate",
-                    builder: (val) {
-                      print("working builder");
-                      return getDataFromAPI(val, isPortrait);
-                    })),
-          ],
-        ),
+            ),
+          Obx(() => controller.loadingData.isTrue
+              ? controller.loadingDataWithoutProgress.isTrue
+                  ? getDataFromAPI(controller, isPortrait)
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    )
+              : GetBuilder<QurhomeRegimenController>(
+                  id: "newUpdate",
+                  builder: (val) {
+                    print("working builder");
+                    return getDataFromAPI(val, isPortrait);
+                  })),
+        ],
       ),
     );
   }
