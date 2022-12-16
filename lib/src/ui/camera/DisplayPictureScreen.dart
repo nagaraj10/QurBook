@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
 import 'package:myfhb/common/ShowPDFFromFile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -966,6 +967,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void callBackToRefresh() {
+    QurPlanReminders.getTheRemindersFromAPI();
     setState(() {});
   }
 

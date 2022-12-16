@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
@@ -526,6 +527,8 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   void callBackToRefresh() {
+    QurPlanReminders.getTheRemindersFromAPI();
+
     (context as Element).markNeedsBuild();
   }
 
