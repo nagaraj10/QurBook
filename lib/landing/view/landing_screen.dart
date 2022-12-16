@@ -1066,6 +1066,8 @@ class _LandingScreenState extends State<LandingScreen> {
               landingViewModel.checkIfUserIdSame().then((value) {
                 isUserMainId = value;
               });
+              QurPlanReminders.getTheRemindersFromAPI();
+
               setState(() {});
               (context as Element).markNeedsBuild();
             },

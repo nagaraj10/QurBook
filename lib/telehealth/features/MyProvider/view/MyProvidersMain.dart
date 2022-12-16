@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -126,6 +127,8 @@ class _TabBarDemoState extends State<MyProvidersMain>
 
   void callBackToRefresh() {
     //myProvidersResponseList = null;
+    QurPlanReminders.getTheRemindersFromAPI();
+
     setState(() {
       isRefresh = false;
     });
