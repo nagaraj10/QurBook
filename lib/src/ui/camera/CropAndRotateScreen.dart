@@ -7,6 +7,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -89,6 +90,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   void callBackToRefresh() {
+    QurPlanReminders.getTheRemindersFromAPI();
     (context as Element).markNeedsBuild();
   }
 
