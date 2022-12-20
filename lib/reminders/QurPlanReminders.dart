@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 import '../common/CommonUtil.dart';
@@ -17,6 +19,7 @@ class QurPlanReminders {
     //final fileName = 'assets/tempData.json';
 
     //final dataString = await rootBundle.loadString(fileName);
+
     final headerRequest = HeaderRequest();
     var headers = await headerRequest.getRequestHeadersAuthContents();
     var now = DateTime.now();
@@ -33,7 +36,7 @@ class QurPlanReminders {
     var params = jsonEncode({
       'method': 'get',
       'data':
-          'Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow'
+          'Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow&patientId=${PreferenceUtil.getStringValue(KEY_USERID)}"'
     });
     try {
       var responseFromApi = await ApiServices.post(
