@@ -33,7 +33,6 @@ class QurPlanReminders {
       isIndianTime: true,
     );
     var userId = PreferenceUtil.getStringValue(KEY_USERID);
-    print('userId: '+userId);
     final _baseUrl = Constants.BASE_URL;
     var params = jsonEncode({
       'method': 'get',
