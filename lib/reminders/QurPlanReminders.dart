@@ -32,11 +32,12 @@ class QurPlanReminders {
       dayAfterTomorrowDate,
       isIndianTime: true,
     );
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
     final _baseUrl = Constants.BASE_URL;
     var params = jsonEncode({
       'method': 'get',
       'data':
-          'Action=GetUserReminders&startdate=$today&enddate=$dayAfterTomorrow&patientId=${PreferenceUtil.getStringValue(KEY_USERID)}"'
+          'Action=GetUserReminders&patientId=$userId&startdate=$today&enddate=$dayAfterTomorrow'
     });
     try {
       var responseFromApi = await ApiServices.post(
