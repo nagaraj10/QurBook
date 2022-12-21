@@ -271,6 +271,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         setAutoInitEnabled(true)
         OHQDeviceManager.init(applicationContext,this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
+//            if (alarmManager?.canScheduleExactAlarms() == false) {
+//                Intent().also { intent ->
+//                    intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+//                    context.startActivity(intent)
+//                }
+//            }
+//        }
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
@@ -3141,7 +3150,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                     this,
                     nsId,
                     notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             } else {
                 PendingIntent.getBroadcast(
