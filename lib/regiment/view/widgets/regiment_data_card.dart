@@ -11,6 +11,7 @@ import 'package:path/path.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../constants/fhb_constants.dart';
+import 'AutoCloseText.dart';
 import 'form_data_dialog.dart';
 import '../../view_model/regiment_view_model.dart';
 import '../../models/save_response_model.dart';
@@ -632,9 +633,7 @@ class RegimentDataCard extends StatelessWidget {
     if (saveResponse?.isSuccess ?? false) {
       if ((saveResponse?.result != null) &&
           (saveResponse?.result?.actions != null) &&
-          (saveResponse?.result?.actions?.returnData != null) &&
-          (saveResponse?.result?.actions?.returnData?.eid != null) &&
-          (saveResponse?.result?.actions?.returnData?.activityName != null)) {
+          (saveResponse?.result?.actions?.returnData != null)) {
         LoaderClass.hideLoadingDialog(Get.context);
         checkForReturnActionsProviderForm(
           returnAction: saveResponse?.result?.actions?.returnData,
@@ -971,7 +970,9 @@ class RegimentDataCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if (returnAction?.action == startActivity)
+                      if ((returnAction?.action == startActivity) &&
+                          (returnAction?.eid != null) &&
+                          (returnAction?.activityName != ''))
                         Padding(
                           padding: EdgeInsets.only(
                             left: 20.0.w,
@@ -1005,6 +1006,10 @@ class RegimentDataCard extends StatelessWidget {
                         ),
                     ],
                   ),
+                  SizedBox(height: 5.h),
+                  if ((returnAction?.eid == null) &&
+                      (returnAction?.activityName == ''))
+                    AutoCloseText(needReload: true),
                 ],
               ),
             ),
@@ -1020,7 +1025,12 @@ class RegimentDataCard extends StatelessWidget {
     } else {
       Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
           [];
-      LoaderClass.hideLoadingDialog(Get.context);
+      Future.delayed(Duration(milliseconds: 300), () async {
+        await Provider.of<RegimentViewModel>(Get.context, listen: false)
+            .fetchRegimentData();
+        //LoaderClass.hideLoadingDialog(Get.context);
+      });
+      //LoaderClass.hideLoadingDialog(Get.context);
     }
   }
 
