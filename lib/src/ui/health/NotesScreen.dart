@@ -186,6 +186,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                           height: 25.0.h,
                           width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
+                          errorBuilder: (context, error, stackTrace) =>
+                              SizedBox(),
                         )
                       : SizedBox(),
                 ),

@@ -208,13 +208,16 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CircleAvatar(
+                        radius: 25,
                         backgroundColor:
-                            const Color(fhbColors.transparentColor),
+                            const Color(fhbColors.bgColorContainer),
                         child: Image.network(
                           data.metadata.healthRecordType.logo,
                           height: 25.0.h,
                           width: 25.0.h,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
+                          errorBuilder: (context, error, stackTrace) =>
+                              SizedBox(),
                         ),
                       ),
                       Row(

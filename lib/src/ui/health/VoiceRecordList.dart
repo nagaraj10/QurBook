@@ -181,6 +181,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       height: 25.0.h,
                       width: 25.0.h,
                       color: Color(new CommonUtil().getMyPrimaryColor()),
+                      errorBuilder: (context, error, stackTrace) => SizedBox(),
                     )),
                 SizedBox(width: 20),
                 Expanded(
