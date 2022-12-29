@@ -149,7 +149,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null && (data?.healthRecordCollection?.length??0) > 0) {
+              if (data != null &&
+                  (data?.healthRecordCollection?.length ?? 0) > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
@@ -210,8 +211,9 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                               width: 50,
                             )
                           :*/
-                      Container(
-                padding: EdgeInsets.all(10),
+                      CircleAvatar(
+                radius: 25,
+                backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
                   /*Constants.BASE_URL + */ data
                       .metadata.healthRecordCategory.logo,
@@ -220,9 +222,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   color: Color(
                     CommonUtil().getMyPrimaryColor(),
                   ),
-                ),
-                color: const Color(
-                  fhbColors.bgColorContainer,
+                  errorBuilder: (context, error, stackTrace) => SizedBox(),
                 ),
               )
                   /*: Container(

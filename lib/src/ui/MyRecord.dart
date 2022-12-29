@@ -1514,7 +1514,8 @@ class _CustomTabsState extends State<CustomTabView>
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,
-              )
+                errorBuilder: (context, error, stackTrace) =>
+                    SizedBox())
             : Icon(Icons.calendar_today, size: 20.0.sp, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
