@@ -1174,9 +1174,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                   audioMessage:
                       result?.messageDetails?.payload?.sheelaAudioMsgUrl,
                 ),
-              ).then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
-              readUnreadAction(result);
+              ).then((value) {
+                readUnreadAction(result, isRead: true);
+              });
             }
           } else {
             Get.to(SuperMaya());
