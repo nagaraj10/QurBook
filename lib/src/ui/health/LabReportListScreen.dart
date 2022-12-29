@@ -150,7 +150,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             }
             mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
             if (mediaMetaInfo != null &&
-                (mediaMetaInfo?.healthRecordCollection?.length??0) > 0) {
+                (mediaMetaInfo?.healthRecordCollection?.length ?? 0) > 0) {
               mediMasterId =
                   new CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
               if (mediMasterId.length > 0) {
@@ -213,19 +213,18 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                               width: 50.0.h,
                             )
                           :*/
-                    Container(
-              padding: EdgeInsets.all(10),
+                    CircleAvatar(
+              radius: 25,
+              backgroundColor: const Color(fhbColors.bgColorContainer),
               child: Image.network(
                 /*Constants.BASE_URL +*/
                 mediaMetaInfo.metadata.healthRecordCategory.logo,
                 height: 30.0.h,
                 width: 30.0.h,
+                errorBuilder: (context, error, stackTrace) => SizedBox(),
                 color: Color(
                   CommonUtil().getMyPrimaryColor(),
                 ),
-              ),
-              color: const Color(
-                fhbColors.bgColorContainer,
               ),
             )
                 /*: Container(
