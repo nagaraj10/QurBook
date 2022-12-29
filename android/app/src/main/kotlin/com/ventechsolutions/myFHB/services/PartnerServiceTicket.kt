@@ -15,6 +15,7 @@ class PartnerServiceTicket:BroadcastReceiver() {
         val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
         val uid = p1?.getStringExtra(Constants.PROB_USER_ID)
+        val ticketId = p1?.getStringExtra(Constants.PROP_EVEID)
         val templateName = p1?.getStringExtra(Constants.PROP_REDIRECT_TO)
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
@@ -25,6 +26,7 @@ class PartnerServiceTicket:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_UUID,uid)
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
         launchIntent?.putExtra(Constants.PROP_REDIRECT_TO,templateName)
+        launchIntent?.putExtra(Constants.PROP_EVEID,ticketId)
         p0.startActivity(launchIntent)
     }
  }

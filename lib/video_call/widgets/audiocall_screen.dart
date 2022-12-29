@@ -8,7 +8,7 @@ class AudioCallScreen extends StatelessWidget {
   final String avatar;
   String patName;
   AudioCallScreen({this.avatar, this.patName});
-  var regController = Get.find<QurhomeRegimenController>();
+  var regController = Get.put(QurhomeRegimenController());
 
   @override
   Widget build(BuildContext context) {

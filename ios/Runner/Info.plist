@@ -129,5 +129,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Application requires access to LocationAlwaysAndWhenInUse for locating the address and adding a healthcare provider</string>
 </dict>
 </plist>

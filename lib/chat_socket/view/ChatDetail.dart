@@ -216,6 +216,8 @@ class ChatState extends State<ChatDetail> {
   String lastReceived = '';
   String lastReceivedFuture = '';
 
+  String parsedReferenceText = '';
+
   @override
   void initState() {
     super.initState();
@@ -1043,7 +1045,7 @@ class ChatState extends State<ChatDetail> {
                   children: <Widget>[
                     Text(
                         widget.peerName != null && widget.peerName != ''
-                            ? isFromCareCoordinator
+                            ? isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')
                                 ? widget.peerName?.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
                                 : widget.peerName?.capitalizeFirstofEach
@@ -1072,7 +1074,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getTopBookingDetail() {
-    if (isFromCareCoordinator) {
+    if (isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')) {
       return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
@@ -1083,7 +1085,7 @@ class ChatState extends State<ChatDetail> {
               color: Colors.white));
     } else {
       if (!isCareGiverApi) {
-        if (!isFamilyPatientApi) {
+        if (!isFamilyPatientApi &&(familyUserId!=null&&familyUserId!='')) {
           return Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1786,7 +1788,7 @@ class ChatState extends State<ChatDetail> {
       );
 
   WidgetSpan buildDateComponent(
-          String text, String linkToOpen, int index, bool isPatient) =>
+          String text, String linkToOpen, int index, bool isPatient, String fullContent,{bool isFromBtnDirection = false}) =>
       WidgetSpan(
         child: !isPatient
             ? InkWell(
@@ -1800,7 +1802,9 @@ class ChatState extends State<ChatDetail> {
                     padding: const EdgeInsets.all(6.0),
                     child: RichText(
                       text: TextSpan(
-                        children: getSplittedTextWidget(chooseYourDate, index),
+                        children: getSplittedTextWidget(isFromBtnDirection
+                            ? chooseDirection
+                            : chooseYourDate, index),
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14.0.sp,
@@ -1809,13 +1813,24 @@ class ChatState extends State<ChatDetail> {
                     ),
                   ),
                 ),
-                onTap: () async {
+                onTap:  isFromBtnDirection
+                               ? null
+                               : () async {
                   FocusManager.instance.primaryFocus.unfocus();
+                  parsedReferenceText = '';
                   //tapDatePicker();
                   //Get.to(ChooseDateSlot());
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ChooseDateSlot()),
+                    MaterialPageRoute(builder: (context) => ChooseDateSlot(messageContent: fullContent,
+                        getRefNumber: (message) {
+                          if (message != null && message != '') {
+                            if (message.toString().contains(')')) {
+                              parsedReferenceText =
+                                  getSubstringByString(message.toString());
+                            }
+                          }
+                        }))
                   ).then((value) {
                     if (value != null) {
                       List<String> result = [];
@@ -1827,7 +1842,7 @@ class ChatState extends State<ChatDetail> {
                               .substring(2, result.toString().length - 2);
                           if (removedBrackets.length > 0) {
                             onSendMessage(
-                                removedBrackets.toString(), 0, null, true);
+                                removedBrackets.toString()  + getRefText(), 0, null, true);
                           }
                         }
                       } catch (e) {
@@ -1843,14 +1858,18 @@ class ChatState extends State<ChatDetail> {
   List<InlineSpan> linkify(String text, int index, bool isPatient) {
     const String urlPattern = 'https?:/\/\\S+';
     const String datePattern = '{date}';
+    const String directionPattern = '{map}';
     final RegExp dateRegExp = RegExp('($datePattern)', caseSensitive: false);
+    final RegExp btnDirectionExp =
+            RegExp('($directionPattern)', caseSensitive: false);
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
     final RegExpMatch dateMatch = dateRegExp.firstMatch(text);
+    final RegExpMatch directionMap = btnDirectionExp.firstMatch(text);
     final RegExpMatch match = linkRegExp.firstMatch(text);
 
-    if (match == null && dateMatch == null) {
+    if (match == null && dateMatch == null && directionMap == null) {
       list.add(TextSpan(children: getSplittedTextWidget(text, index)));
       return list;
     }
@@ -1867,24 +1886,85 @@ class ChatState extends State<ChatDetail> {
               text.substring(0, dateMatch.start), index)));
     }
 
+    if ((directionMap?.start ?? 0) > 0) {
+            list.add(TextSpan(
+                   children: getSplittedTextWidget(
+                        text.substring(0, directionMap.start), index)));
+        }
+
     final String linkText = match?.group(0) ?? '';
     final String dateText = dateMatch?.group(0) ?? '';
+    final String directionText = directionMap?.group(0) ?? '';
     if (linkText.contains(RegExp(urlPattern, caseSensitive: false))) {
       list.add(buildLinkComponent(linkText, linkText, index, isPatient));
     }
 
     if (dateText.contains(RegExp(datePattern, caseSensitive: false))) {
-      list.add(buildDateComponent(dateText, dateText, index, isPatient));
+      list.add(buildDateComponent(dateText, dateText, index, isPatient, text,isFromBtnDirection: false));
+    }
+
+    if (directionText
+            .contains(RegExp(directionPattern, caseSensitive: false))) {
+      list.add(buildDateComponent(
+          directionText, directionText, index, isPatient, text,
+          isFromBtnDirection: true));
     }
 
     list.addAll(linkify(
-        text.substring(match != null
-            ? match?.start + linkText?.length
-            : (dateMatch != null ? dateMatch?.start + dateText?.length : 0)),
+        text.substring(getMatchLinkText(
+                        match, dateMatch, directionMap, linkText, dateText, directionText)),
         index,
         isPatient));
 
     return list;
+  }
+
+  getMatchLinkText(
+        RegExpMatch match,
+        RegExpMatch dateMatch,
+        RegExpMatch directionMap,
+        String linkText,
+        String dateText,
+        String directionText) {
+      int value = 0;
+
+      try {
+        if (match != null) {
+          value = match?.start + linkText?.length;
+        } else {
+          if (dateMatch != null) {
+            value = dateMatch?.start + dateText?.length;
+          } else if (directionMap != null) {
+            value = directionMap?.start + directionText?.length;
+          } else {
+            value = 0;
+          }
+        }
+
+        return value;
+      } catch (e) {
+        return value;
+      }
+    }
+
+  String getSubstringByString(String content) {
+    String value = '';
+    try {
+      int start = content.indexOf("(") + 1;
+      int end = content.indexOf(")", start);
+      value = content.substring(start, end);
+      return value;
+    } catch (e) {
+      return value;
+    }
+  }
+
+  String getRefText() {
+    if (parsedReferenceText != null && parsedReferenceText != '') {
+      return '  (' + parsedReferenceText + ')'.toString();
+    } else {
+      return '';
+    }
   }
 
   List<TextSpan> getSplittedTextWidget(String tempData, int index) {

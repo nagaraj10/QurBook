@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
@@ -125,6 +126,17 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strRegimen.toLowerCase()) {
+                if (PreferenceUtil.getIfQurhomeisAcive()) {
+                  Get.to(
+                    () => QurHomeRegimenScreen(
+                      addAppBar: true,
+                    ),
+                  );
+                } else {
+                  Get.toNamed(rt_Regimen);
+                }
               }
             } catch (e) {
               //gettingReposnseFromNative();
@@ -406,6 +418,17 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strRegimen.toLowerCase()) {
+                if (PreferenceUtil.getIfQurhomeisAcive()) {
+                  Get.to(
+                    () => QurHomeRegimenScreen(
+                      addAppBar: true,
+                    ),
+                  );
+                } else {
+                  Get.toNamed(rt_Regimen);
+                }
               }
             } catch (e) {
               //gettingReposnseFromNative();

@@ -10,6 +10,7 @@ class FormDataCheckbox extends StatefulWidget {
     @required this.fieldData,
     @required this.updateValue,
     @required this.canEdit,
+    this.isFromQurHomeSymptom = false,
   });
 
   final FieldModel fieldData;
@@ -19,6 +20,7 @@ class FormDataCheckbox extends StatefulWidget {
     String title,
   }) updateValue;
   final bool canEdit;
+  final bool isFromQurHomeSymptom;
 
   @override
   _FormDataCheckboxState createState() => _FormDataCheckboxState();
@@ -64,8 +66,28 @@ class _FormDataCheckboxState extends State<FormDataCheckbox> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: loadCheckboxItems(),
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget?.fieldData!=null) Text(
+            CommonUtil().showDescriptionTextForm(widget.fieldData),
+            style: TextStyle(
+              fontSize: 14.0.sp,
+              fontWeight: FontWeight.w600,
+              color: widget.isFromQurHomeSymptom
+                  ? Color(CommonUtil().getQurhomePrimaryColor())
+                  : Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          ),
+          SizedBox(
+            height: 5.0.h,
+          ),
+          Column(
+            children: loadCheckboxItems(),
+          ),
+        ],
+      ),
     );
   }
 }

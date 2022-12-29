@@ -178,6 +178,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
     private var patPic: String? = null
     private var isPartialResultInvoked: Boolean? = false
     private var speechRecognizer: SpeechRecognizer? = null
+    private var speechIntent: Intent? = null
     private lateinit var dialog: Dialog
     private lateinit var countDownTimerDialog: Dialog
 
@@ -270,6 +271,15 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
         setAutoInitEnabled(true)
         OHQDeviceManager.init(applicationContext,this)
         registerReceiver(broadcastReceiver, IntentFilter("INTERNET_LOST"));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            val alarmManager = ContextCompat.getSystemService(context, AlarmManager::class.java)
+//            if (alarmManager?.canScheduleExactAlarms() == false) {
+//                Intent().also { intent ->
+//                    intent.action = Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
+//                    context.startActivity(intent)
+//                }
+//            }
+//        }
         fullyInitialize()
         FacebookSdk.setIsDebugEnabled(true)
         FacebookSdk.addLoggingBehavior(LoggingBehavior.APP_EVENTS);
@@ -290,7 +300,6 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
             }
         }
 
-        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val action = intent.action
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
@@ -451,7 +460,7 @@ class MainActivity : FlutterActivity(), SessionController.Listener,
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("macid|" + bleMacId)
                     }
-                    sendPost("Connected", DEVICE_WT, 0, 0, 0,)
+                    sendPost("Connected", DEVICE_WT, 0, 0, 0)
                     if (::BLEEventChannel.isInitialized) {
                         BLEEventChannel.success("bleDeviceType|" + bleDeviceType)
                     }
@@ -2197,11 +2206,16 @@ WOWGoDataUpload = 1
 
             sharedValue =
                 "ack&${redirect_to}&${userId}"
-        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true) {
+        }else if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true || redirect_to?.contains("notifyPatientServiceTicketByCC") == true) {
 
-
+if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
             sharedValue =
                 "ack&${redirect_to}&${uuid}"
+                }
+                if (redirect_to?.contains("notifyPatientServiceTicketByCC") == true ){
+            sharedValue =
+                "ack&${redirect_to}&${EVEId}"
+                }
         }
          else if (redirect_to?.contains("familyMemberCaregiverRequest") == true) {
 
@@ -2264,10 +2278,10 @@ WOWGoDataUpload = 1
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
 
                         } else {
-                            if(rawTitle!=null && rawTitle!="")
-                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
-                            else if(rawBody!=null && rawBody!="")
+                            if(rawBody!=null && rawBody!="")
                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
+                            else if(rawTitle!=null && rawTitle!="")
+                            sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawTitle}"
                             else
                              sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${message}"
 
@@ -2381,15 +2395,34 @@ WOWGoDataUpload = 1
 
     //todo this method need to uncomment
     private fun speakWithVoiceAssistant(langCode: String) {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(
+        Log.e("langs",langCode)
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
+
+        speechIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+//        intent.putExtra(
+//            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+//            "en-US"
+//        )
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        //GetSrcTargetLanguages()
+
+
+        speechIntent?.putExtra(
             RecognizerIntent.EXTRA_LANGUAGE_MODEL,
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        GetSrcTargetLanguages()
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode)
-        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+        speechIntent?.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode/*Locale.US.toString()*/)
+        speechIntent?.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,
+            langCode/*Locale.US.toString()*/
+        )
+        speechIntent?.putExtra(
+            RecognizerIntent.EXTRA_ONLY_RETURN_LANGUAGE_PREFERENCE,
+            langCode/*Locale.US.toString()*/
+        )
+
+//        startActivityForResult(intent,140)
+//        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
 
 //        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000)
 //        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
@@ -2550,10 +2583,13 @@ WOWGoDataUpload = 1
 
 //                    if (finalWords != null && finalWords?.length!! > 0 && finalWords != "") {
                     if (data != null && data.size > 0) {
-                        finalWords+=data[0]+" "
-                        displayText.setText(finalWords)
+                        val pattern = Regex("^[A-Za-z]+\$")
+//                        if(pattern.containsMatchIn(data[0])){
+                            finalWords+=data[0]+" "
+                            displayText.setText(finalWords)
+//                        }
                         speechRecognizer?.cancel()
-                        speechRecognizer?.startListening(intent)
+                        speechRecognizer?.startListening(speechIntent)
                     }
 //                    if (data != null && data.size > 0) {
 //                        finalWords = data[0].toString()
@@ -2653,7 +2689,7 @@ WOWGoDataUpload = 1
 
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
-            speechRecognizer?.startListening(intent)
+            speechRecognizer?.startListening(speechIntent)
 
         } catch (a: ActivityNotFoundException) {
             // Toast.makeText(applicationContext,
@@ -3118,7 +3154,7 @@ WOWGoDataUpload = 1
                     this,
                     nsId,
                     notificationIntent,
-                    PendingIntent.FLAG_CANCEL_CURRENT
+                    PendingIntent.FLAG_IMMUTABLE
                 )
             } else {
                 PendingIntent.getBroadcast(
