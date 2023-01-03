@@ -296,7 +296,7 @@ import LS202_DeviceManager
         recognitionTask = SFSpeechRecognitionTask()
         
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try audioSession.setCategory(.record, mode: .measurement, options: .mixWithOthers)
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         let inputNode = audioEngine.inputNode
         inputNode.removeTap(onBus: 0)
