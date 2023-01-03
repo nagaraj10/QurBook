@@ -731,7 +731,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             onPressed: () {
                                               onSendMessage(
                                                   addCommentController.text,
-                                                  widget.ticket);
+                                                  widget.ticket ?? ticketList);
                                             },
                                             elevation: 2.0,
                                             fillColor: Colors.white,
@@ -843,8 +843,11 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                           ticketList
                                                                   .attachments[
                                                               index],
-                                                          widget.ticket.uid
-                                                              .toString());
+                                                          widget.isFromNotification
+                                                              ? widget.ticketId
+                                                              : widget
+                                                                  .ticket.uid
+                                                                  .toString());
                                                     });
                                               },
                                             ),
