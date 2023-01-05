@@ -193,8 +193,7 @@ class AudioWidgetState extends State<AudioWidget> {
     );
   }
 
-  Widget getAudioWidgetWithPlayer() {
-    return Container(
+  Widget getAudioWidgetWithPlayer() => Container(
       width: widget.isFromChat ? 1.sw / 1.7 : 1.sw,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
@@ -237,7 +236,7 @@ class AudioWidgetState extends State<AudioWidget> {
                     ),
                   );
                 },
-                divisions: maxDuration.toInt(),
+                divisions: maxDuration.toInt()>0?maxDuration.toInt():null,
               ),
             ),
           ),
@@ -283,7 +282,6 @@ class AudioWidgetState extends State<AudioWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
-  }
 
   onStartPlayerPressed() {
     return flutterSound.playerState == PlayerState.isPaused
@@ -324,7 +322,6 @@ class AudioWidgetState extends State<AudioWidget> {
         );
         maxDuration = DuarationOfFile.inSeconds.toDouble();
       }
-
       // if (_media == t_MEDIA.ASSET) {
       //   var buffer = (await rootBundle.load(variable.assetSample[_codec.index]))
       //       .buffer
