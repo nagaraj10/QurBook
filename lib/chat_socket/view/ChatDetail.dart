@@ -1710,9 +1710,11 @@ class ChatState extends State<ChatDetail> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: <Widget>[
-                                            fhbBasicWidget
+                                            Expanded(
+                                              child: fhbBasicWidget
                                                 .getAudioWidgetForChat(
-                                                    chatList?.messages?.content)
+                                                    chatList?.messages?.content),
+                                            )
                                           ],
                                         ),
                                       ),
