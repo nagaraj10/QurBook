@@ -61,6 +61,7 @@ class SheelaAIController extends GetxController {
   int randomNum = 0;
   String relationshipId;
   String conversationFlag;
+  var additionalInfo = {};
   bool lastMsgIsOfButtons = false;
   AudioCache _audioCache;
   Timer _popTimer;
@@ -88,6 +89,7 @@ class SheelaAIController extends GetxController {
         ? '${profile.result.firstName} ${profile.result.lastName}'
         : '';
     conversationFlag = null;
+    additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
     if (Platform.isIOS) {
@@ -254,6 +256,7 @@ class SheelaAIController extends GetxController {
                 : message
             : relationshipId,
         conversationFlag: conversationFlag,
+        additionalInfo: json.encode(additionalInfo),
         localDateTime:
             CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
         endPoint: BASE_URL,
@@ -345,9 +348,13 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.conversationFlag ?? '').isNotEmpty) {
             conversationFlag = currentResponse.conversationFlag;
           }
+          if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
+            additionalInfo = currentResponse.additionalInfo;
+          }
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
+            additionalInfo = {};
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }

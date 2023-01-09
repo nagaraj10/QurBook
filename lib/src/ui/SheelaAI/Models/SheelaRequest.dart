@@ -16,6 +16,7 @@ class SheelaRequestModel {
   String endPoint;
   String relationshipId;
   String conversationFlag;
+  var additionalInfo;
   String localDateTime;
   String directCall;
   SheelaRequestModel({
@@ -33,6 +34,7 @@ class SheelaRequestModel {
     this.endPoint,
     this.relationshipId,
     this.conversationFlag,
+    this.additionalInfo,
     this.localDateTime,
     this.directCall,
   });
@@ -49,6 +51,7 @@ class SheelaRequestModel {
     kioskData = json['kiosk_data'];
     ProviderMsg = json['provider_msg'];
     directCall = json['directCall'];
+    additionalInfo = json['additionalInfo'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,6 +72,7 @@ class SheelaRequestModel {
     data['endPoint'] = endPoint;
     data['relationshipId'] = relationshipId;
     data['conversationFlag'] = conversationFlag;
+    data['additionalInfo'] = additionalInfo;
     data["localDateTime"] = localDateTime;
     data["directCall"] = directCall;
     return data;

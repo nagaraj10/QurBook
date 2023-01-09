@@ -54,6 +54,7 @@ class SheelaResponse {
   int currentButtonPlayingIndex;
   bool loading = false;
   String conversationFlag;
+  var additionalInfo;
   String sessionId;
   String relationshipId;
   String audioFile;
@@ -83,6 +84,7 @@ class SheelaResponse {
     this.ttsResponse,
     this.loading,
     this.conversationFlag,
+    this.additionalInfo,
     this.sessionId,
     this.relationshipId,
     this.imageURLS,
@@ -126,6 +128,7 @@ class SheelaResponse {
     directCall = (json['directCall']?? false);
     recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
+    additionalInfo = json['additionalInfo'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
     isButtonNumber = (json['IsButtonNumber']?? false);
@@ -158,6 +161,7 @@ class SheelaResponse {
     data['directCall'] = this.directCall;
     data['recipient'] = this.recipient;
     data['conversationFlag'] = this.conversationFlag;
+    data['additionalInfo'] = this.additionalInfo;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;
