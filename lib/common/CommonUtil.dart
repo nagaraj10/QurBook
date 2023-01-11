@@ -6653,6 +6653,7 @@ class VideoCallCommonUtils {
 
     CallLogModel callLogModel = CallLogModel(
         callerUser: regController.userId.value,
+        recipientUser: regController.careCoordinatorId.value,
         recipientId: regController.careCoordinatorId.value,
         startedTime: callStartTime,
         endTime: !isCallLog?callEndTime:null,
