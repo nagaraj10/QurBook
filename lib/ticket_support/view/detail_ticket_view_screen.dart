@@ -175,7 +175,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains("homecare services") ||
           strName.contains("food delivery") ||
           strName.contains("doctor appointment") ||
-          strName.contains("lab appointment")) {
+          strName.contains("lab appointment") ||
+          strName.contains("general health")) {
         if (ticket.type.additionalInfo != null && dataFields != null) {
           for (int i = 0; i < ticket.type.additionalInfo?.field.length; i++) {
             Field field = ticket.type.additionalInfo?.field[i];
@@ -334,7 +335,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               strName.contains("homecare services") ||
                               strName.contains("food delivery") ||
                               strName.contains("doctor appointment") ||
-                              strName.contains("lab appointment"))
+                              strName.contains("lab appointment") ||
+                          strName.contains("general health"))
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: widgetForColumn)
