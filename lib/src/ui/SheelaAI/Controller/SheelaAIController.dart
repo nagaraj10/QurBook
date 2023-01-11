@@ -11,8 +11,10 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -139,6 +141,10 @@ class SheelaAIController extends GetxController {
                 } else {
                   Get.toNamed(rt_Regimen);
                 }
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strMyFamilyList.toLowerCase()) {
+                Get.to(UserAccounts(
+                    arguments: UserAccountsArguments(selectedIndex: 1)));
               }
             } catch (e) {
               //gettingReposnseFromNative();
