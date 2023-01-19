@@ -37,30 +37,33 @@ class AppointmentsCommonWidget {
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   Widget docName(BuildContext context, doc) {
-    return Row(
-      children: [
-        Container(
-//          constraints:
-//              BoxConstraints(maxWidth: 1.sw / 2.5),
-          child: Row(
-            children: [
-              TextWidget(
-                text: toBeginningOfSentenceCase(doc == null ? '' : doc),
-                fontWeight: FontWeight.w500,
-                fontsize: fhbStyles.fnt_doc_name,
-                softwrap: false,
-                overflow: TextOverflow.ellipsis,
-                colors: Colors.black,
-              ),
-              IconWidget(
-                  colors: Color(new CommonUtil().getMyPrimaryColor()),
-                  icon: Icons.info,
-                  size: 12.0.sp,
-                  onTap: () {}),
-            ],
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(
+              toBeginningOfSentenceCase(doc == null ? '' : doc),
+              //softWrap: false,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              maxLines: 2,
+              style:
+              TextStyle(color: Colors.black, fontWeight: FontWeight.w500, fontSize: fhbStyles.fnt_doc_name),
+            ),
           ),
-        ),
-      ],
+          SizedBox(width: 1.0.w,),
+          Padding(
+            padding:  EdgeInsets.only(top:4.0),
+            child: IconWidget(
+                colors: Color(new CommonUtil().getMyPrimaryColor()),
+                icon: Icons.info,
+                size: 12.0.sp,
+                onTap: () {}),
+          ),
+        ],
+      ),
     );
   }
 

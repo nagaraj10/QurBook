@@ -89,174 +89,186 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           children: [
             Container(
                 padding: EdgeInsets.all(8),
-                child: Stack(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        commonWidget.docPhotoView(doc),
-                        SizedBoxWidget(
-                          width: 10.0.w,
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                    Flexible(
+                      flex: 2,
+                      child: Container(
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            commonWidget.docName(
-                                context,
-                                commonWidget.getDoctorAndHealthOrganizationName(
-                                    widget.doc)),
-                            SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                            widget.doc.doctorSessionId == null ||
-                                    widget.doc?.doctor?.specialization == null
-                                ? SizedBox.shrink()
-                                : Container(
-                                    width: 1.sw / 2,
-                                    child: Text(
-                                      toBeginningOfSentenceCase((widget
-                                                      .doc
-                                                      .doctor
-                                                      .doctorProfessionalDetailCollection !=
-                                                  null &&
-                                              widget
-                                                      .doc
-                                                      .doctor
-                                                      .doctorProfessionalDetailCollection
-                                                      .length >
-                                                  0)
-                                          ? widget
-                                                      .doc
-                                                      .doctor
-                                                      .doctorProfessionalDetailCollection[
-                                                          0]
-                                                      .specialty !=
-                                                  null
-                                              ? widget
-                                                          .doc
-                                                          .doctor
-                                                          .doctorProfessionalDetailCollection[
-                                                              0]
-                                                          .specialty
-                                                          .name !=
-                                                      null
+                          children: [
+                            commonWidget.docPhotoView(doc),
+                            SizedBoxWidget(
+                              width: 10.0.w,
+                            ),
+                            Expanded(
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    commonWidget.docName(
+                                        context,
+                                        commonWidget.getDoctorAndHealthOrganizationName(
+                                            widget.doc)),
+                                    SizedBoxWidget(height: 3.0.h, width: 0.0.h),
+                                    widget.doc.doctorSessionId == null ||
+                                            widget.doc?.doctor?.specialization == null
+                                        ? SizedBox.shrink()
+                                        : Container(
+                                            width: 1.sw / 2,
+                                            child: Text(
+                                              toBeginningOfSentenceCase((widget
+                                                              .doc
+                                                              .doctor
+                                                              .doctorProfessionalDetailCollection !=
+                                                          null &&
+                                                      widget
+                                                              .doc
+                                                              .doctor
+                                                              .doctorProfessionalDetailCollection
+                                                              .length >
+                                                          0)
                                                   ? widget
-                                                      .doc
-                                                      .doctor
-                                                      .doctorProfessionalDetailCollection[
-                                                          0]
-                                                      .specialty
-                                                      .name
-                                                  : ''
-                                              : ''
-                                          : ''),
-                                      style: TextStyle(
-                                          fontSize:
-                                              fhbStyles.fnt_doc_specialist),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                            widget.doc.doctorSessionId == null ||
-                                    widget.doc?.doctor?.specialization == null
-                                ? SizedBox.shrink()
-                                : SizedBox(height: 3.0.h),
-                            commonWidget.docLoc(
-                                context, commonWidget.getLocation(widget.doc)),
-                            widget.doc.doctorSessionId == null ||
-                                    widget.doc?.doctor?.specialization == null
-                                ? SizedBox.shrink()
-                                : SizedBox(height: 3.0),
-                            widget.doc.doctorSessionId == null
-                                ? commonWidget.docLoc(context,
-                                    commonWidget.getServiceCategory(widget.doc))
-                                : SizedBox.shrink(),
-                            widget.doc.doctorSessionId == null ||
-                                    widget.doc?.doctor?.specialization == null
-                                ? SizedBox.shrink()
-                                : SizedBox(height: 3.0),
-                            widget.doc.doctorSessionId == null
-                                ? commonWidget.docLoc(context,
-                                    commonWidget.getModeOfService(widget.doc))
-                                : SizedBox.shrink(),
-                            SizedBoxWidget(height: 5.0.h),
-                            SizedBoxWidget(height: 15.0.h),
-                            widget.doc.doctorSessionId == null
-                                ? SizedBox.shrink()
-                                : commonWidget.docIcons(
-                                    false, doc, context, () {})
+                                                              .doc
+                                                              .doctor
+                                                              .doctorProfessionalDetailCollection[
+                                                                  0]
+                                                              .specialty !=
+                                                          null
+                                                      ? widget
+                                                                  .doc
+                                                                  .doctor
+                                                                  .doctorProfessionalDetailCollection[
+                                                                      0]
+                                                                  .specialty
+                                                                  .name !=
+                                                              null
+                                                          ? widget
+                                                              .doc
+                                                              .doctor
+                                                              .doctorProfessionalDetailCollection[
+                                                                  0]
+                                                              .specialty
+                                                              .name
+                                                          : ''
+                                                      : ''
+                                                  : ''),
+                                              style: TextStyle(
+                                                  fontSize:
+                                                      fhbStyles.fnt_doc_specialist),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                    widget.doc.doctorSessionId == null ||
+                                            widget.doc?.doctor?.specialization == null
+                                        ? SizedBox.shrink()
+                                        : SizedBox(height: 3.0.h),
+                                    commonWidget.docLoc(
+                                        context, commonWidget.getLocation(widget.doc)),
+                                    widget.doc.doctorSessionId == null ||
+                                            widget.doc?.doctor?.specialization == null
+                                        ? SizedBox.shrink()
+                                        : SizedBox(height: 3.0),
+                                    widget.doc.doctorSessionId == null
+                                        ? commonWidget.docLoc(context,
+                                            commonWidget.getServiceCategory(widget.doc))
+                                        : SizedBox.shrink(),
+                                    widget.doc.doctorSessionId == null ||
+                                            widget.doc?.doctor?.specialization == null
+                                        ? SizedBox.shrink()
+                                        : SizedBox(height: 3.0),
+                                    widget.doc.doctorSessionId == null
+                                        ? commonWidget.docLoc(context,
+                                            commonWidget.getModeOfService(widget.doc))
+                                        : SizedBox.shrink(),
+                                    SizedBoxWidget(height: 5.0.h),
+                                    SizedBoxWidget(height: 15.0.h),
+                                    widget.doc.doctorSessionId == null
+                                        ? SizedBox.shrink()
+                                        : commonWidget.docIcons(
+                                            false, doc, context, () {})
+                                  ],
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Column(
-                        children: [
-                          //joinCallIcon(doc),
-                          SizedBoxWidget(
-                            height:
-                                widget.doc?.doctor?.specialization == null ||
-                                        widget.doc.doctorSessionId == null
-                                    ? 30.0.h
-                                    : 40.0.h,
-                          ),
-                          widget.doc.doctorSessionId == null
-                              ? SizedBox.shrink()
-                              : commonWidget.count(doc.slotNumber),
-                          doc.plannedFollowupDate == null
-                              ? TextWidget(
-                                  fontsize: 12.0.sp,
-                                  text: doc.plannedStartDateTime == null
-                                      ? ''
-                                      : DateFormat(Constants
-                                                  .Appointments_time_format)
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        child: Column(
+                          children: [
+                            //joinCallIcon(doc),
+                            SizedBoxWidget(
+                              height:
+                                  widget.doc?.doctor?.specialization == null ||
+                                          widget.doc.doctorSessionId == null
+                                      ? 30.0.h
+                                      : 40.0.h,
+                            ),
+                            widget.doc.doctorSessionId == null
+                                ? SizedBox.shrink()
+                                : commonWidget.count(doc.slotNumber),
+                            doc.plannedFollowupDate == null
+                                ? TextWidget(
+                                    fontsize: 12.0.sp,
+                                    text: doc.plannedStartDateTime == null
+                                        ? ''
+                                        : DateFormat(Constants
+                                                    .Appointments_time_format)
+                                                .format(DateTime.parse(
+                                                    doc.plannedStartDateTime))
+                                                .toString() ??
+                                            '',
+                                    fontWeight: FontWeight.w600,
+                                    colors: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                  )
+                                : TextWidget(
+                                    fontsize: 11.0.sp,
+                                    text: TranslationConstants.nextFollowUpOn.t(),
+                                    overflow: TextOverflow.visible,
+                                    fontWeight: FontWeight.w400,
+                                    colors: Colors.black38,
+                                  ),
+                            TextWidget(
+                              fontsize: 12.0.sp,
+                              text: doc.plannedFollowupDate == null
+                                  ? doc.plannedStartDateTime == null
+                                      ? ""
+                                      : DateFormat.yMMMEd()
                                               .format(DateTime.parse(
                                                   doc.plannedStartDateTime))
                                               .toString() ??
-                                          '',
-                                  fontWeight: FontWeight.w600,
-                                  colors: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                )
-                              : TextWidget(
-                                  fontsize: 11.0.sp,
-                                  text: TranslationConstants.nextFollowUpOn.t(),
-                                  overflow: TextOverflow.visible,
-                                  fontWeight: FontWeight.w400,
-                                  colors: Colors.black38,
-                                ),
-                          TextWidget(
-                            fontsize: 12.0.sp,
-                            text: doc.plannedFollowupDate == null
-                                ? doc.plannedStartDateTime == null
-                                    ? ""
-                                    : DateFormat.yMMMEd()
-                                            .format(DateTime.parse(
-                                                doc.plannedStartDateTime))
-                                            .toString() ??
-                                        ''
-                                : DateFormat.yMMMEd()
-                                        .format(DateTime.parse(
-                                            doc.plannedFollowupDate))
-                                        .toString() ??
-                                    '',
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.visible,
-                            colors: Colors.black,
-                          ),
-                          TextWidget(
-                            fontsize: 15.0.sp,
-                            text: doc.plannedFollowupDate == null
-                                ? ''
-                                : '${CommonUtil.CURRENCY}' +
-                                        providerCommonWidget.getMoneyWithForamt(
-                                            doc.doctorFollowUpFee) ??
-                                    '',
-                            fontWeight: FontWeight.w600,
-                            overflow: TextOverflow.visible,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ],
+                                          ''
+                                  : DateFormat.yMMMEd()
+                                          .format(DateTime.parse(
+                                              doc.plannedFollowupDate))
+                                          .toString() ??
+                                      '',
+                              fontWeight: FontWeight.w500,
+                              overflow: TextOverflow.visible,
+                              colors: Colors.black,
+                            ),
+                            TextWidget(
+                              fontsize: 15.0.sp,
+                              text: doc.plannedFollowupDate == null
+                                  ? ''
+                                  : '${CommonUtil.CURRENCY}' +
+                                          providerCommonWidget.getMoneyWithForamt(
+                                              doc.doctorFollowUpFee) ??
+                                      '',
+                              fontWeight: FontWeight.w600,
+                              overflow: TextOverflow.visible,
+                              colors: Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
