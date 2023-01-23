@@ -121,5 +121,7 @@ object Constants {
     val PROP_UUID ="uid"
 
     val CLOSE_SHEELA_DIALOG = "closeSheelaDialog"
+    val EVENT_TYPE = "eventType"
+    val OTHERS = "others"
 
 }

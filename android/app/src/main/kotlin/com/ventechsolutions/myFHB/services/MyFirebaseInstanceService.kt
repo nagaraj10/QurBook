@@ -314,7 +314,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         print(data[Constants.PROP_REDIRECT_TO])
 
         if (data["isSheela"] != null && data["isSheela"] == "true") {
-            createNotificationForSheela(data)
+            if (data[Constants.EVENT_TYPE] != null && data[Constants.EVENT_TYPE] == "wrapperCall") {
+                getRegularNotification(data)
+            } else {
+                createNotificationForSheela(data)
+            }
         }
         else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
@@ -448,6 +452,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_MSG, data[getString(R.string.pro_ns_body)])
         onTapNS.putExtra(Constants.PROP_sheelaAudioMsgUrl, data[Constants.PROP_sheelaAudioMsgUrl])
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
+        onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+        onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)

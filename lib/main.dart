@@ -717,12 +717,24 @@ class _MyFHBState extends State<MyFHB> {
           });
           try {
             if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-              final rawTitle = passedValArr[2]?.split('|')[0];
-              final rawBody = passedValArr[2]?.split('|')[1];
-              if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
-                notificationListId = passedValArr[3];
-                FetchNotificationService()
-                    .inAppUnreadAction(notificationListId);
+              var rawTitle = "";
+              var rawBody = "";
+              var eventType = "";
+              var others = "";
+
+              if (passedValArr[2] == 'wrapperCall') {
+                eventType = passedValArr[2];
+                rawTitle = passedValArr[3]?.split('|')[1];
+                rawBody = passedValArr[3]?.split('|')[2];
+                others = passedValArr[3]?.split('|')[0];
+              } else {
+                rawTitle = passedValArr[2]?.split('|')[0];
+                rawBody = passedValArr[2]?.split('|')[1];
+                if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+                  notificationListId = passedValArr[3];
+                  FetchNotificationService()
+                      .inAppUnreadAction(notificationListId);
+                }
               }
 
               Get.toNamed(
@@ -730,6 +742,9 @@ class _MyFHBState extends State<MyFHB> {
                 arguments: SheelaArgument(
                   isSheelaAskForLang: true,
                   rawMessage: rawBody,
+                  eventType: eventType,
+                  rawTitle: rawTitle,
+                  others: others,
                 ),
               );
             } else {

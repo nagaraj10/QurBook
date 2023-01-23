@@ -2170,6 +2170,8 @@ WOWGoDataUpload = 1
         val action = intent.getStringExtra("action")
         val isSheela = intent.getStringExtra("isSheela")
         var uuid = intent.getStringExtra(Constants.PROP_UUID)
+        val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
+        val others = intent.getStringExtra(Constants.OTHERS)
 
 
 
@@ -2277,7 +2279,10 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                             sharedValue =
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
 
-                        } else {
+                        } else if (eventType != null && eventType == "wrapperCall") {
+                            sharedValue =
+                                "${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}"
+                        }else {
                             if(rawBody!=null && rawBody!="")
                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
                             else if(rawTitle!=null && rawTitle!="")

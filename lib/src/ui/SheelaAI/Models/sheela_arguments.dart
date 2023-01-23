@@ -17,6 +17,9 @@ class SheelaArgument {
   String activityName;
   String audioMessage;
   String textSpeechSheela;
+  String eventType;
+  String rawTitle;
+  String others;
 
   SheelaArgument({
     this.isSheelaAskForLang,
@@ -37,5 +40,8 @@ class SheelaArgument {
     this.activityName,
     this.audioMessage,
     this.textSpeechSheela,
+    this.eventType,
+    this.rawTitle,
+    this.others,
   });
 }
