@@ -224,11 +224,6 @@ Future<void> main() async {
     // } else {
     CommonUtil().initPortraitMode();
     // }
-    try {
-      CategoryListBlock _categoryListBlock = new CategoryListBlock();
-
-      _categoryListBlock.getCategoryLists().then((value) {});
-    } catch (e) {}
 
     Map appsFlyerOptions;
     if (Platform.isIOS) {
@@ -274,7 +269,12 @@ Future<void> main() async {
     }
 
     // check if the app install on first time
-    await CommonUtil().isFirstTime();
+    var isFirstTime = await CommonUtil().isFirstTime();
+    if (!isFirstTime) {
+      try {
+        CategoryListBlock().getCategoryLists();
+      } catch (e) {}
+    }
     // SystemChrome.setSystemUIOverlayStyle(
     //   const SystemUiOverlayStyle(
     //     statusBarIconBrightness: Brightness.light,
