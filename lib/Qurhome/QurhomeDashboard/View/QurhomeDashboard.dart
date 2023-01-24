@@ -41,6 +41,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
     try {
       super.initState();
       CommonUtil().requestQurhomeDialog();
+      controller.setActiveQurhomeTo(
+        status: true,
+      );
       if (CommonUtil().isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
@@ -67,6 +70,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
+      controller.setActiveQurhomeTo(
+        status: false,
+      );
       CommonUtil().initPortraitMode();
       super.dispose();
     } catch (e) {
@@ -182,7 +188,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       child: InkWell(
                           onTap: () {
                             bottomTapped(0);
-                            sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                            sheelBadgeController.getSheelaBadgeCount(
+                                isNeedSheelaDialog: true);
                           },
                           child: CommonUtil().isTablet
                               ? AssetImageWidget(
@@ -236,8 +243,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         arguments: SheelaArgument(
                           rawMessage: sheelaQueueShowRemind,
                         ),
-                      ).then((value){
-                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                      ).then((value) {
+                        sheelBadgeController.getSheelaBadgeCount(
+                            isNeedSheelaDialog: true);
                       });
                     } else {
                       String sheela_lang =
@@ -249,7 +257,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           langCode: (sheela_lang ?? ''),
                         ),
                       ).then((value) {
-                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                        sheelBadgeController.getSheelaBadgeCount(
+                            isNeedSheelaDialog: true);
                       });
                     }
                   },

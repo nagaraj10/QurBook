@@ -27,9 +27,6 @@ class QurhomeDashboardController extends GetxController {
 
   @override
   void onInit() {
-    PreferenceUtil.saveIfQurhomeisAcive(
-      qurhomeStatus: true,
-    );
     if (!Get.isRegistered<SheelaAIController>()) {
       Get.put(SheelaAIController());
     }
@@ -53,11 +50,14 @@ class QurhomeDashboardController extends GetxController {
     super.onInit();
   }
 
+  setActiveQurhomeTo({bool status}) {
+    PreferenceUtil.saveIfQurhomeisAcive(
+      qurhomeStatus: status,
+    );
+  }
+
   @override
   void onClose() {
-    PreferenceUtil.saveIfQurhomeisAcive(
-      qurhomeStatus: false,
-    );
     // _disableTimer();
     //bleController.stopBleScan();
     _sheelaBLEController.stopScanning();
