@@ -314,11 +314,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         print(data[Constants.PROP_REDIRECT_TO])
 
         if (data["isSheela"] != null && data["isSheela"] == "true") {
-            if (data[Constants.EVENT_TYPE] != null && data[Constants.EVENT_TYPE] == "wrapperCall") {
-                getRegularNotification(data)
-            } else {
-                createNotificationForSheela(data)
-            }
+            createNotificationForSheela(data)
         }
         else if (data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME] == Constants.PROP_DOC_RESCHDULE) {
             createNotificationCancelAppointment(data)
@@ -380,11 +376,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         else {
             getRegularNotification(data)
             val intent = Intent("remainderSheelaInvokeEvent")
-            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
-            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
-            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
-            intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
-
+            if (data[Constants.EVENT_TYPE] != null && data[Constants.EVENT_TYPE] == Constants.WRAPPERCALL) {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "sheela")
+                intent.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+                intent.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+                intent.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+                intent.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
+                intent.putExtra(Constants.NOTIFICATIONLISTID, data[Constants.NOTIFICATIONLISTID])
+            }else {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+                intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+                intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
+                intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+            }
             this.sendBroadcast(intent)
         }
     }

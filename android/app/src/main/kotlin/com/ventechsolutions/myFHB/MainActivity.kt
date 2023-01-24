@@ -2279,7 +2279,7 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                             sharedValue =
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
 
-                        } else if (eventType != null && eventType == "wrapperCall") {
+                        } else if (eventType != null && eventType == Constants.WRAPPERCALL) {
                             sharedValue =
                                 "${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}"
                         }else {
@@ -2377,6 +2377,14 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
                 mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}")
+            } else if (redirectTo != null && redirectTo.equals("sheela")) {
+                val redirect_to = data.getStringExtra(Constants.PROP_REDIRECT_TO)
+                val eventType = data.getStringExtra(Constants.EVENT_TYPE)
+                val others = data.getStringExtra(Constants.OTHERS)
+                val rawTitle = data.getStringExtra(Constants.PROP_RAWTITLE)
+                val rawBody = data.getStringExtra(Constants.PROP_RAWBODY)
+                val notificationListId = data.getStringExtra(Constants.NOTIFICATIONLISTID)
+                mEventChannel.success("${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}")
             }else{
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")

@@ -722,7 +722,7 @@ class _MyFHBState extends State<MyFHB> {
               var eventType = "";
               var others = "";
 
-              if (passedValArr[2] == 'wrapperCall') {
+              if (passedValArr[2] == strWrapperCall) {
                 eventType = passedValArr[2];
                 rawTitle = passedValArr[3]?.split('|')[1];
                 rawBody = passedValArr[3]?.split('|')[2];
@@ -743,7 +743,6 @@ class _MyFHBState extends State<MyFHB> {
                   isSheelaAskForLang: true,
                   rawMessage: rawBody,
                   eventType: eventType,
-                  rawTitle: rawTitle,
                   others: others,
                 ),
               );
@@ -1363,7 +1362,10 @@ class _MyFHBState extends State<MyFHB> {
               );
             } else if (parsedData[1] == 'sheela') {
               var bundleText;
-              if (parsedData.length == 4) {
+              if (parsedData.length == 5) {
+                bundleText =
+                    parsedData[2] + '|' + parsedData[3] + '|' + parsedData[4];
+              } else if (parsedData.length == 4) {
                 bundleText = parsedData[2] + '|' + parsedData[3];
               } else if (parsedData.length == 3) {
                 bundleText = parsedData[2] + '|' + parsedData[1];
