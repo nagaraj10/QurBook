@@ -3986,17 +3986,18 @@ class CommonUtil {
         : await getExternalStorageDirectory();
   }
 
-  Future<void> isFirstTime() async {
+  Future<bool> isFirstTime() async {
     var prefs = await SharedPreferences.getInstance();
     var firstTime = prefs.getBool('first_time');
     if (firstTime != null && !firstTime) {
       // Not first time
-
+      return false;
     } else {
       // First time
       await prefs.setBool('first_time', false);
       await _deleteAppDir();
       await _deleteCacheDir();
+      return true;
     }
   }
 
