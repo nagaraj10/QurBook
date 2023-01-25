@@ -2170,6 +2170,8 @@ WOWGoDataUpload = 1
         val action = intent.getStringExtra("action")
         val isSheela = intent.getStringExtra("isSheela")
         var uuid = intent.getStringExtra(Constants.PROP_UUID)
+        val eventType = intent.getStringExtra(Constants.EVENT_TYPE)
+        val others = intent.getStringExtra(Constants.OTHERS)
 
 
 
@@ -2277,7 +2279,10 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                             sharedValue =
                                 "${Constants.PROP_ACK}&${"sheela"}&${"$rawTitle|$rawBody"}&${notificationListId}"
 
-                        } else {
+                        } else if (eventType != null && eventType == Constants.WRAPPERCALL) {
+                            sharedValue =
+                                "${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}"
+                        }else {
                             if(rawBody!=null && rawBody!="")
                             sharedValue = "${Constants.PROP_ACK}&${redirect_to}&${rawBody}"
                             else if(rawTitle!=null && rawTitle!="")
@@ -2372,6 +2377,14 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                 val rawMessage = data.getStringExtra("rawMessage")
                 val sheelaAudioMsgUrl = data.getStringExtra("sheelaAudioMsgUrl")
                 mEventChannel.success("isSheelaFollowup&${message}&${rawMessage}&${sheelaAudioMsgUrl}")
+            } else if (redirectTo != null && redirectTo.equals("sheela")) {
+                val redirect_to = data.getStringExtra(Constants.PROP_REDIRECT_TO)
+                val eventType = data.getStringExtra(Constants.EVENT_TYPE)
+                val others = data.getStringExtra(Constants.OTHERS)
+                val rawTitle = data.getStringExtra(Constants.PROP_RAWTITLE)
+                val rawBody = data.getStringExtra(Constants.PROP_RAWBODY)
+                val notificationListId = data.getStringExtra(Constants.NOTIFICATIONLISTID)
+                mEventChannel.success("${Constants.PROP_ACK}&${redirect_to}&${eventType}&${"$others|$rawTitle|$rawBody"}&${notificationListId}")
             }else{
                 val eid = data.getStringExtra("eid")
                 mEventChannel.success("activityRemainderInvokeSheela&${eid}")
