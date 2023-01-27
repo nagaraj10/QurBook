@@ -191,7 +191,17 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
-      if ((model.rawBody ?? '').isNotEmpty) {
+      if (model.eventType != null && model.eventType == strWrapperCall) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            isSheelaAskForLang: true,
+            rawMessage: model.rawBody,
+            eventType: model.eventType,
+            others: model.others,
+          ),
+        );
+      } else if ((model.rawBody ?? '').isNotEmpty) {
         if (sheelaAIController.isSheelaScreenActive) {
           var reqJson = {
             KIOSK_task: KIOSK_read,
