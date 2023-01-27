@@ -25,6 +25,7 @@ class AudioWidget extends StatefulWidget {
   String audioUrl;
   bool isFromChat;
   bool isFromSheela;
+  bool isPlayAudioUrl;
 
   Function(bool, String) deleteAudioFile;
 
@@ -33,6 +34,7 @@ class AudioWidget extends StatefulWidget {
     this.deleteAudioFile, {
     this.isFromChat = false,
     this.isFromSheela = false,
+    this.isPlayAudioUrl = false,
   });
 
   @override
@@ -68,11 +70,16 @@ class AudioWidgetState extends State<AudioWidget> {
     initializeDateFormatting();
     _pathOfFile = widget.audioFile;
     audioUrl = widget.audioUrl;
-    if (widget.isFromSheela) {
+    if(!widget.isPlayAudioUrl){
+      if (widget.isFromSheela) {
+        _sheelaAIController = Get.find();
+        Future.delayed(const Duration(milliseconds: 5))
+            .then((value) => onStartPlayerPressed());
+      }
+    }else{
       _sheelaAIController = Get.find();
-      Future.delayed(const Duration(milliseconds: 5))
-          .then((value) => onStartPlayerPressed());
     }
+
   }
 
   set_up_audios() async {

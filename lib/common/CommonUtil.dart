@@ -5167,15 +5167,19 @@ class CommonUtil {
   }
 
   void dialogForSheelaQueue(BuildContext context, int count) async {
+    bool isFirstTime = true;
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
         barrierLabel: 'Label',
         barrierDismissible: false,
         pageBuilder: (_, __, ___) {
-          Future.delayed(Duration(seconds: 2), () {
-            Get.back();
-          });
+          if(isFirstTime){
+            isFirstTime = false;
+            Future.delayed(Duration(seconds: 2), () {
+              Get.back();
+            });
+          }
           return Center(
             child: Container(
               width: double.infinity,

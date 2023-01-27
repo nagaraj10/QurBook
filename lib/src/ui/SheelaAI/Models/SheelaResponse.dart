@@ -28,6 +28,7 @@ class SpeechModelAPIResponse {
 class SheelaResponse {
   String recipientId;
   String text;
+  String audioURL;
   bool endOfConv = true;
   List<Buttons> buttons;
   var imageURL;
@@ -58,11 +59,13 @@ class SheelaResponse {
   String sessionId;
   String relationshipId;
   String audioFile;
+  bool playAudioInit = false;
   bool isButtonNumber;
 
   SheelaResponse({
     this.recipientId,
     this.text,
+    this.audioURL,
     this.endOfConv,
     this.buttons,
     this.imageURL,
@@ -89,12 +92,14 @@ class SheelaResponse {
     this.relationshipId,
     this.imageURLS,
     this.audioFile,
+    this.playAudioInit,
     this.isButtonNumber
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
     text = json['text'];
+    audioURL = json['audioURL'];
     endOfConv = json['endOfConv'];
     if (json['buttons'] != null) {
       buttons = <Buttons>[];
@@ -138,6 +143,7 @@ class SheelaResponse {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['recipient_id'] = this.recipientId;
     data['text'] = this.text;
+    data['audioURL'] = this.audioURL;
     data['endOfConv'] = this.endOfConv;
     if (this.buttons != null) {
       data['buttons'] = this.buttons?.map((v) => v.toJson()).toList();
