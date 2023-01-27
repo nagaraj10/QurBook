@@ -49,46 +49,49 @@ class NotificationModel {
   bool viewRecordAction, isSheela, chatWithCC = false;
   String message;
   String sheelaAudioMsgUrl;
+  String eventType;
+  String others;
 
-  NotificationModel({
-    this.title,
-    this.body,
-    this.ringtone,
-    this.templateName,
-    this.userId,
-    this.idToHighlight,
-    this.redirect,
-    this.healthRecordMetaIds,
-    this.isCall,
-    this.needToHighlight,
-    this.meeting_id,
-    this.doctorId,
-    this.username,
-    this.type,
-    this.eventId,
-    this.rawTitle,
-    this.rawBody,
-    this.externalLink,
-    this.planId,
-    this.callType,
-    this.isWeb,
-    this.claimId,
-    this.caregiverReceiver,
-    this.caregiverRequestor,
-    this.verificationCode,
-    this.patientPhoneNumber,
-    this.notificationListId,
-    this.careCoordinatorUserId,
-    this.activityName,
-    this.activityTime,
-    this.careGiverName,
-    this.uid,
-    this.isCaregiver,
-    this.deliveredDateTime,
-    this.isFromCareCoordinator,
-    this.message,
-    this.sheelaAudioMsgUrl,
-  });
+  NotificationModel(
+      {this.title,
+      this.body,
+      this.ringtone,
+      this.templateName,
+      this.userId,
+      this.idToHighlight,
+      this.redirect,
+      this.healthRecordMetaIds,
+      this.isCall,
+      this.needToHighlight,
+      this.meeting_id,
+      this.doctorId,
+      this.username,
+      this.type,
+      this.eventId,
+      this.rawTitle,
+      this.rawBody,
+      this.externalLink,
+      this.planId,
+      this.callType,
+      this.isWeb,
+      this.claimId,
+      this.caregiverReceiver,
+      this.caregiverRequestor,
+      this.verificationCode,
+      this.patientPhoneNumber,
+      this.notificationListId,
+      this.careCoordinatorUserId,
+      this.activityName,
+      this.activityTime,
+      this.careGiverName,
+      this.uid,
+      this.isCaregiver,
+      this.deliveredDateTime,
+      this.isFromCareCoordinator,
+      this.message,
+      this.sheelaAudioMsgUrl,
+      this.eventType,
+      this.others});
 
   Map<String, dynamic> toMap() {
     return {
@@ -125,6 +128,8 @@ class NotificationModel {
       'sheelaAudioMsgUrl': sheelaAudioMsgUrl,
       'viewRecordAction': viewRecordAction,
       'chatWithCC': chatWithCC,
+      'eventType': eventType,
+      'others': others
     };
   }
 
@@ -158,7 +163,8 @@ class NotificationModel {
     deliveredDateTime = message['deliveredDateTime'];
     isFromCareCoordinator = message['isFromCareCoordinator'];
     sheelaAudioMsgUrl = message['sheelaAudioMsgUrl'];
-
+    eventType = message['eventType'];
+    others = message['others'];
     viewRecordAction = message['viewRecordAction'];
     chatWithCC = message['chatWithCC'];
   }
@@ -266,6 +272,14 @@ class NotificationModel {
         }
         if ((message[parameters.gcmsheelaAudioMsgUrl] ?? '').isNotEmpty) {
           sheelaAudioMsgUrl = message[parameters.gcmsheelaAudioMsgUrl];
+        }
+
+        if ((message[parameters.eventType] ?? '').isNotEmpty) {
+          eventType = message[parameters.eventType];
+        }
+
+        if ((message[parameters.others] ?? '').isNotEmpty) {
+          others = message[parameters.others];
         }
 
         if (message[parameters.externalLink] != null) {
@@ -430,6 +444,14 @@ class NotificationModel {
     }
     if ((message[parameters.gcmsheelaAudioMsgUrl] ?? '').isNotEmpty) {
       sheelaAudioMsgUrl = message[parameters.gcmsheelaAudioMsgUrl];
+    }
+
+    if ((message[parameters.eventType] ?? '').isNotEmpty) {
+      eventType = message[parameters.eventType];
+    }
+
+    if ((message[parameters.others] ?? '').isNotEmpty) {
+      others = message[parameters.others];
     }
 
     if (message[parameters.strMessage] != null) {
