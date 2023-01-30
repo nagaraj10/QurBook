@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -121,7 +122,10 @@ class SheelaAIController extends GetxController {
               if ((index < buttons.length - 1) &&
                   buttons[index + 1].skipTts &&
                   !currentPlayingConversation.isButtonNumber) {
-                currentPlayingConversation.currentButtonPlayingIndex++;
+                if (currentPlayingConversation.currentButtonPlayingIndex !=
+                    null) {
+                  currentPlayingConversation.currentButtonPlayingIndex++;
+                }
               }
               checkForButtonsAndPlay();
             }
@@ -148,6 +152,10 @@ class SheelaAIController extends GetxController {
               }
             } catch (e) {
               //gettingReposnseFromNative();
+              if (kDebugMode)
+                printError(
+                  info: e.toString(),
+                );
             }
           }
         }
