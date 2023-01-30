@@ -83,6 +83,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               chat.audioFile,
                               null,
                               isFromSheela: true,
+                              isPlayAudioUrl: chat?.playAudioInit ?? false,
                             )
                           : Obx(() {
                               return Row(

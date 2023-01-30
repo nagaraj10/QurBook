@@ -297,7 +297,7 @@ class SheelaAIController extends GetxController {
         arguments.showUnreadMessage = false;
       } else if (arguments?.eventType != null &&
           arguments?.eventType == strWrapperCall) {
-        sheelaRequest.additionalInfo = arguments?.others??"";
+        sheelaRequest.additionalInfo = arguments?.others ?? "";
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
@@ -359,6 +359,15 @@ class SheelaAIController extends GetxController {
           }
           if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
+          }
+          if ((currentResponse?.audioURL != null) &&
+              (currentResponse?.audioURL ?? '').isNotEmpty) {
+            isLoading(true);
+            SheelaResponse audioResponse = SheelaResponse();
+            audioResponse.recipientId = sheelaAudioMsgUrl;
+            audioResponse.audioFile = currentResponse?.audioURL;
+            audioResponse.playAudioInit = true;
+            conversations.add(audioResponse);
           }
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();

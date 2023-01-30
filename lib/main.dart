@@ -567,11 +567,20 @@ class _MyFHBState extends State<MyFHB> {
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
         if (sheelaAIController.isSheelaScreenActive) {
-          var reqJson = {
-            KIOSK_task: KIOSK_read,
-            KIOSK_message_api: passedValArr[2].toString()
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
+          if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
+              (passedValArr[3] != 'null')) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: passedValArr[3].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          } else {
+            var reqJsonText = {
+              KIOSK_task: KIOSK_read,
+              KIOSK_message_api: passedValArr[2].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonText);
+          }
         } else {
           if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
               (passedValArr[3] != 'null')) {
