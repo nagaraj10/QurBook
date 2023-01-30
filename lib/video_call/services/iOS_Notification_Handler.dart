@@ -47,6 +47,7 @@ class IosNotificationHandler {
   bool notificationReceivedFromKilledState = false;
   bool viewRecordAction, chatWithCC = false;
   SheelaAIController sheelaAIController = Get.find();
+
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
       (call) async {
@@ -209,7 +210,7 @@ class IosNotificationHandler {
               KIOSK_audio_url: model.sheelaAudioMsgUrl
             };
             CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
-          }else{
+          } else {
             var reqJson = {
               KIOSK_task: KIOSK_read,
               KIOSK_message_api: model.rawBody,
@@ -233,13 +234,23 @@ class IosNotificationHandler {
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        await Future.delayed(const Duration(seconds: 5));
-        Get.toNamed(
-          router.rt_Sheela,
-          arguments: SheelaArgument(
-            audioMessage: model.sheelaAudioMsgUrl,
-          ),
-        );
+        if (sheelaAIController.isSheelaScreenActive) {
+          if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: model.sheelaAudioMsgUrl
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          }
+        } else {
+          await Future.delayed(const Duration(seconds: 5));
+          Get.toNamed(
+            router.rt_Sheela,
+            arguments: SheelaArgument(
+              audioMessage: model.sheelaAudioMsgUrl,
+            ),
+          );
+        }
       }
     } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
         (model.eventId ?? '').isNotEmpty) {
