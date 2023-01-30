@@ -203,11 +203,19 @@ class IosNotificationHandler {
         );
       } else if ((model.rawBody ?? '').isNotEmpty) {
         if (sheelaAIController.isSheelaScreenActive) {
-          var reqJson = {
-            KIOSK_task: KIOSK_read,
-            KIOSK_message_api: model.rawBody,
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
+          if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: model.sheelaAudioMsgUrl
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          }else{
+            var reqJson = {
+              KIOSK_task: KIOSK_read,
+              KIOSK_message_api: model.rawBody,
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJson);
+          }
         } else {
           Get.toNamed(
             rt_Sheela,
