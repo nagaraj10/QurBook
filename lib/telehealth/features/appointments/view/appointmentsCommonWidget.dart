@@ -691,6 +691,8 @@ class AppointmentsCommonWidget {
       name = doc?.healthOrganization?.name?.capitalizeFirstofEach != null
           ? doc?.healthOrganization?.name?.capitalizeFirstofEach
           : '';
+    } else if (doc?.additionalinfo?.provider_name != null) {
+      name = doc?.additionalinfo?.provider_name ?? '';
     } else if (doc.doctorSessionId == null && doc?.healthOrganization == null) {
       name = doc?.additionalinfo?.title ?? '';
     } else if (doc.doctorSessionId != null &&
