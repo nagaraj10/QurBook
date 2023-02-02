@@ -145,10 +145,12 @@ class VitalDetailController extends GetxController {
         onPressManual: () {
           Get.back();
           _sheelaBLEController.stopTTS();
+          _sheelaBLEController.stopScanning();
         },
         onPressCancel: () async {
           Get.back();
           _sheelaBLEController.stopTTS();
+          _sheelaBLEController.stopScanning();
         },
         title: device,
         isFromVital: true,

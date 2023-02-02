@@ -926,6 +926,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -936,6 +937,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectPulseMeter,
             isFromVital: false,
@@ -963,6 +965,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -999,6 +1002,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -1009,6 +1013,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
             isFromVital: false,
