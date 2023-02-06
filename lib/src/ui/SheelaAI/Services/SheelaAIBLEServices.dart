@@ -187,7 +187,11 @@ class SheelaBLEController extends GetxController {
             case "measurement":
               receivedData = true;
               if (hublistController.bleDeviceType.toLowerCase() ==
-                  "BP".toLowerCase()) {
+                      "BP".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "SPO2".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "Weight".toLowerCase()) {
                 //show next method
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
@@ -384,6 +388,20 @@ class SheelaBLEController extends GetxController {
                 text: "Thank you. Your BP systolic is ${model.data.systolic} "
                     ", Diastolic is ${model.data.diastolic} "
                     "and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (model.deviceType == "WEIGHT") {
+          if ((model.data.weight ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text:
+                    "Thank you. Your Weight is ${model.data.weight} is successfully recorded, Bye!",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
