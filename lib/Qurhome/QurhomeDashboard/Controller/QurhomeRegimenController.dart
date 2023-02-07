@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Api/QurHomeApiProvider.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
@@ -60,6 +61,8 @@ class QurhomeRegimenController extends GetxController {
   var SOSAgentNumber = "".obs;
   var SOSAgentNumberEmptyMsg = "".obs;
   var currLoggedEID = "".obs;
+
+  var dateHeader = "".obs;
 
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE);
@@ -400,6 +403,7 @@ class QurhomeRegimenController extends GetxController {
     try {
       //30 seconds API calling
       timer = Timer.periodic(Duration(seconds: 30), (Timer t) {
+        dateHeader.value = getFormatedDate();
         getRegimenList(isLoading: false);
       });
     } catch (e) {
@@ -423,5 +427,11 @@ class QurhomeRegimenController extends GetxController {
     } catch (e) {
       //print(e);
     }
+  }
+
+  String getFormatedDate() {
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('dd MMM yyyy').format(now);
+    return formattedDate;
   }
 }
