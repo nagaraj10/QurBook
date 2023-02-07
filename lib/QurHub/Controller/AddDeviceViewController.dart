@@ -38,10 +38,10 @@ class AddDeviceViewController extends GetxController {
       loadingData(true);
       final data = {
         DEVICE_ID: listController.bleMacId,
-        DEVICE_TYPE: listController.bleDeviceType,
+        DEVICE_TYPE: listController.bleDeviceType.toUpperCase(),
         USER_HUB_ID: listController.hubListResponse.result.id,
         USER_ID: selectedId,
-        DEVICE_NAME: (nickNameController.text ?? ""),
+        DEVICE_NAME: " ",
         ADDITION_DETAILS: {}
       };
       final res = await _hubApiProvider.saveNewDevice(data);
