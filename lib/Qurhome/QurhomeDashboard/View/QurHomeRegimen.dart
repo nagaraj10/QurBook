@@ -73,6 +73,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.dateHeader.value = controller.getFormatedDate();
+      });
+
       controller.currLoggedEID.value = "";
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(
