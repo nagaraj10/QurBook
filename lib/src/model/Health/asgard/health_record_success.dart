@@ -1,8 +1,9 @@
+
 import 'health_record_collection.dart';
 
 class HealthRecordSuccess {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   HealthRecordSuccess({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class HealthRecordSuccess {
     if (json['result'] != null) {
       result = List<Result>();
       json['result'].forEach((v) {
-        result.add(Result.fromJson(v));
+        result!.add(Result.fromJson(v));
       });
     }
   }
@@ -20,25 +21,25 @@ class HealthRecordSuccess {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String healthRecordTypeId;
-  String healthRecordTypeName;
-  Metadata metadata;
-  String userId;
-  bool isBookmarked;
-  bool isDraft;
-  bool isVisible;
-  bool isActive;
-  bool isCompleted;
-  String doctorId;
-  List<HealthRecordCollection> healthRecordCollection;
+  String? id;
+  String? healthRecordTypeId;
+  String? healthRecordTypeName;
+  Metadata? metadata;
+  String? userId;
+  bool? isBookmarked;
+  bool? isDraft;
+  bool? isVisible;
+  bool? isActive;
+  bool? isCompleted;
+  String? doctorId;
+  List<HealthRecordCollection>? healthRecordCollection;
 
   Result(
       {this.id,
@@ -71,7 +72,7 @@ class Result {
     if (json['healthRecordCollection'] != null) {
       healthRecordCollection = <HealthRecordCollection>[];
       json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection.add(HealthRecordCollection.fromJson(v));
+        healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
       });
     }
   }
@@ -82,7 +83,7 @@ class Result {
     data['healthRecordTypeId'] = healthRecordTypeId;
     data['healthRecordTypeName'] = healthRecordTypeName;
     if (metadata != null) {
-      data['metadata'] = metadata.toJson();
+      data['metadata'] = metadata!.toJson();
     }
     data['userId'] = userId;
     data['isBookmarked'] = isBookmarked;
@@ -93,24 +94,24 @@ class Result {
     data['doctorId'] = doctorId;
     if (healthRecordCollection != null) {
       data['healthRecordCollection'] =
-          healthRecordCollection.map((v) => v.toJson()).toList();
+          healthRecordCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Metadata {
-  HealthRecordCategory healthRecordCategory;
-  HealthRecordType healthRecordType;
-  String memoText;
-  bool hasVoiceNotes;
-  String dateOfVisit;
-  bool isDraft;
-  String sourceName;
-  String memoTextRaw;
-  Doctor doctor;
-  Hospital hospital;
-  String fileName;
+  HealthRecordCategory? healthRecordCategory;
+  HealthRecordType? healthRecordType;
+  String? memoText;
+  bool? hasVoiceNotes;
+  String? dateOfVisit;
+  bool? isDraft;
+  String? sourceName;
+  String? memoTextRaw;
+  Doctor? doctor;
+  Hospital? hospital;
+  String? fileName;
 
   Metadata(
       {this.healthRecordCategory,
@@ -152,10 +153,10 @@ class Metadata {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (healthRecordCategory != null) {
-      data['healthRecordCategory'] = healthRecordCategory.toJson();
+      data['healthRecordCategory'] = healthRecordCategory!.toJson();
     }
     if (healthRecordType != null) {
-      data['healthRecordType'] = healthRecordType.toJson();
+      data['healthRecordType'] = healthRecordType!.toJson();
     }
     data['memoText'] = memoText;
     data['hasVoiceNotes'] = hasVoiceNotes;
@@ -164,10 +165,10 @@ class Metadata {
     data['sourceName'] = sourceName;
     data['memoTextRaw'] = memoTextRaw;
     if (doctor != null) {
-      data['doctor'] = doctor.toJson();
+      data['doctor'] = doctor!.toJson();
     }
     if (hospital != null) {
-      data['hospital'] = hospital.toJson();
+      data['hospital'] = hospital!.toJson();
     }
     data['fileName'] = fileName;
     return data;
@@ -175,14 +176,14 @@ class Metadata {
 }
 
 class HealthRecordCategory {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isDisplay;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isDisplay;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthRecordCategory(
       {this.id,
@@ -220,15 +221,15 @@ class HealthRecordCategory {
 }
 
 class HealthRecordType {
-  String id;
-  String name;
-  String description;
-  String logo;
-  bool isDisplay;
-  bool isAiTranscription;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  bool? isDisplay;
+  bool? isAiTranscription;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthRecordType(
       {this.id,
@@ -269,18 +270,18 @@ class HealthRecordType {
 }
 
 class Doctor {
-  String doctorId;
-  String userId;
-  String name;
-  String firstName;
-  String lastName;
-  String specialization;
-  String doctorReferenceId;
-  String addressLine1;
-  String addressLine2;
-  String profilePicThumbnailUrl;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
+  String? doctorId;
+  String? userId;
+  String? name;
+  String? firstName;
+  String? lastName;
+  String? specialization;
+  String? doctorReferenceId;
+  String? addressLine1;
+  String? addressLine2;
+  String? profilePicThumbnailUrl;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
 
   Doctor(
       {this.doctorId,
@@ -330,19 +331,19 @@ class Doctor {
 }
 
 class Hospital {
-  String id;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String city;
-  String state;
-  String pincode;
-  bool isReferenced;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  HealthOrganizationType healthOrganizationType;
-  CreatedBy createdBy;
+  String? id;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? city;
+  String? state;
+  String? pincode;
+  bool? isReferenced;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  HealthOrganizationType? healthOrganizationType;
+  CreatedBy? createdBy;
 
   Hospital(
       {this.id,
@@ -393,25 +394,25 @@ class Hospital {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (healthOrganizationType != null) {
-      data['healthOrganizationType'] = healthOrganizationType.toJson();
+      data['healthOrganizationType'] = healthOrganizationType!.toJson();
     }
     if (createdBy != null) {
-      data['createdBy'] = createdBy.toJson();
+      data['createdBy'] = createdBy!.toJson();
     }
     return data;
   }
 }
 
 class HealthOrganizationType {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthOrganizationType(
       {this.id,
@@ -452,33 +453,33 @@ class HealthOrganizationType {
 }
 
 class CreatedBy {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
 
   CreatedBy(
       {this.id,

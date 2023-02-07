@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -48,7 +49,7 @@ import '../telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/src/ui/audio/AudioRecorder.dart';
 
 class CommonDialogBox {
-  String categoryName, deviceName;
+  String? categoryName, deviceName;
   TextEditingController fileName = TextEditingController();
   TextEditingController doctor = TextEditingController();
   TextEditingController lab = TextEditingController();
@@ -72,31 +73,31 @@ class CommonDialogBox {
       errPoPulse = '',
       errPoOs = '';
 
-  String validationMsg;
-  List<bool> isSelected;
-  String selectedID;
+  late String validationMsg;
+  List<bool>? isSelected;
+  String? selectedID;
 
-  String categoryID;
+  String? categoryID;
   String categoryIDForNotes = '257b24f5-e0a7-419d-9e23-826b4c52497c';
 
   var doctorsData, hospitalData, labData;
-  String audioPathMain = '';
+  String? audioPathMain = '';
   bool containsAudioMain = false;
   CategoryResult categoryDataObj = CategoryResult();
   MediaResult mediaDataObj = MediaResult();
-  File imageFile;
+  File? imageFile;
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String?> imagePathMain = List();
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-  MediaMetaInfo mediaMetaInfo;
-  String metaInfoId = '';
-  bool modeOfSave;
-  MediaResult selectedMediaData;
+  MediaMetaInfo? mediaMetaInfo;
+  String? metaInfoId = '';
+  bool? modeOfSave;
+  MediaResult? selectedMediaData;
 
-  String metaId;
+  String? metaId;
 
   List<MediaResult> mediaDataAry = PreferenceUtil.getMediaType();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
@@ -104,44 +105,44 @@ class CommonDialogBox {
   FocusNode dateOfBirthFocus = FocusNode();
   FlutterToast toast = FlutterToast();
 
-  String fromClassNew = '';
-  HealthResult deviceHealthResult;
+  String? fromClassNew = '';
+  HealthResult? deviceHealthResult;
   bool forNotes = false;
 
   final ProvidersBloc _providersBloc = ProvidersBloc();
   final ProvidersBloc _providersBlocFor = ProvidersBloc();
-  Future<MyProvidersResponse> _medicalPreferenceList;
-  Future<MyProvidersResponse> _medicalhospitalPreferenceList;
+  Future<MyProvidersResponse?>? _medicalPreferenceList;
+  Future<MyProvidersResponse?>? _medicalhospitalPreferenceList;
 
-  List<Doctors> doctorsListFromProvider;
-  List<Doctors> copyOfdoctorsModel;
+  List<Doctors?>? doctorsListFromProvider;
+  List<Doctors?>? copyOfdoctorsModel;
 
-  List<Hospitals> hospitalListFromProvider;
-  List<Hospitals> copyOfhospitalModel;
+  List<Hospitals>? hospitalListFromProvider;
+  List<Hospitals>? copyOfhospitalModel;
 
-  Doctors doctorObj;
-  Hospitals hospitalObj;
+  Doctors? doctorObj;
+  Hospitals? hospitalObj;
 
   CommonWidgets commonWidgets = CommonWidgets();
   bool showDoctorList = true;
   bool showHospitalList = true;
 
-  String tempUnit = "F";
-  String weightMainUnit = "kg";
+  String? tempUnit = "F";
+  String? weightMainUnit = "kg";
   String heightUnit = "feet";
 
-  Future<Widget> getDialogBoxForPrescription(
+  Future<Widget?> getDialogBoxForPrescription(
       BuildContext context,
       TextEditingController hospitalNameClone,
       TextEditingController doctorsNameClone,
       TextEditingController dateOfVisitClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
       Function updateUI,
-      Function(bool, String) updateAudioUI,
-      List<String> imagePath,
-      HealthResult mediaMetaInfo,
+      Function(bool, String?) updateAudioUI,
+      List<String?> imagePath,
+      HealthResult? mediaMetaInfo,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     try {
@@ -156,8 +157,8 @@ class CommonDialogBox {
       if (mediaMetaInfo != null) {
         deviceHealthResult = mediaMetaInfo;
 
-        doctorsData = mediaMetaInfo.metadata.doctor ?? null;
-        hospitalData = mediaMetaInfo.metadata.hospital ?? null;
+        doctorsData = mediaMetaInfo.metadata!.doctor ?? null;
+        hospitalData = mediaMetaInfo.metadata!.hospital ?? null;
         /* labData = mediaMetaInfo.metaInfo.laboratory != null
             ? mediaMetaInfo.metaInfo.laboratory
             : null;*/
@@ -172,8 +173,8 @@ class CommonDialogBox {
     } catch (e) {}
 
     dateOfVisit.text = dateOfVisitClone.text;
-    if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metadata.memoText ?? '');
+    if (modeOfSave!) {
+      loadMemoText(mediaMetaInfo!.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -187,14 +188,14 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text, mediaMetaInfo);
+    setFileName(fileNameClone.text, mediaMetaInfo!);
     final dialog = StatefulBuilder(builder: (context, setState) {
       return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -358,7 +359,7 @@ class CommonDialogBox {
                 ),
               ),
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePath);
               })
@@ -405,18 +406,18 @@ class CommonDialogBox {
         builder: (context) => dialog);
   }
 
-  Future<Widget> getDialogBoxForLabReport(
+  Future<Widget?> getDialogBoxForLabReport(
       BuildContext context,
       TextEditingController labNameClone,
       TextEditingController doctorsNameClone,
       TextEditingController dateOfVisitClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
       Function updateUI,
-      Function(bool, String) updateAudioUI,
-      List<String> imagePath,
-      HealthResult mediaMetaInfo,
+      Function(bool, String?) updateAudioUI,
+      List<String?> imagePath,
+      HealthResult? mediaMetaInfo,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     try {
@@ -428,11 +429,11 @@ class CommonDialogBox {
         mediaMetaInfo = mediaMetaInfo ?? null;
         deviceHealthResult = mediaMetaInfo;
 
-        doctorsData = mediaMetaInfo.metadata.doctor;
+        doctorsData = mediaMetaInfo.metadata!.doctor;
         setDoctorValueFromResponse(mediaMetaInfo);
 
-        labData = mediaMetaInfo.metadata.laboratory ?? null;
-        hospitalData = mediaMetaInfo.metadata.hospital ?? null;
+        labData = mediaMetaInfo.metadata!.laboratory ?? null;
+        hospitalData = mediaMetaInfo.metadata!.hospital ?? null;
 
         if (mediaMetaInfo != null) {
           metaInfoId = mediaMetaInfo.id;
@@ -450,9 +451,9 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text, mediaMetaInfo);
-    if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metadata.memoText ?? '');
+    setFileName(fileNameClone.text, mediaMetaInfo!);
+    if (modeOfSave!) {
+      loadMemoText(mediaMetaInfo.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -463,7 +464,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -581,7 +582,7 @@ class CommonDialogBox {
                 ),
               ),
             ),
-            modeOfSave
+            modeOfSave!
                 ? fhbBasicWidget.getSaveButton(() {
                     onPostDataToServer(context, imagePath);
                   })
@@ -621,13 +622,13 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogBoxForBillsAndOthers(
+  Future<Widget?> getDialogBoxForBillsAndOthers(
       BuildContext context,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
@@ -640,10 +641,10 @@ class CommonDialogBox {
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     imagePathMain.addAll(imagePath);
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
 
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -655,7 +656,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -685,7 +686,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePath);
               })
@@ -732,18 +733,18 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogForIDDocs(
+  Future<Widget?> getDialogForIDDocs(
       BuildContext context,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
       TextEditingController dateOfVisitClone,
-      String idType) {
+      String? idType) {
     if (mediaMetaInfoClone != null) {
       if (mediaMetaInfoClone != null) {
         metaInfoId = mediaMetaInfoClone.id;
@@ -759,9 +760,9 @@ class CommonDialogBox {
     }
 
     setFileName(fileNameClone.text, mediaMetaInfoClone);
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -769,14 +770,14 @@ class CommonDialogBox {
     final mediaDataAry = <MediaResult>[];
 
     for (var mediaData in PreferenceUtil.getMediaType()) {
-      final categorySplitAry = mediaData.description.split('_');
+      final categorySplitAry = mediaData.description!.split('_');
       if (categorySplitAry[0] == CommonConstants.categoryDescriptionIDDocs) {
         mediaDataAry.add(mediaData);
       }
     }
 
     for (var mediaData in mediaDataAry) {
-      final mediaDataClone = mediaData.name.split(' ');
+      final mediaDataClone = mediaData.name!.split(' ');
       if (mediaDataClone.isNotEmpty) {
         if (idType != '' && idType != null) {
           if (idType == mediaData.id) {
@@ -796,7 +797,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -852,7 +853,7 @@ class CommonDialogBox {
               child: DropdownButton(
                 hint: Text('Select ID Type'),
                 value: selectedMediaData,
-                onChanged: (newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     selectedMediaData = newValue;
                     PreferenceUtil.saveMediaData(
@@ -863,7 +864,7 @@ class CommonDialogBox {
                   return DropdownMenuItem(
                     value: idType,
                     child: new Text(
-                      idType.name,
+                      idType.name!,
                       style: new TextStyle(color: Colors.black),
                     ),
                   );
@@ -873,7 +874,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            modeOfSave
+            modeOfSave!
                 ? fhbBasicWidget.getSaveButton(() {
                     onPostDataToServer(context, imagePath);
                   })
@@ -913,18 +914,18 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogBoxForGlucometer(
+  Future<Widget?> getDialogBoxForGlucometer(
       BuildContext context,
-      String deviceNameClone,
+      String? deviceNameClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
-      List<bool> isSelectedClone,
+      List<bool>? isSelectedClone,
       TextEditingController fileNameClone) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
@@ -941,9 +942,9 @@ class CommonDialogBox {
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     isSelected = isSelectedClone;
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -955,7 +956,7 @@ class CommonDialogBox {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
+              fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName!),
               IconButton(
                 icon: Icon(
                   Icons.close,
@@ -990,7 +991,7 @@ class CommonDialogBox {
                 },
                 errGluco,
                 variable.strGlucUnit,
-                range: isSelected[0] == true ? 'Fast' : 'PP',
+                range: isSelected![0] == true ? 'Fast' : 'PP',
                 device: Constants.STR_GLUCOMETER,
               ),
               SizedBox(
@@ -1035,17 +1036,17 @@ class CommonDialogBox {
                 ],
                 onPressed: (index) {
                   setState(() {
-                    for (var i = 0; i < isSelected.length; i++) {
-                      isSelected[i] = i == index;
+                    for (var i = 0; i < isSelected!.length; i++) {
+                      isSelected![i] = i == index;
                     }
                   });
                 },
-                isSelected: isSelected,
+                isSelected: isSelected!,
               ),
               SizedBox(
                 height: 15.0.h,
               ),
-              if (modeOfSave)
+              if (modeOfSave!)
                 fhbBasicWidget.getSaveButton(() {
                   onPostDataToServer(context, imagePath);
                 })
@@ -1091,20 +1092,20 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogBoxForTemperature(
+  Future<Widget?> getDialogBoxForTemperature(
       BuildContext context,
-      String deviceNameClone,
+      String? deviceNameClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone,
-      {String tempMainUnit,
-      Function(String) updateUnit}) {
+      {String? tempMainUnit,
+      Function(String?)? updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1124,9 +1125,9 @@ class CommonDialogBox {
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1136,7 +1137,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -1184,7 +1185,7 @@ class CommonDialogBox {
                     width: 50,
                     child: GestureDetector(
                       child: fhbBasicWidget.getTextForAlertDialog(
-                          context, tempMainUnit),
+                          context, tempMainUnit!),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -1195,7 +1196,7 @@ class CommonDialogBox {
                           (value) {
                             tempMainUnit = PreferenceUtil.getStringValue(
                                 Constants.STR_KEY_TEMP);
-                            updateUnit(tempMainUnit);
+                            updateUnit!(tempMainUnit);
                             tempUnit = tempMainUnit;
                             setState(() {});
                           },
@@ -1214,7 +1215,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePath);
               })
@@ -1262,28 +1263,28 @@ class CommonDialogBox {
   }
 
   void setFileName(String fileNameClone, HealthResult healthResult,
-      {String voiceRecord}) async {
+      {String? voiceRecord}) async {
     try {
-      categoryName = healthResult.metadata.healthRecordCategory.categoryName;
-      deviceName = healthResult.metadata.healthRecordType.name;
-      categoryID = healthResult.metadata.healthRecordCategory.id;
+      categoryName = healthResult.metadata!.healthRecordCategory!.categoryName;
+      deviceName = healthResult.metadata!.healthRecordType!.name;
+      categoryID = healthResult.metadata!.healthRecordCategory!.id;
     } catch (e) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     }
 
-    if (modeOfSave) {
+    if (modeOfSave!) {
       fileName.text = fileNameClone;
     } else {
       if (fileNameClone == '') {
         if (categoryName == variable.strDevices) {
           fileName = TextEditingController(
-              text: deviceName +
+              text: deviceName! +
                   '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
         } else {
           fileName = TextEditingController(
-              text: categoryName +
+              text: categoryName! +
                   '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
         }
       } else {
@@ -1297,20 +1298,20 @@ class CommonDialogBox {
     }
   }
 
-  Future<Widget> getDialogBoxForWeightingScale(
+  Future<Widget?> getDialogBoxForWeightingScale(
       BuildContext context,
-      String deviceNameClone,
+      String? deviceNameClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone,
-      {String weightUnit,
-      Function(String) updateUnit}) {
+      {String? weightUnit,
+      Function(String?)? updateUnit}) {
     final commonConstants = CommonConstants();
     commonConstants.getCountryMetrics();
     if (mediaMetaInfoClone != null) {
@@ -1332,9 +1333,9 @@ class CommonDialogBox {
       weightMainUnit = weightUnit;
     }
 
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1345,7 +1346,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -1392,7 +1393,7 @@ class CommonDialogBox {
                     width: 50,
                     child: GestureDetector(
                       child: fhbBasicWidget.getTextForAlertDialog(
-                          context, weightUnit),
+                          context, weightUnit!),
                       onTap: () {
                         Navigator.push(
                           context,
@@ -1403,7 +1404,7 @@ class CommonDialogBox {
                           (value) {
                             weightUnit = PreferenceUtil.getStringValue(
                                 Constants.STR_KEY_WEIGHT);
-                            updateUnit(weightUnit);
+                            updateUnit!(weightUnit);
                             weightMainUnit = weightUnit;
                             setState(() {});
                           },
@@ -1422,7 +1423,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePath);
               })
@@ -1469,14 +1470,14 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogBoxForPulseOxidometer(
+  Future<Widget?> getDialogBoxForPulseOxidometer(
       BuildContext context,
-      String deviceNameClone,
+      String? deviceNameClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
@@ -1498,9 +1499,9 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
 
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1511,7 +1512,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -1576,7 +1577,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            modeOfSave
+            modeOfSave!
                 ? fhbBasicWidget.getSaveButton(() {
                     onPostDataToServer(context, imagePath);
                   })
@@ -1616,14 +1617,14 @@ class CommonDialogBox {
         barrierDismissible: false);
   }
 
-  Future<Widget> getDialogBoxForBPMonitor(
+  Future<Widget?> getDialogBoxForBPMonitor(
       BuildContext context,
-      String deviceNameClone,
+      String? deviceNameClone,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String?> imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
@@ -1646,9 +1647,9 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
     diaStolicPressure.text = diastolicPressureClone.text;
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -1659,7 +1660,7 @@ class CommonDialogBox {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName!),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -1742,7 +1743,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            modeOfSave
+            modeOfSave!
                 ? fhbBasicWidget.getSaveButton(() {
                     onPostDataToServer(context, imagePath);
                   })
@@ -1818,10 +1819,10 @@ class CommonDialogBox {
       BuildContext context,
       String searchParam,
       TextEditingController doctorsName,
-      TextEditingController hospitalName,
-      TextEditingController labName,
+      TextEditingController? hospitalName,
+      TextEditingController? labName,
       Function onTextFinished,
-      String audioPath,
+      String? audioPath,
       bool containsAudio,
       {setState}) async {
     await Navigator.of(context)
@@ -1858,13 +1859,13 @@ class CommonDialogBox {
         } else if (results.containsKey(Constants.keyHospital)) {
           hospitalData = json.decode(results[Constants.keyHospital]);
 
-          hospitalName.text =
+          hospitalName!.text =
               hospitalData[parameters.strHealthOrganizationName];
           hospital.text = hospitalData[parameters.strHealthOrganizationName];
         } else if (results.containsKey(Constants.keyLab)) {
           labData = json.decode(results[Constants.keyLab]);
 
-          labName.text = labData[parameters.strHealthOrganizationName];
+          labName!.text = labData[parameters.strHealthOrganizationName];
           lab.text = labData[parameters.strHealthOrganizationName];
         }
         onTextFinished();
@@ -1872,8 +1873,8 @@ class CommonDialogBox {
     });
   }
 
-  Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
-      Function(bool, String) updateUI) {
+  Widget getMicIcon(BuildContext context, bool containsAudio, String? audioPath,
+      Function(bool, String?) updateUI) {
     return GestureDetector(
       onTap: () async {
         await Navigator.of(context)
@@ -1922,8 +1923,8 @@ class CommonDialogBox {
     );
   }
 
-  void onPostDataToServer(BuildContext context, List<String> imagePath,
-      {Function onRefresh}) async {
+  void onPostDataToServer(BuildContext context, List<String?>? imagePath,
+      {Function? onRefresh}) async {
     if (doValidationBeforePosting()) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
@@ -1931,7 +1932,7 @@ class CommonDialogBox {
       var postMediaData = Map<String, dynamic>();
 
       var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      if (modeOfSave) {
+      if (modeOfSave!) {
         postMainData[parameters.struserId] = userID;
       }
       final catgoryDataList = PreferenceUtil.getCategoryType();
@@ -1942,15 +1943,15 @@ class CommonDialogBox {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+      var mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
       final metaDataFromSharedPrefernce = mediaTypesResponse.result;
       if (categoryName != Constants.STR_DEVICES) {
         mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
-            categoryID, metaDataFromSharedPrefernce, categoryName);
+            categoryID, metaDataFromSharedPrefernce!, categoryName);
       } else {
         mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
-            deviceName, metaDataFromSharedPrefernce);
+            deviceName, metaDataFromSharedPrefernce!);
       }
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
@@ -1971,13 +1972,13 @@ class CommonDialogBox {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
-      if (modeOfSave) {
+      if (modeOfSave!) {
         var dateTime = DateTime.now();
         postMediaData[parameters.strStartDate] =
-            deviceHealthResult.metadata.startDateTime ??
+            deviceHealthResult!.metadata!.startDateTime ??
                 dateTime.toUtc().toString();
         postMediaData[parameters.strEndDate] =
-            deviceHealthResult.metadata.endDateTime ??
+            deviceHealthResult!.metadata!.endDateTime ??
                 dateTime.toUtc().toString();
       } else {
         final dateTime = DateTime.now();
@@ -2003,7 +2004,7 @@ class CommonDialogBox {
               CommonConstants.strTimeIntake;
           postDeviceValuesExtra[parameters.strvalue] = '';
           postDeviceValuesExtra[parameters.strunit] =
-              isSelected[0] == true ? variable.strBefore : variable.strAfter;
+              isSelected![0] == true ? variable.strBefore : variable.strAfter;
           postDeviceData.add(postDeviceValuesExtra);
         } else if (deviceName == Constants.STR_THERMOMETER) {
           postDeviceValues[parameters.strParameters] =
@@ -2066,14 +2067,14 @@ class CommonDialogBox {
       } else if (categoryName == Constants.STR_IDDOCS) {
         if (selectedMediaData != null) {
           postMediaData[parameters.stridType] =
-              selectedMediaData.name.split(' ')[0];
+              selectedMediaData!.name!.split(' ')[0];
         }
       } else if (categoryName == Constants.STR_LABREPORT) {
         postMediaData[Constants.keyDoctor] = doctorsData;
         postMediaData[Constants.keyLab] = labData;
       }
       if (imagePath != null && imagePath.length > 0 && imagePath.length == 1) {
-        final folderName = File(imagePath[0]);
+        final folderName = File(imagePath[0]!);
         final fileNoun = folderName.path.split('/').last;
         if (fileNoun.contains('.pdf')) {
           postMediaData[parameters.strfileName] = fileName.text + '.pdf';
@@ -2085,20 +2086,20 @@ class CommonDialogBox {
       }
 
       postMainData[parameters.strmetaInfo] = postMediaData;
-      if (modeOfSave) {
+      if (modeOfSave!) {
         postMainData[parameters.strIsActive] = false;
       }
 
       final params = json.encode(postMediaData);
       print(params);
 
-      if (modeOfSave) {
+      if (modeOfSave!) {
         audioPathMain = '';
         await _healthReportListForUserBlock
             .updateHealthRecords(
                 params.toString(), imagePath, audioPathMain, metaInfoId)
             .then((value) {
-          if (value.isSuccess && value != null) {
+          if (value!.isSuccess! && value != null) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
@@ -2108,7 +2109,7 @@ class CommonDialogBox {
               Navigator.of(context).pop();
             });
           } else {
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
             toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
@@ -2116,20 +2117,20 @@ class CommonDialogBox {
         await _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePath, audioPathMain)
             .then((value) {
-          if (value != null && value.isSuccess) {
+          if (value != null && value.isSuccess!) {
             _healthReportListForUserBlock
                 .getHelthReportLists()
                 .then((value) async {
               await PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
               if (categoryName == AppConstants.voiceRecords) {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 Navigator.of(context).pop();
 
-                final List<String> recordIds = [];
-                recordIds.add(value.result[0].id);
+                final List<String?> recordIds = [];
+                recordIds.add(value!.result![0].id);
                 CommonUtil.audioPage = true;
                 if (fromClassNew == 'audio') {
                   await Navigator.pushReplacement(
@@ -2177,9 +2178,9 @@ class CommonDialogBox {
               } else if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-                onRefresh(true);
+                onRefresh!(true);
               } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 Navigator.of(context).pop();
@@ -2189,7 +2190,7 @@ class CommonDialogBox {
               }
             });
           } else {
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
             toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
@@ -2205,7 +2206,7 @@ class CommonDialogBox {
   }
 
   void postAudioToServer(String mediaMetaID, BuildContext context,
-      {Function onRefresh}) {
+      {Function? onRefresh}) {
     final Map<String, dynamic> postImage = {};
 
     postImage[parameters.strmediaMetaId] = mediaMetaID;
@@ -2213,23 +2214,23 @@ class CommonDialogBox {
     var k = 0;
     for (var i = 0; i < imagePathMain.length; i++) {
       _healthReportListForUserBlock
-          .saveImage(imagePathMain[i].trim(), mediaMetaID, '')
+          .saveImage(imagePathMain[i]!.trim(), mediaMetaID, '')
           .then((postImageResponse) {
         if ((audioPathMain != '' && k == imagePathMain.length) ||
             (audioPathMain != '' && k == imagePathMain.length - 1)) {
           _healthReportListForUserBlock
-              .saveImage(audioPathMain, mediaMetaID, '')
+              .saveImage(audioPathMain!, mediaMetaID, '')
               .then((postImageResponse) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
                       Constants.KEY_COMPLETE_DATA, value)
                   .then((value) {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 if (categoryName == AppConstants.notes) {
                   Navigator.of(context).pop();
-                  onRefresh(true);
+                  onRefresh!(true);
                 } else {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop(true);
@@ -2241,12 +2242,12 @@ class CommonDialogBox {
           _healthReportListForUserBlock.getHelthReportLists().then((value) {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
                 .then((value) {
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                   .pop();
 
               if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
-                onRefresh(true);
+                onRefresh!(true);
               } else {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(true);
@@ -2257,12 +2258,12 @@ class CommonDialogBox {
           _healthReportListForUserBlock.getHelthReportLists().then((value) {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
                 .then((value) {
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+              Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                   .pop();
 
               if (categoryName == AppConstants.notes) {
                 Navigator.of(context).pop();
-                onRefresh(true);
+                onRefresh!(true);
               } else {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(true);
@@ -2277,19 +2278,19 @@ class CommonDialogBox {
   }
 
   void saveAudioFile(BuildContext context, String audioPath, String mediaMetaID,
-      {Function onRefresh}) {
+      {Function? onRefresh}) {
     if (audioPathMain != '') {
       _healthReportListForUserBlock
-          .saveImage(audioPathMain, mediaMetaID, '')
+          .saveImage(audioPathMain!, mediaMetaID, '')
           .then((postImageResponse) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
             if (categoryName == AppConstants.notes) {
               Navigator.of(context).pop();
-              onRefresh(true);
+              onRefresh!(true);
             } else {
               Navigator.of(context).pop();
               Navigator.of(context).pop(true);
@@ -2300,7 +2301,7 @@ class CommonDialogBox {
     } else {
       if (categoryName == AppConstants.notes) {
         Navigator.of(context).pop();
-        onRefresh(true);
+        onRefresh!(true);
       } else {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -2449,15 +2450,15 @@ class CommonDialogBox {
     return validationConditon;
   }
 
-  Future<Widget> getDialogForVoicerecords(
+  Future<Widget?> getDialogForVoicerecords(
       BuildContext context,
       bool containsAudio,
-      String audioPath,
-      Function(bool, String) deleteAudioFunction,
-      Function(bool, String) updateAudioUI,
+      String? audioPath,
+      Function(bool, String?) deleteAudioFunction,
+      Function(bool, String?) updateAudioUI,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
-      {String fromClass}) async {
+      {String? fromClass}) async {
     modeOfSave = modeOfSaveClone;
     containsAudioMain = containsAudio;
     audioPathMain = audioPath;
@@ -2491,7 +2492,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, null);
               })
@@ -2565,7 +2566,7 @@ class CommonDialogBox {
 
           doctorsData = preferedDoctorData;
 
-          doctor.text = preferedDoctorData.name;
+          doctor.text = preferedDoctorData.name!;
         }
       });
     } catch (e) {
@@ -2597,7 +2598,7 @@ class CommonDialogBox {
 
           hospitalData = preferredHospitalData;
 
-          hospital.text = preferredHospitalData.name;
+          hospital.text = preferredHospitalData.name!;
         }
       });
     } catch (e) {
@@ -2629,7 +2630,7 @@ class CommonDialogBox {
 
           labData = preferredlabData;
 
-          lab.text = preferredlabData.name;
+          lab.text = preferredlabData.name!;
         }
       });
     } catch (e) {
@@ -2675,13 +2676,13 @@ class CommonDialogBox {
     memoController.text = memoText;
   }
 
-  Future<Widget> getDialogBoxForNotes(
+  Future<Widget?> getDialogBoxForNotes(
       BuildContext context,
       bool containsAudio,
-      String audioPath,
+      String? audioPath,
       Function(bool, String) deleteAudioFunction,
-      List<String> imagePath,
-      Function(bool, String) updateAudioUI,
+      List<String>? imagePath,
+      Function(bool, String?) updateAudioUI,
       HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
@@ -2697,9 +2698,9 @@ class CommonDialogBox {
     forNotes = true;
 
     if (imagePath != null) imagePathMain.addAll(imagePath);
-    if (modeOfSave) {
+    if (modeOfSave!) {
       deviceHealthResult = mediaMetaInfoClone;
-      loadMemoText(mediaMetaInfoClone.metadata.memoText ?? '');
+      loadMemoText(mediaMetaInfoClone.metadata!.memoText ?? '');
     } else {
       memoController.text = '';
     }
@@ -2748,7 +2749,7 @@ class CommonDialogBox {
             SizedBox(
               height: 15.0.h,
             ),
-            if (modeOfSave)
+            if (modeOfSave!)
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePath, onRefresh: refresh);
               })
@@ -2834,7 +2835,7 @@ class CommonDialogBox {
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
       if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;
       }
     }
@@ -2848,7 +2849,7 @@ class CommonDialogBox {
   List<CategoryResult> getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.isEmpty) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = CommonUtil().fliterCategories(value.result);
+        filteredCategoryData = CommonUtil().fliterCategories(value!.result!);
         PreferenceUtil.saveCategoryList(
             Constants.KEY_CATEGORYLIST_VISIBLE, filteredCategoryData);
         //filteredCategoryData.add(categoryDataObjClone);
@@ -2859,14 +2860,14 @@ class CommonDialogBox {
     }
   }
 
-  Widget getAllCustomRoles(Doctors doctorObj, Function onAdd) {
-    Widget familyWidget;
+  Widget getAllCustomRoles(Doctors? doctorObj, Function onAdd) {
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: _providersBloc.providersListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
@@ -2887,11 +2888,11 @@ class CommonDialogBox {
 
             case Status.COMPLETED:
               if (snapshot.data != null &&
-                  snapshot.data.data != null &&
-                  snapshot.data.data.result != null &&
-                  snapshot.data.data.result.doctors != null &&
-                  snapshot.data.data.result.doctors.isNotEmpty) {
-                doctorsListFromProvider = snapshot.data.data.result.doctors;
+                  snapshot.data!.data != null &&
+                  snapshot.data!.data!.result != null &&
+                  snapshot.data!.data!.result!.doctors != null &&
+                  snapshot.data!.data!.result!.doctors!.isNotEmpty) {
+                doctorsListFromProvider = snapshot.data!.data!.result!.doctors;
                 filterDuplicateDoctor();
                 familyWidget = getDoctorDropDown(
                   doctorsListFromProvider,
@@ -2919,14 +2920,14 @@ class CommonDialogBox {
     );
   }
 
-  Widget getAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
-    Widget familyWidget;
+  Widget getAllHospitalRoles(Hospitals? hospitalObj, Function onAdd) {
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: _providersBloc.providershospitalListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
@@ -2947,11 +2948,11 @@ class CommonDialogBox {
 
             case Status.COMPLETED:
               if (snapshot.data != null &&
-                  snapshot.data.data != null &&
-                  snapshot.data.data.result != null &&
-                  snapshot.data.data.result.hospitals != null &&
-                  snapshot.data.data.result.hospitals.isNotEmpty) {
-                hospitalListFromProvider = snapshot.data.data.result.hospitals;
+                  snapshot.data!.data != null &&
+                  snapshot.data!.data!.result != null &&
+                  snapshot.data!.data!.result!.hospitals != null &&
+                  snapshot.data!.data!.result!.hospitals!.isNotEmpty) {
+                hospitalListFromProvider = snapshot.data!.data!.result!.hospitals;
                 filterDuplicateHospital();
                 familyWidget = getHospitalDropDown(
                   hospitalListFromProvider,
@@ -2980,11 +2981,11 @@ class CommonDialogBox {
   }
 
   getDoctorDropDown(
-      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
-      {Widget child}) {
+      List<Doctors?>? doctors, Doctors? doctorObjSample, Function? onAddClick,
+      {Widget? child}) {
     if (doctorObjSample != null) {
-      for (var doctorsObjS in doctors) {
-        if (doctorsObjS.id == doctorObjSample.id) {
+      for (var doctorsObjS in doctors!) {
+        if (doctorsObjS!.id == doctorObjSample.id) {
           doctorObj = doctorsObjS;
         }
       }
@@ -3006,13 +3007,13 @@ class CommonDialogBox {
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
-                              child: Text(element.user != null
-                                  ? new CommonUtil().getDoctorName(element.user)
+                              child: Text(element!.user != null
+                                  ? new CommonUtil().getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
                             fhbBasicWidget.getSaveButton(() {
-                              onAddClick();
+                              onAddClick!();
                             }, text: 'Add Doctor'),
                             SizedBox(height: 10),
                           ],
@@ -3021,8 +3022,8 @@ class CommonDialogBox {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.user != null
-                              ? new CommonUtil().getDoctorName(element.user)
+                          child: Text(element!.user != null
+                              ? new CommonUtil().getDoctorName(element.user!)!
                               : ''),
                         ),
                       ))
@@ -3032,18 +3033,18 @@ class CommonDialogBox {
                   children: [
                     SizedBox(height: 10),
                     fhbBasicWidget.getSaveButton(() {
-                      onAddClick();
+                      onAddClick!();
                     }, text: 'Add Doctor'),
                     SizedBox(height: 10)
                   ],
                 ),
-              ),
+              ) as List<PopupMenuEntry<Doctors>>,
         onSelected: (value) {
           doctorObj = value;
           setDoctorValue(value);
           setState(() {
             doctor.text = value.user != null
-                ? CommonUtil().getDoctorName(value.user)
+                ? CommonUtil().getDoctorName(value.user!)!
                 : '';
           });
         },
@@ -3053,11 +3054,11 @@ class CommonDialogBox {
   }
 
   getDoctorDropDownWhenNoList(
-      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
-      {Widget child}) {
+      List<Doctors?>? doctors, Doctors? doctorObjSample, Function onAddClick,
+      {Widget? child}) {
     if (doctorObjSample != null) {
-      for (final doctorsObjS in doctors) {
-        if (doctorsObjS.id == doctorObjSample.id) {
+      for (final doctorsObjS in doctors!) {
+        if (doctorsObjS!.id == doctorObjSample.id) {
           doctorObj = doctorsObjS;
         }
       }
@@ -3079,7 +3080,7 @@ class CommonDialogBox {
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 width: 0.5.sw,
                                 child: Text(
-                                  element.user.name,
+                                  element!.user!.name!,
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -3094,7 +3095,7 @@ class CommonDialogBox {
                           child: Container(
                             width: 0.5.sw,
                             child: Text(
-                              element.user.name,
+                              element!.user!.name!,
                             ),
                           ),
                         ))
@@ -3103,7 +3104,7 @@ class CommonDialogBox {
                 doctorObj = value;
                 setDoctorValue(value);
                 setState(() {
-                  doctor.text = doctorObj.user.name;
+                  doctor.text = doctorObj!.user!.name!;
                 });
               },
               child: child ?? getIconButton(),
@@ -3133,11 +3134,11 @@ class CommonDialogBox {
           });
   }
 
-  getHospitalsDropDownWhenNoList(List<Hospitals> hospitallist,
-      Hospitals hospitalObjSample, Function onAddClick,
-      {Widget child}) {
+  getHospitalsDropDownWhenNoList(List<Hospitals>? hospitallist,
+      Hospitals? hospitalObjSample, Function onAddClick,
+      {Widget? child}) {
     if (hospitalObjSample != null) {
-      for (var hospitalObjS in hospitallist) {
+      for (var hospitalObjS in hospitallist!) {
         if (hospitalObjS.id == hospitalObjSample.id) {
           hospitalObj = hospitalObjS;
         }
@@ -3161,7 +3162,7 @@ class CommonDialogBox {
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                     width: 0.5.sw,
                                     child: Text(
-                                      element.name,
+                                      element.name!,
                                     ),
                                   ),
                                   SizedBox(height: 10),
@@ -3176,7 +3177,7 @@ class CommonDialogBox {
                               child: Container(
                                 width: 0.5.sw,
                                 child: Text(
-                                  element.name,
+                                  element.name!,
                                 ),
                               ),
                             ))
@@ -3186,7 +3187,7 @@ class CommonDialogBox {
                 setHospitalValue(value);
                 setState(() {
                   hospital.text =
-                      hospitalObj.name != null ? hospitalObj.name : '';
+                      hospitalObj!.name != null ? hospitalObj!.name! : '';
                 });
               },
               child: child ?? getIconButton(),
@@ -3219,16 +3220,16 @@ class CommonDialogBox {
   void setDoctorValue(Doctors newValue) {
     final doctorNewObj = Doctor(
       doctorId: newValue.id,
-      name: newValue.user.name,
-      firstName: newValue.user.firstName,
-      lastName: newValue.user.lastName,
-      addressLine1: newValue.user.userAddressCollection3[0].addressLine1,
-      addressLine2: newValue.user.userAddressCollection3[0].addressLine2,
+      name: newValue.user!.name,
+      firstName: newValue.user!.firstName,
+      lastName: newValue.user!.lastName,
+      addressLine1: newValue.user!.userAddressCollection3![0].addressLine1,
+      addressLine2: newValue.user!.userAddressCollection3![0].addressLine2,
       isMciVerified: newValue.isMciVerified,
       isTelehealthEnabled: newValue.isTelehealthEnabled,
-      profilePicThumbnailUrl: newValue.user.profilePicThumbnailUrl,
+      profilePicThumbnailUrl: newValue.user!.profilePicThumbnailUrl,
       specialization: newValue.specialization,
-      userId: newValue.user.id,
+      userId: newValue.user!.id,
     );
 
     doctorsData = doctorNewObj;
@@ -3239,11 +3240,11 @@ class CommonDialogBox {
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
       addressLine1:
-          newValue.healthOrganizationAddressCollection[0]?.addressLine1,
+          newValue.healthOrganizationAddressCollection![0]?.addressLine1,
       addressLine2:
-          newValue.healthOrganizationAddressCollection[0]?.addressLine2,
-      cityName: newValue.healthOrganizationAddressCollection[0]?.city?.name,
-      stateName: newValue.healthOrganizationAddressCollection[0]?.state?.name,
+          newValue.healthOrganizationAddressCollection![0]?.addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection![0]?.city?.name,
+      stateName: newValue.healthOrganizationAddressCollection![0]?.state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
       healthOrganizationTypeId: newValue.healthOrganizationType?.id,
       phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
@@ -3255,7 +3256,7 @@ class CommonDialogBox {
     hospitalData = hospitalNewObj;
   }
 
-  void setValueToDoctorDropdown(doctorsData, Function onTextFinished) {
+  void setValueToDoctorDropdown(doctorsData, Function? onTextFinished) {
     final userAddressCollection3 = address.UserAddressCollection3(
         addressLine1: doctorsData[parameters.strAddressLine1],
         addressLine2: doctorsData[parameters.strAddressLine2]);
@@ -3275,14 +3276,14 @@ class CommonDialogBox {
         isMciVerified: doctorsData[parameters.strisMCIVerified],
         user: user);
 
-    doctorsListFromProvider.add(doctorObj);
+    doctorsListFromProvider!.add(doctorObj);
     filterDuplicateDoctor();
     getDoctorDropDown(doctorsListFromProvider, doctorObj, onTextFinished);
   }
 
   void setDoctorValueFromResponse(HealthResult mediaMetaInfo) {
-    if (mediaMetaInfo.metadata.doctor != null) {
-      final doctorFromRespon = mediaMetaInfo.metadata.doctor;
+    if (mediaMetaInfo.metadata!.doctor != null) {
+      final doctorFromRespon = mediaMetaInfo.metadata!.doctor!;
 
       final userAddressCollection3 = address.UserAddressCollection3(
           addressLine1: doctorFromRespon.addressLine1,
@@ -3314,28 +3315,28 @@ class CommonDialogBox {
   }
 
   void filterDuplicateDoctor() {
-    if (doctorsListFromProvider.isNotEmpty) {
+    if (doctorsListFromProvider!.isNotEmpty) {
       copyOfdoctorsModel = doctorsListFromProvider;
-      var ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
-      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      var ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));
       doctorsListFromProvider = copyOfdoctorsModel;
     }
   }
 
   void filterDuplicateHospital() {
-    if (hospitalListFromProvider.isNotEmpty) {
+    if (hospitalListFromProvider!.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
-      var ids = copyOfhospitalModel.map((e) => e?.id).toSet();
-      copyOfhospitalModel.retainWhere((x) => ids.remove(x?.id));
+      var ids = copyOfhospitalModel!.map((e) => e?.id).toSet();
+      copyOfhospitalModel!.retainWhere((x) => ids.remove(x?.id));
       hospitalListFromProvider = copyOfhospitalModel;
     }
   }
 
-  getHospitalDropDown(List<Hospitals> hospitallist, Hospitals hospitalObjSample,
+  getHospitalDropDown(List<Hospitals>? hospitallist, Hospitals? hospitalObjSample,
       Function onAddClick,
-      {Widget child}) {
+      {Widget? child}) {
     if (hospitalObjSample != null) {
-      for (var hospitalObjS in hospitallist) {
+      for (var hospitalObjS in hospitallist!) {
         if (hospitalObjS.id == hospitalObjSample.id) {
           hospitalObj = hospitalObjS;
         }
@@ -3360,7 +3361,7 @@ class CommonDialogBox {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(
-                                  element.name != null ? element.name : ''),
+                                  element.name != null ? element.name! : ''),
                             ),
                             SizedBox(height: 10),
                             fhbBasicWidget.getSaveButton(() {
@@ -3373,7 +3374,7 @@ class CommonDialogBox {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name : ''),
+                          child: Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()
@@ -3387,12 +3388,12 @@ class CommonDialogBox {
                     SizedBox(height: 10)
                   ],
                 ),
-              ),
+              ) as List<PopupMenuEntry<Hospitals>>,
         onSelected: (value) {
           hospitalObj = value;
           setHospitalValue(value);
           setState(() {
-            hospital.text = hospitalObj.name != null ? hospitalObj.name : '';
+            hospital.text = hospitalObj!.name != null ? hospitalObj!.name! : '';
             ;
           });
         },
@@ -3402,13 +3403,13 @@ class CommonDialogBox {
   }
 
   Widget getFutureAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
-    Widget familyWidget;
+    late Widget familyWidget;
 
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: _providersBloc.providershospitalListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
@@ -3429,11 +3430,11 @@ class CommonDialogBox {
 
             case Status.COMPLETED:
               if (snapshot.data != null &&
-                  snapshot.data.data != null &&
-                  snapshot.data.data.result != null &&
-                  snapshot.data.data.result.hospitals != null &&
-                  snapshot.data.data.result.hospitals.isNotEmpty) {
-                hospitalListFromProvider = snapshot.data.data.result.hospitals;
+                  snapshot.data!.data != null &&
+                  snapshot.data!.data!.result != null &&
+                  snapshot.data!.data!.result!.hospitals != null &&
+                  snapshot.data!.data!.result!.hospitals!.isNotEmpty) {
+                hospitalListFromProvider = snapshot.data!.data!.result!.hospitals;
                 //filterDuplicateHospital();
                 familyWidget = getHospitalDropDown(
                   hospitalListFromProvider,

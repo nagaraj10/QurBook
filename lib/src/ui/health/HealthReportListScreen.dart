@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
@@ -23,24 +24,24 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class HealthReportListScreen extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
 
   final Function callBackToRefresh;
 
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
-  final Function(String, List<HealthRecordCollection>, bool)
+  final Function(String?, bool?) mediaSelected;
+  final Function(String?, List<HealthRecordCollection>, bool)
       healthRecordSelected;
-  final bool allowSelect;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  final bool showDetails;
-  final bool allowAttach;
+  final bool? allowSelect;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  final bool? showDetails;
+  final bool? allowAttach;
 
-  List<String> mediaMeta;
+  List<String?>? mediaMeta;
   HealthReportListScreen(
       this.completeData,
       this.callBackToRefresh,
@@ -61,8 +62,8 @@ class HealthReportListScreen extends StatefulWidget {
 }
 
 class _HealthReportListScreenState extends State<HealthReportListScreen> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
-  BookmarkRecordBloc _bookmarkRecordBloc;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
+  late BookmarkRecordBloc _bookmarkRecordBloc;
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -96,7 +97,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return _getWidgetToDisplayHealthRecords(widget.completeData);
+    return _getWidgetToDisplayHealthRecords(widget.completeData!);
   }
 
   Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
@@ -140,11 +141,11 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   Widget getCardWidgetForPrescription(
       HealthResult mediaMetaInfoObj, int position) {
-    if (mediaMetaInfoObj.metadata.doctor != null)
+    if (mediaMetaInfoObj.metadata!.doctor != null)
       return InkWell(
           onLongPress: () {
-            if (widget.allowSelect) {
-              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            if (widget.allowSelect!) {
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
               setState(() {});
               widget.mediaSelected(
@@ -152,15 +153,15 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             }
           },
           onTap: () {
-            if (widget.allowSelect && widget.showDetails == false) {
-              if (widget.allowAttach) {
+            if (widget.allowSelect! && widget.showDetails == false) {
+              if (widget.allowAttach!) {
                 bool condition;
-                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
                   condition = false;
                 } else {
                   condition = true;
                 }
-                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
                 if (mediaMetaInfoObj != null &&
                     (mediaMetaInfoObj.healthRecordCollection?.length??0) > 0) {
                   mediMasterId =
@@ -176,12 +177,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 }
               } else {
                 bool condition;
-                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
                   condition = false;
                 } else {
                   condition = true;
                 }
-                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
                 widget.mediaSelected(mediaMetaInfoObj.id, condition);
               }
@@ -213,12 +214,12 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             child: Row(
               children: <Widget>[
                 ClipOval(
-                    child: mediaMetaInfoObj.metadata.doctor != null
+                    child: mediaMetaInfoObj.metadata!.doctor != null
                         ? getProfilePicWidget(
                             mediaMetaInfoObj
-                                .metadata.doctor.profilePicThumbnailUrl,
-                            mediaMetaInfoObj.metadata.doctor.firstName,
-                            mediaMetaInfoObj.metadata.doctor.lastName,
+                                .metadata!.doctor!.profilePicThumbnailUrl!,
+                            mediaMetaInfoObj.metadata!.doctor!.firstName!,
+                            mediaMetaInfoObj.metadata!.doctor!.lastName!,
                             Color(CommonUtil().getMyPrimaryColor()))
                         : Container(
                             width: 50,
@@ -233,29 +234,29 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     children: <Widget>[
                       Text(
                         toBeginningOfSentenceCase(mediaMetaInfoObj
-                                    .metadata.doctor !=
+                                    .metadata!.doctor !=
                                 null
-                            ? (mediaMetaInfoObj.metadata.doctor.name != null &&
-                                    mediaMetaInfoObj.metadata.doctor.name != '')
-                                ? mediaMetaInfoObj.metadata.doctor.name
-                                : mediaMetaInfoObj.metadata.doctor.firstName +
+                            ? (mediaMetaInfoObj.metadata!.doctor!.name != null &&
+                                    mediaMetaInfoObj.metadata!.doctor!.name != '')
+                                ? mediaMetaInfoObj.metadata!.doctor!.name
+                                : mediaMetaInfoObj.metadata!.doctor!.firstName! +
                                     ' ' +
-                                    mediaMetaInfoObj.metadata.doctor.lastName
-                            : mediaMetaInfoObj.metadata.doctor.firstName +
+                                    mediaMetaInfoObj.metadata!.doctor!.lastName!
+                            : mediaMetaInfoObj.metadata!.doctor!.firstName! +
                                 ' ' +
-                                mediaMetaInfoObj.metadata.doctor.lastName),
+                                mediaMetaInfoObj.metadata!.doctor!.lastName!)!,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Visibility(
-                          visible: mediaMetaInfoObj.metadata.hospital != null
+                          visible: mediaMetaInfoObj.metadata!.hospital != null
                               ? true
                               : false,
                           child: Text(
-                            mediaMetaInfoObj.metadata.hospital != null
+                            mediaMetaInfoObj.metadata!.hospital != null
                                 ? toBeginningOfSentenceCase(mediaMetaInfoObj
-                                    .metadata.hospital.healthOrganizationName)
+                                    .metadata!.hospital!.healthOrganizationName)!
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -282,7 +283,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
-                          icon: mediaMetaInfoObj.isBookmarked
+                          icon: mediaMetaInfoObj.isBookmarked!
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
@@ -298,14 +299,14 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metadata.hasVoiceNotes)
+                      (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata!.hasVoiceNotes!)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,
                             )
                           : Container(),
-                      widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                      widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                           ? Icon(
                               Icons.done,
                               color:
@@ -325,7 +326,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   getDoctorProfileImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future:
-          _healthReportListForUserBlock.getProfilePic(data.metaInfo.doctor.id),
+          _healthReportListForUserBlock.getProfilePic(data.metaInfo!.doctor!.id!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(
@@ -339,8 +340,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             width: 50.0,
             height: 50.0,
             child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[550],
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[550]!,
                 child:
                     Container(width: 50, height: 50, color: Colors.grey[200])),
           );
@@ -355,7 +356,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     return CachedNetworkImage(
       imageUrl: Constants.BASE_URL +
           "doctors/" +
-          data.metaInfo.doctor.id +
+          data.metaInfo!.doctor!.id! +
           "/getprofilepic",
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
@@ -369,8 +370,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           width: 50.0,
           height: 50.0,
           child: Shimmer.fromColors(
-              baseColor: Colors.grey[200],
-              highlightColor: Colors.grey[550],
+              baseColor: Colors.grey[200]!,
+              highlightColor: Colors.grey[550]!,
               child:
                   Container(width: 50, height: 50, color: Colors.grey[200]))),
       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -378,10 +379,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    if (data.mediaMasterIds.isNotEmpty) {
+    if (data.mediaMasterIds!.isNotEmpty) {
       return FutureBuilder(
         future: _healthReportListForUserBlock
-            .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+            .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (snapshot.hasData) {
             return Container(
@@ -399,8 +400,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               width: 40.0,
               height: 60.0,
               child: Shimmer.fromColors(
-                  baseColor: Colors.grey[200],
-                  highlightColor: Colors.grey[400],
+                  baseColor: Colors.grey[200]!,
+                  highlightColor: Colors.grey[400]!,
                   child: Container(
                       width: 50, height: 50, color: Colors.grey[200])),
             );
@@ -418,14 +419,14 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   getDocumentImageWidgetNew(MediaMetaInfo data) {
-    String usrId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String usrId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     return CachedNetworkImage(
       imageUrl: Constants.BASE_URL +
           query.qr_mediameta +
           usrId +
           query.qr_slash +
           query.qr_rawMedia +
-          new CommonUtil().getMetaMasterId(data),
+          new CommonUtil().getMetaMasterId(data)!,
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -438,8 +439,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           width: 50.0,
           height: 50.0,
           child: Shimmer.fromColors(
-              baseColor: Colors.grey[200],
-              highlightColor: Colors.grey[550],
+              baseColor: Colors.grey[200]!,
+              highlightColor: Colors.grey[550]!,
               child:
                   Container(width: 50, height: 50, color: Colors.grey[200]))),
       errorWidget: (context, url, error) => Icon(Icons.error),
@@ -447,9 +448,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   bookMarkRecord(MediaMetaInfo data) {
-    List<String> mediaIds = [];
+    List<String?> mediaIds = [];
     mediaIds.add(data.id);
-    bool _isRecordBookmarked = data.isBookmarked;
+    bool _isRecordBookmarked = data.isBookmarked!;
     if (_isRecordBookmarked) {
       _isRecordBookmarked = false;
     } else {
@@ -458,7 +459,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
-      if (bookmarkRecordResponse.success) {
+      if (bookmarkRecordResponse!.success!) {
         _refresh();
       }
     });

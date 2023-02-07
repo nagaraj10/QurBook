@@ -1,7 +1,8 @@
+
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_country_picker/flutter_country_picker.dart';
+// import 'package:flutter_country_picker/flutter_country_picker.dart';  FU2.5
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -26,8 +27,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  LoginBloc _loginBloc;
-  var _selected = Country.IN;
+  late LoginBloc _loginBloc;
+ // var _selected = Country.IN;
+ late var _selected ; //  FU2.5
   TextEditingController phoneTextController = new TextEditingController();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
@@ -95,26 +97,26 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   child: Row(
                     children: <Widget>[
-                      CountryPicker(
-                        nameTextStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
-                        dialingCodeTextStyle: TextStyle(
-                            color: Colors.black54, fontWeight: FontWeight.w500),
-                        dense: false,
-                        showFlag: true, //displays flag, true by default
-                        showDialingCode:
-                            true, //displays dialing code, false by default
-                        showName:
-                            false, //displays country name, true by default
-                        showCurrency: false, //eg. 'British pound'
-                        showCurrencyISO: false, //eg. 'GBP'
-                        onChanged: (Country country) {
-                          setState(() {
-                            _selected = country;
-                          });
-                        },
-                        selectedCountry: _selected,
-                      ),
+                      // CountryPicker(
+                      //   nameTextStyle: TextStyle(
+                      //       color: Colors.black, fontWeight: FontWeight.w500),
+                      //   dialingCodeTextStyle: TextStyle(
+                      //       color: Colors.black54, fontWeight: FontWeight.w500),
+                      //   dense: false,
+                      //   showFlag: true, //displays flag, true by default
+                      //   showDialingCode:
+                      //       true, //displays dialing code, false by default
+                      //   showName:
+                      //       false, //displays country name, true by default
+                      //   showCurrency: false, //eg. 'British pound'
+                      //   showCurrencyISO: false, //eg. 'GBP'
+                      //   onChanged: (Country country) {
+                      //     setState(() {
+                      //       _selected = country;
+                      //     });
+                      //   },
+                      //   selectedCountry: _selected,
+                      // ), FU2.5
                       Container(
                         width: 1.0.w,
                         height: 30.0.h,
@@ -170,7 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget submitButton(LoginBloc bloc, String countryCode,
+  Widget submitButton(LoginBloc bloc, String? countryCode,
       TextEditingController phoneTextController) {
     return StreamBuilder(
       stream: bloc.submitCheck,
@@ -194,9 +196,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 new FHBUtils().check().then((intenet) {
                   if (intenet != null && intenet) {
                     bloc
-                        .submit(phoneTextController.text, countryCode)
+                        .submit(phoneTextController.text, countryCode!)
                         .then((signInResponse) {
-                      if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
+                      if (signInResponse!.message == Constants.STR_MSG_SIGNUP ||
                           signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                           signInResponse.message == Constants.STR_VERIFY_OTP ||
                           signInResponse.message == Constants.STR_VERIFY_USER)
@@ -235,8 +237,8 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  void moveToNext(SignIn signIn, String phoneNumber, String countryCode) {
-    if (signIn.success) {
+  void moveToNext(SignIn signIn, String phoneNumber, String? countryCode) {
+    if (signIn.success!) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
@@ -250,7 +252,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     } else {
-      new FHBBasicWidget().getSnackBarWidget(context, signIn.message);
+      new FHBBasicWidget().getSnackBarWidget(context, signIn.message!);
     }
   }
 }

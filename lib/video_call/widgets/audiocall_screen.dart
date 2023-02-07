@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -5,8 +6,8 @@ import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenControll
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AudioCallScreen extends StatelessWidget {
-  final String avatar;
-  String patName;
+  final String? avatar;
+  String? patName;
   AudioCallScreen({this.avatar, this.patName});
   var regController = Get.put(QurhomeRegimenController());
 

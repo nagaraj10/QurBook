@@ -1,6 +1,7 @@
+
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
+// import 'package:auto_size_text/auto_size_text.dart'; FU2.5
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,7 +46,7 @@ import 'ChatDetail.dart';
 
 class ChatUserList extends StatefulWidget {
   const ChatUserList({
-    Key key,
+    Key? key,
     this.isHome = false,
     this.onBackPressed,
     this.careGiversList,
@@ -53,8 +54,8 @@ class ChatUserList extends StatefulWidget {
   }) : super(key: key);
 
   final bool isHome;
-  final Function onBackPressed;
-  final List<CareGiverInfo> careGiversList;
+  final Function? onBackPressed;
+  final List<CareGiverInfo>? careGiversList;
   final bool isDynamicLink;
 
   @override
@@ -62,12 +63,12 @@ class ChatUserList extends StatefulWidget {
 }
 
 class _ChatUserListState extends State<ChatUserList> {
-  var token = '';
-  var userId = '';
+  String? token = '';
+  String? userId = '';
 
   bool isLoading = false;
 
-  String patientId = '';
+  String? patientId = '';
   String patientName = '';
 
   ChatSocketService chocketService = new ChatSocketService();
@@ -77,7 +78,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
   FamilyMembers familyData = new FamilyMembers();
 
-  CaregiverPatientChatModel familyListModel;
+  CaregiverPatientChatModel? familyListModel;
 
   FlutterToast toast = FlutterToast();
 
@@ -100,7 +101,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void getFamilyListMap() async {
-    familyListModel = await controller.getFamilyMappingList();
+    familyListModel = await (controller.getFamilyMappingList() as FutureOr<CaregiverPatientChatModel?>);
     if (familyListModel != null) {
       if (familyListModel?.result != null) {
         if (familyListModel?.result?.isNotEmpty) {
@@ -119,11 +120,11 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void initSocket(bool isLoad) {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .off(message);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .off(notifyChatList);
 
@@ -143,7 +144,7 @@ class _ChatUserListState extends State<ChatUserList> {
 
     emitGetUserList(careGiverIds, isLoad);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .on(notifyChatList, (data) {
       if (data != null) {
@@ -153,7 +154,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   void emitGetUserList(var careGiverIds, bool isLoad) {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .emitWithAck(getChatsList, {
       'userId': userId,
@@ -164,7 +165,7 @@ class _ChatUserListState extends State<ChatUserList> {
       if (userList != null) {
         UserChatListModel userChatList = UserChatListModel.fromJson(userList);
         if (userChatList != null) {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatUserList(userChatList);
         }
       }
@@ -297,7 +298,7 @@ class _ChatUserListState extends State<ChatUserList> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemBuilder: (c, i) =>
-                        getCardWidgetForFamilyList(familyListModel?.result[i]),
+                        getCardWidgetForFamilyList(familyListModel?.result![i]),
                     itemCount: familyListModel?.result?.length ?? 0,
                   ),
                 ),
@@ -329,18 +330,18 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget getCardWidgetForFamilyList(Result data) {
-    var fulName = '';
-    var ccName = '';
+    String? fulName = '';
+    String? ccName = '';
     try {
       if (data?.firstName != null && data?.firstName != '') {
         fulName = data?.firstName;
       }
       if (data?.lastName != null && data?.lastName != '') {
-        fulName = fulName + ' ' + data?.lastName;
+        fulName = fulName! + ' ' + data?.lastName!;
       }
     } catch (e) {}
 
-    if (data?.isCarecoordinator) {
+    if (data?.isCarecoordinator!) {
       try {
         if (data?.carecoordinatorfirstName != null &&
             data?.carecoordinatorfirstName != '') {
@@ -348,7 +349,7 @@ class _ChatUserListState extends State<ChatUserList> {
         }
         if (data?.carecoordinatorLastName != null &&
             data?.carecoordinatorLastName != '') {
-          ccName = ccName + ' ' + data?.carecoordinatorLastName;
+          ccName = ccName! + ' ' + data?.carecoordinatorLastName!;
         }
       } catch (e) {}
     }
@@ -360,7 +361,7 @@ class _ChatUserListState extends State<ChatUserList> {
               String strLastDate = data?.chatListItem?.deliveredOn != null &&
                               data?.chatListItem?.deliveredOn != ''
                               ? CommonUtil().getFormattedDateTime(
-                              data?.chatListItem?.deliveredOn): '';
+                              data?.chatListItem?.deliveredOn!): '';
               Get.back();
               Navigator.push(
                               context,
@@ -409,7 +410,7 @@ class _ChatUserListState extends State<ChatUserList> {
                               child: Center(
                                 child: Text(
                                   data != null
-                                      ? data.firstName[0].toUpperCase()
+                                      ? data.firstName![0].toUpperCase()
                                       : '',
                                   style: TextStyle(
                                       fontSize: 22.0.sp,
@@ -419,14 +420,14 @@ class _ChatUserListState extends State<ChatUserList> {
                               ),
                             )
                           : Image.network(
-                              data?.profilePicThumbnailUrl,
+                              data?.profilePicThumbnailUrl!,
                               fit: BoxFit.cover,
                               width: 45.0.h,
                               height: 45.0.h,
                               headers: {
                                 HttpHeaders.authorizationHeader:
                                     PreferenceUtil.getStringValue(
-                                        KEY_AUTHTOKEN),
+                                        KEY_AUTHTOKEN)!,
                               },
                               errorBuilder: (context, exception, stackTrace) {
                                 return Container(
@@ -438,13 +439,13 @@ class _ChatUserListState extends State<ChatUserList> {
                                       child: Text(
                                     data?.firstName != null &&
                                             data?.lastName != null
-                                        ? data?.firstName[0].toUpperCase() +
-                                            (data?.lastName.length > 0
-                                                ? data?.lastName[0]
+                                        ? data?.firstName![0].toUpperCase() +
+                                            (data?.lastName!.length > 0
+                                                ? data?.lastName![0]
                                                     .toUpperCase()
                                                 : '')
                                         : data?.firstName != null
-                                            ? data?.firstName[0].toUpperCase()
+                                            ? data?.firstName![0].toUpperCase()
                                             : '',
                                     style: TextStyle(
                                       color: Colors.white,
@@ -471,7 +472,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 fulName != null
                                     ? CommonUtil().titleCase(
                                     fulName.toLowerCase()) +
-                                    (data?.isCarecoordinator
+                                    (data?.isCarecoordinator!
                                         ? CARE_COORDINATOR_STRING
                                         : '')
                                     : '',
@@ -502,7 +503,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         SizedBox(
                           height: 2.0.h,
                         ),
-                        data?.isCarecoordinator
+                        data?.isCarecoordinator!
                             ? Text(
                                 ccName != null
                                     ? 'Name: ' +
@@ -539,7 +540,7 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget checkIfDoctorIdExist() {
-    return new FutureBuilder<String>(
+    return new FutureBuilder<String?>(
       future: getPatientDetails(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -560,7 +561,7 @@ class _ChatUserListState extends State<ChatUserList> {
       children: <Widget>[
         // List
         Container(
-            child: (Provider.of<ChatSocketViewModel>(Get.context)
+            child: (Provider.of<ChatSocketViewModel>(Get.context!)
                             ?.userChatList
                             ?.length ??
                         0) >
@@ -569,10 +570,10 @@ class _ChatUserListState extends State<ChatUserList> {
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) => buildItem(
                         context,
-                        Provider.of<ChatSocketViewModel>(Get.context)
-                            ?.userChatList[index]),
-                    itemCount: Provider.of<ChatSocketViewModel>(Get.context)
-                        ?.userChatList
+                        Provider.of<ChatSocketViewModel>(Get.context!)
+                            ?.userChatList![index]),
+                    itemCount: Provider.of<ChatSocketViewModel>(Get.context!)
+                        ?.userChatList!
                         .length,
                   )
                 : Container(
@@ -599,8 +600,8 @@ class _ChatUserListState extends State<ChatUserList> {
   }
 
   Widget buildItem(BuildContext context, PayloadChat userChatList) {
-    var ccName = '';
-    if (userChatList?.isFamilyUserCareCoordinator) {
+    String? ccName = '';
+    if (userChatList?.isFamilyUserCareCoordinator!) {
       try {
         if (userChatList?.firstName != null &&
             userChatList?.firstName != '') {
@@ -608,7 +609,7 @@ class _ChatUserListState extends State<ChatUserList> {
         }
         if (userChatList?.lastName != null &&
             userChatList?.lastName != '') {
-          ccName = ccName + ' ' + userChatList?.lastName;
+          ccName = ccName! + ' ' + userChatList?.lastName!;
         }
       } catch (e) {}
     }
@@ -628,7 +629,7 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientPicture: '',
                         isFromVideoCall: false,
                         isNormalChatUserList: 'true',
-                        carecoordinatorId: userChatList?.isFamilyUserCareCoordinator?userChatList?.peerId:'',
+                        carecoordinatorId: userChatList?.isFamilyUserCareCoordinator!?userChatList?.peerId:'',
                         familyUserId: userChatList?.familyUserId,
                         isFromCareCoordinator: userChatList?.isFamilyUserCareCoordinator,
                         isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
@@ -639,7 +640,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                 userChatList?.deliveredTimeStamp != ''
                             ? getFormattedDateTime(
                                 DateTime.fromMillisecondsSinceEpoch(int.parse(
-                                        userChatList?.deliveredTimeStamp))
+                                        userChatList?.deliveredTimeStamp!))
                                     .toString())
                             : ''))).then((value) {
               if (value) {
@@ -669,7 +670,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                         padding: EdgeInsets.all(15.0),
                                       ),
                                   imageUrl:
-                                      userChatList?.profilePicThumbnailURL,
+                                      userChatList?.profilePicThumbnailURL!,
                                   width: 50.0,
                                   height: 50.0,
                                   fit: BoxFit.cover,
@@ -681,7 +682,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                         child: Center(
                                             child: Text(
                                           userChatList?.firstName != null
-                                              ? userChatList?.firstName[0]
+                                              ? userChatList?.firstName![0]
                                                   .toString()
                                                   .toUpperCase()
                                               : '',
@@ -718,7 +719,7 @@ class _ChatUserListState extends State<ChatUserList> {
                               Expanded(
                                 child :Text(
                                   CommonUtil().capitalizeFirstofEach(
-                                      getDocName(userChatList))+(userChatList?.isFamilyUserCareCoordinator
+                                      getDocName(userChatList))+(userChatList?.isFamilyUserCareCoordinator!
                                       ?CARE_COORDINATOR_STRING:''),
                                   // overflow: TextOverflow.ellipsis,
                                   // softWrap: true,
@@ -731,7 +732,7 @@ class _ChatUserListState extends State<ChatUserList> {
                             ],
                           ),
                         ),
-                        userChatList?.isFamilyUserCareCoordinator
+                        userChatList?.isFamilyUserCareCoordinator!
                             ? Text(
                                 ccName != null
                                     ? 'Name: ' +
@@ -754,7 +755,7 @@ class _ChatUserListState extends State<ChatUserList> {
                             padding: const EdgeInsets.only(bottom: 4),
                             child: userChatList?.messages != null
                                 ? userChatList?.messages?.content != null
-                                    ? userChatList?.messages?.content
+                                    ? userChatList?.messages?.content!
                                             .contains(STR_HTTPS)
                                         ? Row(
                                             children: [
@@ -802,7 +803,7 @@ class _ChatUserListState extends State<ChatUserList> {
                                     getFormattedDateTime(
                                         (DateTime.fromMillisecondsSinceEpoch(
                                                 int.parse(userChatList
-                                                    ?.deliveredTimeStamp))
+                                                    ?.deliveredTimeStamp!))
                                             .toString()))
                                 : '',
                             style: TextStyle(
@@ -886,12 +887,12 @@ class _ChatUserListState extends State<ChatUserList> {
     return formattedDate;
   }
 
-  Future<String> getPatientDetails() async {
+  Future<String?> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(KEY_USERID);
 
     MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
     patientName = myProfile.result != null
-        ? myProfile.result.firstName + myProfile.result.firstName
+        ? myProfile.result!.firstName! + myProfile.result!.firstName!
         : '';
     return patientId;
   }
@@ -910,7 +911,7 @@ class _ChatUserListState extends State<ChatUserList> {
         );
       }
     } else {
-      widget.onBackPressed();
+      widget.onBackPressed!();
     }
     return Future.value(false);
   }
@@ -918,10 +919,10 @@ class _ChatUserListState extends State<ChatUserList> {
   String getDocName(PayloadChat userChatList) {
     String name = '';
     if (userChatList != null) {
-      if(userChatList?.isFamilyUserCareCoordinator){
+      if(userChatList?.isFamilyUserCareCoordinator!){
         if (userChatList?.familyUserFirstName != null && userChatList?.familyUserFirstName != '') {
           if (userChatList?.familyUserLastName != null && userChatList?.familyUserLastName != '') {
-            name = userChatList?.familyUserFirstName + ' ' + userChatList?.familyUserLastName ?? '';
+            name = userChatList?.familyUserFirstName! + ' ' + userChatList?.familyUserLastName! ?? '';
           } else {
             name = (userChatList?.familyUserFirstName ?? '').toString();
           }
@@ -932,7 +933,7 @@ class _ChatUserListState extends State<ChatUserList> {
         if (userChatList != null) {
           if (userChatList?.firstName != null && userChatList?.firstName != '') {
             if (userChatList?.lastName != null && userChatList?.lastName != '') {
-              name = userChatList.firstName + ' ' + userChatList.lastName ?? '';
+              name = userChatList.firstName! + ' ' + userChatList.lastName! ?? '';
             } else {
               name = (userChatList?.firstName ?? '').toString();
             }
@@ -957,7 +958,7 @@ class _ChatUserListState extends State<ChatUserList> {
     if (users != null) {
       if (users?.firstName != null && users?.firstName != '') {
         if (users?.lastName != null && users?.lastName != '') {
-          name = users?.firstName + ' ' + users?.lastName ?? '';
+          name = users?.firstName! + ' ' + users?.lastName! ?? '';
         } else {
           name = (users?.firstName ?? '').toString();
         }

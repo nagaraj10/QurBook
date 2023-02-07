@@ -1,3 +1,4 @@
+
 // ignore: file_names
 import 'dart:async';
 import 'dart:convert' as convert;
@@ -153,8 +154,8 @@ class ApiBaseHelper {
   }
 
   Future<bool> callBackForPlanExpiry(
-    String userId,
-    String planId,
+    String? userId,
+    String? planId,
   ) async {
     try {
       final head = await headerRequest.getRequestHeadersAuthContent();
@@ -189,8 +190,8 @@ class ApiBaseHelper {
   }
 
   Future<bool> callBackFromChat(
-    String careGiverId,
-    String patId,
+    String? careGiverId,
+    String? patId,
   ) async {
     try {
       final head = await headerRequest.getRequestHeadersAuthContent();
@@ -243,7 +244,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateTeleHealthProvidersNew(String url, String jsonString,
-      {bool isPAR}) async {
+      {bool? isPAR}) async {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
@@ -363,7 +364,7 @@ class ApiBaseHelper {
   /// it contains one parameter which describ ethe URL  type
   /// Created by Parvathi M on 7th Jan 2020
 
-  Future<dynamic> getHealthRecordList(String url, {bool condition}) async {
+  Future<dynamic> getHealthRecordList(String url, {required bool condition}) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
@@ -564,13 +565,13 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  dynamic _returnResponse(http.Response response, {bool forDoctorSearch}) {
+  dynamic _returnResponse(http.Response? response, {bool? forDoctorSearch}) {
     print(response?.statusCode);
     print(response?.request?.url);
     switch (response?.statusCode) {
       case 200:
         var responseJson;
-        if (response.headers[variable.strcontenttype] ==
+        if (response!.headers[variable.strcontenttype] ==
                 variable.file_img_jpg ||
             response.headers[variable.strcontenttype] ==
                 variable.file_img_png ||
@@ -587,19 +588,19 @@ class ApiBaseHelper {
         return responseJson;
 
       case 201:
-        final responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response!.body.toString());
         exitFromApp();
 
         return responseJson;
 
       case 400:
-        final responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response!.body.toString());
 
         exitFromApp();
 
         return responseJson;
       case 401:
-        final responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response!.body.toString());
         if (responseJson[parameters.strMessage] != null &&
             responseJson[parameters.strMessage] != '') {
           SnackbarToLogout(msg: responseJson[parameters.strMessage]);
@@ -615,7 +616,7 @@ class ApiBaseHelper {
         break;
 
       case 403:
-        final responseJson = convert.jsonDecode(response.body.toString());
+        final responseJson = convert.jsonDecode(response!.body.toString());
         if (responseJson[parameters.strMessage] ==
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
@@ -624,18 +625,18 @@ class ApiBaseHelper {
         }
         break;
       case 404:
-        if (forDoctorSearch) {
-          final responseJson = convert.jsonDecode(response.body.toString());
+        if (forDoctorSearch!) {
+          final responseJson = convert.jsonDecode(response!.body.toString());
           return responseJson;
         } else {
           exitFromApp();
         }
         break;
       case 500:
-        print(response.body.toString());
+        print(response!.body.toString());
 
         try {
-          if (forDoctorSearch) {
+          if (forDoctorSearch!) {
             final responseJson = convert.jsonDecode(response.body.toString());
             return responseJson;
           } else {
@@ -649,7 +650,7 @@ class ApiBaseHelper {
         break;
       default:
         throw FetchDataException(
-            variable.strErrComm + '${response.statusCode}');
+            variable.strErrComm + '${response!.statusCode}');
     }
   }
 
@@ -814,7 +815,7 @@ class ApiBaseHelper {
   }
 
   Future<http.Response> getNotificationList(String path,
-      {Map<String, String> headers, int timeout = 20}) async {
+      {Map<String, String>? headers, int timeout = 20}) async {
     var responseJson;
     try {
       var response =
@@ -899,7 +900,7 @@ class ApiBaseHelper {
       var responseJson;
       try {
         var response = await ApiServices.get(
-            _baseUrl + url + metaMasterIdList[i].id,
+            _baseUrl + url + metaMasterIdList[i].id!,
             headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       } on SocketException {
@@ -920,7 +921,7 @@ class ApiBaseHelper {
       var responseJson;
       try {
         var response = await ApiServices.get(
-            _baseUrl + url + metaMasterIdList[i].id,
+            _baseUrl + url + metaMasterIdList[i].id!,
             headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       } on SocketException {
@@ -965,8 +966,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageAndGetDeviceInfo(String url, List<String> imagePaths,
-      String payload, String jsonBody, String userId) async {
+  Future<dynamic> saveImageAndGetDeviceInfo(String url, List<String?> imagePaths,
+      String payload, String jsonBody, String? userId) async {
     var response;
     try {
       final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -985,7 +986,7 @@ class ApiBaseHelper {
         });
 
         for (final image in imagePaths) {
-          final fileName = File(image);
+          final fileName = File(image!);
           final fileNoun = fileName.path.split('/').last;
           formData.files.addAll([
             MapEntry(
@@ -1109,10 +1110,10 @@ class ApiBaseHelper {
   }
 
   void SnackbarToLogout(
-      {String msg = 'something went wrong, please try again later.'}) {
+      {String? msg = 'something went wrong, please try again later.'}) {
     PreferenceUtil.clearAllData().then((value) {
       gett.Get.offAll(PatientSignInScreen());
-      gett.Get.snackbar(parameters.strMessage, msg);
+      gett.Get.snackbar(parameters.strMessage, msg!);
     });
   }
 
@@ -1187,7 +1188,7 @@ class ApiBaseHelper {
 
   Future<dynamic> postDeviceId(
       String url, String jsonBody, bool isActive) async {
-    final Map<String, String> requestHeadersAuthAccept = {};
+    final Map<String, String?> requestHeadersAuthAccept = {};
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
 
@@ -1214,7 +1215,7 @@ class ApiBaseHelper {
 
   Future<dynamic> escalateNonAdherance(String url, dynamic jsonString) async {
     var responseJson;
-    final Map<String, String> requestHeadersAuthContent = {};
+    final Map<String, String?> requestHeadersAuthContent = {};
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
@@ -1237,7 +1238,7 @@ class ApiBaseHelper {
 
   Future<dynamic> associateRecords(String url, String jsonString) async {
     var responseJson;
-    final Map<String, String> requestHeadersAuthContent = {};
+    final Map<String, String?> requestHeadersAuthContent = {};
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
@@ -1258,7 +1259,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getMetaIdURL(List<String> recordIds, String patientId) async {
+  Future<dynamic> getMetaIdURL(List<String?> recordIds, String? patientId) async {
     final inputBody = {};
     inputBody[strUserId] = patientId;
     inputBody[HEALTH_RECORDMETAIDS] = recordIds;
@@ -1290,7 +1291,7 @@ class ApiBaseHelper {
   }
 
   getValueBasedOnSearch(String name, String apiname) async {
-    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
 
     final response = await ApiServices.get(
       '$_baseUrl$apiname/search/$name',
@@ -1365,7 +1366,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> createMediaData(String url, String payload,
-      List<String> imagePaths, String audioPath, String id,
+      List<String?>? imagePaths, String? audioPath, String? id,
       {bool isVital = false}) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -1386,7 +1387,7 @@ class ApiBaseHelper {
       });
 
       for (final image in imagePaths) {
-        final fileName = File(image);
+        final fileName = File(image!);
         final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
@@ -1437,7 +1438,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> createMediaDataClaim(String url, String payload,
-      List<String> imagePaths, String audioPath, String id) async {
+      List<String?>? imagePaths, String? audioPath, String? id) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
@@ -1457,7 +1458,7 @@ class ApiBaseHelper {
       });
 
       for (final image in imagePaths) {
-        final fileName = File(image);
+        final fileName = File(image!);
         final fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
@@ -1540,7 +1541,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> updateHealthRecords(String url, String payload,
-      List<String> imagePaths, String audioPath, String metaId) async {
+      List<String?>? imagePaths, String? audioPath, String? metaId) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
@@ -1560,7 +1561,7 @@ class ApiBaseHelper {
       });
 
       for (final image in imagePaths) {
-        var fileName = File(image);
+        var fileName = File(image!);
         var fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry('fileName',
@@ -1667,7 +1668,7 @@ class ApiBaseHelper {
       'profilePicture': await MultipartFile.fromFile(image.path,
           filename: filename, contentType: MediaType('image', '$fileType')),
     });
-    var response;
+    late var response;
     try {
       response = await dio.put(_baseUrl + url, data: formData);
 
@@ -1684,10 +1685,10 @@ class ApiBaseHelper {
     }
   }
 
-  Future<bool> uploadAttachment(String url, String ticketId, File image) async {
+  Future<bool?> uploadAttachment(String url, String ticketId, File image) async {
     var authToken =
-        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
+    String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var filename = image.path.split('/').last;
     final fileType = filename.split('.')[1];
 
@@ -1790,7 +1791,7 @@ class ApiBaseHelper {
 
   Future<dynamic> associateUpdateRecords(String url, String jsonString) async {
     var responseJson;
-    final requestHeadersAuthContent = Map<String, String>();
+    final requestHeadersAuthContent = Map<String, String?>();
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
@@ -1932,7 +1933,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveRegimentMedia(
-      String url, String imagePaths, String userId, String providerId) async {
+      String url, String imagePaths, String? userId, String? providerId) async {
     var response;
     try {
       var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -2021,7 +2022,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getLoginDetails() async {
-    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
 
     final response = await ApiServices.get(
       _baseUrl + 'user/loggedin-details/',
@@ -2092,13 +2093,13 @@ class ApiBaseHelper {
   }
 
   Future<FetchingCartItemsModel> fetchCartItems(
-      {String cartUserId,
-      String notificationListId,
+      {String? cartUserId,
+      String? notificationListId,
       bool isPaymentLinkViaPush = false,
-      String cartId = ""}) async {
+      String? cartId = ""}) async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       FetchingCartItemsModel responseJson;
@@ -2134,14 +2135,14 @@ class ApiBaseHelper {
 
   Future<FetchingCartItemsModel> clearCartItems() async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       FetchingCartItemsModel responseJson;
 
       if (userID != null && userID != "" && ((createBy ?? '').isNotEmpty)) {
-        Map<String, String> jsobBodyMap = new Map();
+        Map<String, String?> jsobBodyMap = new Map();
         jsobBodyMap['userId'] = userID;
         jsobBodyMap['createdBy'] = createBy;
         try {
@@ -2161,8 +2162,8 @@ class ApiBaseHelper {
 
   Future<CartGenricResponse> removeCartItems(dynamic body) async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       CartGenricResponse responseJson;
@@ -2188,8 +2189,8 @@ class ApiBaseHelper {
 
   Future<MakePaymentResponse> makePayment(dynamic body) async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       MakePaymentResponse responseJson;
@@ -2213,8 +2214,8 @@ class ApiBaseHelper {
 
   Future<dynamic> updateCartIcon(dynamic body) async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       var responseJson;
@@ -2262,8 +2263,8 @@ class ApiBaseHelper {
 
   Future<UpdatePaymentResponse> updatePaymentStatus(dynamic body) async {
     try {
-      String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      String createBy =
+      String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String? createBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       DateTime dateTime = DateTime.now();
       UpdatePaymentResponse responseJson;
@@ -2604,7 +2605,7 @@ class ApiBaseHelper {
           await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
     ]);
 
-    var response;
+    late var response;
 
     try {
       response = await dio.post(_baseUrl + url, data: formData);
@@ -2729,7 +2730,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> uploadAttachmentForTicket(
-      String url, String ticketId, List<ImagesModel> imagePaths) async {
+      String url, String? ticketId, List<ImagesModel> imagePaths) async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
@@ -2744,16 +2745,16 @@ class ApiBaseHelper {
       for (ImagesModel image in imagePaths) {
         FormData newFormData;
 
-        var fileName = File(image.file);
+        var fileName = File(image.file!);
         var fileNoun, filePathForUrl;
         if (!image.isFromFile) {
-          filePathForUrl = fileName.path + image.fileType;
+          filePathForUrl = fileName.path + image.fileType!;
         }
         fileNoun =
             image.isFromFile ? fileName.path.split('/').last : filePathForUrl;
 
         String mimeType =
-            mime(image.isFromFile ? fileName.path : image.fileType);
+            mime(image.isFromFile ? fileName.path : image.fileType)!;
         String mimee = mimeType.split('/')[0];
         String type = mimeType.split('/')[1];
         print("-----------------------");
@@ -2881,7 +2882,7 @@ class _Exception implements InnerException {
 
   @override
   String toString() {
-    final String message = this.message;
+    final String? message = this.message;
     if (message == null) return 'Exception';
     return '$message';
   }

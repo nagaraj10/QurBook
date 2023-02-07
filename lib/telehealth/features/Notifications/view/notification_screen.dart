@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -74,8 +75,8 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreen extends State<NotificationScreen> {
   FlutterToast toast = FlutterToast();
-  CancelAppointmentViewModel cancelAppointmentViewModel;
-  FetchNotificationViewModel notificationData;
+  late CancelAppointmentViewModel cancelAppointmentViewModel;
+  FetchNotificationViewModel? notificationData;
 
   @override
   void initState() {
@@ -111,7 +112,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     return WillPopScope(
         onWillPop: () => onBackPressed(context),
         child: Scaffold(
-          appBar: notificationAppBar(context),
+          appBar: notificationAppBar(context) as PreferredSizeWidget?,
           body: notificationBodyView(),
         ));
   }
@@ -137,7 +138,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                notificationData.fetchNotifications();
+                notificationData!.fetchNotifications();
               },
             ),
             CupertinoDialogAction(
@@ -151,7 +152,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop();
-                notificationData.deleteTheSelectedNotifiations();
+                notificationData!.deleteTheSelectedNotifiations();
               },
             ),
           ],
@@ -327,7 +328,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     if (notificationData == null) {
       notificationData = Provider.of<FetchNotificationViewModel>(context);
     }
-    return listView(notificationData.pagingController.itemList);
+    return listView(notificationData!.pagingController.itemList);
     // switch (notificationData.loadingStatus) {
     //   case LoadingStatus.searching:
     //     return CommonCircularIndicator();
@@ -346,7 +347,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     // }
   }
 
-  Widget listView(List<NotificationResult> notification) {
+  Widget listView(List<NotificationResult>? notification) {
     // List<NotificationResult> pendingNotification = new List();
     // List<NotificationResult> readNotification = new List();
     // List<NotificationResult> mainNotificationList = new List();
@@ -370,7 +371,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     //     ..addAll(readNotification);
     // }
     return PagedListView(
-      pagingController: notificationData.pagingController,
+      pagingController: notificationData!.pagingController,
       builderDelegate: PagedChildBuilderDelegate<NotificationResult>(
         itemBuilder: (context, item, index) =>
             notificationView(notification: item),
@@ -399,10 +400,10 @@ class _NotificationScreen extends State<NotificationScreen> {
     );
   }
 
-  Widget notificationView({NotificationResult notification}) {
+  Widget notificationView({NotificationResult? notification}) {
     if (notification?.messageDetails != null) {
-      Payload payload = notification?.messageDetails?.payload;
-      MessageContent message = notification.messageDetails?.messageContent;
+      Payload? payload = notification?.messageDetails?.payload;
+      MessageContent message = notification!.messageDetails?.messageContent!;
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : InkWell(
@@ -414,23 +415,23 @@ class _NotificationScreen extends State<NotificationScreen> {
                 // }
               },
               splashColor: Color(CommonUtil.secondaryGrey),
-              onTap: notificationData.deleteMode
+              onTap: notificationData!.deleteMode
                   ? () {
                       if (notification.deleteSelected) {
                         notification.deleteSelected = false;
 
-                        notificationData.removeTheIdToDelete(notification.id);
+                        notificationData!.removeTheIdToDelete(notification.id);
                       } else {
                         notification.deleteSelected = true;
-                        notificationData.addTheidToDelete(notification.id);
+                        notificationData!.addTheidToDelete(notification.id);
                       }
                     }
                   : (notification?.isUnread ?? false)
                       ? () {
-                          var tempRedirectTo = payload?.redirectTo != null &&
+                          var tempRedirectTo = (payload?.redirectTo != null &&
                                   payload?.redirectTo != ''
-                              ? payload?.redirectTo.split('|')[0]
-                              : '';
+                              ? payload?.redirectTo!.split('|')[0]
+                              : '')!;
                           if (tempRedirectTo == 'myRecords') {
                             if ((payload?.healthRecordMetaIds ?? '')
                                 .isNotEmpty) {
@@ -438,12 +439,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   notification, tempRedirectTo,
                                   bundles: {
                                     'catName':
-                                        payload?.redirectTo.split('|')[1],
+                                        payload?.redirectTo!.split('|')[1],
                                     'healthRecordMetaIds':
                                         payload?.healthRecordMetaIds
                                   });
                             } else {
-                              final split = payload?.redirectTo?.split('|');
+                              final List<String> split = payload?.redirectTo?.split('|');
                               var redirectData = {
                                 for (int i = 0; i < split.length; i++)
                                   i: split[i]
@@ -563,7 +564,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                         text: message.messageTitle,
                                         colors:
                                             (notification?.isUnread == null ||
-                                                    !notification?.isUnread)
+                                                    !notification?.isUnread!)
                                                 ? Colors.black
                                                 : Color(CommonUtil()
                                                     .getMyPrimaryColor()),
@@ -602,7 +603,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     children: <Widget>[
                                       TextWidget(
                                         text: constants.notificationDate(
-                                            notification?.createdOn),
+                                            notification?.createdOn!),
                                         colors: Colors.black,
                                         overflow: TextOverflow.visible,
                                         fontWeight: FontWeight.w500,
@@ -614,10 +615,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       ),
                                       TextWidget(
                                         text: constants.notificationTime(
-                                            notification?.createdOn),
+                                            notification?.createdOn!),
                                         colors:
                                             (notification?.isUnread == null ||
-                                                    !notification?.isUnread)
+                                                    !notification?.isUnread!)
                                                 ? Colors.black
                                                 : Color(CommonUtil()
                                                     .getMyPrimaryColor()),
@@ -944,7 +945,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             TranslationConstants.yourBookingSuccess.t(), Colors.green);
         FetchNotificationService().updateNsActionStatus(body).then((data) {
           if (data != null && data['isSuccess']) {
-            if (notification.isUnread != null && notification.isUnread) {
+            if (notification.isUnread != null && notification.isUnread!) {
               NotificationOntapRequest req = NotificationOntapRequest();
               req.logIds = [notification.id];
               final body = req.toJson();
@@ -979,8 +980,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     List<String> bookingIds = new List();
     List<String> dates = new List();
     for (int i = 0; i < appointments.length; i++) {
-      bookingIds.add(appointments[i].bookingId);
-      dates.add(appointments[i].plannedStartDateTime);
+      bookingIds.add(appointments[i].bookingId!);
+      dates.add(appointments[i].plannedStartDateTime!);
     }
     CancelAppointmentModel cancelAppointment = await cancelAppointmentViewModel
         .fetchCancelAppointment(bookingIds, dates);
@@ -988,7 +989,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     return cancelAppointment;
   }
 
-  void notificationOnTapActions(NotificationResult result, String templateName,
+  void notificationOnTapActions(NotificationResult? result, String? templateName,
       {dynamic bundles}) {
     switch (templateName) {
       case "AppointmentReminder180":
@@ -1001,7 +1002,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then(
+        ))!.then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
@@ -1028,7 +1029,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then(
+        ))!.then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
@@ -1039,7 +1040,7 @@ class _NotificationScreen extends State<NotificationScreen> {
               bookingId: result?.messageDetails?.payload?.bookingId,
               date: result?.messageDetails?.payload?.appointmentDate,
               templateName: result?.messageDetails?.content?.templateName),
-        )).then(
+        ))!.then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
@@ -1089,25 +1090,25 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
         break;
       case "sheela":
-        Get.to(SuperMaya()).then(
+        Get.to(SuperMaya())!.then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "profile_page":
         Get.toNamed(router.rt_UserAccounts,
-                arguments: UserAccountsArguments(selectedIndex: 0))
+                arguments: UserAccountsArguments(selectedIndex: 0))!
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "googlefit":
-        Get.toNamed(router.rt_AppSettings).then(
+        Get.toNamed(router.rt_AppSettings)!.then(
             (value) => PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "th_provider":
         Get.toNamed(router.rt_TelehealthProvider,
-                arguments: HomeScreenArguments(selectedIndex: 1))
+                arguments: HomeScreenArguments(selectedIndex: 1))!
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
@@ -1115,15 +1116,15 @@ class _NotificationScreen extends State<NotificationScreen> {
       case "my_record":
         getProfileData();
         Get.toNamed(router.rt_HomeScreen,
-                arguments: HomeScreenArguments(selectedIndex: 1))
+                arguments: HomeScreenArguments(selectedIndex: 1))!
             .then((value) =>
                 PageNavigator.goToPermanent(context, router.rt_Landing));
         readUnreadAction(result);
         break;
       case "myRecords":
         var categoryName = bundles['catName'];
-        String hrmId = bundles['healthRecordMetaIds'];
-        List<String> _listOfhrmId = List<String>();
+        String? hrmId = bundles['healthRecordMetaIds'];
+        List<String?> _listOfhrmId = List<String?>();
         _listOfhrmId.add(hrmId);
         CommonUtil()
             .navigateToMyRecordsCategory(categoryName, _listOfhrmId, false);
@@ -1131,7 +1132,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         break;
       case "sheela|pushMessage":
         if (result?.messageDetails?.payload?.redirectTo?.contains("sheela")) {
-          var redirectArray =
+          List<String> redirectArray =
               result?.messageDetails?.payload?.redirectTo?.split("|");
           if (redirectArray.length > 1 && redirectArray[1] == "pushMessage") {
             var rawBody, rawTitle;
@@ -1151,7 +1152,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   arguments: SheelaArgument(
                     textSpeechSheela: rawBody,
                   ),
-                ).then((value) =>
+                )!.then((value) =>
                     PageNavigator.goToPermanent(context, router.rt_Landing));
               } else {
                 Get.toNamed(
@@ -1160,7 +1161,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     isSheelaAskForLang: true,
                     rawMessage: rawBody,
                   ),
-                ).then((value) =>
+                )!.then((value) =>
                     PageNavigator.goToPermanent(context, router.rt_Landing));
               }
 
@@ -1174,7 +1175,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                   audioMessage:
                       result?.messageDetails?.payload?.sheelaAudioMsgUrl,
                 ),
-              ).then((value) {
+              )!.then((value) {
                 readUnreadAction(result, isRead: true);
               });
             }
@@ -1202,7 +1203,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         Get.toNamed(
           router.rt_HomeScreen,
           arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-        ).then(
+        )!.then(
           (value) => PageNavigator.goToPermanent(
             context,
             router.rt_Landing,
@@ -1220,7 +1221,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         )?.regimentMode = RegimentMode.Schedule;
         Provider.of<RegimentViewModel>(context, listen: false)?.regimentFilter =
             RegimentFilter.Missed;
-        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments()).then(
+        Get.toNamed(router.rt_Regimen, arguments: RegimentArguments())!.then(
           (value) => PageNavigator.goToPermanent(
             context,
             router.rt_Landing,
@@ -1247,7 +1248,7 @@ class _NotificationScreen extends State<NotificationScreen> {
     }
   }
 
-  void readUnreadAction(NotificationResult result, {bool isRead = false}) {
+  void readUnreadAction(NotificationResult? result, {bool isRead = false}) {
     NotificationOntapRequest req = NotificationOntapRequest();
     req.logIds = [result?.id];
     final body = req.toJson();
@@ -1270,8 +1271,8 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget createNSActionButton(
-      String templateName, NotificationResult notification) {
-    Payload payload = notification.messageDetails?.payload;
+      String? templateName, NotificationResult notification) {
+    Payload? payload = notification.messageDetails?.payload;
     var message = notification.messageDetails?.messageContent;
     switch (templateName) {
       case constants.strCancelByDoctor:
@@ -1281,7 +1282,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           child: Row(
             children: [
               OutlineButton(
-                onPressed: !notification?.isActionDone
+                onPressed: !notification?.isActionDone!
                     ? () {
                         //Reschedule
                         var body = {};
@@ -1297,22 +1298,22 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     isReshedule: true,
                                     doc: Past(
                                         doctor: doctorObj.Doctor(
-                                            id: notification.messageDetails
-                                                .payload.doctorId),
+                                            id: notification.messageDetails!
+                                                .payload!.doctorId),
                                         doctorSessionId: notification
-                                            .messageDetails
-                                            .payload
+                                            .messageDetails!
+                                            .payload!
                                             .doctorSessionId,
                                         healthOrganization: City(
-                                            id: notification.messageDetails
-                                                .payload.healthOrganizationId),
+                                            id: notification.messageDetails!
+                                                .payload!.healthOrganizationId),
                                         bookingId: notification
-                                            .messageDetails.payload.bookingId),
+                                            .messageDetails!.payload!.bookingId),
                                     body: body,
                                   )),
                         ).then((value) {
                           if (notification?.isUnread != null &&
-                              notification?.isUnread) {
+                              notification?.isUnread!) {
                             NotificationOntapRequest req =
                                 NotificationOntapRequest();
                             req.logIds = [notification?.id];
@@ -1336,12 +1337,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                         });
                       }
                     : null,
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.reschedule.t(),
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1353,7 +1354,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 width: 15.0.w,
               ),
               OutlineButton(
-                onPressed: !notification?.isActionDone
+                onPressed: !notification?.isActionDone!
                     ? () {
                         var body = {};
                         body['templateName'] = payload?.templateName;
@@ -1363,22 +1364,22 @@ class _NotificationScreen extends State<NotificationScreen> {
                             [
                               Past(
                                   bookingId: notification
-                                      .messageDetails.payload.bookingId,
+                                      .messageDetails!.payload!.bookingId,
                                   plannedStartDateTime: notification
-                                      .messageDetails
-                                      .payload
+                                      .messageDetails!
+                                      .payload!
                                       .plannedStartDateTime)
                             ],
                             body,
                             notification);
                       }
                     : null,
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.cancel.t(),
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1402,7 +1403,7 @@ class _NotificationScreen extends State<NotificationScreen> {
           child: Row(
             children: [
               OutlineButton(
-                onPressed: !notification?.isActionDone
+                onPressed: !notification?.isActionDone!
                     ? () {
                         final currentUserId =
                             PreferenceUtil.getStringValue(KEY_USERID);
@@ -1416,7 +1417,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                   ?.messageDetails?.payload?.templateName,
                               showRenew: true,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(
@@ -1449,12 +1450,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                           } */
                       }
                     : null,
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.renew.t(),
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1466,7 +1467,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                 width: 15.0.w,
               ),
               OutlineButton(
-                onPressed: !notification?.isActionDone
+                onPressed: !notification?.isActionDone!
                     ? () {
                         CommonUtil().CallbackAPI(
                           notification?.messageDetails?.payload?.patientName,
@@ -1498,12 +1499,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                         });
                       }
                     : null,
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.callback.t(),
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1684,7 +1685,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                         .then((value) => {});
                   });
                   checkIfPaymentLinkIsExpired(
-                          notification?.messageDetails?.payload?.appointmentId)
+                          notification?.messageDetails?.payload?.appointmentId!)
                       .then((value) {
                     if (value) {
                       Get.to(BookingConfirmation(
@@ -1697,12 +1698,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                     }
                   });
                 },
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1748,14 +1749,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                     cartId: notification?.messageDetails?.payload?.bookingId,
                     patientName:
                         notification?.messageDetails?.payload?.patientName,
-                  )).then((value) {});
+                  ))!.then((value) {});
                 },
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'Pay Now',
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1782,7 +1783,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ChatDetail(
-                            peerId: payload.userId,
+                            peerId: payload!.userId,
                             peerAvatar: payload.senderProfilePic,
                             peerName: payload.patientName,
                             patientId: '',
@@ -1800,12 +1801,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                             lastDate: payload.deliveredDateTime)),
                   ).then((value) {});
                 },
-                borderSide: notification?.isUnread
+                borderSide: notification?.isUnread!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.chatwithcc,
-                  colors: notification?.isUnread
+                  colors: notification?.isUnread!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1822,7 +1823,7 @@ class _NotificationScreen extends State<NotificationScreen> {
 
                   var body = {};
                   body['templateName'] = payload?.templateName;
-                  final split = payload?.redirectTo?.split('|');
+                  final List<String> split = payload?.redirectTo?.split('|');
                   var redirectData = {
                     for (int i = 0; i < split.length; i++) i: split[i]
                   };
@@ -1839,12 +1840,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                     }
                   }
                 },
-                borderSide: notification?.isUnread
+                borderSide: notification?.isUnread!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: TranslationConstants.viewrecord,
-                  colors: notification?.isUnread
+                  colors: notification?.isUnread!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1866,14 +1867,14 @@ class _NotificationScreen extends State<NotificationScreen> {
                   await readUnreadAction(notification, isRead: true);
 
                   new CommonUtil().getDetailsOfAddedFamilyMember(
-                      context, notification?.messageDetails?.payload?.userId);
+                      context, notification?.messageDetails?.payload?.userId!);
                 },
-                borderSide: !notification?.isActionDone
+                borderSide: !notification?.isActionDone!
                     ? BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))
                     : BorderSide(color: Colors.grey),
                 child: TextWidget(
                   text: 'View Details',
-                  colors: !notification?.isActionDone
+                  colors: !notification?.isActionDone!
                       ? Color(CommonUtil().getMyPrimaryColor())
                       : Colors.grey,
                   overflow: TextOverflow.visible,
@@ -1904,7 +1905,7 @@ class _NotificationScreen extends State<NotificationScreen> {
             .getAppointmentDetailsUsingId(appointmentId);
     if (appointmentNotificationPayment != null) {
       if (appointmentNotificationPayment?.result?.appointment?.status != null) {
-        if (appointmentNotificationPayment?.result?.appointment?.status.code ==
+        if (appointmentNotificationPayment?.result?.appointment?.status!.code ==
             "BOOKIP") {
           paymentStatus = true;
         } else {

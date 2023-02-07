@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -11,7 +12,7 @@ import '../../constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 class GoogleMapServices {
-  final String sessionToken;
+  final String? sessionToken;
 
   GoogleMapServices({this.sessionToken});
 
@@ -19,7 +20,7 @@ class GoogleMapServices {
     final webserviceCall = WebserviceCall();
 
     final response = await ApiServices.get(
-        webserviceCall.getQueryForSuggestion(sessionToken, query));
+        webserviceCall.getQueryForSuggestion(sessionToken!, query));
     var responseData = json.decode(response.body);
     var predictions = responseData[parameters.strpredictions];
 
@@ -46,7 +47,7 @@ class GoogleMapServices {
     return placeDetail;
   }
 
-  static Future<String> getAddrFromLocation(double lat, double lng) async {
+  static Future<String?> getAddrFromLocation(double lat, double lng) async {
     final webserviceCall = WebserviceCall();
 
     final response =

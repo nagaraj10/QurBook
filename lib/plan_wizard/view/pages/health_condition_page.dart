@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -17,7 +18,7 @@ class HealthConditionPage extends StatefulWidget {
 }
 
 class _HealthConditionPageState extends State<HealthConditionPage> {
-  Future<Map<String, List<MenuItem>>> healthConditions;
+  Future<Map<String?, List<MenuItem>>>? healthConditions;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
           //   },
           // ),
           Expanded(
-            child: FutureBuilder<Map<String, List<MenuItem>>>(
+            child: FutureBuilder<Map<String?, List<MenuItem>>>(
                 future: healthConditions,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -103,7 +104,7 @@ class _HealthConditionPageState extends State<HealthConditionPage> {
         ],
       );
 
-  List<Widget> getPlansGrid(Map<String, List<MenuItem>> healthConditionsList) {
+  List<Widget> getPlansGrid(Map<String?, List<MenuItem>> healthConditionsList) {
     var planCategories = <Widget>[];
     healthConditionsList?.forEach(
       (categoryName, menuItemList) {

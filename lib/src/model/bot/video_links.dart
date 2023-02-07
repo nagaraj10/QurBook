@@ -1,7 +1,8 @@
+
 class VideoLinks {
-  String title;
-  String thumbnail;
-  String url;
+  String? title;
+  String? thumbnail;
+  String? url;
 
   VideoLinks({this.title, this.thumbnail, this.url});
 

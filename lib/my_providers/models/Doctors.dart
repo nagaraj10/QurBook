@@ -1,24 +1,25 @@
+
 import 'DoctorLanguageCollection.dart';
 import 'User.dart';
 import 'UserProfessionalCollection.dart';
 
 class Doctors {
-  String id;
-  String specialization;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool isActive;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  User user;
-  List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
-  List<DoctorLanguageCollection> doctorLanguageCollection;
-  bool isDefault;
-  String providerPatientMappingId;
-  List<String> sharedCategories;
-  bool isResident = false;
-  bool isPatientAssociatedRequest = false;
+  String? id;
+  String? specialization;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  User? user;
+  List<DoctorProfessionalDetailCollection>? doctorProfessionalDetailCollection;
+  List<DoctorLanguageCollection>? doctorLanguageCollection;
+  bool? isDefault;
+  String? providerPatientMappingId;
+  List<String?>? sharedCategories;
+  bool? isResident = false;
+  bool? isPatientAssociatedRequest = false;
   Doctors(
       {this.id,
       this.specialization,
@@ -51,14 +52,14 @@ class Doctors {
       doctorProfessionalDetailCollection =
           List<DoctorProfessionalDetailCollection>();
       json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection
+        doctorProfessionalDetailCollection!
             .add(DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
     if (json['doctorLanguageCollection'] != null) {
       doctorLanguageCollection = List<DoctorLanguageCollection>();
       json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection.add(DoctorLanguageCollection.fromJson(v));
+        doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
       });
     }
     isDefault = json['isDefault'];
@@ -81,15 +82,15 @@ class Doctors {
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
     if (user != null) {
-      data['user'] = user.toJson();
+      data['user'] = user!.toJson();
     }
     if (doctorProfessionalDetailCollection != null) {
       data['doctorProfessionalDetailCollection'] =
-          doctorProfessionalDetailCollection.map((v) => v.toJson()).toList();
+          doctorProfessionalDetailCollection!.map((v) => v.toJson()).toList();
     }
     if (doctorLanguageCollection != null) {
       data['doctorLanguageCollection'] =
-          doctorLanguageCollection.map((v) => v.toJson()).toList();
+          doctorLanguageCollection!.map((v) => v.toJson()).toList();
     }
     data['isDefault'] = isDefault;
     data['providerPatientMappingId'] = providerPatientMappingId;

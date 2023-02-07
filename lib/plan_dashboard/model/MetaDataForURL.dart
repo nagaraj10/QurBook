@@ -1,11 +1,12 @@
+
 class MetaDataForURL {
-  String icon;
-  String details;
-  String description;
-  String descriptionURL;
-  String diseases;
-  String diseaseIcon;
-  String doctorName;
+  String? icon;
+  String? details;
+  String? description;
+  String? descriptionURL;
+  String? diseases;
+  String? diseaseIcon;
+  String? doctorName;
 
   MetaDataForURL(
       {this.icon, this.details, this.description, this.descriptionURL,this.diseases,this.diseaseIcon,this.doctorName});

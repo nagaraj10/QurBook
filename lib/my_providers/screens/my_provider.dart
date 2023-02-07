@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -19,12 +20,12 @@ class MyProvider extends StatefulWidget {
 
 class MyProviderState extends State<MyProvider>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   int _activeTabIndex = 0;
 
-  ProvidersBloc _providersBloc;
-  MyProvidersResponse myProvidersResponseList;
-  MyProvidersResponse myProvidersResponseHospitalClinicList;
+  late ProvidersBloc _providersBloc;
+  MyProvidersResponse? myProvidersResponseList;
+  MyProvidersResponse? myProvidersResponseHospitalClinicList;
   bool isFirstTymForDoctors = true;
   bool isFirstTymForHospital = true;
 
@@ -34,7 +35,7 @@ class MyProviderState extends State<MyProvider>
     super.initState();
 
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(_setActiveTabIndex);
+    _tabController!.addListener(_setActiveTabIndex);
 
     _providersBloc = ProvidersBloc();
     _providersBloc.getMedicalPreferencesForDoctors().then((value) {
@@ -63,8 +64,8 @@ class MyProviderState extends State<MyProvider>
   }
 
   void _setActiveTabIndex() {
-    FocusManager.instance.primaryFocus.unfocus();
-    _activeTabIndex = _tabController.index;
+    FocusManager.instance.primaryFocus!.unfocus();
+    _activeTabIndex = _tabController!.index;
   }
 
   void refreshPage() {

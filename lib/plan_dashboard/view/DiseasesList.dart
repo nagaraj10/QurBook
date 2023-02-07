@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
@@ -21,7 +22,7 @@ class DiseasesList extends StatefulWidget {
 }
 
 class _DiseasesList extends State<DiseasesList> {
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
   PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
   List<PlanListResult> myPLanListResult = [];
@@ -33,13 +34,13 @@ class _DiseasesList extends State<DiseasesList> {
   Map<String, List<String>> selectTitle = {};
   Map<String, List<String>> selectedTitle = {};
 
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
 
   List<PlanListResult> providerList = [];
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
 
     planListModel = myPlanViewModel.getPlanList('');
@@ -47,7 +48,7 @@ class _DiseasesList extends State<DiseasesList> {
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -88,7 +89,7 @@ class _DiseasesList extends State<DiseasesList> {
     setState(() {});
   }
 
-  Widget diseasesList(List<PlanListResult> planList) {
+  Widget diseasesList(List<PlanListResult>? planList) {
     categoryListUniq = [];
     selectTitle = {};
     selectedTitle = {};
@@ -274,8 +275,8 @@ class _DiseasesList extends State<DiseasesList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
-            return diseasesList(snapshot.data.result);
+              snapshot?.data?.result!.isNotEmpty) {
+            return diseasesList(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -293,7 +294,7 @@ class _DiseasesList extends State<DiseasesList> {
   }
 
   Widget diseasesListItem(BuildContext context, int i,
-      List<PlanListResult> planList, List<PlanListResult> planListFull) {
+      List<PlanListResult> planList, List<PlanListResult>? planListFull) {
     return InkWell(
       onTap: () {
         try {
@@ -388,7 +389,7 @@ class _DiseasesList extends State<DiseasesList> {
                       Text(
                         planList[i].metadata?.diseases != null
                             ? toBeginningOfSentenceCase(
-                                planList[i]?.metadata?.diseases)
+                                planList[i]?.metadata?.diseases)!
                             : '',
                         style: TextStyle(
                           fontSize: 18.0.sp,

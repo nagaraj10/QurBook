@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class DeleteRecord {
-  List<String> mediaMetaIds;
-  List<String> mediaMasterIds;
+  List<String>? mediaMetaIds;
+  List<String>? mediaMasterIds;
 
   DeleteRecord({this.mediaMetaIds,this.mediaMasterIds});
 

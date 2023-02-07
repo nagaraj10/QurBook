@@ -1,3 +1,4 @@
+
 import 'package:get/get.dart';
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/model/GetUnreadCountFamily.dart';
@@ -28,7 +29,7 @@ class ChatUserListController extends GetxController {
 
   Future<dynamic> getFamilyMappingList() async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       CaregiverPatientChatModel familyList =
           await chocketService.getFamilyListMap(userId);
@@ -40,7 +41,7 @@ class ChatUserListController extends GetxController {
   Future<GetUnreadCountFamily> getUnreadCountFamily() async {
     try {
 
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       GetUnreadCountFamily getUserIdModel =
       await chocketService.getUnreadCountFamily(userId);

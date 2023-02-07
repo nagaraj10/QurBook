@@ -1,21 +1,22 @@
-class Data {
-  String userid;
-  String username;
-  String fullname;
-  String age;
-  String history;
-  String profileimage;
-  String address;
-  String countryCode;
-  String phoneNumber;
-  String status;
-  String conditions;
 
-  bool isBookmarked;
-  String isAvailable;
-  String consultationFee;
-  String specialist;
-  String city;
+class Data {
+  String? userid;
+  String? username;
+  String? fullname;
+  String? age;
+  String? history;
+  String? profileimage;
+  String? address;
+  String? countryCode;
+  String? phoneNumber;
+  String? status;
+  String? conditions;
+
+  bool? isBookmarked;
+  String? isAvailable;
+  String? consultationFee;
+  String? specialist;
+  String? city;
 
   Data(
       {this.userid,

@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class MoreMenuScreen extends StatefulWidget {
-  final Function(bool userChanged) refresh;
+  final Function(bool userChanged)? refresh;
 
   const MoreMenuScreen({this.refresh});
 
@@ -53,33 +54,33 @@ class MoreMenuScreen extends StatefulWidget {
 }
 
 class _MoreMenuScreenState extends State<MoreMenuScreen> {
-  MyProfileModel myProfile;
-  File profileImage;
+  MyProfileModel? myProfile;
+  File? profileImage;
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
-  GetDeviceSelectionModel selectionResult;
-  CreateDeviceSelectionModel createDeviceSelectionModel;
-  UpdateDeviceModel updateDeviceModel;
+  GetDeviceSelectionModel? selectionResult;
+  CreateDeviceSelectionModel? createDeviceSelectionModel;
+  UpdateDeviceModel? updateDeviceModel;
 
-  int preColor = 0xff5e1fe0;
-  int greColor = 0xff753aec;
-  var userMappingId = '';
+  int? preColor = 0xff5e1fe0;
+  int? greColor = 0xff753aec;
+  String? userMappingId = '';
 
-  bool _isdigitRecognition = true;
-  bool _isdeviceRecognition = true;
-  bool _isGFActive;
-  DevicesViewModel _deviceModel;
-  bool _isHKActive = false;
+  bool? _isdigitRecognition = true;
+  bool? _isdeviceRecognition = true;
+  bool? _isGFActive;
+  late DevicesViewModel _deviceModel;
+  bool? _isHKActive = false;
   bool _firstTym = true;
-  bool _isBPActive = true;
-  bool _isGLActive = true;
-  bool _isOxyActive = true;
-  bool _isTHActive = true;
-  bool _isWSActive = true;
+  bool? _isBPActive = true;
+  bool? _isGLActive = true;
+  bool? _isOxyActive = true;
+  bool? _isTHActive = true;
+  bool? _isWSActive = true;
   bool _isHealthFirstTime = false;
-  String preferred_language;
-  String qa_subscription;
+  String? preferred_language;
+  String? qa_subscription;
 
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) ??
       variable.icon_mayaMain;
@@ -88,20 +89,20 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
           ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
           : 0xff5e1fe0;*/
-  int selectedPrimaryColor = 0xff5f0cf9;
+  int? selectedPrimaryColor = 0xff5f0cf9;
 
   int selectedGradientColor =
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
-  List<Tags> tagsList = new List<Tags>();
+  List<Tags>? tagsList = new List<Tags>();
   List<Widget> devices = [];
-  bool allowAppointmentNotification = true;
-  bool allowVitalNotification = true;
-  bool allowSymptomsNotification = true;
+  bool? allowAppointmentNotification = true;
+  bool? allowVitalNotification = true;
+  bool? allowSymptomsNotification = true;
   bool isCareGiver = false;
 
-  List<DeviceData> selectedList;
+  late List<DeviceData> selectedList;
   bool isTouched = false;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
@@ -114,7 +115,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   bool isIntegration = false;
   bool isColorPallete = false;
   bool loading = false;
-  PreferredMeasurement preferredMeasurement;
+  PreferredMeasurement? preferredMeasurement;
 
   @override
   void initState() {
@@ -153,10 +154,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       }
     });
 
-    if (myProfile.result != null) {}
+    if (myProfile!.result != null) {}
   }
 
-  Future<MyProfileModel> getMyProfile() async {
+  Future<MyProfileModel?> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } else {
@@ -212,8 +213,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   void openWebView(String title, String url, bool isLocal) {
@@ -232,7 +233,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           child: ListTile(
             leading: ClipOval(
               child: profileImage != null
-                  ? Image.file(profileImage,
+                  ? Image.file(profileImage!,
                       width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
             ),
@@ -240,7 +241,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  myProfile.result != null
+                  myProfile!.result != null
                       ? /* toBeginningOfSentenceCase(
                               myProfile.result.firstName ?? '') +
                           ' ' +
@@ -255,18 +256,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.isNotEmpty)
-                      ? myProfile
-                              .result.userContactCollection3[0].phoneNumber ??
+                  (myProfile!.result!.userContactCollection3 != null &&
+                          myProfile!.result!.userContactCollection3!.isNotEmpty)
+                      ? myProfile!
+                              .result!.userContactCollection3![0]!.phoneNumber ??
                           ''
                       : '',
                   style: TextStyle(fontSize: 14.0.sp),
                 ),
                 Text(
-                  (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.isNotEmpty)
-                      ? myProfile.result.userContactCollection3[0].email ?? ''
+                  (myProfile!.result!.userContactCollection3 != null &&
+                          myProfile!.result!.userContactCollection3!.isNotEmpty)
+                      ? myProfile!.result!.userContactCollection3![0]!.email ?? ''
                       : '',
                   style: TextStyle(fontSize: 13.0.sp),
                 )
@@ -394,7 +395,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               HomeScreen.of(context)?.refresh();
                               LandingScreen.of(context)?.refresh();
                               if (widget.refresh != null) {
-                                widget.refresh(false);
+                                widget.refresh!(false);
                               }
 
                               setState(() {});
@@ -433,7 +434,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     );
   }
 
-  void unPairDexCom(String externalSourceId) async {
+  void unPairDexCom(String? externalSourceId) async {
     setState(() {
       loading = true;
     });
@@ -441,7 +442,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       setState(() {
         loading = false;
       });
-      if (value.isSuccess) {
+      if (value.isSuccess!) {
         getAvailableDevices();
       }
     });
@@ -452,22 +453,22 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       loading = true;
     });
     await healthReportListForUserRepository.getAvailableDevices().then((value) {
-      if (value.isSuccess) {
+      if (value.isSuccess!) {
         devices.clear();
-        value.result.forEach((element) {
+        value.result!.forEach((element) {
           devices.add(ListTile(
-            title: Text(element.name,
+            title: Text(element.name!,
                 style: TextStyle(fontWeight: FontWeight.w500)),
-            trailing: Text((element.isPaired ? 'Un Pair' : 'Pair'),style: TextStyle(color:element.isPaired ? Colors.red : Colors.green ,fontWeight: FontWeight.bold),),
+            trailing: Text((element.isPaired! ? 'Un Pair' : 'Pair'),style: TextStyle(color:element.isPaired! ? Colors.red : Colors.green ,fontWeight: FontWeight.bold),),
             onTap: () {
-              if (element.isPaired) {
+              if (element.isPaired!) {
                 unPairDexCom(element.externalSourceId);
               } else {
-                String baseUrl='';
-                String clientId='';
-                String redirectUrl='';
+                String? baseUrl='';
+                String? clientId='';
+                String? redirectUrl='';
                 String state='';
-                element.systemConfiguration.forEach((config) {
+                element.systemConfiguration!.forEach((config) {
                   if(config.name=="clientId"){
                     clientId=config.value;
                   }
@@ -505,17 +506,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     });
   }
 
-  Future<GetDeviceSelectionModel> getAppColorValues() async {
+  Future<GetDeviceSelectionModel?> getAppColorValues() async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
         .then((value) {
       selectionResult = value;
-      if (selectionResult.isSuccess) {
-        if (selectionResult.result != null) {
-          setValues(selectionResult);
-          userMappingId = selectionResult.result[0].id;
+      if (selectionResult!.isSuccess!) {
+        if (selectionResult!.result != null) {
+          setValues(selectionResult!);
+          userMappingId = selectionResult!.result![0].id;
         } else {
           userMappingId = '';
           preColor = 0xff5e1fe0;
@@ -550,122 +551,122 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
-    preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
-    greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
+    preColor = getDeviceSelectionModel.result![0].profileSetting!.preColor;
+    greColor = getDeviceSelectionModel.result![0].profileSetting!.greColor;
 
     _isdeviceRecognition =
-        getDeviceSelectionModel.result[0].profileSetting.allowDevice != null &&
-                getDeviceSelectionModel.result[0].profileSetting.allowDevice !=
+        getDeviceSelectionModel.result![0].profileSetting!.allowDevice != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.allowDevice !=
                     ''
-            ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
+            ? getDeviceSelectionModel.result![0].profileSetting!.allowDevice
             : true;
     _isdigitRecognition =
-        getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
-                getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+        getDeviceSelectionModel.result![0].profileSetting!.allowDigit != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.allowDigit !=
                     ''
-            ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+            ? getDeviceSelectionModel.result![0].profileSetting!.allowDigit
             : true;
     _isGFActive =
-        getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
-                getDeviceSelectionModel.result[0].profileSetting.googleFit != ''
-            ? getDeviceSelectionModel.result[0].profileSetting.googleFit
+        getDeviceSelectionModel.result![0].profileSetting!.googleFit != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.googleFit != ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.googleFit
             : false;
     _isHKActive =
-        getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
-                getDeviceSelectionModel.result[0].profileSetting.healthFit != ''
-            ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+        getDeviceSelectionModel.result![0].profileSetting!.healthFit != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.healthFit != ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.healthFit
             : false;
     _isBPActive =
-        getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
-                getDeviceSelectionModel.result[0].profileSetting.bpMonitor != ''
-            ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+        getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.bpMonitor != ''
+            ? getDeviceSelectionModel.result![0].profileSetting!.bpMonitor
             : true;
-    _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+    _isGLActive = getDeviceSelectionModel.result![0].profileSetting!.glucoMeter !=
                 null &&
-            getDeviceSelectionModel.result[0].profileSetting.glucoMeter != ''
-        ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+            getDeviceSelectionModel.result![0].profileSetting!.glucoMeter != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.glucoMeter
         : true;
     _isOxyActive = getDeviceSelectionModel
-                    .result[0].profileSetting.pulseOximeter !=
+                    .result![0].profileSetting!.pulseOximeter !=
                 null &&
-            getDeviceSelectionModel.result[0].profileSetting.pulseOximeter != ''
-        ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
+            getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.pulseOximeter
         : true;
-    _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+    _isWSActive = getDeviceSelectionModel.result![0].profileSetting!.weighScale !=
                 null &&
-            getDeviceSelectionModel.result[0].profileSetting.weighScale != ''
-        ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+            getDeviceSelectionModel.result![0].profileSetting!.weighScale != ''
+        ? getDeviceSelectionModel.result![0].profileSetting!.weighScale
         : true;
     _isTHActive =
-        getDeviceSelectionModel.result[0].profileSetting.thermoMeter != null &&
-                getDeviceSelectionModel.result[0].profileSetting.thermoMeter !=
+        getDeviceSelectionModel.result![0].profileSetting!.thermoMeter != null &&
+                getDeviceSelectionModel.result![0].profileSetting!.thermoMeter !=
                     ''
-            ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
+            ? getDeviceSelectionModel.result![0].profileSetting!.thermoMeter
             : true;
 
     preferred_language = getDeviceSelectionModel
-                    .result[0].profileSetting.preferred_language !=
+                    .result![0].profileSetting!.preferred_language !=
                 null &&
             getDeviceSelectionModel
-                    .result[0].profileSetting.preferred_language !=
+                    .result![0].profileSetting!.preferred_language !=
                 ''
-        ? getDeviceSelectionModel.result[0].profileSetting.preferred_language
+        ? getDeviceSelectionModel.result![0].profileSetting!.preferred_language
         : 'undef';
 
     qa_subscription = getDeviceSelectionModel
-                    .result[0].profileSetting.qa_subscription !=
+                    .result![0].profileSetting!.qa_subscription !=
                 null &&
-            getDeviceSelectionModel.result[0].profileSetting.qa_subscription !=
+            getDeviceSelectionModel.result![0].profileSetting!.qa_subscription !=
                 ''
-        ? getDeviceSelectionModel.result[0].profileSetting.qa_subscription
+        ? getDeviceSelectionModel.result![0].profileSetting!.qa_subscription
         : 'Y';
 
     selectedPrimaryColor =
         PreferenceUtil.getSavedTheme(Constants.keyPriColor) ?? preColor;
 
-    tagsList = getDeviceSelectionModel.result[0].tags != null &&
-            getDeviceSelectionModel.result[0].tags.length > 0
-        ? getDeviceSelectionModel.result[0].tags
+    tagsList = getDeviceSelectionModel.result![0].tags != null &&
+            getDeviceSelectionModel.result![0].tags!.length > 0
+        ? getDeviceSelectionModel.result![0].tags
         : new List();
 
     allowAppointmentNotification = getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 null &&
             getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 ''
-        ? getDeviceSelectionModel.result[0].profileSetting
+        ? getDeviceSelectionModel.result![0].profileSetting!
             .caregiverCommunicationSetting?.appointments
         : true;
 
     allowVitalNotification = getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 null &&
             getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 ''
         ? getDeviceSelectionModel
-            .result[0].profileSetting.caregiverCommunicationSetting?.vitals
+            .result![0].profileSetting!.caregiverCommunicationSetting?.vitals
         : true;
 
     allowSymptomsNotification = getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 null &&
             getDeviceSelectionModel
-                    .result[0].profileSetting.caregiverCommunicationSetting !=
+                    .result![0].profileSetting!.caregiverCommunicationSetting !=
                 ''
         ? getDeviceSelectionModel
-            .result[0].profileSetting.caregiverCommunicationSetting?.symptoms
+            .result![0].profileSetting!.caregiverCommunicationSetting?.symptoms
         : true;
 
-    preferredMeasurement = getDeviceSelectionModel.result[0].profileSetting !=
+    preferredMeasurement = getDeviceSelectionModel.result![0].profileSetting !=
             null
-        ? getDeviceSelectionModel.result[0].profileSetting.preferredMeasurement
+        ? getDeviceSelectionModel.result![0].profileSetting!.preferredMeasurement
         : null;
   }
 
-  Future<CreateDeviceSelectionModel> createAppColorSelection(
-      int priColor, int greColor) async {
+  Future<CreateDeviceSelectionModel?> createAppColorSelection(
+      int? priColor, int? greColor) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
         .createDeviceSelection(
@@ -689,9 +690,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             allowSymptomsNotification)
         .then((value) {
       createDeviceSelectionModel = value;
-      if (createDeviceSelectionModel.isSuccess) {
+      if (createDeviceSelectionModel!.isSuccess!) {
       } else {
-        if (createDeviceSelectionModel.message ==
+        if (createDeviceSelectionModel!.message ==
             STR_USER_PROFILE_SETTING_ALREADY) {
           updateDeviceSelectionModel(priColor, greColor);
         }
@@ -700,8 +701,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     return createDeviceSelectionModel;
   }
 
-  Future<UpdateDeviceModel> updateDeviceSelectionModel(
-      int priColor, int greColor) async {
+  Future<UpdateDeviceModel?> updateDeviceSelectionModel(
+      int? priColor, int? greColor) async {
     await healthReportListForUserRepository
         .updateDeviceModel(
             userMappingId,
@@ -725,7 +726,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             preferredMeasurement)
         .then((value) {
       updateDeviceModel = value;
-      if (updateDeviceModel.isSuccess) {
+      if (updateDeviceModel!.isSuccess!) {
         // app color updated
       }
     });
@@ -735,7 +736,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   Widget getValuesFromSharedPrefernce() {
     final _myProfileBloc = MyProfileBloc();
 
-    return FutureBuilder<MyProfileModel>(
+    return FutureBuilder<MyProfileModel?>(
       future: _myProfileBloc.getMyProfileData(Constants.KEY_USERID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -760,7 +761,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Widget getAppColorsAndDeviceValues() {
-    return FutureBuilder<GetDeviceSelectionModel>(
+    return FutureBuilder<GetDeviceSelectionModel?>(
       future: getAppColorValues(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -779,8 +780,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   void launchWhatsApp({
-    @required String phone,
-    @required String message,
+    required String phone,
+    required String message,
   }) async {
     String url() {
       if (Platform.isIOS) {
@@ -807,7 +808,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           child: ListTile(
             leading: ClipOval(
               child: profileImage != null
-                  ? Image.file(profileImage,
+                  ? Image.file(profileImage!,
                       width: 50.0.h, height: 50.0.h, fit: BoxFit.cover)
                   : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile),
             ),
@@ -815,7 +816,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  myProfile.result != null
+                  myProfile!.result != null
                       ? /* toBeginningOfSentenceCase(
                               myProfile.result.firstName ?? '') +
                           ' ' +
@@ -830,18 +831,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
                 Text(
-                  (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.isNotEmpty)
-                      ? myProfile
-                              .result.userContactCollection3[0].phoneNumber ??
+                  (myProfile!.result!.userContactCollection3 != null &&
+                          myProfile!.result!.userContactCollection3!.isNotEmpty)
+                      ? myProfile!
+                              .result!.userContactCollection3![0]!.phoneNumber ??
                           ''
                       : '',
                   style: TextStyle(fontSize: 14.0.sp),
                 ),
                 Text(
-                  (myProfile.result.userContactCollection3 != null &&
-                          myProfile.result.userContactCollection3.isNotEmpty)
-                      ? myProfile.result.userContactCollection3[0].email ?? ''
+                  (myProfile!.result!.userContactCollection3 != null &&
+                          myProfile!.result!.userContactCollection3!.isNotEmpty)
+                      ? myProfile!.result!.userContactCollection3![0]!.email ?? ''
                       : '',
                   style: TextStyle(fontSize: 13.0.sp),
                 )
@@ -888,7 +889,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     trailing: Transform.scale(
                       scale: 0.8,
                       child: Switch(
-                        value: _isdigitRecognition,
+                        value: _isdigitRecognition!,
                         activeColor:
                             Color(new CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
@@ -923,7 +924,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     trailing: Transform.scale(
                       scale: 0.8,
                       child: Switch(
-                        value: _isdeviceRecognition,
+                        value: _isdeviceRecognition!,
                         activeColor:
                             Color(new CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
@@ -993,7 +994,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                           Transform.scale(
                                             scale: 0.8,
                                             child: Switch(
-                                              value: _isGFActive,
+                                              value: _isGFActive!,
                                               activeColor: Color(
                                                   new CommonUtil()
                                                       .getMyPrimaryColor()),
@@ -1052,7 +1053,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     Transform.scale(
                                       scale: 0.8,
                                       child: Switch(
-                                        value: _isHKActive,
+                                        value: _isHKActive!,
                                         activeColor: Color(new CommonUtil()
                                             .getMyPrimaryColor()),
                                         onChanged: (bool newValue) {
@@ -1206,32 +1207,32 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             SizedBox(
                               height: 10,
                             ),
-                            FutureBuilder<List<DeviceData>>(
+                            FutureBuilder<List<DeviceData>?>(
                               future: _deviceModel.getDevices(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   for (int i = 0;
-                                      i <= snapshot.data.length;
+                                      i <= snapshot.data!.length;
                                       i++) {
                                     switch (i) {
                                       case 0:
-                                        snapshot.data[i].isSelected =
+                                        snapshot.data![i].isSelected =
                                             _isBPActive;
                                         break;
                                       case 1:
-                                        snapshot.data[i].isSelected =
+                                        snapshot.data![i].isSelected =
                                             _isGLActive;
                                         break;
                                       case 2:
-                                        snapshot.data[i].isSelected =
+                                        snapshot.data![i].isSelected =
                                             _isOxyActive;
                                         break;
                                       case 3:
-                                        snapshot.data[i].isSelected =
+                                        snapshot.data![i].isSelected =
                                             _isTHActive;
                                         break;
                                       case 4:
-                                        snapshot.data[i].isSelected =
+                                        snapshot.data![i].isSelected =
                                             _isWSActive;
                                         break;
 
@@ -1246,10 +1247,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                         child: new ListView.builder(
                                           shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: snapshot.data.length,
+                                          itemCount: snapshot.data!.length,
                                           itemBuilder: (context, i) {
                                             return DeviceCard(
-                                                deviceData: snapshot.data[i],
+                                                deviceData: snapshot.data![i],
                                                 isSelected: (bool value) {
                                                   isTouched = true;
                                                   switch (i) {
@@ -1289,10 +1290,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                   setState(() {
                                                     if (value) {
                                                       selectedList.add(
-                                                          snapshot.data[i]);
+                                                          snapshot.data![i]);
                                                     } else {
                                                       selectedList.remove(
-                                                          snapshot.data[i]);
+                                                          snapshot.data![i]);
                                                     }
                                                   });
 
@@ -1306,7 +1307,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                   createAppColorSelection(
                                                       preColor, greColor);
                                                 },
-                                                key: Key(snapshot.data[i].status
+                                                key: Key(snapshot.data![i].status
                                                     .toString()));
                                           },
                                         ),
@@ -1426,7 +1427,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                     HomeScreen.of(context)?.refresh();
                                     LandingScreen.of(context)?.refresh();
                                     if (widget.refresh != null) {
-                                      widget.refresh(false);
+                                      widget.refresh!(false);
                                     }
 
                                     setState(() {});
@@ -1468,13 +1469,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     );
   }
 
-  Future<bool> _handleGoogleFit() async {
-    bool ret = false;
+  Future<bool?> _handleGoogleFit() async {
+    bool? ret = false;
     bool _isSignedIn = await _deviceDataHelper.isGoogleFitSignedIn();
     if (_isGFActive == _isSignedIn) {
       ret = _isGFActive;
     } else {
-      if (_isGFActive) {
+      if (_isGFActive!) {
         _isGFActive = await _deviceDataHelper.activateGoogleFit();
       } else {
         _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();

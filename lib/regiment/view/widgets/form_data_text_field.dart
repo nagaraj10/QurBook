@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
@@ -7,11 +8,11 @@ import '../../models/field_response_model.dart';
 
 class FormDataTextField extends StatelessWidget {
   const FormDataTextField({
-    @required this.fieldData,
+    required this.fieldData,
     this.isNumberOnly = false,
     this.isFromQurHomeSymptom = false,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.updateValue,
+    required this.canEdit,
   });
 
   final FieldModel fieldData;
@@ -66,7 +67,7 @@ class FormDataTextField extends StatelessWidget {
             // if (isNumberOnly) FilteringTextInputFormatter.digitsOnly,
           ],
           validator: (value) {
-            if (fieldData.title.startsWith('_') && value.isEmpty) {
+            if (fieldData.title.startsWith('_') && value!.isEmpty) {
               return '${fieldData.title} is required';
             } else if (isNumberOnly &&
                 (fieldData?.vmin ?? '').isNotEmpty &&
@@ -74,10 +75,10 @@ class FormDataTextField extends StatelessWidget {
               if (value?.isEmpty) {
                 return '${fieldData.title} is required';
               } else if (isNumberOnly) {
-                if (((double.tryParse(value) ?? 0) <
-                        (double.tryParse(fieldData?.vmin) ?? 0)) ||
+                if (((double.tryParse(value!) ?? 0) <
+                        (double.tryParse(fieldData?.vmin!) ?? 0)) ||
                     ((double.tryParse(value) ?? 0) >
-                        (double.tryParse(fieldData?.vmax) ?? 0))) {
+                        (double.tryParse(fieldData?.vmax!) ?? 0))) {
                   return 'Enter a valid ${fieldData.title}';
                 } else {
                   return null;

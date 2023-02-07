@@ -1,10 +1,11 @@
+
 class PrescriptionMedicines {
-  String medicineName;
-  String beforeOrAfterFood;
-  String days;
-  PrescriptionMedicineSchedule schedule;
-  String quantity;
-  String notes;
+  String? medicineName;
+  String? beforeOrAfterFood;
+  String? days;
+  PrescriptionMedicineSchedule? schedule;
+  String? quantity;
+  String? notes;
 
   PrescriptionMedicines(
       {this.medicineName,
@@ -37,9 +38,9 @@ class PrescriptionMedicines {
 }
 
 class PrescriptionMedicineSchedule {
-  String morning;
-  String afternoon;
-  String evening;
+  String? morning;
+  String? afternoon;
+  String? evening;
 
   PrescriptionMedicineSchedule({this.morning, this.afternoon, this.evening});
 
@@ -52,7 +53,7 @@ class PrescriptionMedicineSchedule {
 }
 
 class PrescriptionMedicinesList {
-  List<PrescriptionMedicines> medicines;
+  late List<PrescriptionMedicines> medicines;
 
   PrescriptionMedicinesList.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {

@@ -1,7 +1,8 @@
+
 class UnreadChatSocketNotify {
-  String idFrom;
-  String idTo;
-  Result result;
+  String? idFrom;
+  String? idTo;
+  Result? result;
 
   UnreadChatSocketNotify({this.idFrom, this.idTo, this.result});
 
@@ -17,15 +18,15 @@ class UnreadChatSocketNotify {
     data['idFrom'] = this.idFrom;
     data['idTo'] = this.idTo;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  bool isSuccess;
-  List<Payload> payload;
+  bool? isSuccess;
+  List<Payload>? payload;
 
   Result({this.isSuccess, this.payload});
 
@@ -34,7 +35,7 @@ class Result {
     if (json['payload'] != null) {
       payload = <Payload>[];
       json['payload'].forEach((v) {
-        payload.add(new Payload.fromJson(v));
+        payload!.add(new Payload.fromJson(v));
       });
     }
   }
@@ -43,14 +44,14 @@ class Result {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
-      data['payload'] = this.payload.map((v) => v.toJson()).toList();
+      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Payload {
-  String count;
+  String? count;
 
   Payload({this.count});
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -11,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class PlanCard extends StatelessWidget {
   const PlanCard({
-    @required this.healthCondition,
+    required this.healthCondition,
   });
 
   final MenuItem healthCondition;
@@ -85,7 +86,7 @@ class PlanCard extends StatelessWidget {
                       ),
                       Flexible(
                         child: Text(
-                          healthCondition.title,
+                          healthCondition.title!,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,

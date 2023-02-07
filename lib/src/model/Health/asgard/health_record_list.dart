@@ -1,9 +1,10 @@
+
 import '../../../../common/CommonUtil.dart';
 import 'health_record_collection.dart';
 
 class HealthRecordList {
-  bool isSuccess;
-  List<HealthResult> result;
+  bool? isSuccess;
+  List<HealthResult>? result;
 
   HealthRecordList({this.isSuccess, this.result});
 
@@ -12,7 +13,7 @@ class HealthRecordList {
     if (json['result'] != null) {
       result = <HealthResult>[];
       json['result'].forEach((v) {
-        result.add(HealthResult.fromJson(v));
+        result!.add(HealthResult.fromJson(v));
       });
     }
   }
@@ -21,28 +22,28 @@ class HealthRecordList {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class HealthResult {
-  String id;
-  String healthRecordTypeId;
-  String healthRecordTypeName;
-  Metadata metadata;
-  String userId;
-  bool isBookmarked;
-  bool isDraft;
-  bool isVisible;
-  bool isActive;
-  String isCompleted;
-  String doctorId;
-  List<HealthRecordCollection> healthRecordCollection;
-  bool isSelected = false;
-  String createdOn;
-  DateTime dateTimeValue;
+  String? id;
+  String? healthRecordTypeId;
+  String? healthRecordTypeName;
+  Metadata? metadata;
+  String? userId;
+  bool? isBookmarked;
+  bool? isDraft;
+  bool? isVisible;
+  bool? isActive;
+  String? isCompleted;
+  String? doctorId;
+  List<HealthRecordCollection>? healthRecordCollection;
+  bool? isSelected = false;
+  String? createdOn;
+  DateTime? dateTimeValue;
 
   HealthResult(
       {this.id,
@@ -78,15 +79,15 @@ class HealthResult {
     if (json['healthRecordCollection'] != null) {
       healthRecordCollection = <HealthRecordCollection>[];
       json['healthRecordCollection'].forEach((v) {
-        healthRecordCollection.add(HealthRecordCollection.fromJson(v));
+        healthRecordCollection!.add(HealthRecordCollection.fromJson(v));
       });
     }
     createdOn = json['createdOn'];
     if (metadata != null) {
-      if (metadata.startDateTime != null && metadata.startDateTime != '') {
-        dateTimeValue = DateTime.parse(metadata.startDateTime);
+      if (metadata!.startDateTime != null && metadata!.startDateTime != '') {
+        dateTimeValue = DateTime.parse(metadata!.startDateTime!);
       } else {
-        dateTimeValue = DateTime.parse(createdOn);
+        dateTimeValue = DateTime.parse(createdOn!);
       }
     }
   }
@@ -97,7 +98,7 @@ class HealthResult {
     data['healthRecordTypeId'] = healthRecordTypeId;
     data['healthRecordTypeName'] = healthRecordTypeName;
     if (metadata != null) {
-      data['metadata'] = metadata.toJson();
+      data['metadata'] = metadata!.toJson();
     }
     data['userId'] = userId;
     data['isBookmarked'] = isBookmarked;
@@ -108,7 +109,7 @@ class HealthResult {
     data['doctorId'] = doctorId;
     if (healthRecordCollection != null) {
       data['healthRecordCollection'] =
-          healthRecordCollection.map((v) => v.toJson()).toList();
+          healthRecordCollection!.map((v) => v.toJson()).toList();
     }
     data['createdOn'] = createdOn;
     return data;
@@ -116,21 +117,21 @@ class HealthResult {
 }
 
 class Metadata {
-  HealthRecordCategory healthRecordCategory;
-  HealthRecordType healthRecordType;
-  String memoText;
-  bool hasVoiceNotes;
-  String dateOfVisit;
-  bool isDraft;
-  String sourceName;
-  String memoTextRaw;
-  String startDateTime;
-  String endDateTime;
-  Doctor doctor;
-  Hospital hospital;
-  String fileName;
-  Laboratory laboratory;
-  List<DeviceReadings> deviceReadings;
+  HealthRecordCategory? healthRecordCategory;
+  HealthRecordType? healthRecordType;
+  String? memoText;
+  bool? hasVoiceNotes;
+  String? dateOfVisit;
+  bool? isDraft;
+  String? sourceName;
+  String? memoTextRaw;
+  String? startDateTime;
+  String? endDateTime;
+  Doctor? doctor;
+  Hospital? hospital;
+  String? fileName;
+  Laboratory? laboratory;
+  List<DeviceReadings>? deviceReadings;
 
   Metadata(
       {this.healthRecordCategory,
@@ -172,7 +173,7 @@ class Metadata {
         if (json['deviceReadings'] != null) {
           deviceReadings = <DeviceReadings>[];
           json['deviceReadings'].forEach((v) {
-            deviceReadings.add(DeviceReadings.fromJson(v));
+            deviceReadings!.add(DeviceReadings.fromJson(v));
           });
         }
       }
@@ -198,10 +199,10 @@ class Metadata {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (healthRecordCategory != null) {
-      data['healthRecordCategory'] = healthRecordCategory.toJson();
+      data['healthRecordCategory'] = healthRecordCategory!.toJson();
     }
     if (healthRecordType != null) {
-      data['healthRecordType'] = healthRecordType.toJson();
+      data['healthRecordType'] = healthRecordType!.toJson();
     }
     data['memoText'] = memoText;
     data['hasVoiceNotes'] = hasVoiceNotes;
@@ -213,32 +214,32 @@ class Metadata {
     data['endDateTime'] = endDateTime;
 
     if (doctor != null) {
-      data['doctor'] = doctor.toJson();
+      data['doctor'] = doctor!.toJson();
     }
     if (hospital != null) {
-      data['hospital'] = hospital.toJson();
+      data['hospital'] = hospital!.toJson();
     }
     data['fileName'] = fileName;
     if (laboratory != null) {
-      data['laboratory'] = laboratory.toJson();
+      data['laboratory'] = laboratory!.toJson();
     }
     if (deviceReadings != null) {
       data['deviceReadings'] =
-          deviceReadings.map((v) => v.toJson()).toList();
+          deviceReadings!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class HealthRecordCategory {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isDisplay;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? categoryName;
+  String? categoryDescription;
+  String? logo;
+  bool? isDisplay;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthRecordCategory(
       {this.id,
@@ -276,15 +277,15 @@ class HealthRecordCategory {
 }
 
 class HealthRecordType {
-  String id;
-  String name;
-  String description;
-  String logo;
-  bool isDisplay;
-  bool isAiTranscription;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? description;
+  String? logo;
+  bool? isDisplay;
+  bool? isAiTranscription;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthRecordType(
       {this.id,
@@ -325,18 +326,18 @@ class HealthRecordType {
 }
 
 class Doctor {
-  String doctorId;
-  String userId;
-  String name;
-  String firstName;
-  String lastName;
-  String specialization;
-  String doctorReferenceId;
-  String addressLine1;
-  String addressLine2;
-  String profilePicThumbnailUrl;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
+  String? doctorId;
+  String? userId;
+  String? name;
+  String? firstName;
+  String? lastName;
+  String? specialization;
+  String? doctorReferenceId;
+  String? addressLine1;
+  String? addressLine2;
+  String? profilePicThumbnailUrl;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
 
   Doctor(
       {this.doctorId,
@@ -386,19 +387,19 @@ class Doctor {
 }
 
 class Hospital {
-  String healthOrganizationReferenceId;
-  String healthOrganizationName;
-  String addressLine1;
-  String addressLine2;
-  String cityName;
-  String stateName;
-  String pincode;
-  String healthOrganizationId;
-  String healthOrganizationTypeId;
-  String healthOrganizationTypeName;
-  String phoneNumber;
-  String phoneNumberTypeId;
-  String phoneNumberTypeName;
+  String? healthOrganizationReferenceId;
+  String? healthOrganizationName;
+  String? addressLine1;
+  String? addressLine2;
+  String? cityName;
+  String? stateName;
+  String? pincode;
+  String? healthOrganizationId;
+  String? healthOrganizationTypeId;
+  String? healthOrganizationTypeName;
+  String? phoneNumber;
+  String? phoneNumberTypeId;
+  String? phoneNumberTypeName;
 
   Hospital(
       {this.healthOrganizationReferenceId,
@@ -451,19 +452,19 @@ class Hospital {
 }
 
 class Laboratory {
-  String healthOrganizationId;
-  String healthOrganizationName;
-  String healthOrganizationTypeId;
-  String healthOrganizationTypeName;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  String cityName;
-  String stateName;
-  String phoneNumber;
-  String phoneNumberTypeId;
-  String phoneNumberTypeName;
-  String healthOrganizationReferenceId;
+  String? healthOrganizationId;
+  String? healthOrganizationName;
+  String? healthOrganizationTypeId;
+  String? healthOrganizationTypeName;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  String? cityName;
+  String? stateName;
+  String? phoneNumber;
+  String? phoneNumberTypeId;
+  String? phoneNumberTypeName;
+  String? healthOrganizationReferenceId;
 
   Laboratory(
       {this.healthOrganizationId,
@@ -516,7 +517,7 @@ class Laboratory {
 }
 
 class DeviceReadings {
-  String parameter;
+  String? parameter;
   dynamic value;
   dynamic unit;
 

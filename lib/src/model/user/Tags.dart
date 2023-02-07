@@ -1,8 +1,9 @@
+
 class Tags {
-  String id;
-  String name;
-  String code;
-  bool isChecked = false;
+  String? id;
+  String? name;
+  String? code;
+  bool? isChecked = false;
 
   Tags({this.id, this.name,this.isChecked});
 

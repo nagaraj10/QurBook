@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../models/regiment_data_model.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
@@ -7,9 +8,9 @@ import 'radio_tile_widget.dart';
 
 class FormDataRadio extends StatefulWidget {
   const FormDataRadio({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.fieldData,
+    required this.updateValue,
+    required this.canEdit,
   });
 
   final FieldModel fieldData;

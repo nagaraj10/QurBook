@@ -1,3 +1,4 @@
+
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -18,14 +19,14 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ReportWebView extends StatefulWidget {
-  final String embededUrl;
-  final String reportId;
-  final String id;
+  final String? embededUrl;
+  final String? reportId;
+  final String? id;
 
-  ReportWebView({Key key,
-    @required this.embededUrl,
-    @required this.reportId,
-    @required this.id})
+  ReportWebView({Key? key,
+    required this.embededUrl,
+    required this.reportId,
+    required this.id})
       : super(key: key);
 
   @override
@@ -33,11 +34,11 @@ class ReportWebView extends StatefulWidget {
 }
 
 class _ReportWebView extends State<ReportWebView> {
-  String embededUrl;
-  String reportId;
-  String authToken;
-  String id;
-  String _power_bi_url;
+  String? embededUrl;
+  String? reportId;
+  String? authToken;
+  String? id;
+  late String _power_bi_url;
 
   final Completer<WebViewController> _controller =
   Completer<WebViewController>();
@@ -106,7 +107,7 @@ class _ReportWebView extends State<ReportWebView> {
                     'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
             controller.clearCache();*/
           },
-          onLoadStop: (InAppWebViewController controller, Uri url) {
+          onLoadStop: (InAppWebViewController controller, Uri? url) {
             controller.evaluateJavascript(
                 source:
                 'onHTMLLoad("$id","$reportId","$embededUrl","$authToken","$height")');
@@ -189,7 +190,7 @@ class NavigationControls extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<WebViewController> snapshot) {
         final bool webViewReady =
             snapshot.connectionState == ConnectionState.done;
-        final WebViewController controller = snapshot.data;
+        final WebViewController? controller = snapshot.data;
         return Row(
           children: <Widget>[],
         );

@@ -1,7 +1,8 @@
+
 class UpdateDeviceModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   UpdateDeviceModel({this.isSuccess, this.message, this.result});
 

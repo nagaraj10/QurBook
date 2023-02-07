@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -16,7 +17,7 @@ import '../../constants/fhb_query.dart' as query;
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class MyFamilyDetailViewInsurance extends StatefulWidget {
-  HealthRecordList completeData;
+  HealthRecordList? completeData;
 
   MyFamilyDetailViewInsurance({this.completeData});
 
@@ -51,7 +52,7 @@ class MyFamilyDetailViewInsuranceState
   Widget build(BuildContext context) {
     // TODO: implement build
     getCategoryPreference();
-    return getWidgetToDisplayIDDocs(widget.completeData);
+    return getWidgetToDisplayIDDocs(widget.completeData!);
   }
 
   Widget getWidgetToDisplayIDDocs(HealthRecordList completeData) {
@@ -118,7 +119,7 @@ class MyFamilyDetailViewInsuranceState
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :*/
                     Constants.BASE_URL +
-                        mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                        mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                     height: 20.0.h,
                     width: 20.0.h,
                     color: Color(CommonUtil().getMyPrimaryColor()),
@@ -134,7 +135,7 @@ class MyFamilyDetailViewInsuranceState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        mediaMetaInfoObj.metadata.fileName ?? '',
+                        mediaMetaInfoObj.metadata!.fileName ?? '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 16.0.sp,
@@ -143,13 +144,13 @@ class MyFamilyDetailViewInsuranceState
                         overflow: TextOverflow.ellipsis,
                       ),
                       Visibility(
-                          visible: mediaMetaInfoObj.metadata.dateOfVisit != null
+                          visible: mediaMetaInfoObj.metadata!.dateOfVisit != null
                               ? true
                               : false,
                           child: Text(
-                            mediaMetaInfoObj.metadata.dateOfVisit != null
+                            mediaMetaInfoObj.metadata!.dateOfVisit != null
                                 ? variable.strValidThru +
-                                    mediaMetaInfoObj.metadata.dateOfVisit
+                                    mediaMetaInfoObj.metadata!.dateOfVisit!
                                 : '',
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
@@ -160,7 +161,7 @@ class MyFamilyDetailViewInsuranceState
                           )),
                       Text(
                         FHBUtils().getFormattedDateString(mediaMetaInfoObj
-                            .metadata.healthRecordType.createdOn),
+                            .metadata!.healthRecordType!.createdOn),
                         style: TextStyle(
                             fontSize: 14.0.sp,
                             color: Colors.grey[400],
@@ -173,7 +174,7 @@ class MyFamilyDetailViewInsuranceState
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      mediaMetaInfoObj.isBookmarked
+                      mediaMetaInfoObj.isBookmarked!
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
                               color: Color(CommonUtil().getMyPrimaryColor()),
@@ -195,9 +196,9 @@ class MyFamilyDetailViewInsuranceState
     for (final e in PreferenceUtil.getCategoryType()) {
       if (e.categoryDescription == CommonConstants.categoryDescriptionIDDocs) {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
-          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, e.categoryName)
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, e.categoryName!)
               .then((onValue) {
-            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, e.id)
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, e.id!)
                 .then((value) {});
           });
         });

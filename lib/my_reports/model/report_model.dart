@@ -1,6 +1,7 @@
+
 class ReportModel {
-  bool isSuccess;
-  List<MyReportResult> result;
+  bool? isSuccess;
+  List<MyReportResult>? result;
 
   ReportModel({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class ReportModel {
     if (json['result'] != null) {
       result = new List<MyReportResult>();
       json['result'].forEach((v) {
-        result.add(new MyReportResult.fromJson(v));
+        result!.add(new MyReportResult.fromJson(v));
       });
     }
   }
@@ -18,24 +19,24 @@ class ReportModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MyReportResult {
-  String id;
-  String groupId;
-  String groupName;
-  String reportId;
-  String reportName;
-  String embeddedUrl;
-  String datasetId;
-  List<String> roles;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? groupId;
+  String? groupName;
+  String? reportId;
+  String? reportName;
+  String? embeddedUrl;
+  String? datasetId;
+  List<String>? roles;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   MyReportResult(
       {this.id,

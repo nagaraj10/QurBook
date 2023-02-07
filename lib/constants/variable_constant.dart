@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
@@ -413,7 +414,7 @@ const String stAudioPath = 'myFHB/Audio';
 const String strDateOfVisit = 'Date of visit: ';
 
 //for Add remainder
-List<String> selectedInterval = ['Day', 'Week', 'Month'];
+List<String?> selectedInterval = ['Day', 'Week', 'Month'];
 const String strUpdateRemainder = 'Update Reminder';
 const String strAddRemainder = 'Add Reminder';
 const String strTitle = 'Title';
@@ -483,7 +484,7 @@ const String strUpdateData = 'Updating Data';
 const String strgetMediaTypes = 'Getting Media Types';
 const String strGetProfileData = 'Getting ProfileData';
 
-String authToken;
+String? authToken;
 
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';

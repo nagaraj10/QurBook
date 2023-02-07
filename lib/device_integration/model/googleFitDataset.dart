@@ -1,3 +1,4 @@
+
 import 'googleFitPoint.dart';
 import '../../constants/fhb_parameters.dart';
 
@@ -7,8 +8,8 @@ class Dataset {
     this.point,
   });
 
-  String dataSourceId;
-  List<Point> point;
+  String? dataSourceId;
+  List<Point>? point;
 
   factory Dataset.fromJson(Map<String, dynamic> json) => Dataset(
         dataSourceId: json[gfdataSourceId],
@@ -17,6 +18,6 @@ class Dataset {
 
   Map<String, dynamic> toJson() => {
         gfdataSourceId: dataSourceId,
-        gfpoint: List<dynamic>.from(point.map((x) => x.toJson())),
+        gfpoint: List<dynamic>.from(point!.map((x) => x.toJson())),
       };
 }

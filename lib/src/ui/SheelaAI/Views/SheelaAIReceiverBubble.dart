@@ -1,9 +1,10 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/loading.dart';
+// import 'package:loading/indicator/ball_pulse_indicator.dart';  FU2.5
+// import 'package:loading/loading.dart';  FU2.5
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 
@@ -69,15 +70,16 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                     borderRadius: chatBubbleBorderRadiusFor(false),
                   ),
                   child: (chat.loading ?? false)
-                      ? Loading(
-                          indicator: BallPulseIndicator(),
-                          size: 20.0,
-                          color: PreferenceUtil.getIfQurhomeisAcive()
-                              ? Color(
-                                  CommonUtil().getQurhomeGredientColor(),
-                                )
-                              : Colors.white,
-                        )
+                      ?  Container()
+                      // Loading(
+                      //     indicator: BallPulseIndicator(),
+                      //     size: 20.0,
+                      //     color: PreferenceUtil.getIfQurhomeisAcive()
+                      //         ? Color(
+                      //             CommonUtil().getQurhomeGredientColor(),
+                      //           )
+                      //         : Colors.white,
+                      //   )
                       : (chat.audioFile ?? '').isNotEmpty
                           ? AudioWidget(
                               chat.audioFile,
@@ -97,13 +99,13 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                               : CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          chat.text,
+                                          chat.text!,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText2
+                                              .bodyText2!
                                               .apply(
                                                 fontSizeFactor:
-                                                    CommonUtil().isTablet
+                                                    CommonUtil().isTablet!
                                                         ? 1.6
                                                         : 1.0,
                                                 color: PreferenceUtil
@@ -160,7 +162,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                   chat.timeStamp,
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText2
+                      .bodyText2!
                       .apply(color: Colors.grey),
                 ),
               //need to add the video links here
@@ -176,15 +178,15 @@ class SheelaAIReceiverBubble extends StatelessWidget {
   }
 
   String videoThumbnail(VideoLinks currentVideoLink) {
-    String videoId;
-    videoId = YoutubePlayer.convertUrlToId(currentVideoLink.url);
-    final videoThumbnail = YoutubePlayer.getThumbnail(videoId: videoId);
+    String? videoId;
+    videoId = YoutubePlayer.convertUrlToId(currentVideoLink.url!);
+    final videoThumbnail = YoutubePlayer.getThumbnail(videoId: videoId!);
     return videoThumbnail;
   }
 
   Widget videoWidgets() {
     return Column(
-      children: chat.videoLinks
+      children: chat.videoLinks!
           .map(
             (currentVideoLink) => Card(
               elevation: 5,
@@ -236,9 +238,9 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                       return;
                                     }
                                     controller.stopTTS();
-                                    String videoId;
+                                    String? videoId;
                                     videoId = YoutubePlayer.convertUrlToId(
-                                        currentVideoLink?.url);
+                                        currentVideoLink?.url!);
                                     Get.to(
                                       MyYoutubePlayer(
                                         videoId: videoId,
@@ -253,7 +255,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      currentVideoLink.title,
+                      currentVideoLink.title!,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15.0.sp,
@@ -274,18 +276,18 @@ class SheelaAIReceiverBubble extends StatelessWidget {
     if ((chat.buttons ?? []).isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: chat.buttons
+        children: chat.buttons!
             .map(
               (buttonData) => InkWell(
-                onTap: ((chat.singleuse != null && chat.singleuse) &&
-                        (chat.isActionDone != null && chat.isActionDone))
+                onTap: ((chat.singleuse != null && chat.singleuse!) &&
+                        (chat.isActionDone != null && chat.isActionDone!))
                     ? null
                     : () {
                         if (controller.isLoading.isTrue) {
                           return;
                         }
                         if (chat.singleuse != null &&
-                            chat.singleuse &&
+                            chat.singleuse! &&
                             chat.isActionDone != null) {
                           chat.isActionDone = true;
                         }
@@ -318,7 +320,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                       vertical: 10,
                     ),
                     child: Text(
-                      buttonData.title,
+                      buttonData.title!,
                       style: TextStyle(
                         color: (buttonData.isPlaying.isTrue) ||
                                 (buttonData.isSelected ?? false)
@@ -361,7 +363,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
         child: InkWell(
             onTap: () {
               Navigator.push(
-                  Get.context,
+                  Get.context!,
                   MaterialPageRoute(
                       builder: (context) => ImageSlider(
                             imageURl: url,
@@ -374,7 +376,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
               height: 200.0.h,
               headers: {
                 HttpHeaders.authorizationHeader:
-                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
                 Constants.KEY_OffSet: CommonUtil().setTimeZone()
               },
             )));
@@ -389,8 +391,8 @@ class SheelaAIReceiverBubble extends StatelessWidget {
 
     try {
       if (chat.imageURLS != null) {
-        if (chat.imageURLS.length > 0) {
-          for (String imgURL in chat.imageURLS) {
+        if (chat.imageURLS!.length > 0) {
+          for (String imgURL in chat.imageURLS!) {
             if (imgURL != null && imgURL != '' && imgURL != 'null') {
               column.add(getImageFromUrl(imgURL));
             }

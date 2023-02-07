@@ -1,17 +1,18 @@
+
 class Payload {
-  String type;
-  String priority;
-  String userId;
-  String meetingId;
-  String patientId;
-  String patientName;
-  String patientPicture;
-  String userName;
+  String? type;
+  String? priority;
+  String? userId;
+  String? meetingId;
+  String? patientId;
+  String? patientName;
+  String? patientPicture;
+  String? userName;
   /*String doctorId;
   String doctorPicture;*/
-  String callType;
-  String isWeb;
-  String patientPhoneNumber;
+  String? callType;
+  String? isWeb;
+  String? patientPhoneNumber;
 
   Payload(
       {this.type,

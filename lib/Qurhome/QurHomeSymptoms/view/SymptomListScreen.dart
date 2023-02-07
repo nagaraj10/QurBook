@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,7 +33,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   void initState() {
     super.initState();
 
-    Provider.of<RegimentViewModel>(Get.context, listen: false).cachedEvents =
+    Provider.of<RegimentViewModel>(Get.context!, listen: false).cachedEvents =
         [];
     controller.getSymptomList(isLoading: true);
 
@@ -44,7 +45,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: OrientationBuilder(builder: (_, orientation) {
-        if (orientation == Orientation.landscape && CommonUtil().isTablet)
+        if (orientation == Orientation.landscape && CommonUtil().isTablet!)
           return Obx(() => controller.loadingData.isTrue
               ? CommonCircularQurHome()
               : Container(
@@ -295,8 +296,8 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     );
   }*/
 
-  Color getColor(Activityname activityname, Uformname uformName,
-      Metadata metadata, Orientation orientation) {
+  Color getColor(Activityname? activityname, Uformname? uformName,
+      Metadata? metadata, Orientation orientation) {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
@@ -334,21 +335,21 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     return cardColor;
   }
 
-  dynamic getIcon(Activityname activityname, Uformname uformName,
-      Metadata metadata, Orientation orientation) {
+  dynamic getIcon(Activityname? activityname, Uformname? uformName,
+      Metadata? metadata, Orientation orientation) {
     final iconSize = 40.0.sp;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata?.icon,
+            metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata?.icon,
+            imageUrl: metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
@@ -366,7 +367,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     }
   }
 
-  dynamic getDefaultIcon(Activityname activityname, Uformname uformName,
+  dynamic getDefaultIcon(Activityname? activityname, Uformname? uformName,
       double iconSize, Orientation orientation) {
     var isDefault = true;
     dynamic cardIcon = 'assets/launcher/myfhb.png';

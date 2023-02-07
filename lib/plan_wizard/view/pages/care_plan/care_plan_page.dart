@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -22,22 +23,22 @@ class CarePlanPage extends StatefulWidget {
 }
 
 class _CarePlanPageState extends State<CarePlanPage> {
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
 
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
 
   bool isSearch = false;
 
   List<PlanListResult> planSearchList = List();
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   int carePlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
   @override
   void initState() {
     mInitialTime = DateTime.now();
@@ -110,23 +111,23 @@ class _CarePlanPageState extends State<CarePlanPage> {
                 (planListProvider?.currentPackageProviderCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              planListProvider.changeCurrentPage(2);
+              planListProvider!.changeCurrentPage(2);
             }
           },
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
-      planSearchList = await planListProvider.filterSortingForProvider(popUpChoicePrice);
+      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
-      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDura);
+      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider.filterSortingForProvider(popUpChoiceDefault);
+      planSearchList = await planListProvider!.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList = await planListProvider.filterPlanNameProvider(title);
+        planSearchList = await planListProvider!.filterPlanNameProvider(title);
       }
     }
     setState(() {});
@@ -176,7 +177,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
     );
   }
 
-  Widget carePlanList(List<PlanListResult> planList) {
+  Widget carePlanList(List<PlanListResult>? planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
@@ -222,8 +223,8 @@ class _CarePlanPageState extends State<CarePlanPage> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   /* Widget popMenuItem() {
@@ -292,7 +293,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -300,7 +301,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;

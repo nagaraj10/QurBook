@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 import '../../colors/fhb_colors.dart' as fhbColors;
@@ -12,12 +13,12 @@ import '../screens/my_providers_hospitals_list.dart';
 import '../screens/my_providers_labs_list.dart';
 
 class MyProvidersTabBar extends StatefulWidget {
-  MyProvidersResponseData data;
-  MyProvidersResponseData dataHospitalLab;
-  TabController tabController;
-  ProvidersBloc providersBloc;
-  MyProviderState myProviderState;
-  Function refresh;
+  MyProvidersResponseData? data;
+  MyProvidersResponseData? dataHospitalLab;
+  TabController? tabController;
+  ProvidersBloc? providersBloc;
+  MyProviderState? myProviderState;
+  Function? refresh;
 
   MyProvidersTabBar(
       {this.data,
@@ -35,11 +36,11 @@ class MyProvidersTabBar extends StatefulWidget {
 }
 
 class MyProviderTabBarState extends State<MyProvidersTabBar> {
-  List<Hospitals> hospitalsModel = [];
-  List<Doctors> doctorsModel = [];
-  List<Doctors> doctorsModelPatientAssociated = [];
+  List<Hospitals>? hospitalsModel = [];
+  List<Doctors?>? doctorsModel = [];
+  List<Doctors?> doctorsModelPatientAssociated = [];
 
-  List<Hospitals> labsModel = List();
+  List<Hospitals>? labsModel = List();
 
   @override
   void initState() {
@@ -49,21 +50,21 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
       hospitalsModel = widget.dataHospitalLab?.hospitals;
       doctorsModel = widget.data?.doctors;
       if (widget.data?.providerRequestCollection3 != null &&
-          widget.data?.providerRequestCollection3.length > 0)
+          widget.data?.providerRequestCollection3!.length > 0)
         for (ProviderRequestCollection3 providerRequestCollection3
-            in widget.data?.providerRequestCollection3) {
-          Doctors patientAddedDoctor = providerRequestCollection3.doctor;
+            in widget.data?.providerRequestCollection3!) {
+          Doctors patientAddedDoctor = providerRequestCollection3.doctor!;
           patientAddedDoctor.isPatientAssociatedRequest = true;
           doctorsModelPatientAssociated.add(providerRequestCollection3.doctor);
         }
 
       if (doctorsModelPatientAssociated.isNotEmpty &&
           doctorsModelPatientAssociated.length > 0) {
-        doctorsModel.addAll(doctorsModelPatientAssociated);
+        doctorsModel!.addAll(doctorsModelPatientAssociated);
       }
-      labsModel = widget.dataHospitalLab.labs;
-      if (widget.data.clinics != null) {
-        hospitalsModel.addAll(widget.dataHospitalLab.clinics);
+      labsModel = widget.dataHospitalLab!.labs;
+      if (widget.data!.clinics != null) {
+        hospitalsModel!.addAll(widget.dataHospitalLab!.clinics!);
       }
     }
 
@@ -109,7 +110,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
 
     // 3
     // Labs
-    labsModel.sort((a, b) => a.name
+    labsModel!.sort((a, b) => a.name
         .toString()
         .toLowerCase()
         .compareTo(b.name.toString().toLowerCase()));
@@ -133,7 +134,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     return TabBarView(
       controller: widget.tabController,
       children: [
-        doctorsModel != null && doctorsModel.isNotEmpty
+        doctorsModel != null && doctorsModel!.isNotEmpty
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(
@@ -141,7 +142,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                   providersBloc: widget.providersBloc,
                   myProviderState: widget.myProviderState,
                   refresh: () {
-                    widget.refresh();
+                    widget.refresh!();
                   },
                 ))
             : Container(
@@ -156,7 +157,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                   ),
                 ),
               ),
-        if (hospitalsModel.length > 0)
+        if (hospitalsModel!.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersHospitalsList(
@@ -164,7 +165,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 providersBloc: widget.providersBloc,
                 myProviderState: widget.myProviderState,
                 isRefresh: () {
-                  widget.refresh();
+                  widget.refresh!();
                 },
               ))
         else
@@ -180,7 +181,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ),
             color: Color(fhbColors.bgColorContainer),
           ),
-        if (labsModel.length > 0)
+        if (labsModel!.length > 0)
           Container(
               color: Color(fhbColors.bgColorContainer),
               child: MyProvidersLabsList(
@@ -188,7 +189,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 providersBloc: widget.providersBloc,
                 myProviderState: widget.myProviderState,
                 isRefresh: () {
-                  widget.refresh();
+                  widget.refresh!();
                 },
               ))
         else

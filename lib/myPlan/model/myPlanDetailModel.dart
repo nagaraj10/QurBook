@@ -1,6 +1,7 @@
+
 class MyPlanDetailModel {
-  bool isSuccess;
-  List<MyPlanDetailResult> result;
+  bool? isSuccess;
+  List<MyPlanDetailResult>? result;
 
   MyPlanDetailModel({this.isSuccess,this.result});
 
@@ -9,7 +10,7 @@ class MyPlanDetailModel {
     if (json['result'] != null) {
       result = List<MyPlanDetailResult>();
       json['result'].forEach((v) {
-        result.add(MyPlanDetailResult.fromJson(v));
+        result!.add(MyPlanDetailResult.fromJson(v));
       });
     }
   }
@@ -18,53 +19,53 @@ class MyPlanDetailModel {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MyPlanDetailResult {
-  String planid;
-  String packageid;
-  String packagetitle;
-  String tplanid;
-  String startdate;
-  String planstemplateTitle;
-  String planstemplateDescription;
-  String specid;
-  String specialityTitle;
-  String plancatid;
-  String plancategoriesTitle;
-  String deptid;
-  String departmentsTitle;
-  String cid;
-  String conditionsTitle;
-  String sid;
-  String stepsTitle;
-  String plansDuration;
-  String teidUser;
-  String teid;
-  String title;
-  String description;
-  String duration;
-  String aid;
-  String pformid;
-  String pformdata;
-  String uformid;
-  String doserepeat;
-  String mealtype;
-  String befafttime;
-  String daystart;
-  String dayrepeat;
-  String weekrepeat;
-  String remindin;
-  String remindinType;
-  String evDuration;
-  String providerid;
-  String providername;
-  String titletext;
-  String repeattext;
+  String? planid;
+  String? packageid;
+  String? packagetitle;
+  String? tplanid;
+  String? startdate;
+  String? planstemplateTitle;
+  String? planstemplateDescription;
+  String? specid;
+  String? specialityTitle;
+  String? plancatid;
+  String? plancategoriesTitle;
+  String? deptid;
+  String? departmentsTitle;
+  String? cid;
+  String? conditionsTitle;
+  String? sid;
+  String? stepsTitle;
+  String? plansDuration;
+  String? teidUser;
+  String? teid;
+  String? title;
+  String? description;
+  String? duration;
+  String? aid;
+  String? pformid;
+  String? pformdata;
+  String? uformid;
+  String? doserepeat;
+  String? mealtype;
+  String? befafttime;
+  String? daystart;
+  String? dayrepeat;
+  String? weekrepeat;
+  String? remindin;
+  String? remindinType;
+  String? evDuration;
+  String? providerid;
+  String? providername;
+  String? titletext;
+  String? repeattext;
 
   MyPlanDetailResult(
       {this.planid,

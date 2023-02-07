@@ -1,22 +1,23 @@
+
 import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryAdditionalInfo.dart';
 
 class ClaimExpiryResult {
-  String userId;
-  String balanceAmount;
-  String balanceDoctorAppointments;
-  String balanceDieticianAppointments;
-  String balanceCarePlans;
-  String balanceDietPlans;
-  bool isMembershipUser;
-  String membershipId;
-  String healthOrganizationId;
-  String healthOrganizationName;
-  String planName;
-  String planStartDate;
-  String planEndDate;
-  String planSubscriptionInfoId;
-  ClaimExpiryAdditionalInfo additionalInfo;
-  String membershipStatus;
+  String? userId;
+  String? balanceAmount;
+  String? balanceDoctorAppointments;
+  String? balanceDieticianAppointments;
+  String? balanceCarePlans;
+  String? balanceDietPlans;
+  bool? isMembershipUser;
+  String? membershipId;
+  String? healthOrganizationId;
+  String? healthOrganizationName;
+  String? planName;
+  String? planStartDate;
+  String? planEndDate;
+  String? planSubscriptionInfoId;
+  ClaimExpiryAdditionalInfo? additionalInfo;
+  String? membershipStatus;
 
   ClaimExpiryResult(
       {this.userId,
@@ -74,7 +75,7 @@ class ClaimExpiryResult {
     data['planEndDate'] = this.planEndDate;
     data['planSubscriptionInfoId'] = this.planSubscriptionInfoId;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     data['membershipStatus'] = this.membershipStatus;
     return data;

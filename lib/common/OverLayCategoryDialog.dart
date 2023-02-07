@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'CommonUtil.dart';
@@ -24,7 +25,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   Color get barrierColor => Colors.black.withOpacity(0.5);
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   bool get maintainState => true;
@@ -103,7 +104,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
         ))));
   }
 
-  List<Widget> getWidgetsFordevices(BuildContext context) {
+  List<Widget> getWidgetsFordevices(BuildContext? context) {
     var categoryWidgetList = List<Widget>();
 
     final catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
@@ -119,14 +120,14 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   width: 25.0.h,
                   height: 25.0.h,
                   child: CachedNetworkImage(
-                    imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
+                    imageUrl: Constants.BASE_URL + catgoryDataList[i].logo!,
                     color: Colors.white70,
                     placeholder: (context, url) => CommonCircularIndicator(),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                 ),
                 onTap: () {
-                  callBackPage(catgoryDataList[i].categoryName, context,
+                  callBackPage(catgoryDataList[i].categoryName!, context,
                       catgoryDataList[i].id);
                 },
               ),
@@ -137,7 +138,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   padding: const EdgeInsets.all(8),
                   child: Center(
                     child: Text(
-                      catgoryDataList[i].categoryName,
+                      catgoryDataList[i].categoryName!,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -146,7 +147,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
             ],
           ),
           onTap: () {
-            callBackPage(catgoryDataList[i].categoryName, context,
+            callBackPage(catgoryDataList[i].categoryName!, context,
                 catgoryDataList[i].id);
           },
         ),
@@ -156,12 +157,12 @@ class OverlayCategoryDialog extends ModalRoute<void> {
     return categoryWidgetList;
   }
 
-  callBackPage(String categoryName, BuildContext context, String categoryID) {
+  callBackPage(String categoryName, BuildContext? context, String? categoryID) {
     PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
         .then((onValue) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
           .then((value) {
-        Navigator.pop(context);
+        Navigator.pop(context!);
       });
     });
   }

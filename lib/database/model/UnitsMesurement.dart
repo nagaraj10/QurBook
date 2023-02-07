@@ -1,11 +1,12 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class UnitsMesurements {
-  int id;
-  String units;
+  int? id;
+  String? units;
   dynamic minValue;
   dynamic maxValue;
-  String range;
+  String? range;
   UnitsMesurements(this.id, this.units, this.minValue, this.maxValue,this.range);
 
   UnitsMesurements.fromJson(Map<String, dynamic> obj) {

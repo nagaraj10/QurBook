@@ -1,8 +1,10 @@
+
+
 import '../../constants/fhb_parameters.dart';
 
 class WeightValues {
-  bool isSuccess;
-  List<WVResult> result;
+  bool? isSuccess;
+  List<WVResult>? result;
 
   WeightValues({this.isSuccess, this.result});
 
@@ -11,7 +13,7 @@ class WeightValues {
     if (json[dataResult] != null) {
       result = <WVResult>[];
       json[dataResult].forEach((wgtvalue) {
-        result.add(WVResult.fromJson(wgtvalue));
+        result!.add(WVResult.fromJson(wgtvalue));
       });
     }
   }
@@ -21,20 +23,20 @@ class WeightValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((wgtvalue) => wgtvalue.toJson()).toList();
+          result!.map((wgtvalue) => wgtvalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class WVResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  String weight;
-  String weightUnit;
-  String deviceId;
-  DateTime dateTimeValue;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  String? weight;
+  String? weightUnit;
+  String? deviceId;
+  DateTime? dateTimeValue;
   WVResult(
       {this.sourceType,
       this.startDateTime,

@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class BookmarkRequest {
-  List<String> mediaMetaIds;
-  bool isBookmarked;
+  List<String>? mediaMetaIds;
+  bool? isBookmarked;
 
   BookmarkRequest({this.mediaMetaIds, this.isBookmarked});
 

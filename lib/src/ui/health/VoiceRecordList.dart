@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -15,20 +16,20 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class VoiceRecordList extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
   final Function callBackToRefresh;
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool, HealthResult) mediaSelected;
+  final Function(String?, bool?, HealthResult) mediaSelected;
 
   final String categoryDescription;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  List<String> mediaMeta;
-  final bool allowSelect;
-  final bool showDetails;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  List<String?>? mediaMeta;
+  final bool? allowSelect;
+  final bool? showDetails;
 
   VoiceRecordList(
       this.completeData,
@@ -49,7 +50,7 @@ class VoiceRecordList extends StatefulWidget {
 }
 
 class _VoiceRecordListState extends State<VoiceRecordList> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -75,7 +76,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
 
   @override
   Widget build(BuildContext context) {
-    return getWidgetToDisplayVoiceRecords(widget.completeData);
+    return getWidgetToDisplayVoiceRecords(widget.completeData!);
   }
 
   Widget getWidgetToDisplayVoiceRecords(HealthRecordList completeData) {
@@ -117,11 +118,11 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   }
 
   getCardWidgetForVoiceRecords(HealthResult mediaMetaInfoObj, int i) {
-    print(mediaMetaInfoObj.metadata.hasVoiceNotes.toString() + '********');
+    print(mediaMetaInfoObj.metadata!.hasVoiceNotes.toString() + '********');
     return InkWell(
         onLongPress: () {
-          if (widget.isAudioSelect) {
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          if (widget.isAudioSelect!) {
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
             setState(() {});
             widget.mediaSelected(mediaMetaInfoObj.id,
@@ -129,14 +130,14 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
           }
         },
         onTap: () {
-          if (widget.isAudioSelect && widget.showDetails == false) {
+          if (widget.isAudioSelect! && widget.showDetails == false) {
             bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+            if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
               condition = false;
             } else {
               condition = true;
             }
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
             // setState(() {});
             widget.mediaSelected(
@@ -177,7 +178,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                           : */
                       /*Constants.BASE_URL +*/
-                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                      mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                       height: 25.0.h,
                       width: 25.0.h,
                       color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -194,8 +195,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                         height: 10.0.h,
                       ),
                       Text(
-                        mediaMetaInfoObj.metadata.fileName != null
-                            ? mediaMetaInfoObj.metadata.fileName
+                        mediaMetaInfoObj.metadata!.fileName != null
+                            ? mediaMetaInfoObj.metadata!.fileName!
                             : '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -221,7 +222,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
-                          icon: mediaMetaInfoObj.isBookmarked
+                          icon: mediaMetaInfoObj.isBookmarked!
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
@@ -237,8 +238,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metadata.hasVoiceNotes)
+                      (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata!.hasVoiceNotes!)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,
@@ -255,7 +256,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   getDocumentImagegetDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Image.memory(snapshot.data);
@@ -264,8 +265,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
             width: 50.0.h,
             height: 50.0.h,
             child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[600],
+                baseColor: Colors.grey[200]!,
+                highlightColor: Colors.grey[600]!,
                 child: Container(
                     width: 50.0.h, height: 50.0.h, color: Colors.grey[200])),
           );
@@ -283,7 +284,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
         Icons.done,
         color: Color(new CommonUtil().getMyPrimaryColor()),
       );
-    } else if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+    } else if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
       return Icon(
         Icons.done,
         color: Color(new CommonUtil().getMyPrimaryColor()),

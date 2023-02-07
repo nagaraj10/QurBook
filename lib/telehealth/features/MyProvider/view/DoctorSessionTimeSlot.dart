@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
@@ -23,28 +24,28 @@ import 'package:myfhb/common/errors_widget.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class DoctorSessionTimeSlot extends StatefulWidget {
-  final String doctorId;
-  final String date;
-  final List<Doctors> docs;
-  final List<DoctorResult> docsReschedule;
-  final int i;
-  final int doctorListIndex;
-  Past doctorsData;
-  bool isReshedule;
-  final String healthOrganizationId;
-  final List<HealthOrganizationResult> healthOrganizationResult;
-  final List<ResultFromHospital> resultFromHospitalList;
-  final int doctorListPos;
-  Function(String) closePage;
-  Function() refresh;
-  bool isFromNotification;
-  ValueChanged<String> onChanged;
-  DateTime onUserChangedDate;
-  bool isFromHospital;
+  final String? doctorId;
+  final String? date;
+  final List<Doctors?>? docs;
+  final List<DoctorResult?>? docsReschedule;
+  final int? i;
+  final int? doctorListIndex;
+  Past? doctorsData;
+  bool? isReshedule;
+  final String? healthOrganizationId;
+  final List<HealthOrganizationResult>? healthOrganizationResult;
+  final List<ResultFromHospital>? resultFromHospitalList;
+  final int? doctorListPos;
+  Function(String)? closePage;
+  Function()? refresh;
+  bool? isFromNotification;
+  ValueChanged<String>? onChanged;
+  DateTime? onUserChangedDate;
+  bool? isFromHospital;
   dynamic body;
-  bool isFromFollowOrReschedule;
-  bool isFromFollowUpApp;
-  bool isFromFollowUpTake;
+  bool? isFromFollowOrReschedule;
+  bool? isFromFollowUpApp;
+  bool? isFromFollowUpTake;
 
   DoctorSessionTimeSlot({
     this.doctorId,
@@ -81,7 +82,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   SlotsAvailabilityViewModel slotsAvailabilityViewModel =
       new SlotsAvailabilityViewModel();
   CommonWidgets commonWidgets = new CommonWidgets();
-  DateTime _selectedValue = DateTime.now();
+  DateTime? _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
 
   @override
@@ -109,12 +110,12 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   getSelectedValue() {
     DateTime sValue;
     if (widget.doctorsData != null) {
-      if (widget.doctorsData.plannedFollowupDate != null) {
-        int scrollDays = DateTime.parse(widget.doctorsData.plannedFollowupDate)
+      if (widget.doctorsData!.plannedFollowupDate != null) {
+        int scrollDays = DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
             .difference(DateTime.now())
             .inDays;
         if (scrollDays >= 0) {
-          sValue = DateTime.parse(widget.doctorsData.plannedFollowupDate);
+          sValue = DateTime.parse(widget.doctorsData!.plannedFollowupDate!);
         } else {
           sValue = DateTime.now();
         }
@@ -132,7 +133,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   updateMembershipStatus() async {
     var value = await LandingService.getMemberShipDetails();
     PreferenceUtil.saveActiveMembershipStatus(
-      value.isSuccess ? (value.result ?? []).length > 0 : false,
+      value.isSuccess! ? (value.result ?? []).length > 0 : false,
     );
   }
 
@@ -163,18 +164,18 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               setState(() {
                 _selectedValue = date;
               });
-              widget.onChanged(date.toString());
+              widget.onChanged!(date.toString());
             },
             isScrollToDate: widget.doctorsData != null
-                ? widget.doctorsData.plannedFollowupDate != null
+                ? widget.doctorsData!.plannedFollowupDate != null
                     ? true
                     : false
                 : false,
             scrollToDate: widget.doctorsData != null
                 ? widget.onUserChangedDate != null
                     ? widget.onUserChangedDate.toString()
-                    : widget.doctorsData.plannedFollowupDate != null
-                        ? widget.doctorsData.plannedFollowupDate
+                    : widget.doctorsData!.plannedFollowupDate != null
+                        ? widget.doctorsData!.plannedFollowupDate
                         : DateTime.now().toString()
                 : DateTime.now().toString(),
           ),
@@ -184,19 +185,19 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     );
   }
 
-  DateTime initialDate() {
+  DateTime? initialDate() {
     if (widget.doctorsData != null) {
       if (widget.onUserChangedDate != null) {
         setState(() {
           _selectedValue = widget.onUserChangedDate;
         });
         return widget.onUserChangedDate;
-      } else if (widget.doctorsData.plannedFollowupDate != null) {
-        int scrollDays = DateTime.parse(widget.doctorsData.plannedFollowupDate)
+      } else if (widget.doctorsData!.plannedFollowupDate != null) {
+        int scrollDays = DateTime.parse(widget.doctorsData!.plannedFollowupDate!)
             .difference(DateTime.now())
             .inDays;
         if (scrollDays >= 0) {
-          return DateTime.parse(widget.doctorsData.plannedFollowupDate);
+          return DateTime.parse(widget.doctorsData!.plannedFollowupDate!);
         } else {
           return DateTime.now();
         }
@@ -212,8 +213,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
     return new FutureBuilder<AvailableTimeSlotsModel>(
       future: slotsAvailabilityViewModel.fetchTimeSlots(
           _selectedValue.toString(),
-          widget.doctorId,
-          widget.healthOrganizationId),
+          widget.doctorId!,
+          widget.healthOrganizationId!),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -233,7 +234,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             return ErrorsWidget();
           } else {
             return (snapshot?.data?.isSuccess != null &&
-                    !snapshot?.data?.isSuccess &&
+                    !snapshot?.data?.isSuccess! &&
                     (snapshot?.data?.message ?? '').isNotEmpty)
                 ? Column(
                     children: <Widget>[
@@ -241,7 +242,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                         height: 8.0.h,
                       ),
                       new Text(
-                        snapshot?.data?.message,
+                        snapshot?.data?.message!,
                         style: TextStyle(
                           fontSize: 12.0.sp,
                         ),
@@ -251,14 +252,14 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       ),
                     ],
                   )
-                : snapshot.data.result.sessions != null &&
-                        snapshot.data.result.sessions != null
-                    ? snapshot.data.result.sessions[0].slots != null &&
-                            snapshot.data.result.sessions[0].slots.isNotEmpty
+                : snapshot.data!.result!.sessions != null &&
+                        snapshot.data!.result!.sessions != null
+                    ? snapshot.data!.result!.sessions![0].slots != null &&
+                            snapshot.data!.result!.sessions![0].slots!.isNotEmpty
                         ? Container(
                             margin: EdgeInsets.only(left: 5, top: 12),
                             child: GetTimeSlots(
-                              dateSlotTimingsObj: snapshot.data.result,
+                              dateSlotTimingsObj: snapshot.data!.result,
                               docs: widget.docs,
                               docsReschedule: widget.docsReschedule,
                               j: widget.i,
@@ -272,10 +273,10 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                                   widget.resultFromHospitalList,
                               doctorListPos: widget.doctorListPos,
                               closePage: (value) {
-                                widget.closePage(value);
+                                widget.closePage!(value);
                               },
                               isRefresh: () {
-                                widget.refresh();
+                                widget.refresh!();
                               },
                               isFromNotification: widget.isFromNotification,
                               isFromHospital: widget.isFromHospital,

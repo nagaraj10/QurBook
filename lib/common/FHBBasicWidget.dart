@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
@@ -33,15 +34,15 @@ class FHBBasicWidget {
   FHBBasicWidget();
 
   DateTime dateTime = DateTime.now();
-  String authToken;
+  String? authToken;
 
   var commonConstants = CommonConstants();
   var actionWidgetSize = 55.0;
   var plusIconSize = 14.0;
 
-  UnitsMesurements unitsMesurements;
+  UnitsMesurements? unitsMesurements;
 
-  setValues(String unitsTosearch, String range) async {
+  setValues(String? unitsTosearch, String range) async {
     await commonConstants
         .getValuesForUnit(unitsTosearch, range)
         .then((unitsMesurementsClone) {
@@ -74,7 +75,7 @@ class FHBBasicWidget {
     );
   }
 
-  Widget getSaveButton(Function onSavedPressed, {String text, double width}) {
+  Widget getSaveButton(Function onSavedPressed, {String? text, double? width}) {
     return RaisedGradientButton(
       width: width ?? 120.0.w,
       height: 40.0.h,
@@ -116,7 +117,7 @@ class FHBBasicWidget {
 
   Widget getTextFieldWithNoCallbacks(
       BuildContext context, TextEditingController searchController,
-      {bool isFileField}) {
+      {bool? isFileField}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -128,7 +129,7 @@ class FHBBasicWidget {
 
   Widget getTextFieldWithNoCallbacksClaim(
       BuildContext context, TextEditingController searchController,
-      {bool isFileField}) {
+      {bool? isFileField}) {
     return Container(
         width: 1.sw,
         child: TextField(
@@ -139,10 +140,10 @@ class FHBBasicWidget {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.only(left: 20.0),
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
               ),
             )));
   }
@@ -199,7 +200,7 @@ class FHBBasicWidget {
 
   void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
     var snackBar = SnackBar(content: Text(value));
-    scaffoldstate.currentState.showSnackBar(snackBar);
+    scaffoldstate.currentState!.showSnackBar(snackBar);
   }
 
   Widget getTextFieldForDate(
@@ -251,7 +252,7 @@ class FHBBasicWidget {
         ));
   }
 
-  Widget getTextTextTitleWithPurpleColor(String textTitle, {double fontSize}) {
+  Widget getTextTextTitleWithPurpleColor(String textTitle, {double? fontSize}) {
     return Text(textTitle,
         textAlign: TextAlign.center,
         style: TextStyle(
@@ -278,7 +279,7 @@ class FHBBasicWidget {
   Widget getProfilePicWidget(ProfilePicThumbnailMain profilePicThumbnail) {
     return profilePicThumbnail != null
         ? Image.memory(
-            Uint8List.fromList(profilePicThumbnail.data),
+            Uint8List.fromList(profilePicThumbnail.data!),
             height: 50.0.h,
             width: 50.0.h,
             fit: BoxFit.cover,
@@ -290,16 +291,16 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getProfilePicWidgeUsingUrl(MyProfileModel myProfile) {
+  Widget getProfilePicWidgeUsingUrl(MyProfileModel? myProfile) {
     if (myProfile != null && myProfile.result != null) {
-      if (myProfile.result.profilePicThumbnailUrl != '') {
+      if (myProfile.result!.profilePicThumbnailUrl != '') {
         return Image.network(
-          myProfile.result.profilePicThumbnailUrl,
+          myProfile.result!.profilePicThumbnailUrl!,
           height: 50.0.h,
           width: 50.0.h,
           fit: BoxFit.cover,
           headers: {
-            HttpHeaders.authorizationHeader: authToken,
+            HttpHeaders.authorizationHeader: authToken!,
           },
           errorBuilder: (context, exception, stackTrace) {
             return Container(
@@ -330,7 +331,7 @@ class FHBBasicWidget {
     }
   }
 
-  Future<String> setAuthToken() async {
+  Future<String?> setAuthToken() async {
     authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     return authToken;
   }
@@ -346,14 +347,14 @@ class FHBBasicWidget {
   Widget getTextFiledWithHintAndSuffixText(
     BuildContext context,
     String hintTextValue,
-    String suffixTextValue,
+    String? suffixTextValue,
     TextEditingController controllerValue,
     Function(String) onTextChanged,
     String error,
-    String unitsTosearch, {
-    String range,
-    String device,
-    bool showLabel,
+    String? unitsTosearch, {
+    String? range,
+    String? device,
+    bool? showLabel,
   }) {
     var errorValue = error;
     if (showLabel == null) {
@@ -394,13 +395,13 @@ class FHBBasicWidget {
               } else {
                 number = int.parse(value);
               }
-              if (number < unitsMesurements.minValue ||
-                  number > unitsMesurements.maxValue) {
+              if (number < unitsMesurements!.minValue ||
+                  number > unitsMesurements!.maxValue) {
                 errorValue = CommonConstants.strErrorStringForDevices +
                     ' ' +
-                    unitsMesurements.minValue.toString() +
+                    unitsMesurements!.minValue.toString() +
                     variable.strAnd +
-                    unitsMesurements.maxValue.toString();
+                    unitsMesurements!.maxValue.toString();
 
                 onTextChanged(errorValue);
               } else {
@@ -412,8 +413,8 @@ class FHBBasicWidget {
   }
 
   Widget getTextFiledWithHint(BuildContext context, String hintTextValue,
-      TextEditingController memoController,
-      {bool enabled}) {
+      TextEditingController? memoController,
+      {bool? enabled}) {
     return Container(
         width: 1.sw - 60,
         child: TextField(
@@ -426,8 +427,8 @@ class FHBBasicWidget {
             )));
   }
 
-  Widget getMicIcon(BuildContext context, bool containsAudio, String audioPath,
-      Function(bool containsAudio, String audioPath) updateUI) {
+  Widget getMicIcon(BuildContext context, bool containsAudio, String? audioPath,
+      Function(bool containsAudio, String? audioPath) updateUI) {
     return GestureDetector(
       child: Container(
         height: 80.0.h,
@@ -476,12 +477,12 @@ class FHBBasicWidget {
   }
 
   Widget getAudioIconWithFile(
-      String audioPathMain,
+      String? audioPathMain,
       bool containsAudioMain,
-      Function(bool containsAudio, String audioPath) updateUI,
+      Function(bool containsAudio, String? audioPath) updateUI,
       BuildContext context,
-      List<String> imagePath,
-      Function(BuildContext context, List<String> imagePath)
+      List<String?>? imagePath,
+      Function(BuildContext context, List<String?>? imagePath)
           onPostDataToServer) {
     return containsAudioMain
         ? Column(
@@ -516,7 +517,7 @@ class FHBBasicWidget {
           );
   }
 
-  Widget getAudioWidgetForChat(String audioPathMain) {
+  Widget getAudioWidgetForChat(String? audioPathMain) {
     return Column(
       children: <Widget>[AudioWidget(audioPathMain, null, isFromChat: true)],
     );
@@ -532,7 +533,7 @@ class FHBBasicWidget {
               padding: EdgeInsets.symmetric(vertical: 10),
               width: 0.5.sw,
               child: Text(
-                element.user.name,
+                element.user!.name!,
               ),
             ),
             SizedBox(height: 10),
@@ -577,13 +578,13 @@ class FHBBasicWidget {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   static customShowCaseNew(
       GlobalKey _key, String desc, Widget _child, String title,
-      {BuildContext context}) {
+      {required BuildContext context}) {
     return Showcase.withWidget(
         key: _key,
         disableAnimation: true,
@@ -662,7 +663,7 @@ class FHBBasicWidget {
   }
 
   static customShowCase(
-      GlobalKey _key, String desc, Widget _child, String title) {
+      GlobalKey? _key, String desc, Widget _child, String title) {
     return Showcase.withWidget(
         key: _key,
         disableAnimation: false,
@@ -741,7 +742,7 @@ class FHBBasicWidget {
   }
 
   static Widget getRefreshContainerButton(
-      String errorMsg, Function onRefreshPressed) {
+      String? errorMsg, Function onRefreshPressed) {
     return ErrorsWidget();
     // return Container(
     //   color: Color(fhbColors.bgColorContainer),
@@ -793,8 +794,8 @@ class FHBBasicWidget {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   Widget getRichTextFieldWithNoCallbacks(
@@ -802,10 +803,10 @@ class FHBBasicWidget {
       TextEditingController searchController,
       String hintText,
       int length,
-      String error,
-      Function(String) onTextChanged,
+      String? error,
+      Function(String?) onTextChanged,
       bool condiiton) {
-    String errorValue = error;
+    String? errorValue = error;
 
     return Container(
       height: 1.sh / 5,
@@ -840,14 +841,14 @@ class FHBBasicWidget {
   Widget getErrorMsgForUnitEntered(
       BuildContext context,
       String hintTextValue,
-      String suffixTextValue,
+      String? suffixTextValue,
       TextEditingController controllerValue,
       Function(String) onTextChanged,
       String error,
-      String unitsTosearch,
-      String deviceName,
-      {String range,
-      String device}) {
+      String? unitsTosearch,
+      String? deviceName,
+      {String? range,
+      String? device}) {
     var node = FocusScope.of(context);
 
     setValues(unitsTosearch, range ?? '');
@@ -878,9 +879,9 @@ class FHBBasicWidget {
                   title: 'Confirmation',
                   content: CommonConstants.strErrorStringForDevices +
                       ' ' +
-                      unitsMesurements.minValue.toString() +
+                      unitsMesurements!.minValue.toString() +
                       variable.strAnd +
-                      unitsMesurements.maxValue.toString(),
+                      unitsMesurements!.maxValue.toString(),
                   confirm: 'Confirm', onPressedConfirm: () {
                 Navigator.pop(context);
                 node.nextFocus();
@@ -931,13 +932,13 @@ class FHBBasicWidget {
                   number = int.parse(value);
                 }
                 if (number is int) {
-                  if (number < unitsMesurements.minValue ||
-                      number > unitsMesurements.maxValue) {
+                  if (number < unitsMesurements!.minValue ||
+                      number > unitsMesurements!.maxValue) {
                     errorValue = CommonConstants.strErrorStringForDevices +
                         ' ' +
-                        unitsMesurements.minValue.toString() +
+                        unitsMesurements!.minValue.toString() +
                         variable.strAnd +
-                        unitsMesurements.maxValue.toString();
+                        unitsMesurements!.maxValue.toString();
 
                     onTextChanged(errorValue);
                   }
@@ -946,9 +947,9 @@ class FHBBasicWidget {
                       number > ((unitsMesurements?.maxValue).toDouble())) {
                     errorValue = CommonConstants.strErrorStringForDevices +
                         ' ' +
-                        unitsMesurements.minValue.toString() +
+                        unitsMesurements!.minValue.toString() +
                         variable.strAnd +
-                        unitsMesurements.maxValue.toString();
+                        unitsMesurements!.maxValue.toString();
 
                     onTextChanged(errorValue);
                   }
@@ -966,24 +967,24 @@ class FHBBasicWidget {
                 }
                 try {
                   if (number is int) {
-                    if (number < unitsMesurements.minValue ||
-                        number > unitsMesurements.maxValue) {
+                    if (number < unitsMesurements!.minValue ||
+                        number > unitsMesurements!.maxValue) {
                       errorValue = CommonConstants.strErrorStringForDevices +
                           ' ' +
-                          unitsMesurements.minValue.toString() +
+                          unitsMesurements!.minValue.toString() +
                           variable.strAnd +
-                          unitsMesurements.maxValue.toString();
+                          unitsMesurements!.maxValue.toString();
 
                       onTextChanged(errorValue);
                     }
                   } else if (number is double) {
-                    if (number < ((unitsMesurements.minValue).toDouble()) ||
-                        number > ((unitsMesurements.maxValue).toDouble())) {
+                    if (number < ((unitsMesurements!.minValue).toDouble()) ||
+                        number > ((unitsMesurements!.maxValue).toDouble())) {
                       errorValue = CommonConstants.strErrorStringForDevices +
                           ' ' +
-                          unitsMesurements.minValue.toString() +
+                          unitsMesurements!.minValue.toString() +
                           variable.strAnd +
-                          unitsMesurements.maxValue.toString();
+                          unitsMesurements!.maxValue.toString();
 
                       onTextChanged(errorValue);
                     }
@@ -998,9 +999,9 @@ class FHBBasicWidget {
                       title: 'Confirmation',
                       content: CommonConstants.strErrorStringForDevices +
                           ' ' +
-                          unitsMesurements.minValue.toString() +
+                          unitsMesurements!.minValue.toString() +
                           variable.strAnd +
-                          unitsMesurements.maxValue.toString(),
+                          unitsMesurements!.maxValue.toString(),
                       confirm: 'Confirm', onPressedConfirm: () {
                     Navigator.pop(context);
                     node.nextFocus();
@@ -1019,13 +1020,13 @@ class FHBBasicWidget {
 
   showPopupForNotInRange() {}
 
-  getColorBasedOnDevice(String deviceName, String unitsTosearch, String text) {
+  getColorBasedOnDevice(String? deviceName, String? unitsTosearch, String text) {
     switch (deviceName) {
       case Constants.STR_BP_MONITOR:
         if (text != null && text != '') {
           final number = int.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return Colors.red;
           } else {
             return Color(CommonConstants.bpDarkColor);
@@ -1037,8 +1038,8 @@ class FHBBasicWidget {
       case Constants.STR_GLUCOMETER:
         if (text != null && text != '') {
           final number = int.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return Colors.red;
           } else {
             return Color(CommonConstants.GlucoDarkColor);
@@ -1051,15 +1052,15 @@ class FHBBasicWidget {
         if (text != null && text != '') {
           final number = double.parse(text);
           if (number is int) {
-            if (number < unitsMesurements.minValue ||
-                number > unitsMesurements.maxValue) {
+            if (number < unitsMesurements!.minValue ||
+                number > unitsMesurements!.maxValue) {
               return Colors.red;
             } else {
               return Color(CommonConstants.weightDarkColor);
             }
           } else if (number is double) {
-            if (number < (unitsMesurements.minValue).toDouble() ||
-                number > (unitsMesurements.maxValue).toDouble()) {
+            if (number < (unitsMesurements!.minValue).toDouble() ||
+                number > (unitsMesurements!.maxValue).toDouble()) {
               return Colors.red;
             } else {
               return Color(CommonConstants.weightDarkColor);
@@ -1073,8 +1074,8 @@ class FHBBasicWidget {
       case Constants.STR_THERMOMETER:
         if (text != null && text != '') {
           final number = double.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return Colors.red;
           } else {
             return Color(CommonConstants.ThermoDarkColor);
@@ -1087,8 +1088,8 @@ class FHBBasicWidget {
       case Constants.STR_PULSE_OXIMETER:
         if (text != null && text != '') {
           final number = int.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return Colors.red;
           } else {
             return Color(CommonConstants.pulseDarkColor);
@@ -1100,8 +1101,8 @@ class FHBBasicWidget {
       default:
         if (text != null && text != '') {
           final number = int.parse(text);
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return Colors.red;
           } else {
             return Color(CommonConstants.pulseDarkColor);
@@ -1113,7 +1114,7 @@ class FHBBasicWidget {
     }
   }
 
-  bool checkifValueisInRange(String text, String device) {
+  bool checkifValueisInRange(String text, String? device) {
     try {
       if (text != null && text != '') {
         var number;
@@ -1123,15 +1124,15 @@ class FHBBasicWidget {
           number = int.parse(text);
         }
         if (number is int) {
-          if (number < unitsMesurements.minValue ||
-              number > unitsMesurements.maxValue) {
+          if (number < unitsMesurements!.minValue ||
+              number > unitsMesurements!.maxValue) {
             return true;
           } else {
             return false;
           }
         } else if (number is double) {
-          if (number < (unitsMesurements.minValue).toDouble() ||
-              number > (unitsMesurements.maxValue).toDouble()) {
+          if (number < (unitsMesurements!.minValue).toDouble() ||
+              number > (unitsMesurements!.maxValue).toDouble()) {
             return true;
           } else {
             return false;
@@ -1150,7 +1151,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   DecimalTextInputFormatter({this.decimalRange})
       : assert(decimalRange == null || decimalRange > 0);
 
-  final int decimalRange;
+  final int? decimalRange;
 
   @override
   TextEditingValue formatEditUpdate(
@@ -1164,7 +1165,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       var value = newValue.text;
 
       if (value.contains('.') &&
-          value.substring(value.indexOf('.') + 1).length > decimalRange) {
+          value.substring(value.indexOf('.') + 1).length > decimalRange!) {
         truncated = oldValue.text;
         newSelection = oldValue.selection;
       } else if (value == '.') {
@@ -1187,12 +1188,12 @@ class DecimalTextInputFormatter extends TextInputFormatter {
 
 Widget getFirstLastNameText(MyProfileModel myProfile) {
   if (myProfile.result != null &&
-      myProfile.result.firstName != null &&
-      myProfile.result.lastName != null) {
+      myProfile.result!.firstName != null &&
+      myProfile.result!.lastName != null) {
     return Text(
-      myProfile.result.firstName[0].toUpperCase() +
-          (myProfile.result.lastName.length > 0
-              ? myProfile.result.lastName[0].toUpperCase()
+      myProfile.result!.firstName![0].toUpperCase() +
+          (myProfile.result!.lastName!.length > 0
+              ? myProfile.result!.lastName![0].toUpperCase()
               : ''),
       style: TextStyle(
         color: Colors.white,
@@ -1200,9 +1201,9 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
         fontWeight: FontWeight.w400,
       ),
     );
-  } else if (myProfile.result != null && myProfile.result.firstName != null) {
+  } else if (myProfile.result != null && myProfile.result!.firstName != null) {
     return Text(
-      myProfile.result.firstName[0].toUpperCase(),
+      myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
         color: Colors.white,
         fontSize: 18.0.sp,
@@ -1222,14 +1223,14 @@ Widget getFirstLastNameText(MyProfileModel myProfile) {
 }
 
 Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
-    {Color textColor}) {
+    {Color? textColor}) {
   if (myProfile.result != null &&
-      myProfile.result.firstName != null &&
-      myProfile.result.lastName != null) {
+      myProfile.result!.firstName != null &&
+      myProfile.result!.lastName != null) {
     return Text(
-      myProfile.result.firstName[0].toUpperCase() +
-          (myProfile.result.lastName.length > 0
-              ? myProfile.result.lastName[0].toUpperCase()
+      myProfile.result!.firstName![0].toUpperCase() +
+          (myProfile.result!.lastName!.length > 0
+              ? myProfile.result!.lastName![0].toUpperCase()
               : ''),
       style: TextStyle(
         color: textColor ?? Colors.white,
@@ -1237,9 +1238,9 @@ Widget getFirstLastNameTextForProfile(MyProfileModel myProfile,
         fontWeight: FontWeight.w500,
       ),
     );
-  } else if (myProfile.result != null && myProfile.result.firstName != null) {
+  } else if (myProfile.result != null && myProfile.result!.firstName != null) {
     return Text(
-      myProfile.result.firstName[0].toUpperCase(),
+      myProfile.result!.firstName![0].toUpperCase(),
       style: TextStyle(
         color: Colors.white,
         fontSize: 28.0.sp,

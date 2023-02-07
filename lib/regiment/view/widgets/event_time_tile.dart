@@ -1,17 +1,18 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
 
 class EventTimeTile extends StatefulWidget {
   const EventTimeTile(
-      {@required this.title,
-      @required this.onTimeSelected,
+      {required this.title,
+      required this.onTimeSelected,
       this.selectedTime,
       this.controller});
 
   final String title;
-  final Function onTimeSelected;
-  final TimeOfDay selectedTime;
+  final Function? onTimeSelected;
+  final TimeOfDay? selectedTime;
   final controller;
 
   @override
@@ -19,11 +20,11 @@ class EventTimeTile extends StatefulWidget {
 }
 
 class _EventTimeTileState extends State<EventTimeTile> {
-  TimeOfDay timeSelected;
+  TimeOfDay? timeSelected;
   DayPeriod selectedTimePeriod = DayPeriod.am;
   //final _textFormField = TextEditingController();
 
-  getTimeAsString(TimeOfDay timeOfDay) {
+  getTimeAsString(TimeOfDay? timeOfDay) {
     if (timeOfDay != null) {
       selectedTimePeriod = timeOfDay.period;
       var hour = timeOfDay?.hour;
@@ -89,15 +90,15 @@ class _EventTimeTileState extends State<EventTimeTile> {
                           return MediaQuery(
                             data: MediaQuery.of(context)
                                 .copyWith(alwaysUse24HourFormat: true),
-                            child: chld,
+                            child: chld!,
                           );
                         });
                     if (timeSelected != null) {
                       widget.controller.text = getTimeAsString(timeSelected);
                       setState(() {
-                        selectedTimePeriod = timeSelected.period;
+                        selectedTimePeriod = timeSelected!.period;
                       });
-                      widget.onTimeSelected(
+                      widget.onTimeSelected!(
                           timeSelected, widget.title, widget.controller);
                     }
                   },
@@ -112,7 +113,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
                         ),
                         enabled: false,
                         validator: (val) {
-                          return val.isEmpty ? 'error' : null;
+                          return val!.isEmpty ? 'error' : null;
                         },
                         decoration: InputDecoration(
                           isDense: true,

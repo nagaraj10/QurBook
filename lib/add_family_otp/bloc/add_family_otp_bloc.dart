@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert' as convert;
 
@@ -12,8 +13,8 @@ import '../../constants/variable_constant.dart' as variable;
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class AddFamilyOTPBloc with Validators implements BaseBloc {
-  AuthenticationRepository _authenticationRepository;
-  StreamController _otpVerifyController;
+  late AuthenticationRepository _authenticationRepository;
+  StreamController? _otpVerifyController;
 
   final _mobileNumberController = BehaviorSubject<String>();
 
@@ -25,12 +26,12 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
   Stream<bool> get submitCheck => mobileNumber.map((m) => true);
 
   StreamSink<ApiResponse<AddFamilyOTPResponse>> get otpSink =>
-      _otpVerifyController.sink;
+      _otpVerifyController!.sink as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
 
   Stream<ApiResponse<AddFamilyOTPResponse>> get otpStream =>
-      _otpVerifyController.stream;
+      _otpVerifyController!.stream as Stream<ApiResponse<AddFamilyOTPResponse>>;
 
-  String fromClass;
+  String? fromClass;
 
   AddFamilyOTPBloc() {
     _otpVerifyController =
@@ -43,8 +44,8 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
     _otpVerifyController?.close();
   }
 
-  Future<AddFamilyOTPResponse> verifyAddFamilyOtp(
-      String enteredMobNumber, String selectedCountryCode, String otp) async {
+  Future<AddFamilyOTPResponse?> verifyAddFamilyOtp(
+      String? enteredMobNumber, String selectedCountryCode, String otp) async {
     final verifyOTP = {};
     //verifyOTP[variable.strSrcName] = CommonConstants.strTrident;
     verifyOTP[variable.strCountryCode] = '+' + selectedCountryCode;
@@ -58,7 +59,7 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
     final jsonString = convert.jsonEncode(verifyOTP);
 
     otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
-    AddFamilyOTPResponse addFamilyOTPResponse;
+    AddFamilyOTPResponse? addFamilyOTPResponse;
 
     try {
       addFamilyOTPResponse =

@@ -1,3 +1,4 @@
+
 import '../../add_address/models/place.dart';
 import '../../my_providers/models/Doctors.dart';
 import '../../my_providers/models/Hospitals.dart';
@@ -6,23 +7,23 @@ import '../../search_providers/models/hospital_list_response_new.dart';
 import '../../search_providers/models/labs_list_response_new.dart';
 
 class AddProvidersArguments {
-  DoctorsListResult data;
-  HospitalsListResult hospitalData;
-  LabListResult labData;
+  DoctorsListResult? data;
+  HospitalsListResult? hospitalData;
+  LabListResult? labData;
 
-  String searchKeyWord;
-  bool hasData;
-  String searchText;
-  String fromClass;
+  String? searchKeyWord;
+  bool? hasData;
+  String? searchText;
+  String? fromClass;
 
-  Doctors doctorsModel;
-  Hospitals hospitalsModel;
-  Hospitals labsModel;
-  PlaceDetail placeDetail;
-  Place place;
-  String confirmAddressDescription;
-  Function isRefresh;
-  List<Hospitals> labsDataList;
+  Doctors? doctorsModel;
+  Hospitals? hospitalsModel;
+  Hospitals? labsModel;
+  PlaceDetail? placeDetail;
+  Place? place;
+  String? confirmAddressDescription;
+  Function? isRefresh;
+  List<Hospitals>? labsDataList;
 
   AddProvidersArguments({
     this.data,

@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -44,7 +45,7 @@ class AppointmentsCommonWidget {
         children: [
           Flexible(
             child: Text(
-              toBeginningOfSentenceCase(doc == null ? '' : doc),
+              toBeginningOfSentenceCase(doc == null ? '' : doc)!,
               //softWrap: false,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -96,36 +97,36 @@ class AppointmentsCommonWidget {
 
   Widget docIcons(
       bool isUpcoming, Past doc, BuildContext context, Function refresh) {
-    List<String> recordIds = new List();
-    List<String> notesId = new List();
-    List<String> voiceIds = new List();
+    List<String>? recordIds = new List();
+    List<String?> notesId = new List();
+    List<String?> voiceIds = new List();
 
     FlutterToast toast = new FlutterToast();
     bool containsNotes, containsVoice, containsRecord;
 
     String notesCount =
-        doc.healthRecord.notes == null || doc.healthRecord.notes == ''
+        doc.healthRecord!.notes == null || doc.healthRecord!.notes == ''
             ? 0.toString()
             : 1.toString();
     String voiceNotesCount =
-        doc.healthRecord.voice == null || doc.healthRecord.voice == ''
+        doc.healthRecord!.voice == null || doc.healthRecord!.voice == ''
             ? 0.toString()
             : 1.toString();
-    int healthRecord = doc.healthRecord.associatedRecords == null
+    int healthRecord = doc.healthRecord!.associatedRecords == null
         ? 0
-        : doc.healthRecord.associatedRecords.length;
+        : doc.healthRecord!.associatedRecords!.length;
     //int otherRecords =  doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
     //String rxCount = (healthRecord + otherRecords).toString();
     String rxCount = healthRecord.toString();
 
-    if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
-      notesId.add(doc.healthRecord.notes);
+    if (int.parse(notesCount) > 0 && doc.healthRecord!.notes != null) {
+      notesId.add(doc.healthRecord!.notes);
       containsNotes = true;
     } else {
       containsNotes = false;
     }
-    if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
-      voiceIds.add(doc.healthRecord.voice);
+    if (int.parse(voiceNotesCount) > 0 && doc.healthRecord!.voice != null) {
+      voiceIds.add(doc.healthRecord!.voice);
       containsVoice = true;
     } else {
       containsVoice = false;
@@ -134,11 +135,11 @@ class AppointmentsCommonWidget {
       /* if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
       }*/
-      if (doc.healthRecord.associatedRecords != null &&
-          doc.healthRecord.associatedRecords.length > 0) {
-        for (int i = 0; i < doc.healthRecord.associatedRecords.length; i++) {
-          if (!recordIds.contains(doc.healthRecord.associatedRecords[i])) {
-            recordIds.add(doc.healthRecord.associatedRecords[i]);
+      if (doc.healthRecord!.associatedRecords != null &&
+          doc.healthRecord!.associatedRecords!.length > 0) {
+        for (int i = 0; i < doc.healthRecord!.associatedRecords!.length; i++) {
+          if (!recordIds.contains(doc.healthRecord!.associatedRecords![i])) {
+            recordIds.add(doc.healthRecord!.associatedRecords![i]);
           }
         }
         containsRecord = true;
@@ -159,7 +160,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             TranslationConstants.notes.t(), () async {
-          FocusManager.instance.primaryFocus.unfocus();
+          FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.notes);
 
           await Navigator.of(context)
@@ -180,7 +181,7 @@ class AppointmentsCommonWidget {
               .then((results) {
             try {
               if (results.containsKey('selectedResult')) {
-                HealthResult metaIds = results['selectedResult'];
+                HealthResult? metaIds = results['selectedResult'];
 
                 //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
                 //metaIds = json.decode(results['selectedResult']);
@@ -189,8 +190,8 @@ class AppointmentsCommonWidget {
                 }
 
                 if (containsNotes) {
-                  associateUpdateRecords(doc.id, metaIds).then((value) {
-                    if (value != null && value.isSuccess) {
+                  associateUpdateRecords(doc.id, metaIds!).then((value) {
+                    if (value != null && value.isSuccess!) {
                       toast.getToast('Success', Colors.green);
                       refresh();
                     } else {
@@ -211,7 +212,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             AppConstants.voiceNotes, () async {
-          FocusManager.instance.primaryFocus.unfocus();
+          FocusManager.instance.primaryFocus!.unfocus();
           int position = await getCategoryPosition(AppConstants.voiceRecords);
 
           await Navigator.of(context)
@@ -232,7 +233,7 @@ class AppointmentsCommonWidget {
               .then((results) {
             try {
               if (results.containsKey('selectedResult')) {
-                HealthResult metaIds = results['selectedResult'];
+                HealthResult? metaIds = results['selectedResult'];
 
                 //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
                 //metaIds = json.decode(results['selectedResult']);
@@ -241,8 +242,8 @@ class AppointmentsCommonWidget {
                   containsVoice = true;
                 }
                 if (containsVoice) {
-                  associateUpdateRecords(doc.id, metaIds).then((value) {
-                    if (value != null && value.isSuccess) {
+                  associateUpdateRecords(doc.id, metaIds!).then((value) {
+                    if (value != null && value.isSuccess!) {
                       toast.getToast('Success', Colors.green);
                       refresh();
                     } else {
@@ -264,7 +265,7 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             TranslationConstants.records.t(), () async {
           if (rxCount != null /*&& isUpcoming*/) {
-            FocusManager.instance.primaryFocus.unfocus();
+            FocusManager.instance.primaryFocus!.unfocus();
             int position = await getCategoryPosition(AppConstants.prescription);
 
             await Navigator.of(context)
@@ -287,15 +288,15 @@ class AppointmentsCommonWidget {
                   var metaIds = results['metaId'];
 
                   recordIds = metaIds.cast<String>();
-                  if (recordIds.length > 0) {
+                  if (recordIds!.length > 0) {
                     containsRecord = true;
                   }
 
                   if (containsRecord) {
                     associateRecords(
-                            doc.doctor.user.id, doc.bookedFor.id, recordIds)
+                            doc.doctor!.user!.id, doc.bookedFor!.id, recordIds)
                         .then((value) {
-                      if (value != null && value.isSuccess) {
+                      if (value != null && value.isSuccess!) {
                         toast.getToast('Success', Colors.green);
                         refresh();
                       } else {
@@ -317,7 +318,7 @@ class AppointmentsCommonWidget {
   }
 
   Future<AssociateSuccessResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
+      String? doctorId, String? userId, List<String>? healthRecords) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
     AssociateSuccessResponse associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
@@ -456,7 +457,7 @@ class AppointmentsCommonWidget {
         colors: Color(new CommonUtil().getMyPrimaryColor()),
         size: 24.0.sp,
         onTap: () {
-          FocusManager.instance.primaryFocus.unfocus();
+          FocusManager.instance.primaryFocus!.unfocus();
           if (!isHome) {
             Navigator.of(context).pop();
           }
@@ -534,7 +535,7 @@ class AppointmentsCommonWidget {
     } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+        filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;
@@ -576,7 +577,7 @@ class AppointmentsCommonWidget {
 
   Widget getFirstLastNameText(Past doc) {
     if (doc.doctorSessionId == null && doc.healthOrganization != null) {
-      String strName = doc.healthOrganization.name ?? "";
+      String strName = doc.healthOrganization!.name ?? "";
       String strName1 = "";
       String strName2 = "";
       try {
@@ -603,12 +604,12 @@ class AppointmentsCommonWidget {
       return Text(
           (doc?.additionalinfo?.title != null &&
                   doc?.additionalinfo?.title != '')
-              ? doc?.additionalinfo?.title[0].toUpperCase() ?? ''
+              ? doc?.additionalinfo?.title![0].toUpperCase() ?? ''
               : (doc?.serviceCategory?.code == 'LAB')
-                  ? (doc?.additionalinfo?.lab_name != null &&
+                  ? ((doc?.additionalinfo?.lab_name != null &&
                           doc?.additionalinfo?.lab_name != '')
-                      ? doc?.additionalinfo?.lab_name[0].toUpperCase()
-                      : ''
+                      ? doc?.additionalinfo?.lab_name![0].toUpperCase()
+                      : '')!
                   : '',
           style: TextStyle(
             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -616,20 +617,20 @@ class AppointmentsCommonWidget {
             fontWeight: FontWeight.w400,
           ));
     } else if (doc != null &&
-        doc.doctor.user.firstName != null &&
-        doc.doctor.user.lastName != null) {
+        doc.doctor!.user!.firstName != null &&
+        doc.doctor!.user!.lastName != null) {
       return Text(
-        doc.doctor.user.firstName[0].toUpperCase() +
-            doc.doctor.user.lastName[0].toUpperCase(),
+        doc.doctor!.user!.firstName![0].toUpperCase() +
+            doc.doctor!.user!.lastName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
       );
-    } else if (doc != null && doc.doctor.user.firstName != null) {
+    } else if (doc != null && doc.doctor!.user!.firstName != null) {
       return Text(
-        doc.doctor.user.firstName[0].toUpperCase(),
+        doc.doctor!.user!.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -649,7 +650,7 @@ class AppointmentsCommonWidget {
   }
 
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
-      String bookingID, HealthResult healthResult) async {
+      String? bookingID, HealthResult healthResult) async {
     MyProviderViewModel providerViewModel = new MyProviderViewModel();
     AssociateUpdateSuccessResponse associateResponseList =
         await providerViewModel.associateUpdateRecords(bookingID, healthResult);
@@ -671,9 +672,9 @@ class AppointmentsCommonWidget {
     else if (doc?.doctor?.user?.profilePicThumbnailUrl == null)
       return Container(color: Color(fhbColors.bgColorContainer));
     else
-      return Image.network(doc.doctor.user.profilePicThumbnailUrl,
+      return Image.network(doc.doctor!.user!.profilePicThumbnailUrl!,
           fit: BoxFit.cover, height: 40.0.h, width: 40.0.h, errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
+              (BuildContext context, Object exception, StackTrace? stackTrace) {
         return Container(
           height: 50.0.h,
           width: 50.0.h,
@@ -686,7 +687,7 @@ class AppointmentsCommonWidget {
   }
 
   getDoctorAndHealthOrganizationName(Past doc) {
-    String name = '';
+    String? name = '';
     if (doc.doctorSessionId == null && doc?.healthOrganization != null) {
       name = doc?.healthOrganization?.name?.capitalizeFirstofEach != null
           ? doc?.healthOrganization?.name?.capitalizeFirstofEach
@@ -715,21 +716,21 @@ class AppointmentsCommonWidget {
   }
 
   getLocation(Past doc) {
-    String location = '';
+    String? location = '';
     if (doc.doctorSessionId == null &&
         doc?.healthOrganization != null &&
         doc?.healthOrganization?.healthOrganizationAddressCollection != null &&
         doc?.healthOrganization?.healthOrganizationAddressCollection?.length >
             0) {
-      location = doc?.healthOrganization?.healthOrganizationAddressCollection[0]
+      location = doc?.healthOrganization?.healthOrganizationAddressCollection![0]
               .city?.name ??
           '';
     } else if (doc.doctorSessionId != null &&
         doc?.doctor != null &&
         doc?.doctor?.user != null &&
         doc?.doctor?.user?.userAddressCollection3 != null &&
-        doc?.doctor?.user?.userAddressCollection3.length > 0) {
-      location = doc?.doctor?.user?.userAddressCollection3[0]?.city.name;
+        doc?.doctor?.user?.userAddressCollection3!.length > 0) {
+      location = doc?.doctor?.user?.userAddressCollection3![0]?.city!.name;
     }
 
     return location;

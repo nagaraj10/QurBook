@@ -1,6 +1,7 @@
+
 class ReferAFriendRequest {
-  List<Contacts> contacts;
-  String source;
+  List<Contacts>? contacts;
+  String? source;
 
   ReferAFriendRequest({this.contacts, this.source});
 
@@ -8,7 +9,7 @@ class ReferAFriendRequest {
     if (json['contacts'] != null) {
       contacts = List<Contacts>();
       json['contacts'].forEach((v) {
-        contacts.add(Contacts.fromJson(v));
+        contacts!.add(Contacts.fromJson(v));
       });
     }
     source = json['source'];
@@ -17,7 +18,7 @@ class ReferAFriendRequest {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (contacts != null) {
-      data['contacts'] = contacts.map((v) => v.toJson()).toList();
+      data['contacts'] = contacts!.map((v) => v.toJson()).toList();
     }
     data['source'] = source;
     return data;
@@ -25,8 +26,8 @@ class ReferAFriendRequest {
 }
 
 class Contacts {
-  String phoneNumber;
-  String name;
+  String? phoneNumber;
+  String? name;
 
   Contacts({this.phoneNumber, this.name});
 

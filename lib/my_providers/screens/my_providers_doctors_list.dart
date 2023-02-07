@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/ClipImage/ClipOvalImage.dart';
@@ -24,10 +25,10 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'my_provider.dart';
 
 class MyProvidersDoctorsList extends StatefulWidget {
-  final List<Doctors> doctorsModel;
-  final ProvidersBloc providersBloc;
-  final MyProviderState myProviderState;
-  Function refresh;
+  final List<Doctors?>? doctorsModel;
+  final ProvidersBloc? providersBloc;
+  final MyProviderState? myProviderState;
+  Function? refresh;
 
   MyProvidersDoctorsList(
       {this.doctorsModel,
@@ -40,10 +41,10 @@ class MyProvidersDoctorsList extends StatefulWidget {
 }
 
 class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
-  List<Doctors> doctorsModel;
-  List<Doctors> copyOfdoctorsModel;
-  MyProviderState myProviderState;
-  MyProviderViewModel providerViewModel;
+  List<Doctors?>? doctorsModel;
+  List<Doctors?>? copyOfdoctorsModel;
+  late MyProviderState myProviderState;
+  late MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
   FlutterToast toast = FlutterToast();
 
@@ -67,10 +68,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   }
 
   void filterDuplicateDoctor() {
-    if (widget?.doctorsModel.isNotEmpty) {
+    if (widget?.doctorsModel!.isNotEmpty) {
       copyOfdoctorsModel = widget.doctorsModel;
-      var ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
-      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      var ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));
       doctorsModel = copyOfdoctorsModel;
     }
   }
@@ -83,24 +84,24 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (context, index) {
-        var eachDoctorModel = doctorsModel[index];
+        var eachDoctorModel = doctorsModel![index]!;
         var specialization =
             eachDoctorModel.doctorProfessionalDetailCollection != null
-                ? eachDoctorModel.doctorProfessionalDetailCollection.isNotEmpty
-                    ? eachDoctorModel.doctorProfessionalDetailCollection[0]
+                ? eachDoctorModel.doctorProfessionalDetailCollection!.isNotEmpty
+                    ? eachDoctorModel.doctorProfessionalDetailCollection![0]
                                 .specialty !=
                             null
-                        ? (eachDoctorModel.doctorProfessionalDetailCollection[0]
-                                        .specialty.name !=
+                        ? (eachDoctorModel.doctorProfessionalDetailCollection![0]
+                                        .specialty!.name !=
                                     null &&
                                 eachDoctorModel
-                                        .doctorProfessionalDetailCollection[0]
-                                        .specialty
+                                        .doctorProfessionalDetailCollection![0]
+                                        .specialty!
                                         .name !=
                                     '')
                             ? eachDoctorModel
-                                .doctorProfessionalDetailCollection[0]
-                                .specialty
+                                .doctorProfessionalDetailCollection![0]
+                                .specialty!
                                 .name
                             : ''
                         : ''
@@ -128,14 +129,14 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                   children: <Widget>[
                     ClipOval(
                         child: eachDoctorModel.user != null
-                            ? (eachDoctorModel.user.profilePicThumbnailUrl !=
+                            ? (eachDoctorModel.user!.profilePicThumbnailUrl !=
                                         null ||
-                                    (eachDoctorModel.user.firstName != null &&
-                                        eachDoctorModel.user.lastName != null))
+                                    (eachDoctorModel.user!.firstName != null &&
+                                        eachDoctorModel.user!.lastName != null))
                                 ? getProfilePicWidget(
-                                    eachDoctorModel.user.profilePicThumbnailUrl,
-                                    eachDoctorModel.user.firstName,
-                                    eachDoctorModel.user.lastName,
+                                    eachDoctorModel.user!.profilePicThumbnailUrl!,
+                                    eachDoctorModel.user!.firstName!,
+                                    eachDoctorModel.user!.lastName!,
                                     Color(CommonUtil().getMyPrimaryColor()))
                                 : Container(
                                     width: 50.0.h,
@@ -157,10 +158,11 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: 5.0.h),
-                          AutoSizeText(
+                          //AutoSizeText( // FU2.5
+                            Text( //FU2.5
                             eachDoctorModel.user != null
                                 ? CommonUtil()
-                                    .getDoctorName(eachDoctorModel.user)
+                                    .getDoctorName(eachDoctorModel.user!)!
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -168,12 +170,14 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.start,
-                          ),
+                          ),  
                           SizedBox(height: 5.0.h),
+                         
                           if (specialization != null)
-                            AutoSizeText(
+                           // AutoSizeText( // FU2.5
+                            Text( // FU2.5
                               specialization != null
-                                  ? toBeginningOfSentenceCase(specialization)
+                                  ? toBeginningOfSentenceCase(specialization)!
                                   : '',
                               maxLines: 1,
                               style: TextStyle(
@@ -181,10 +185,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                   fontWeight: FontWeight.w400,
                                   color: ColorUtils.lightgraycolor),
                               textAlign: TextAlign.start,
-                            )
+                            ) 
                           else
                             SizedBox(height: 0.0.h, width: 0.0.h),
-                          SizedBox(height: 5.0.h),
+                          SizedBox(height: 5.0.h), 
                         ],
                       ),
                     ),
@@ -198,7 +202,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                     Colors.transparent)),
                             child: Container(
                                 child: Text(
-                              eachDoctorModel.isPatientAssociatedRequest
+                              eachDoctorModel.isPatientAssociatedRequest!
                                   ? "Waiting for approval"
                                   : "",
                               maxLines: 2,
@@ -222,7 +226,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                         children: <Widget>[
                           commonWidgets.getBookMarkedIconNew(eachDoctorModel,
                               () {
-                            if (eachDoctorModel.isPatientAssociatedRequest) {
+                            if (eachDoctorModel.isPatientAssociatedRequest!) {
                               toast.getToast('Approval request is pending',
                                   Colors.black54);
                             } else {
@@ -233,8 +237,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                                       'ListItem',
                                       eachDoctorModel.sharedCategories)
                                   .then((status) {
-                                if (status) {
-                                  widget.refresh();
+                                if (status!) {
+                                  widget.refresh!();
                                 }
                               });
                             }
@@ -251,12 +255,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
           color: Colors.transparent,
         );
       },
-      itemCount: doctorsModel.length,
+      itemCount: doctorsModel!.length,
     );
   }
 
   callMethodToNavigate(Doctors eachDoctorModel, {bool isButton = false}) {
-    if (eachDoctorModel.isPatientAssociatedRequest) {
+    if (eachDoctorModel.isPatientAssociatedRequest!) {
       toast.getToast('Approval request is pending', Colors.black54);
     } else {
       Navigator.pushNamed(context, router.rt_AddProvider,
@@ -266,7 +270,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
               fromClass: router.rt_myprovider,
               hasData: true,
               isRefresh: () {
-                widget.refresh();
+                widget.refresh!();
               })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
         myProviderState.refreshPage();

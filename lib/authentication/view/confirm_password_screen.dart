@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -19,7 +20,7 @@ import 'package:provider/provider.dart';
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName, this.isVirtualNumber = false});
 
-  String userName;
+  String? userName;
   bool isVirtualNumber;
 
   @override
@@ -36,10 +37,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   final _ChangePasswordKey = GlobalKey<FormState>();
   final _otpKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
-  AuthViewModel authViewModel;
+  late AuthViewModel authViewModel;
   bool _isHidden = true;
   bool _isHiddenSecondary = true;
-  OtpViewModel otpViewModel;
+  OtpViewModel? otpViewModel;
 
   @override
   void initState() {
@@ -69,7 +70,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
   @override
   void codeUpdated() {
     setState(() {
-      CodeController.text = code;
+      CodeController.text = code!;
     });
   }
 
@@ -84,7 +85,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
           children: <Widget>[
             Container(
               padding: EdgeInsets.symmetric(
-                  horizontal: CommonUtil().isTablet ? 50 : 20),
+                  horizontal: CommonUtil().isTablet! ? 50 : 20),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +143,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                               validator: (value) {
                                 return AuthenticationValidator()
                                     .phoneOtpValidation(
-                                        value, patternOtp, strEnterOtpp);
+                                        value!, patternOtp as String, strEnterOtpp);
                               },
                               onSaved: (value) {},
                             ),
@@ -191,8 +192,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   ),
                                   validator: (value) {
                                     return AuthenticationValidator()
-                                        .passwordValidation(value,
-                                            patternPassword, strPassCantEmpty);
+                                        .passwordValidation(value!,
+                                            patternPassword as String, strPassCantEmpty);
                                   },
                                   controller: NewPasswordController,
                                   onSaved: (value) {},
@@ -241,7 +242,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                         .confirmPasswordValidation(
                                             NewPasswordController.text,
                                             value,
-                                            patternPassword,
+                                            patternPassword as String,
                                             strPassCantEmpty);
                                   },
                                 ),
@@ -272,7 +273,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                                   ),
                                   children: [
                                     TextSpan(
-                                      text: otpViewModel.timeForResend,
+                                      text: otpViewModel!.timeForResend,
                                       style: TextStyle(
                                         color: Color(
                                             CommonUtil().getMyPrimaryColor()),
@@ -290,7 +291,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                     ),
                     SizedBox(height: 10.0.h),
                     Visibility(
-                      visible: otpViewModel.timerSeconds == 0,
+                      visible: otpViewModel!.timerSeconds == 0,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -300,12 +301,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
                               Color(CommonUtil().getMyGredientColor()),
                             ]),
                             width: 200.0.w,
-                            onPressed: otpViewModel.timerSeconds == 0
+                            onPressed: otpViewModel!.timerSeconds == 0
                                 ? () {
-                                    if (_ChangePasswordKey.currentState
+                                    if (_ChangePasswordKey.currentState!
                                         .validate()) {
                                       otpViewModel?.stopOTPTimer();
-                                      otpViewModel.confirmViaCall(
+                                      otpViewModel!.confirmViaCall(
                                         phoneNumber: widget.userName ?? '',
                                         onOtpReceived: (otpCode) {
                                           _verifyDetails(
@@ -388,16 +389,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
     );
   }
 
-  _verifyDetails({String otpCode}) async {
+  _verifyDetails({String? otpCode}) async {
     FocusScope.of(context).unfocus();
     if (otpCode != null ||
-        (_ChangePasswordKey.currentState.validate() &&
-            _otpKey.currentState.validate())) {
+        (_ChangePasswordKey.currentState!.validate() &&
+            _otpKey.currentState!.validate())) {
       if (otpCode == null) {
-        _ChangePasswordKey.currentState.save();
+        _ChangePasswordKey.currentState!.save();
       } else {
-        _otpKey.currentState.save();
-        _ChangePasswordKey.currentState.save();
+        _otpKey.currentState!.save();
+        _ChangePasswordKey.currentState!.save();
       }
       LoaderClass.showLoadingDialog(context);
       var logInModel = PatientConfirmPasswordModel(
@@ -419,14 +420,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen>
 
   _checkResponse(PatientConfirmPasswordModel response) {
     LoaderClass.hideLoadingDialog(context);
-    if (response.isSuccess) {
-      toast.getToast(response.message, Colors.lightBlue);
+    if (response.isSuccess!) {
+      toast.getToast(response.message!, Colors.lightBlue);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => PatientSignInScreen()),
           (route) => false);
     } else {
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message!, Colors.red);
     }
   }
 

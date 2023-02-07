@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -18,10 +19,10 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_provider.dart';
 
 class MyProvidersLabsList extends StatefulWidget {
-  final List<Hospitals> labsModel;
-  final ProvidersBloc providersBloc;
-  final MyProviderState myProviderState;
-  Function isRefresh;
+  final List<Hospitals>? labsModel;
+  final ProvidersBloc? providersBloc;
+  final MyProviderState? myProviderState;
+  Function? isRefresh;
 
   MyProvidersLabsList(
       {this.labsModel,
@@ -34,10 +35,10 @@ class MyProvidersLabsList extends StatefulWidget {
 }
 
 class _MyProvidersLabsList extends State<MyProvidersLabsList> {
-  List<Hospitals> labsModel;
-  ProvidersBloc providersBloc;
-  MyProviderState myProviderState;
-  MyProviderViewModel providerViewModel;
+  List<Hospitals>? labsModel;
+  ProvidersBloc? providersBloc;
+  late MyProviderState myProviderState;
+  late MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
 
   @override
@@ -66,7 +67,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (context, index) {
-        final eachLabModel = widget.labsModel[index];
+        final eachLabModel = widget.labsModel![index];
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
@@ -77,7 +78,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                       hasData: true,
                       labsDataList:widget.labsModel,
                       isRefresh: () {
-                        widget.isRefresh();
+                        widget.isRefresh!();
                       })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
                 myProviderState.refreshPage();
@@ -113,7 +114,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                   child: Center(
                                     child: Text(
                                       eachLabModel.name != null
-                                          ? eachLabModel.name[0].toUpperCase()
+                                          ? eachLabModel.name![0].toUpperCase()
                                           : '',
                                       style: TextStyle(
                                           color: Color(CommonUtil()
@@ -136,11 +137,13 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            eachLabModel.name != null
+                         
+                         // AutoSizeText( FU2.5
+                         Text( //FU2.5
+                            (eachLabModel.name != null
                                 ? eachLabModel?.name
                                     ?.capitalizeFirstofEach //toBeginningOfSentenceCase(eachLabModel.name)
-                                : '',
+                                : '')!,
                             maxLines: 1,
                             style: TextStyle(
                               fontSize: 16.0.sp,
@@ -149,14 +152,15 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5.0.h),
-                          AutoSizeText(
-                            '' + commonWidgets.getCityHospital(eachLabModel),
+                          Text( //FU2.5
+                        //  AutoSizeText( FU2.5
+                            '' + commonWidgets.getCityHospital(eachLabModel)!,
                             maxLines: 1,
                             style: TextStyle(
                                 fontSize: 15.0.sp,
                                 fontWeight: FontWeight.w400,
                                 color: ColorUtils.lightgraycolor),
-                          ),
+                          ), 
                           SizedBox(height: 5.0.h),
                         ],
                       ),
@@ -173,8 +177,8 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
                                 .bookMarkHealthOrg(
                                     eachLabModel, false, 'ListItem', null)
                                 .then((status) {
-                              if (status) {
-                                widget.isRefresh();
+                              if (status!) {
+                                widget.isRefresh!();
                               }
                             });
                           }),
@@ -190,7 +194,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList> {
           color: Colors.transparent,
         );
       },
-      itemCount: widget.labsModel.length,
+      itemCount: widget.labsModel!.length,
     );
   }
 }

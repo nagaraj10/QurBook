@@ -1,6 +1,7 @@
+
 class AddPlanSuccessResponse {
-  bool isSuccess;
-  String result;
+  bool? isSuccess;
+  String? result;
 
   AddPlanSuccessResponse({this.isSuccess, this.result});
 

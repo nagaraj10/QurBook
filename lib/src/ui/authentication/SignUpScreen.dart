@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -14,14 +15,14 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class SignUpScreen extends StatefulWidget {
   final String enteredMobNumber;
-  final String selectedCountryCode;
-  final String selectedCountry;
+  final String? selectedCountryCode;
+  final String? selectedCountry;
 
   const SignUpScreen(
-      {Key key,
-      @required this.enteredMobNumber,
-      @required this.selectedCountryCode,
-      @required this.selectedCountry})
+      {Key? key,
+      required this.enteredMobNumber,
+      required this.selectedCountryCode,
+      required this.selectedCountry})
       : super(key: key);
 
   @override
@@ -32,23 +33,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final double circleRadius = 100.0.h;
   final double circleBorderWidth = 2.0;
 
-  LoginBloc _loginBloc;
-  TextEditingController phoneNumber,
+  late LoginBloc _loginBloc;
+  TextEditingController? phoneNumber,
       name,
       email,
       firstName,
       middleName,
       lastName;
   String strErrorMsg = '';
-  String dropDownValue = 'Male';
-  PickedFile imageURI;
+  String? dropDownValue = 'Male';
+  PickedFile? imageURI;
   @override
   void initState() {
     super.initState();
 
     _loginBloc = LoginBloc();
     phoneNumber = new TextEditingController(
-        text: '+' + widget.selectedCountryCode + ' ' + widget.enteredMobNumber);
+        text: '+' + widget.selectedCountryCode! + ' ' + widget.enteredMobNumber);
     name = new TextEditingController(text: '');
     email = new TextEditingController(text: '');
     firstName = new TextEditingController(text: '');
@@ -96,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
-                                          Colors.grey[200].withOpacity(0.5)))),
+                                          Colors.grey[200]!.withOpacity(0.5)))),
                         ),
                       ),
                       Padding(
@@ -109,7 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
-                                          Colors.grey[200].withOpacity(0.5)))),
+                                          Colors.grey[200]!.withOpacity(0.5)))),
                         ),
                       ),
                       Padding(
@@ -122,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
-                                          Colors.grey[200].withOpacity(0.5)))),
+                                          Colors.grey[200]!.withOpacity(0.5)))),
                         ),
                       ),
                       Padding(
@@ -135,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
-                                          Colors.grey[200].withOpacity(0.5)))),
+                                          Colors.grey[200]!.withOpacity(0.5)))),
                         ),
                       ),
                       Padding(
@@ -150,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               border: UnderlineInputBorder(
                                   borderSide: BorderSide(
                                       color:
-                                          Colors.grey[200].withOpacity(0.5)))),
+                                          Colors.grey[200]!.withOpacity(0.5)))),
                         ),
                       ),
                     ],
@@ -200,9 +201,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             shape: CircleBorder(),
                             image: DecorationImage(
                                 fit: BoxFit.cover,
-                                image: imageURI != null
-                                    ? FileImage(File(imageURI.path))
-                                    : AssetImage(variable.icon_fhb))),
+                                image: (imageURI != null
+                                    ? FileImage(File(imageURI!.path))
+                                    : AssetImage(variable.icon_fhb)) as ImageProvider<Object>)),
                       ),
                       onTap: () {
                         saveMediaDialog(context);
@@ -228,7 +229,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         height: 1.0.h,
         color: Colors.grey,
       ),
-      onChanged: (String newValue) {
+      onChanged: (String? newValue) {
         setState(() {
           dropDownValue = newValue;
         });
@@ -246,28 +247,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (doValidation()) {
       _loginBloc
           .createUser(
-              '+' + widget.selectedCountryCode,
+              '+' + widget.selectedCountryCode!,
               widget.enteredMobNumber,
-              email.text,
-              dropDownValue,
-              firstName.text,
+              email!.text,
+              dropDownValue!,
+              firstName!.text,
               '',
               '',
               '',
-              File(imageURI.path),
-              middleName.text,
-              lastName.text)
+              File(imageURI!.path),
+              middleName!.text,
+              lastName!.text)
           .then((onValue) {
         PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
-            int.parse(widget.selectedCountryCode));
+            int.parse(widget.selectedCountryCode!));
         PreferenceUtil.saveString(Constants.MOB_NUM, widget.enteredMobNumber)
             .then((onValue) {
           PreferenceUtil.saveString(
-                  Constants.COUNTRY_CODE, widget.selectedCountry)
+                  Constants.COUNTRY_CODE, widget.selectedCountry!)
               .then((onValue) {});
         });
         PreferenceUtil.saveString(
-            CommonConstants.KEY_COUNTRYNAME, widget.selectedCountry);
+            CommonConstants.KEY_COUNTRYNAME, widget.selectedCountry!);
 
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -296,13 +297,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool doValidation() {
     bool isValid = false;
 
-    if (phoneNumber.text == '') {
+    if (phoneNumber!.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterMobileNum;
-    } else if (firstName.text == '') {
+    } else if (firstName!.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterFirstname;
-    } else if (lastName.text == '') {
+    } else if (lastName!.text == '') {
       isValid = false;
       strErrorMsg = variable.strEnterLastName;
     } else {

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -27,15 +28,15 @@ class CategoryList extends StatefulWidget {
   @override
   _CategoryState createState() => _CategoryState();
 
-  final String providerId;
-  final String diseases;
-  final String icon;
+  final String? providerId;
+  final String? diseases;
+  final String? icon;
 
   const CategoryList(this.providerId, this.icon, this.diseases);
 }
 
 class _CategoryState extends State<CategoryList> {
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
   PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
   List<PlanListResult> myPLanListResult = [];
@@ -49,19 +50,19 @@ class _CategoryState extends State<CategoryList> {
 
   bool isSubscribedOne = false;
 
-  String providerId = '';
-  String icon = '';
-  String diseases = '';
+  String? providerId = '';
+  String? icon = '';
+  String? diseases = '';
 
-  Future<PlanListModel> planListModel;
-  Map<String, List<PlanListResult>> planListResultMap;
-  Map<String, bool> isSelectedMap;
+  Future<PlanListModel>? planListModel;
+  Map<String?, List<PlanListResult>>? planListResultMap;
+  late Map<String?, bool> isSelectedMap;
 
   List<PlanListResult> planListResult = [];
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     // Provider.of<RegimentViewModel>(
     //   context,
@@ -75,12 +76,12 @@ class _CategoryState extends State<CategoryList> {
     icon = widget.icon;
     diseases = widget.diseases;
 
-    planListModel = myPlanViewModel.getPlanList(providerId);
+    planListModel = myPlanViewModel.getPlanList(providerId!);
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -123,8 +124,8 @@ class _CategoryState extends State<CategoryList> {
                 height: 10.0.h,
               ),
               Expanded(
-                child: myPlanListModel != null ?? myPlanListModel.isSuccess
-                    ? categoryList(myPlanListModel.result)
+                child: myPlanListModel != null ?? myPlanListModel!.isSuccess!
+                    ? categoryList(myPlanListModel!.result)
                     : getCategoryList(providerId),
               ),
             ],
@@ -141,7 +142,7 @@ class _CategoryState extends State<CategoryList> {
     setState(() {});
   }
 
-  Widget categoryList(List<PlanListResult> planList) {
+  Widget categoryList(List<PlanListResult>? planList) {
     categoryListUniq = [];
     //selectTitle = {};
     //selectedTitle = {};
@@ -171,7 +172,7 @@ class _CategoryState extends State<CategoryList> {
           elementNew.packcatid,
           () => [],
         );*/
-        planListResultMap.putIfAbsent(
+        planListResultMap!.putIfAbsent(
           elementNew.packcatid,
           () => [],
         );
@@ -190,7 +191,7 @@ class _CategoryState extends State<CategoryList> {
           }
           //selectTitle[elementLast.packcatid].add(elementLast.title);
 
-          planListResultMap[elementLast.packcatid].add(elementLast);
+          planListResultMap![elementLast.packcatid]!.add(elementLast);
         });
       });
     }
@@ -217,7 +218,7 @@ class _CategoryState extends State<CategoryList> {
     return (categoryListUniq != null &&
             categoryListUniq.isNotEmpty &&
             planListResultMap != null &&
-            planListResultMap.isNotEmpty)
+            planListResultMap!.isNotEmpty)
         ? GroupListView(
             shrinkWrap: true,
             padding: EdgeInsets.only(
@@ -226,7 +227,7 @@ class _CategoryState extends State<CategoryList> {
             sectionsCount:
                 isSearch ? myPLanListResult.length : categoryListUniq.length,
             countOfItemInSection: (section) {
-              return planListResultMap[isSearch
+              return planListResultMap![isSearch
                           ? myPLanListResult[section]?.packcatid
                           : categoryListUniq[section]?.packcatid]
                       ?.length ??
@@ -247,7 +248,7 @@ class _CategoryState extends State<CategoryList> {
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                       child: Text(
-                        toBeginningOfSentenceCase(catName),
+                        toBeginningOfSentenceCase(catName)!,
                         style: TextStyle(
                             color: Colors.white, fontWeight: FontWeight.w500),
                       ),
@@ -271,7 +272,7 @@ class _CategoryState extends State<CategoryList> {
           );
   }
 
-  Widget getCategoryList(String providerId) {
+  Widget getCategoryList(String? providerId) {
     return FutureBuilder<PlanListModel>(
       future: planListModel,
       builder: (context, snapshot) {
@@ -293,8 +294,8 @@ class _CategoryState extends State<CategoryList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
-            return categoryList(snapshot.data.result);
+              snapshot?.data?.result!.isNotEmpty) {
+            return categoryList(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -327,7 +328,7 @@ class _CategoryState extends State<CategoryList> {
                   planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {
-            planListModel = myPlanViewModel.getPlanList(providerId);
+            planListModel = myPlanViewModel.getPlanList(providerId!);
           });
         });
       },
@@ -375,7 +376,7 @@ class _CategoryState extends State<CategoryList> {
                       children: [
                         Text(
                           planList[i].catname != null
-                              ? toBeginningOfSentenceCase(planList[i].catname)
+                              ? toBeginningOfSentenceCase(planList[i].catname)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -389,7 +390,7 @@ class _CategoryState extends State<CategoryList> {
                         Text(
                           planList[i].providerName != null
                               ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
+                                  planList[i].providerName)!
                               : '',
                           style: TextStyle(
                               fontSize: 14.0.sp,
@@ -398,14 +399,14 @@ class _CategoryState extends State<CategoryList> {
                         ),
                         SizedBox(height: 2.h),
                         Text(
-                          selectTitle[planList[i].packcatid] != null
+                          selectTitle[planList[i].packcatid!] != null
                               ? isSubscribedOne
                                   ? planList[i].catselecttype == '1'
                                       ? strSelectedPlan +
-                                          selectedTitle[planList[i].packcatid]
+                                          selectedTitle[planList[i].packcatid!]!
                                               .join(', ')
                                       : strSelectedPlans +
-                                          selectedTitle[planList[i].packcatid]
+                                          selectedTitle[planList[i].packcatid!]!
                                               .join(', ')
                                   : planList[i].catselecttype == '1'
                                       ? strSelectPlan
@@ -433,9 +434,9 @@ class _CategoryState extends State<CategoryList> {
   Widget _itemBuilder(BuildContext context, IndexPath inx) {
     if ((planListResultMap?.length ?? 0) > 0 &&
         (categoryListUniq?.length ?? 0) > 0) {
-      final planListResult = planListResultMap[isSearch
+      final planListResult = planListResultMap![isSearch
           ? myPLanListResult[inx.section]?.packcatid
-          : categoryListUniq[inx.section]?.packcatid];
+          : categoryListUniq[inx.section]?.packcatid]!;
       return InkWell(
         onTap: () {
           Navigator.push(
@@ -513,7 +514,7 @@ class _CategoryState extends State<CategoryList> {
                           Text(
                             planListResult[inx.index]?.title != null
                                 ? toBeginningOfSentenceCase(
-                                    planListResult[inx.index]?.title)
+                                    planListResult[inx.index]?.title)!
                                 : '',
                             style: TextStyle(
                               fontSize: 15.0.sp,
@@ -526,7 +527,7 @@ class _CategoryState extends State<CategoryList> {
                           Text(
                             planListResult[inx.index]?.providerName != null
                                 ? toBeginningOfSentenceCase(
-                                    planListResult[inx.index]?.providerName)
+                                    planListResult[inx.index]?.providerName)!
                                 : '',
                             style: TextStyle(
                                 fontSize: 14.0.sp,
@@ -548,7 +549,7 @@ class _CategoryState extends State<CategoryList> {
                                       null)
                                     Text(
                                       planListResult[inx.index]
-                                              ?.packageDuration +
+                                              ?.packageDuration! +
                                           ' days',
                                       maxLines: 1,
                                       style: TextStyle(
@@ -605,7 +606,7 @@ class _CategoryState extends State<CategoryList> {
                             planListResult[inx.index].price != null
                                 ? Visibility(
                                     visible: planListResult[inx.index]
-                                            .price
+                                            .price!
                                             .isNotEmpty &&
                                         planListResult[inx.index]?.price != '0',
                                     replacement: TextWidget(
@@ -616,7 +617,7 @@ class _CategoryState extends State<CategoryList> {
                                             CommonUtil().getMyPrimaryColor())),
                                     child: TextWidget(
                                         text: CommonUtil.CURRENCY +
-                                            planListResult[inx.index]?.price,
+                                            planListResult[inx.index]?.price!,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
                                         colors: Color(new CommonUtil()
@@ -681,7 +682,7 @@ class _CategoryState extends State<CategoryList> {
                                                       '0', refresh: () {
                                             setState(() {
                                               planListModel = myPlanViewModel
-                                                  .getPlanList(providerId);
+                                                  .getPlanList(providerId!);
                                             });
                                           });
                                         }
@@ -720,26 +721,26 @@ class _CategoryState extends State<CategoryList> {
     }
   }
 
-  String getImage(int i, List<PlanListResult> planList) {
-    String image;
+  String? getImage(int i, List<PlanListResult> planList) {
+    String? image;
     if (planList[i] != null) {
       if (planList[i].metadata != null && planList[i].metadata != '') {
-        if (planList[i].metadata.icon != null &&
-            planList[i].metadata.icon != '') {
-          image = planList[i].metadata.icon;
+        if (planList[i].metadata!.icon != null &&
+            planList[i].metadata!.icon != '') {
+          image = planList[i].metadata!.icon;
         } else {
           if (planList[i].catmetadata != null &&
               planList[i].catmetadata != '') {
-            if (planList[i].catmetadata.icon != null &&
-                planList[i].catmetadata.icon != '') {
-              image = planList[i].catmetadata.icon;
+            if (planList[i].catmetadata!.icon != null &&
+                planList[i].catmetadata!.icon != '') {
+              image = planList[i].catmetadata!.icon;
             }
           } else {
             if (planList[i].providerMetadata != null &&
                 planList[i].providerMetadata != '') {
-              if (planList[i].providerMetadata.icon != null &&
-                  planList[i].providerMetadata.icon != '') {
-                image = planList[i].providerMetadata.icon;
+              if (planList[i].providerMetadata!.icon != null &&
+                  planList[i].providerMetadata!.icon != '') {
+                image = planList[i].providerMetadata!.icon;
               }
             } else {
               image = '';
@@ -748,16 +749,16 @@ class _CategoryState extends State<CategoryList> {
         }
       } else {
         if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
-          if (planList[i].catmetadata.icon != null &&
-              planList[i].catmetadata.icon != '') {
-            image = planList[i].catmetadata.icon;
+          if (planList[i].catmetadata!.icon != null &&
+              planList[i].catmetadata!.icon != '') {
+            image = planList[i].catmetadata!.icon;
           }
         } else {
           if (planList[i].providerMetadata != null &&
               planList[i].providerMetadata != '') {
-            if (planList[i].providerMetadata.icon != null &&
-                planList[i].providerMetadata.icon != '') {
-              image = planList[i].providerMetadata.icon;
+            if (planList[i].providerMetadata!.icon != null &&
+                planList[i].providerMetadata!.icon != '') {
+              image = planList[i].providerMetadata!.icon;
             }
           } else {
             image = '';
@@ -766,16 +767,16 @@ class _CategoryState extends State<CategoryList> {
       }
     } else {
       if (planList[i].catmetadata != null && planList[i].catmetadata != '') {
-        if (planList[i].catmetadata.icon != null &&
-            planList[i].catmetadata.icon != '') {
-          image = planList[i].catmetadata.icon;
+        if (planList[i].catmetadata!.icon != null &&
+            planList[i].catmetadata!.icon != '') {
+          image = planList[i].catmetadata!.icon;
         }
       } else {
         if (planList[i].providerMetadata != null &&
             planList[i].providerMetadata != '') {
-          if (planList[i].providerMetadata.icon != null &&
-              planList[i].providerMetadata.icon != '') {
-            image = planList[i].providerMetadata.icon;
+          if (planList[i].providerMetadata!.icon != null &&
+              planList[i].providerMetadata!.icon != '') {
+            image = planList[i].providerMetadata!.icon;
           }
         } else {
           image = '';

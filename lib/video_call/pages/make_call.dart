@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -15,29 +16,29 @@ import 'package:myfhb/video_call/utils/audiocall_provider.dart';
 import 'package:myfhb/video_call/utils/rtc_engine.dart';
 import 'package:myfhb/video_call/widgets/audiocall_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:screen/screen.dart';
+//import 'package:screen/screen.dart';  FU2.5
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../../../../constants/fhb_constants.dart' as constants;
 
 class MakeCallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
-  final String channelName;
+  final String? channelName;
 
   /// non-modifiable client role of the page
-  final ClientRole role;
+  final ClientRole? role;
 
-  final String bookId;
-  final String patName;
-  final String appointmentId;
-  final String call_start_time;
-  final bool isFromAppointment;
-  final String startedTime;
-  final String patId;
+  final String? bookId;
+  final String? patName;
+  final String? appointmentId;
+  final String? call_start_time;
+  final bool? isFromAppointment;
+  final String? startedTime;
+  final String? patId;
 
   /// Creates a call page with given channel name.
   const MakeCallPage(
-      {Key key,
+      {Key? key,
       this.channelName,
       this.role,
       this.bookId,
@@ -56,23 +57,23 @@ class MakeCallPage extends StatefulWidget {
 class _MakeCallPageState extends State<MakeCallPage> {
   final _infoStrings = <String>[];
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   bool _internetconnection = false;
   var _connectionStatus = '';
-  String doctor_id, mtTitle, specialityName = null;
+  String? doctor_id, mtTitle, specialityName = null;
 
-  String userIdForNotify = '';
+  String? userIdForNotify = '';
 
   var regController = Get.find<QurhomeRegimenController>();
 
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
   @override
   void dispose() {
     try {
       super.dispose();
-      Provider.of<RTCEngineProvider>(Get.context, listen: false)
+      Provider.of<RTCEngineProvider>(Get.context!, listen: false)
           .stopRtcEngine();
-      Screen.keepOn(false);
+      //Screen.keepOn(false);  FU2.5
       _connectivitySubscription.cancel();
       fbaLog(eveName: 'qurbook_screen_event', eveParams: {
         'eventTime': '${DateTime.now()}',
@@ -90,7 +91,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
     try {
       super.initState();
       mInitialTime = DateTime.now();
-      Screen.keepOn(true);
+      //Screen.keepOn(true);  FU2.5
       _connectivitySubscription =
           _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     } catch (e) {
@@ -146,7 +147,7 @@ class _MakeCallPageState extends State<MakeCallPage> {
               }
             });
             Provider.of<RTCEngineProvider>(
-              Get.context,
+              Get.context!,
               listen: false,
             ).updateCustomViewShown(true);
             //toast.getToast(no_internet_conn, Colors.red);

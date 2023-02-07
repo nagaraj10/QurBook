@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
@@ -25,14 +26,14 @@ class VitalDetailController extends GetxController {
   final GetGFDataFromFHBRepo _helper = GetGFDataFromFHBRepo();
   var loadingData = false.obs;
   var filterBtnOnTap = 0.obs;
-  SheelaBLEController _sheelaBLEController;
-  HubListViewController _hubController;
+  late SheelaBLEController _sheelaBLEController;
+  late HubListViewController _hubController;
   var bpList = [].obs;
   var gulList = [].obs;
   var oxyList = [].obs;
   var tempList = [].obs;
   var weightList = [].obs;
-  String deviceName;
+  String? deviceName;
 
   var timerProgress = 1.0.obs;
   var isShowTimerDialog = true.obs;
@@ -135,13 +136,13 @@ class VitalDetailController extends GetxController {
     _hubController = Get.find();
     _sheelaBLEController = Get.find();
     await _hubController.getHubList();
-    if ((_hubController.hubListResponse.result.userDeviceCollection ?? [])
+    if ((_hubController.hubListResponse!.result!.userDeviceCollection ?? [])
             .length >
         0) {
       _sheelaBLEController.isFromVitals = true;
       _sheelaBLEController.setupListenerForReadings();
       CommonUtil().dialogForScanDevices(
-        Get.context,
+        Get.context!,
         onPressManual: () {
           Get.back();
           _sheelaBLEController.stopTTS();
@@ -181,19 +182,19 @@ class VitalDetailController extends GetxController {
       List<BPResult> ret = [];
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bloodPressureCollection.isEmpty) {
+        if (dataElement.bloodPressureCollection!.isEmpty) {
           loadingData.value = false;
           return bpList.value = [];
         }
-        dataElement.bloodPressureCollection.forEach((bpElement) {
+        dataElement.bloodPressureCollection!.forEach((bpElement) {
           var bpList = BPResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: bpElement.startDateTime.toIso8601String(),
-              endDateTime: bpElement.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: bpElement.startDateTime!.toIso8601String(),
+              endDateTime: bpElement.endDateTime!.toIso8601String(),
               systolic: bpElement.systolic,
               diastolic: bpElement.diastolic,
-              bpm: dataElement.heartRateCollection.isNotEmpty
-                  ? dataElement.heartRateCollection[0].bpm ?? null
+              bpm: dataElement.heartRateCollection!.isNotEmpty
+                  ? dataElement.heartRateCollection![0].bpm ?? null
                   : null,
               deviceId: dataElement.deviceId,
               dateTimeValue: bpElement.startDateTime);
@@ -249,24 +250,24 @@ class VitalDetailController extends GetxController {
       List<dynamic> finalResult;
       var ret = List<GVResult>();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bloodGlucoseCollection.isEmpty) {
+        if (dataElement.bloodGlucoseCollection!.isEmpty) {
           loadingData.value = false;
           return gulList.value = [];
         }
-        dataElement.bloodGlucoseCollection.forEach((bgValue) {
+        dataElement.bloodGlucoseCollection!.forEach((bgValue) {
           var bgList = GVResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: bgValue.startDateTime.toIso8601String(),
-              endDateTime: bgValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: bgValue.startDateTime!.toIso8601String(),
+              endDateTime: bgValue.endDateTime!.toIso8601String(),
               bloodGlucoseLevel: bgValue.bloodGlucoseLevel,
               bgUnit:
-                  (bgValue.bgUnit == null) ? null : bgValue.bgUnit.description,
+                  (bgValue.bgUnit == null) ? null : bgValue.bgUnit!.description,
               mealContext: (bgValue.mealContext == null)
                   ? null
-                  : bgValue.mealContext.description,
+                  : bgValue.mealContext!.description,
               mealType: (bgValue.mealType == null)
                   ? null
-                  : bgValue.mealType.description,
+                  : bgValue.mealType!.description,
               deviceId: dataElement.deviceId,
               dateTimeValue: bgValue.startDateTime);
           ret.add(bgList);
@@ -315,23 +316,23 @@ class VitalDetailController extends GetxController {
       var ret = <OxyResult>[];
       //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.oxygenSaturationCollection.isEmpty &&
-            dataElement.heartRateCollection.isEmpty) {
+        if (dataElement.oxygenSaturationCollection!.isEmpty &&
+            dataElement.heartRateCollection!.isEmpty) {
           loadingData.value = false;
           return oxyList.value = [];
         }
-        dataElement.oxygenSaturationCollection.forEach((oxyValue) {
+        dataElement.oxygenSaturationCollection!.forEach((oxyValue) {
           var oxyList = OxyResult(
-            sourceType: dataElement.sourceType.description,
-            startDateTime: oxyValue.startDateTime.toIso8601String(),
-            endDateTime: oxyValue.endDateTime.toIso8601String(),
+            sourceType: dataElement.sourceType!.description,
+            startDateTime: oxyValue.startDateTime!.toIso8601String(),
+            endDateTime: oxyValue.endDateTime!.toIso8601String(),
             oxygenSaturation: oxyValue.oxygenSaturation,
             deviceId: dataElement.deviceId,
             dateTimeValue: oxyValue.startDateTime,
-            bpm: dataElement.heartRateCollection.isEmpty
+            bpm: dataElement.heartRateCollection!.isEmpty
                 ? ''
-                : dataElement.heartRateCollection[0].bpm != null
-                    ? dataElement.heartRateCollection[0].bpm.toString()
+                : dataElement.heartRateCollection![0].bpm != null
+                    ? dataElement.heartRateCollection![0].bpm.toString()
                     : '',
           );
           ret.add(oxyList);
@@ -385,17 +386,17 @@ class VitalDetailController extends GetxController {
       List<TMPResult> ret = [];
       List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyTemperatureCollection.isEmpty) {
+        if (dataElement.bodyTemperatureCollection!.isEmpty) {
           loadingData.value = false;
           return tempList.value = [];
         }
-        dataElement.bodyTemperatureCollection.forEach((tempValue) {
+        dataElement.bodyTemperatureCollection!.forEach((tempValue) {
           var tempList = TMPResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: tempValue.startDateTime.toIso8601String(),
-              endDateTime: tempValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: tempValue.startDateTime!.toIso8601String(),
+              endDateTime: tempValue.endDateTime!.toIso8601String(),
               temperature: tempValue.temperature,
-              temperatureUnit: tempValue.temperatureUnit.description,
+              temperatureUnit: tempValue.temperatureUnit!.description,
               deviceId: dataElement.deviceId,
               dateTimeValue: tempValue.startDateTime);
           ret.add(tempList);
@@ -445,18 +446,18 @@ class VitalDetailController extends GetxController {
       List<WVResult> ret = [];
       List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.bodyWeightCollection.isEmpty) {
+        if (dataElement.bodyWeightCollection!.isEmpty) {
           loadingData.value = false;
           return weightList.value = [];
         }
-        dataElement.bodyWeightCollection.forEach((weightValue) {
+        dataElement.bodyWeightCollection!.forEach((weightValue) {
           var weightList = WVResult(
-              sourceType: dataElement.sourceType.description,
-              startDateTime: weightValue.startDateTime.toIso8601String(),
-              endDateTime: weightValue.endDateTime.toIso8601String(),
+              sourceType: dataElement.sourceType!.description,
+              startDateTime: weightValue.startDateTime!.toIso8601String(),
+              endDateTime: weightValue.endDateTime!.toIso8601String(),
               weight: weightValue.weight,
               weightUnit: weightValue.weightUnit != null
-                  ? weightValue.weightUnit.description
+                  ? weightValue.weightUnit!.description
                   : 'kg',
               deviceId: dataElement.deviceId,
               dateTimeValue: weightValue.startDateTime);

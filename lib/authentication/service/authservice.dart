@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:myfhb/src/resources/network/api_services.dart';
@@ -58,7 +59,7 @@ class AuthService {
         return responseResult;
       } else if (response.statusCode == 500) {
         final responseResult = jsonDecode(response.body);
-        final String responseString = responseResult[strResult];
+        final String? responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString ?? '');
         return responseResult;
@@ -292,7 +293,7 @@ class AuthService {
   Future<dynamic> addDoctorAsProvider(String jsonBody) async {
     var responseJson;
     var requestHeaders = <String, String>{
-      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
       'Content-Type': 'application/json',
       Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };
@@ -312,7 +313,7 @@ class AuthService {
   Future<IvrNumberModel> getIVRNumbers() async {
     var responseJson;
     var requestHeaders = <String, String>{
-      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!,
       'Content-Type': 'application/json',
       Constants.KEY_OffSet: CommonUtil().setTimeZone()
     };

@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
@@ -36,16 +37,16 @@ import '../utils/audiocall_provider.dart';
 class IosNotificationHandler {
   final myDB = FirebaseFirestore.instance;
   bool isAlreadyLoaded = false;
-  NotificationModel model;
+  late NotificationModel model;
   bool renewAction = false;
   bool callbackAction = false;
   bool acceptAction = false;
   bool escalteAction = false;
   bool rejectAction = false;
-  bool viewMemberAction, viewDetails = false;
+  bool? viewMemberAction, viewDetails = false;
   bool communicationSettingAction = false;
   bool notificationReceivedFromKilledState = false;
-  bool viewRecordAction, chatWithCC = false;
+  bool? viewRecordAction, chatWithCC = false;
   SheelaAIController sheelaAIController = Get.find();
 
   setUpListerForTheNotification() {
@@ -66,7 +67,7 @@ class IosNotificationHandler {
               LaunchReview.launch(
                   iOSAppId: variable.iOSAppId, writeReview: false);
             } else {
-              CommonUtil().launchURL(model.externalLink);
+              CommonUtil().launchURL(model.externalLink!);
             }
           }
 
@@ -119,7 +120,7 @@ class IosNotificationHandler {
     try {
       await myDB
           .collection("call_log")
-          .doc("${model.callArguments.channelName}")
+          .doc("${model.callArguments!.channelName}")
           .set({"call_status": status});
     } catch (e) {
       print(e);
@@ -130,14 +131,14 @@ class IosNotificationHandler {
         'ns_type': 'call',
         'navigationPage': 'TeleHelath Call screen',
       });
-      if (model.callType.toLowerCase() == 'audio') {
-        Provider.of<AudioCallProvider>(Get.context, listen: false)
+      if (model.callType!.toLowerCase() == 'audio') {
+        Provider.of<AudioCallProvider>(Get.context!, listen: false)
             .enableAudioCall();
-      } else if (model.callType.toLowerCase() == 'video') {
-        Provider.of<AudioCallProvider>(Get.context, listen: false)
+      } else if (model.callType!.toLowerCase() == 'video') {
+        Provider.of<AudioCallProvider>(Get.context!, listen: false)
             .disableAudioCall();
       }
-      Get.key.currentState.pushNamed(
+      Get.key.currentState!.pushNamed(
         router.rt_CallMain,
         arguments: model.callArguments,
       );
@@ -145,7 +146,7 @@ class IosNotificationHandler {
   }
 
   actionForTheNotification() async {
-    if (model.isCall) {
+    if (model.isCall!) {
       updateStatus(parameters.accept.toLowerCase());
     } else if (callbackAction) {
       callbackAction = false;
@@ -168,10 +169,10 @@ class IosNotificationHandler {
         receiver: model.caregiverReceiver,
         requestor: model.caregiverRequestor,
       );
-    } else if (viewDetails && (model.userId ?? '').isNotEmpty) {
+    } else if (viewDetails! && (model.userId ?? '').isNotEmpty) {
       CommonUtil().getDetailsOfAddedFamilyMember(
-        Get.context,
-        model.userId,
+        Get.context!,
+        model.userId!,
       );
     } else if (acceptAction &&
         (model.patientPhoneNumber ?? '').isNotEmpty &&
@@ -268,7 +269,7 @@ class IosNotificationHandler {
       );
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
-        chatWithCC) {
+        chatWithCC!) {
       if (!notificationReceivedFromKilledState) {
         if ((model.userId ?? '').isNotEmpty &&
             (model.patientName ?? '').isNotEmpty &&
@@ -302,10 +303,10 @@ class IosNotificationHandler {
       }
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
-        viewRecordAction) {
+        viewRecordAction!) {
       if (model.redirectData != null) {
-        final dataOne = model.redirectData[1];
-        final dataTwo = model.redirectData[2];
+        final dataOne = model.redirectData![1];
+        final dataTwo = model.redirectData![2];
 
         if (dataTwo.runtimeType == String && (dataTwo ?? '').isNotEmpty) {
           final userId = PreferenceUtil.getStringValue(KEY_USERID);
@@ -356,8 +357,8 @@ class IosNotificationHandler {
                 nsRoute: parameters.chat,
               ));
     } else if (model.redirectData != null) {
-      final dataOne = model.redirectData[1];
-      final dataTwo = model.redirectData[2];
+      final dataOne = model.redirectData![1];
+      final dataTwo = model.redirectData![2];
       fbaLog(eveParams: {
         'eventTime': '${DateTime.now()}',
         'ns_type': 'myRecords',
@@ -416,10 +417,10 @@ class IosNotificationHandler {
       if (isAlreadyLoaded) {
         if ((model.notificationListId ?? '').isNotEmpty) {
           FetchNotificationService()
-              .inAppUnreadAction(model.notificationListId);
+              .inAppUnreadAction(model.notificationListId!);
         }
         if (model.rawBody != null) {
-          String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+          String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
           if (sheela_lang != null && sheela_lang != '') {
             Get.toNamed(
               rt_Sheela,
@@ -473,12 +474,12 @@ class IosNotificationHandler {
                     packageId: model.planId,
                     showRenew: renewAction,
                     templateName: model.templateName),
-              ).then((value) {
+              )!.then((value) {
                 renewAction = false;
               })
             : Get.to(() => SplashScreen(
                   nsRoute: 'regiment_screen',
-                )).then((value) {
+                ))!.then((value) {
                 renewAction = false;
               });
       } else {
@@ -502,7 +503,7 @@ class IosNotificationHandler {
             showRenew: false,
             templateName: model.templateName,
           ),
-        ).then((value) {
+        )!.then((value) {
           renewAction = false;
         });
       } else {
@@ -619,7 +620,7 @@ class IosNotificationHandler {
       });
       isAlreadyLoaded
           ? PageNavigator.goToPermanent(
-              Get.key.currentContext, router.rt_Landing)
+              Get.key.currentContext!, router.rt_Landing)
           : Get.to(() => SplashScreen(
                 nsRoute: 'regiment_screen',
               ));
@@ -682,7 +683,7 @@ class IosNotificationHandler {
       model.redirect = 'appointmentList';
       await PreferenceUtil.saveNotificationData(model);
       isAlreadyLoaded
-          ? PageNavigator.goTo(Get.context, router.rt_Landing)
+          ? PageNavigator.goTo(Get.context!, router.rt_Landing)
           : Get.to(() => SplashScreen(
                 nsRoute: model.redirect,
               ));
@@ -709,7 +710,7 @@ class IosNotificationHandler {
     } else {
       isAlreadyLoaded
           ? PageNavigator.goTo(
-              Get.context,
+              Get.context!,
               router.rt_Landing,
             )
           : Get.to(() => SplashScreen(
@@ -719,7 +720,7 @@ class IosNotificationHandler {
   }
 
   void navigateToMyRecordsCategory(
-      dynamic categoryType, List<String> hrmId, bool isTerminate) async {
+      dynamic categoryType, List<String>? hrmId, bool isTerminate) async {
     CommonUtil().getCategoryListPos(categoryType).then(
           (value) => CommonUtil().goToMyRecordsScreen(
             value,

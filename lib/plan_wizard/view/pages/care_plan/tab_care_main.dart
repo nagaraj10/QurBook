@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart';
 import 'package:myfhb/plan_wizard/view/pages/care_plan/care_plan_page.dart';
@@ -15,17 +16,17 @@ class TabCareMain extends StatefulWidget {
 
 class _TabCareMainState extends State<TabCareMain>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   int _activeTabIndex = 0;
 
-  PlanWizardViewModel planListProvider;
+  late PlanWizardViewModel planListProvider;
 
   @override
   void initState() {
     super.initState();
 
     _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(_setActiveTabIndex);
+    _tabController!.addListener(_setActiveTabIndex);
 
     if ((Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.isDynamicLink) ??
@@ -35,7 +36,7 @@ class _TabCareMainState extends State<TabCareMain>
             ?.dynamicLinkTabIndex;
         Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.changeCurrentTab(tabIndex);
-        _tabController.animateTo(tabIndex);
+        _tabController!.animateTo(tabIndex);
       });
     } else {
       Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;
@@ -48,8 +49,8 @@ class _TabCareMainState extends State<TabCareMain>
   }
 
   void _setActiveTabIndex() {
-    FocusManager.instance.primaryFocus.unfocus();
-    _activeTabIndex = _tabController.index;
+    FocusManager.instance.primaryFocus!.unfocus();
+    _activeTabIndex = _tabController!.index;
     planListProvider.changeCurrentTab(_activeTabIndex);
   }
 

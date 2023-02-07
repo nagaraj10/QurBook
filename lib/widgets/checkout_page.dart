@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:ui';
 
@@ -39,12 +40,12 @@ import 'CartIconWithBadge.dart';
 
 class CheckoutPage extends StatefulWidget {
   //final CartType cartType;
-  final String cartUserId;
+  final String? cartUserId;
   final bool isFromNotification;
-  final String bookingId;
-  final String notificationListId;
-  final String cartId;
-  final String patientName;
+  final String? bookingId;
+  final String? notificationListId;
+  final String? cartId;
+  final String? patientName;
 
   //CheckoutPage({this.cartType = CartType.DEFAULT_CART, this.cartUserId});
   CheckoutPage(
@@ -268,7 +269,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     showDialog(
                                                         barrierDismissible:
                                                             false,
-                                                        context: Get.context,
+                                                        context: Get.context!,
                                                         builder: (context) {
                                                           return AlertDialog(
                                                             insetPadding:
@@ -320,8 +321,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                                                 children: <Widget>[
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet ? 50 : 40,
+                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -341,8 +342,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                     ),
                                                                                   ),
                                                                                   SizedBoxWithChild(
-                                                                                    width: CommonUtil().isTablet ? 120 : 90,
-                                                                                    height: CommonUtil().isTablet ? 50 : 40,
+                                                                                    width: CommonUtil().isTablet! ? 120 : 90,
+                                                                                    height: CommonUtil().isTablet! ? 50 : 40,
                                                                                     child: FlatButton(
                                                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0), side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
                                                                                       color: Colors.transparent,
@@ -366,7 +367,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                                   ),
                                                                                 ],
                                                                               ),
-                                                                              CommonUtil().isTablet
+                                                                              CommonUtil().isTablet!
                                                                                   ? SizedBoxWidget(
                                                                                       height: 8.0.h,
                                                                                     )
@@ -416,7 +417,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         SizedBox(
                                                           width: 10,
                                                         ),
-                                                        Text(widget.patientName,
+                                                        Text(widget.patientName!,
                                                             style: TextStyle(
                                                                 fontSize:
                                                                     18.0.sp,
@@ -448,7 +449,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                     ?.fetchingCartItemsModel
                                                     ?.result
                                                     ?.cart
-                                                    ?.productList[index]);
+                                                    ?.productList![index]);
                                           },
                                         ),
                                       ],
@@ -491,7 +492,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                           ],
                                         ),
                                         DottedLine(
-                                            height: 1, color: Colors.grey[400]),
+                                            height: 1, color: Colors.grey[400]!),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -677,8 +678,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "cartId": "${value?.fetchingCartItemsModel?.result?.cart?.id}",
       "isQurbook": true
     };
-    FetchingCartItemsModel fetchingCartItemsModel =
-        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+    FetchingCartItemsModel? fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
                 cartUserId: widget?.cartUserId,
@@ -693,7 +694,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           isPaymentNotification: widget?.isFromNotification,
           fetchingCartItemsModel: fetchingCartItemsModel,
           isSuccess: (value) {
-            if (value) {
+            if (value!) {
               Provider.of<CheckoutPageProvider>(context, listen: false)
                   .loader(false, isNeedRelod: true);
               Provider.of<CheckoutPageProvider>(context, listen: false)
@@ -705,7 +706,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       cartUserId: widget.cartUserId,
                       firstTym: false);
 
-              Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+              Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                   .fetchCartItems(
                       isNeedRelod: true,
                       cartUserId: widget?.cartUserId,
@@ -718,8 +719,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     } else {
       ApiBaseHelper().makePayment(body).then((value) {
         if (value != null) {
-          if (value?.isSuccess && !(value?.result != null)) {
-            Alert.displayConfirmation(Get.context,
+          if (value?.isSuccess! && !(value?.result != null)) {
+            Alert.displayConfirmation(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
                 content: value?.message ?? '', onPressedConfirm: () {
@@ -728,7 +729,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   .then((value) {
                 Provider.of<CheckoutPageProvider>(context, listen: false)
                     .loader(false, isNeedRelod: true);
-                Navigator.of(Get.context).pop();
+                Navigator.of(Get.context!).pop();
                 if (value['isSuccess']) {
                   Navigator.pop(context);
                 }
@@ -764,7 +765,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           productValue = 0;
         } else {
           productValue =
-              double.parse(item?.productDetail?.planSubscriptionFee).toInt();
+              double.parse(item?.productDetail?.planSubscriptionFee!).toInt();
         }
       }
     } else {
@@ -782,17 +783,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
         } else {
           productValue = double.parse(item?.additionalInfo?.actualFee).toInt();
         }
-      } else if (item?.paidAmount.contains(".")) {
+      } else if (item?.paidAmount!.contains(".")) {
         if (item?.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = double.parse(item.paidAmount).toInt();
+          productValue = double.parse(item.paidAmount!).toInt();
         }
       } else {
         if (item?.additionalInfo?.isMembershipAvail ?? false) {
           productValue = 0;
         } else {
-          productValue = int.parse(item.paidAmount);
+          productValue = int.parse(item.paidAmount!);
         }
       }
     }
@@ -842,7 +843,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                               // fontWeight: FontWeight.bold,
                               fontSize: 13),
                         ),
-                        item.additionalInfo.isRenewal
+                        item.additionalInfo!.isRenewal!
                             ? Text(
                                 strRenewal,
                                 style: TextStyle(
@@ -894,7 +895,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                         if (widget.isFromNotification == false) {
                           showDialog(
                               barrierDismissible: false,
-                              context: Get.context,
+                              context: Get.context!,
                               builder: (context) => AlertDialog(
                                     insetPadding:
                                         EdgeInsets.symmetric(horizontal: 8),
@@ -942,7 +943,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                 TextSpan>[
                                                               TextSpan(
                                                                 text:
-                                                                    '${(item?.productDetail?.planName).toLowerCase()}',
+                                                                    '${item?.productDetail?.planName!.toLowerCase()}',
                                                                 style:
                                                                     TextStyle(
                                                                   fontSize:
@@ -985,11 +986,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                         children: <Widget>[
                                                           SizedBoxWithChild(
                                                             width: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 120
                                                                 : 90,
                                                             height: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 50
                                                                 : 40,
                                                             child: FlatButton(
@@ -1027,11 +1028,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           ),
                                                           SizedBoxWithChild(
                                                             width: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 120
                                                                 : 90,
                                                             height: CommonUtil()
-                                                                    .isTablet
+                                                                    .isTablet!
                                                                 ? 50
                                                                 : 40,
                                                             child: FlatButton(
@@ -1062,7 +1063,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                                               false)
                                                                       .fetchCartItem();
 
-                                                                  ProductList productList = Provider.of<
+                                                                  ProductList? productList = Provider.of<
                                                                               CheckoutPageProvider>(
                                                                           context,
                                                                           listen:
@@ -1094,7 +1095,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                                                           ),
                                                         ],
                                                       ),
-                                                      CommonUtil().isTablet
+                                                      CommonUtil().isTablet!
                                                           ? SizedBoxWidget(
                                                               height: 8.0.h,
                                                             )
@@ -1131,8 +1132,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  int getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
-    int planDuration = 0;
+  int? getDurationBasedOnCondition(ProductList item, {bool firstTym = true}) {
+    int? planDuration = 0;
     if (!firstTym) {
       if (item?.productDetail?.packageDuration != null &&
           item?.productDetail?.packageDuration != "") {
@@ -1148,7 +1149,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         if (item?.additionalInfo?.isMembershipAvail ?? false) {
           planDuration = 0;
         } else {
-          planDuration = item?.additionalInfo?.duration.toInt();
+          planDuration = item?.additionalInfo?.duration!.toInt();
         }
       } else {
         if (item?.additionalInfo?.isMembershipAvail ?? false) {
@@ -1181,8 +1182,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       "isQurbook": true
     };
 
-    FetchingCartItemsModel fetchingCartItemsModel =
-        await Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+    FetchingCartItemsModel? fetchingCartItemsModel =
+        await Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
             .updateCartItems(
                 isNeedRelod: false,
                 cartUserId: widget?.cartUserId,
@@ -1194,8 +1195,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
       await Provider.of<CheckoutPageProvider>(context, listen: false)
           .loader(false, isNeedRelod: false);
       if (result != null) {
-        if (result?.isSuccess) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        if (result?.isSuccess!) {
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
           if (result?.result != null) {
             var checkValidation = await CheckoutPageWidgets()
@@ -1206,14 +1207,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
               planSubLogic(value);
             }
           } else {
-            Alert.displayConfirmProceed(Get.context,
+            Alert.displayConfirmProceed(Get.context!,
                 confirm: "Update Cart",
                 title: "Update",
                 content: result?.message ?? '', onPressedConfirm: () {
               ApiBaseHelper()
                   .updateCartIcon(fetchingCartItemsModel?.result)
                   .then((value) {
-                Navigator.of(Get.context).pop();
+                Navigator.of(Get.context!).pop();
                 if (value['isSuccess']) {
                   Provider.of<CheckoutPageProvider>(context, listen: false)
                       .loader(false, isNeedRelod: true);
@@ -1226,7 +1227,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           cartUserId: widget.cartUserId,
                           firstTym: false);
 
-                  Provider.of<CheckoutPageProvider>(Get.context, listen: false)
+                  Provider.of<CheckoutPageProvider>(Get.context!, listen: false)
                       .fetchCartItems(
                           isNeedRelod: true,
                           cartUserId: widget?.cartUserId,
@@ -1239,7 +1240,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             });
           }
         } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
           FlutterToast()..getToast('Subscribe Failed', Colors.red);
         }
       } else {

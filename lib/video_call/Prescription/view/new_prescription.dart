@@ -1,3 +1,4 @@
+
 import 'dart:core';
 import 'dart:ui';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -15,10 +16,10 @@ import '../constants/prescription_constants.dart';
 import 'popUpWidget.dart';
 
 class NewPrescription extends StatefulWidget {
-  final List<PrescriptionMedicines> duplicatedMedicines;
-  bool isDuplicatedPrescription = false;
+  final List<PrescriptionMedicines>? duplicatedMedicines;
+  bool? isDuplicatedPrescription = false;
   NewPrescription(
-      {Key key, this.duplicatedMedicines, this.isDuplicatedPrescription})
+      {Key? key, this.duplicatedMedicines, this.isDuplicatedPrescription})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => NewPrescriptionState();
@@ -30,7 +31,7 @@ class NewPrescriptionState extends State<NewPrescription> {
   bool status6 = false;
   var prescriptionMedicineCount = 0;
   // var medicationArray = [];
-  var medicineList = List<PrescriptionMedicines>();
+  List<PrescriptionMedicines>? medicineList = List<PrescriptionMedicines>();
 
   var medicineNameTextController = TextEditingController();
 
@@ -38,7 +39,7 @@ class NewPrescriptionState extends State<NewPrescription> {
   void initState() {
     mInitialTime = DateTime.now();
     super.initState();
-    if (widget.isDuplicatedPrescription) {
+    if (widget.isDuplicatedPrescription!) {
       medicineList = widget.duplicatedMedicines;
     } else {
       widget.isDuplicatedPrescription = false;
@@ -227,7 +228,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                             // return medicineListItem(position);
                             return medicineListItem(position, medicineList);
                           },
-                          itemCount: medicineList.length,
+                          itemCount: medicineList!.length,
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                         ),
@@ -236,7 +237,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                           child: FlatButton(
                             onPressed: () {
                               setState(() {
-                                medicineList.add(PrescriptionMedicines(
+                                medicineList!.add(PrescriptionMedicines(
                                     schedule: PrescriptionMedicineSchedule(
                                         morning: '',
                                         afternoon: '',
@@ -314,7 +315,7 @@ class NewPrescriptionState extends State<NewPrescription> {
             )));
   }
 
-  Widget medicineListItem(int pos, List<PrescriptionMedicines> medicine) {
+  Widget medicineListItem(int pos, List<PrescriptionMedicines>? medicine) {
     GlobalKey key = new GlobalKey();
     GlobalKey key1 = new GlobalKey();
     GlobalKey key2 = new GlobalKey();
@@ -325,12 +326,12 @@ class NewPrescriptionState extends State<NewPrescription> {
         SizedBox(
           height: 20.0.h,
         ),
-        tabletTextField('$medicineNameHint', medicineList[pos].medicineName),
+        tabletTextField('$medicineNameHint', medicineList![pos].medicineName),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              tabletIntakeSwitch(medicineList[pos].beforeOrAfterFood),
-              daysField(medicineList[pos].days),
+              tabletIntakeSwitch(medicineList![pos].beforeOrAfterFood),
+              daysField(medicineList![pos].days),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -348,7 +349,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                                 width: 0.5.w)),
                         child: Text(
-                          medicineList[pos].schedule.morning ?? "",
+                          medicineList![pos].schedule!.morning ?? "",
                           style: TextStyle(
                               color: Colors.black87,
                               fontSize: 12.0.sp,
@@ -357,7 +358,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                         alignment: Alignment.center),
                     onTap: () {
                       showMoreText(
-                          pos, 0, medicineList[pos].schedule.morning, key);
+                          pos, 0, medicineList![pos].schedule!.morning, key);
                     },
                   ),
                   SizedBox(
@@ -374,7 +375,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                                 width: 0.5.w)),
                         child: Text(
-                          medicineList[pos].schedule.afternoon ?? "",
+                          medicineList![pos].schedule!.afternoon ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 12.0.sp,
@@ -383,7 +384,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                         alignment: Alignment.center),
                     onTap: () {
                       showMoreText(
-                          pos, 1, medicineList[pos].schedule.afternoon, key1);
+                          pos, 1, medicineList![pos].schedule!.afternoon, key1);
                     },
                   ),
                   SizedBox(
@@ -400,7 +401,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                                 width: 0.5.w)),
                         child: Text(
-                          medicineList[pos].schedule.evening ?? "",
+                          medicineList![pos].schedule!.evening ?? "",
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 12.0.sp,
@@ -409,16 +410,16 @@ class NewPrescriptionState extends State<NewPrescription> {
                         alignment: Alignment.center),
                     onTap: () {
                       showMoreText(
-                          pos, 2, medicineList[pos].schedule.evening, key2);
+                          pos, 2, medicineList![pos].schedule!.evening, key2);
                     },
                   ),
                 ],
               ),
-              quantityField(medicineList[pos].quantity),
+              quantityField(medicineList![pos].quantity),
               FlatButton(
                   onPressed: () {
                     setState(() {
-                      medicineList.removeAt(pos);
+                      medicineList!.removeAt(pos);
                     });
                   },
                   child: Icon(
@@ -427,7 +428,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     size: 20.0.sp,
                   ))
             ]),
-        medicationNotesField(medicineList[pos].notes),
+        medicationNotesField(medicineList![pos].notes),
       ],
     );
   }
@@ -510,7 +511,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                 ),
                 onTap: () {
                   setState(() {
-                    text = medicineList[medPosition].schedule.morning ?? "";
+                    text = medicineList![medPosition].schedule!.morning ?? "";
                     // text = '0';
                     // text == 'initial'
                     //     ? initial = '0'
@@ -541,7 +542,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                 onTap: () {
                   setState(() {
                     // text = '1';
-                    text = medicineList[medPosition].schedule.afternoon ?? "";
+                    text = medicineList![medPosition].schedule!.afternoon ?? "";
                     // schedule[medPosition][schedulePosition] = '1';
                     // text = '1';
                     // schedule[medPosition][1] = '1';
@@ -573,7 +574,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                 onTap: () {
                   setState(() {
                     // text = '0.5';
-                    text = medicineList[medPosition].schedule.evening ?? "";
+                    text = medicineList![medPosition].schedule!.evening ?? "";
                     // schedule[medPosition][2] = '0.5';
                     // text == 'initial'
                     //     ? initial = '0.5'

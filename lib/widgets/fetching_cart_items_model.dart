@@ -1,8 +1,9 @@
+
 class FetchingCartItemsModel {
-  bool isSuccess;
-  String message;
-  Result result;
-  Diagnostics diagnostics;
+  bool? isSuccess;
+  String? message;
+  Result? result;
+  Diagnostics? diagnostics;
 
   FetchingCartItemsModel(
       {this.isSuccess, this.message, this.result, this.diagnostics});
@@ -28,19 +29,19 @@ class FetchingCartItemsModel {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     if (this.diagnostics != null) {
-      data['diagnostics'] = this.diagnostics.toJson();
+      data['diagnostics'] = this.diagnostics!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  int productsCount;
-  int totalCartAmount;
-  Cart cart;
+  int? productsCount;
+  int? totalCartAmount;
+  Cart? cart;
 
   Result({this.productsCount, this.cart, this.totalCartAmount});
 
@@ -55,17 +56,17 @@ class Result {
     data['productsCount'] = this.productsCount;
     data['totalCartAmount'] = this.totalCartAmount;
     if (this.cart != null) {
-      data['cart'] = this.cart.toJson();
+      data['cart'] = this.cart!.toJson();
     }
     return data;
   }
 }
 
 class Cart {
-  String id;
-  String createdOn;
-  String lastModifiedOn;
-  List<ProductList> productList;
+  String? id;
+  String? createdOn;
+  String? lastModifiedOn;
+  List<ProductList>? productList;
 
   Cart({this.id, this.createdOn, this.lastModifiedOn, this.productList});
 
@@ -76,7 +77,7 @@ class Cart {
     if (json['productList'] != null) {
       productList = new List<ProductList>();
       json['productList'].forEach((v) {
-        productList.add(new ProductList.fromJson(v));
+        productList!.add(new ProductList.fromJson(v));
       });
     }
   }
@@ -87,19 +88,19 @@ class Cart {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.productList != null) {
-      data['productList'] = this.productList.map((v) => v.toJson()).toList();
+      data['productList'] = this.productList!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ProductList {
-  ProductDetail productDetail;
-  AdditionalInfo additionalInfo;
-  bool isActive;
-  String createdOn;
-  String paidAmount;
-  String lastModifiedOn;
+  ProductDetail? productDetail;
+  AdditionalInfo? additionalInfo;
+  bool? isActive;
+  String? createdOn;
+  String? paidAmount;
+  String? lastModifiedOn;
 
   ProductList(
       {this.productDetail,
@@ -127,25 +128,25 @@ class ProductList {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.productDetail != null) {
-      data['productDetail'] = this.productDetail.toJson();
+      data['productDetail'] = this.productDetail!.toJson();
     }
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['paidAmount'] = this.paidAmount;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.additionalInfo != null) {
-      data['additionalInfo'] = this.additionalInfo.toJson();
+      data['additionalInfo'] = this.additionalInfo!.toJson();
     }
     return data;
   }
 }
 
 class ProductDetail {
-  int id;
-  String planName;
-  String planSubscriptionFee;
-  int packageDuration;
-  String healthOrganizationName;
+  int? id;
+  String? planName;
+  String? planSubscriptionFee;
+  int? packageDuration;
+  String? healthOrganizationName;
 
   ProductDetail(
       {this.id,
@@ -174,9 +175,9 @@ class ProductDetail {
 }
 
 class Diagnostics {
-  String message;
-  ErrorData errorData;
-  bool includeErrorDataInResponse;
+  String? message;
+  ErrorData? errorData;
+  bool? includeErrorDataInResponse;
 
   Diagnostics({this.message, this.errorData, this.includeErrorDataInResponse});
 
@@ -192,7 +193,7 @@ class Diagnostics {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     if (this.errorData != null) {
-      data['errorData'] = this.errorData.toJson();
+      data['errorData'] = this.errorData!.toJson();
     }
     data['includeErrorDataInResponse'] = this.includeErrorDataInResponse;
     return data;
@@ -200,7 +201,7 @@ class Diagnostics {
 }
 
 class ErrorData {
-  int productsCount;
+  int? productsCount;
 
   ErrorData({this.productsCount});
 
@@ -216,14 +217,14 @@ class ErrorData {
 }
 
 class AdditionalInfo {
-  bool isRenewal;
-  String tag;
-  String remarks;
-  String planType;
-  bool isMembershipAvail;
+  bool? isRenewal;
+  String? tag;
+  String? remarks;
+  String? planType;
+  bool? isMembershipAvail;
   dynamic actualFee;
   dynamic newFee;
-  int duration;
+  int? duration;
 
   AdditionalInfo({this.isRenewal, this.tag});
 

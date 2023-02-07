@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -21,7 +22,7 @@ class AppointmentsMain extends StatefulWidget {
   });
 
   final bool isHome;
-  final Function onBackPressed;
+  final Function? onBackPressed;
 
   @override
   _AppointmentsMainState createState() => _AppointmentsMainState();
@@ -33,7 +34,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
     return WillPopScope(
       onWillPop: () {
         if (widget.isHome) {
-          widget.onBackPressed();
+          widget.onBackPressed!();
         }
         return Future.value(widget.isHome ? false : true);
       },

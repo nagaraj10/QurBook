@@ -1,3 +1,4 @@
+
 class Variables {
   Variables({
     this.bookingId,
@@ -26,30 +27,30 @@ class Variables {
     this.oldAppointmentTime,
   });
 
-  String bookingId;
-  String paidOn;
-  String endTime;
-  String lastName;
-  String firstName;
-  String startTime;
-  String doctorName;
-  String paidAmount;
+  String? bookingId;
+  String? paidOn;
+  String? endTime;
+  String? lastName;
+  String? firstName;
+  String? startTime;
+  String? doctorName;
+  String? paidAmount;
   dynamic slotNumber;
-  String patientName;
-  String modeOfPayment;
-  String appointmentDate;
-  String transactionReference;
-  String appointmentTime;
-  String previousSlotNumber;
-  String doctorLastname;
-  String doctorFirstname;
-  String prescriptionNumber;
-  String newBookingId;
-  String oldBookingId;
-  String newAppointmentDate;
-  String newAppointmentTime;
-  String oldAppointmentDate;
-  String oldAppointmentTime;
+  String? patientName;
+  String? modeOfPayment;
+  String? appointmentDate;
+  String? transactionReference;
+  String? appointmentTime;
+  String? previousSlotNumber;
+  String? doctorLastname;
+  String? doctorFirstname;
+  String? prescriptionNumber;
+  String? newBookingId;
+  String? oldBookingId;
+  String? newAppointmentDate;
+  String? newAppointmentTime;
+  String? oldAppointmentDate;
+  String? oldAppointmentTime;
 
   Variables.fromJson(Map<String, dynamic> json) {
     bookingId = json["bookingId"] == null ? null : json["bookingId"];

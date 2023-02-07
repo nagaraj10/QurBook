@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -23,13 +24,13 @@ class ManageActivitiesScreen extends StatefulWidget {
 }
 
 class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
-  RegimentViewModel _regimentViewModel;
+  late RegimentViewModel _regimentViewModel;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     Provider.of<RegimentViewModel>(context, listen: false).getActivityDate(
       dateTime: DateTime.now(),
@@ -47,11 +48,11 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
   }
 
   Color getColor(
-      Activityname activityname, Uformname uformName, Metadata metadata) {
+      Activityname? activityname, Uformname? uformName, Metadata? metadata) {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata?.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -226,7 +227,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                           title: regimentData.title,
                           time: regimentData?.estart != null
                               ? DateFormat('hh:mm\na')
-                                  .format(regimentData?.estart)
+                                  .format(regimentData?.estart!)
                               : '',
                           color: getColor(regimentData.activityname,
                               regimentData.uformname, regimentData.metadata),

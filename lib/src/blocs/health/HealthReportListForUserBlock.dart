@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -23,68 +24,68 @@ import '../../resources/repository/health/HealthReportListForUserRepository.dart
 import '../../../constants/variable_constant.dart' as variable;
 
 class HealthReportListForUserBlock implements BaseBloc {
-  HealthReportListForUserRepository _healthReportListForUserRepository;
-  StreamController _categoryListControlller;
-  StreamController _healthListControlllers;
+  late HealthReportListForUserRepository _healthReportListForUserRepository;
+  StreamController? _categoryListControlller;
+  StreamController? _healthListControlllers;
 
-  StreamController _doctorsProfileImageControlller;
-  StreamController _metaDataController;
-  StreamController _imageDataController;
+  StreamController? _doctorsProfileImageControlller;
+  StreamController? _metaDataController;
+  StreamController? _imageDataController;
 
-  StreamController _moveDataController;
-  StreamController _metaDataUpdateController;
-  StreamController _imageListController;
+  StreamController? _moveDataController;
+  StreamController? _metaDataUpdateController;
+  StreamController? _imageListController;
 
-  StreamController _healthRecordController;
-  StreamController _claimController;
+  StreamController? _healthRecordController;
+  StreamController? _claimController;
 
   StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
-      _categoryListControlller.sink;
+      _categoryListControlller!.sink as StreamSink<ApiResponse<UserHealthResponseList>>;
   Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
-      _categoryListControlller.stream;
+      _categoryListControlller!.stream as Stream<ApiResponse<UserHealthResponseList>>;
 
   //modified for asgard
   StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
-      _healthListControlllers.sink;
+      _healthListControlllers!.sink as StreamSink<ApiResponse<HealthRecordList>>;
   Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
-      _healthListControlllers.stream;
+      _healthListControlllers!.stream as Stream<ApiResponse<HealthRecordList>>;
 
   StreamSink<ApiResponse<Uint8List>> get profileImageSink =>
-      _doctorsProfileImageControlller.sink;
+      _doctorsProfileImageControlller!.sink as StreamSink<ApiResponse<Uint8List>>;
   Stream<ApiResponse<Uint8List>> get profileImageStream =>
-      _doctorsProfileImageControlller.stream;
+      _doctorsProfileImageControlller!.stream as Stream<ApiResponse<Uint8List>>;
 
   StreamSink<ApiResponse<HealthRecordSuccess>> get metadataListSink =>
-      _metaDataController.sink;
+      _metaDataController!.sink as StreamSink<ApiResponse<HealthRecordSuccess>>;
   Stream<ApiResponse<HealthRecordSuccess>> get metaDataStream =>
-      _metaDataController.stream;
+      _metaDataController!.stream as Stream<ApiResponse<HealthRecordSuccess>>;
   StreamSink<ApiResponse<PostImageResponse>> get imageDataSink =>
-      _imageDataController.sink;
+      _imageDataController!.sink as StreamSink<ApiResponse<PostImageResponse>>;
   Stream<ApiResponse<PostImageResponse>> get imageDataStream =>
-      _imageDataController.stream;
+      _imageDataController!.stream as Stream<ApiResponse<PostImageResponse>>;
 
   StreamSink<ApiResponse<MetaDataMovedResponse>> get moveMetaDataSInk =>
-      _moveDataController.sink;
+      _moveDataController!.sink as StreamSink<ApiResponse<MetaDataMovedResponse>>;
   Stream<ApiResponse<MetaDataMovedResponse>> get imoveMetaDataStream =>
-      _moveDataController.stream;
+      _moveDataController!.stream as Stream<ApiResponse<MetaDataMovedResponse>>;
 
   StreamSink<ApiResponse<UpdateMediaResponse>> get metaDataUpdateSink =>
-      _metaDataUpdateController.sink;
+      _metaDataUpdateController!.sink as StreamSink<ApiResponse<UpdateMediaResponse>>;
   Stream<ApiResponse<UpdateMediaResponse>> get metaDataUpdateStream =>
-      _metaDataUpdateController.stream;
+      _metaDataUpdateController!.stream as Stream<ApiResponse<UpdateMediaResponse>>;
 
   StreamSink<ApiResponse<List<ImageDocumentResponse>>> get imageListSink =>
-      _imageListController.sink;
+      _imageListController!.sink as StreamSink<ApiResponse<List<ImageDocumentResponse>>>;
   Stream<ApiResponse<List<ImageDocumentResponse>>> get imageListStream =>
-      _imageListController.stream;
+      _imageListController!.stream as Stream<ApiResponse<List<ImageDocumentResponse>>>;
 
   StreamSink<ApiResponse<HealthRecordSuccess>> get healthRecordSink =>
-      _healthRecordController.sink;
+      _healthRecordController!.sink as StreamSink<ApiResponse<HealthRecordSuccess>>;
   Stream<ApiResponse<HealthRecordSuccess>> get healthRecordStream =>
-      _healthRecordController.stream;
+      _healthRecordController!.stream as Stream<ApiResponse<HealthRecordSuccess>>;
 
-  StreamSink<ApiResponse<ClaimSuccess>> get claimSink => _claimController.sink;
-  Stream<ApiResponse<ClaimSuccess>> get claimStream => _claimController.stream;
+  StreamSink<ApiResponse<ClaimSuccess>> get claimSink => _claimController!.sink as StreamSink<ApiResponse<ClaimSuccess>>;
+  Stream<ApiResponse<ClaimSuccess>> get claimStream => _claimController!.stream as Stream<ApiResponse<ClaimSuccess>>;
 
   @override
   void dispose() {
@@ -124,8 +125,8 @@ class HealthReportListForUserBlock implements BaseBloc {
     _claimController = StreamController<ApiResponse<ClaimSuccess>>();
   }
 
-  Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
-    UserHealthResponseList userHealthResponseList;
+  Future<UserHealthResponseList?> getHelthReportList({bool? condtion}) async {
+    UserHealthResponseList? userHealthResponseList;
     healthReportListSink
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
@@ -138,8 +139,8 @@ class HealthReportListForUserBlock implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<SavedMetaDataResponse> submit(String jsonData) async {
-    SavedMetaDataResponse saveMetaDataResponse;
+  Future<SavedMetaDataResponse?> submit(String jsonData) async {
+    SavedMetaDataResponse? saveMetaDataResponse;
     metadataListSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       saveMetaDataResponse =
@@ -167,9 +168,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     } catch (e) {}
   }
 
-  Future<PostImageResponse> saveImage(
+  Future<PostImageResponse?> saveImage(
       String fileName, String metaID, String jsonData) async {
-    PostImageResponse postImageResponse;
+    PostImageResponse? postImageResponse;
     imageDataSink.add(ApiResponse.loading(variable.strSavingImg));
     try {
       postImageResponse = await _healthReportListForUserRepository.postImage(
@@ -181,9 +182,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return postImageResponse;
   }
 
-  Future<DigitRecogResponse> saveDeviceImage(
-      List<String> fileName, String metaID, String jsonData) async {
-    DigitRecogResponse digitRecogResponse;
+  Future<DigitRecogResponse?> saveDeviceImage(
+      List<String?> fileName, String metaID, String jsonData) async {
+    DigitRecogResponse? digitRecogResponse;
     imageDataSink.add(ApiResponse.loading(variable.strSavingImg));
     try {
       digitRecogResponse = await _healthReportListForUserRepository
@@ -194,9 +195,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return digitRecogResponse;
   }
 
-  Future<MetaDataMovedResponse> switchDataToOtherUser(
-      String familyMemberID, String metaId) async {
-    MetaDataMovedResponse metaDataMovedResponse;
+  Future<MetaDataMovedResponse?> switchDataToOtherUser(
+      String? familyMemberID, String? metaId) async {
+    MetaDataMovedResponse? metaDataMovedResponse;
     moveMetaDataSInk.add(ApiResponse.loading(variable.strMoveData));
     try {
       metaDataMovedResponse = await _healthReportListForUserRepository
@@ -208,9 +209,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return metaDataMovedResponse;
   }
 
-  Future<UpdateMediaResponse> updateMedia(
+  Future<UpdateMediaResponse?> updateMedia(
       String jsonData, String metaInfoId) async {
-    UpdateMediaResponse updateMediaResponse;
+    UpdateMediaResponse? updateMediaResponse;
     metaDataUpdateSink.add(ApiResponse.loading(variable.strUpdateData));
     try {
       updateMediaResponse = await _healthReportListForUserRepository
@@ -239,9 +240,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return userHealthResponseList;
   }*/
 
-  Future<List<ImageDocumentResponse>> getDocumentImageList(
+  Future<List<ImageDocumentResponse>?> getDocumentImageList(
       List<MediaMasterIds> metaMasterIdList) async {
-    List<ImageDocumentResponse> userHealthResponseList;
+    List<ImageDocumentResponse>? userHealthResponseList;
     imageListSink.add(ApiResponse.loading(variable.strUpdateData));
 
     try {
@@ -256,8 +257,8 @@ class HealthReportListForUserBlock implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<HealthRecordList> getHelthReportLists({String userID}) async {
-    HealthRecordList userHealthResponseList;
+  Future<HealthRecordList?> getHelthReportLists({String? userID}) async {
+    HealthRecordList? userHealthResponseList;
     healthReportListSinks
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
@@ -270,10 +271,10 @@ class HealthReportListForUserBlock implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<HealthRecordSuccess> createHealtRecords(
-      String jsonData, List<String> imagePaths, String audioPath,
+  Future<HealthRecordSuccess?> createHealtRecords(
+      String jsonData, List<String?>? imagePaths, String? audioPath,
       {bool isVital = false}) async {
-    HealthRecordSuccess healthRecordSuccess;
+    HealthRecordSuccess? healthRecordSuccess;
     healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       healthRecordSuccess = await _healthReportListForUserRepository
@@ -285,9 +286,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return healthRecordSuccess;
   }
 
-  Future<HealthRecordSuccess> createHealtRecordsClaims(
-      String jsonData, List<String> imagePaths, String audioPath) async {
-    HealthRecordSuccess healthRecordSuccess;
+  Future<HealthRecordSuccess?> createHealtRecordsClaims(
+      String jsonData, List<String?>? imagePaths, String? audioPath) async {
+    HealthRecordSuccess? healthRecordSuccess;
     healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       healthRecordSuccess = await _healthReportListForUserRepository
@@ -299,9 +300,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return healthRecordSuccess;
   }
 
-  Future<HealthRecordSuccess> updateHealthRecords(String jsonData,
-      List<String> imagePaths, String audioPath, String metaId) async {
-    HealthRecordSuccess healthRecordSuccess;
+  Future<HealthRecordSuccess?> updateHealthRecords(String jsonData,
+      List<String?>? imagePaths, String? audioPath, String? metaId) async {
+    HealthRecordSuccess? healthRecordSuccess;
     healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       healthRecordSuccess = await _healthReportListForUserRepository
@@ -313,9 +314,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return healthRecordSuccess;
   }
 
-  Future<HealthRecordSuccess> updateFiles(
-      String audioPath, HealthResult healthResult) async {
-    HealthRecordSuccess healthRecordSuccess;
+  Future<HealthRecordSuccess?> updateFiles(
+      String? audioPath, HealthResult healthResult) async {
+    HealthRecordSuccess? healthRecordSuccess;
     healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       healthRecordSuccess = await _healthReportListForUserRepository
@@ -327,8 +328,8 @@ class HealthReportListForUserBlock implements BaseBloc {
     return healthRecordSuccess;
   }
 
-  Future<ClaimSuccess> createClaim(String jsonData) async {
-    ClaimSuccess claimSuccess;
+  Future<ClaimSuccess?> createClaim(String jsonData) async {
+    ClaimSuccess? claimSuccess;
     claimSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       claimSuccess =

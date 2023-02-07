@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../common/CommonUtil.dart';
 import '../widgets/GradientAppBar.dart';
@@ -18,7 +19,7 @@ class MySchedule extends StatefulWidget {
 
 class _MyScheduleState extends State<MySchedule>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   @override
   void initState() {
     super.initState();

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -6,10 +7,10 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class ChooseDateSlot extends StatefulWidget {
-  ChooseDateSlot({Key key,this.messageContent='',this.getRefNumber}) : super(key: key);
+  ChooseDateSlot({Key? key,this.messageContent='',this.getRefNumber}) : super(key: key);
 
   var messageContent;
-  Function(String) getRefNumber;
+  Function(String)? getRefNumber;
 
   @override
   _ChooseDateSlotState createState() => _ChooseDateSlotState();
@@ -162,7 +163,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                               ' - ' +
                               array['selectedSession'].toString());
                         }
-                        widget.getRefNumber(widget.messageContent??'');
+                        widget.getRefNumber!(widget.messageContent??'');
                         Navigator.pop(context, appendedList.toString());
                       } else {
                         Navigator.pop(context);
@@ -300,13 +301,13 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
   }
 
   Future<void> _selectTime(BuildContext context, int index) async {
-    final TimeOfDay picked_s = await showTimePicker(
+    final TimeOfDay? picked_s = await showTimePicker(
         context: context,
         initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
+        builder: (BuildContext context, Widget? child) {
           return MediaQuery(
             data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-            child: child,
+            child: child!,
           );
         });
 

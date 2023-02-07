@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
@@ -7,7 +8,7 @@ import '../../src/utils/screenutils/size_extensions.dart';
 
 class CountryCodePickerPage extends StatefulWidget {
   CountryCodePickerPage(
-      {@required this.selectedDialogCountry, this.onValuePicked});
+      {required this.selectedDialogCountry, this.onValuePicked});
 
   Country selectedDialogCountry;
   var onValuePicked;

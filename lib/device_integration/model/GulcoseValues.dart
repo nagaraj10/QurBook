@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class GlucoseValues {
-  bool isSuccess;
-  List<GVResult> result;
+  bool? isSuccess;
+  List<GVResult>? result;
 
   GlucoseValues({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class GlucoseValues {
     if (json[dataResult] != null) {
       result = List<GVResult>();
       json[dataResult].forEach((glucosevalue) {
-        result.add(GVResult.fromJson(glucosevalue));
+        result!.add(GVResult.fromJson(glucosevalue));
       });
     }
   }
@@ -21,22 +22,22 @@ class GlucoseValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((glucosevalue) => glucosevalue.toJson()).toList();
+          result!.map((glucosevalue) => glucosevalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class GVResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  int bloodGlucoseLevel;
-  String bgUnit;
-  String mealContext;
-  String mealType;
-  String deviceId;
-  DateTime dateTimeValue;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  int? bloodGlucoseLevel;
+  String? bgUnit;
+  String? mealContext;
+  String? mealType;
+  String? deviceId;
+  DateTime? dateTimeValue;
   GVResult(
       {this.sourceType,
       this.startDateTime,

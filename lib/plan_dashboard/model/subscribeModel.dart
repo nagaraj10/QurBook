@@ -1,6 +1,7 @@
+
 class SubscribeModel {
-  bool isSuccess;
-  SubscibeResult result;
+  bool? isSuccess;
+  SubscibeResult? result;
 
   SubscribeModel({this.isSuccess, this.result});
 
@@ -14,15 +15,15 @@ class SubscribeModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class SubscibeResult {
-  String result;
-  String message;
+  String? result;
+  String? message;
 
   SubscibeResult({this.result, this.message});
 

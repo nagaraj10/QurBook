@@ -1,9 +1,10 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/responseInfoResultRefund.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class ResponseInfoResult {
-  bool success;
-  ResponseInfoResultRefund refund;
+  bool? success;
+  ResponseInfoResultRefund? refund;
 
   ResponseInfoResult({this.success, this.refund});
 
@@ -18,7 +19,7 @@ class ResponseInfoResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strSuccess] = this.success;
     if (this.refund != null) {
-      data[parameters.strRefund] = this.refund.toJson();
+      data[parameters.strRefund] = this.refund!.toJson();
     }
     return data;
   }

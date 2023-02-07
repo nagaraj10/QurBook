@@ -1,3 +1,4 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,22 +27,22 @@ class ProviderDietPlans extends StatefulWidget {
 }
 
 class _ProviderDietPlans extends State<ProviderDietPlans> {
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
 
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
 
   bool isSearch = false;
 
   List<PlanListResult> planSearchList = List();
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   int carePlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
 
   bool isSwitched = false;
 
@@ -77,7 +78,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                         });
                       }
                     },onClosePress: (){
-                    FocusManager.instance.primaryFocus.unfocus();
+                    FocusManager.instance.primaryFocus!.unfocus();
                   },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
@@ -123,27 +124,27 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                 (planListProvider?.currentPackageFreeDietId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+              Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
             }
           },
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
       planSearchList =
-          await planListProvider.filterSortingForProviderDiet(popUpChoicePrice);
+          await planListProvider!.filterSortingForProviderDiet(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
       planSearchList =
-          await planListProvider.filterSortingForProviderDiet(popUpChoiceDura);
+          await planListProvider!.filterSortingForProviderDiet(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
-      planSearchList = await planListProvider
+      planSearchList = await planListProvider!
           .filterSortingForProviderDiet(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
         planSearchList =
-            await planListProvider.filterPlanNameProviderDiet(title);
+            await planListProvider!.filterPlanNameProviderDiet(title);
       }
     }
     setState(() {});
@@ -196,11 +197,11 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               bool needReload =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
                           ?.isDietListEmpty !=
-                      (snapshot?.data?.result.length > 0 ? true : false);
+                      (snapshot?.data?.result!.length > 0 ? true : false);
 
               Provider.of<PlanWizardViewModel>(context, listen: false)
                   ?.updateBottonLayoutEmptyDietList(
-                      snapshot?.data?.result.length > 0 ? true : false,
+                      snapshot?.data?.result!.length > 0 ? true : false,
                       needReload: needReload);
             });
 
@@ -223,7 +224,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     );
   }
 
-  Widget dietPlanList(List<PlanListResult> planList) {
+  Widget dietPlanList(List<PlanListResult>? planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
@@ -233,7 +234,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             itemBuilder: (BuildContext ctx, int i) => DietPlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
               onClick: () {
-                FocusManager.instance.primaryFocus.unfocus();
+                FocusManager.instance.primaryFocus!.unfocus();
               },
               isFrom: strProviderDiet,
             ),
@@ -266,14 +267,14 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+                  Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
                 },
                 child: Text('Yes'),
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   Widget popMenuItemNew() {
@@ -291,7 +292,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -299,7 +300,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;
@@ -343,14 +344,14 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planListProvider.getDietPlanListNew(
+        planListModel = planListProvider!.getDietPlanListNew(
             isFrom: strProviderDiet, isVeg: true);
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider.getDietPlanListNew(isFrom: strProviderDiet);
+            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet);
       });
     }
   }
@@ -452,7 +453,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
   void callMyProviderPage(){
 
     Get.to(AddProviderPlan(
-        planListProvider.selectedTag)).then((value) =>  setState(() {
+        planListProvider!.selectedTag))!.then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
           .getDietPlanListNew(isFrom: strProviderDiet);
     }));

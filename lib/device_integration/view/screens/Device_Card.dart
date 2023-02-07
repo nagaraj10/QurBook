@@ -1,13 +1,14 @@
+
 import 'package:flutter/material.dart';
 import 'Device_Data.dart';
 import '../../../common/CommonUtil.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 
 class DeviceCard extends StatefulWidget {
-  final DeviceData deviceData;
+  final DeviceData? deviceData;
   @override
-  final Key key;
-  final ValueChanged<bool> isSelected;
+  final Key? key;
+  final ValueChanged<bool?>? isSelected;
   const DeviceCard({this.deviceData, this.isSelected, this.key});
   @override
   _DeviceCardState createState() => _DeviceCardState();
@@ -15,15 +16,15 @@ class DeviceCard extends StatefulWidget {
 
 class _DeviceCardState extends State<DeviceCard> {
   Color colors = Colors.white;
-  bool isSelected;
+  bool? isSelected;
   @override
   Widget build(BuildContext context) {
-    isSelected = widget.deviceData.isSelected;
+    isSelected = widget.deviceData!.isSelected;
     return InkWell(
       onTap: () {
         setState(() {
-          isSelected = !isSelected;
-          widget.isSelected(isSelected);
+          isSelected = !isSelected!;
+          widget.isSelected!(isSelected);
         });
       },
       child: Container(
@@ -37,11 +38,11 @@ class _DeviceCardState extends State<DeviceCard> {
               Stack(
                 children: <Widget>[
                   Image.asset(
-                    widget.deviceData.icon,
+                    widget.deviceData!.icon!,
                     height: 30.0.h,
                     width: 30.0.h,
                   ),
-                  if (isSelected)
+                  if (isSelected!)
                     Align(
                       alignment: Alignment.topLeft,
                       child: Icon(
@@ -60,7 +61,7 @@ class _DeviceCardState extends State<DeviceCard> {
               Row(
                 children: [
                   Text(
-                    widget.deviceData.title,
+                    widget.deviceData!.title!,
                     style: TextStyle(
                       fontSize: 13.0.sp,
                     ),

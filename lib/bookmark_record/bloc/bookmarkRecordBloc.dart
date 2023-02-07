@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import '../model/bookmarkRequest.dart';
 import '../model/bookmarkResponse.dart';
@@ -8,12 +9,12 @@ import 'dart:convert' as convert;
 import '../../constants/variable_constant.dart' as variable;
 
 class BookmarkRecordBloc with Validators implements BaseBloc {
-  BookmarkRepository _bookmarkRepository;
-  StreamController _bookmarkController;
+  late BookmarkRepository _bookmarkRepository;
+  StreamController? _bookmarkController;
   StreamSink<ApiResponse<BookmarkResponse>> get bookmarkSink =>
-      _bookmarkController.sink;
+      _bookmarkController!.sink as StreamSink<ApiResponse<BookmarkResponse>>;
   Stream<ApiResponse<BookmarkResponse>> get bookmarkStream =>
-      _bookmarkController.stream;
+      _bookmarkController!.stream as Stream<ApiResponse<BookmarkResponse>>;
 
   BookmarkRecordBloc() {
     _bookmarkController = StreamController<ApiResponse<BookmarkResponse>>();
@@ -25,8 +26,8 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
     _bookmarkController?.close();
   }
 
-  Future<BookmarkResponse> bookMarcRecord(
-      List<String> recordId, bool bookMarkFlag) async {
+  Future<BookmarkResponse?> bookMarcRecord(
+      List<String?> recordId, bool? bookMarkFlag) async {
     var bookmarkRequest = Map<String, dynamic>();
 
     //BookmarkRequest bookmarkRequest = new BookmarkRequest();
@@ -35,7 +36,7 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
 
     final jsonString = convert.jsonEncode(bookmarkRequest);
     bookmarkSink.add(ApiResponse.loading(variable.strBookmarkRecord));
-    BookmarkResponse bookmarkResponse;
+    BookmarkResponse? bookmarkResponse;
     try {
       bookmarkResponse =
           await _bookmarkRepository.bookmarkRecordForIds(jsonString);

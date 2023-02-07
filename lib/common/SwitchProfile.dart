@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -48,13 +49,13 @@ import '../src/utils/colors_utils.dart';
 import '../src/utils/screenutils/size_extensions.dart';
 
 class SwitchProfile {
-  FamilyListBloc _familyListBloc;
-  MyProfileBloc _myProfileBloc;
+  FamilyListBloc? _familyListBloc;
+  MyProfileBloc? _myProfileBloc;
 
-  BuildContext context;
+  late BuildContext context;
   GlobalKey<State> keyLoader = GlobalKey<State>();
-  Function callBackToRefresh;
-  bool isFromDashborad;
+  late Function callBackToRefresh;
+  bool? isFromDashborad;
 
   FlutterToast toast = FlutterToast();
 
@@ -63,13 +64,13 @@ class SwitchProfile {
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh, bool isFromDashborad,
-      {GlobalKey<ScaffoldState> scaffold_state}) {
+      {GlobalKey<ScaffoldState>? scaffold_state}) {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
     isFromDashborad = isFromDashborad;
-    String profileImage;
-    MyProfileModel myProfile;
+    String? profileImage;
+    MyProfileModel? myProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       profileImage = PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
@@ -99,11 +100,11 @@ class SwitchProfile {
             child: isFromDashborad
                 ? getCirleAvatarWithBorderIcon(myProfile)
                 : CircleAvatar(
-                    radius: CommonUtil().isTablet ? 18 : 15,
+                    radius: CommonUtil().isTablet! ? 18 : 15,
                     child: ClipOval(
                         child: myProfile != null
                             ? myProfile.result != null
-                                ? myProfile.result.profilePicThumbnailUrl !=
+                                ? myProfile.result!.profilePicThumbnailUrl !=
                                         null
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile)
@@ -114,8 +115,8 @@ class SwitchProfile {
                                             Color(fhbColors.bgColorContainer),
                                         child: Center(
                                           child: Text(
-                                            myProfile.result.firstName != null
-                                                ? myProfile.result.firstName[0]
+                                            myProfile.result!.firstName != null
+                                                ? myProfile.result!.firstName![0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -136,17 +137,17 @@ class SwitchProfile {
                   )));
   }
 
-  Future<Widget> getDialogBoxWithFamilyMemberScrap(
-      FamilyMemberResult familyData) {
+  Future<Widget?> getDialogBoxWithFamilyMemberScrap(
+      FamilyMemberResult? familyData) {
     return FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName, _) {
-      PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
+      PreferenceUtil.saveString(Constants.KEY_USERID, userId!).then((onValue) {
         CommonUtil().updateSocketFamily();
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
                   null &&
-              PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)
+              PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)!
                   .isNotEmpty) {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, userId);
           } else {
@@ -177,7 +178,7 @@ class SwitchProfile {
     }
     final _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    await _myProfileBloc
+    await _myProfileBloc!
         .getMyProfileData(Constants.KEY_USERID)
         .then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
@@ -185,7 +186,7 @@ class SwitchProfile {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
-            Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(keyLoader.currentContext!, rootNavigator: true).pop();
             CommonUtil()
                 .getMedicalPreference(callBackToRefresh: callBackToRefresh);
           });
@@ -198,10 +199,10 @@ class SwitchProfile {
   }
 
   checkInternet(
-      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffoldState) {
+      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState>? scaffoldState) {
     FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
-        _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
+        _familyListBloc!.getFamilyMembersListNew().then((familyMembersList) {
           if (familyMembersList != null &&
               familyMembersList.result != null &&
               familyMembersList.result.sharedByUsers.length > 0) {
@@ -211,7 +212,7 @@ class SwitchProfile {
             if (PreferenceUtil.getStringValue(Constants.KEY_USERID) !=
                 PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)) {
               PreferenceUtil.saveString(Constants.KEY_USERID,
-                      PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN))
+                      PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!)
                   .then((value) {
                 Get.offAllNamed(
                   rt_Landing,
@@ -229,15 +230,15 @@ class SwitchProfile {
     });
   }
 
-  Widget getCirleAvatarWithBorderIcon(MyProfileModel myProfile) {
+  Widget getCirleAvatarWithBorderIcon(MyProfileModel? myProfile) {
     return Stack(
       children: [
         CircleAvatar(
-          radius: CommonUtil().isTablet ? 20 : 18,
+          radius: CommonUtil().isTablet! ? 20 : 18,
           child: ClipOval(
               child: myProfile != null
                   ? myProfile.result != null
-                      ? myProfile.result.profilePicThumbnailUrl != null
+                      ? myProfile.result!.profilePicThumbnailUrl != null
                           ? FHBBasicWidget()
                               .getProfilePicWidgeUsingUrl(myProfile)
                           : Container(
@@ -246,8 +247,8 @@ class SwitchProfile {
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  myProfile.result.firstName != null
-                                      ? myProfile.result.firstName[0]
+                                  myProfile.result!.firstName != null
+                                      ? myProfile.result!.firstName![0]
                                           .toUpperCase()
                                       : '',
                                   style: TextStyle(
@@ -290,7 +291,7 @@ class SwitchProfile {
             child: Icon(
               Icons.add,
               color: Colors.white,
-              size: CommonUtil().isTablet ? 14 : 12,
+              size: CommonUtil().isTablet! ? 14 : 12,
             )),
       ),
     );

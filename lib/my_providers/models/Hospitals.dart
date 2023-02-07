@@ -1,18 +1,19 @@
+
 class Hospitals {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  HealthOrganizationTypeNew healthOrganizationType;
-  List<HealthOrganizationAddressCollectionNew>
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  HealthOrganizationTypeNew? healthOrganizationType;
+  List<HealthOrganizationAddressCollectionNew>?
       healthOrganizationAddressCollection;
-  List<HealthOrganizationContactCollectionNew>
+  List<HealthOrganizationContactCollectionNew>?
       healthOrganizationContactCollection;
-  bool isDefault;
-  String providerPatientMappingId;
-  List<String> sharedCategories;
-  CreatedBy createdBy;
+  bool? isDefault;
+  String? providerPatientMappingId;
+  List<String?>? sharedCategories;
+  CreatedBy? createdBy;
 
   Hospitals({
     this.id,
@@ -42,7 +43,7 @@ class Hospitals {
       healthOrganizationAddressCollection =
           <HealthOrganizationAddressCollectionNew>[];
       json['healthOrganizationAddressCollection'].forEach((v) {
-        healthOrganizationAddressCollection
+        healthOrganizationAddressCollection!
             .add(HealthOrganizationAddressCollectionNew.fromJson(v));
       });
     }
@@ -50,7 +51,7 @@ class Hospitals {
       healthOrganizationContactCollection =
           <HealthOrganizationContactCollectionNew>[];
       json['healthOrganizationContactCollection'].forEach((v) {
-        healthOrganizationContactCollection
+        healthOrganizationContactCollection!
             .add(HealthOrganizationContactCollectionNew.fromJson(v));
       });
     }
@@ -73,36 +74,36 @@ class Hospitals {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (healthOrganizationType != null) {
-      data['healthOrganizationType'] = healthOrganizationType.toJson();
+      data['healthOrganizationType'] = healthOrganizationType!.toJson();
     }
     if (healthOrganizationAddressCollection != null) {
       data['healthOrganizationAddressCollection'] =
-          healthOrganizationAddressCollection.map((v) => v.toJson()).toList();
+          healthOrganizationAddressCollection!.map((v) => v.toJson()).toList();
     }
     if (healthOrganizationContactCollection != null) {
       data['healthOrganizationContactCollection'] =
-          healthOrganizationContactCollection.map((v) => v.toJson()).toList();
+          healthOrganizationContactCollection!.map((v) => v.toJson()).toList();
     }
     data['isDefault'] = isDefault;
     data['providerPatientMappingId'] = providerPatientMappingId;
     data['sharedCategories'] = sharedCategories;
     if (this.createdBy != null) {
-      data['createdBy'] = this.createdBy.toJson();
+      data['createdBy'] = this.createdBy!.toJson();
     }
     return data;
   }
 }
 
 class HealthOrganizationTypeNew {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   HealthOrganizationTypeNew(
       {this.id,
@@ -143,17 +144,17 @@ class HealthOrganizationTypeNew {
 }
 
 class HealthOrganizationAddressCollectionNew {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  CityProviders city;
-  StateProviders state;
-  HealthOrganizationTypeNew addressType;
+  String? id;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  CityProviders? city;
+  StateProviders? state;
+  HealthOrganizationTypeNew? addressType;
 
   HealthOrganizationAddressCollectionNew(
       {this.id,
@@ -196,24 +197,24 @@ class HealthOrganizationAddressCollectionNew {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (city != null) {
-      data['city'] = city.toJson();
+      data['city'] = city!.toJson();
     }
     if (state != null) {
-      data['state'] = state.toJson();
+      data['state'] = state!.toJson();
     }
     if (addressType != null) {
-      data['addressType'] = addressType.toJson();
+      data['addressType'] = addressType!.toJson();
     }
     return data;
   }
 }
 
 class CityProviders {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   CityProviders(
       {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
@@ -238,12 +239,12 @@ class CityProviders {
 }
 
 class StateProviders {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   StateProviders(
       {this.id,
@@ -275,13 +276,13 @@ class StateProviders {
 }
 
 class HealthOrganizationContactCollectionNew {
-  String id;
-  String phoneNumber;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  HealthOrganizationTypeNew phoneNumberType;
+  String? id;
+  String? phoneNumber;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  HealthOrganizationTypeNew? phoneNumberType;
 
   HealthOrganizationContactCollectionNew(
       {this.id,
@@ -313,40 +314,40 @@ class HealthOrganizationContactCollectionNew {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (phoneNumberType != null) {
-      data['phoneNumberType'] = phoneNumberType.toJson();
+      data['phoneNumberType'] = phoneNumberType!.toJson();
     }
     return data;
   }
 }
 
 class CreatedBy {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
 
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  String providerId;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  String? providerId;
 
   CreatedBy({
     this.id,

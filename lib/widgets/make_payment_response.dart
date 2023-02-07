@@ -1,7 +1,8 @@
+
 class MakePaymentResponse {
-  bool isSuccess;
-  Result result;
-  String message;
+  bool? isSuccess;
+  Result? result;
+  String? message;
 
   MakePaymentResponse({this.isSuccess, this.result, this.message});
 
@@ -20,7 +21,7 @@ class MakePaymentResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     data['message'] = this.message;
     return data;
@@ -28,10 +29,10 @@ class MakePaymentResponse {
 }
 
 class Result {
-  String orderId;
-  List<SubscribeResponse> subscribeResponse;
-  Payment payment;
-  PaymentGatewayDetail paymentGatewayDetail;
+  String? orderId;
+  List<SubscribeResponse>? subscribeResponse;
+  Payment? payment;
+  PaymentGatewayDetail? paymentGatewayDetail;
 
   Result(
       {this.orderId,
@@ -44,7 +45,7 @@ class Result {
     if (json['subscribeResponse'] != null) {
       subscribeResponse = new List<SubscribeResponse>();
       json['subscribeResponse'].forEach((v) {
-        subscribeResponse.add(new SubscribeResponse.fromJson(v));
+        subscribeResponse!.add(new SubscribeResponse.fromJson(v));
       });
     }
     payment =
@@ -59,25 +60,25 @@ class Result {
     data['orderId'] = this.orderId;
     if (this.subscribeResponse != null) {
       data['subscribeResponse'] =
-          this.subscribeResponse.map((v) => v.toJson()).toList();
+          this.subscribeResponse!.map((v) => v.toJson()).toList();
     }
     if (this.payment != null) {
-      data['payment'] = this.payment.toJson();
+      data['payment'] = this.payment!.toJson();
     }
     if (this.paymentGatewayDetail != null) {
-      data['paymentGatewayDetail'] = this.paymentGatewayDetail.toJson();
+      data['paymentGatewayDetail'] = this.paymentGatewayDetail!.toJson();
     }
     return data;
   }
 }
 
 class SubscribeResponse {
-  String result;
-  String planStartDate;
-  String message;
-  int packageid;
-  String price;
-  String docid;
+  String? result;
+  String? planStartDate;
+  String? message;
+  int? packageid;
+  String? price;
+  String? docid;
 
   SubscribeResponse(
       {this.result,
@@ -109,25 +110,25 @@ class SubscribeResponse {
 }
 
 class Payment {
-  String id;
-  PaymentStatus paymentStatus;
-  PaymentStatus paymentGateway;
-  String paidTo;
-  String paidBy;
-  String createdBy;
-  String createdOn;
-  bool isActive;
-  String purpose;
-  int paidAmount;
-  String transactionDateTime;
-  Metadata metadata;
-  Cart cart;
-  String paymentReference;
-  String paidDate;
-  String receiptUrl;
-  String lastModifiedOn;
-  bool isDiscount;
-  String discountDetails;
+  String? id;
+  PaymentStatus? paymentStatus;
+  PaymentStatus? paymentGateway;
+  String? paidTo;
+  String? paidBy;
+  String? createdBy;
+  String? createdOn;
+  bool? isActive;
+  String? purpose;
+  int? paidAmount;
+  String? transactionDateTime;
+  Metadata? metadata;
+  Cart? cart;
+  String? paymentReference;
+  String? paidDate;
+  String? receiptUrl;
+  String? lastModifiedOn;
+  bool? isDiscount;
+  String? discountDetails;
 
   Payment(
       {this.id,
@@ -182,10 +183,10 @@ class Payment {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     if (this.paymentStatus != null) {
-      data['paymentStatus'] = this.paymentStatus.toJson();
+      data['paymentStatus'] = this.paymentStatus!.toJson();
     }
     if (this.paymentGateway != null) {
-      data['paymentGateway'] = this.paymentGateway.toJson();
+      data['paymentGateway'] = this.paymentGateway!.toJson();
     }
     data['paidTo'] = this.paidTo;
     data['paidBy'] = this.paidBy;
@@ -196,10 +197,10 @@ class Payment {
     data['paidAmount'] = this.paidAmount;
     data['transactionDateTime'] = this.transactionDateTime;
     if (this.metadata != null) {
-      data['metadata'] = this.metadata.toJson();
+      data['metadata'] = this.metadata!.toJson();
     }
     if (this.cart != null) {
-      data['cart'] = this.cart.toJson();
+      data['cart'] = this.cart!.toJson();
     }
     data['paymentReference'] = this.paymentReference;
     data['paidDate'] = this.paidDate;
@@ -212,16 +213,16 @@ class Payment {
 }
 
 class PaymentStatus {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  ReferenceData referenceData;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  ReferenceData? referenceData;
 
   PaymentStatus(
       {this.id,
@@ -262,21 +263,21 @@ class PaymentStatus {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.referenceData != null) {
-      data['referenceData'] = this.referenceData.toJson();
+      data['referenceData'] = this.referenceData!.toJson();
     }
     return data;
   }
 }
 
 class ReferenceData {
-  String id;
-  String code;
-  String name;
-  String description;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   ReferenceData(
       {this.id,
@@ -314,7 +315,7 @@ class ReferenceData {
 }
 
 class Metadata {
-  String paymentGateway;
+  String? paymentGateway;
 
   Metadata({this.paymentGateway});
 
@@ -330,7 +331,7 @@ class Metadata {
 }
 
 class Cart {
-  String id;
+  String? id;
 
   Cart({this.id});
 
@@ -346,15 +347,15 @@ class Cart {
 }
 
 class PaymentGatewayDetail {
-  String sourceId;
-  String sourceCode;
-  ResponseInfo responseInfo;
-  String createdBy;
-  String createdOn;
-  bool isActive;
-  String paymentGatewayRequestId;
-  String lastModifiedOn;
-  String id;
+  String? sourceId;
+  String? sourceCode;
+  ResponseInfo? responseInfo;
+  String? createdBy;
+  String? createdOn;
+  bool? isActive;
+  String? paymentGatewayRequestId;
+  String? lastModifiedOn;
+  String? id;
 
   PaymentGatewayDetail(
       {this.sourceId,
@@ -386,7 +387,7 @@ class PaymentGatewayDetail {
     data['sourceId'] = this.sourceId;
     data['sourceCode'] = this.sourceCode;
     if (this.responseInfo != null) {
-      data['responseInfo'] = this.responseInfo.toJson();
+      data['responseInfo'] = this.responseInfo!.toJson();
     }
     data['createdBy'] = this.createdBy;
     data['createdOn'] = this.createdOn;
@@ -399,27 +400,27 @@ class PaymentGatewayDetail {
 }
 
 class ResponseInfo {
-  String id;
-  String phone;
-  String email;
-  String buyerName;
+  String? id;
+  String? phone;
+  String? email;
+  String? buyerName;
   var amount;
-  String purpose;
-  String expiresAt;
-  String status;
-  bool sendSms;
-  bool sendEmail;
-  String smsStatus;
-  String emailStatus;
-  String shorturl;
-  String longurl;
-  String redirectUrl;
-  String webhook;
-  bool allowRepeatedPayments;
-  String customerId;
+  String? purpose;
+  String? expiresAt;
+  String? status;
+  bool? sendSms;
+  bool? sendEmail;
+  String? smsStatus;
+  String? emailStatus;
+  String? shorturl;
+  String? longurl;
+  String? redirectUrl;
+  String? webhook;
+  bool? allowRepeatedPayments;
+  String? customerId;
   var createdAt;
-  String modifiedAt;
-  String paymentGateWay;
+  String? modifiedAt;
+  String? paymentGateWay;
 
   ResponseInfo(
       {this.id,

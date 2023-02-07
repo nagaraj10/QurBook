@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -72,7 +73,7 @@ class TicketViewModel extends ChangeNotifier {
   }
 
   // Create Ticket
-  Future<CreateTicketModel> createTicket() async {
+  Future<CreateTicketModel?> createTicket() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var createTicketModel;
     if (userid != null) {

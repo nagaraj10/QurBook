@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_parameters.dart';
 import 'googleFitValues.dart';
 import 'googleFitEnumvalues.dart';
@@ -11,11 +12,11 @@ class Point {
     this.dataTypeName,
   });
 
-  String startTimeNanos;
-  String originDataSourceId;
-  String endTimeNanos;
-  List<Value> value;
-  String dataTypeName;
+  String? startTimeNanos;
+  String? originDataSourceId;
+  String? endTimeNanos;
+  List<Value>? value;
+  String? dataTypeName;
 
   factory Point.fromJson(Map<String, dynamic> json) => Point(
         startTimeNanos: json[gfstartTimeNanos],
@@ -29,7 +30,7 @@ class Point {
         gfstartTimeNanos: startTimeNanos,
         gforiginDataSourceId: originDataSourceId,
         gfendTimeNanos: endTimeNanos,
-        gfvalue: List<dynamic>.from(value.map((x) => x.toJson())),
+        gfvalue: List<dynamic>.from(value!.map((x) => x.toJson())),
         gfdataTypeName: dataTypeName,
       };
 }

@@ -1,13 +1,14 @@
+
 import 'package:myfhb/my_providers/models/Doctors.dart';
 
 class ProviderRequestCollection3 {
-  String id;
-  String userPhoneNumber;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String patientInfo;
-  Doctors doctor;
+  String? id;
+  String? userPhoneNumber;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? patientInfo;
+  Doctors? doctor;
 
   ProviderRequestCollection3(
       {this.id,
@@ -38,7 +39,7 @@ class ProviderRequestCollection3 {
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['patientInfo'] = this.patientInfo;
     if (this.doctor != null) {
-      data['doctor'] = this.doctor.toJson();
+      data['doctor'] = this.doctor!.toJson();
     }
     return data;
   }

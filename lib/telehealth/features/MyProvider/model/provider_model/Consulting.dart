@@ -1,7 +1,8 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Consulting {
-  String fee;
+  String? fee;
 
   Consulting({this.fee});
 

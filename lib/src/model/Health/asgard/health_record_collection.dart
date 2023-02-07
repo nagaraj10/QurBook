@@ -1,10 +1,11 @@
+
 class HealthRecordCollection {
-  String id;
-  String fileType;
-  String healthRecordUrl;
-  bool isActive;
-  String createdOn;
-  String createdBy;
+  String? id;
+  String? fileType;
+  String? healthRecordUrl;
+  bool? isActive;
+  String? createdOn;
+  String? createdBy;
 
   HealthRecordCollection({this.id,
     this.fileType,

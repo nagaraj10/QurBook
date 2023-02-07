@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -24,21 +25,21 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 
 class PaymentResultPage extends StatefulWidget {
-  final bool status;
-  final bool isFromSubscribe;
-  final String refNo;
+  final bool? status;
+  final bool? isFromSubscribe;
+  final String? refNo;
   final bool isFreePlan;
-  Function(String) closePage;
-  final bool isPaymentFails;
-  final String cartUserId;
-  final String paymentRetryUrl;
-  final String paymentId;
-  final bool isFromRazor;
+  Function(String)? closePage;
+  final bool? isPaymentFails;
+  final String? cartUserId;
+  final String? paymentRetryUrl;
+  final String? paymentId;
+  final bool? isFromRazor;
   final bool isPaymentFromNotification;
 
   PaymentResultPage(
-      {Key key,
-      @required this.status,
+      {Key? key,
+      required this.status,
       this.refNo,
       this.closePage,
       this.isFromSubscribe,
@@ -56,7 +57,7 @@ class PaymentResultPage extends StatefulWidget {
 }
 
 class _ResultPage extends State<PaymentResultPage> {
-  bool status;
+  bool? status;
 
   //bool isFromSubscribe;
 
@@ -84,13 +85,13 @@ class _ResultPage extends State<PaymentResultPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
+        Text(status! ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
             style: TextStyle(
                 fontSize: 22.0.sp,
                 color: Colors.white,
                 fontWeight: FontWeight.bold)),
         SizedBox(height: 10.0.h),
-        status
+        status!
             ? Text(PLAN_CONFIRM,
                 style: TextStyle(
                     fontSize: 16.0.sp,
@@ -125,14 +126,14 @@ class _ResultPage extends State<PaymentResultPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                          status ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
+                          status! ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                           width: 120.0.h,
                           height: 120.0.h,
-                          color: status ? Colors.white : Colors.red),
+                          color: status! ? Colors.white : Colors.red),
                       SizedBox(height: 15.0.h),
                       (widget?.isFreePlan ?? false)
                           ? Text(
-                              status
+                              status!
                                   ? 'Plan Subscription/Renewal Successful'
                                   : 'Plan Subscription/Renewal Failed',
                               // TODO this need to confirm with bussinees
@@ -143,7 +144,7 @@ class _ResultPage extends State<PaymentResultPage> {
                           : paidPlanContent(),
                       //status
                       ((widget.refNo ?? '').isNotEmpty)
-                          ? Text('Order ID : ' + widget.refNo,
+                          ? Text('Order ID : ' + widget.refNo!,
                               style: TextStyle(
                                   fontSize: 16.0.sp,
                                   color: Colors.white,
@@ -170,9 +171,9 @@ class _ResultPage extends State<PaymentResultPage> {
                                     KEY_USERID_MAIN),
                                 "status": status
                               });
-                              if (status) {
+                              if (status!) {
                                 //widget.closePage(STR_SUCCESS);
-                                SchedulerBinding.instance
+                                SchedulerBinding.instance!
                                     .addPostFrameCallback((_) async {
                                   if (widget.isPaymentFromNotification) {
                                     Get.offAllNamed(
@@ -189,7 +190,7 @@ class _ResultPage extends State<PaymentResultPage> {
                                 if (widget?.isFreePlan ?? false) {
                                   Get.back();
                                 } else {
-                                  SchedulerBinding.instance
+                                  SchedulerBinding.instance!
                                       .addPostFrameCallback((_) async {
                                     if (widget.isPaymentFromNotification) {
                                       Get.offAll(NotificationMain());
@@ -217,7 +218,7 @@ class _ResultPage extends State<PaymentResultPage> {
                         ],
                       ),
                       SizedBox(height: 20.0.h),
-                      status
+                      status!
                           ? Visibility(
                               visible: !(Provider.of<CheckoutPageProvider>(
                                       context,
@@ -244,14 +245,14 @@ class _ResultPage extends State<PaymentResultPage> {
                                             listen: false)
                                         .loader(false, isNeedRelod: true);
                                     Provider.of<RegimentViewModel>(
-                                      Get.context,
+                                      Get.context!,
                                       listen: false,
                                     ).regimentMode = RegimentMode.Schedule;
                                     Provider.of<RegimentViewModel>(
-                                      Get.context,
+                                      Get.context!,
                                       listen: false,
                                     ).regimentFilter = RegimentFilter.Scheduled;
-                                    SchedulerBinding.instance
+                                    SchedulerBinding.instance!
                                         .addPostFrameCallback((_) async {
                                       await Get.offAllNamed(router.rt_Regimen);
                                     });
@@ -313,7 +314,7 @@ class _ResultPage extends State<PaymentResultPage> {
   }
 
   Widget getRetryButton() {
-    if (!status && !widget?.isFreePlan ?? false) {
+    if (!status! && !widget?.isFreePlan ?? false) {
       return FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -327,7 +328,7 @@ class _ResultPage extends State<PaymentResultPage> {
 
           Navigator.pop(context);
           Navigator.pushReplacement(
-            Get.context,
+            Get.context!,
             MaterialPageRoute(
               builder: (context) => PaymentGatwayPage(
                 redirectUrl: widget.paymentRetryUrl,

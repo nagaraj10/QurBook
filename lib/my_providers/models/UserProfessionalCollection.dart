@@ -1,13 +1,14 @@
+
 class DoctorProfessionalDetailCollection {
-  String id;
-  QualificationInfo qualificationInfo;
-  MedicalCouncilInfo medicalCouncilInfo;
-  MedicalCouncilInfo specialty;
-  List<ClinicName> clinicName;
-  String aboutMe;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  QualificationInfo? qualificationInfo;
+  MedicalCouncilInfo? medicalCouncilInfo;
+  MedicalCouncilInfo? specialty;
+  List<ClinicName>? clinicName;
+  String? aboutMe;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   DoctorProfessionalDetailCollection(
       {this.id,
@@ -34,7 +35,7 @@ class DoctorProfessionalDetailCollection {
     if (json['clinicName'] != null) {
       clinicName = List<ClinicName>();
       json['clinicName'].forEach((v) {
-        clinicName.add(ClinicName.fromJson(v));
+        clinicName!.add(ClinicName.fromJson(v));
       });
     }
     aboutMe = json['aboutMe'];
@@ -47,16 +48,16 @@ class DoctorProfessionalDetailCollection {
     final data = <String, dynamic>{};
     data['id'] = id;
     if (qualificationInfo != null) {
-      data['qualificationInfo'] = qualificationInfo.toJson();
+      data['qualificationInfo'] = qualificationInfo!.toJson();
     }
     if (medicalCouncilInfo != null) {
-      data['medicalCouncilInfo'] = medicalCouncilInfo.toJson();
+      data['medicalCouncilInfo'] = medicalCouncilInfo!.toJson();
     }
     if (specialty != null) {
-      data['specialty'] = specialty.toJson();
+      data['specialty'] = specialty!.toJson();
     }
     if (clinicName != null) {
-      data['clinicName'] = clinicName.map((v) => v.toJson()).toList();
+      data['clinicName'] = clinicName!.map((v) => v.toJson()).toList();
     }
     data['aboutMe'] = aboutMe;
     data['isActive'] = isActive;
@@ -67,8 +68,8 @@ class DoctorProfessionalDetailCollection {
 }
 
 class QualificationInfo {
-  List<Degree> degree;
-  List<Degree> university;
+  List<Degree>? degree;
+  List<Degree>? university;
 
   QualificationInfo({this.degree, this.university});
 
@@ -76,13 +77,13 @@ class QualificationInfo {
     if (json['degree'] != null) {
       degree = <Degree>[];
       json['degree'].forEach((v) {
-        degree.add(Degree.fromJson(v));
+        degree!.add(Degree.fromJson(v));
       });
     }
     if (json['university'] != null) {
       university = List<Degree>();
       json['university'].forEach((v) {
-        university.add(Degree.fromJson(v));
+        university!.add(Degree.fromJson(v));
       });
     }
   }
@@ -90,19 +91,19 @@ class QualificationInfo {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (degree != null) {
-      data['degree'] = degree.map((v) => v.toJson()).toList();
+      data['degree'] = degree!.map((v) => v.toJson()).toList();
     }
     if (university != null) {
-      data['university'] = university.map((v) => v.toJson()).toList();
+      data['university'] = university!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Degree {
-  String id;
-  String name;
-  bool isActive;
+  String? id;
+  String? name;
+  bool? isActive;
 
   Degree({this.id, this.name, this.isActive});
 
@@ -122,12 +123,12 @@ class Degree {
 }
 
 class MedicalCouncilInfo {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String description;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? description;
+  String? lastModifiedOn;
 
   MedicalCouncilInfo(
       {this.id,
@@ -159,7 +160,7 @@ class MedicalCouncilInfo {
 }
 
 class ClinicName {
-  String name;
+  String? name;
 
   ClinicName({this.name});
 

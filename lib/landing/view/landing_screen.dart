@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -64,39 +65,39 @@ import 'widgets/home_widget.dart';
 import 'widgets/navigation_drawer.dart';
 
 class LandingScreen extends StatefulWidget {
-  static _LandingScreenState of(BuildContext context) =>
-      context.findAncestorStateOfType<State<LandingScreen>>();
+  static _LandingScreenState? of(BuildContext context) =>
+      context.findAncestorStateOfType<State<LandingScreen>>() as _LandingScreenState?;
 
   const LandingScreen({
     this.landingArguments,
   });
 
-  final LandingArguments landingArguments;
+  final LandingArguments? landingArguments;
 
   @override
   _LandingScreenState createState() => _LandingScreenState();
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
   final GlobalKey<State> _key = GlobalKey<State>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  Future profileData;
-  File imageURIProfile;
-  LandingViewModel landingViewModel;
+  Future? profileData;
+  File? imageURIProfile;
+  LandingViewModel? landingViewModel;
   CommonUtil commonUtil = CommonUtil();
   bool isUserMainId = true;
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
-  GetDeviceSelectionModel selectionResult;
+  GetDeviceSelectionModel? selectionResult;
 
-  bool bpMonitor = true;
-  bool glucoMeter = true;
-  bool pulseOximeter = true;
-  bool thermoMeter = true;
-  bool weighScale = true;
+  bool? bpMonitor = true;
+  bool? glucoMeter = true;
+  bool? pulseOximeter = true;
+  bool? thermoMeter = true;
+  bool? weighScale = true;
   var userId;
 
   final controller = Get.put(ChatUserListController());
@@ -114,11 +115,11 @@ class _LandingScreenState extends State<LandingScreen> {
 
       SystemChannels.lifecycle.setMessageHandler((msg) {
         if (msg == AppLifecycleState.resumed.toString()) {
-          imageCache.clear();
-          imageCache.clearLiveImages();
+          imageCache!.clear();
+          imageCache!.clearLiveImages();
           profileData = getMyProfile();
         }
-      });
+      } as Future<String?> Function(String?)?);
       onInit();
     } catch (e) {
       //print(e);
@@ -132,7 +133,7 @@ class _LandingScreenState extends State<LandingScreen> {
       dbInitialize();
       userId = PreferenceUtil.getStringValue(KEY_USERID);
       QurPlanReminders.getTheRemindersFromAPI();
-      Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+      Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
       await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();
@@ -170,11 +171,11 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .off(getChatTotalCountOn);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .emitWithAck(getChatTotalCountEmit, {
       'userId': userId,
@@ -183,20 +184,20 @@ class _LandingScreenState extends State<LandingScreen> {
         TotalCountModel totalCountModel =
             TotalCountModel.fromJson(countResponseEmit);
         if (totalCountModel != null) {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatTotalCount(totalCountModel);
         }
       }
     });
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .on(getChatTotalCountOn, (countResponseOn) {
       if (countResponseOn != null) {
         TotalCountModel totalCountModelOn =
             TotalCountModel.fromJson(countResponseOn);
         if (totalCountModelOn != null) {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatTotalCount(totalCountModelOn);
         }
       }
@@ -220,7 +221,7 @@ class _LandingScreenState extends State<LandingScreen> {
       await PreferenceUtil.removeNotificationData();
 
       if (notificationData.redirect == 'appointmentList') {
-        landingViewModel.updateTabIndex(3);
+        landingViewModel!.updateTabIndex(3);
       } else if (notificationData.redirect == chat) {
         if ((notificationData.doctorId ?? '').isNotEmpty &&
             (notificationData.doctorName ?? '').isNotEmpty &&
@@ -248,7 +249,7 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  Future<MyProfileResult> getIsCpUser() async {
+  Future<MyProfileResult?> getIsCpUser() async {
     MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     return myProfile.result;
@@ -257,26 +258,26 @@ class _LandingScreenState extends State<LandingScreen> {
   checkCpUser() async {
     var value = await LandingService.getMemberShipDetails();
     PreferenceUtil.saveActiveMembershipStatus(
-        value.isSuccess ? (value.result ?? []).length > 0 : false);
-    if (value.isSuccess) {
+        value.isSuccess! ? (value.result ?? []).length > 0 : false);
+    if (value.isSuccess!) {
       bool isShown =
-          await PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown();
+          await (PreferenceUtil.getIsCorpUserWelcomeMessageDialogShown() as FutureOr<bool>);
 
       if (!isShown) {
-        MyProfileResult cpUser = await getIsCpUser();
+        MyProfileResult? cpUser = await getIsCpUser();
         showDialog(
             barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
-              return CorpUsersWelcomeDialog(cpUser, value.result[0]);
+              return CorpUsersWelcomeDialog(cpUser, value.result![0]);
             });
       }
     }
   }
 
   Future<bool> _onBackPressed() {
-    if (landingViewModel.currentTabIndex != 0) {
-      landingViewModel.updateTabIndex(0);
+    if (landingViewModel!.currentTabIndex != 0) {
+      landingViewModel!.updateTabIndex(0);
       return Future.value(false);
     } else {
       return showDialog(
@@ -300,8 +301,8 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               );
             },
-          ) ??
-          false;
+          ).then((value) => value as bool) ??
+          false as Future<bool>;
     }
   }
 
@@ -309,17 +310,17 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     landingViewModel = Provider.of<LandingViewModel>(context);
 
-    if (landingViewModel.isURLCome) {
-      landingViewModel.isURLCome = false;
+    if (landingViewModel!.isURLCome) {
+      landingViewModel!.isURLCome = false;
       Future.delayed(Duration(seconds: 2), () {
         if (widget?.landingArguments?.url != null &&
-            widget?.landingArguments?.url.isNotEmpty) {
-          CommonUtil().launchURL(widget?.landingArguments?.url);
+            widget?.landingArguments?.url!.isNotEmpty) {
+          CommonUtil().launchURL(widget?.landingArguments?.url!);
         }
       });
     }
-    return FutureBuilder<MyProfileModel>(
-      future: profileData,
+    return FutureBuilder<MyProfileModel?>(
+      future: profileData.then((value) => value as MyProfileModel?),
       builder: (context, snapshot) {
         return Scaffold(
           key: _scaffoldKey,
@@ -332,7 +333,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 Column(
                   children: [
                     Visibility(
-                      visible: !landingViewModel.isSearchVisible,
+                      visible: !landingViewModel!.isSearchVisible,
                       child: Container(
                         //height: CommonUtil().isTablet ? 90.00 : null,
                         decoration: BoxDecoration(
@@ -358,9 +359,9 @@ class _LandingScreenState extends State<LandingScreen> {
                                   ),
                                   color: Colors.white,
                                   iconSize:
-                                      CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
+                                      CommonUtil().isTablet! ? 34.0.sp : 24.0.sp,
                                   onPressed: () {
-                                    _scaffoldKey.currentState.openDrawer();
+                                    _scaffoldKey.currentState!.openDrawer();
                                   },
                                 ),
                               ),
@@ -377,7 +378,7 @@ class _LandingScreenState extends State<LandingScreen> {
                               //   ),
 
                               Visibility(
-                                visible: landingViewModel.currentTabIndex == 4,
+                                visible: landingViewModel!.currentTabIndex == 4,
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                     right: 5.0.w,
@@ -385,7 +386,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   child: IconWidget(
                                     icon: Icons.search,
                                     colors: Colors.white,
-                                    size: CommonUtil().isTablet
+                                    size: CommonUtil().isTablet!
                                         ? 33.0.sp
                                         : 30.0.sp,
                                     onTap: () {
@@ -426,7 +427,7 @@ class _LandingScreenState extends State<LandingScreen> {
           drawer: NavigationDrawer(
             myProfile: myProfile,
             moveToLoginPage: moveToLoginPage,
-            userChangedbool: landingViewModel.isUserMainId,
+            userChangedbool: landingViewModel!.isUserMainId,
             refresh: (userChanged) => refresh(
               userChanged: userChanged,
             ),
@@ -442,7 +443,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               ),
               child: BottomNavigationBar(
-                currentIndex: landingViewModel.currentTabIndex,
+                currentIndex: landingViewModel!.currentTabIndex,
                 //type: BottomNavigationBarType.fixed,
                 type: BottomNavigationBarType.shifting,
                 selectedFontSize: 12.sp,
@@ -467,16 +468,16 @@ class _LandingScreenState extends State<LandingScreen> {
                       AssetImage(
                         variable.icon_home,
                       ),
-                      size: CommonUtil().isTablet
+                      size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel.currentTabIndex == 0
+                          : landingViewModel!.currentTabIndex == 0
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       variable.strhome,
                       style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 0
+                        color: landingViewModel!.currentTabIndex == 0
                             ? Color(
                                 CommonUtil().getMyPrimaryColor(),
                               )
@@ -489,7 +490,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     title: Text(
                       variable.strChat,
                       style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 1
+                        color: landingViewModel!.currentTabIndex == 1
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -500,7 +501,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     title: Text(
                       variable.strMaya,
                       style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 2
+                        color: landingViewModel!.currentTabIndex == 2
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -509,16 +510,16 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_th),
-                      size: CommonUtil().isTablet
+                      size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel.currentTabIndex == 3
+                          : landingViewModel!.currentTabIndex == 3
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       constants.strAppointment,
                       style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 3
+                        color: landingViewModel!.currentTabIndex == 3
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -527,16 +528,16 @@ class _LandingScreenState extends State<LandingScreen> {
                   BottomNavigationBarItem(
                     icon: ImageIcon(
                       AssetImage(variable.icon_records),
-                      size: CommonUtil().isTablet
+                      size: CommonUtil().isTablet!
                           ? 33.0.sp
-                          : landingViewModel.currentTabIndex == 4
+                          : landingViewModel!.currentTabIndex == 4
                               ? selOption
                               : unSelOption,
                     ),
                     title: Text(
                       variable.strMyRecords,
                       style: TextStyle(
-                        color: landingViewModel.currentTabIndex == 4
+                        color: landingViewModel!.currentTabIndex == 4
                             ? Color(CommonUtil().getMyPrimaryColor())
                             : Colors.black54,
                       ),
@@ -545,7 +546,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
                 //backgroundColor: Colors.grey[200],
                 onTap: (index) {
-                  landingViewModel.updateTabIndex(index);
+                  landingViewModel!.updateTabIndex(index);
                 },
               ),
             ),
@@ -567,17 +568,17 @@ class _LandingScreenState extends State<LandingScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           count = 0;
-          snapshot.data.docs.forEach((element) {
+          snapshot.data!.docs.forEach((element) {
             if (element.data()[constants.STR_IS_READ_COUNT] != null &&
                 element.data()[constants.STR_IS_READ_COUNT] != '') {
-              count = count + element.data()[constants.STR_IS_READ_COUNT];
+              count = count + element.data()[constants.STR_IS_READ_COUNT] as int;
             }
           });
           return BadgeIcon(
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: landingViewModel.currentTabIndex == 1
+                color: landingViewModel!.currentTabIndex == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -590,7 +591,7 @@ class _LandingScreenState extends State<LandingScreen> {
             icon: GestureDetector(
               child: ImageIcon(
                 const AssetImage(variable.icon_chat),
-                color: landingViewModel.currentTabIndex == 1
+                color: landingViewModel!.currentTabIndex == 1
                     ? Color(CommonUtil().getMyPrimaryColor())
                     : Colors.black54,
               ),
@@ -605,10 +606,10 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Widget getCurrentTab() {
     final Function onBackPressed = () {
-      landingViewModel.updateTabIndex(0);
+      landingViewModel!.updateTabIndex(0);
     };
     Widget landingTab;
-    switch (landingViewModel.currentTabIndex) {
+    switch (landingViewModel!.currentTabIndex) {
       case 1:
         landingTab = ChatUserList(
           isHome: true,
@@ -660,7 +661,7 @@ class _LandingScreenState extends State<LandingScreen> {
                 Text(
                   CommonUtil().getUserName(),
                   style: TextStyle(
-                    fontSize: CommonUtil().isTablet ? 20.0.sp : 18.0.sp,
+                    fontSize: CommonUtil().isTablet! ? 20.0.sp : 18.0.sp,
                     color: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
@@ -693,18 +694,18 @@ class _LandingScreenState extends State<LandingScreen> {
       icon: GestureDetector(
         child: ImageIcon(
           const AssetImage(variable.icon_chat),
-          size: CommonUtil().isTablet
+          size: CommonUtil().isTablet!
               ? 33.0.sp
-              : landingViewModel.currentTabIndex == 1
+              : landingViewModel!.currentTabIndex == 1
                   ? selOption
                   : unSelOption,
-          color: landingViewModel.currentTabIndex == 1
+          color: landingViewModel!.currentTabIndex == 1
               ? Color(CommonUtil().getMyPrimaryColor())
               : Colors.black54,
         ),
       ),
       badgeColor: ColorUtils.countColor,
-      badgeCount: Provider.of<ChatSocketViewModel>(Get.context)?.chatTotalCount,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context!)?.chatTotalCount,
     );
   }
 
@@ -712,14 +713,14 @@ class _LandingScreenState extends State<LandingScreen> {
     return BadgeIcon(
       icon: Image.asset(
         variable.icon_mayaMain,
-        height: CommonUtil().isTablet
+        height: CommonUtil().isTablet!
             ? 33.0.sp
-            : landingViewModel.currentTabIndex == 2
+            : landingViewModel!.currentTabIndex == 2
                 ? selSheelaOption
                 : unSelOption,
-        width: CommonUtil().isTablet
+        width: CommonUtil().isTablet!
             ? 33.0.sp
-            : landingViewModel.currentTabIndex == 2
+            : landingViewModel!.currentTabIndex == 2
                 ? selSheelaOption
                 : unSelOption,
       ),
@@ -731,7 +732,7 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Future<MyProfileModel> getMyProfile() async {
+  Future<MyProfileModel?> getMyProfile() async {
     final userId = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     final userIdMain =
         await PreferenceUtil.getStringValue(constants.KEY_USERID);
@@ -751,19 +752,19 @@ class _LandingScreenState extends State<LandingScreen> {
         if (value != null) {
           if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
             var profileSetting =
-                value?.result?.userProfileSettingCollection3[0].profileSetting;
+                value?.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting?.preferredMeasurement != null) {
               PreferredMeasurement preferredMeasurement =
-                  profileSetting?.preferredMeasurement;
+                  profileSetting?.preferredMeasurement!;
               await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode)
+                      preferredMeasurement.height?.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                        preferredMeasurement.weight?.unitCode)
+                        preferredMeasurement.weight?.unitCode!)
                     .then((value) {
                   PreferenceUtil.saveString(
                           Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature?.unitCode
+                          preferredMeasurement.temperature?.unitCode!
                               .toUpperCase())
                       .then((value) {});
                 });
@@ -790,7 +791,7 @@ class _LandingScreenState extends State<LandingScreen> {
     PreferenceUtil.clearAllData().then(
       (value) {
         Navigator.pushAndRemoveUntil(
-          Get.context,
+          Get.context!,
           MaterialPageRoute(
             builder: (context) => PatientSignInScreen(),
           ),
@@ -815,17 +816,17 @@ class _LandingScreenState extends State<LandingScreen> {
 
   void moveToQurhome() async {
     var result = await healthReportListForUserRepository.getDeviceSelection();
-    if (result.isSuccess) {
+    if (result.isSuccess!) {
       if (Platform.isIOS) {
         reponseToRemoteNotificationMethodChannel.invokeListMethod(
           QurhomeDefaultUI,
           {
             'status':
-                (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false)
+                (result.result!.first?.profileSetting?.qurhomeDefaultUI ?? false)
           },
         );
       }
-      if (result.result.first?.profileSetting?.qurhomeDefaultUI ?? false) {
+      if (result.result!.first?.profileSetting?.qurhomeDefaultUI ?? false) {
         if (!PreferenceUtil.getIfQurhomeisDefaultUI()) {
           PreferenceUtil.saveQurhomeAsDefaultUI(
             qurhomeStatus: true,
@@ -899,57 +900,57 @@ class _LandingScreenState extends State<LandingScreen> {
     checkCpUser();
   }
 
-  Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
+  Future<GetDeviceSelectionModel?> getDeviceSelectionValues() async {
     await healthReportListForUserRepository.getDeviceSelection().then((value) {
       selectionResult = value;
-      if (selectionResult.isSuccess) {
-        if (selectionResult.result != null) {
+      if (selectionResult!.isSuccess!) {
+        if (selectionResult!.result != null) {
           bpMonitor =
-              selectionResult.result[0].profileSetting.bpMonitor != null &&
-                      selectionResult.result[0].profileSetting.bpMonitor != ''
-                  ? selectionResult.result[0].profileSetting.bpMonitor
+              selectionResult!.result![0].profileSetting!.bpMonitor != null &&
+                      selectionResult!.result![0].profileSetting!.bpMonitor != ''
+                  ? selectionResult!.result![0].profileSetting!.bpMonitor
                   : true;
           glucoMeter =
-              selectionResult.result[0].profileSetting.glucoMeter != null &&
-                      selectionResult.result[0].profileSetting.glucoMeter != ''
-                  ? selectionResult.result[0].profileSetting.glucoMeter
+              selectionResult!.result![0].profileSetting!.glucoMeter != null &&
+                      selectionResult!.result![0].profileSetting!.glucoMeter != ''
+                  ? selectionResult!.result![0].profileSetting!.glucoMeter
                   : true;
           pulseOximeter =
-              selectionResult.result[0].profileSetting.pulseOximeter != null &&
-                      selectionResult.result[0].profileSetting.pulseOximeter !=
+              selectionResult!.result![0].profileSetting!.pulseOximeter != null &&
+                      selectionResult!.result![0].profileSetting!.pulseOximeter !=
                           ''
-                  ? selectionResult.result[0].profileSetting.pulseOximeter
+                  ? selectionResult!.result![0].profileSetting!.pulseOximeter
                   : true;
           thermoMeter =
-              selectionResult.result[0].profileSetting.thermoMeter != null &&
-                      selectionResult.result[0].profileSetting.thermoMeter != ''
-                  ? selectionResult.result[0].profileSetting.thermoMeter
+              selectionResult!.result![0].profileSetting!.thermoMeter != null &&
+                      selectionResult!.result![0].profileSetting!.thermoMeter != ''
+                  ? selectionResult!.result![0].profileSetting!.thermoMeter
                   : true;
           weighScale =
-              selectionResult.result[0].profileSetting.weighScale != null &&
-                      selectionResult.result[0].profileSetting.weighScale != ''
-                  ? selectionResult.result[0].profileSetting.weighScale
+              selectionResult!.result![0].profileSetting!.weighScale != null &&
+                      selectionResult!.result![0].profileSetting!.weighScale != ''
+                  ? selectionResult!.result![0].profileSetting!.weighScale
                   : true;
-          if (selectionResult.result[0].profileSetting != null) {
-            if (selectionResult.result[0].profileSetting.preferred_language !=
+          if (selectionResult!.result![0].profileSetting != null) {
+            if (selectionResult!.result![0].profileSetting!.preferred_language !=
                 null) {
               final preferredLanguage =
-                  selectionResult.result[0].profileSetting.preferred_language;
+                  selectionResult!.result![0].profileSetting!.preferred_language;
               var currentLanguage = '';
               if (preferredLanguage != 'undef') {
-                currentLanguage = preferredLanguage.split('-').first;
+                currentLanguage = preferredLanguage!.split('-').first;
               } else {
                 currentLanguage = 'en';
               }
               PreferenceUtil.saveString(Constants.SHEELA_LANG,
                   CommonUtil.langaugeCodes[currentLanguage] ?? 'en-IN');
             }
-            if (selectionResult.result[0].profileSetting.preColor != null &&
-                selectionResult.result[0].profileSetting.greColor != null) {
+            if (selectionResult!.result![0].profileSetting!.preColor != null &&
+                selectionResult!.result![0].profileSetting!.greColor != null) {
               PreferenceUtil.saveTheme(Constants.keyPriColor,
-                  selectionResult.result[0].profileSetting.preColor);
+                  selectionResult!.result![0].profileSetting!.preColor!);
               PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                  selectionResult.result[0].profileSetting.greColor);
+                  selectionResult!.result![0].profileSetting!.greColor!);
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
@@ -1043,15 +1044,15 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   Widget getSwitchProfileWidget() {
-    return FutureBuilder<MyProfileModel>(
+    return FutureBuilder<MyProfileModel?>(
         future: getMyProfile(),
         builder: (context, snapshot) {
           if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
             PreferenceUtil.saveProfileData(
                 Constants.KEY_PROFILE, snapshot.data);
 
-          imageCache.clear();
-          imageCache.clearLiveImages();
+          imageCache!.clear();
+          imageCache!.clearLiveImages();
 
           return SwitchProfile().buildActions(
             context,
@@ -1059,8 +1060,8 @@ class _LandingScreenState extends State<LandingScreen> {
             () {
               profileData = getMyProfile();
               checkIfUserIdSame();
-              landingViewModel.getQurPlanDashBoard(needNotify: true);
-              landingViewModel.checkIfUserIdSame().then((value) {
+              landingViewModel!.getQurPlanDashBoard(needNotify: true);
+              landingViewModel!.checkIfUserIdSame().then((value) {
                 isUserMainId = value;
               });
               QurPlanReminders.getTheRemindersFromAPI();

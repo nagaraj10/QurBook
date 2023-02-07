@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
@@ -5,8 +6,8 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/viewModel/BottomN
 import 'package:provider/provider.dart';
 
 class BottomNavigationMain extends StatefulWidget {
-  final int selectedPageIndex;
-  final Function myFunc;
+  final int? selectedPageIndex;
+  final Function? myFunc;
 
   BottomNavigationMain({this.selectedPageIndex, this.myFunc});
   @override
@@ -15,7 +16,7 @@ class BottomNavigationMain extends StatefulWidget {
 
 class _BottomNavigationMainState extends State<BottomNavigationMain> {
   bool firstTym = false;
-  BottomNavigationViewModel bottomNavigationViewModel;
+  late BottomNavigationViewModel bottomNavigationViewModel;
   @override
   Widget build(BuildContext context) {
     getDataForProvider();
@@ -24,7 +25,7 @@ class _BottomNavigationMainState extends State<BottomNavigationMain> {
         create: (context) => BottomNavigationViewModel(),
         child: BottomNavigationWidget(
           selectedPageIndex: widget.selectedPageIndex,
-          myFunc: widget.myFunc(widget.selectedPageIndex),
+          myFunc: widget.myFunc!(widget.selectedPageIndex),
           bottomNavigationArgumentsList:
               bottomNavigationViewModel.bottomNavigationArgumentsList,
         ),

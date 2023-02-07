@@ -1,3 +1,4 @@
+
 import '../../constants/fhb_query.dart' as query;
 import '../models/doctor_list_response_new.dart';
 import '../../src/resources/network/ApiBaseHelper.dart';
@@ -17,7 +18,7 @@ class DoctorsListRepository {
   }
 
   Future<DoctorsSearchListResponse> getDoctorsListFromSearchNew(
-      String param, bool isSkipUnknown) async {
+      String? param, bool? isSkipUnknown) async {
     final offset = 0;
     var limit = 10;
     var response = await _helper.getDoctorsListFromSearchNew(

@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -8,12 +9,12 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class DropdownWithTags extends StatefulWidget {
   const DropdownWithTags(
-      {Key key, this.title, this.tags, this.onChecked, this.isClickable})
+      {Key? key, this.title, this.tags, this.onChecked, this.isClickable})
       : super(key: key);
-  final String title;
-  final List<Tags> tags;
-  final bool isClickable;
-  final Function(List<Tags>) onChecked;
+  final String? title;
+  final List<Tags>? tags;
+  final bool? isClickable;
+  final Function(List<Tags>?)? onChecked;
 
   @override
   _DropdownWithTagsState createState() => _DropdownWithTagsState();
@@ -24,7 +25,7 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
   final nameController = TextEditingController();
   FocusNode nameFocus = FocusNode();
 
-  List<Tags> _foundUsers = [];
+  List<Tags>? _foundUsers = [];
   @override
   void initState() {
     _foundUsers = widget.tags;
@@ -86,11 +87,11 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
   }
 
   List<CheckboxListTile> getlistWithCheckbox() {
-    return _foundUsers
+    return _foundUsers!
         .map((e) => CheckboxListTile(
               value: e.isChecked,
               checkColor: Color(CommonUtil().getMyPrimaryColor()),
-              title: Text(e.name,
+              title: Text(e.name!,
                   style: TextStyle(
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   )),
@@ -99,9 +100,9 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
                 setState(() {
                   e.isChecked = val;
                 });
-                widget.onChecked(_foundUsers);
+                widget.onChecked!(_foundUsers);
               },
-              selected: e.isChecked,
+              selected: e.isChecked!,
               activeColor: Colors.white,
             ))
         .toList();
@@ -179,14 +180,14 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
   }
 
   void _runFilter(String enteredKeyword) {
-    List<Tags> results = [];
+    List<Tags>? results = [];
     if (enteredKeyword.isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
       results = widget.tags;
     } else {
-      results = widget.tags
+      results = widget.tags!
           .where((user) =>
-              user.name.toLowerCase().contains(enteredKeyword.toLowerCase()))
+              user.name!.toLowerCase().contains(enteredKeyword.toLowerCase()))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -195,6 +196,6 @@ class _DropdownWithTagsState extends State<DropdownWithTags> {
     setState(() {
       _foundUsers = results;
     });
-    widget.onChecked(_foundUsers);
+    widget.onChecked!(_foundUsers);
   }
 }

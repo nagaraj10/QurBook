@@ -1,6 +1,7 @@
+
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart'; FU2.5
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
 import '../../common/PreferenceUtil.dart';
@@ -38,8 +39,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 
 class ClaimRecordDisplay extends StatefulWidget {
-  Function(String) closePage;
-  final String claimID;
+  Function(String)? closePage;
+  final String? claimID;
 
   @override
   _ClaimRecordDisplayState createState() => _ClaimRecordDisplayState();
@@ -53,10 +54,10 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   int _current = 0;
   int index = 0;
   int length = 0;
-  CarouselController carouselSlider;
-  String authToken;
+  CarouselController? carouselSlider;
+  String? authToken;
 
-  String billName = "",
+  String? billName = "",
       claimNo = "",
       submittedDate = "",
       amount = "",
@@ -65,15 +66,15 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
       status = "",statusCode="",
       remark = "",
       approvedAmount = "";
-  ClaimListRepository claimListRepository;
-  ClaimListBloc claimListBloc;
-  GetRecordIdsFilter getRecordIdsFilter;
-  ClaimRecordDetails claimRecordDetails;
+  late ClaimListRepository claimListRepository;
+  ClaimListBloc? claimListBloc;
+  GetRecordIdsFilter? getRecordIdsFilter;
+  ClaimRecordDetails? claimRecordDetails;
 
   bool ispdfPresent = false;
-  HealthRecordCollection pdfId;
+  HealthRecordCollection? pdfId;
   var pdfFile;
-  String fileName;
+  String? fileName;
 
   @override
   void initState() {
@@ -94,11 +95,13 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         key: scaffold_state,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: AutoSizeText(
+          title: 
+          Text( // FU2.5
+          //AutoSizeText( FU2.5
             "My Claim ",
             maxLines: 1,
-            maxFontSize: 16,
-          ),
+          //  maxFontSize: 16, FU2.5
+          ), 
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -111,7 +114,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: <Widget>[
-            claimRecordDetails != null && claimRecordDetails.result != null
+            claimRecordDetails != null && claimRecordDetails!.result != null
                 ? getClaimDetails()
                 : getClaimDetailsFromFutureBuilder()
           ],
@@ -128,16 +131,16 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
             ),
             color: Colors.black87,
             child: (getRecordIdsFilter != null &&
-                    getRecordIdsFilter.result != null &&
-                    getRecordIdsFilter.result.length > 0 &&
-                    getRecordIdsFilter.result[0].healthRecordCollection !=
+                    getRecordIdsFilter!.result != null &&
+                    getRecordIdsFilter!.result!.length > 0 &&
+                    getRecordIdsFilter!.result![0].healthRecordCollection !=
                         null &&
-                    getRecordIdsFilter.result[0].healthRecordCollection.length >
+                    getRecordIdsFilter!.result![0].healthRecordCollection!.length >
                         0)
                 ? getWidgetForImages(
-                    getRecordIdsFilter.result[0].healthRecordCollection)
+                    getRecordIdsFilter!.result![0].healthRecordCollection)
                 : getImageFromMetaId(claimRecordDetails
-                    ?.result?.documentMetadata[0]?.healthRecordId)),
+                    ?.result?.documentMetadata![0]?.healthRecordId)),
         Padding(
           padding: EdgeInsets.all(5),
           child: Builder(
@@ -158,7 +161,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + billName ?? "",
+                    child: Text("   " + billName! ?? "",
                         style: getTextStyleForValue()))
               ],
             )),
@@ -173,7 +176,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + claimNo ?? "",
+                    child: Text("   " + claimNo! ?? "",
                         style: getTextStyleForValue()))
               ],
             )),
@@ -189,7 +192,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + submittedDate ?? "",
+                    child: Text("   " + submittedDate! ?? "",
                         style: getTextStyleForValue()))
               ],
             )),
@@ -204,7 +207,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + amount ?? "",
+                    child: Text("   " + amount! ?? "",
                         style: getTextStyleForValue()))
               ],
             )),
@@ -221,7 +224,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                   Text(":"),
                   Expanded(
                       flex: 2,
-                      child: Text("   " + approvedAmount ?? "",
+                      child: Text("   " + approvedAmount! ?? "",
                           style: getTextStyleForValue()))
                 ],
               )),
@@ -251,7 +254,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                   flex: 2,
-                  child: Text("   " + familyMember ?? "",
+                  child: Text("   " + familyMember! ?? "",
                       style: getTextStyleForValue()),
                 )
               ],
@@ -267,7 +270,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 Text(":"),
                 Expanded(
                     flex: 2,
-                    child: Text("   " + status ?? "",
+                    child: Text("   " + status! ?? "",
                         style: getTextStyleForValue()))
               ],
             )),
@@ -317,11 +320,11 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                         return Container(
                             height: double.infinity,
                             child: Image.network(
-                              imgUrl.healthRecordUrl,
+                              imgUrl.healthRecordUrl!,
                               height: 200.0.h,
                               width: 200.0.h,
                               headers: {
-                                HttpHeaders.authorizationHeader: authToken
+                                HttpHeaders.authorizationHeader: authToken!
                               },
                             ));
                         /*Container(
@@ -357,11 +360,11 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   }
 
   void initializeData() {
-    if (claimRecordDetails != null && claimRecordDetails.result != null) {
-      billName = claimRecordDetails?.result?.documentMetadata[0].billName;
+    if (claimRecordDetails != null && claimRecordDetails!.result != null) {
+      billName = claimRecordDetails?.result?.documentMetadata![0].billName;
       claimNo = claimRecordDetails?.result?.claimNumber;
       amount =(CommonUtil.REGION_CODE != "IN"?variable.strDollar+" ":variable.strRs +". ") +
-          claimRecordDetails?.result?.documentMetadata[0].claimAmount;
+          claimRecordDetails?.result?.documentMetadata![0].claimAmount;
       final df = new DateFormat('dd-MMM-yyyy');
 
       submittedDate =
@@ -382,18 +385,18 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
     }
   }
 
-  getImageFromMetaId(String healthRecordID) {
+  getImageFromMetaId(String? healthRecordID) {
     return FutureBuilder<GetRecordIdsFilter>(
       future: claimListRepository.getHealthRecordDetailViaId(healthRecordID),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot?.data?.isSuccess != null &&
               snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
+            if (snapshot.data!.isSuccess!) {
               getRecordIdsFilter = snapshot.data;
               final getMediaMasterIDForPdfTypeStr = CommonUtil()
                   .getMediaMasterIDForPdfTypeStr(
-                      getRecordIdsFilter?.result[0]?.healthRecordCollection);
+                      getRecordIdsFilter?.result![0]?.healthRecordCollection!);
               if (getMediaMasterIDForPdfTypeStr != null) {
                 ispdfPresent = true;
                 pdfId = getMediaMasterIDForPdfTypeStr;
@@ -403,7 +406,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                 ispdfPresent = false;
               }
               return getWidgetForImages(
-                  getRecordIdsFilter?.result[0]?.healthRecordCollection);
+                  getRecordIdsFilter?.result![0]?.healthRecordCollection);
             } else {
               return Container(child: Center(child: Text("Error In Loading")));
             }
@@ -431,7 +434,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
     );
   }
 
-  getWidgetForImages(List<HealthRecordCollection> healthRecordCollection) {
+  getWidgetForImages(List<HealthRecordCollection>? healthRecordCollection) {
     if (healthRecordCollection != null && healthRecordCollection.isNotEmpty) {
       index = _current + 1;
       _current = 0;
@@ -447,11 +450,11 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
                     ? pdfFile == null
                         ? getPDFFile(
                             pdfId,
-                            getRecordIdsFilter?.result[0]
-                                ?.healthRecordCollection[0]?.fileType,
+                            getRecordIdsFilter?.result![0]
+                                ?.healthRecordCollection![0]?.fileType,
                             fileName)
                         : getViewPDF()
-                    : getCarousalImage(healthRecordCollection))),
+                    : getCarousalImage(healthRecordCollection!))),
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 20, right: 20),
@@ -460,7 +463,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               children: <Widget>[
                 Visibility(child: IconButton(
                   onPressed: () {
-                    if (healthRecordCollection.isNotEmpty) {
+                    if (healthRecordCollection!.isNotEmpty) {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -517,7 +520,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot?.data?.isSuccess != null &&
               snapshot?.data?.result != null) {
-            if (snapshot.data.isSuccess) {
+            if (snapshot.data!.isSuccess!) {
               claimRecordDetails = snapshot.data;
               return getClaimDetails();
             } else {
@@ -536,7 +539,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
   }
 
   getPDFFile(
-      HealthRecordCollection audioMediaId, String fileType, String fileName) {
+      HealthRecordCollection? audioMediaId, String? fileType, String? fileName) {
     return FutureBuilder<String>(
         future: downloadFile(audioMediaId, fileType, fileName),
         builder: (context, snapshot) {
@@ -550,8 +553,8 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         });
   }
 
-  Future<String> downloadFile(HealthRecordCollection audioMediaId,
-      String fileType, String fileName) async {
+  Future<String> downloadFile(HealthRecordCollection? audioMediaId,
+      String? fileType, String? fileName) async {
     final storagePermission = Platform.isAndroid
         ? await Permission.storage.status
         : await Permission.photos.status;
@@ -564,9 +567,9 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         .then((filePath) async {
       var file = File('$filePath');
       final request = await ApiServices.get(
-        audioMediaId.healthRecordUrl,
+        audioMediaId!.healthRecordUrl!,
         headers: {
-          HttpHeaders.authorizationHeader: authToken,
+          HttpHeaders.authorizationHeader: authToken!,
           Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
       );
@@ -601,14 +604,14 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               Get.to(() => PDFView());*/
               if (Platform.isIOS) {
                 final path = await CommonUtil.downloadFile(
-                    pdfId.healthRecordUrl, pdfId.fileType);
-                await OpenFile.open(
-                  path.path,
-                );
+                    pdfId!.healthRecordUrl!, pdfId!.fileType);
+                // await OpenFile.open(
+                //   path.path,
+                // );FU2.5
               }else {
-                await OpenFile.open(
-                  pdfFile,
-                );
+                // await OpenFile.open(
+                //   pdfFile,
+                // );FU2.5
               }
             },
           )

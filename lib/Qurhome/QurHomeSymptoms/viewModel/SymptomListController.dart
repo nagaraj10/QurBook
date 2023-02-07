@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,15 +22,15 @@ import 'package:myfhb/constants/fhb_query.dart' as variable;
 class SymptomListController extends GetxController {
   final _apiProvider = SymptomService();
   var loadingData = false.obs;
-  RegimentResponseModel symtomListModel;
+  late RegimentResponseModel symtomListModel;
   var symptomList = [].obs;
 
-  getSymptomList({bool isLoading}) async {
+  getSymptomList({required bool isLoading}) async {
     try {
       if (isLoading) {
         loadingData.value = true;
       }
-      http.Response response = await _apiProvider.getSymptomList();
+      http.Response? response = await (_apiProvider.getSymptomList() as FutureOr<Response?>);
       if (response == null) {
         loadingData.value = false;
         return RegimentResponseModel(
@@ -41,7 +42,7 @@ class SymptomListController extends GetxController {
           symtomListModel =
               RegimentResponseModel.fromJson(json.decode(response.body));
 
-          List<RegimentDataModel> tempRegimentsList =
+          List<RegimentDataModel>? tempRegimentsList =
               symtomListModel.regimentsList;
 
           //print("tempRegimentsList length ${tempRegimentsList.length}");
@@ -80,7 +81,7 @@ class SymptomListController extends GetxController {
 
             symptomList.value = finalRegimentsList;
           } else {
-            symptomList.value = symtomListModel.regimentsList;
+            symptomList.value = symtomListModel.regimentsList!;
           }
         } on PlatformException {
           symptomList.value = [];
@@ -95,7 +96,7 @@ class SymptomListController extends GetxController {
   SheelaAICommonTTSService sheelaTTSController = SheelaAICommonTTSService();
 
   void startSymptomTTS(int index,
-      {String staticText, String dynamicText}) async {
+      {String? staticText, String? dynamicText}) async {
     stopSymptomTTS();
     if (index < symptomList.value?.length) {
       Future.delayed(
@@ -123,22 +124,22 @@ class SymptomListController extends GetxController {
   }
 
   static Future<SaveResponseModel> saveFormData(
-      {String eid,
-      String events,
-      bool isFollowEvent,
-      String followEventContext,
-      DateTime selectedDate,
-      TimeOfDay selectedTime}) async {
+      {String? eid,
+      String? events,
+      bool? isFollowEvent,
+      String? followEventContext,
+      DateTime? selectedDate,
+      TimeOfDay? selectedTime}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForRegiment = Constants.BASE_URL + variable.regiment;
     var localTime;
     try {
-      if (Provider.of<RegimentViewModel>(Get.context, listen: false)
+      if (Provider.of<RegimentViewModel>(Get.context!, listen: false)
               .regimentFilter ==
           RegimentFilter.AsNeeded) {
         localTime = CommonUtil.dateFormatterWithdatetimeseconds(
-          DateTime(selectedDate.year, selectedDate.month, selectedDate.day,
-              selectedTime.hour, selectedTime.minute),
+          DateTime(selectedDate!.year, selectedDate.month, selectedDate.day,
+              selectedTime!.hour, selectedTime.minute),
           isIndianTime: true,
         );
       } else {

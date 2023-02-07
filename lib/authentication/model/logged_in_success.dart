@@ -1,5 +1,6 @@
+
 class LoginDetails {
-  Result result;
+  Result? result;
 
   LoginDetails({this.result});
 
@@ -10,27 +11,27 @@ class LoginDetails {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String id;
-  String lastLoggedIn;
-  String status;
+  String? id;
+  String? lastLoggedIn;
+  String? status;
   dynamic verificationCode;
   dynamic codeExpirationDatetime;
-  bool isLocked;
-  int failedVerificationCount;
+  bool? isLocked;
+  int? failedVerificationCount;
   dynamic accountLockedDatetime;
   dynamic resetPasswordExpiryDatetime;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
   dynamic passwordChangedOn;
-  String firstLoggedIn;
+  String? firstLoggedIn;
 
   Result(
       {this.id,

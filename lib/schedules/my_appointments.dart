@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../src/model/AppointmentModel.dart';
@@ -7,15 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
 import '../common/CommonUtil.dart';
-import 'package:random_color/random_color.dart';
+// import 'package:random_color/random_color.dart';  FU2.5
 import '../constants/fhb_constants.dart' as Constants;
 import '../constants/variable_constant.dart' as variable;
 import '../constants/router_variable.dart' as router;
 import '../src/utils/screenutils/size_extensions.dart';
 
 class MyAppointment extends StatefulWidget {
-  static _MyAppointmentState of(BuildContext context) =>
-      context.findAncestorStateOfType<State<MyAppointment>>();
+  static _MyAppointmentState? of(BuildContext context) =>
+      context.findAncestorStateOfType<State<MyAppointment>>() as _MyAppointmentState?;
 
   @override
   State<StatefulWidget> createState() => _MyAppointmentState();
@@ -25,8 +26,8 @@ class MyAppointment extends StatefulWidget {
 enum FormType { login, register }
 
 class _MyAppointmentState extends State<MyAppointment> {
-  SharedPreferences prefs;
-  final RandomColor _randomColor = RandomColor();
+  SharedPreferences? prefs;
+  // final RandomColor _randomColor = RandomColor();  FU2.5
 
   dynamic detailsList =
       List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
@@ -95,7 +96,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                           Padding(
                                             padding: EdgeInsets.all(2),
                                             child: Text(
-                                              model.dName[0].toUpperCase(),
+                                              model.dName![0].toUpperCase(),
                                               style: TextStyle(
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()),
@@ -118,7 +119,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                     children: <Widget>[
                                       Text(
                                           toBeginningOfSentenceCase(
-                                              model.hName),
+                                              model.hName)!,
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             color: Colors.black,
@@ -128,7 +129,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                       Text(
                                         variable.strDr +
                                             toBeginningOfSentenceCase(
-                                                model.dName),
+                                                model.dName)!,
                                         style: TextStyle(
                                             fontSize: 15.0.sp,
                                             color: Colors.grey,
@@ -137,9 +138,9 @@ class _MyAppointmentState extends State<MyAppointment> {
                                       SizedBox(height: 5.0.h),
                                       Text(
                                         toBeginningOfSentenceCase(
-                                            model.appDate +
+                                            model.appDate! +
                                                 ',' +
-                                                model.appTime),
+                                                model.appTime!)!,
                                         style: TextStyle(
                                             fontSize: 14.0.sp,
                                             color: Colors.grey[400]),

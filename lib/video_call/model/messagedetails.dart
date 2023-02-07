@@ -1,10 +1,11 @@
+
 import 'package:myfhb/common/keysofmodel.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
 import 'package:myfhb/video_call/model/payload.dart';
 
 class MessageDetails {
-  Content content;
-  Payload payload;
+  Content? content;
+  Payload? payload;
 
   MessageDetails({this.content, this.payload});
 
@@ -18,10 +19,10 @@ class MessageDetails {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.content != null) {
-      data[c_content] = this.content.toJson();
+      data[c_content] = this.content!.toJson();
     }
     if (this.payload != null) {
-      data[c_payload] = this.payload.toJson();
+      data[c_payload] = this.payload!.toJson();
     }
     return data;
   }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,25 +28,25 @@ class ProviderCarePlans extends StatefulWidget {
 }
 
 class _ProviderCarePlans extends State<ProviderCarePlans> {
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
 
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
 
   bool isSearch = false;
 
   List<PlanListResult> planSearchList = List();
 
-  String _selectedView = popUpChoiceDefault;
+  String? _selectedView = popUpChoiceDefault;
 
   int carePlanListLength = 0;
 
-  PlanWizardViewModel planListProvider;
+  PlanWizardViewModel? planListProvider;
 
   List sortType = ['Default', 'Price', 'Duration'];
-  ValueNotifier<String> _selectedItem = new ValueNotifier<String>('Default');
-  String conditionChosen;
+  ValueNotifier<String?> _selectedItem = new ValueNotifier<String?>('Default');
+  String? conditionChosen;
 
-  ProviderOrganisationResponse providerOrganizationResult;
+  ProviderOrganisationResponse? providerOrganizationResult;
 
   @override
   void initState() {
@@ -86,7 +87,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                         });
                       }
                     },onClosePress: (){
-                    FocusManager.instance.primaryFocus.unfocus();
+                    FocusManager.instance.primaryFocus!.unfocus();
                   },
                     hintText: strPlanHospitalDiet,
                     padding: 10.0.sp,
@@ -112,26 +113,26 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                 (planListProvider?.currentPackageFreeCareId ?? '').isEmpty) {
               _alertForUncheckPlan();
             } else {
-              planListProvider.changeCurrentPage(2);
+              planListProvider!.changeCurrentPage(2);
             }
           },
         ));
   }
 
-  onSearched(String title, String filterBy) async {
+  onSearched(String? title, String filterBy) async {
     planSearchList.clear();
     if (filterBy == popUpChoicePrice) {
       planSearchList =
-          await planListProvider.filterSortingForProvider(popUpChoicePrice);
+          await planListProvider!.filterSortingForProvider(popUpChoicePrice);
     } else if (filterBy == popUpChoiceDura) {
       planSearchList =
-          await planListProvider.filterSortingForProvider(popUpChoiceDura);
+          await planListProvider!.filterSortingForProvider(popUpChoiceDura);
     } else if (filterBy == popUpChoiceDefault) {
       planSearchList =
-          await planListProvider.filterSortingForProvider(popUpChoiceDefault);
+          await planListProvider!.filterSortingForProvider(popUpChoiceDefault);
     } else if (filterBy == 'localSearch') {
       if (title != null) {
-        planSearchList = await planListProvider.filterPlanNameProvider(title);
+        planSearchList = await planListProvider!.filterPlanNameProvider(title);
       }
     }
     setState(() {});
@@ -216,7 +217,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
     );
   }
 
-  Widget carePlanList(List<PlanListResult> planList) {
+  Widget carePlanList(List<PlanListResult>? planList) {
     return (planList != null && planList.length > 0)
         ? ListView.builder(
             shrinkWrap: true,
@@ -226,7 +227,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
             itemBuilder: (BuildContext ctx, int i) => CarePlanCard(
               planList: isSearch ? planSearchList[i] : planList[i],
               onClick: () {
-                FocusManager.instance.primaryFocus.unfocus();
+                FocusManager.instance.primaryFocus!.unfocus();
               },
               isFrom: strProviderCare,
             ),
@@ -244,7 +245,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   Widget clickTextAllEmpty() {
 
-    int planWizardProviderLength =  Provider.of<PlanWizardViewModel>(Get.context, listen: false)
+    int planWizardProviderLength =  Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
         .planWizardProviderCount;
 
     TextStyle defaultStyle = TextStyle(color: Colors.grey);
@@ -331,7 +332,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
   }
 
   void callMyProviderPage() {
-    Get.to(AddProviderPlan(planListProvider.selectedTag))
+    Get.to(AddProviderPlan(planListProvider!.selectedTag))!
         .then((value) => setState(() {
               planListModel =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
@@ -371,8 +372,8 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   /* Widget popMenuItem() {
@@ -441,7 +442,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
               child: new AnimatedBuilder(
                 child: new Text(sortType[index]),
                 animation: _selectedItem,
-                builder: (BuildContext context, Widget child) {
+                builder: (BuildContext context, Widget? child) {
                   return new RadioListTile<String>(
                     value: sortType[index],
                     groupValue: _selectedItem.value,
@@ -449,7 +450,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                     onChanged: (value) {
                       setState(() {
                         _selectedItem.value = value;
-                        FocusManager.instance.primaryFocus.unfocus();
+                        FocusManager.instance.primaryFocus!.unfocus();
                         _selectedView = value;
                         if (value == popUpChoicePrice) {
                           isSearch = true;

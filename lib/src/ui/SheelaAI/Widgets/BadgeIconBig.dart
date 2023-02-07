@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
@@ -7,13 +8,13 @@ class BadgeIconBig extends StatelessWidget {
         this.badgeCount = 0,
         this.showIfZero = false,
         this.badgeColor = Colors.red,
-        TextStyle badgeTextStyle})
+        TextStyle? badgeTextStyle})
       : this.badgeTextStyle = badgeTextStyle ??
       TextStyle(
         color: Colors.white,
         fontSize: 10.0.sp,
       );
-  final Widget icon;
+  final Widget? icon;
   final int badgeCount;
   final bool showIfZero;
   final Color badgeColor;
@@ -22,7 +23,7 @@ class BadgeIconBig extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Stack(children: <Widget>[
-      icon,
+      icon!,
       if (badgeCount > 0 || showIfZero) badge(badgeCount),
     ]);
   }

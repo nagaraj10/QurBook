@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:agora_rtc_engine/rtc_engine.dart';
@@ -23,20 +24,20 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
-  ClientRole role;
-  bool isAppExists;
+  ClientRole? role;
+  bool? isAppExists;
   Function(bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
-  String doctorId;
-  String doctorName;
-  String doctorPicUrl;
-  String patientId;
-  String patientName;
-  String patientPicUrl;
-  RtcEngine rtcEngine;
-  String channelName;
-  bool isWeb;
+  String? doctorId;
+  String? doctorName;
+  String? doctorPicUrl;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
+  RtcEngine? rtcEngine;
+  String? channelName;
+  bool? isWeb;
 
   MyControllers(
       this.rtcEngine,
@@ -61,17 +62,17 @@ class MyControllers extends StatefulWidget {
 
 class _MyControllersState extends State<MyControllers> {
   ChatViewModel chatViewModel = ChatViewModel();
-  SharedPreferences prefs;
-  String patientId;
-  String patientName;
-  String patientPicUrl;
+  SharedPreferences? prefs;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
 
   final audioCallStatus =
-      Provider.of<AudioCallProvider>(Get.context, listen: false);
+      Provider.of<AudioCallProvider>(Get.context!, listen: false);
   final videoIconStatus =
-      Provider.of<VideoIconProvider>(Get.context, listen: false);
+      Provider.of<VideoIconProvider>(Get.context!, listen: false);
   final videoRequestStatus =
-      Provider.of<VideoRequestProvider>(Get.context, listen: false);
+      Provider.of<VideoRequestProvider>(Get.context!, listen: false);
 
   //final myDB = Firestore.instance;
 
@@ -171,7 +172,7 @@ class _MyControllersState extends State<MyControllers> {
   Widget build(BuildContext context) => _toolbar(callStatus: widget.callStatus);
 
   /// Toolbar layout
-  Widget _toolbar({CallStatus callStatus, HideProvider hideProvider}) {
+  Widget _toolbar({CallStatus? callStatus, HideProvider? hideProvider}) {
     if (widget.role == ClientRole.Audience) return Container();
     /* return Container(
       color: Colors.black.withOpacity(0.5),
@@ -327,7 +328,7 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       Navigator.pop(context);
     } else {
-      if (widget.isAppExists) {
+      if (widget.isAppExists!) {
         Navigator.pop(context);
       } else {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -341,7 +342,7 @@ class _MyControllersState extends State<MyControllers> {
       widget.muted = !widget.muted;
     });
     widget.controllerState(widget.muted, widget._isHideMyVideo);
-    widget.rtcEngine.muteLocalAudioStream(widget.muted);
+    widget.rtcEngine!.muteLocalAudioStream(widget.muted);
   }
 
   void _onToggleVideo() async {
@@ -375,12 +376,12 @@ class _MyControllersState extends State<MyControllers> {
         await widget?.rtcEngine?.enableLocalVideo(false);
         await widget?.rtcEngine?.muteLocalVideoStream(true);
 
-        Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+        Provider.of<HideProvider>(context, listen: false)?.swithToAudio();
         Provider.of<AudioCallProvider>(context, listen: false)
             ?.enableAudioCall();
-        Provider?.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
+        Provider.of<VideoIconProvider>(context, listen: false)?.turnOffVideo();
       } else {
-        widget.rtcEngine.muteLocalVideoStream(videoIconStatus?.isVideoOn);
+        widget.rtcEngine!.muteLocalVideoStream(videoIconStatus?.isVideoOn);
         Provider.of<RTCEngineProvider>(context, listen: false)
             ?.changeLocalVideoStatus(videoIconStatus?.isVideoOn);
         CommonUtil.isLocalUserOnPause = videoIconStatus?.isVideoOn;

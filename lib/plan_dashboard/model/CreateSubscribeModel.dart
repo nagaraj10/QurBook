@@ -1,6 +1,7 @@
+
 class CreateSubscribeModel {
-  bool isSuccess;
-  PaymentResult result;
+  bool? isSuccess;
+  PaymentResult? result;
 
   CreateSubscribeModel({this.isSuccess, this.result});
 
@@ -14,15 +15,15 @@ class CreateSubscribeModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class PaymentResult {
-  Payment payment;
-  PaymentGatewayDetail paymentGatewayDetail;
+  Payment? payment;
+  PaymentGatewayDetail? paymentGatewayDetail;
 
   PaymentResult({this.payment, this.paymentGatewayDetail});
 
@@ -37,24 +38,24 @@ class PaymentResult {
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     if (payment != null) {
-      data['payment'] = payment.toJson();
+      data['payment'] = payment!.toJson();
     }
     if (paymentGatewayDetail != null) {
-      data['paymentGatewayDetail'] = paymentGatewayDetail.toJson();
+      data['paymentGatewayDetail'] = paymentGatewayDetail!.toJson();
     }
     return data;
   }
 }
 
 class Payment {
-  int paidamount;
-  String paidby;
-  String paidfor;
-  String status;
-  Metadata metadata;
-  String purpose;
-  String subscriptionid;
-  int id;
+  int? paidamount;
+  String? paidby;
+  String? paidfor;
+  String? status;
+  Metadata? metadata;
+  String? purpose;
+  String? subscriptionid;
+  int? id;
 
   Payment(
       {this.paidamount,
@@ -86,7 +87,7 @@ class Payment {
     data['paidfor'] = paidfor;
     data['status'] = status;
     if (metadata != null) {
-      data['metadata'] = metadata.toJson();
+      data['metadata'] = metadata!.toJson();
     }
     data['purpose'] = purpose;
     data['subscriptionid'] = subscriptionid;
@@ -96,7 +97,7 @@ class Payment {
 }
 
 class Metadata {
-  String paymentGateway;
+  String? paymentGateway;
 
   Metadata({this.paymentGateway});
 
@@ -112,9 +113,9 @@ class Metadata {
 }
 
 class PaymentGatewayDetail {
-  String sourcecode;
-  PaymentMetadata metadata;
-  String paymentgatewayrequestid;
+  String? sourcecode;
+  PaymentMetadata? metadata;
+  String? paymentgatewayrequestid;
 
   PaymentGatewayDetail(
       {this.sourcecode, this.metadata, this.paymentgatewayrequestid});
@@ -131,7 +132,7 @@ class PaymentGatewayDetail {
     final data = <String, dynamic>{};
     data['sourcecode'] = sourcecode;
     if (metadata != null) {
-      data['metadata'] = metadata.toJson();
+      data['metadata'] = metadata!.toJson();
     }
     data['paymentgatewayrequestid'] = paymentgatewayrequestid;
     return data;
@@ -139,25 +140,25 @@ class PaymentGatewayDetail {
 }
 
 class PaymentMetadata {
-  String id;
-  String phone;
-  String email;
-  String buyerName;
+  String? id;
+  String? phone;
+  String? email;
+  String? buyerName;
   var amount;
-  String purpose;
-  String expiresAt;
-  String status;
-  bool sendSms;
-  bool sendEmail;
-  String shorturl;
-  String longurl;
-  String redirectUrl;
-  String webhook;
-  bool allowRepeatedPayments;
-  String customerId;
+  String? purpose;
+  String? expiresAt;
+  String? status;
+  bool? sendSms;
+  bool? sendEmail;
+  String? shorturl;
+  String? longurl;
+  String? redirectUrl;
+  String? webhook;
+  bool? allowRepeatedPayments;
+  String? customerId;
   var createdAt;
-  String modifiedAt;
-  String paymentGateWay;
+  String? modifiedAt;
+  String? paymentGateWay;
 
   PaymentMetadata(
       {this.id,

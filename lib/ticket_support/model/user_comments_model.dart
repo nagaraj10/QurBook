@@ -1,3 +1,4 @@
+
 // To parse this JSON data, do
 //
 //     final userCommentsModel = userCommentsModelFromJson(jsonString);
@@ -14,8 +15,8 @@ class UserCommentsModel {
     this.result,
   });
 
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   factory UserCommentsModel.fromJson(Map<String, dynamic> json) => UserCommentsModel(
     isSuccess: json["isSuccess"],
@@ -24,7 +25,7 @@ class UserCommentsModel {
 
   Map<String, dynamic> toJson() => {
     "isSuccess": isSuccess,
-    "result": result.toJson(),
+    "result": result!.toJson(),
   };
 }
 
@@ -35,9 +36,9 @@ class Result {
     this.ticket,
   });
 
-  bool success;
+  bool? success;
   dynamic error;
-  Ticket ticket;
+  Ticket? ticket;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     success: json["success"],
@@ -48,7 +49,7 @@ class Result {
   Map<String, dynamic> toJson() => {
     "success": success,
     "error": error,
-    "ticket": ticket.toJson(),
+    "ticket": ticket!.toJson(),
   };
 }
 
@@ -76,26 +77,26 @@ class Ticket {
     this.updated,
   });
 
-  bool deleted;
-  int status;
-  List<dynamic> tags;
-  List<Assignee> subscribers;
-  String id;
-  Assignee assignee;
-  Group group;
-  String issue;
-  Assignee owner;
-  String subject;
-  Type type;
-  Priority priority;
-  DateTime date;
-  List<Comment> comments;
-  List<dynamic> notes;
-  List<dynamic> attachments;
-  List<History> history;
-  int uid;
-  int v;
-  DateTime updated;
+  bool? deleted;
+  int? status;
+  List<dynamic>? tags;
+  List<Assignee>? subscribers;
+  String? id;
+  Assignee? assignee;
+  Group? group;
+  String? issue;
+  Assignee? owner;
+  String? subject;
+  Type? type;
+  Priority? priority;
+  DateTime? date;
+  List<Comment>? comments;
+  List<dynamic>? notes;
+  List<dynamic>? attachments;
+  List<History>? history;
+  int? uid;
+  int? v;
+  DateTime? updated;
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
     deleted: json["deleted"],
@@ -123,24 +124,24 @@ class Ticket {
   Map<String, dynamic> toJson() => {
     "deleted": deleted,
     "status": status,
-    "tags": List<dynamic>.from(tags.map((x) => x)),
-    "subscribers": List<dynamic>.from(subscribers.map((x) => x.toJson())),
+    "tags": List<dynamic>.from(tags!.map((x) => x)),
+    "subscribers": List<dynamic>.from(subscribers!.map((x) => x.toJson())),
     "_id": id,
-    "assignee": assignee.toJson(),
-    "group": group.toJson(),
+    "assignee": assignee!.toJson(),
+    "group": group!.toJson(),
     "issue": issue,
-    "owner": owner.toJson(),
+    "owner": owner!.toJson(),
     "subject": subject,
-    "type": type.toJson(),
-    "priority": priority.toJson(),
-    "date": date.toIso8601String(),
-    "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
-    "notes": List<dynamic>.from(notes.map((x) => x)),
-    "attachments": List<dynamic>.from(attachments.map((x) => x)),
-    "history": List<dynamic>.from(history.map((x) => x.toJson())),
+    "type": type!.toJson(),
+    "priority": priority!.toJson(),
+    "date": date!.toIso8601String(),
+    "comments": List<dynamic>.from(comments!.map((x) => x.toJson())),
+    "notes": List<dynamic>.from(notes!.map((x) => x)),
+    "attachments": List<dynamic>.from(attachments!.map((x) => x)),
+    "history": List<dynamic>.from(history!.map((x) => x.toJson())),
     "uid": uid,
     "__v": v,
-    "updated": updated.toIso8601String(),
+    "updated": updated!.toIso8601String(),
   };
 }
 
@@ -155,13 +156,13 @@ class Assignee {
     this.deleted,
   });
 
-  String id;
-  String username;
-  String email;
-  String fullname;
-  Title title;
-  Role role;
-  bool deleted;
+  String? id;
+  String? username;
+  String? email;
+  String? fullname;
+  Title? title;
+  Role? role;
+  bool? deleted;
 
   factory Assignee.fromJson(Map<String, dynamic> json) => Assignee(
     id: json["_id"],
@@ -178,8 +179,8 @@ class Assignee {
     "username": username,
     "email": email,
     "fullname": fullname,
-    "title": titleValues.reverse[title],
-    "role": role.toJson(),
+    "title": titleValues.reverse![title!],
+    "role": role!.toJson(),
     "deleted": deleted == null ? null : deleted,
   };
 }
@@ -195,13 +196,13 @@ class Role {
     this.roleId,
   });
 
-  Id id;
-  Name name;
-  Description description;
-  Normalized normalized;
-  bool isAdmin;
-  bool isAgent;
-  Id roleId;
+  Id? id;
+  Name? name;
+  Description? description;
+  Normalized? normalized;
+  bool? isAdmin;
+  bool? isAgent;
+  Id? roleId;
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
     id: idValues.map[json["_id"]],
@@ -214,13 +215,13 @@ class Role {
   );
 
   Map<String, dynamic> toJson() => {
-    "_id": idValues.reverse[id],
-    "name": nameValues.reverse[name],
-    "description": descriptionValues.reverse[description],
-    "normalized": normalizedValues.reverse[normalized],
+    "_id": idValues.reverse![id!],
+    "name": nameValues.reverse![name!],
+    "description": descriptionValues.reverse![description!],
+    "normalized": normalizedValues.reverse![normalized!],
     "isAdmin": isAdmin,
     "isAgent": isAgent,
-    "id": idValues.reverse[roleId],
+    "id": idValues.reverse![roleId!],
   };
 }
 
@@ -273,11 +274,11 @@ class Comment {
     this.comment,
   });
 
-  bool deleted;
-  String id;
-  Assignee owner;
-  DateTime date;
-  String comment;
+  bool? deleted;
+  String? id;
+  Assignee? owner;
+  DateTime? date;
+  String? comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
     deleted: json["deleted"],
@@ -290,8 +291,8 @@ class Comment {
   Map<String, dynamic> toJson() => {
     "deleted": deleted,
     "_id": id,
-    "owner": owner.toJson(),
-    "date": date.toIso8601String(),
+    "owner": owner!.toJson(),
+    "date": date!.toIso8601String(),
     "comment": comment,
   };
 }
@@ -306,12 +307,12 @@ class Group {
     this.v,
   });
 
-  List<Assignee> members;
-  List<dynamic> sendMailTo;
-  bool public;
-  String id;
-  String name;
-  int v;
+  List<Assignee>? members;
+  List<dynamic>? sendMailTo;
+  bool? public;
+  String? id;
+  String? name;
+  int? v;
 
   factory Group.fromJson(Map<String, dynamic> json) => Group(
     members: List<Assignee>.from(json["members"].map((x) => Assignee.fromJson(x))),
@@ -323,8 +324,8 @@ class Group {
   );
 
   Map<String, dynamic> toJson() => {
-    "members": List<dynamic>.from(members.map((x) => x.toJson())),
-    "sendMailTo": List<dynamic>.from(sendMailTo.map((x) => x)),
+    "members": List<dynamic>.from(members!.map((x) => x.toJson())),
+    "sendMailTo": List<dynamic>.from(sendMailTo!.map((x) => x)),
     "public": public,
     "_id": id,
     "name": name,
@@ -341,11 +342,11 @@ class History {
     this.date,
   });
 
-  String id;
-  String action;
-  String description;
-  Assignee owner;
-  DateTime date;
+  String? id;
+  String? action;
+  String? description;
+  Assignee? owner;
+  DateTime? date;
 
   factory History.fromJson(Map<String, dynamic> json) => History(
     id: json["_id"],
@@ -359,8 +360,8 @@ class History {
     "_id": id,
     "action": action,
     "description": description,
-    "owner": owner.toJson(),
-    "date": date.toIso8601String(),
+    "owner": owner!.toJson(),
+    "date": date!.toIso8601String(),
   };
 }
 
@@ -377,15 +378,15 @@ class Priority {
     this.priorityId,
   });
 
-  int overdueIn;
-  String htmlColor;
-  String id;
-  String name;
-  int migrationNum;
-  bool priorityDefault;
-  int v;
-  String durationFormatted;
-  String priorityId;
+  int? overdueIn;
+  String? htmlColor;
+  String? id;
+  String? name;
+  int? migrationNum;
+  bool? priorityDefault;
+  int? v;
+  String? durationFormatted;
+  String? priorityId;
 
   factory Priority.fromJson(Map<String, dynamic> json) => Priority(
     overdueIn: json["overdueIn"],
@@ -420,10 +421,10 @@ class Type {
     this.v,
   });
 
-  List<Priority> priorities;
-  String id;
-  String name;
-  int v;
+  List<Priority>? priorities;
+  String? id;
+  String? name;
+  int? v;
 
   factory Type.fromJson(Map<String, dynamic> json) => Type(
     priorities: List<Priority>.from(json["priorities"].map((x) => Priority.fromJson(x))),
@@ -433,7 +434,7 @@ class Type {
   );
 
   Map<String, dynamic> toJson() => {
-    "priorities": List<dynamic>.from(priorities.map((x) => x.toJson())),
+    "priorities": List<dynamic>.from(priorities!.map((x) => x.toJson())),
     "_id": id,
     "name": name,
     "__v": v,
@@ -442,11 +443,11 @@ class Type {
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'dart:io';
@@ -51,7 +52,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var gender = TextEditingController();
   var bloodGroupController = TextEditingController();
   var bloodRangeController = TextEditingController();
-  File imageURIProfile, profileImage;
+  File? imageURIProfile, profileImage;
   var dob = TextEditingController();
   var languageController = TextEditingController();
 
@@ -71,18 +72,18 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var cntrlr_corp_name = TextEditingController(text: '');
 
-  LanguageModel languageModelList;
+  LanguageModel? languageModelList;
   LanguageRepository languageBlock = new LanguageRepository();
 
   bool _isEditable = false;
   double sliverBarHeight = 220;
-  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+  late AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
   bool isFeetOrInches = true;
   bool isKg = true;
 
-  MediaTypeBlock _mediaTypeBlock;
-  HealthReportListForUserRepository _healthReportListForUserRepository;
+  MediaTypeBlock? _mediaTypeBlock;
+  late HealthReportListForUserRepository _healthReportListForUserRepository;
 
   List<Tags> selectedTags = [];
 
@@ -99,7 +100,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
+      _mediaTypeBlock!.getMediTypesList();
     }
   }
 
@@ -108,7 +109,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
-  Future<String> getPreferredLanguage(MyProfileResult myProfile) async {
+  Future<String?> getPreferredLanguage(MyProfileResult? myProfile) async {
     try {
       try {
         var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -122,7 +123,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       String currentLanguage = '';
       final lan = CommonUtil.getCurrentLanCode();
       if (lan != "undef") {
-        final langCode = lan.split("-").first;
+        final langCode = lan!.split("-").first;
         currentLanguage = langCode;
       } else {
         currentLanguage = 'en';
@@ -131,7 +132,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       if (currentLanguage.isNotEmpty) {
         CommonUtil.supportedLanguages.forEach((language, languageCode) {
           if (currentLanguage == languageCode) {
-            languageController.text = toBeginningOfSentenceCase(language);
+            languageController.text = toBeginningOfSentenceCase(language)!;
             return;
           }
         });
@@ -139,11 +140,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  String setValueLanguages(MyProfileResult myProfile) {
-    String languagePreferred = "English";
+  String? setValueLanguages(MyProfileResult? myProfile) {
+    String? languagePreferred = "English";
     if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
-      ProfileSetting profileSetting =
-          myProfile?.userProfileSettingCollection3[0].profileSetting;
+      ProfileSetting? profileSetting =
+          myProfile?.userProfileSettingCollection3![0].profileSetting;
       if (profileSetting != null) {
         CommonUtil.langaugeCodes.forEach((language, languageCode) {
           if (language == profileSetting.preferred_language) {
@@ -170,7 +171,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   Widget getProfileDetailClone() {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
     return FutureBuilder<MyProfileModel>(
       future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
@@ -178,7 +179,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
             //getPreferredLanguage(snapshot.data.result);
-            return getProfileWidget(snapshot.data, snapshot.data.result);
+            return getProfileWidget(snapshot.data, snapshot.data!.result!);
           } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
@@ -245,15 +246,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileModel myProfile, MyProfileResult data,
-      {String errorMsg}) {
+  Widget getProfileWidget(MyProfileModel? myProfile, MyProfileResult data,
+      {String? errorMsg}) {
     addFamilyUserInfoBloc.getDeviceSelectionValues().then((value) {});
     if (data != null) {
       setUnit(data);
 
       if (data.userContactCollection3 != null) {
-        if (data.userContactCollection3.length > 0) {
-          mobile.text = data.userContactCollection3[0].phoneNumber;
+        if (data.userContactCollection3!.length > 0) {
+          mobile.text = data.userContactCollection3![0]!.phoneNumber!;
         }
       }
       if (data != null) {
@@ -263,8 +264,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
             data?.lastName?.capitalizeFirstofEach;
       }
       if (data.userContactCollection3 != null) {
-        if (data.userContactCollection3.length > 0) {
-          email.text = data.userContactCollection3[0].email;
+        if (data.userContactCollection3!.length > 0) {
+          email.text = data.userContactCollection3![0]!.email!;
         }
       }
 
@@ -275,32 +276,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
           heightInchController.text =
               data.additionalInfo?.heightObj?.valueInches ?? '';
         } else {
-          heightController.text = data.additionalInfo.height != null
-              ? data.additionalInfo.height
+          heightController.text = data.additionalInfo!.height != null
+              ? data.additionalInfo!.height!
               : '';
         }
 
-        weightController.text = data.additionalInfo.weight != null
-            ? data.additionalInfo.weight
+        weightController.text = data.additionalInfo!.weight != null
+            ? data.additionalInfo!.weight!
             : '';
       }
       if (data.gender != null) {
-        gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
+        gender.text = toBeginningOfSentenceCase(data.gender!.toLowerCase())!;
       }
       if (data.bloodGroup != null) {
         print('current blood group ${data?.bloodGroup}');
-        bloodGroupController.text = data?.bloodGroup.split(' ')[0];
-        bloodRangeController.text = data?.bloodGroup.split(' ')[1];
+        bloodGroupController.text = data?.bloodGroup!.split(' ')[0];
+        bloodRangeController.text = data?.bloodGroup!.split(' ')[1];
         //renameBloodGroup(data.bloodGroup);
       }
       if (data.dateOfBirth != null) {
-        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
+        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
       }
       if (data != null) {
         firstName.text = data?.firstName?.capitalizeFirstofEach;
-        middleName.text = (data.middleName != null && data.middleName != '')
+        middleName.text = ((data.middleName != null && data.middleName != '')
             ? data?.middleName?.capitalizeFirstofEach
-            : '';
+            : '')!;
         lastName.text = data?.lastName?.capitalizeFirstofEach;
       } else {
         firstName.text = data != null
@@ -312,22 +313,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
 
       if (data.userAddressCollection3 != null) {
-        if (data.userAddressCollection3.length > 0) {
-          cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
-          cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
-          cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
-          cntrlr_addr_city.text = data.userAddressCollection3[0].city?.name;
-          cntrlr_addr_state.text = data.userAddressCollection3[0].state?.name;
+        if (data.userAddressCollection3!.length > 0) {
+          cntrlr_addr_one.text = data.userAddressCollection3![0].addressLine1!;
+          cntrlr_addr_two.text = data.userAddressCollection3![0].addressLine2!;
+          cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode!;
+          cntrlr_addr_city.text = data.userAddressCollection3![0].city?.name!;
+          cntrlr_addr_state.text = data.userAddressCollection3![0].state?.name!;
         }
       }
 
       if (data.membershipOfferedBy != null && data.membershipOfferedBy != '') {
-        cntrlr_corp_name.text = data.membershipOfferedBy;
+        cntrlr_corp_name.text = data.membershipOfferedBy!;
       }
     }
     try {
       try {
-        String profileImageFile =
+        String? profileImageFile =
             PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
         if (profileImageFile != null) {
           profileImage = File(profileImageFile);
@@ -659,7 +660,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
 
                 getLanguageWidget(myProfile),
-                addFamilyUserInfoBloc.tagsList.length > 0
+                addFamilyUserInfoBloc.tagsList!.length > 0
                     ? getDropDownWithTagsdrop()
                     : SizedBox(),
                 Padding(
@@ -772,9 +773,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   void verifyEmail() {
     AddFamilyUserInfoBloc addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     addFamilyUserInfoBloc.verifyEmail().then((value) {
-      if (value.success &&
-          value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
-        new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
+      if (value!.success! &&
+          value.message!.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
+        new FHBBasicWidget().showInSnackBar(value.message!, scaffold_state);
       } else {
         PreferenceUtil.saveString(Constants.PROFILE_EMAIL, email.text);
 
@@ -801,7 +802,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     if (currentLanguage.isNotEmpty) {
       CommonUtil.supportedLanguages.forEach((language, languageCode) {
         if (currentLanguage == languageCode) {
-          languageController.text = toBeginningOfSentenceCase(language);
+          languageController.text = toBeginningOfSentenceCase(language)!;
           return;
         }
       });
@@ -810,12 +811,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return languageController.text;
   }
 
-  getLanguageWidget(MyProfileModel myProfile) {
+  getLanguageWidget(MyProfileModel? myProfile) {
     return FutureBuilder(
         future: getPreferredLanguage(myProfile?.result),
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
           if (snapshot.data != null && snapshot.data != "") {
-            languageController.text = snapshot.data;
+            languageController.text = snapshot.data!;
           } else {
             languageController.text = "English";
           }
@@ -837,13 +838,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   void setUnit(MyProfileResult data) {
-    var profileSetting = data.userProfileSettingCollection3[0].profileSetting;
+    var profileSetting = data.userProfileSettingCollection3![0].profileSetting;
     if (profileSetting != null) {
       if (profileSetting?.preferredMeasurement != null) {
         try {
-          String heightUnit =
+          String? heightUnit =
               profileSetting?.preferredMeasurement?.height?.unitCode;
-          String weightUnit =
+          String? weightUnit =
               profileSetting?.preferredMeasurement?.weight?.unitCode;
           if (heightUnit == Constants.STR_VAL_HEIGHT_IND) {
             isFeetOrInches = true;
@@ -884,7 +885,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-          final List<Tags> tagslist = snapshot.data.result;
+          final List<Tags>? tagslist = snapshot.data.result;
 
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
 
@@ -899,9 +900,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
         });
   }
 
-  void setTheValuesForDropdown(List<Tags> result) {
+  void setTheValuesForDropdown(List<Tags>? result) {
     if (selectedTags != null && selectedTags.isNotEmpty) {
-      for (var mediaResultObj in result) {
+      for (var mediaResultObj in result!) {
         if (selectedTags.contains(mediaResultObj.id)) {
           mediaResultObj.isChecked = true;
         }
@@ -913,7 +914,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     selectedTags = [];
     for (final mediaResultObj in result) {
       if (!selectedTags.contains(mediaResultObj.id) &&
-          mediaResultObj.isChecked) {
+          mediaResultObj.isChecked!) {
         selectedTags.add(mediaResultObj);
       }
     }

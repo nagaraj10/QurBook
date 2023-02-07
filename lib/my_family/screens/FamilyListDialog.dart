@@ -1,3 +1,4 @@
+
 import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
@@ -28,7 +29,7 @@ class FamilyListDialog extends StatefulWidget {
 }
 
 class FamilyListDialogState extends State<FamilyListDialog> {
-  FamilyListBloc _familyListBloc;
+  FamilyListBloc? _familyListBloc;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
   @override
@@ -36,7 +37,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     super.initState();
 
     _familyListBloc = FamilyListBloc();
-    _familyListBloc.getFamilyMembersListNew();
+    _familyListBloc!.getFamilyMembersListNew();
   }
 
   @override
@@ -54,12 +55,12 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   Widget getFamilyMemberList() {
     return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
         ? getDialogBoxWithFamilyMember(
-            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
+            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER)) as Widget
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
-            stream: _familyListBloc.familyMemberListStream,
+            stream: _familyListBloc!.familyMemberListStream,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                switch (snapshot.data.status) {
+                switch (snapshot.data!.status) {
                   case Status.LOADING:
                     CommonUtil.showLoadingDialog(
                         context, _keyLoader, variable.Please_Wait);
@@ -76,10 +77,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
                   case Status.COMPLETED:
                     getDialogBoxWithFamilyMember(
-                            snapshot.data.data.response.data)
+                            snapshot.data!.data!.response!.data!)
                         .then((widget) {
                       return widget;
-                    });
+                    } as FutureOr<_> Function(Widget?));
                     break;
                 }
               } else {
@@ -92,7 +93,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
           );
   }
 
-  Future<Widget> getDialogBoxWithFamilyMember(FamilyData data) async {
+  Future<Widget?> getDialogBoxWithFamilyMember(FamilyData data) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -148,7 +149,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
             : setupAlertDialoadContainer(null));
   }
 
-  Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
+  Widget setupAlertDialoadContainer(List<Sharedbyme>? sharedByMe) {
     var myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     var profileData = ProfileData(
@@ -186,15 +187,15 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                         child: Row(
                           children: <Widget>[
                             ClipOval(
-                                child: sharedByMe[index].linkedData.nickName ==
+                                child: sharedByMe![index].linkedData!.nickName ==
                                         variable.Self
                                     ? FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
-                                            .profileData
-                                            .profilePicThumbnail
-                                            .data),
+                                            .profileData!
+                                            .profilePicThumbnail!
+                                            .data!),
                                         height: 50.0.h,
                                         width: 50.0.h,
                                         fit: BoxFit.cover,
@@ -215,7 +216,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                       fontWeight: FontWeight.w500),
                                 ),
                                 Text(
-                                  sharedByMe[index].linkedData.roleName,
+                                  sharedByMe[index].linkedData!.roleName!,
                                   softWrap: false,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -229,7 +230,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                       ),
                       onTap: () {
                         PreferenceUtil.saveString(Constants.KEY_USERID,
-                                sharedByMe[index].profileData.id)
+                                sharedByMe![index].profileData!.id!)
                             .then((onValue) {
                           Navigator.of(context).pop();
                         });

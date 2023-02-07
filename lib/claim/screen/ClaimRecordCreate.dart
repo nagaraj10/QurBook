@@ -1,8 +1,9 @@
+
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart'; FU2.5
 
 import '../../colors/fhb_colors.dart' as fhbColors;
 import '../../common/CommonConstants.dart';
@@ -50,7 +51,7 @@ export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import '../../constants/variable_constant.dart' as variable;
 
 class ClaimRecordCreate extends StatefulWidget {
-  final List<String> imagePath;
+  final List<String?>? imagePath;
 
   ClaimRecordCreate({this.imagePath});
 
@@ -64,46 +65,46 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   int _current = 0;
   int index = 0;
   int length = 0;
-  CarouselController carouselSlider;
-  String authToken;
+  CarouselController? carouselSlider;
+  String? authToken;
 
   TextEditingController billDate = TextEditingController();
   TextEditingController fileName = TextEditingController();
   TextEditingController claimAmount = TextEditingController();
-  String selectedDate;
+  String? selectedDate;
 
   DateTime dateTime = DateTime.now();
-  String dateofBirthStr;
+  String? dateofBirthStr;
 
   final dateOfBirthController = TextEditingController(text: '');
   FocusNode dateOfBirthFocus = FocusNode();
 
-  FamilyListBloc _familyListBloc;
-  FamilyMembers familyData = new FamilyMembers();
+  late FamilyListBloc _familyListBloc;
+  FamilyMembers? familyData = new FamilyMembers();
   List<SharedByUsers> _familyNames = new List();
   bool isFamilyChanged = false;
 
-  SharedByUsers selectedUser;
-  var selectedId = '', createdBy = '';
-  String categoryName;
-  String categoryID;
-  String validationMsg;
-  String selectedClaimType = "Pharmacy";
+  SharedByUsers? selectedUser;
+  String? selectedId = '', createdBy = '';
+  String? categoryName;
+  String? categoryID;
+  late String validationMsg;
+  String? selectedClaimType = "Pharmacy";
 
   CategoryResult categoryDataObj = CategoryResult();
   MediaResult mediaDataObj = MediaResult();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
-  HealthReportListForUserRepository _healthReportListForUserRepository;
+  late HealthReportListForUserRepository _healthReportListForUserRepository;
 
   FlutterToast toast = FlutterToast();
 
-  String claimAmountTotal;
-  String memberShipStartDate, memberShipEndDate;
-  bool isActiveMemberShipSelected;
+  String? claimAmountTotal;
+  String? memberShipStartDate, memberShipEndDate;
+  bool? isActiveMemberShipSelected;
   bool ispdfPresent = false;
-  var pdfFile;
+  late var pdfFile;
   var pdfFileName;
 
   @override
@@ -112,17 +113,17 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     super.initState();
     _healthReportListForUserRepository =
         new HealthReportListForUserRepository();
-    if (widget.imagePath.isNotEmpty) {
-      length = widget.imagePath.length;
+    if (widget.imagePath!.isNotEmpty) {
+      length = widget.imagePath!.length;
       index = 1;
     }
 
     try {
       claimAmountTotal = new CommonUtil().getClaimAmount();
-      claimAmountTotal = json.decode(claimAmountTotal);
-      if (claimAmountTotal.contains('.')) {
-        claimAmountTotal = claimAmountTotal.contains(".")
-            ? claimAmountTotal.split(".")[0]
+      claimAmountTotal = json.decode(claimAmountTotal!);
+      if (claimAmountTotal!.contains('.')) {
+        claimAmountTotal = claimAmountTotal!.contains(".")
+            ? claimAmountTotal!.split(".")[0]
             : claimAmountTotal;
       }
     } catch (e) {}
@@ -131,14 +132,14 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     memberShipEndDate = new CommonUtil().getMemberSipEndDate();
     isActiveMemberShipSelected = PreferenceUtil.getIfMemberShipIsAcive();
 
-    memberShipStartDate = json.decode(memberShipStartDate);
-    memberShipEndDate = json.decode(memberShipEndDate);
+    memberShipStartDate = json.decode(memberShipStartDate!);
+    memberShipEndDate = json.decode(memberShipEndDate!);
     setAuthToken();
     initializeData();
 
-    if (length == 1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath[0])) {
+    if (length == 1 && new CommonUtil().checkIfFileIsPdf(widget.imagePath![0]!)) {
       ispdfPresent = true;
-      pdfFile = File(widget.imagePath[0]);
+      pdfFile = File(widget.imagePath![0]!);
       final fileNoun = pdfFile.path.split('/').last;
       pdfFileName = fileNoun;
     }
@@ -163,11 +164,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       key: scaffold_state,
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: AutoSizeText(
+        title: 
+        Text(  //FU2.5
+        //AutoSizeText( FU2.5
           "My Claim",
           maxLines: 1,
-          maxFontSize: 16,
-        ),
+          //maxFontSize: 16, FU2.5
+        ),  
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -204,7 +207,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                           Visibility(
                             child: IconButton(
                               onPressed: () {
-                                if (widget.imagePath.isNotEmpty) {}
+                                if (widget.imagePath!.isNotEmpty) {}
                               },
                               icon: Icon(
                                 Icons.fullscreen,
@@ -277,10 +280,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             style: fhbBasicWidget.getTextStyleForValue(),
             decoration: InputDecoration(
               enabledBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey[300]),
+                borderSide: BorderSide(color: Colors.grey[300]!),
               ),
               contentPadding: EdgeInsets.only(left: 20.0),
               counterText: '',
@@ -305,13 +308,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           ),
 
           (familyData != null &&
-                  familyData.result?.sharedByUsers != null &&
-                  familyData.result?.sharedByUsers.length > 0)
+                  familyData!.result?.sharedByUsers != null &&
+                  familyData!.result?.sharedByUsers!.length > 0)
               ? FittedBox(
                   fit: BoxFit.cover,
                   child: Row(
                     children: [
-                      dropDownButton(familyData.result?.sharedByUsers)
+                      dropDownButton(familyData!.result?.sharedByUsers)
                     ],
                   ))
               : FittedBox(
@@ -338,7 +341,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     );
   }
 
-  Widget getCarousalImage(List<String> imagesPath) {
+  Widget getCarousalImage(List<String?>? imagesPath) {
     if (imagesPath != null && imagesPath.isNotEmpty) {
       index = _current + 1;
       _current = 0;
@@ -348,11 +351,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          (widget.imagePath != null && widget.imagePath.isNotEmpty)
+          (widget.imagePath != null && widget.imagePath!.isNotEmpty)
               ? Expanded(
                   child: CarouselSlider(
                     carouselController: carouselSlider,
-                    items: widget.imagePath.map((imgUrl) {
+                    items: widget.imagePath!.map((imgUrl) {
                       return Builder(
                         builder: (BuildContext context) {
                           return Container(
@@ -362,7 +365,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                               child: Container(
                                 height: double.infinity,
                                 child: Image.file(
-                                  File(imgUrl),
+                                  File(imgUrl!),
                                   fit: BoxFit.scaleDown,
                                 ),
                               ));
@@ -397,12 +400,12 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   }
 
   goToPrevious() {
-    carouselSlider.previousPage(
+    carouselSlider!.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   goToNext() {
-    carouselSlider.nextPage(
+    carouselSlider!.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
@@ -417,13 +420,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     return status;
   }*/
 
-  HealthRecordCollection checkIfMp3IsPresent(HealthResult data) {
-    HealthRecordCollection mediaMetaId;
+  HealthRecordCollection? checkIfMp3IsPresent(HealthResult data) {
+    HealthRecordCollection? mediaMetaId;
 
     if (data.healthRecordCollection != null &&
-        data.healthRecordCollection.isNotEmpty) {
+        data.healthRecordCollection!.isNotEmpty) {
       mediaMetaId = CommonUtil()
-          .getMediaMasterIDForAudioFileType(data.healthRecordCollection);
+          .getMediaMasterIDForAudioFileType(data.healthRecordCollection!);
     }
     return mediaMetaId;
   }
@@ -460,13 +463,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
   Future<void> _selectDate(
       BuildContext context, TextEditingController dateOfVisitSample) async {
     var dateTime = DateTime.now();
-    var startDate = DateFormat('yyyy-MM-dd').parse(memberShipStartDate);
-    var endDate = DateFormat('yyyy-MM-dd').parse(memberShipEndDate);
+    var startDate = DateFormat('yyyy-MM-dd').parse(memberShipStartDate!);
+    var endDate = DateFormat('yyyy-MM-dd').parse(memberShipEndDate!);
     final picked = await showDatePicker(
         context: context,
-        initialDate: isActiveMemberShipSelected ? dateTime : endDate,
+        initialDate: isActiveMemberShipSelected! ? dateTime : endDate,
         firstDate: startDate,
-        lastDate: isActiveMemberShipSelected ? dateTime : endDate);
+        lastDate: isActiveMemberShipSelected! ? dateTime : endDate);
 
     if (picked != null) {
       dateTime = picked ?? dateTime;
@@ -518,7 +521,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       stream: _familyListBloc.familyMemberListNewStream,
       builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Scaffold(
                 backgroundColor: Colors.white,
@@ -533,7 +536,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
@@ -541,12 +544,12 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
-              if (snapshot.data.data.result != null) {
-                familyData = snapshot.data.data;
+              if (snapshot.data!.data!.result != null) {
+                familyData = snapshot.data!.data;
               }
 
-              return dropDownButton(snapshot.data.data.result != null
-                  ? snapshot.data.data.result.sharedByUsers
+              return dropDownButton(snapshot.data!.data!.result != null
+                  ? snapshot.data!.data!.result!.sharedByUsers
                   : null);
               break;
           }
@@ -557,15 +560,15 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     );
   }
 
-  Widget dropDownButton(List<SharedByUsers> sharedByMeList) {
-    MyProfileModel myProfile;
+  Widget dropDownButton(List<SharedByUsers>? sharedByMeList) {
+    MyProfileModel? myProfile;
     String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result.firstName?.capitalizeFirstofEach +
+          ? myProfile.result!.firstName?.capitalizeFirstofEach +
               ' ' +
-              myProfile.result.lastName?.capitalizeFirstofEach
+              myProfile.result!.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
@@ -587,7 +590,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       for (SharedByUsers sharedByUsers in _familyNames) {
         if (sharedByUsers != null) {
           if (sharedByUsers.child != null) {
-            if (sharedByUsers.child.id == selectedId) {
+            if (sharedByUsers.child!.id == selectedId) {
               selectedUser = sharedByUsers;
             }
           }
@@ -618,10 +621,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         },
         decoration: InputDecoration(
           enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[300]),
+            borderSide: BorderSide(color: Colors.grey[300]!),
           ),
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey[300]),
+            borderSide: BorderSide(color: Colors.grey[300]!),
           ),
           contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
           suffixIcon: IconButton(
@@ -653,9 +656,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           categoryDataObj.toJson();
       var _mediaTypeBlock = MediaTypeBlock();
 
-      var mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+      var mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
-      final metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      final metaDataFromSharedPrefernce = mediaTypesResponse.result!;
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularLabel(
           categoryID, metaDataFromSharedPrefernce, categoryName);
 
@@ -668,10 +671,10 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
       await _healthReportListForUserBlock
           .createHealtRecordsClaims(params.toString(), widget.imagePath, null)
           .then((value) {
-        if (value != null && value.isSuccess) {
-          createClaim(value.result[0].id);
+        if (value != null && value.isSuccess!) {
+          createClaim(value.result![0].id);
         } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
           toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
         }
       });
@@ -713,12 +716,12 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
         if (claimAmount.text != "" &&
             claimAmount.text != null &&
             int.parse(claimAmount.text) > 0) {
-          if (int.parse(claimAmount.text) <= int.parse(claimAmountTotal)) {
+          if (int.parse(claimAmount.text) <= int.parse(claimAmountTotal!)) {
             condition = true;
           } else {
             condition = false;
             validationMsg = "Current balance is  " +
-                claimAmountTotal +
+                claimAmountTotal! +
                 " INR. Please enter a lesser amount";
           }
         } else {
@@ -736,7 +739,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     return condition;
   }
 
-  void createClaim(String healthRecordID) {
+  void createClaim(String? healthRecordID) {
     var postMediaData = Map<String, dynamic>();
     var membership = {};
     String memberShipId = new CommonUtil().getMemberShipID();
@@ -752,13 +755,13 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     var submittedFor = {};
     submittedFor[qr_str_id] = selectedId;
     postMediaData[qr_submittedfor] = submittedFor;
-    double claimAmt = double.parse(claimAmountTotal);
+    double claimAmt = double.parse(claimAmountTotal!);
 
     postMediaData[qr_remark] = "";
     postMediaData[qr_ClaimAmountTotal] = claimAmt;
     postMediaData[qr_health_org_id] = json.decode(healthOrganizationID);
     var planSubscriptionInfoId =
-        PreferenceUtil.getStringValue(Constants.keyPlanSubscriptionInfoId);
+        PreferenceUtil.getStringValue(Constants.keyPlanSubscriptionInfoId)!;
     postMediaData[parameters.strPlanSubscriptionInfoId] =
         json.decode(planSubscriptionInfoId);
 
@@ -780,7 +783,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
     _healthReportListForUserRepository.createClaimRecord(params).then((value) {
       if (value != null && value.isSuccess) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pop(context);
@@ -809,11 +812,11 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           ),
           padding: EdgeInsets.only(
               left: 20,
-              top: CommonUtil().isTablet ? 1 : 10,
-              bottom: CommonUtil().isTablet ? 1 : 20),
+              top: CommonUtil().isTablet! ? 1 : 10,
+              bottom: CommonUtil().isTablet! ? 1 : 20),
         ),
         value: selectedClaimType != null
-            ? toBeginningOfSentenceCase(selectedClaimType.toLowerCase())
+            ? toBeginningOfSentenceCase(selectedClaimType!.toLowerCase())
             : "",
         items: variable.claimType.map((eachGender) {
           return DropdownMenuItem(
@@ -824,8 +827,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
               ),
               padding: EdgeInsets.only(
                   left: 20,
-                  top: CommonUtil().isTablet ? 1 : 10,
-                  bottom: CommonUtil().isTablet ? 1 : 20),
+                  top: CommonUtil().isTablet! ? 1 : 10,
+                  bottom: CommonUtil().isTablet! ? 1 : 20),
             ),
             value: eachGender,
           );
@@ -852,8 +855,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                     style: fhbBasicWidget.getTextStyleForValue()),
                 padding: EdgeInsets.only(
                     left: 20,
-                    top: CommonUtil().isTablet ? 1 : 10,
-                    bottom: CommonUtil().isTablet ? 1 : 20)),
+                    top: CommonUtil().isTablet! ? 1 : 10,
+                    bottom: CommonUtil().isTablet! ? 1 : 20)),
           ],
         ),
         items: _familyNames
@@ -872,20 +875,20 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
                               style: fhbBasicWidget.getTextStyleForValue()),
                           padding: EdgeInsets.only(
                               left: 20,
-                              top: CommonUtil().isTablet ? 1 : 10,
-                              bottom: CommonUtil().isTablet ? 1 : 20)),
+                              top: CommonUtil().isTablet! ? 1 : 10,
+                              bottom: CommonUtil().isTablet! ? 1 : 20)),
                     ],
                   ),
                   value: user,
                 ))
             .toList(),
-        onChanged: (SharedByUsers user) {
+        onChanged: (SharedByUsers? user) {
           isFamilyChanged = true;
           setState(() {
             selectedUser = user;
-            if (user.child != null) {
-              if (user.child.id != null) {
-                selectedId = user.child.id;
+            if (user!.child != null) {
+              if (user.child!.id != null) {
+                selectedId = user.child!.id;
               }
             } else {
               selectedId = createdBy;
@@ -911,9 +914,9 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
             icon: ImageIcon(AssetImage(variable.icon_attach),
                 color: Colors.white),
             onPressed: () async {
-              await OpenFile.open(
-                pdfFile.path,
-              );
+              // await OpenFile.open(
+              //   pdfFile.path,
+              // );FU2.5
             },
           )
         ],

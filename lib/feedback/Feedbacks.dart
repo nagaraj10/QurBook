@@ -1,6 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+//import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/feedback/Controller/FeedbackController.dart';
@@ -47,7 +48,7 @@ class _FeedbacksState extends State<Feedbacks> {
   List<dynamic> byteDataClonelist = [];
   List<Asset> images = <Asset>[];
 
-  String audioPathMain = '';
+  String? audioPathMain = '';
   bool containsAudioMain = false;
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   List<String> imagePaths = List();
@@ -84,9 +85,9 @@ class _FeedbacksState extends State<Feedbacks> {
     if (!mounted) return;
 
     for (var asset in resultList) {
-      var filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);
+      // var filePath =
+      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      // imagePaths.add(filePath); FU2.5
     }
 
     setState(() {
@@ -336,12 +337,12 @@ class _FeedbacksState extends State<Feedbacks> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                items: controller.categories.result.map((feedbackCategory) {
+                items: controller.categories.result!.map((feedbackCategory) {
                   var value = feedbackCategory;
                   return DropdownMenuItem<FeedbackCategoryModel>(
                     value: value,
                     child: Text(
-                      value.name,
+                      value.name!,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0.sp,
@@ -367,12 +368,12 @@ class _FeedbacksState extends State<Feedbacks> {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                items: controller.categories.result.map((feedbackCategory) {
+                items: controller.categories.result!.map((feedbackCategory) {
                   var value = feedbackCategory;
                   return DropdownMenuItem<FeedbackCategoryModel>(
                     value: value,
                     child: Text(
-                      value.name,
+                      value.name!,
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0.sp,
@@ -404,12 +405,12 @@ class _FeedbacksState extends State<Feedbacks> {
     final Map<String, dynamic> postMediaData = {};
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     postMediaData[parameters.strhealthRecordCategory] =
-        controller.feedbackType.result.first.toJson();
+        controller.feedbackType!.result!.first.toJson();
     postMediaData[parameters.strhealthRecordType] = controller
-        .feedbackType.result.first.healthRecordTypeCollection.first
+        .feedbackType!.result!.first.healthRecordTypeCollection!.first
         .toJson();
     postMediaData[variable.strfeedback] = feedbackController.text;
-    postMediaData[variable.strfeedBackCategoryId] = controller.selectedType.id;
+    postMediaData[variable.strfeedBackCategoryId] = controller.selectedType!.id;
     postMediaData[variable.strisDraft] = true;
     postMediaData[variable.strsourceName] = CommonConstants.app_name;
     postMainData[variable.strmetaInfo] = postMediaData;
@@ -420,14 +421,14 @@ class _FeedbacksState extends State<Feedbacks> {
           .createHealtRecords(params.toString(), imagePaths, audioPathMain)
           .then((value) {
         controller.removeSelectedType();
-        if (value.isSuccess) {
+        if (value!.isSuccess!) {
           _healthReportListForUserBlock.getHelthReportLists().then((value) {
             PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
             callFeedBackSuccess(context);
           });
         } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         }
       });
     } else {
@@ -436,20 +437,20 @@ class _FeedbacksState extends State<Feedbacks> {
           .then(
         (savedMetaDataResponse) {
           controller.removeSelectedType();
-          if (savedMetaDataResponse.isSuccess) {
+          if (savedMetaDataResponse!.isSuccess!) {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
             PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
             _healthReportListForUserBlock.getHelthReportLists().then(
               (value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value);
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
                 callFeedBackSuccess(context);
               },
             );
           } else {
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
           }
         },
       );
@@ -472,7 +473,7 @@ class _FeedbacksState extends State<Feedbacks> {
             if ((audioPathMain != '' && k == imagePaths.length) ||
                 (audioPathMain != '' && k == imagePaths.length - 1)) {
               _healthReportListForUserBlock
-                  .saveImage(audioPathMain, mediaMetaID, '')
+                  .saveImage(audioPathMain!, mediaMetaID, '')
                   .then((postImageResponse) {
                 _healthReportListForUserBlock
                     .getHelthReportLists()
@@ -480,7 +481,7 @@ class _FeedbacksState extends State<Feedbacks> {
                   PreferenceUtil.saveCompleteData(
                       Constants.KEY_COMPLETE_DATA, value);
 
-                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                       .pop();
                   callFeedBackSuccess(context);
                 });
@@ -489,7 +490,7 @@ class _FeedbacksState extends State<Feedbacks> {
               _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value);
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 callFeedBackSuccess(context);
@@ -498,7 +499,7 @@ class _FeedbacksState extends State<Feedbacks> {
               _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value);
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                Navigator.of(_keyLoader.currentContext!, rootNavigator: true)
                     .pop();
 
                 callFeedBackSuccess(context);
@@ -509,7 +510,7 @@ class _FeedbacksState extends State<Feedbacks> {
         );
       }
     } else {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
       callFeedBackSuccess(context);
     }
   }
@@ -535,18 +536,18 @@ class _FeedbacksState extends State<Feedbacks> {
       BuildContext context, String audioPath, String mediaMetaID) {
     if (audioPathMain != '') {
       _healthReportListForUserBlock
-          .saveImage(audioPathMain, mediaMetaID, '')
+          .saveImage(audioPathMain!, mediaMetaID, '')
           .then((postImageResponse) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
 
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
           callFeedBackSuccess(context);
         });
       });
     } else {
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
       callFeedBackSuccess(context);
     }

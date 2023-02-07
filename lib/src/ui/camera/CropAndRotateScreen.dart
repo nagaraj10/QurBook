@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,11 +18,11 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class CropAndRotateScreen extends StatefulWidget {
-  final List<String> imagePath;
+  final List<String?> imagePath;
 
   const CropAndRotateScreen({
-    Key key,
-    @required this.imagePath,
+    Key? key,
+    required this.imagePath,
   }) : super(key: key);
 
   @override
@@ -32,12 +33,12 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
-  String categoryName, categoryNameClone;
-  String categoryID;
-  CarouselController carouselSlider;
+  String? categoryName, categoryNameClone;
+  String? categoryID;
+  CarouselController? carouselSlider;
   int _current = 0;
 
-  String currentImagePath;
+  String? currentImagePath;
 
   bool _cropping = false;
 
@@ -77,7 +78,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
       children: <Widget>[
         Expanded(
           child: InkWell(
-            child: Text(categoryName),
+            child: Text(categoryName!),
             onTap: () {
               _showOverlayCategoryDialog(context);
             },
@@ -135,7 +136,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                         decoration: BoxDecoration(),
                         child: Container(
                           height: double.infinity,
-                          child: imgUrl.contains(variable.strpdf)
+                          child: imgUrl!.contains(variable.strpdf)
                               ? new CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
@@ -182,7 +183,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                   IconButton(
                     icon: Icon(Icons.crop, color: Colors.white),
                     onPressed: () {
-                      cropImage(currentImagePath);
+                      cropImage(currentImagePath!);
                     },
                   ),
                   index == widget.imagePath.length
@@ -222,17 +223,17 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   goToPrevious() {
-    carouselSlider.previousPage(
+    carouselSlider!.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   goToNext() {
-    carouselSlider.nextPage(
+    carouselSlider!.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
   Future<void> cropImage(String filePath) async {
-    File croppedFile = await ImageCropper.cropImage(
+    File? croppedFile = await ImageCropper.cropImage(
         sourcePath: filePath,
         aspectRatioPresets: Platform.isAndroid
             ? [

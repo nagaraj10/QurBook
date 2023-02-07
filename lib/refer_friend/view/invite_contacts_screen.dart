@@ -1,3 +1,4 @@
+
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,8 +29,8 @@ class InviteContactsScreen extends StatefulWidget {
 }
 
 class _InviteContactsScreenState extends State<InviteContactsScreen> {
-  List<Contact> _contacts;
-  List<Contact> _contactsSearched;
+  List<Contact>? _contacts;
+  List<Contact>? _contactsSearched;
   List<Contact> selectedList = [];
   bool onSearch = false;
   TextEditingController searchController = TextEditingController();
@@ -40,7 +41,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       refreshContacts();
     });
   }
@@ -63,7 +64,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   Future<void> refreshContacts() async {
     final contacts = (await ContactsService.getContacts()).toList();
     contacts.forEach((element) {
-      final phone = element.phones.toList();
+      final phone = element.phones!.toList();
       final List<Item> phoneNonRepeatList = [];
       for (var i = 0; i < phone.length; i++) {
         var repeat = false;
@@ -86,7 +87,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
         }
       }
     });
-    Map<String, Contact> mp = {};
+    Map<String?, Contact> mp = {};
     for (var item in newContacts) {
       mp[item.displayName] = item;
     }
@@ -177,8 +178,8 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     if (value.trim().isNotEmpty) {
                       setState(() {
                         onSearch = true;
-                        _contactsSearched = _contacts
-                            .where((element) => element.displayName
+                        _contactsSearched = _contacts!
+                            .where((element) => element.displayName!
                                 .trim()
                                 .toLowerCase()
                                 .contains(value.trim().toLowerCase()))
@@ -240,7 +241,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
     );
   }
 
-  Widget inviteContactsBodyView(List<Contact> contactsValue) {
+  Widget inviteContactsBodyView(List<Contact>? contactsValue) {
     return Expanded(
       child: contactsValue == null
           ? CommonCircularIndicator()
@@ -271,7 +272,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
       itemCount: contacts?.length ?? 0,
       itemBuilder: (context, index) {
         final contact = contacts?.elementAt(index);
-        final phone = contact.phones.toList();
+        final phone = contact.phones!.toList();
         return phone == null || phone.isEmpty
             ? Container()
             : ListTile(
@@ -292,10 +293,10 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     });
                   }
                 },
-                leading: (contact.avatar != null && contact.avatar.isNotEmpty)
+                leading: (contact.avatar != null && contact.avatar!.isNotEmpty)
                     ? CircleAvatar(
                         backgroundColor: Color(0xFFf7f6f5),
-                        backgroundImage: MemoryImage(contact.avatar))
+                        backgroundImage: MemoryImage(contact.avatar!))
                     : CircleAvatar(
                         backgroundColor: Color(0xFFf7f6f5),
                         child: Text(
@@ -328,7 +329,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                             height: 0.h,
                             width: 0.w,
                           ),
-                subtitle: itemsTile(contact.phones),
+                subtitle: itemsTile(contact.phones!),
               );
       },
     );
@@ -365,15 +366,15 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   sendInviteToFriends() async {
     var contacts = List<Contacts>();
     selectedList.forEach((e) {
-      e.phones.forEach((element) {
-        if (element.value.isNotEmpty) {
+      e.phones!.forEach((element) {
+        if (element.value!.isNotEmpty) {
           if (element.value.toString().contains('+')) {
             final mobileNo =
-                '+${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
+                '+${element.value!.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           } else {
             final mobileNo =
-                '+${_selectedDialogCountry.phoneCode}${element.value.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
+                '+${_selectedDialogCountry.phoneCode}${element.value!.replaceAll(RegExp(r'[^\s\w]'), '').replaceAll(' ', '')}';
             contacts.add(Contacts(name: e.displayName, phoneNumber: mobileNo));
           }
         }
@@ -390,7 +391,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   sendReferalRequest(ReferAFriendRequest friendRequest) {
     referAFriend(friendRequest).then((value) {
       List<Result> referalList = value?.result ?? [];
-      if (value?.isSuccess && referalList?.length > 0) {
+      if (value?.isSuccess! && referalList?.length > 0) {
         LoaderClass.hideLoadingDialog(context);
         showDialog(
             barrierDismissible: false,
@@ -417,7 +418,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                     shrinkWrap: true,
                     itemCount: referalList?.length ?? 0,
                     itemBuilder: (context, index) {
-                      var trailingText = referalList[index].isExistingUser
+                      var trailingText = referalList[index].isExistingUser!
                           ? 'User Exists'
                           : 'Invite Sent';
 
@@ -427,7 +428,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                           children: [
                             Row(
                               children: [
-                                referalList[index].isExistingUser
+                                referalList[index].isExistingUser!
                                     ? CircleAvatar(
                                         radius: 15,
                                         backgroundColor: Colors.transparent,
@@ -441,15 +442,15 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                         backgroundColor: Color(0xFFf7f6f5),
                                         radius: 15,
                                         child: Text(
-                                          referalList[index]
-                                                      ?.name
+                                          (referalList[index]
+                                                      ?.name!
                                                       .split(' ')
                                                       .length >
                                                   1
                                               ? '${referalList[index]?.name?.split(' ')[0][0]}${referalList[index]?.name?.split(' ')[1][0]}'
                                               : referalList[index]
                                                   ?.name
-                                                  ?.split(' ')[0][0],
+                                                  ?.split(' ')[0][0])!,
                                           style: TextStyle(
                                             fontSize: 12.0.sp,
                                           ),
@@ -465,7 +466,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                     children: [
                                       Text(
                                         referalList[index]
-                                            ?.name
+                                            ?.name!
                                             .capitalizeFirstofEach,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -477,7 +478,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                       //   height: 10,
                                       // ),
                                       Text(
-                                        referalList[index].phoneNumber,
+                                        referalList[index].phoneNumber!,
                                         style: TextStyle(
                                             fontSize: 10,
                                             color: Colors.black45,
@@ -498,7 +499,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                     //     : Colors.green.withOpacity(0.7),
                                     color: Colors.white,
                                   ),
-                                  child: referalList[index].isExistingUser
+                                  child: referalList[index].isExistingUser!
                                       ? Text(
                                           '$trailingText',
                                           style: TextStyle(

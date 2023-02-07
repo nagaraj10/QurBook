@@ -1,6 +1,7 @@
+
 class ReferAFriendResponse {
-  bool isSuccess;
-  List<Result> result;
+  bool? isSuccess;
+  List<Result>? result;
 
   ReferAFriendResponse({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class ReferAFriendResponse {
     if (json['result'] != null) {
       result = List<Result>();
       json['result'].forEach((v) {
-        result.add(Result.fromJson(v));
+        result!.add(Result.fromJson(v));
       });
     }
   }
@@ -18,17 +19,17 @@ class ReferAFriendResponse {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Result {
-  String phoneNumber;
-  String name;
-  bool isExistingUser;
-  String message;
+  String? phoneNumber;
+  String? name;
+  bool? isExistingUser;
+  String? message;
 
   Result({this.phoneNumber, this.name, this.isExistingUser, this.message});
 

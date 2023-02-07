@@ -3,7 +3,7 @@ class ClaimSuccess {
   dynamic isSuccess;
   dynamic message;
   dynamic result;
-  Diagnostics diagnostics;
+  Diagnostics? diagnostics;
 
   ClaimSuccess({this.isSuccess, this.message, this.result});
 
@@ -28,7 +28,7 @@ class ClaimSuccess {
       data['result'] = this.result;
     }
     if (diagnostics != null) {
-      data['diagnostics'] = diagnostics.toJson();
+      data['diagnostics'] = diagnostics!.toJson();
     }
     return data;
   }

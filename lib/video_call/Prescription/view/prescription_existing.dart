@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
@@ -359,7 +360,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
             Container(
                 width: 75.0.w, //1.sw * 0.2,
                 child: Text(
-                  medsList[pos].medicineName,
+                  medsList[pos].medicineName!,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 15.0.sp,
@@ -373,7 +374,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
 //        width: 20,
 //      ),
             Text(
-              meds[pos].days,
+              meds[pos].days!,
               textAlign: TextAlign.end,
               style: TextStyle(
                   color: Colors.black,
@@ -399,7 +400,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               color: Color(CommonUtil().getMyPrimaryColor()),
                               width: 0.5.w)),
                       child: Text(
-                        medsList[pos].schedule.morning,
+                        medsList[pos].schedule!.morning!,
                         style: TextStyle(
                             color: Colors.black87,
                             fontSize: 12.0.sp,
@@ -421,7 +422,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               color: Color(CommonUtil().getMyPrimaryColor()),
                               width: 0.5.w)),
                       child: Text(
-                        medsList[pos].schedule.morning,
+                        medsList[pos].schedule!.morning!,
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 12.0.sp,
@@ -443,7 +444,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                               color: Color(CommonUtil().getMyPrimaryColor()),
                               width: 0.5.w)),
                       child: Text(
-                        medsList[pos].schedule.morning,
+                        medsList[pos].schedule!.morning!,
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 12.0.sp,
@@ -456,7 +457,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
             ),
 
             Text(
-              medsList[pos].quantity,
+              medsList[pos].quantity!,
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 15.0.sp,

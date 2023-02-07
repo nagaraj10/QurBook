@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:math';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -68,9 +69,9 @@ export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class MyRecords extends StatefulWidget {
-  MyRecordsArgument argument;
+  MyRecordsArgument? argument;
   final bool isHome;
-  final Function onBackPressed;
+  final Function? onBackPressed;
   final bool isPatientSwitched;
   final String patientName;
   final String patientId;
@@ -89,46 +90,46 @@ class MyRecords extends StatefulWidget {
 
 class _MyRecordsState extends State<MyRecords> {
   List<TabModel> tabModelList = new List();
-  CategoryListBlock _categoryListBlocks;
-  HealthReportListForUserBlock _healthReportListForUserBlock;
-  MediaTypeBlock _mediaTypeBlock;
+  CategoryListBlock? _categoryListBlocks;
+  HealthReportListForUserBlock? _healthReportListForUserBlock;
+  MediaTypeBlock? _mediaTypeBlock;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
-  String categoryName;
-  String categoryID;
-  FamilyListBloc _familyListBloc;
-  MyProfileBloc _myProfileBloc;
+  String? categoryName;
+  String? categoryID;
+  FamilyListBloc? _familyListBloc;
+  MyProfileBloc? _myProfileBloc;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
-  GlobalSearchBloc _globalSearchBloc;
+  GlobalSearchBloc? _globalSearchBloc;
   bool fromSearch = false;
   List<CategoryResult> categoryDataList = new List();
-  HealthRecordList completeData;
+  HealthRecordList? completeData;
   List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
-  int initPosition = 0;
+  int? initPosition = 0;
 
   final GlobalKey _cameraKey = GlobalKey();
   final GlobalKey _voiceKey = GlobalKey();
-  BuildContext _myContext;
+  late BuildContext _myContext;
   CategoryResult categoryDataObjClone = new CategoryResult();
 
   List<String> selectedMedia = new List();
   static bool audioPage = false;
-  LandingViewModel landingViewModel;
+  LandingViewModel? landingViewModel;
   BuildContext context;
 
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    initPosition = widget.argument.categoryPosition;
+    initPosition = widget.argument!.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
     if (searchQuery != '') {
-      _globalSearchBloc.searchBasedOnMediaType(
+      _globalSearchBloc!.searchBasedOnMediaType(
           _searchQueryController.text.toString() == null
               ? ''
               : _searchQueryController.text.toString());
@@ -140,12 +141,12 @@ class _MyRecordsState extends State<MyRecords> {
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirstTime
                 ? null
-                : ShowCaseWidget.of(_myContext)
+                : ShowCaseWidget.of(_myContext)!
                     .startShowCase([_cameraKey, _voiceKey]));
       });
     } catch (e) {}
@@ -176,7 +177,7 @@ class _MyRecordsState extends State<MyRecords> {
               needNotify: true,
             );
           } else {
-            widget.onBackPressed();
+            widget.onBackPressed!();
           }
         }
         return Future.value(widget.isHome ? false : true);
@@ -230,19 +231,19 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getResponseForSearchedMedia() {
     _globalSearchBloc = null;
     _globalSearchBloc = new GlobalSearchBloc();
-    _globalSearchBloc.searchBasedOnMediaType(
+    _globalSearchBloc!.searchBasedOnMediaType(
         (searchQuery == null && searchQuery == '') ? '' : searchQuery);
 
     return PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null
         ? getMainWidgets(PreferenceUtil.getCategoryTypeDisplay(
             Constants.KEY_SEARCHED_CATEGORY))
         : StreamBuilder<ApiResponse<GlobalSearch>>(
-            stream: _globalSearchBloc.globalSearchStream,
+            stream: _globalSearchBloc!.globalSearchStream,
             builder:
                 (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
               if (!snapshot.hasData) return Container();
 
-              switch (snapshot.data.status) {
+              switch (snapshot.data!.status) {
                 case Status.LOADING:
                   return Center(
                       child: SizedBox(
@@ -255,17 +256,17 @@ class _MyRecordsState extends State<MyRecords> {
 
                 case Status.ERROR:
                   return FHBBasicWidget.getRefreshContainerButton(
-                      snapshot.data.message, () {
+                      snapshot.data!.message, () {
                     setState(() {});
                   });
                 case Status.COMPLETED:
                   _categoryListBlocks = null;
                   //rebuildAllBlocks();
-                  return snapshot.data.data.response.count == 0
+                  return snapshot.data!.data!.response!.count == 0
                       ? getEmptyCard()
                       : Container(
                           child: getWidgetForSearchedMedia(
-                              snapshot.data.data.response.data),
+                              snapshot.data!.data!.response!.data!),
                         );
                   break;
               }
@@ -299,11 +300,11 @@ class _MyRecordsState extends State<MyRecords> {
       return getMainWidgets(categoryDataFromPrefernce);
     else*/
     return StreamBuilder<ApiResponse<CategoryDataList>>(
-      stream: _categoryListBlocks.categoryListStreams,
+      stream: _categoryListBlocks!.categoryListStreams,
       builder:
           (context, AsyncSnapshot<ApiResponse<CategoryDataList>> snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
@@ -315,7 +316,7 @@ class _MyRecordsState extends State<MyRecords> {
 
             case Status.ERROR:
               return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
+                  snapshot.data!.message, () {
                 setState(() {});
               });
               break;
@@ -327,9 +328,9 @@ class _MyRecordsState extends State<MyRecords> {
               if (categoryDataList.length > 0) {
                 categoryDataList.clear();
               }
-              if (snapshot.data.data.result != null &&
-                  snapshot.data.data.result.length > 0) {
-                categoryDataList.addAll(snapshot.data.data.result);
+              if (snapshot.data!.data!.result != null &&
+                  snapshot.data!.data!.result!.length > 0) {
+                categoryDataList.addAll(snapshot.data!.data!.result!);
                 return getMainWidgets(categoryDataList);
               } else {
                 return Container(
@@ -385,15 +386,15 @@ class _MyRecordsState extends State<MyRecords> {
       itemCount: categoryData.length,
       fromSearch: fromSearch,
       argument: widget.argument,
-      allowSelect: widget.argument.allowSelect ?? false,
-      allowSelectVoice: widget.argument.isAudioSelect ?? false,
-      allowSelectNotes: widget.argument.isNotesSelect ?? false,
-      selectedMedia: widget.argument.selectedMedias,
-      isFromChat: widget.argument.isFromChat ?? false,
-      showDetails: widget.argument.showDetails ?? false,
-      selectedRecordsId: widget.argument.selectedRecordIds,
-      isAssociateOrChat: widget.argument.isAssociateOrChat ?? false,
-      isFromBills: widget.argument.isFromBills ?? false,
+      allowSelect: widget.argument!.allowSelect ?? false,
+      allowSelectVoice: widget.argument!.isAudioSelect ?? false,
+      allowSelectNotes: widget.argument!.isNotesSelect ?? false,
+      selectedMedia: widget.argument!.selectedMedias,
+      isFromChat: widget.argument!.isFromChat ?? false,
+      showDetails: widget.argument!.showDetails ?? false,
+      selectedRecordsId: widget.argument!.selectedRecordIds,
+      isAssociateOrChat: widget.argument!.isAssociateOrChat ?? false,
+      isFromBills: widget.argument!.isFromBills ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -401,9 +402,9 @@ class _MyRecordsState extends State<MyRecords> {
           getDataForParticularLabel(categoryData.elementAt(index).categoryName,
               categoryData.elementAt(index).id);
 
-          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
               .then((value) {
-            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
         } catch (e) {}
@@ -415,9 +416,9 @@ class _MyRecordsState extends State<MyRecords> {
               categoryData.elementAt(position.toInt()).categoryName,
               categoryData.elementAt(position.toInt()).id);
 
-          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
               .then((value) {
-            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {});
           });
         } catch (e) {}
@@ -428,9 +429,9 @@ class _MyRecordsState extends State<MyRecords> {
       scaffold_state: scaffold_state,
       completeData: completeData,
       recordsState: this,
-      userID: widget.argument.userID ?? '',
-      fromAppointments: widget.argument.fromAppointments ?? false,
-      fromClass: widget.argument.fromClass,
+      userID: widget.argument!.userID ?? '',
+      fromAppointments: widget.argument!.fromAppointments ?? false,
+      fromClass: widget.argument!.fromClass,
       isFromVideoCall: widget.argument?.isFromVideoCall ?? false,
       isPatientSwitched: widget.isPatientSwitched,
       patientId: widget.patientId,
@@ -535,26 +536,26 @@ class _MyRecordsState extends State<MyRecords> {
   void rebuildAllBlocks() {
     if (_categoryListBlocks == null) {
       _categoryListBlocks = new CategoryListBlock();
-      _categoryListBlocks.getCategoryLists();
+      _categoryListBlocks!.getCategoryLists();
     } else if (_categoryListBlocks != null) {
       _categoryListBlocks = null;
       _categoryListBlocks = new CategoryListBlock();
-      _categoryListBlocks.getCategoryLists();
+      _categoryListBlocks!.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists();
+      _healthReportListForUserBlock!.getHelthReportLists();
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists();
+      _healthReportListForUserBlock!.getHelthReportLists();
     }
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
+      _mediaTypeBlock!.getMediTypesList();
     }
     /* if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
@@ -572,7 +573,7 @@ class _MyRecordsState extends State<MyRecords> {
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
     List<CategoryResult> filteredCategoryData = new List();
     for (CategoryResult dataObj in data) {
-      if (dataObj.isDisplay &&
+      if (dataObj.isDisplay! &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
           dataObj.categoryName != Constants.STR_WEARABLES) {
@@ -594,15 +595,15 @@ class _MyRecordsState extends State<MyRecords> {
     }
 
     filteredCategoryData.sort((a, b) {
-      return a.categoryDescription
+      return a.categoryDescription!
           .toLowerCase()
-          .compareTo(b.categoryDescription.toLowerCase());
+          .compareTo(b.categoryDescription!.toLowerCase());
     });
 
     return filteredCategoryData;
   }
 
-  void getDataForParticularLabel(String category, String categoryId) {
+  void getDataForParticularLabel(String? category, String? categoryId) {
     categoryName = category;
     categoryID = categoryId;
   }
@@ -612,41 +613,41 @@ class _MyRecordsState extends State<MyRecords> {
 
 class CustomTabView extends StatefulWidget {
   final int itemCount;
-  final IndexedWidgetBuilder tabBuilder;
-  final IndexedWidgetBuilder pageBuilder;
-  final Widget stub;
-  final ValueChanged<int> onPositionChange;
-  final ValueChanged<double> onScroll;
-  final int initPosition;
-  List<CategoryResult> categoryData;
+  final IndexedWidgetBuilder? tabBuilder;
+  final IndexedWidgetBuilder? pageBuilder;
+  final Widget? stub;
+  final ValueChanged<int?>? onPositionChange;
+  final ValueChanged<double>? onScroll;
+  final int? initPosition;
+  List<CategoryResult>? categoryData;
 
-  GlobalKey cameraKey;
-  GlobalKey voiceKey;
-  GlobalKey<ScaffoldState> scaffold_state;
-  bool fromSearch;
-  HealthRecordList completeData;
-  List<String> selectedMedia = new List();
-  bool allowSelect;
-  bool allowSelectNotes;
-  bool allowSelectVoice;
-  bool isFromChat;
-  bool showDetails;
-  _MyRecordsState recordsState;
-  HealthResult healthResult;
-  List<HealthRecordCollection> selectedRecordsId = new List();
-  bool isAssociateOrChat;
-  bool isFromBills;
-  String userID;
-  bool fromAppointments;
-  String fromClass;
-  MyRecordsArgument argument;
-  bool isFromVideoCall = false;
-  bool isPatientSwitched;
-  String patientName;
-  String patientId;
+  GlobalKey? cameraKey;
+  GlobalKey? voiceKey;
+  GlobalKey<ScaffoldState>? scaffold_state;
+  bool? fromSearch;
+  HealthRecordList? completeData;
+  List<String?>? selectedMedia = new List();
+  bool? allowSelect;
+  bool? allowSelectNotes;
+  bool? allowSelectVoice;
+  bool? isFromChat;
+  bool? showDetails;
+  _MyRecordsState? recordsState;
+  HealthResult? healthResult;
+  List<HealthRecordCollection>? selectedRecordsId = new List();
+  bool? isAssociateOrChat;
+  bool? isFromBills;
+  String? userID;
+  bool? fromAppointments;
+  String? fromClass;
+  MyRecordsArgument? argument;
+  bool? isFromVideoCall = false;
+  bool? isPatientSwitched;
+  String? patientName;
+  String? patientId;
 
   CustomTabView(
-      {@required this.itemCount,
+      {required this.itemCount,
       this.tabBuilder,
       this.pageBuilder,
       this.stub,
@@ -685,39 +686,39 @@ class CustomTabView extends StatefulWidget {
 
 class _CustomTabsState extends State<CustomTabView>
     with TickerProviderStateMixin {
-  TabController controller;
-  int _currentCount;
-  int _currentPosition;
+  TabController? controller;
+  int? _currentCount;
+  int? _currentPosition;
 
   List<TabModel> tabModelList = new List();
-  CategoryListBlock _categoryListBlock;
-  HealthReportListForUserBlock _healthReportListForUserBlock;
-  MediaTypeBlock _mediaTypeBlock;
+  CategoryListBlock? _categoryListBlock;
+  HealthReportListForUserBlock? _healthReportListForUserBlock;
+  MediaTypeBlock? _mediaTypeBlock;
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
   String searchQuery = "Search query";
-  String categoryName = '';
-  String categoryID = '';
+  String? categoryName = '';
+  String? categoryID = '';
 
-  FamilyListBloc _familyListBloc;
-  MyProfileBloc _myProfileBloc;
+  FamilyListBloc? _familyListBloc;
+  MyProfileBloc? _myProfileBloc;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
-  GlobalSearchBloc _globalSearchBloc;
+  GlobalSearchBloc? _globalSearchBloc;
   List<CategoryData> categoryDataList = new List();
   List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   bool containsAudio = false;
   String audioPath = '';
-  HealthResult selectedResult;
-  CommonUtil commonUtil;
+  HealthResult? selectedResult;
+  late CommonUtil commonUtil;
 
   @override
   void initState() {
     commonUtil = new CommonUtil();
-    if (widget.fromSearch) {
+    if (widget.fromSearch!) {
       _currentPosition = 0;
     } else {
       _currentPosition = widget.initPosition ?? 0;
@@ -726,10 +727,10 @@ class _CustomTabsState extends State<CustomTabView>
     controller = TabController(
       length: widget.itemCount,
       vsync: this,
-      initialIndex: _currentPosition >= widget.itemCount ? 0 : _currentPosition,
+      initialIndex: _currentPosition! >= widget.itemCount ? 0 : _currentPosition!,
     );
-    controller.addListener(onPositionChange);
-    controller.animation.addListener(onScroll);
+    controller!.addListener(onPositionChange);
+    controller!.animation!.addListener(onScroll);
     _currentCount = widget.itemCount;
     super.initState();
   }
@@ -737,21 +738,21 @@ class _CustomTabsState extends State<CustomTabView>
   @override
   void didUpdateWidget(CustomTabView oldWidget) {
     if (_currentCount != widget.itemCount) {
-      controller.animation.removeListener(onScroll);
-      controller.removeListener(onPositionChange);
-      controller.dispose();
+      controller!.animation!.removeListener(onScroll);
+      controller!.removeListener(onPositionChange);
+      controller!.dispose();
 
       if (widget.initPosition != null) {
         _currentPosition = widget.initPosition;
       }
 
-      if (_currentPosition > widget.itemCount - 1) {
+      if (_currentPosition! > widget.itemCount - 1) {
         _currentPosition = widget.itemCount - 1;
-        _currentPosition = _currentPosition < 0 ? 0 : _currentPosition;
+        _currentPosition = _currentPosition! < 0 ? 0 : _currentPosition;
         if (widget.onPositionChange is ValueChanged<int>) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
             if (mounted) {
-              widget.onPositionChange(_currentPosition);
+              widget.onPositionChange!(_currentPosition);
             }
           });
         }
@@ -762,13 +763,13 @@ class _CustomTabsState extends State<CustomTabView>
         controller = TabController(
           length: widget.itemCount,
           vsync: this,
-          initialIndex: _currentPosition,
+          initialIndex: _currentPosition!,
         );
-        controller.addListener(onPositionChange);
-        controller.animation.addListener(onScroll);
+        controller!.addListener(onPositionChange);
+        controller!.animation!.addListener(onScroll);
       });
     } else if (widget.initPosition != null) {
-      controller.animateTo(widget.initPosition);
+      controller!.animateTo(widget.initPosition!);
     }
 
     super.didUpdateWidget(oldWidget);
@@ -776,9 +777,9 @@ class _CustomTabsState extends State<CustomTabView>
 
   @override
   void dispose() {
-    controller.animation.removeListener(onScroll);
-    controller.removeListener(onPositionChange);
-    controller.dispose();
+    controller!.animation!.removeListener(onScroll);
+    controller!.removeListener(onPositionChange);
+    controller!.dispose();
     super.dispose();
   }
 
@@ -792,7 +793,7 @@ class _CustomTabsState extends State<CustomTabView>
         widget.isPatientSwitched = true;
       }
     }
-    if (widget.isPatientSwitched) {
+    if (widget.isPatientSwitched!) {
       if (CommonUtil.dialogboxOpen != true)
         Future.delayed(
             Duration.zero,
@@ -833,7 +834,7 @@ class _CustomTabsState extends State<CustomTabView>
                 ),
               ),
             ),
-            tabs: getAllTabsToDisplayInHeader(widget.categoryData),
+            tabs: getAllTabsToDisplayInHeader(widget.categoryData!),
           ),
         ),
         Expanded(
@@ -843,7 +844,7 @@ class _CustomTabsState extends State<CustomTabView>
     );
   }
 
-  Widget getAllTabsToDisplayInBodyClone(List<CategoryResult> data) {
+  Widget getAllTabsToDisplayInBodyClone(List<CategoryResult>? data) {
     rebuildAllBlocks();
     if (widget.selectedMedia == null) {
       widget.selectedMedia = new List();
@@ -862,7 +863,7 @@ class _CustomTabsState extends State<CustomTabView>
             color: Color(new CommonUtil().getMyPrimaryColor()),
             borderRadius: BorderRadius.circular(30)),
         child: (widget.categoryData != null &&
-                widget.categoryData[controller.index].categoryName ==
+                widget.categoryData![controller!.index].categoryName ==
                     AppConstants.notes)
             ? IconButton(
                 icon: Icon(
@@ -884,11 +885,11 @@ class _CustomTabsState extends State<CustomTabView>
                         child: IconButton(
                           icon: Icon(
                             Icons.camera_alt,
-                            color: widget?.isFromVideoCall
+                            color: widget?.isFromVideoCall!
                                 ? Colors.black38
                                 : Colors.white,
                           ),
-                          onPressed: widget?.isFromVideoCall
+                          onPressed: widget?.isFromVideoCall!
                               ? null
                               : () {
                                   onCameraClicked();
@@ -909,11 +910,11 @@ class _CustomTabsState extends State<CustomTabView>
                         child: IconButton(
                           icon: Icon(
                             Icons.mic,
-                            color: widget?.isFromVideoCall
+                            color: widget?.isFromVideoCall!
                                 ? Colors.black38
                                 : Colors.white,
                           ),
-                          onPressed: widget?.isFromVideoCall
+                          onPressed: widget?.isFromVideoCall!
                               ? null
                               : () {
                                   onVoiceRecordClicked();
@@ -926,18 +927,18 @@ class _CustomTabsState extends State<CustomTabView>
       ),
       Align(
           alignment: Alignment.bottomCenter,
-          child: widget.isAssociateOrChat
+          child: widget.isAssociateOrChat!
               /*(widget.selectedMedia != null &&
                   widget.selectedMedia.length > 0 &&
                   !widget.showDetails)*/
               ? OutlineButton(
                   onPressed: () {
-                    if (widget.isFromChat) {
+                    if (widget.isFromChat!) {
                       Navigator.of(context)
                           .pop({'metaId': widget.selectedRecordsId});
                     } else {
-                      if (widget.allowSelect) {
-                        if (widget.fromAppointments) {
+                      if (widget.allowSelect!) {
+                        if (widget.fromAppointments!) {
                           Navigator.of(context).pop(
                               {'selectedResult': json.encode(selectedResult)});
                         } else {
@@ -945,7 +946,7 @@ class _CustomTabsState extends State<CustomTabView>
                               .pop({'metaId': widget.selectedMedia});
                         }
                       } else {
-                        if (widget.fromAppointments) {
+                        if (widget.fromAppointments!) {
                           Navigator.of(context)
                               .pop({'selectedResult': selectedResult});
                         } else {
@@ -955,7 +956,7 @@ class _CustomTabsState extends State<CustomTabView>
                       }
                     }
                   },
-                  child: widget.isFromChat ? Text('Attach') : Text('Associate'),
+                  child: widget.isFromChat! ? Text('Attach') : Text('Associate'),
                   textColor: Color(new CommonUtil().getMyPrimaryColor()),
                   color: Colors.white,
                   borderSide: BorderSide(
@@ -969,20 +970,20 @@ class _CustomTabsState extends State<CustomTabView>
     ]);
   }
 
-  Widget getAllTabsToDisplayInBody(List<CategoryResult> data) {
+  Widget getAllTabsToDisplayInBody(List<CategoryResult>? data) {
     HealthRecordList completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return widget.fromSearch
+    return widget.fromSearch!
         ? getMediTypeForlabels(data, widget.completeData)
         : /*completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
             : */
         StreamBuilder<ApiResponse<HealthRecordList>>(
-            stream: _healthReportListForUserBlock.healthReportStreams,
+            stream: _healthReportListForUserBlock!.healthReportStreams,
             builder: (context,
                 AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
               if (snapshot.hasData) {
-                switch (snapshot.data.status) {
+                switch (snapshot.data!.status) {
                   case Status.LOADING:
                     return Scaffold(
                       backgroundColor: Colors.white,
@@ -997,7 +998,7 @@ class _CustomTabsState extends State<CustomTabView>
 
                   case Status.ERROR:
                     return FHBBasicWidget.getRefreshContainerButton(
-                        snapshot.data.message, () {
+                        snapshot.data!.message, () {
                       setState(() {});
                     });
                     break;
@@ -1005,12 +1006,12 @@ class _CustomTabsState extends State<CustomTabView>
                   case Status.COMPLETED:
                     _healthReportListForUserBlock = null;
                     rebuildAllBlocks();
-                    if (!widget.fromSearch) {
+                    if (!widget.fromSearch!) {
                       PreferenceUtil.saveCompleteData(
-                          Constants.KEY_COMPLETE_DATA, snapshot.data.data);
+                          Constants.KEY_COMPLETE_DATA, snapshot.data!.data);
                     }
 
-                    return getMediTypeForlabels(data, snapshot.data.data);
+                    return getMediTypeForlabels(data, snapshot.data!.data);
                     break;
                 }
               } else {
@@ -1023,17 +1024,17 @@ class _CustomTabsState extends State<CustomTabView>
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryResult> data) {
     HealthRecordList completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return widget.fromSearch
+    return widget.fromSearch!
         ? getMediTypeForlabels(data, widget.completeData)
         /*: completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
             */
         : StreamBuilder<ApiResponse<HealthRecordList>>(
-            stream: _healthReportListForUserBlock.healthReportStreams,
+            stream: _healthReportListForUserBlock!.healthReportStreams,
             builder: (context,
                 AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
               if (snapshot.hasData) {
-                switch (snapshot.data.status) {
+                switch (snapshot.data!.status) {
                   case Status.LOADING:
                     return Scaffold(
                       backgroundColor: Colors.white,
@@ -1048,7 +1049,7 @@ class _CustomTabsState extends State<CustomTabView>
 
                   case Status.ERROR:
                     return FHBBasicWidget.getRefreshContainerButton(
-                        snapshot.data.message, () {
+                        snapshot.data!.message, () {
                       setState(() {});
                     });
                     break;
@@ -1056,12 +1057,12 @@ class _CustomTabsState extends State<CustomTabView>
                   case Status.COMPLETED:
                     _healthReportListForUserBlock = null;
                     rebuildAllBlocks();
-                    if (!widget.fromSearch) {
+                    if (!widget.fromSearch!) {
                       PreferenceUtil.saveCompleteData(
-                          Constants.KEY_COMPLETE_DATA, snapshot.data.data);
+                          Constants.KEY_COMPLETE_DATA, snapshot.data!.data);
                     }
 
-                    return getMediTypeForlabels(data, snapshot.data.data);
+                    return getMediTypeForlabels(data, snapshot.data!.data);
                     break;
                 }
               } else {
@@ -1074,26 +1075,26 @@ class _CustomTabsState extends State<CustomTabView>
   void rebuildAllBlocks() {
     if (_categoryListBlock == null) {
       _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryLists();
+      _categoryListBlock!.getCategoryLists();
     } else if (_categoryListBlock != null) {
       _categoryListBlock = null;
       _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryLists();
+      _categoryListBlock!.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists(userID: widget.userID);
+      _healthReportListForUserBlock!.getHelthReportLists(userID: widget.userID);
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists(userID: widget.userID);
+      _healthReportListForUserBlock!.getHelthReportLists(userID: widget.userID);
     }
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
+      _mediaTypeBlock!.getMediTypesList();
     }
     /*if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
@@ -1109,14 +1110,14 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getMediTypeForlabels(
-      List<CategoryResult> data, HealthRecordList completeData) {
+      List<CategoryResult>? data, HealthRecordList? completeData) {
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
+      _mediaTypeBlock!.getMediTypesList();
     } else {
       _mediaTypeBlock = null;
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypesList();
+      _mediaTypeBlock!.getMediTypesList();
     }
 
     List<MediaResult> selectedMediaData = PreferenceUtil.getMediaType();
@@ -1124,11 +1125,11 @@ class _CustomTabsState extends State<CustomTabView>
     return selectedMediaData != null
         ? getStackBody(data, completeData, selectedMediaData)
         : StreamBuilder<ApiResponse<MediaDataList>>(
-            stream: _mediaTypeBlock.mediaTypeStreams,
+            stream: _mediaTypeBlock!.mediaTypeStreams,
             builder:
                 (context, AsyncSnapshot<ApiResponse<MediaDataList>> snapshot) {
               if (snapshot.hasData) {
-                switch (snapshot.data.status) {
+                switch (snapshot.data!.status) {
                   case Status.LOADING:
                     return Scaffold(
                       backgroundColor: Colors.white,
@@ -1151,9 +1152,9 @@ class _CustomTabsState extends State<CustomTabView>
                     _mediaTypeBlock = null;
                     rebuildAllBlocks();
                     PreferenceUtil.saveMediaType(
-                        Constants.KEY_METADATA, snapshot.data.data.result);
+                        Constants.KEY_METADATA, snapshot.data!.data!.result);
                     return getStackBody(
-                        data, completeData, snapshot.data.data.result);
+                        data, completeData, snapshot.data!.data!.result!);
                     break;
                 }
               } else {
@@ -1163,7 +1164,7 @@ class _CustomTabsState extends State<CustomTabView>
           );
   }
 
-  Widget getStackBody(List<CategoryResult> data, HealthRecordList completeData,
+  Widget getStackBody(List<CategoryResult>? data, HealthRecordList? completeData,
       List<MediaResult> mediaData) {
     if (mediaData == null) {
       return Container();
@@ -1172,7 +1173,7 @@ class _CustomTabsState extends State<CustomTabView>
       alignment: Alignment.bottomRight,
       children: <Widget>[
         TabBarView(
-          children: _getAllDataForTheTabs(data, completeData, mediaData),
+          children: _getAllDataForTheTabs(data!, completeData, mediaData),
           controller: controller,
         ),
       ],
@@ -1190,20 +1191,20 @@ class _CustomTabsState extends State<CustomTabView>
 
   void addHealthRecords(String metaId,
       List<HealthRecordCollection> healthRecords, bool condition) {
-    if (widget.isFromChat) {
+    if (widget.isFromChat!) {
       if (condition) {
-        if (!(widget.selectedRecordsId.contains(metaId))) {}
+        if (!(widget.selectedRecordsId!.contains(metaId))) {}
       } else {
-        widget.selectedRecordsId.remove(metaId);
+        widget.selectedRecordsId!.remove(metaId);
       }
       if (condition) {
-        if (!(widget.selectedMedia.contains(metaId))) {
-          widget.selectedMedia.add(metaId);
-          widget.selectedRecordsId.addAll(healthRecords);
+        if (!(widget.selectedMedia!.contains(metaId))) {
+          widget.selectedMedia!.add(metaId);
+          widget.selectedRecordsId!.addAll(healthRecords);
         }
       } else {
-        widget.selectedMedia.remove(metaId);
-        widget.selectedRecordsId.remove(healthRecords);
+        widget.selectedMedia!.remove(metaId);
+        widget.selectedRecordsId!.remove(healthRecords);
       }
     }
     callBackToRefresh();
@@ -1214,40 +1215,40 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   void commonMethodToAddOrRemove(
-      String metaId, bool condition, HealthResult healthCategory) {
-    if (widget.allowSelect) {
-      if (widget.isFromChat) {
+      String metaId, bool condition, HealthResult? healthCategory) {
+    if (widget.allowSelect!) {
+      if (widget.isFromChat!) {
         if (condition) {
-          if (!(widget.selectedMedia.contains(metaId))) {
-            widget.selectedMedia.add(metaId);
-            widget.selectedRecordsId
-                .addAll(healthCategory.healthRecordCollection);
+          if (!(widget.selectedMedia!.contains(metaId))) {
+            widget.selectedMedia!.add(metaId);
+            widget.selectedRecordsId!
+                .addAll(healthCategory!.healthRecordCollection!);
           }
         } else {
-          widget.selectedMedia.remove(metaId);
-          widget.selectedRecordsId
-              .remove(healthCategory.healthRecordCollection);
+          widget.selectedMedia!.remove(metaId);
+          widget.selectedRecordsId!
+              .remove(healthCategory!.healthRecordCollection);
         }
       } else {
         if (condition) {
-          if (!(widget.selectedMedia.contains(metaId))) {
-            widget.selectedMedia.add(metaId);
+          if (!(widget.selectedMedia!.contains(metaId))) {
+            widget.selectedMedia!.add(metaId);
           }
         } else {
-          widget.selectedMedia.remove(metaId);
+          widget.selectedMedia!.remove(metaId);
         }
       }
-    } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
+    } else if (widget.allowSelectNotes! || widget.allowSelectVoice!) {
       if (condition) {
-        if (widget.selectedMedia.length > 0) {
+        if (widget.selectedMedia!.length > 0) {
           new FHBBasicWidget()
-              .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state);
+              .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state!);
         } else {
-          widget.selectedMedia.add(metaId);
+          widget.selectedMedia!.add(metaId);
           selectedResult = healthCategory;
         }
       } else {
-        widget.selectedMedia.remove(metaId);
+        widget.selectedMedia!.remove(metaId);
       }
     }
 
@@ -1260,7 +1261,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   List<Widget> _getAllDataForTheTabs(List<CategoryResult> data,
-      HealthRecordList completeData, List<MediaResult> mediaData) {
+      HealthRecordList? completeData, List<MediaResult> mediaData) {
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
     for (CategoryResult dataObj in data) {
@@ -1459,19 +1460,19 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   onPositionChange() {
-    FocusManager.instance.primaryFocus.unfocus();
-    if (!controller.indexIsChanging) {
+    FocusManager.instance.primaryFocus!.unfocus();
+    if (!controller!.indexIsChanging) {
       setState(() {});
-      _currentPosition = controller.index;
+      _currentPosition = controller!.index;
       if (widget.onPositionChange is ValueChanged<int>) {
-        widget.onPositionChange(_currentPosition);
+        widget.onPositionChange!(_currentPosition);
 
         try {
-          _currentPosition = controller.index;
+          _currentPosition = controller!.index;
 
           categoryName =
-              categoryDataList.elementAt(_currentPosition).categoryName;
-          categoryID = categoryDataList.elementAt(_currentPosition).id;
+              categoryDataList.elementAt(_currentPosition!).categoryName;
+          categoryID = categoryDataList.elementAt(_currentPosition!).id;
         } catch (e) {}
       }
     }
@@ -1479,16 +1480,16 @@ class _CustomTabsState extends State<CustomTabView>
 
   onScroll() {
     if (widget.onScroll is ValueChanged<double>) {
-      widget.onScroll(controller.animation.value);
+      widget.onScroll!(controller!.animation!.value);
 
       try {
-        _currentPosition = controller.animation.value.toInt();
+        _currentPosition = controller!.animation!.value.toInt();
 
         categoryName = categoryDataList
-            .elementAt(controller.animation.value.toInt())
+            .elementAt(controller!.animation!.value.toInt())
             .categoryName;
         categoryID =
-            categoryDataList.elementAt(controller.animation.value.toInt()).id;
+            categoryDataList.elementAt(controller!.animation!.value.toInt()).id;
       } catch (e) {}
     }
   }
@@ -1497,9 +1498,9 @@ class _CustomTabsState extends State<CustomTabView>
     List<Widget> tabWidgetList = new List();
 
     data.sort((a, b) {
-      return a.categoryDescription
+      return a.categoryDescription!
           .toLowerCase()
-          .compareTo(b.categoryDescription.toLowerCase());
+          .compareTo(b.categoryDescription!.toLowerCase());
     });
 
     for (CategoryResult dataObj in data) {
@@ -1510,7 +1511,7 @@ class _CustomTabsState extends State<CustomTabView>
         dataObj.logo != null
             ? Image.network(
                 /*Constants.BASE_URL + */
-                dataObj.logo,
+                dataObj.logo!,
                 width: 20.0.h,
                 height: 20.0.h,
                 color: Colors.white,
@@ -1520,7 +1521,7 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
-          dataObj.categoryName,
+          dataObj.categoryName!,
           style: TextStyle(fontSize: 14.0.sp),
         )),
         Padding(padding: EdgeInsets.only(top: 10)),
@@ -1534,16 +1535,16 @@ class _CustomTabsState extends State<CustomTabView>
   void openNotesDialog() async {
     await saveCategoryToPrefernce();
     PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
           .then((onValue) {
-        PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+        PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
             .then((value) {});
       });
     });
 
     TextEditingController fileName = new TextEditingController(
         text:
-            categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+            categoryName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
@@ -1566,7 +1567,7 @@ class _CustomTabsState extends State<CustomTabView>
         fileName,
         (value) {
           if (value) {
-            widget.recordsState.setState(() {});
+            widget.recordsState!.setState(() {});
           }
         });
   }
@@ -1589,15 +1590,15 @@ class _CustomTabsState extends State<CustomTabView>
       if (categoryName == AppConstants.voiceRecords ||
           categoryName == Constants.STR_HOSPITALDOCUMENT) {
         new FHBBasicWidget().showInSnackBar(
-            Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName,
-            widget.scaffold_state);
+            Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName!,
+            widget.scaffold_state!);
       } else if (categoryName == AppConstants.notes) {
         openNotesDialog();
       } else {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
-          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
               .then((onValue) {
-            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID!)
                 .then((value) {
               if (categoryName == STR_DEVICES) {
                 PreferenceUtil.saveString(
@@ -1633,17 +1634,17 @@ class _CustomTabsState extends State<CustomTabView>
     saveCategoryToPrefernce();
     if (categoryName == Constants.STR_HOSPITALDOCUMENT) {
       new FHBBasicWidget().showInSnackBar(
-          Constants.MSG_NO_VOICERECORDS + ' ' + categoryName,
-          widget.scaffold_state);
+          Constants.MSG_NO_VOICERECORDS + ' ' + categoryName!,
+          widget.scaffold_state!);
     } else {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, AppConstants.voiceRecords)
           .then((value) {
         PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
-                PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
+                PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID)!)
             .then((value) {
-          if (widget.argument.fromClass == 'audio' ||
-              widget.argument.fromClass == null) {
+          if (widget.argument!.fromClass == 'audio' ||
+              widget.argument!.fromClass == null) {
             // Navigator.pushReplacement(
             //         context,
             //         MaterialPageRoute(
@@ -1661,14 +1662,14 @@ class _CustomTabsState extends State<CustomTabView>
                     fromVoice: true,
                     fromClass: categoryName == AppConstants.voiceRecords
                         ? ''
-                        : widget.argument.fromClass ?? 'audio'),
+                        : widget.argument!.fromClass ?? 'audio'),
               ),
             );
           } else {
             Navigator.pushNamed(context, router.rt_AudioScreen,
                     arguments: AudioScreenArguments(
                         fromVoice: true,
-                        fromClass: widget.argument.fromClass ?? 'audio'))
+                        fromClass: widget.argument!.fromClass ?? 'audio'))
                 .then((results) {});
           }
         });
@@ -1677,7 +1678,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   saveCategoryToPrefernce() async {
-    categoryName = widget.categoryData.elementAt(_currentPosition).categoryName;
-    categoryID = widget.categoryData.elementAt(_currentPosition).id;
+    categoryName = widget.categoryData!.elementAt(_currentPosition!).categoryName;
+    categoryID = widget.categoryData!.elementAt(_currentPosition!).id;
   }
 }

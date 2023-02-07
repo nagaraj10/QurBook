@@ -1,8 +1,9 @@
+
 import 'State.dart';
 
 class StateModel {
-  bool isSuccess;
-  List<State> result;
+  bool? isSuccess;
+  List<State>? result;
 
   StateModel({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class StateModel {
     if (json['result'] != null) {
       result = List<State>();
       json['result'].forEach((v) {
-        result.add(State.fromJson(v));
+        result!.add(State.fromJson(v));
       });
     }
   }
@@ -20,7 +21,7 @@ class StateModel {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }

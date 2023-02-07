@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:get/get.dart';
@@ -69,37 +70,37 @@ class RegimentDataModel {
   final dynamic tplanid;
   final dynamic teidUser;
   final dynamic aid;
-  final Activityname activityname;
+  final Activityname? activityname;
   final dynamic uformid;
-  final Uformname uformname;
-  final String uformname1;
-  final DateTime estart;
-  final DateTime eend;
+  final Uformname? uformname;
+  final String? uformname1;
+  final DateTime? estart;
+  final DateTime? eend;
   final dynamic html;
-  final Otherinfo otherinfo;
+  final Otherinfo? otherinfo;
   final dynamic remindin;
   final dynamic remindinType;
-  final DateTime ack;
-  final DateTime ack_local;
-  final DateTime ackIST;
+  final DateTime? ack;
+  final DateTime? ack_local;
+  final DateTime? ackIST;
   final dynamic alarm;
-  final UformData uformdata;
-  final DateTime ts;
+  final UformData? uformdata;
+  final DateTime? ts;
   final dynamic deleted;
   final dynamic evDuration;
-  final bool hashtml;
-  final bool isActive;
+  final bool? hashtml;
+  final bool? isActive;
   final dynamic hascustform;
   final dynamic htmltemplate;
   final dynamic dosesNeeded;
   final dynamic dosesAvailable;
   final dynamic dosesUsed;
   final dynamic providername;
-  final bool hasform;
+  final bool? hasform;
   final dynamic saytext;
-  final bool doseMeal;
+  final bool? doseMeal;
   final dynamic doseRepeat;
-  final Metadata metadata;
+  final Metadata? metadata;
   Rx<bool> isPlaying = false.obs;
   final bool scheduled;
   final bool asNeeded;
@@ -110,11 +111,11 @@ class RegimentDataModel {
   final bool isModifiedToday;
   final dynamic healthOrgName;
   final dynamic activityOrgin;
-  final int duration;
-  String seq;
+  final int? duration;
+  String? seq;
   final dynamic doctorSessionId;
-  final ServiceCategory serviceCategory;
-  final ServiceCategory modeOfService;
+  final ServiceCategory? serviceCategory;
+  final ServiceCategory? modeOfService;
 
   factory RegimentDataModel.fromJson(Map<String, dynamic> json) =>
       RegimentDataModel(
@@ -135,7 +136,7 @@ class RegimentDataModel {
         html: json['html'] != null ? json['html'] : '',
         otherinfo: json['otherinfo'] != null
             ? Otherinfo.fromJson(
-                json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}'))
+                json['otherinfo'] is List ? {} : (json['otherinfo'] ?? '{}' as Map<String, dynamic>))
             : null,
         remindin: json['remindin'],
         remindinType: json['remindin_type'],
@@ -201,9 +202,9 @@ class RegimentDataModel {
         'tplanid': tplanid,
         'teid_user': teidUser,
         'aid': aid,
-        'activityname': activitynameValues?.reverse[activityname],
+        'activityname': activitynameValues?.reverse![activityname!],
         'uformid': uformid,
-        'uformname': uformnameValues?.reverse[uformname],
+        'uformname': uformnameValues?.reverse![uformname!],
         'uformname': uformname1,
         'estart': estart?.toIso8601String(),
         'eend': eend?.toIso8601String(),
@@ -230,7 +231,7 @@ class RegimentDataModel {
         'saytext': saytext,
         'dosemeal': doseMeal,
         'doserepeat': doseRepeat,
-        'metadata': metadata.toJson(),
+        'metadata': metadata!.toJson(),
         'ev_disabled': isEventDisabled ? '1' : '0',
         'saytext_dyn': sayTextDynamic,
         'healthorganizationname': healthOrgName,
@@ -238,8 +239,8 @@ class RegimentDataModel {
         'duration': duration,
         'seq': seq,
         'doctorSessionId': doctorSessionId,
-        'serviceCategory': serviceCategory.toJson(),
-        'modeOfService': modeOfService.toJson(),
+        'serviceCategory': serviceCategory!.toJson(),
+        'modeOfService': modeOfService!.toJson(),
       };
 }
 
@@ -251,11 +252,11 @@ class Otherinfo {
       this.needFile,
       this.snoozeText});
 
-  final String needPhoto;
-  final String needAudio;
-  final String needVideo;
-  final String needFile;
-  final String snoozeText;
+  final String? needPhoto;
+  final String? needAudio;
+  final String? needVideo;
+  final String? needFile;
+  final String? snoozeText;
 
   factory Otherinfo.fromJson(Map<String, dynamic> json) => Otherinfo(
       needPhoto: (json['NeedPhoto'] ?? 0).toString(),
@@ -278,7 +279,7 @@ class UformData {
     this.vitalsData,
   });
 
-  List<VitalsData> vitalsData;
+  List<VitalsData>? vitalsData;
 
   UformData fromJson(Map<String, dynamic> json) {
     final vitalsDataList = <VitalsData>[];
@@ -293,9 +294,9 @@ class UformData {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final jsonMap = <String, dynamic>{};
-    vitalsData.forEach((vitalData) {
+  Map<String?, dynamic> toJson() {
+    final jsonMap = <String?, dynamic>{};
+    vitalsData!.forEach((vitalData) {
       jsonMap.putIfAbsent(vitalData.vitalName, () => vitalData.toJson());
     });
     return jsonMap;
@@ -326,11 +327,11 @@ class VitalsData {
   dynamic alarm;
   dynamic amin;
   dynamic amax;
-  FieldType fieldType;
-  OtherData photo;
-  OtherData audio;
-  OtherData file;
-  OtherData video;
+  FieldType? fieldType;
+  OtherData? photo;
+  OtherData? audio;
+  OtherData? file;
+  OtherData? video;
 
   factory VitalsData.fromJson(Map<String, dynamic> json) {
     return VitalsData(
@@ -394,11 +395,11 @@ final uformnameValues = EnumValues({
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     reverseMap ??= map.map((k, v) => new MapEntry(v, k));
     return reverseMap;
   }
@@ -412,10 +413,10 @@ class Metadata {
     this.metadatafrom,
   });
 
-  final String icon;
-  final String color;
-  final String bgcolor;
-  final String metadatafrom;
+  final String? icon;
+  final String? color;
+  final String? bgcolor;
+  final String? metadatafrom;
 
   factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
         icon: json['icon'],
@@ -433,8 +434,8 @@ class Metadata {
 }
 
 class OtherData {
-  String name;
-  String url;
+  String? name;
+  String? url;
 
   OtherData({
     this.name,

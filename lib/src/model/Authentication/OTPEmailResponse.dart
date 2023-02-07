@@ -1,11 +1,12 @@
+
 import '../../../common/CommonUtil.dart';
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class OTPEmailResponse {
-  int status;
-  bool success;
-  String message;
-  String response;
+  int? status;
+  bool? success;
+  String? message;
+  String? response;
 
   OTPEmailResponse({this.status, this.success, this.message, this.response});
 

@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,10 +9,10 @@ import 'package:photo_view/photo_view.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class FullPhoto extends StatelessWidget {
-  final String url;
-  final String filePath;
+  final String? url;
+  final String? filePath;
 
-  FullPhoto({Key key, @required this.url, this.filePath}) : super(key: key);
+  FullPhoto({Key? key, required this.url, this.filePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +46,10 @@ class FullPhoto extends StatelessWidget {
 }
 
 class FullPhotoScreen extends StatefulWidget {
-  final String url;
-  final String filePath;
+  final String? url;
+  final String? filePath;
 
-  FullPhotoScreen({Key key, @required this.url, this.filePath})
+  FullPhotoScreen({Key? key, required this.url, this.filePath})
       : super(key: key);
 
   @override
@@ -56,9 +57,9 @@ class FullPhotoScreen extends StatefulWidget {
 }
 
 class FullPhotoScreenState extends State<FullPhotoScreen> {
-  final String url;
+  final String? url;
 
-  FullPhotoScreenState({Key key, @required this.url});
+  FullPhotoScreenState({Key? key, required this.url});
 
   @override
   void initState() {
@@ -80,9 +81,9 @@ class FullPhotoScreenState extends State<FullPhotoScreen> {
   @override
   Widget build(BuildContext context) {
     if (widget.filePath == null) {
-      return Container(child: PhotoView(imageProvider: NetworkImage(url)));
+      return Container(child: PhotoView(imageProvider: NetworkImage(url!)));
     } else {
-      return Container(child: Center(child: Image.file(File(widget.filePath))));
+      return Container(child: Center(child: Image.file(File(widget.filePath!))));
     }
   }
 }

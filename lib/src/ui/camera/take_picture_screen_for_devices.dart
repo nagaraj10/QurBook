@@ -1,10 +1,11 @@
+
 import 'dart:io';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:auto_size_text/auto_size_text.dart';
+// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+// import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -32,12 +33,12 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 
 class TakePictureScreenForDevices extends StatefulWidget {
   final List<CameraDescription> cameras;
-  final bool isFromSignUpPage;
+  final bool? isFromSignUpPage;
 
   const TakePictureScreenForDevices({
-    Key key,
+    Key? key,
     this.isFromSignUpPage,
-    @required this.cameras,
+    required this.cameras,
   }) : super(key: key);
 
   @override
@@ -47,14 +48,14 @@ class TakePictureScreenForDevices extends StatefulWidget {
 
 class TakePictureScreenForDevicesState
     extends State<TakePictureScreenForDevices> {
-  CameraController _controller;
-  Future<void> _initializeControllerFuture;
+  late CameraController _controller;
+  Future<void>? _initializeControllerFuture;
   bool isMultipleImages = false;
   bool isThumbnails = false;
   List<String> imagePaths = new List();
-  String categoryName;
-  String deviceName;
-  String chosenDevice;
+  String? categoryName;
+  String? deviceName;
+  String? chosenDevice;
   bool isObjectDetecting = true;
 
   int maxImageNo = 10;
@@ -63,9 +64,9 @@ class TakePictureScreenForDevicesState
 
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
-  TextEditingController fileName;
+  TextEditingController? fileName;
 
-  List<dynamic> _recognitions;
+  List<dynamic>? _recognitions;
   int _imageHeight = 0;
   int _imageWidth = 0;
   String _model = "";
@@ -196,33 +197,35 @@ class TakePictureScreenForDevicesState
                                       padding: EdgeInsets.all(5),
                                       decoration: BoxDecoration(),
                                       alignment: Alignment.center,
-                                      child: AutoSizeText(
+                                      child: Text( //FU2.5
+                                   //   AutoSizeText( FU2.5
                                         _recognitions != null
-                                            ? _recognitions.length > 0
-                                                ? deviceNames(_recognitions[0][
+                                            ? _recognitions!.length > 0
+                                                ? deviceNames(_recognitions![0][
                                                             Constants
                                                                 .keyDetectedClass]) !=
                                                         Constants
                                                             .IS_CATEGORYNAME_DEVICES
-                                                    ? deviceNames(_recognitions[
+                                                    ? deviceNames(_recognitions![
                                                             0][
                                                         Constants
                                                             .keyDetectedClass])
-                                                    : deviceName[0]
+                                                    : deviceName![0]
                                                             .toUpperCase() +
-                                                        deviceName.substring(1)
-                                                : deviceName[0].toUpperCase() +
-                                                    deviceName.substring(1)
-                                            : deviceName[0].toUpperCase() +
-                                                deviceName.substring(1),
-                                        maxFontSize: 14,
-                                        minFontSize: 10,
+                                                        deviceName!.substring(1)
+                                                : deviceName![0].toUpperCase() +
+                                                    deviceName!.substring(1)
+                                            : deviceName![0].toUpperCase() +
+                                                deviceName!.substring(1),
+                                        // maxFontSize: 14, FU2.5
+                                        // minFontSize: 10, FU2.5
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 16.0.sp,
                                             fontWeight: FontWeight.w500),
-                                      )),
+                                      )  
+                                      ),
                                 ),
                                 onTap: () {
                                   _showOverlay(context);
@@ -254,8 +257,8 @@ class TakePictureScreenForDevicesState
                                       height: 25.0.h,
                                       child: CommonCircularIndicator())
                                 ]))
-                        : _recognitions.length == 0 ||
-                                _recognitions[0][Constants.keyDetectedClass] ==
+                        : _recognitions!.length == 0 ||
+                                _recognitions![0][Constants.keyDetectedClass] ==
                                     variable.strOthers
                             ? Container(
                                 height: 80.0.h,
@@ -292,7 +295,7 @@ class TakePictureScreenForDevicesState
                                       Flexible(
                                         child: Text(
                                             variable.strDeviceFound +
-                                                ' ${deviceNames(_recognitions[0]["detectedClass"])}',
+                                                ' ${deviceNames(_recognitions![0]["detectedClass"])}',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w400)),
@@ -527,9 +530,9 @@ class TakePictureScreenForDevicesState
     if (!mounted) return;
 
     for (Asset asset in resultList) {
-      String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(filePath);
+      // String filePath =
+      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      // imagePaths.add(filePath); FU2.5
     }
 
     setState(() {
@@ -563,10 +566,10 @@ class TakePictureScreenForDevicesState
     if (categoryName == variable.strDevices) {
       fileName = new TextEditingController(
           text:
-              deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+              deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
       fileName = new TextEditingController(
-          text: categoryName +
+          text: categoryName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     }
   }
@@ -583,9 +586,9 @@ class TakePictureScreenForDevicesState
       _imageWidth = imageWidth;
       PreferenceUtil.saveString(
           Constants.KEY_DEVICENAME,
-          deviceNames(_recognitions.length == 0
+          deviceNames(_recognitions!.length == 0
               ? ''
-              : _recognitions[0][Constants.keyDetectedClass]));
+              : _recognitions![0][Constants.keyDetectedClass]));
 
       _controller = control;
     });
@@ -679,7 +682,7 @@ class TakePictureScreenForDevicesState
     });
   }
 
-  String deviceNames(String detectedClass) {
+  String deviceNames(String? detectedClass) {
     String device;
 
     switch (detectedClass) {
@@ -711,7 +714,7 @@ class TakePictureScreenForDevicesState
 
   getWidgetForTitle(BuildContext context) {
     return InkWell(
-      child: Text(categoryName),
+      child: Text(categoryName!),
       onTap: () {
         _showOverlayCategory(context);
       },

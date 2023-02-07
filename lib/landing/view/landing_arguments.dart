@@ -1,6 +1,7 @@
+
 class LandingArguments {
   final bool needFreshLoad;
-  final String url;
+  final String? url;
 
   const LandingArguments({
     this.needFreshLoad = true,

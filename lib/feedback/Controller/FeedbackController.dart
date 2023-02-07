@@ -1,3 +1,4 @@
+
 import 'package:myfhb/feedback/Model/FeedbackCategoriesTypeModel.dart';
 import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:myfhb/feedback/Provider/FeedbackApiProvider.dart';
@@ -7,16 +8,16 @@ import 'package:http/http.dart' as http;
 class FeedbackController extends GetxController {
   final _apiProvider = FeedbackApiProvider();
   var loadingData = false.obs;
-  FeedbackTypeModel feedbackType;
-  FeedbackCategoryType categories;
-  FeedbackCategoryModel selectedType;
+  FeedbackTypeModel? feedbackType;
+  late FeedbackCategoryType categories;
+  FeedbackCategoryModel? selectedType;
   var catSelected = false.obs;
 
   getFeedbacktypes() async {
     try {
       loadingData.value = true;
-      http.Response responseCat = await _apiProvider.getFeedbackCat();
-      http.Response response = await _apiProvider.getFeedbacktypes();
+      http.Response? responseCat = await (_apiProvider.getFeedbackCat() as FutureOr<Response?>);
+      http.Response? response = await (_apiProvider.getFeedbacktypes() as FutureOr<Response?>);
       if (response == null || responseCat == null) {
         // failed to get the data, we are showing the error on UI
       } else {
@@ -30,7 +31,7 @@ class FeedbackController extends GetxController {
     }
   }
 
-  setRecordType(FeedbackCategoryModel selected) {
+  setRecordType(FeedbackCategoryModel? selected) {
     catSelected.value = false;
     selectedType = selected;
     catSelected.value = true;

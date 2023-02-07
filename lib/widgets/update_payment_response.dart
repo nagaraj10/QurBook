@@ -1,6 +1,7 @@
+
 class UpdatePaymentResponse {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   UpdatePaymentResponse({this.isSuccess, this.result});
 
@@ -14,20 +15,20 @@ class UpdatePaymentResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  SubscribeResponse subscribeResponse;
-  String paymentId;
-  String paymentOrderId;
-  String paymentRequestId;
-  String paymentStatus;
-  String cartId;
-  String cartUserId;
+  SubscribeResponse? subscribeResponse;
+  String? paymentId;
+  String? paymentOrderId;
+  String? paymentRequestId;
+  String? paymentStatus;
+  String? cartId;
+  String? cartUserId;
 
   Result(
       {this.subscribeResponse,
@@ -53,7 +54,7 @@ class Result {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.subscribeResponse != null) {
-      data['subscribeResponse'] = this.subscribeResponse.toJson();
+      data['subscribeResponse'] = this.subscribeResponse!.toJson();
     }
     data['paymentId'] = this.paymentId;
     data['paymentOrderId'] = this.paymentOrderId;
@@ -66,8 +67,8 @@ class Result {
 }
 
 class SubscribeResponse {
-  bool isSuccess;
-  List<Payload> payload;
+  bool? isSuccess;
+  List<Payload>? payload;
 
   SubscribeResponse({this.isSuccess, this.payload});
 
@@ -76,7 +77,7 @@ class SubscribeResponse {
     if (json['payload'] != null) {
       payload = new List<Payload>();
       json['payload'].forEach((v) {
-        payload.add(new Payload.fromJson(v));
+        payload!.add(new Payload.fromJson(v));
       });
     }
   }
@@ -85,19 +86,19 @@ class SubscribeResponse {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
-      data['payload'] = this.payload.map((v) => v.toJson()).toList();
+      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Payload {
-  String result;
-  String planStartDate;
-  String message;
-  int packageid;
-  String price;
-  String docid;
+  String? result;
+  String? planStartDate;
+  String? message;
+  int? packageid;
+  String? price;
+  String? docid;
 
   Payload(
       {this.result,

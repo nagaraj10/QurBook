@@ -1,12 +1,13 @@
+
 import '../constants/constants.dart';
 
 class PatientSignupOtp {
-  String verificationCode;
-  String userName;
-  String source;
-  String userId;
-  String message;
-  bool isSuccess;
+  String? verificationCode;
+  String? userName;
+  String? source;
+  String? userId;
+  String? message;
+  bool? isSuccess;
 
   PatientSignupOtp(
       {this.verificationCode,

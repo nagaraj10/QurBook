@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../constants/variable_constant.dart' as variable;
@@ -8,20 +9,20 @@ import '../../src/blocs/Authentication/LoginBloc.dart';
 import '../../src/resources/network/ApiResponse.dart';
 
 class LabsListBlock implements BaseBloc {
-  LabsListRepository _labsListRepository;
-  StreamController _labsListController;
+  late LabsListRepository _labsListRepository;
+  StreamController? _labsListController;
 
   StreamSink<ApiResponse<LabsListResponse>> get labListSink =>
-      _labsListController.sink;
+      _labsListController!.sink as StreamSink<ApiResponse<LabsListResponse>>;
   Stream<ApiResponse<LabsListResponse>> get labStream =>
-      _labsListController.stream;
+      _labsListController!.stream as Stream<ApiResponse<LabsListResponse>>;
 
-  StreamController _labsListNewController;
+  late StreamController _labsListNewController;
 
   StreamSink<ApiResponse<LabsSearchListResponse>> get labListNewSink =>
-      _labsListNewController.sink;
+      _labsListNewController.sink as StreamSink<ApiResponse<LabsSearchListResponse>>;
   Stream<ApiResponse<LabsSearchListResponse>> get labNewStream =>
-      _labsListNewController.stream;
+      _labsListNewController.stream as Stream<ApiResponse<LabsSearchListResponse>>;
 
   @override
   void dispose() {
@@ -58,8 +59,8 @@ class LabsListBlock implements BaseBloc {
     }
   }
 
-  Future<LabsListResponse> getLabsListUsingID(String labId) async {
-    LabsListResponse labsListResponse;
+  Future<LabsListResponse?> getLabsListUsingID(String labId) async {
+    LabsListResponse? labsListResponse;
     labListSink.add(ApiResponse.loading(variable.strGetLabById));
     try {
       labsListResponse = await _labsListRepository.getLabsFromId(labId);

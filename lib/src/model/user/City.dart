@@ -1,16 +1,17 @@
+
 import 'State.dart' as stateObj;
 
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class City {
-  String id;
-  String name;
-  String stateId;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String lastModifiedBy;
-  stateObj.State state;
+  String? id;
+  String? name;
+  String? stateId;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? lastModifiedBy;
+  stateObj.State? state;
 
   City(
       {this.id,
@@ -41,7 +42,7 @@ class City {
     data[parameters.strIsActive] = isActive;
     data[parameters.strCreatedOn] = createdOn;
     if (state != null) {
-      data[parameters.strState] = state.toJson();
+      data[parameters.strState] = state!.toJson();
     }
     data[parameters.strLastModifiedOn] = lastModifiedOn;
     data[parameters.strlastModifiedBy] = lastModifiedBy;

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../constants/fhb_query.dart' as query;
 import '../../constants/webservice_call.dart';
@@ -12,11 +13,11 @@ class MyFamilyViewModel with ChangeNotifier {
 
   // 1
   // Get the family members list
-  FamilyMembersList familyMembersList;
+  FamilyMembersList? familyMembersList;
 
   // 2
   // Get the relationship list
-  RelationShipResponseList relationShipResponseList;
+  RelationShipResponseList? relationShipResponseList;
 
   // 1
   // Get Family Members

@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
@@ -120,7 +121,7 @@ class QurHomeApiProvider {
   }
 
   Future<bool> callMessagingAPI(
-      {String token, CallPushNSModel callModel}) async {
+      {String? token, required CallPushNSModel callModel}) async {
     bool isCallSent = false;
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -143,8 +144,8 @@ class QurHomeApiProvider {
               'Could not initiate call. Please try again later', Colors.red);
         } else {
           FlutterToast().getToast(
-              ((err?.message ?? '')).isNotEmpty
-                  ? err?.message
+              (err?.message ?? '').isNotEmpty
+                  ? err?.message!
                   : 'Could not initiate call. Please try again later',
               Colors.red);
         }
@@ -156,7 +157,7 @@ class QurHomeApiProvider {
     return isCallSent;
   }
 
-  Future<dynamic> callLogData({CallLogModel request}) async {
+  Future<dynamic> callLogData({required CallLogModel request}) async {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -183,7 +184,7 @@ class QurHomeApiProvider {
     } catch (e) {}
   }
 
-  Future<dynamic> callLogEndData({CallEndModel request}) async {
+  Future<dynamic> callLogEndData({required CallEndModel request}) async {
     try {
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
       http.Response res = await ApiServices.put(
@@ -205,14 +206,14 @@ class QurHomeApiProvider {
   }
 
   Future<dynamic> callMissedCallNsAlertAPI(
-      {CallLogModel request, dynamic isFromSheelaRequest}) async {
+      {CallLogModel? request, dynamic isFromSheelaRequest}) async {
     try {
       var regController = Get.find<QurhomeRegimenController>();
       var jsonString = "";
       String strURL = "";
       if (regController.isFromSOS.value) {
         strURL = qr_triggerSOSMissedCallNotification;
-        jsonString = convert.jsonEncode(request.toJson());
+        jsonString = convert.jsonEncode(request!.toJson());
       } else {
         strURL = qr_triggerMissedCallNotification;
         jsonString = convert.jsonEncode(isFromSheelaRequest);
@@ -236,7 +237,7 @@ class QurHomeApiProvider {
     } catch (e) {}
   }
 
-  Future<dynamic> updateCallStatus(String appointmentId) async {
+  Future<dynamic> updateCallStatus(String? appointmentId) async {
     try {
       final AuthService authService = AuthService();
       var header = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -329,10 +330,10 @@ class QurHomeApiProvider {
             CallRecordModel.fromJson(convert.json.decode(res.body));
 
         regController.resourceId.value =
-            CommonUtil().validString(_response.result.resourceId);
+            CommonUtil().validString(_response.result!.resourceId);
 
         regController.sid.value =
-            CommonUtil().validString(_response.result.sid);
+            CommonUtil().validString(_response.result!.sid);
 
         return _response.isSuccess;
       } else {

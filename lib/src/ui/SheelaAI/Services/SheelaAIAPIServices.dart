@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -24,7 +25,7 @@ class SheelAIAPIService {
       var response = await ApiServices.post(
         mayaUrl,
         body: jsonString,
-        headers: headerRequest,
+        headers: headerRequest as Map<String, String?>?,
       );
       // print("-----------------Sheela response---------------------");
       // print(response.body);

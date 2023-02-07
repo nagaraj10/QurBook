@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../models/AddAddressArguments.dart';
 import '../models/place.dart';
@@ -11,7 +12,7 @@ import '../../common/CommonUtil.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 
 class AddAddressScreen extends StatefulWidget {
-  final AddAddressArguments arguments;
+  final AddAddressArguments? arguments;
 
   const AddAddressScreen({this.arguments});
 
@@ -24,12 +25,12 @@ class AddAddressScreen extends StatefulWidget {
 class AddAddressScreenState extends State<AddAddressScreen> {
   final searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  var googleMapServices;
+  late var googleMapServices;
   var sessionToken;
   var uuid = Uuid();
   double tableHeight = 0;
 
-  Future<List<Place>> places;
+  Future<List<Place>>? places;
   List<Place> placesListArray = <Place>[];
 
   @override
@@ -94,7 +95,7 @@ class AddAddressScreenState extends State<AddAddressScreen> {
         if (placesListArray.length > 0 && placesListArray != null)
           AddAddressList(
               placesListArray: placesListArray,
-              providerType: widget.arguments.providerType)
+              providerType: widget.arguments!.providerType)
         else
           Container()
       ],
@@ -159,7 +160,7 @@ class AddAddressScreenState extends State<AddAddressScreen> {
     googleMapServices = GoogleMapServices(sessionToken: sessionToken);
     places = googleMapServices.getSuggestions(searchController.text);
 
-    places.then((value) {
+    places!.then((value) {
       setState(() {
         placesListArray = value;
       });

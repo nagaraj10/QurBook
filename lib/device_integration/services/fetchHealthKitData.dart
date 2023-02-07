@@ -1,3 +1,4 @@
+
 import 'package:health/health.dart';
 import 'dart:async';
 import '../../constants/fhb_parameters.dart';
@@ -29,7 +30,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
+  Future<String?> getWeightData(DateTime startDate, DateTime endDate) async {
     if (await Health.requestAuthorization(types)) {
       try {
         final Map<String, dynamic> healthRecord = {};
@@ -80,7 +81,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getHeartRateData(var startDate, var endDate) async {
+  Future<String?> getHeartRateData(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
       try {
         var healthData = await Health.getHealthDataFromTypes(
@@ -126,7 +127,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getBloodPressureData(var startDate, var endDate) async {
+  Future<String?> getBloodPressureData(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
       try {
         var systolicData = await Health.getHealthDataFromTypes(
@@ -180,7 +181,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getBloodGlucoseData(var startDate, var endDate) async {
+  Future<String?> getBloodGlucoseData(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
       try {
         /// Fetch BloodGlucose data
@@ -229,7 +230,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getBloodOxygenData(var startDate, var endDate) async {
+  Future<String?> getBloodOxygenData(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
       //print("Blood_Oxygen Summary");
       try {
@@ -278,7 +279,7 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getBodyTemperature(var startDate, var endDate) async {
+  Future<String?> getBodyTemperature(var startDate, var endDate) async {
     if (await Health.requestAuthorization(types)) {
       //print("Body_Temperature Summary");
       try {

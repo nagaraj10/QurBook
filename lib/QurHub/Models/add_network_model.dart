@@ -1,9 +1,10 @@
+
 class AddNetworkModel {
-  String result;
-  String hubId;
-  bool isSuccess;
-  String message;
-  Diagnostics diagnostics;
+  String? result;
+  String? hubId;
+  bool? isSuccess;
+  String? message;
+  Diagnostics? diagnostics;
 
   AddNetworkModel(
       {this.result,
@@ -34,7 +35,7 @@ class AddNetworkModel {
       data['isSuccess'] = this.isSuccess;
       data['message'] = this.message;
       if (this.diagnostics != null) {
-        data['diagnostics'] = this.diagnostics.toJson();
+        data['diagnostics'] = this.diagnostics!.toJson();
       }
     } catch (e) {
       print(e);
@@ -44,7 +45,7 @@ class AddNetworkModel {
 }
 
 class Diagnostics {
-  Diagnostics.fromJson(Map<String, dynamic> json) {}
+  Diagnostics.fromJson(Map<String, dynamic>? json) {}
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

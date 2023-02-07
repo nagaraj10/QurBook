@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import '../../widgets/GradientAppBar.dart';
 
 class MyPlanDetail extends StatefulWidget {
-  final String packageId;
-  final String templateName;
+  final String? packageId;
+  final String? templateName;
 
   /*  final String title;
   final String providerName;
@@ -37,8 +38,8 @@ class MyPlanDetail extends StatefulWidget {
   bool showRenew;
 
   MyPlanDetail(
-      {Key key,
-      @required this.packageId,
+      {Key? key,
+      required this.packageId,
       /* @required this.title,
       @required this.providerName,
       @required this.docName,
@@ -65,14 +66,14 @@ class MyPlanDetail extends StatefulWidget {
 class PlanDetail extends State<MyPlanDetail> {
   MyPlanViewModel myPlanViewModel = MyPlanViewModel();
 
-  String title;
-  String tags;
-  String providerName;
-  String docName;
-  String startDate;
-  String endDate;
-  String packageId;
-  String isExpired;
+  String? title;
+  String? tags;
+  String? providerName;
+  String? docName;
+  String? startDate;
+  String? endDate;
+  String? packageId;
+  String? isExpired;
   String icon = '';
   String catIcon = '';
   String providerIcon = '';
@@ -81,10 +82,10 @@ class PlanDetail extends State<MyPlanDetail> {
   String isExtendable = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  InAppWebViewController webView;
-  bool showRenewOrSubscribeButton = false;
-  Future<MyPlanListModel> planListFetch;
-  String packageDuration;
+  InAppWebViewController? webView;
+  bool? showRenewOrSubscribeButton = false;
+  Future<MyPlanListModel>? planListFetch;
+  String? packageDuration;
   @override
   void initState() {
     super.initState();
@@ -95,7 +96,7 @@ class PlanDetail extends State<MyPlanDetail> {
   }
 
   Future<void> getConfiguration() async {
-    bool showRenewOrSubscribeButton =
+    bool? showRenewOrSubscribeButton =
         await PreferenceUtil.getUnSubscribeValue();
     setState(() {
       this.showRenewOrSubscribeButton = showRenewOrSubscribeButton;
@@ -174,9 +175,9 @@ class PlanDetail extends State<MyPlanDetail> {
           } else {
             if (snapshot?.hasData &&
                 snapshot?.data?.result != null &&
-                snapshot?.data?.result.isNotEmpty) {
+                snapshot?.data?.result!.isNotEmpty) {
               MyPlanListResult planList =
-                  snapshot?.data?.result[0] as MyPlanListResult;
+                  snapshot?.data?.result![0] as MyPlanListResult;
               setValues(planList);
               return getMainWidget();
             } else {
@@ -249,14 +250,14 @@ class PlanDetail extends State<MyPlanDetail> {
                         children: [
                           Text(
                             title != null && title != ''
-                                ? toBeginningOfSentenceCase(title.trim())
+                                ? toBeginningOfSentenceCase(title!.trim())!
                                 : '-',
                             style: TextStyle(
                                 fontSize: 20.sp, fontWeight: FontWeight.w500),
                           ),
                           Text(
                             providerName != null && providerName != ''
-                                ? toBeginningOfSentenceCase(providerName)
+                                ? toBeginningOfSentenceCase(providerName)!
                                 : '-',
                             style: TextStyle(
                                 fontSize: 16.sp, color: Colors.grey[600]),
@@ -275,7 +276,7 @@ class PlanDetail extends State<MyPlanDetail> {
                                     Flexible(
                                       child: Container(
                                         child: Text(
-                                            toBeginningOfSentenceCase(docName),
+                                            toBeginningOfSentenceCase(docName)!,
                                             textAlign: TextAlign.start,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(fontSize: 16.sp)),
@@ -338,7 +339,7 @@ class PlanDetail extends State<MyPlanDetail> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey[400])),
+                                  border: Border.all(color: Colors.grey[400]!)),
                               height: 0.62.sh,
                               width: 0.45.sh,
                               child: Center(child: Text(strEmptyWebView)),
@@ -349,7 +350,7 @@ class PlanDetail extends State<MyPlanDetail> {
                       ],
                     ),
             ),
-            if (tags != strMemb && showRenewOrSubscribeButton)
+            if (tags != strMemb && showRenewOrSubscribeButton!)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

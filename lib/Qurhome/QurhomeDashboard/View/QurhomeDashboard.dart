@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       controller.setActiveQurhomeTo(
         status: true,
       );
-      if (CommonUtil().isTablet) {
+      if (CommonUtil().isTablet!) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
         textFontSize = 26;
@@ -86,7 +87,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
           child: Scaffold(
             appBar: AppBar(
               backgroundColor: Colors.white,
-              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
               elevation: 0,
               centerTitle: true,
               title: Row(
@@ -105,7 +106,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                               vertical: 4.h,
                             ),
                             child: controller.currentSelectedIndex == 2
-                                ? CommonUtil().isTablet
+                                ? CommonUtil().isTablet!
                                     ? AssetImageWidget(
                                         icon: icon_vitals_qurhome,
                                         height: 24.h,
@@ -117,7 +118,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                         width: 22.h,
                                       )
                                 : controller.currentSelectedIndex == 3
-                                    ? CommonUtil().isTablet
+                                    ? CommonUtil().isTablet!
                                         ? AssetImageWidget(
                                             icon: icon_symptom_qurhome,
                                             height: 24.h,
@@ -176,7 +177,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   ? IconWidget(
                       icon: Icons.arrow_back_ios,
                       colors: Colors.black,
-                      size: CommonUtil().isTablet ? 38.0 : 24.0,
+                      size: CommonUtil().isTablet! ? 38.0 : 24.0,
                       onTap: () {
                         Get.back();
                       },
@@ -191,7 +192,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                             sheelBadgeController.getSheelaBadgeCount(
                                 isNeedSheelaDialog: true);
                           },
-                          child: CommonUtil().isTablet
+                          child: CommonUtil().isTablet!
                               ? AssetImageWidget(
                                   icon: icon_qurhome,
                                   height: 48.h,
@@ -243,12 +244,12 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         arguments: SheelaArgument(
                           rawMessage: sheelaQueueShowRemind,
                         ),
-                      ).then((value) {
+                      )!.then((value) {
                         sheelBadgeController.getSheelaBadgeCount(
                             isNeedSheelaDialog: true);
                       });
                     } else {
-                      String sheela_lang =
+                      String? sheela_lang =
                           PreferenceUtil.getStringValue(SHEELA_LANG);
                       Get.toNamed(
                         rt_Sheela,
@@ -256,7 +257,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           isSheelaAskForLang: !((sheela_lang ?? '').isNotEmpty),
                           langCode: (sheela_lang ?? ''),
                         ),
-                      ).then((value) {
+                      )!.then((value) {
                         sheelBadgeController.getSheelaBadgeCount(
                             isNeedSheelaDialog: true);
                       });

@@ -1,3 +1,4 @@
+
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -12,13 +13,13 @@ class PlanPdfViewer extends StatelessWidget {
     this.scaffoldKey,
   });
 
-  final String url;
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  final String? url;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   Widget build(BuildContext context) => Builder(
         builder: (_) {
-          final updatedData = CommonUtil().getFileNameAndUrl(url);
+          final updatedData = CommonUtil().getFileNameAndUrl(url!);
           if (updatedData?.isNotEmpty ?? false) {
             return FutureBuilder<PDFDocument>(
               future: PDFDocument.fromURL(updatedData.first),
@@ -80,7 +81,7 @@ class PlanPdfViewer extends StatelessWidget {
                       ),
                       Expanded(
                         child: PDFViewer(
-                          document: snapshot.data,
+                          document: snapshot.data!,
                           showPicker: false,
                           showNavigation: false,
                         ),

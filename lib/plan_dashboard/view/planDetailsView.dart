@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -40,7 +41,7 @@ class MyPlanDetailView extends StatefulWidget {
   // final String description;
   // final String price;
   // final String issubscription;
-  final String packageId;
+  final String? packageId;
 
   // final String providerName;
   // final String packageDuration;
@@ -50,18 +51,18 @@ class MyPlanDetailView extends StatefulWidget {
   // final String iconApi;
   // final String catIcon;
   // final bool isRenew;
-  final String isFrom;
+  final String? isFrom;
 
   // final bool isExtendable;
   // final MetaDataForURL metaDataForURL;
 
   const MyPlanDetailView({
-    Key key,
+    Key? key,
     // @required this.title,
     // @required this.description,
     // @required this.price,
     // @required this.issubscription,
-    @required this.packageId,
+    required this.packageId,
     // @required this.providerName,
     // @required this.packageDuration,
     // @required this.providerId,
@@ -70,7 +71,7 @@ class MyPlanDetailView extends StatefulWidget {
     // @required this.iconApi,
     // @required this.catIcon,
     // @required this.isRenew,
-    @required this.isFrom,
+    required this.isFrom,
     // @required this.isExtendable,
     // @required this.metaDataForURL,
   }) : super(key: key);
@@ -82,27 +83,27 @@ class MyPlanDetailView extends StatefulWidget {
 }
 
 class PlanDetail extends State<MyPlanDetailView> {
-  String title;
-  String description;
-  String price;
-  String issubscription;
-  String packageId;
-  String providerName;
-  String packageDuration;
-  String docName;
-  String providerId;
-  bool isDisable;
-  String hosIcon = '';
-  String iconApi = '';
-  String catIcon = '';
+  String? title;
+  String? description;
+  String? price;
+  String? issubscription;
+  String? packageId;
+  String? providerName;
+  String? packageDuration;
+  String? docName;
+  String? providerId;
+  bool? isDisable;
+  String? hosIcon = '';
+  String? iconApi = '';
+  String? catIcon = '';
   bool isExtendable = false;
   bool isRenew = false;
-  String isFrom = '';
-  MetaDataForURL metaDataForURL;
-  InAppWebViewController webView;
+  String? isFrom = '';
+  MetaDataForURL? metaDataForURL;
+  InAppWebViewController? webView;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<PlanListModel> planListModel;
+  Future<PlanListModel>? planListModel;
   @override
   void initState() {
     super.initState();
@@ -203,9 +204,9 @@ class PlanDetail extends State<MyPlanDetailView> {
             } else {
               if (snapshot?.hasData &&
                   snapshot?.data?.result != null &&
-                  snapshot?.data?.result.isNotEmpty) {
+                  snapshot?.data?.result!.isNotEmpty) {
                 PlanListResult planList =
-                    snapshot?.data?.result[0] as PlanListResult;
+                    snapshot?.data?.result![0] as PlanListResult;
                 setValues(planList);
                 return Builder(
                   builder: (contxt) => Container(
@@ -347,7 +348,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                 children: [
                                   Text(
                                     title != null && title != ''
-                                        ? title.trim()
+                                        ? title!.trim()
                                         : '-',
                                     style: TextStyle(
                                         fontSize: 18.sp,
@@ -358,7 +359,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                   ),
                                   Text(
                                     providerName != null && providerName != ''
-                                        ? providerName
+                                        ? providerName!
                                         : '-',
                                     style: TextStyle(
                                         fontSize: 14.sp,
@@ -379,7 +380,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                                               child: Container(
                                                 child: Text(
                                                     toBeginningOfSentenceCase(
-                                                        docName),
+                                                        docName)!,
                                                     textAlign: TextAlign.start,
                                                     overflow:
                                                         TextOverflow.ellipsis,
@@ -471,7 +472,7 @@ class PlanDetail extends State<MyPlanDetailView> {
                               child: SingleChildScrollView(
                                 child: Text(
                                   description != null && description != ''
-                                      ? description.trim()
+                                      ? description!.trim()
                                       : '-',
                                   style: TextStyle(
                                       fontSize: 16.sp,
@@ -882,9 +883,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getAddCartText() {
     String text = strAddToCart;
 
-    if (Provider.of<PlanWizardViewModel>(Get.context)
+    if (Provider.of<PlanWizardViewModel>(Get.context!)
             .checkItemInCart(packageId, isFrom, providerId: providerId) ||
-        Provider.of<PlanWizardViewModel>(Get.context)
+        Provider.of<PlanWizardViewModel>(Get.context!)
                 .currentPackageProviderCareId ==
             packageId) {
       text = strRemoveFromCart;
@@ -902,9 +903,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getAddCartTextFreeCare() {
     String text = strAddToCart;
 
-    if (Provider.of<PlanWizardViewModel>(Get.context)
+    if (Provider.of<PlanWizardViewModel>(Get.context!)
             .checkItemInCart(packageId, isFrom, providerId: providerId) ||
-        Provider.of<PlanWizardViewModel>(Get.context)
+        Provider.of<PlanWizardViewModel>(Get.context!)
                 .currentPackageFreeCareId ==
             packageId) {
       text = strRemoveFromCart;
@@ -922,9 +923,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getAddCartTextProviderDiet() {
     String text = strAddToCart;
 
-    if (Provider.of<PlanWizardViewModel>(Get.context)
+    if (Provider.of<PlanWizardViewModel>(Get.context!)
             .checkItemInCart(packageId, isFrom) ||
-        Provider.of<PlanWizardViewModel>(Get.context)
+        Provider.of<PlanWizardViewModel>(Get.context!)
                 .currentPackageProviderDietId ==
             packageId) {
       text = strRemoveFromCart;
@@ -942,9 +943,9 @@ class PlanDetail extends State<MyPlanDetailView> {
   String getAddCartTextFreeDiet() {
     String text = strAddToCart;
 
-    if (Provider.of<PlanWizardViewModel>(Get.context)
+    if (Provider.of<PlanWizardViewModel>(Get.context!)
             .checkItemInCart(packageId, isFrom) ||
-        Provider.of<PlanWizardViewModel>(Get.context)
+        Provider.of<PlanWizardViewModel>(Get.context!)
                 .currentPackageFreeDietId ==
             packageId) {
       text = strRemoveFromCart;
@@ -959,8 +960,8 @@ class PlanDetail extends State<MyPlanDetailView> {
     return text;
   }
 
-  String getImage() {
-    String image;
+  String? getImage() {
+    String? image;
     if (iconApi != null && iconApi != '') {
       image = iconApi;
     } else {

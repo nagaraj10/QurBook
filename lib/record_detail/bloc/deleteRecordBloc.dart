@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import '../model/deleteRecord.dart';
 import '../model/deleteRecordResponse.dart';
@@ -10,12 +11,12 @@ import 'dart:convert' as convert;
 import '../../constants/variable_constant.dart' as variable;
 
 class DeleteRecordBloc with Validators implements BaseBloc {
-  DeleteRecordRepository _deleteRecordRepository;
-  StreamController _deleteRecordController;
+  late DeleteRecordRepository _deleteRecordRepository;
+  StreamController? _deleteRecordController;
   StreamSink<ApiResponse<DeleteRecordResponse>> get delteRecordSink =>
-      _deleteRecordController.sink;
+      _deleteRecordController!.sink as StreamSink<ApiResponse<DeleteRecordResponse>>;
   Stream<ApiResponse<DeleteRecordResponse>> get deleteRecordStream =>
-      _deleteRecordController.stream;
+      _deleteRecordController!.stream as Stream<ApiResponse<DeleteRecordResponse>>;
 
   DeleteRecordBloc() {
     _deleteRecordController =
@@ -28,9 +29,9 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     _deleteRecordController?.close();
   }
 
-  Future<DeleteRecordResponse> deleteRecord(String metaId) async {
+  Future<DeleteRecordResponse?> deleteRecord(String metaId) async {
     delteRecordSink.add(ApiResponse.loading(variable.strDeletingRecords));
-    DeleteRecordResponse deleteRecordResponse;
+    DeleteRecordResponse? deleteRecordResponse;
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForIds(metaId);
@@ -40,12 +41,12 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     return deleteRecordResponse;
   }
 
-  Future<DeleteRecordResponse> deleteRecordOnMediaMasterID(
+  Future<DeleteRecordResponse?> deleteRecordOnMediaMasterID(
       String metaId) async {
     final deleteRecord = DeleteRecord();
 
     delteRecordSink.add(ApiResponse.loading(variable.strDeletingRecords));
-    DeleteRecordResponse deleteRecordResponse;
+    DeleteRecordResponse? deleteRecordResponse;
     try {
       deleteRecordResponse =
           await _deleteRecordRepository.deleteRecordForMediaMasterIds(metaId);

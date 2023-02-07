@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -41,7 +42,7 @@ import 'package:myfhb/ticket_support/controller/create_ticket_controller.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/images_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_types_model.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart'; FU2.5
 import 'package:provider/provider.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as tckConstants;
@@ -53,7 +54,7 @@ import '../../constants/variable_constant.dart' as variable;
 import 'dart:convert';
 import '../../../my_providers/models/UserAddressCollection.dart' as address;
 import '../../constants/fhb_parameters.dart' as parameters;
-import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+//import 'package:flutter_absolute_path/flutter_absolute_path.dart';  FU2.5
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
@@ -82,21 +83,21 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = GlobalKey<ScaffoldState>();
   var controller = Get.put(CreateTicketController());
-  Hospitals selectedLab;
-  Doctors selectedDoctor;
+  Hospitals? selectedLab;
+  Doctors? selectedDoctor;
 
-  ProvidersBloc _providersBloc = ProvidersBloc();
-  Future<MyProvidersResponse> _medicalPreferenceList;
-  Future<MyProvidersResponse> _medicalhospitalPreferenceList;
+  ProvidersBloc? _providersBloc = ProvidersBloc();
+  Future<MyProvidersResponse?>? _medicalPreferenceList;
+  Future<MyProvidersResponse?>? _medicalhospitalPreferenceList;
 
-  List<Doctors> doctorsListFromProvider;
-  List<Doctors> copyOfdoctorsModel;
+  List<Doctors?>? doctorsListFromProvider;
+  List<Doctors?>? copyOfdoctorsModel;
 
-  List<Hospitals> hospitalListFromProvider;
-  List<Hospitals> copyOfhospitalModel;
+  List<Hospitals>? hospitalListFromProvider;
+  List<Hospitals>? copyOfhospitalModel;
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-  Doctors doctorObj;
-  Hospitals hospitalObj;
+  Doctors? doctorObj;
+  Hospitals? hospitalObj;
 
   var doctorsData, hospitalData, labData;
   CommonWidgets commonWidgets = new CommonWidgets();
@@ -116,13 +117,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   List<Asset> images = <Asset>[];
   List<String> recordIds = [];
   var healthRecordList;
-  String authToken;
-  MenuItem dropdownValue;
-  Future<Map<String, List<MenuItem>>> healthConditions;
-  Map<String, List<MenuItem>> healthConditionsResult;
+  String? authToken;
+  MenuItem? dropdownValue;
+  Future<Map<String?, List<MenuItem>>>? healthConditions;
+  Map<String?, List<MenuItem>>? healthConditionsResult;
   var packageName;
   var package_title_ctrl = TextEditingController(text: '');
-  PlanListResult planListModel;
+  PlanListResult? planListModel;
   List<PlanListResult> planListModelList = List();
 
   Future<void> _selectDate(BuildContext context) async {
@@ -149,9 +150,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       super.initState();
       _getInitialDate(context);
       setAuthToken();
-      _medicalPreferenceList = _providersBloc.getMedicalPreferencesForDoctors();
+      _medicalPreferenceList = _providersBloc!.getMedicalPreferencesForDoctors();
       _medicalhospitalPreferenceList =
-          _providersBloc.getMedicalPreferencesForHospital();
+          _providersBloc!.getMedicalPreferencesForHospital();
       healthConditions =
           Provider.of<PlanWizardViewModel>(context, listen: false)
               .getHealthConditions();
@@ -166,7 +167,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   void dispose() {
     controller = null;
 
-    controller.dispose();
+    controller!.dispose();
 
     super.dispose();
   }
@@ -178,17 +179,17 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   setBooleanValues() {
     if (widget.ticketList != null) {
       if (widget.ticketList.additionalInfo != null)
-        for (Field field in widget.ticketList.additionalInfo?.field) {
+        for (Field field in widget.ticketList.additionalInfo?.field!) {
           if (field.type == tckConstants.tckTypeTitle) {
             isTxt = true;
           }
           if (field.type == tckConstants.tckTypeDescription) {
             isDescription = true;
           }
-          if (field.type == tckConstants.tckTypeDropdown && field.isDoctor) {
+          if (field.type == tckConstants.tckTypeDropdown && field.isDoctor!) {
             isDoctor = true;
           }
-          if (field.type == tckConstants.tckTypeDropdown && field.isHospital) {
+          if (field.type == tckConstants.tckTypeDropdown && field.isHospital!) {
             isHospital = true;
           }
           if (field.type == tckConstants.tckTypeDate) {
@@ -218,7 +219,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           ),
           title: Text(tckConstants.strAddMyTicket),
         ),
-        body: Obx(() => isFirstTym && controller.isCTLoading?.value ?? false
+        body: Obx(() => isFirstTym && controller!.isCTLoading?.value ?? false
             ? const Center(
                 child: CircularProgressIndicator(),
               )
@@ -250,7 +251,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     List<Widget> widgetForColumn = List();
     try {
       if (ticketTypesResult.additionalInfo != null) {
-        for (Field field in ticketTypesResult.additionalInfo?.field) {
+        for (Field field in ticketTypesResult.additionalInfo?.field!) {
           (field.type == tckConstants.tckTypeTitle &&
                   field.name != tckConstants.tckPackageTitle)
               ? widgetForColumn.add(Column(
@@ -274,7 +275,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 ))
               : SizedBox.shrink();
 
-          (field.type == tckConstants.tckTypeDropdown && field.isDoctor)
+          (field.type == tckConstants.tckTypeDropdown && field.isDoctor!)
               ? widgetForColumn.add(Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -312,7 +313,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           widgetForColumn.add(SizedBox(
             height: 20,
           ));
-          (field.type == tckConstants.tckTypeDropdown && field.isHospital)
+          (field.type == tckConstants.tckTypeDropdown && field.isHospital!)
               ? widgetForColumn.add(Row(
                   children: [
                     Expanded(
@@ -379,7 +380,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                 ))
               : SizedBox.shrink();
 
-          (field.type == tckConstants.tckTypeDropdown && field.isCategory)
+          (field.type == tckConstants.tckTypeDropdown && field.isCategory!)
               ? widgetForColumn.add(Column(
                   children: [
                     SizedBox(height: 20.h),
@@ -393,7 +394,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                 height: 50,
                                 child: healthConditionsResult != null
                                     ? getDropDownForPlanCategory(
-                                        healthConditionsResult) //getDropDownForPlanCategory(healthConditionsResult)
+                                        healthConditionsResult!) //getDropDownForPlanCategory(healthConditionsResult)
                                     : getExpandedDropdownForCategory())),
                       ],
                     )
@@ -438,7 +439,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     });
   }
 
-  void setValueToDoctorDropdown(doctorsData, Function onTextFinished) {
+  void setValueToDoctorDropdown(doctorsData, Function? onTextFinished) {
     final userAddressCollection3 = address.UserAddressCollection3(
         addressLine1: doctorsData[parameters.strAddressLine1],
         addressLine2: doctorsData[parameters.strAddressLine2]);
@@ -458,7 +459,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
         isMciVerified: doctorsData[parameters.strisMCIVerified],
         user: user);
 
-    doctorsListFromProvider.add(doctorObj);
+    doctorsListFromProvider!.add(doctorObj);
     filterDuplicateDoctor();
     getDoctorDropDown(doctorsListFromProvider, doctorObj, onTextFinished);
   }
@@ -469,7 +470,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
-        controller.labBookAppointment.value
+        controller!.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredLab,
@@ -481,24 +482,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller.labBookAppointment.value
+        controller!.labBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller.labBookAppointment.value
+        controller!.labBookAppointment.value
             ? dropDownButton(
-                controller.labsList != null && controller.labsList.length > 0
-                    ? controller.labsList
+                controller!.labsList != null && controller!.labsList!.length > 0
+                    ? controller!.labsList!
                     : [])
             : SizedBox.shrink(),
 
-        controller.labBookAppointment.value &&
-                controller.isPreferredLabDisable.value
+        controller!.labBookAppointment.value &&
+                controller!.isPreferredLabDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller.labBookAppointment.value &&
-                controller.isPreferredLabDisable.value
+        controller!.labBookAppointment.value &&
+                controller!.isPreferredLabDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -515,7 +516,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller.labBookAppointment.value
+        controller!.labBookAppointment.value
             ? SizedBox(height: 20.h)
             : SizedBox.shrink(),
       ],
@@ -635,7 +636,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     );
   }
 
-  Widget getWidgetForTitleText({String title}) {
+  Widget getWidgetForTitleText({String? title}) {
     return Row(
       children: [
         Text(title ?? tckConstants.strTicketTitle,
@@ -796,7 +797,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           .toLowerCase()
           .contains("care/diet plan")) {
         if (dropdownValue != null) {
-          tckConstants.tckSelectedCategory = dropdownValue.title;
+          tckConstants.tckSelectedCategory = dropdownValue!.title;
           if (package_title_ctrl.text != null &&
               package_title_ctrl.text != "") {
             Constants.tckPackageName = package_title_ctrl.text;
@@ -832,9 +833,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     try {
       if (labsList.length > 0) {
         for (Hospitals selHospitals in labsList) {
-          if (selHospitals.name == controller.selPrefLab.value) {
+          if (selHospitals.name == controller!.selPrefLab.value) {
             selectedLab = selHospitals;
-            controller.selPrefLabId.value =
+            controller!.selPrefLabId.value =
                 CommonUtil().validString(selHospitals.id);
           }
         }
@@ -853,7 +854,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller.isPreferredLabDisable.value ?? false,
+          ignoring: controller!.isPreferredLabDisable.value ?? false,
           child: DropdownButton<Hospitals>(
             value: selectedLab,
             underline: SizedBox(),
@@ -861,7 +862,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             hint: Row(
               children: <Widget>[
                 SizedBoxWidget(width: 20),
-                Text(CommonUtil().validString(selectedLab.name),
+                Text(CommonUtil().validString(selectedLab!.name),
                     style: TextStyle(
                       fontSize: 14.0.sp,
                     )),
@@ -881,12 +882,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                       value: currLab,
                     ))
                 .toList(),
-            onChanged: (Hospitals currLab) {
+            onChanged: (Hospitals? currLab) {
               try {
                 selectedLab = currLab;
-                controller.selPrefLab.value =
-                    CommonUtil().validString(currLab.name);
-                controller.selPrefLabId.value =
+                controller!.selPrefLab.value =
+                    CommonUtil().validString(currLab!.name);
+                controller!.selPrefLabId.value =
                     CommonUtil().validString(currLab.id);
                 setState(() {});
               } catch (e) {}
@@ -897,13 +898,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     );
   }
 
-  Widget dropDoctorDownButton(List<Doctors> doctorsList) {
+  Widget dropDoctorDownButton(List<Doctors?> doctorsList) {
     try {
       if (doctorsList.length > 0) {
-        for (Doctors selDoctors in doctorsList) {
-          if (selDoctors.user.name == controller.selPrefLab.value) {
+        for (Doctors? selDoctors in doctorsList) {
+          if (selDoctors!.user!.name == controller!.selPrefLab.value) {
             selectedDoctor = selDoctors;
-            controller.selPrefDoctorId.value =
+            controller!.selPrefDoctorId.value =
                 CommonUtil().validString(selDoctors.id);
           }
         }
@@ -922,7 +923,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
         child: IgnorePointer(
-          ignoring: controller.isPreferredLabDisable.value ?? false,
+          ignoring: controller!.isPreferredLabDisable.value ?? false,
           child: DropdownButton<Doctors>(
             value: selectedDoctor,
             underline: SizedBox(),
@@ -930,18 +931,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             hint: Row(
               children: <Widget>[
                 SizedBoxWidget(width: 20),
-                Text(CommonUtil().validString(selectedDoctor.user.name),
+                Text(CommonUtil().validString(selectedDoctor!.user!.name),
                     style: TextStyle(
                       fontSize: 14.0.sp,
                     )),
               ],
             ),
             items: doctorsList
-                .map((Doctors currDoc) => DropdownMenuItem(
+                .map((Doctors? currDoc) => DropdownMenuItem(
                       child: Row(
                         children: <Widget>[
                           SizedBoxWidget(width: 20),
-                          Text(CommonUtil().validString(currDoc.user.name),
+                          Text(CommonUtil().validString(currDoc!.user!.name),
                               style: TextStyle(
                                 fontSize: 14.0.sp,
                               )),
@@ -950,12 +951,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                       value: currDoc,
                     ))
                 .toList(),
-            onChanged: (Doctors currDoc) {
+            onChanged: (Doctors? currDoc) {
               try {
                 selectedDoctor = currDoc;
-                controller.selPrefDoctor.value =
-                    CommonUtil().validString(currDoc.user.name);
-                controller.selPrefDoctorId.value =
+                controller!.selPrefDoctor.value =
+                    CommonUtil().validString(currDoc!.user!.name);
+                controller!.selPrefDoctorId.value =
                     CommonUtil().validString(currDoc.id);
                 setState(() {});
               } catch (e) {}
@@ -966,15 +967,15 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     );
   }
 
-  Widget getAllCustomRoles(Doctors doctorObj, Function onAdd) {
-    Widget familyWidget;
+  Widget getAllCustomRoles(Doctors? doctorObj, Function onAdd) {
+    late Widget familyWidget;
 
     if (_providersBloc != null) {
       _providersBloc = null;
       _providersBloc = new ProvidersBloc();
     }
-    return FutureBuilder<MyProvidersResponse>(
-      future: _providersBloc.getMedicalPreferencesForDoctors(),
+    return FutureBuilder<MyProvidersResponse?>(
+      future: _providersBloc!.getMedicalPreferencesForDoctors(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.connectionState) {
@@ -1007,11 +1008,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             case ConnectionState.done:
               if (snapshot.data != null &&
                   snapshot.data != null &&
-                  snapshot.data.result != null &&
-                  snapshot.data.result.doctors != null &&
-                  snapshot.data.result.doctors.isNotEmpty) {
-                doctorsListFromProvider = snapshot.data.result.doctors;
-                controller.isCTLoading = true.obs;
+                  snapshot.data!.result != null &&
+                  snapshot.data!.result!.doctors != null &&
+                  snapshot.data!.result!.doctors!.isNotEmpty) {
+                doctorsListFromProvider = snapshot.data!.result!.doctors;
+                controller!.isCTLoading = true.obs;
                 filterDuplicateDoctor();
                 familyWidget = getDoctorDropDown(
                   doctorsListFromProvider,
@@ -1040,29 +1041,29 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   }
 
   void filterDuplicateDoctor() {
-    if (doctorsListFromProvider.isNotEmpty) {
+    if (doctorsListFromProvider!.isNotEmpty) {
       copyOfdoctorsModel = doctorsListFromProvider;
-      var ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
-      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      var ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));
       doctorsListFromProvider = copyOfdoctorsModel;
     }
   }
 
   void filterDuplicateHospital() {
-    if (hospitalListFromProvider.isNotEmpty) {
+    if (hospitalListFromProvider!.isNotEmpty) {
       copyOfhospitalModel = hospitalListFromProvider;
-      var ids = copyOfhospitalModel.map((e) => e?.id).toSet();
-      copyOfhospitalModel.retainWhere((x) => ids.remove(x?.id));
+      var ids = copyOfhospitalModel!.map((e) => e?.id).toSet();
+      copyOfhospitalModel!.retainWhere((x) => ids.remove(x?.id));
       hospitalListFromProvider = copyOfhospitalModel;
     }
   }
 
   getDoctorDropDown(
-      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
-      {Widget child}) {
+      List<Doctors?>? doctors, Doctors? doctorObjSample, Function? onAddClick,
+      {Widget? child}) {
     if (doctorObjSample != null) {
-      for (var doctorsObjS in doctors) {
-        if (doctorsObjS.id == doctorObjSample.id) {
+      for (var doctorsObjS in doctors!) {
+        if (doctorsObjS!.id == doctorObjSample.id) {
           doctorObj = doctorsObjS;
         }
       }
@@ -1084,13 +1085,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
-                              child: Text(element.user != null
-                                  ? new CommonUtil().getDoctorName(element.user)
+                              child: Text(element!.user != null
+                                  ? new CommonUtil().getDoctorName(element.user!)!
                                   : ''),
                             ),
                             SizedBox(height: 10),
                             fhbBasicWidget.getSaveButton(() {
-                              onAddClick();
+                              onAddClick!();
                             }, text: 'Add Doctor'),
                             SizedBox(height: 10),
                           ],
@@ -1099,8 +1100,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.user != null
-                              ? new CommonUtil().getDoctorName(element.user)
+                          child: Text(element!.user != null
+                              ? new CommonUtil().getDoctorName(element.user!)!
                               : ''),
                         ),
                       ))
@@ -1110,18 +1111,18 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   children: [
                     SizedBox(height: 10),
                     fhbBasicWidget.getSaveButton(() {
-                      onAddClick();
+                      onAddClick!();
                     }, text: 'Add Doctor'),
                     SizedBox(height: 10)
                   ],
                 ),
-              ),
+              ) as List<PopupMenuEntry<Doctors>>,
         onSelected: (value) {
           doctorObj = value;
           setDoctorValue(value);
           setState(() {
             doctor.text = value.user != null
-                ? CommonUtil().getDoctorName(value.user)
+                ? CommonUtil().getDoctorName(value.user!)!
                 : '';
           });
         },
@@ -1130,11 +1131,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     });
   }
 
-  getHospitalDropDown(List<Hospitals> hospitallist, Hospitals hospitalObjSample,
+  getHospitalDropDown(List<Hospitals>? hospitallist, Hospitals? hospitalObjSample,
       Function onAddClick,
-      {Widget child}) {
+      {Widget? child}) {
     if (hospitalObjSample != null) {
-      for (var hospitalObjS in hospitallist) {
+      for (var hospitalObjS in hospitallist!) {
         if (hospitalObjS.id == hospitalObjSample.id) {
           hospitalObj = hospitalObjS;
         }
@@ -1160,7 +1161,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               width: 0.5.sw,
                               child: Text(
-                                  element.name != null ? element.name : ''),
+                                  element.name != null ? element.name! : ''),
                             ),
                             SizedBox(height: 10),
                             fhbBasicWidget.getSaveButton(() {
@@ -1173,7 +1174,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                         value: element,
                         child: Container(
                           width: 0.5.sw,
-                          child: Text(element.name != null ? element.name : ''),
+                          child: Text(element.name != null ? element.name! : ''),
                         ),
                       ))
                 .toList()
@@ -1187,12 +1188,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                     SizedBox(height: 10)
                   ],
                 ),
-              ),
+              ) as List<PopupMenuEntry<Hospitals>>,
         onSelected: (value) {
           hospitalObj = value;
           setHospitalValue(value);
           setState(() {
-            hospital.text = hospitalObj.name != null ? hospitalObj.name : '';
+            hospital.text = hospitalObj!.name != null ? hospitalObj!.name! : '';
           });
         },
         child: child ?? getIconButton(),
@@ -1200,11 +1201,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     });
   }
 
-  Widget getAllHospitalRoles(Hospitals hospitalObj, Function onAdd) {
-    Widget familyWidget;
+  Widget getAllHospitalRoles(Hospitals? hospitalObj, Function onAdd) {
+    late Widget familyWidget;
 
-    return FutureBuilder<MyProvidersResponse>(
-      future: _providersBloc.getMedicalPreferencesForHospital(),
+    return FutureBuilder<MyProvidersResponse?>(
+      future: _providersBloc!.getMedicalPreferencesForHospital(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.connectionState) {
@@ -1237,10 +1238,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             case ConnectionState.done:
               if (snapshot.data != null &&
                   snapshot.data != null &&
-                  snapshot.data.result != null &&
-                  snapshot.data.result.hospitals != null &&
-                  snapshot.data.result.hospitals.isNotEmpty) {
-                hospitalListFromProvider = snapshot.data.result.hospitals;
+                  snapshot.data!.result != null &&
+                  snapshot.data!.result!.hospitals != null &&
+                  snapshot.data!.result!.hospitals!.isNotEmpty) {
+                hospitalListFromProvider = snapshot.data!.result!.hospitals;
                 filterDuplicateHospital();
                 familyWidget = getHospitalDropDown(
                   hospitalListFromProvider,
@@ -1277,11 +1278,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   }
 
   getDoctorDropDownWhenNoList(
-      List<Doctors> doctors, Doctors doctorObjSample, Function onAddClick,
-      {Widget child}) {
+      List<Doctors?>? doctors, Doctors? doctorObjSample, Function onAddClick,
+      {Widget? child}) {
     if (doctorObjSample != null) {
-      for (final doctorsObjS in doctors) {
-        if (doctorsObjS.id == doctorObjSample.id) {
+      for (final doctorsObjS in doctors!) {
+        if (doctorsObjS!.id == doctorObjSample.id) {
           doctorObj = doctorsObjS;
         }
       }
@@ -1303,7 +1304,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 width: 0.5.sw,
                                 child: Text(
-                                  element.user.name,
+                                  element!.user!.name!,
                                 ),
                               ),
                               SizedBox(height: 10),
@@ -1318,7 +1319,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                           child: Container(
                             width: 0.5.sw,
                             child: Text(
-                              element.user.name,
+                              element!.user!.name!,
                             ),
                           ),
                         ))
@@ -1354,11 +1355,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           });
   }
 
-  getHospitalsDropDownWhenNoList(List<Hospitals> hospitallist,
-      Hospitals hospitalObjSample, Function onAddClick,
-      {Widget child}) {
+  getHospitalsDropDownWhenNoList(List<Hospitals>? hospitallist,
+      Hospitals? hospitalObjSample, Function onAddClick,
+      {Widget? child}) {
     if (hospitalObjSample != null) {
-      for (var hospitalObjS in hospitallist) {
+      for (var hospitalObjS in hospitallist!) {
         if (hospitalObjS.id == hospitalObjSample.id) {
           hospitalObj = hospitalObjS;
         }
@@ -1382,7 +1383,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                     padding: EdgeInsets.symmetric(vertical: 10),
                                     width: 0.5.sw,
                                     child: Text(
-                                      element.name,
+                                      element.name!,
                                     ),
                                   ),
                                   SizedBox(height: 10),
@@ -1397,7 +1398,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                               child: Container(
                                 width: 0.5.sw,
                                 child: Text(
-                                  element.name,
+                                  element.name!,
                                 ),
                               ),
                             ))
@@ -1436,16 +1437,16 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   void setDoctorValue(Doctors newValue) {
     var doctorNewObj = Doctor(
       doctorId: newValue.id,
-      name: newValue.user.name,
-      firstName: newValue.user.firstName,
-      lastName: newValue.user.lastName,
-      addressLine1: newValue.user.userAddressCollection3[0].addressLine1,
-      addressLine2: newValue.user.userAddressCollection3[0].addressLine2,
+      name: newValue.user!.name,
+      firstName: newValue.user!.firstName,
+      lastName: newValue.user!.lastName,
+      addressLine1: newValue.user!.userAddressCollection3![0].addressLine1,
+      addressLine2: newValue.user!.userAddressCollection3![0].addressLine2,
       isMciVerified: newValue.isMciVerified,
       isTelehealthEnabled: newValue.isTelehealthEnabled,
-      profilePicThumbnailUrl: newValue.user.profilePicThumbnailUrl,
+      profilePicThumbnailUrl: newValue.user!.profilePicThumbnailUrl,
       specialization: newValue.specialization,
-      userId: newValue.user.id,
+      userId: newValue.user!.id,
     );
 
     doctorsData = doctorNewObj;
@@ -1456,11 +1457,11 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       healthOrganizationId: newValue.id,
       healthOrganizationName: newValue.name,
       addressLine1:
-          newValue.healthOrganizationAddressCollection[0]?.addressLine1,
+          newValue.healthOrganizationAddressCollection![0]?.addressLine1,
       addressLine2:
-          newValue.healthOrganizationAddressCollection[0]?.addressLine2,
-      cityName: newValue.healthOrganizationAddressCollection[0]?.city?.name,
-      stateName: newValue.healthOrganizationAddressCollection[0]?.state?.name,
+          newValue.healthOrganizationAddressCollection![0]?.addressLine2,
+      cityName: newValue.healthOrganizationAddressCollection![0]?.city?.name,
+      stateName: newValue.healthOrganizationAddressCollection![0]?.state?.name,
       /*healthOrganizationTypeName: newValue.healthOrganizationType?.name,
       healthOrganizationTypeId: newValue.healthOrganizationType?.id,
       phoneNumber: newValue.healthOrganizationContactCollection[0]?.phoneNumber,
@@ -1478,7 +1479,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         //Lab Appointment
-        controller.labBookAppointment.value
+        controller!.labBookAppointment.value
             ? Row(
                 children: [
                   Text(tckConstants.strPreferredDoctors,
@@ -1490,24 +1491,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller.doctorBookAppointment.value
+        controller!.doctorBookAppointment.value
             ? SizedBox(height: 10.h)
             : SizedBox.shrink(),
 
-        controller.doctorBookAppointment.value
-            ? dropDoctorDownButton(controller.doctorsList != null &&
-                    controller.doctorsList.length > 0
-                ? controller.doctorsList
+        controller!.doctorBookAppointment.value
+            ? dropDoctorDownButton(controller!.doctorsList != null &&
+                    controller!.doctorsList!.length > 0
+                ? controller!.doctorsList!
                 : [])
             : SizedBox.shrink(),
 
-        controller.doctorBookAppointment.value &&
-                controller.isPreferredDoctorDisable.value
+        controller!.doctorBookAppointment.value &&
+                controller!.isPreferredDoctorDisable.value
             ? SizedBox(height: 5.h)
             : SizedBox.shrink(),
 
-        controller.doctorBookAppointment.value &&
-                controller.isPreferredDoctorDisable.value
+        controller!.doctorBookAppointment.value &&
+                controller!.isPreferredDoctorDisable.value
             ? RichText(
                 text: TextSpan(
                     text: ' *',
@@ -1524,7 +1525,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               )
             : SizedBox.shrink(),
 
-        controller.doctorBookAppointment.value
+        controller!.doctorBookAppointment.value
             ? SizedBox(height: 20.h)
             : SizedBox.shrink(),
       ],
@@ -1535,10 +1536,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     tckConstants.ticketType = ticketListData.id;
     tckConstants.tckPriority = ticketListData.id;
 
-    if (controller.labBookAppointment.value &&
-        controller.selPrefLab.value != "Select") {
-      tckConstants.tckPrefLab = controller.selPrefLab.value;
-      tckConstants.tckPrefLabId = controller.selPrefLabId.value;
+    if (controller!.labBookAppointment.value &&
+        controller!.selPrefLab.value != "Select") {
+      tckConstants.tckPrefLab = controller!.selPrefLab.value;
+      tckConstants.tckPrefLabId = controller!.selPrefLabId.value;
     } else {
       tckConstants.tckPrefLab = "";
       tckConstants.tckPrefLabId = "";
@@ -1567,7 +1568,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
               context,
               MaterialPageRoute(builder: (context) => MyTicketsListScreen()),
             );
-          });
+          } as FutureOr<List<dynamic>> Function(dynamic));
         } else {
           FlutterToast().getToast('Ticket Created Successfully', Colors.grey);
           Navigator.of(context).pop();
@@ -1644,7 +1645,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
         .then((results) {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
-          healthRecordList = results[STR_META_ID] as List;
+          healthRecordList = results[STR_META_ID] as List?;
           if (healthRecordList != null) {
             getMediaURL(healthRecordList);
           }
@@ -1655,8 +1656,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   getMediaURL(List<HealthRecordCollection> healthRecordCollection) async {
     for (int i = 0; i < healthRecordCollection.length; i++) {
-      String fileType = healthRecordCollection[i].fileType;
-      String fileURL = healthRecordCollection[i].healthRecordUrl;
+      String? fileType = healthRecordCollection[i].fileType;
+      String? fileURL = healthRecordCollection[i].healthRecordUrl;
       if ((fileType == STR_JPG) ||
           (fileType == STR_PNG) ||
           (fileType == STR_JPEG)) {
@@ -1702,10 +1703,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
     for (Asset asset in resultList) {
-      String filePath =
-          await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.add(ImagesModel(
-          isFromFile: true, file: filePath, isdownloaded: true, asset: asset));
+      // String filePath =
+      //     await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      // imagePaths.add(ImagesModel(
+      //     isFromFile: true, file: filePath, isdownloaded: true, asset: asset));  FU2.5
     }
     setState(() {
       images = resultList;
@@ -1740,12 +1741,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                     child: Container(
                                         height: double.infinity,
                                         child: AssetThumb(
-                                          asset: asset,
+                                          asset: asset as Asset,
                                           width: 150,
                                           height: 150,
                                         )))
                                 : imagePaths[index].isdownloaded
-                                    ? imagePaths[index].fileType.trim() ==
+                                    ? imagePaths[index].fileType!.trim() ==
                                             ".pdf"
                                         ? Material(
                                             child: Container(
@@ -1757,9 +1758,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                                       variable.icon_attach),
                                                   color: Colors.white),
                                               onPressed: () async {
-                                                await OpenFile.open(
-                                                  imagePaths[index].file,
-                                                );
+                                                // await OpenFile.open(
+                                                //   imagePaths[index].file,
+                                                // ); FU2.5
                                               },
                                             ),
                                           ))
@@ -1767,7 +1768,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                             child: Container(
                                                 height: double.infinity,
                                                 child: Image.file(
-                                                  File(imagePaths[index].file),
+                                                  File(imagePaths[index].file!),
                                                   width: 150,
                                                   fit: BoxFit.fill,
                                                   height: 150,
@@ -1777,13 +1778,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                                         child: Container(
                                             height: double.infinity,
                                             child: Image.network(
-                                              imagePaths[index].file,
+                                              imagePaths[index].file!,
                                               width: 150,
                                               fit: BoxFit.fill,
                                               height: 150,
                                               headers: {
                                                 HttpHeaders.authorizationHeader:
-                                                    authToken
+                                                    authToken!
                                               },
                                             )),
                                       ),
@@ -1836,7 +1837,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
       itemBuilder: (context, suggestion) {
         return ListTile(
           title: Text(
-            suggestion.title,
+            suggestion.title!,
             style: TextStyle(
               fontSize: 16.0.sp,
             ),
@@ -1857,7 +1858,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
         );
       },
       onSuggestionSelected: (suggestion) {
-        package_title_ctrl.text = suggestion.title;
+        package_title_ctrl.text = suggestion.title!;
         //stateVal = suggestion.state;
       },
       validator: (value) {
@@ -1884,14 +1885,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
           isFrom:
               strFreeDiet) // make sure return type of these functions as Future.
     ]);
-    planListModelList.addAll(responses[0]?.result);
-    planListModelList.addAll(responses[1]?.result);
-    planListModelList.addAll(responses[2]?.result);
-    planListModelList.addAll(responses[3]?.result);
+    planListModelList.addAll(responses[0]?.result!);
+    planListModelList.addAll(responses[1]?.result!);
+    planListModelList.addAll(responses[2]?.result!);
+    planListModelList.addAll(responses[3]?.result!);
   }
 
   Widget getDropDownForPlanCategory(
-      Map<String, List<MenuItem>> healthConditionsList) {
+      Map<String?, List<MenuItem>> healthConditionsList) {
     List<MenuItem> menuItems = List();
     healthConditionsList.values.map((element) {
       menuItems.addAll(element);
@@ -1899,7 +1900,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
     return SizedBoxWithChild(
         height: 50,
         child: IgnorePointer(
-            ignoring: controller.isPreferredDoctorDisable.value,
+            ignoring: controller!.isPreferredDoctorDisable.value,
             child: Expanded(
                 flex: 1,
                 child: DropdownButton<MenuItem>(
@@ -1928,12 +1929,12 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                   items: menuItems.map((MenuItem items) {
                     return DropdownMenuItem(
                       value: items,
-                      child: Text(items.title),
+                      child: Text(items.title!),
                     );
                   }).toList(),
                   // After selecting the desired option,it will
                   // change button value to selected value
-                  onChanged: (MenuItem newValue) {
+                  onChanged: (MenuItem? newValue) {
                     setState(() {
                       dropdownValue = newValue;
                     });
@@ -1942,7 +1943,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
   }
 
   Widget getExpandedDropdownForCategory() {
-    return FutureBuilder<Map<String, List<MenuItem>>>(
+    return FutureBuilder<Map<String?, List<MenuItem>>>(
       future: healthConditions,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -1972,7 +1973,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
                       {});
           if ((healthConditionsList?.length ?? 0) > 0) {
             healthConditionsResult = healthConditionsList;
-            return getDropDownForPlanCategory(healthConditionsResult);
+            return getDropDownForPlanCategory(healthConditionsResult!);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -1998,14 +1999,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
 
   void downloadFilesFromServer(
       BuildContext contxt, List<HealthRecordCollection> imagesPathMain) async {
-    String authToken =
+    String? authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    List<String> filePathist = new List();
+    List<String?> filePathist = new List();
     for (final _currentImage in imagesPathMain) {
       try {
         await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
-                _currentImage.healthRecordUrl.split('/').last)
+                _currentImage.healthRecordUrl!.split('/').last)
             .then((filePath) async {
           var file;
           if (_currentImage.fileType == '.pdf') {
@@ -2014,9 +2015,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreenNew> {
             file = File('$filePath');
           }
           final request = await ApiServices.get(
-            _currentImage.healthRecordUrl,
+            _currentImage.healthRecordUrl!,
             headers: {
-              HttpHeaders.authorizationHeader: authToken,
+              HttpHeaders.authorizationHeader: authToken!,
               Constants.KEY_OffSet: CommonUtil().setTimeZone()
             },
           );

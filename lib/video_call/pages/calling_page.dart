@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,12 +15,12 @@ import '../../src/utils/screenutils/size_extensions.dart';
 class CallingPage extends StatefulWidget {
   final name;
   final id;
-  CallMetaData callMetaData;
+  CallMetaData? callMetaData;
   dynamic isCallActualTime;
   final healthOrganizationId;
-  User patienInfo;
-  bool isFromAppointment;
-  String patientPrescriptionId;
+  User? patienInfo;
+  bool? isFromAppointment;
+  String? patientPrescriptionId;
 
   CallingPage(
       {this.name,
@@ -37,10 +38,10 @@ class CallingPage extends StatefulWidget {
 
 class _CallingPageState extends State<CallingPage> {
   final myDB = FirebaseFirestore.instance;
-  var name = '';
+  String? name = '';
   bool callCurrentStaus = false;
-  AudioPlayer audioPlayer;
-  AudioCache _audioCache;
+  AudioPlayer? audioPlayer;
+  late AudioCache _audioCache;
   var isDoctor;
 
   var regController = Get.find<QurhomeRegimenController>();
@@ -81,8 +82,8 @@ class _CallingPageState extends State<CallingPage> {
   void clearAudioPlayer() async {
     try {
       _audioCache.clearAll();
-      await audioPlayer.stop();
-      await audioPlayer.release();
+      await audioPlayer!.stop();
+      await audioPlayer!.release();
     } catch (e) {
       //print(e);
     }
@@ -95,8 +96,8 @@ class _CallingPageState extends State<CallingPage> {
         isDoctor = false; //await sharedPref.getBool('isDoctor');
       } catch (e) {}
       audioPlayer = await _audioCache.play('raw/dailer_tone.mp3');
-      audioPlayer.setVolume(0.1);
-      audioPlayer.playingRouteState = PlayingRoute.EARPIECE;
+      audioPlayer!.setVolume(0.1);
+      audioPlayer!.playingRouteState = PlayingRoute.EARPIECE;
       VideoCallCommonUtils.isMissedCallNsSent = false;
       VideoCallCommonUtils().updateCallCurrentStatus(
           mContext: context,
@@ -105,7 +106,7 @@ class _CallingPageState extends State<CallingPage> {
           healthOrganizationId: widget.healthOrganizationId,
           audioPlayer: audioPlayer,
           isCallActualTime: widget.isCallActualTime,
-          healthRecord: widget.callMetaData.healthRecord,
+          healthRecord: widget.callMetaData!.healthRecord,
           patienInfo: widget.patienInfo,
           isFromAppointment: widget.isFromAppointment,
           isDoctor: isDoctor);
@@ -128,7 +129,7 @@ class _CallingPageState extends State<CallingPage> {
             ),
             child: ValueListenableBuilder(
               valueListenable: VideoCallCommonUtils.callActions,
-              builder: (context, value, child) {
+              builder: (context, dynamic value, child) {
                 return Column(
                   children: [
                     Container(
@@ -201,7 +202,7 @@ class _CallingPageState extends State<CallingPage> {
                               VideoCallCommonUtils().createMissedCallNS(
                                   docName: regController.userName.value,
                                   patId: regController.careCoordinatorId.value,
-                                  bookingId: widget.callMetaData.bookId);
+                                  bookingId: widget.callMetaData!.bookId);
                             }
                             VideoCallCommonUtils().callEnd(context, widget.id);
                           } catch (e) {

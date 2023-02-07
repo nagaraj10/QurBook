@@ -1,24 +1,25 @@
+
 import '../../../../constants/fhb_constants.dart';
 import '../../../../constants/variable_constant.dart';
 
 class SheelaRequestModel {
-  String sender;
-  String name;
-  String message;
-  String source;
-  String sessionId;
+  String? sender;
+  String? name;
+  String? message;
+  String? source;
+  String? sessionId;
   //String authToken;
-  String timezone;
-  String lang;
-  String deviceType;
-  String ProviderMsg;
-  Map<String, dynamic> kioskData;
-  String endPoint;
-  String relationshipId;
-  String conversationFlag;
+  String? timezone;
+  String? lang;
+  String? deviceType;
+  String? ProviderMsg;
+  Map<String, dynamic>? kioskData;
+  String? endPoint;
+  String? relationshipId;
+  String? conversationFlag;
   var additionalInfo;
-  String localDateTime;
-  String directCall;
+  String? localDateTime;
+  String? directCall;
   SheelaRequestModel({
     this.sender,
     this.name,

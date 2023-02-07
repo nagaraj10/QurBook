@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -72,9 +73,9 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
           //return ticketTypeListTest(context);
           if (snapshot?.hasData &&
               snapshot?.data?.ticketTypeResults != null &&
-              snapshot?.data?.ticketTypeResults.isNotEmpty) {
+              snapshot?.data?.ticketTypeResults!.isNotEmpty) {
             return Container(
-                child: ticketTypesList(snapshot.data.ticketTypeResults));
+                child: ticketTypesList(snapshot.data!.ticketTypeResults));
           } else {
             return SafeArea(
               child: SizedBox(
@@ -97,7 +98,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
     );
   }
 
-  Widget ticketTypesList(List<TicketTypesResult> ticketTypesList) {
+  Widget ticketTypesList(List<TicketTypesResult>? ticketTypesList) {
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -237,7 +238,7 @@ class _TicketTypesScreenState extends State<TicketTypesScreen> {
                     child: getTicketTypeImages(context, ticketList[i]),
                   ),
                   Text(
-                    ticketList[i].name,
+                    ticketList[i].name!,
                     overflow: TextOverflow.visible,
                     style: TextStyle(
                       fontSize: 14.0.sp,

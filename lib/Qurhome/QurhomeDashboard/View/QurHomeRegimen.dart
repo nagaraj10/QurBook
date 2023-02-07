@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -56,18 +57,18 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   final controller = Get.put(QurhomeRegimenController());
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
-  String snoozeValue = "5 mins";
+  String? snoozeValue = "5 mins";
   List<RegimentDataModel> regimenList = [];
 
   HubListViewController hubController = Get.find();
-  SheelaBLEController _sheelaBLEController;
+  late SheelaBLEController _sheelaBLEController;
   var chatGetXController = Get.find<ChatUserListController>();
 
-  AnimationController animationController;
+  AnimationController? animationController;
 
   int _counter = 0;
   StreamController<int> _events = StreamController<int>();
-  Timer _timer;
+  Timer? _timer;
   bool appIsInBackground = false;
 
   @override
@@ -78,10 +79,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       chatGetXController.getUnreadCountFamily().then(
         (value) {
           if (value != null) {
-            if (value?.isSuccess) {
+            if (value?.isSuccess!) {
               if (value?.result != null) {
-                if (value?.result[0]?.count != null) {
-                  if (int.parse(value?.result[0]?.count ?? 0) > 0) {
+                if (value?.result![0]?.count != null) {
+                  if (int.parse(value?.result![0]?.count ?? 0 as String) > 0) {
                     if (PreferenceUtil.getIfQurhomeisAcive()) {
                       redirectToSheelaUnreadMessage();
                     }
@@ -95,7 +96,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       initSocketCountUnread();
       //initGeoLocation();
       //checkMobileOrTablet();
-      WidgetsBinding.instance.addObserver(this);
+      WidgetsBinding.instance!.addObserver(this);
       controller.startTimer();
       super.initState();
     } catch (e) {
@@ -124,11 +125,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }*/
 
   initSocketCountUnread() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .off(notifyQurhomeUser);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .on(notifyQurhomeUser, (data) {
       if (data != null) {
@@ -136,7 +137,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             UnreadChatSocketNotify.fromJson(data);
         if (unreadCountNotify != null) {
           if (unreadCountNotify?.result != null) {
-            if (unreadCountNotify?.result?.isSuccess) {
+            if (unreadCountNotify?.result?.isSuccess!) {
               if (PreferenceUtil.getIfQurhomeisAcive()) {
                 redirectToSheelaUnreadMessage();
               }
@@ -173,7 +174,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       appBar: widget.addAppBar
           ? AppBar(
               backgroundColor: Colors.white,
-              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
               elevation: 0,
               centerTitle: true,
               title: Text(
@@ -185,7 +186,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               leading: IconWidget(
                 icon: Icons.arrow_back_ios,
                 colors: Colors.black,
-                size: CommonUtil().isTablet ? 38.0 : 24.0,
+                size: CommonUtil().isTablet! ? 38.0 : 24.0,
                 onTap: () {
                   Get.back();
                 },
@@ -274,13 +275,13 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
               'Please re-try after some time',
             ),
           )
-        : val.qurHomeRegimenResponseModel.regimentsList.length != 0
+        : val.qurHomeRegimenResponseModel!.regimentsList!.length != 0
             ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 50.0),
                 child: Container(
                   child: PageView.builder(
                     itemCount:
-                        val.qurHomeRegimenResponseModel.regimentsList.length,
+                        val.qurHomeRegimenResponseModel!.regimentsList!.length,
                     scrollDirection: Axis.vertical,
                     onPageChanged: (int index) {
                       setState(() {
@@ -294,8 +295,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       return _buildCarouselItem(
                           context,
                           itemIndex,
-                          val.qurHomeRegimenResponseModel
-                              .regimentsList[itemIndex],
+                          val.qurHomeRegimenResponseModel!
+                              .regimentsList![itemIndex],
                           val.nextRegimenPosition,
                           isPortrait);
                     },
@@ -324,7 +325,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   String getDeviceType() {
-    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance!.window);
     return data.size.shortestSide < 600 ? 'phone' : 'tablet';
   }
 
@@ -435,7 +436,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       children: [
                         Text(
                           regimen.estart != null
-                              ? DateFormat('hh:mm a').format(regimen.estart)
+                              ? DateFormat('hh:mm a').format(regimen.estart!)
                               : '',
                           style: TextStyle(
                               color: getTextAndIconColor(
@@ -474,22 +475,22 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     );
   }
 
-  dynamic getIcon(Activityname activityname, Uformname uformName,
-      Metadata metadata, int itemIndex, int nextRegimenPosition,
-      {double sizeOfIcon}) {
+  dynamic getIcon(Activityname? activityname, Uformname? uformName,
+      Metadata? metadata, int itemIndex, int nextRegimenPosition,
+      {double? sizeOfIcon}) {
     final iconSize = sizeOfIcon ?? 40.0.h;
     try {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata?.icon,
+            metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata?.icon,
+            imageUrl: metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: getTextAndIconColor(itemIndex, nextRegimenPosition),
@@ -510,8 +511,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   dynamic getDefaultIcon(
-    Activityname activityname,
-    Uformname uformName,
+    Activityname? activityname,
+    Uformname? uformName,
     double iconSize,
     int itemIndex,
     int nextRegimenPosition,
@@ -646,7 +647,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                               child: Text(
                                 regimen.estart != null
                                     ? DateFormat('hh:mm a')
-                                        .format(regimen.estart)
+                                        .format(regimen.estart!)
                                     : '',
                                 style: TextStyle(
                                     color: Colors.grey,
@@ -710,7 +711,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 child: InkWell(
                           onTap: () {
                             Navigator.pop(context);
-                            if (regimen.hasform) {
+                            if (regimen.hasform!) {
                               onCardPressed(context, regimen,
                                   aid: regimen.aid,
                                   uid: regimen.uid,
@@ -769,7 +770,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                                 child: DropdownButton<String>(
                                   value: snoozeValue,
                                   elevation: 16,
-                                  onChanged: (String newValue) {
+                                  onChanged: (String? newValue) {
                                     setState(() {
                                       snoozeValue = newValue;
                                     });
@@ -803,14 +804,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        var time = snoozeValue.split(" ");
+                        var time = snoozeValue!.split(" ");
                         Reminder reminder = Reminder();
                         reminder.uformname = regimen.uformname.toString();
                         reminder.activityname = regimen.activityname.toString();
                         reminder.title = regimen.title.toString();
                         reminder.description = regimen.description.toString();
                         reminder.eid = regimen.eid.toString();
-                        reminder.estart = regimen.estart
+                        reminder.estart = regimen.estart!
                             .add(Duration(minutes: int.parse(time[0])))
                             .toString();
                         reminder.remindin = regimen.remindin.toString();
@@ -837,7 +838,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       height: 10,
                     ),
                     Visibility(
-                      visible: regimen.hashtml,
+                      visible: regimen.hashtml!,
                       child: Column(
                         children: [
                           InkWell(
@@ -880,9 +881,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   Future<void> onCardPressed(BuildContext context, RegimentDataModel regimen,
-      {String eventIdReturn,
-      String followEventContext,
-      String activityName,
+      {String? eventIdReturn,
+      String? followEventContext,
+      String? activityName,
       dynamic uid,
       dynamic aid,
       dynamic formId,
@@ -893,12 +894,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       final response = await Provider.of<RegimentViewModel>(context,
               listen: false)
           .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
-      if (response != null && response?.isSuccess && response?.result != null) {
+      if (response != null && response?.isSuccess! && response?.result != null) {
         print('forEventId: ' + response.toJson().toString());
         eventId = response?.result?.eid.toString();
       }
     }
-    var canEdit = regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+    var canEdit = regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
     // if (canEdit || isValidSymptom(context)) {
@@ -906,9 +907,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         await Provider.of<RegimentViewModel>(context, listen: false)
             .getFormData(eid: eventId);
 
-    if (fieldsResponseModel.isSuccess &&
-        (fieldsResponseModel.result.fields.isNotEmpty ||
-            regimen.otherinfo.toJson().toString().contains('1')) &&
+    if (fieldsResponseModel.isSuccess! &&
+        (fieldsResponseModel.result!.fields!.isNotEmpty ||
+            regimen.otherinfo!.toJson().toString().contains('1')) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentStatus !=
             RegimentStatus.DialogOpened) {
       if (!Get.isRegistered<SheelaBLEController>()) {
@@ -922,7 +923,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
-            Get.context,
+            Get.context!,
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
@@ -932,7 +933,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 arguments: SheelaArgument(
                   eId: regimen.eid,
                 ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              )!.then((value) => {controller.showCurrLoggedRegimen(regimen)});
             },
             onPressCancel: () async {
               Get.back();
@@ -961,7 +962,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
-            Get.context,
+            Get.context!,
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
@@ -971,7 +972,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 arguments: SheelaArgument(
                   eId: regimen.eid,
                 ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              )!.then((value) => {controller.showCurrLoggedRegimen(regimen)});
             },
             onPressCancel: () async {
               Get.back();
@@ -998,7 +999,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           hubController.eid = regimen.eid;
           hubController.uid = regimen.uid;
           CommonUtil().dialogForScanDevices(
-            Get.context,
+            Get.context!,
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
@@ -1008,7 +1009,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                 arguments: SheelaArgument(
                   eId: regimen.eid,
                 ),
-              ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+              )!.then((value) => {controller.showCurrLoggedRegimen(regimen)});
             },
             onPressCancel: () async {
               Get.back();
@@ -1038,7 +1039,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {controller.showCurrLoggedRegimen(regimen)});
+          )!.then((value) => {controller.showCurrLoggedRegimen(regimen)});
         } else {
           FlutterToast().getToast(
             (Provider.of<RegimentViewModel>(context, listen: false)
@@ -1058,7 +1059,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             arguments: SheelaArgument(
               eId: regimen.eid,
             ),
-          ).then((value) => {
+          )!.then((value) => {
                 /*controller.getRegimenList()*/ controller
                     .showCurrLoggedRegimen(regimen)
               });
@@ -1078,7 +1079,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         var value = await showDialog(
           context: context,
           builder: (_) => FormDataDialog(
-            fieldsData: fieldsResponseModel.result.fields,
+            fieldsData: fieldsResponseModel.result!.fields,
             eid: eventId,
             color: Color(CommonUtil().getQurhomePrimaryColor()),
             mediaData: regimen.otherinfo,
@@ -1088,10 +1089,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             isFromQurHomeRegimen: true,
             triggerAction: (String triggerEventId, String followContext,
                 String activityName) {
-              Provider.of<RegimentViewModel>(Get.context, listen: false)
+              Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .updateRegimentStatus(RegimentStatus.DialogClosed);
               Get.back();
-              onCardPressed(Get.context, regimen,
+              onCardPressed(Get.context!, regimen,
                   eventIdReturn: triggerEventId,
                   followEventContext: followContext,
                   activityName: activityName);
@@ -1121,7 +1122,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         Provider.of<RegimentViewModel>(context, listen: false)
             .updateRegimentStatus(RegimentStatus.DialogClosed);
       }
-    } else if (!regimen.hasform) {
+    } else if (!regimen.hasform!) {
       FlutterToast().getToast(
         tickInfo,
         Colors.black,
@@ -1149,9 +1150,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             : false);
   }
 
-  String getDialogTitle(BuildContext context, RegimentDataModel regimentData,
-      String activityName) {
-    String title = '';
+  String? getDialogTitle(BuildContext context, RegimentDataModel regimentData,
+      String? activityName) {
+    String? title = '';
     if (!(regimentData?.asNeeded ?? false) &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule) {
@@ -1159,7 +1160,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         title = activityName?.capitalizeFirstofEach;
       } else {
         title =
-            '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart) : ''},${regimentData.title}';
+            '${regimentData?.estart != null ? DateFormat('hh:mm a').format(regimentData.estart!) : ''},${regimentData.title}';
       }
     } else {
       if (activityName != null && activityName != '') {
@@ -1176,7 +1177,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata?.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -1210,7 +1211,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   }
 
   bool checkCanEdit(RegimentDataModel regimen) {
-    return regimen.estart.difference(DateTime.now()).inMinutes <= 15 &&
+    return regimen.estart!.difference(DateTime.now()).inMinutes <= 15 &&
         Provider.of<RegimentViewModel>(context, listen: false).regimentMode ==
             RegimentMode.Schedule;
   }
@@ -1221,7 +1222,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     final canEdit = checkCanEdit(regimen);
     if (canEdit || isValidSymptom(context)) {
       LoaderClass.showLoadingDialog(
-        Get.context,
+        Get.context!,
         canDismiss: false,
       );
       var saveResponse =
@@ -1237,9 +1238,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
         controller.showCurrLoggedRegimen(regimen);
 
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
       } else {
-        LoaderClass.hideLoadingDialog(Get.context);
+        LoaderClass.hideLoadingDialog(Get.context!);
       }
     } else {
       FlutterToast().getToast(
@@ -1313,9 +1314,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         vsync: this,
         duration: Duration(seconds: 10),
       );
-      animationController.addListener(() {
-        if (animationController.isAnimating) {
-          controller.updateTimerValue(animationController.value);
+      animationController!.addListener(() {
+        if (animationController!.isAnimating) {
+          controller.updateTimerValue(animationController!.value);
         } else {
           controller.updateTimerValue(1.0);
         }
@@ -1333,11 +1334,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     try {
       _counter = 10;
       if (_timer != null) {
-        _timer.cancel();
+        _timer!.cancel();
       }
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         if (!_events.isClosed) {
-          (_counter > 0) ? _counter-- : _timer.cancel();
+          (_counter > 0) ? _counter-- : _timer!.cancel();
           _events.add(_counter);
           notify();
         } else {
@@ -1364,7 +1365,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       closeDialog();
       FHBUtils().check().then((intenet) async {
         if (intenet != null && intenet) {
-          if (CommonUtil().isTablet) {
+          if (CommonUtil().isTablet!) {
             if (!controller.onGoingSOSCall.value) {
               VideoCallCommonUtils.callActions.value = CallActions.CALLING;
               controller.callSOSEmergencyServices(0);
@@ -1428,7 +1429,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
           ),
         ),
         AnimatedBuilder(
-          animation: animationController,
+          animation: animationController!,
           builder: (context, child) => Container(
             margin: EdgeInsets.only(
               top: 15.00,
@@ -1469,9 +1470,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   showSOSTimerDialog(BuildContext context) {
     try {
-      animationController.reverse(
+      animationController!.reverse(
           from:
-              animationController.value == 0 ? 1.0 : animationController.value);
+              animationController!.value == 0 ? 1.0 : animationController!.value);
     } catch (e) {
       print(e);
     }
@@ -1494,11 +1495,11 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                       //print(snapshot.data.toString());
                       return Container(
                           width: orientation == Orientation.landscape &&
-                                  CommonUtil().isTablet
+                                  CommonUtil().isTablet!
                               ? 0.7.sw
                               : 1.sw,
                           height: orientation == Orientation.landscape &&
-                                  CommonUtil().isTablet
+                                  CommonUtil().isTablet!
                               ? 1.sh / 2
                               : 1.sh / 2.4,
                           child: Column(
@@ -1664,10 +1665,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   void dispose() {
     try {
       if (animationController != null) {
-        animationController.dispose();
+        animationController!.dispose();
       }
       _events.close();
-      WidgetsBinding.instance.removeObserver(this);
+      WidgetsBinding.instance!.removeObserver(this);
       super.dispose();
     } catch (e) {
       print(e);
@@ -1678,7 +1679,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     Get.toNamed(
       rt_Sheela,
       arguments: SheelaArgument(showUnreadMessage: true),
-    ).then((value) {
+    )!.then((value) {
       initSocketCountUnread();
     });
   }
@@ -1686,7 +1687,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
 class SOSAgentCallWidget extends StatelessWidget {
   SOSAgentCallWidget({
-    @required this.SOSAgentNumber,
+    required this.SOSAgentNumber,
   });
 
   String SOSAgentNumber;

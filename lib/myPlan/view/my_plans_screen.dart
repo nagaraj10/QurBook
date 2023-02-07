@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,7 +23,7 @@ class MyPlansScreen extends StatefulWidget {
 
 class _MyPlansScreenState extends State<MyPlansScreen> {
 
-  bool cartEnable=false;
+  bool? cartEnable=false;
   bool addPlanButton=false;
 
   @override
@@ -45,13 +46,13 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
           size: 24.0.sp,
           onTap: () => onBackPressed(context),
         ),
-        actions: cartEnable?[
+        actions: cartEnable!?[
           Center(
             child: Container(
                 margin: EdgeInsets.only(right: 15.0.sp),
                 child: InkWell(
                     onTap: () {
-                      Get.to(CheckoutPage()).then((value) => FocusManager.instance.primaryFocus.unfocus());
+                      Get.to(CheckoutPage())!.then((value) => FocusManager.instance.primaryFocus!.unfocus());
                     },
                     child:
                         CartIconWithBadge(color: Colors.white, size: 32.0.sp))),
@@ -82,8 +83,8 @@ class _MyPlansScreenState extends State<MyPlansScreen> {
   }
 
   Future<void> getConfiguration() async {
-    bool addplanbutton=await PreferenceUtil.getAddPlanBtn();
-    bool cartEnable=await PreferenceUtil.getCartEnable();
+    bool? addplanbutton=await PreferenceUtil.getAddPlanBtn();
+    bool? cartEnable=await PreferenceUtil.getCartEnable();
    setState(() {
      this.cartEnable=cartEnable;
    });

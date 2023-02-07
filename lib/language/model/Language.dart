@@ -1,6 +1,7 @@
+
 class LanguageModel {
-  bool isSuccess;
-  List<LanguageResult> result;
+  bool? isSuccess;
+  List<LanguageResult>? result;
 
   LanguageModel({this.isSuccess, this.result});
 
@@ -9,7 +10,7 @@ class LanguageModel {
     if (json['result'] != null) {
       result = List<LanguageResult>();
       json['result'].forEach((v) {
-        result.add(LanguageResult.fromJson(v));
+        result!.add(LanguageResult.fromJson(v));
       });
     }
   }
@@ -18,22 +19,22 @@ class LanguageModel {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class LanguageResult {
-  String id;
-  String code;
-  String name;
-  String description;
-  bool isActive;
-  String createdBy;
-  String createdOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
   dynamic lastModifiedOn;
-  List<ReferenceValueCollection> referenceValueCollection;
+  List<ReferenceValueCollection>? referenceValueCollection;
 
   LanguageResult(
       {this.id,
@@ -58,7 +59,7 @@ class LanguageResult {
     if (json['referenceValueCollection'] != null) {
       referenceValueCollection = List<ReferenceValueCollection>();
       json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection.add(ReferenceValueCollection.fromJson(v));
+        referenceValueCollection!.add(ReferenceValueCollection.fromJson(v));
       });
     }
   }
@@ -75,22 +76,22 @@ class LanguageResult {
     data['lastModifiedOn'] = lastModifiedOn;
     if (referenceValueCollection != null) {
       data['referenceValueCollection'] =
-          referenceValueCollection.map((v) => v.toJson()).toList();
+          referenceValueCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class ReferenceValueCollection {
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
 
   ReferenceValueCollection(
       {this.id,

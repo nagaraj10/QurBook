@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -31,9 +32,9 @@ class SheelaAISenderBubble extends StatelessWidget {
             children: [
               if (!PreferenceUtil.getIfQurhomeisAcive())
                 Text(
-                  controller.userName,
+                  controller.userName!,
                   style: PreferenceUtil.getIfQurhomeisAcive()
-                      ? Theme.of(context).textTheme.bodyText2.apply(
+                      ? Theme.of(context).textTheme.bodyText2!.apply(
                             color: Colors.black,
                           )
                       : Theme.of(context).textTheme.bodyText2,
@@ -55,9 +56,9 @@ class SheelaAISenderBubble extends StatelessWidget {
                     borderRadius: chatBubbleBorderRadiusFor(true),
                   ),
                   child: Text(
-                    chat.text,
-                    style: Theme.of(context).textTheme.bodyText2.apply(
-                          fontSizeFactor: CommonUtil().isTablet ? 1.6 : 1.0,
+                    chat.text!,
+                    style: Theme.of(context).textTheme.bodyText2!.apply(
+                          fontSizeFactor: CommonUtil().isTablet! ? 1.6 : 1.0,
                           color: PreferenceUtil.getIfQurhomeisAcive()
                               ? Colors.black
                               : Colors.white,
@@ -68,7 +69,7 @@ class SheelaAISenderBubble extends StatelessWidget {
               if (!PreferenceUtil.getIfQurhomeisAcive())
                 Text(
                   chat.timeStamp,
-                  style: Theme.of(context).textTheme.bodyText2.apply(
+                  style: Theme.of(context).textTheme.bodyText2!.apply(
                         color: Colors.grey,
                       ),
                 ),

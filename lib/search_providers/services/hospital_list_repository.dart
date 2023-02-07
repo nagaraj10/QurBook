@@ -1,3 +1,4 @@
+
 import 'package:myfhb/search_providers/models/NewHospitalResponse.dart';
 
 import '../../common/CommonConstants.dart';
@@ -19,7 +20,7 @@ class HospitalListRepository {
   }
 
   Future<HospitalsSearchListResponse> getHospitalFromSearchNew(
-      String param) async {
+      String? param) async {
     final limit = 10;
     List<String> selectedOrganization = ["HOSPTL","CLINIC"];
 

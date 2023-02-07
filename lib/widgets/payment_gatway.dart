@@ -1,3 +1,4 @@
+
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -25,19 +26,19 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class PaymentGatwayPage extends StatefulWidget {
-  final String redirectUrl;
-  final String paymentId;
-  Function(String) closePage;
+  final String? redirectUrl;
+  final String? paymentId;
+  Function(String)? closePage;
   bool isFromSubscribe;
-  bool isFromRazor;
+  bool? isFromRazor;
   bool isPaymentFromNotification;
 
   PaymentGatwayPage(
-      {Key key,
-      @required this.redirectUrl,
-      @required this.paymentId,
-      @required this.isFromSubscribe,
-      @required this.isFromRazor,
+      {Key? key,
+      required this.redirectUrl,
+      required this.paymentId,
+      required this.isFromSubscribe,
+      required this.isFromRazor,
       this.isPaymentFromNotification = false,
       this.closePage})
       : super(key: key);
@@ -47,10 +48,10 @@ class PaymentGatwayPage extends StatefulWidget {
 }
 
 class _WebViewExampleState extends State<PaymentGatwayPage> {
-  String PAYMENT_URL;
-  UpdatePaymentViewModel updatePaymentViewModel;
+  String? PAYMENT_URL;
+  UpdatePaymentViewModel? updatePaymentViewModel;
   bool isFromSubscribe = false;
-  bool isFromRazor = false;
+  bool? isFromRazor = false;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
@@ -102,7 +103,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               NavigationControls(_controller.future),
             ],
           ),
-          body: isFromRazor
+          body: isFromRazor!
               ? iosWebview()
               : Platform.isAndroid
                   ? androidWebview()
@@ -128,13 +129,13 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
           navigationDelegate: (NavigationRequest request) {
             String finalUrl = request.url.toString();
             if (finalUrl.contains(CHECK_URL)) {
-              String paymentOrderId = '';
-              String paymentRequestId = '';
-              String signature = '';
-              String paymentStatus = '';
+              String? paymentOrderId = '';
+              String? paymentRequestId = '';
+              String? signature = '';
+              String? paymentStatus = '';
               Uri uri = Uri.parse(finalUrl);
 
-              if (isFromRazor) {
+              if (isFromRazor!) {
                 paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
                 paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
                 paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
@@ -148,7 +149,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               if (paymentStatus != null && paymentStatus == CREDIT ||
                   paymentStatus != null && paymentStatus == PAID) {
                 updatePaymentSubscribe(widget.paymentId, paymentOrderId,
-                        paymentRequestId, isFromRazor, signature)
+                        paymentRequestId, isFromRazor!, signature)
                     .then((value) {
                   if ((value?.isSuccess == true &&
                           value?.result?.paymentStatus == PAYCREDIT) ||
@@ -167,7 +168,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                 });
               } else {
                 updatePaymentSubscribe(widget.paymentId, paymentOrderId,
-                        paymentRequestId, isFromRazor, signature)
+                        paymentRequestId, isFromRazor!, signature)
                     .then((value) {
                   gotoPaymentResultPage(
                     false,
@@ -214,13 +215,13 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
         navigationDelegate: (NavigationRequest request) {
           String finalUrl = request.url.toString();
           if (finalUrl.contains(CHECK_URL)) {
-            String paymentOrderId = '';
-            String paymentRequestId = '';
-            String signature = '';
-            String paymentStatus = '';
+            String? paymentOrderId = '';
+            String? paymentRequestId = '';
+            String? signature = '';
+            String? paymentStatus = '';
             Uri uri = Uri.parse(finalUrl);
 
-            if (isFromRazor) {
+            if (isFromRazor!) {
               paymentStatus = uri.queryParameters[RAZOR_PAYMENT_STATUS];
               paymentOrderId = uri.queryParameters[RAZOR_PAYMENT_ID];
               paymentRequestId = uri.queryParameters[RAZOR_PAYMENT_REQ_ID];
@@ -234,7 +235,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             if (paymentStatus != null && paymentStatus == CREDIT ||
                 paymentStatus != null && paymentStatus == PAID) {
               updatePaymentSubscribe(widget.paymentId, paymentOrderId,
-                      paymentRequestId, isFromRazor, signature)
+                      paymentRequestId, isFromRazor!, signature)
                   .then((value) {
                 if ((value?.isSuccess == true &&
                         value?.result?.paymentStatus == PAYCREDIT) ||
@@ -253,7 +254,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               });
             } else {
               updatePaymentSubscribe(widget.paymentId, paymentOrderId,
-                      paymentRequestId, isFromRazor, signature)
+                      paymentRequestId, isFromRazor!, signature)
                   .then((value) {
                 gotoPaymentResultPage(
                   false,
@@ -300,7 +301,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
                   Provider.of<CheckoutPageProvider>(context, listen: false)
                       .loader(false, isNeedRelod: true);
                   if (!isFromSubscribe) {
-                    widget.closePage(STR_FAILED);
+                    widget.closePage!(STR_FAILED);
                     Navigator.pop(context);
                     Navigator.pop(context);
                   } else {
@@ -312,12 +313,12 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   void gotoPaymentResultPage(bool status, String refNo,
-      {bool isPaymentFails, final String cartUserId}) {
+      {bool? isPaymentFails, final String? cartUserId}) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -326,7 +327,7 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
             refNo: refNo,
             isFromSubscribe: isFromSubscribe,
             closePage: (value) {
-              widget.closePage(value);
+              widget.closePage!(value);
               Navigator.pop(context);
             },
             cartUserId: cartUserId,
@@ -350,11 +351,11 @@ class _WebViewExampleState extends State<PaymentGatwayPage> {
   }
 
   Future<UpdatePaymentResponse> updatePaymentSubscribe(
-      String paymentId,
-      String paymentOrderId,
-      String paymentRequestId,
+      String? paymentId,
+      String? paymentOrderId,
+      String? paymentRequestId,
       bool isFromRazor,
-      String signature) async {
+      String? signature) async {
     var body;
     if (isFromRazor) {
       body = {
@@ -392,7 +393,7 @@ class NavigationControls extends StatelessWidget {
           (BuildContext context, AsyncSnapshot<WebViewController> snapshot) {
         final bool webViewReady =
             snapshot.connectionState == ConnectionState.done;
-        final WebViewController controller = snapshot.data;
+        final WebViewController? controller = snapshot.data;
         return Row(
           children: <Widget>[],
         );

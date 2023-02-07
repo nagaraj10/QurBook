@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ import 'SheelaAIReceiverBubble.dart';
 import 'SheelaAISenderBubble.dart';
 
 class SheelaAIMainScreen extends StatefulWidget {
-  final SheelaArgument arguments;
+  final SheelaArgument? arguments;
   SheelaAIMainScreen({this.arguments});
   @override
   State<SheelaAIMainScreen> createState() => _SheelaAIMainScreenState();
@@ -30,12 +31,12 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   SheelaAIController controller = Get.find();
   SheelaQueueServices servicesQueue = SheelaQueueServices();
-  AnimationController animationController;
-  Animation<double> _animation;
+  AnimationController? animationController;
+  Animation<double>? _animation;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     controller.arguments = widget.arguments;
     controller.setDefaultValues();
     controller.bleController = null;
@@ -48,13 +49,13 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         vsync: this,
         value: 0.0);
     _animation =
-        Tween<double>(begin: 0.0, end: 15.0).animate(animationController)
+        Tween<double>(begin: 0.0, end: 15.0).animate(animationController!)
           ..addStatusListener(
             (status) {
               if (status == AnimationStatus.completed) {
-                animationController.reverse();
+                animationController!.reverse();
               } else if (status == AnimationStatus.dismissed) {
-                animationController.forward();
+                animationController!.forward();
               }
             },
           );
@@ -63,15 +64,15 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   @override
   void dispose() {
     animationController?.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     controller.stopTTS();
     controller.isSheelaScreenActive = false;
     if (controller.bleController != null) {
-      controller.bleController.stopTTS();
-      controller.bleController.stopScanning();
-      controller.bleController.isFromRegiment = false;
-      controller.bleController.addingDevicesInHublist = false;
-      controller.bleController.isFromVitals = false;
+      controller.bleController!.stopTTS();
+      controller.bleController!.stopScanning();
+      controller.bleController!.isFromRegiment = false;
+      controller.bleController!.addingDevicesInHublist = false;
+      controller.bleController!.isFromVitals = false;
       controller.bleController = null;
     }
     super.dispose();
@@ -83,11 +84,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         state == AppLifecycleState.detached) {
       controller.canSpeak = false;
       if (controller.bleController != null) {
-        controller.bleController.stopTTS();
+        controller.bleController!.stopTTS();
         controller.bleController = null;
       }
       controller.stopTTS();
-      if ((controller.arguments.audioMessage ?? '').isNotEmpty) {
+      if ((controller.arguments!.audioMessage ?? '').isNotEmpty) {
         controller.isSheelaScreenActive = false;
         Get.back();
       }
@@ -110,7 +111,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             controller.updateTimer(enable: false);
           } else {
             if (controller.currentPlayingConversation != null &&
-                controller.currentPlayingConversation.isPlaying.isTrue) {
+                controller.currentPlayingConversation!.isPlaying.isTrue) {
               controller.updateTimer(enable: false);
             } else {
               controller.updateTimer(enable: true);
@@ -120,7 +121,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
         return WillPopScope(
           onWillPop: () async {
             if (controller.isLoading.isFalse ||
-                (controller.arguments.audioMessage ?? '').isNotEmpty) {
+                (controller.arguments!.audioMessage ?? '').isNotEmpty) {
               controller.stopTTS();
               controller.canSpeak = false;
               controller.isSheelaScreenActive = false;
@@ -145,7 +146,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                       ),
                       onPressed: () {
                         if (controller.isLoading.isFalse ||
-                            (controller.arguments.audioMessage ?? '')
+                            (controller.arguments!.audioMessage ?? '')
                                 .isNotEmpty) {
                           controller.stopTTS();
                           controller.canSpeak = false;
@@ -164,7 +165,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                             PreferenceUtil.saveString(
                                 SHEELA_LANG,
                                 CommonUtil
-                                    .langaugeCodes[languageCode ?? 'undef']);
+                                    .langaugeCodes[languageCode ?? 'undef']!);
                             controller.getDeviceSelectionValues(
                               preferredLanguage: languageCode,
                             );
@@ -224,7 +225,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             floatingActionButton: Visibility(
               visible: controller.bleController == null,
               child: AnimatedBuilder(
-                animation: animationController,
+                animation: animationController!,
                 builder: (context, child) {
                   return Container(
                     decoration: const BoxDecoration(
@@ -286,10 +287,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   AppBar getQurhomeAppbar() {
     return AppBar(
       backgroundColor: Colors.white,
-      toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+      toolbarHeight: CommonUtil().isTablet! ? 110.00 : null,
       centerTitle: true,
       elevation: 0,
-      title: CommonUtil().isTablet
+      title: CommonUtil().isTablet!
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -345,11 +346,11 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
             controller.updateTimer(enable: false);
             Get.back();
           },
-          child: CommonUtil().isTablet
+          child: CommonUtil().isTablet!
               ? IconWidget(
                   icon: Icons.arrow_back_ios,
                   colors: Colors.black,
-                  size: CommonUtil().isTablet ? 38.0 : 24.0,
+                  size: CommonUtil().isTablet! ? 38.0 : 24.0,
                   onTap: () {
                     controller.canSpeak = false;
                     controller.stopTTS();
@@ -403,10 +404,10 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   value: languageCode,
                   groupValue: currentLanguage,
                   activeColor: Color(CommonUtil().getMyPrimaryColor()),
-                  onChanged: (value) {
+                  onChanged: (dynamic value) {
                     Get.back();
                     PreferenceUtil.saveString(SHEELA_LANG,
-                        CommonUtil.langaugeCodes[value ?? 'undef']);
+                        CommonUtil.langaugeCodes[value ?? 'undef']!);
                     controller
                         .getDeviceSelectionValues(
                       preferredLanguage: value,
@@ -418,7 +419,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   },
                 ),
                 Text(
-                  toBeginningOfSentenceCase(language),
+                  toBeginningOfSentenceCase(language)!,
                   style: TextStyle(
                     fontSize: 16.0.sp,
                   ),

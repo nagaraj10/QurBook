@@ -1,10 +1,11 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/paymentGatewayDetail.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/refund.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class Payload {
-  Refund refund;
-  PaymentGatewayDetail paymentGatewayDetail;
+  Refund? refund;
+  PaymentGatewayDetail? paymentGatewayDetail;
 
   Payload({this.refund, this.paymentGatewayDetail});
 
@@ -21,11 +22,11 @@ class Payload {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.refund != null) {
-      data[parameters.strRefund] = this.refund.toJson();
+      data[parameters.strRefund] = this.refund!.toJson();
     }
     if (this.paymentGatewayDetail != null) {
       data[parameters.strPaymentGatewayDetail] =
-          this.paymentGatewayDetail.toJson();
+          this.paymentGatewayDetail!.toJson();
     }
     return data;
   }

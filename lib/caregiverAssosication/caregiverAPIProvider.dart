@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -14,8 +15,8 @@ import 'caregiverAssosicationModel.dart';
 
 class CaregiverAPIProvider {
   approveCareGiver({
-    String phoneNumber,
-    String code,
+    String? phoneNumber,
+    String? code,
   }) async {
     final url = BASE_URL + qr_userlinking + qr_approve_caregiver;
     final headers = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -35,8 +36,8 @@ class CaregiverAPIProvider {
         ),
       );
       FlutterToast().getToast(
-        model.message,
-        model.isSuccess ? Colors.green : Colors.red,
+        model.message!,
+        model.isSuccess! ? Colors.green : Colors.red,
       );
     } catch (e) {
       FlutterToast().getToast(
@@ -47,8 +48,8 @@ class CaregiverAPIProvider {
   }
 
   rejectCareGiver({
-    String receiver,
-    String requestor,
+    String? receiver,
+    String? requestor,
   }) async {
     final url = BASE_URL + qr_userlinking + qr_reject_caregiver;
     final headers = await HeaderRequest().getRequestHeadersTimeSlot();
@@ -69,8 +70,8 @@ class CaregiverAPIProvider {
         ),
       );
       FlutterToast().getToast(
-        model.message,
-        model.isSuccess ? Colors.green : Colors.red,
+        model.message!,
+        model.isSuccess! ? Colors.green : Colors.red,
       );
     } catch (e) {
       FlutterToast().getToast(

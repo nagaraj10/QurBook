@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../src/utils/screenutils/size_extensions.dart';
 import '../constants/constants.dart';
@@ -8,10 +9,10 @@ import 'or_divider.dart';
 
 class ConfirmViaCallWidget extends StatelessWidget {
   ConfirmViaCallWidget({
-    @required this.ivrNumbersList,
+    required this.ivrNumbersList,
   });
 
-  List<String> ivrNumbersList;
+  List<String>? ivrNumbersList;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class ConfirmViaCallWidget extends StatelessWidget {
     var phoneWidgets = <Widget>[];
     primaryNumber;
     var index = 0;
-    for (final ivrNumber in ivrNumbersList) {
+    for (final ivrNumber in ivrNumbersList!) {
       phoneWidgets.add((ivrNumber ?? '').isNotEmpty
           ? Column(
               children: [

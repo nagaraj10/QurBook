@@ -1,14 +1,15 @@
+
 class AdditionalInfo {
   AdditionalInfo({
-      int age, 
-      String height, 
-      String offset, 
-      String weight, 
-      List<dynamic> language, 
-      String mrdNumber, 
-      String uhidNumber, 
-      String visitReason, 
-      String patientHistory,}){
+      int? age, 
+      String? height, 
+      String? offset, 
+      String? weight, 
+      List<dynamic>? language, 
+      String? mrdNumber, 
+      String? uhidNumber, 
+      String? visitReason, 
+      String? patientHistory,}){
     _age = age;
     _height = height;
     _offset = offset;
@@ -31,25 +32,25 @@ class AdditionalInfo {
     _visitReason = json['visitReason'];
     _patientHistory = json['patientHistory'];
   }
-  int _age;
-  String _height;
-  String _offset;
-  String _weight;
-  List<dynamic> _language;
-  String _mrdNumber;
-  String _uhidNumber;
-  String _visitReason;
-  String _patientHistory;
+  int? _age;
+  String? _height;
+  String? _offset;
+  String? _weight;
+  List<dynamic>? _language;
+  String? _mrdNumber;
+  String? _uhidNumber;
+  String? _visitReason;
+  String? _patientHistory;
 
-  int get age => _age;
-  String get height => _height;
-  String get offset => _offset;
-  String get weight => _weight;
-  List<dynamic> get language => _language;
-  String get mrdNumber => _mrdNumber;
-  String get uhidNumber => _uhidNumber;
-  String get visitReason => _visitReason;
-  String get patientHistory => _patientHistory;
+  int? get age => _age;
+  String? get height => _height;
+  String? get offset => _offset;
+  String? get weight => _weight;
+  List<dynamic>? get language => _language;
+  String? get mrdNumber => _mrdNumber;
+  String? get uhidNumber => _uhidNumber;
+  String? get visitReason => _visitReason;
+  String? get patientHistory => _patientHistory;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

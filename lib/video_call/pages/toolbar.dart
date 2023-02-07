@@ -1,3 +1,4 @@
+
 import 'package:agora_rtc_engine/rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,19 +23,19 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 // ignore: must_be_immutable
 class Toolbar extends StatefulWidget {
-  final ClientRole role;
+  final ClientRole? role;
   Function(bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
-  String patId;
-  String patName;
-  String appointmentId;
-  String patPicUrl;
-  String bookId;
+  String? patId;
+  String? patName;
+  String? appointmentId;
+  String? patPicUrl;
+  String? bookId;
   String callStartTime;
-  String healthOrganizationId;
-  HealthRecord healthRecords;
-  bool isFromAppointment;
+  String? healthOrganizationId;
+  HealthRecord? healthRecords;
+  bool? isFromAppointment;
 
   Toolbar(
       this.role,
@@ -65,17 +66,17 @@ class _ToolbarState extends State<Toolbar> {
   String callStartTime = '';
   String callEndTime = '';
   //ApiResponse _apiResponse = ApiResponse();
-  String doctor_id, mtTitle = '', specialityName = '';
+  String? doctor_id, mtTitle = '', specialityName = '';
   String userIdForNotify = '';
 
   final audioCallStatus =
-      Provider.of<AudioCallProvider>(Get.context, listen: false);
+      Provider.of<AudioCallProvider>(Get.context!, listen: false);
   final videoIconStatus =
-      Provider.of<VideoIconProvider>(Get.context, listen: false);
+      Provider.of<VideoIconProvider>(Get.context!, listen: false);
   final videoRequestStatus =
-      Provider.of<VideoRequestProvider>(Get.context, listen: false);
+      Provider.of<VideoRequestProvider>(Get.context!, listen: false);
 
-  var rtcProvider = Provider.of<RTCEngineProvider>(Get.context, listen: false);
+  var rtcProvider = Provider.of<RTCEngineProvider>(Get.context!, listen: false);
   var regController = Get.find<QurhomeRegimenController>();
 
   @override
@@ -274,7 +275,7 @@ class _ToolbarState extends State<Toolbar> {
   void _onCallEnd(BuildContext context) {
     prepareMyData();
     try {
-      if (!widget.isFromAppointment) {
+      if (!widget.isFromAppointment!) {
         callApiToUpdateNonAppointment();
       }
     } catch (e) {}
@@ -292,7 +293,7 @@ class _ToolbarState extends State<Toolbar> {
         widget.muted = !widget.muted;
       });
       widget.controllerState(widget.muted, widget._isHideMyVideo);
-      Provider.of<RTCEngineProvider>(Get.context, listen: false)
+      Provider.of<RTCEngineProvider>(Get.context!, listen: false)
           ?.rtcEngine
           ?.muteLocalAudioStream(widget.muted);
     } catch (e) {
@@ -336,10 +337,10 @@ class _ToolbarState extends State<Toolbar> {
           await rtcProvider?.rtcEngine?.enableLocalVideo(false);
           await rtcProvider?.rtcEngine?.muteLocalVideoStream(true);
 
-          Provider?.of<HideProvider>(context, listen: false)?.swithToAudio();
+          Provider.of<HideProvider>(context, listen: false)?.swithToAudio();
           Provider.of<AudioCallProvider>(context, listen: false)
               ?.enableAudioCall();
-          Provider?.of<VideoIconProvider>(context, listen: false)
+          Provider.of<VideoIconProvider>(context, listen: false)
               ?.turnOffVideo();
         } else {
           await rtcProvider?.rtcEngine
@@ -472,7 +473,7 @@ class _ToolbarState extends State<Toolbar> {
                           await rtcProvider?.rtcEngine?.enableLocalVideo(false);
                           await rtcProvider?.rtcEngine
                               ?.muteLocalVideoStream(true);
-                          Provider.of<RTCEngineProvider>(Get.context,
+                          Provider.of<RTCEngineProvider>(Get.context!,
                                   listen: false)
                               ?.changeLocalVideoStatus(true);
                           var newStatus = VideoCallStatus();

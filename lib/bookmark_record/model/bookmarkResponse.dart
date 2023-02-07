@@ -1,9 +1,10 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class BookmarkResponse {
-  int status;
-  bool success;
-  String message;
+  int? status;
+  bool? success;
+  String? message;
 
   BookmarkResponse({this.status, this.success, this.message});
 

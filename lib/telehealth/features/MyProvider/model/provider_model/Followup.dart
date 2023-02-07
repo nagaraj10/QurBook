@@ -1,11 +1,12 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/FollowupIn.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Followup {
-  String fee;
-  FollowupIn followupIn;
-  int followupValue;
-  String followupType;
+  String? fee;
+  FollowupIn? followupIn;
+  int? followupValue;
+  String? followupType;
 
   Followup({this.fee, this.followupIn, this.followupValue, this.followupType});
 
@@ -22,7 +23,7 @@ class Followup {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strfee] = this.fee;
     if (this.followupIn != null) {
-      data[parameters.strfollowupIn] = this.followupIn.toJson();
+      data[parameters.strfollowupIn] = this.followupIn!.toJson();
     }
     data[parameters.strfollowupValue] = this.followupValue;
     data[parameters.strfollowupType] = this.followupType;

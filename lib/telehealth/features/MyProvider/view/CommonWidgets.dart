@@ -1,5 +1,6 @@
+
 import 'dart:typed_data';
-import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,12 +23,12 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class CommonWidgets {
   CommonUtil commonUtil = new CommonUtil();
-  int rowPosition;
-  int itemPosition;
+  int? rowPosition;
+  int? itemPosition;
 
   Widget getTextForDoctors(String docName) {
     return Text(
-      docName != null ? toBeginningOfSentenceCase(docName) : '',
+      docName != null ? toBeginningOfSentenceCase(docName)! : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
       softWrap: true,
@@ -35,9 +36,9 @@ class CommonWidgets {
     );
   }
 
-  Widget getTextAbout(String docName) {
+  Widget getTextAbout(String? docName) {
     return Text(
-      docName != null ? toBeginningOfSentenceCase(docName) : '',
+      docName != null ? toBeginningOfSentenceCase(docName)! : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
       softWrap: true,
@@ -64,7 +65,7 @@ class CommonWidgets {
     print('specialization' + phoneNumber);
     return Text(
       (phoneNumber != null && phoneNumber != 'null')
-          ? toBeginningOfSentenceCase(phoneNumber)
+          ? toBeginningOfSentenceCase(phoneNumber)!
           : '',
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
@@ -76,11 +77,11 @@ class CommonWidgets {
   Widget getDoctoSpecialistOnly(Doctors eachDoctorModel) {
     return Text(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
-              eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
-          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+              eachDoctorModel.doctorProfessionalDetailCollection!.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection![0].specialty !=
                   null
               ? toBeginningOfSentenceCase(eachDoctorModel
-                  .doctorProfessionalDetailCollection[0].specialty.name)
+                  .doctorProfessionalDetailCollection![0].specialty!.name)!
               : ''
           : '',
       style: TextStyle(
@@ -93,11 +94,11 @@ class CommonWidgets {
   Widget getDoctoSpecialistForReschedule(DoctorResult eachDoctorModel) {
     return Text(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
-              eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
-          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+              eachDoctorModel.doctorProfessionalDetailCollection!.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection![0].specialty !=
                   null
               ? toBeginningOfSentenceCase(eachDoctorModel
-                  .doctorProfessionalDetailCollection[0].specialty.name)
+                  .doctorProfessionalDetailCollection![0].specialty!.name)!
               : ''
           : '',
       style: TextStyle(
@@ -110,11 +111,11 @@ class CommonWidgets {
   Widget getDoctoSpecialistOnlyForHos(DoctorFromHos eachDoctorModel) {
     return getDoctorSpecialityText(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
-              eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
-          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+              eachDoctorModel.doctorProfessionalDetailCollection!.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection![0].specialty !=
                   null
               ? toBeginningOfSentenceCase(eachDoctorModel
-                  .doctorProfessionalDetailCollection[0].specialty.name)
+                  .doctorProfessionalDetailCollection![0].specialty!.name)!
               : ''
           : '',
     );
@@ -130,9 +131,9 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorsAddress(String address) {
+  Widget getDoctorsAddress(String? address) {
     return Text(
-      address != null ? toBeginningOfSentenceCase(address) : '',
+      address != null ? toBeginningOfSentenceCase(address)! : '',
       overflow: TextOverflow.ellipsis,
       softWrap: false,
       style: TextStyle(
@@ -142,18 +143,18 @@ class CommonWidgets {
     );
   }
 
-  String getCity(HealthOrganizationResult result) {
-    String city;
+  String? getCity(HealthOrganizationResult result) {
+    String? city;
 
     if (result
-        .healthOrganization.healthOrganizationAddressCollection.isNotEmpty) {
-      if (result.healthOrganization.healthOrganizationAddressCollection.length >
+        .healthOrganization!.healthOrganizationAddressCollection!.isNotEmpty) {
+      if (result.healthOrganization!.healthOrganizationAddressCollection!.length >
           0) {
-        if (result.healthOrganization.healthOrganizationAddressCollection[0]
+        if (result.healthOrganization!.healthOrganizationAddressCollection![0]
                 .city !=
             null) {
-          city = result.healthOrganization
-              .healthOrganizationAddressCollection[0].city.name;
+          city = result.healthOrganization!
+              .healthOrganizationAddressCollection![0].city!.name;
         } else {
           city = '';
         }
@@ -166,13 +167,13 @@ class CommonWidgets {
     return city;
   }
 
-  String getCityDoctorsModel(Doctors doctors) {
-    String city;
+  String? getCityDoctorsModel(Doctors doctors) {
+    String? city;
 
-    if (doctors.user.userAddressCollection3.isNotEmpty) {
-      if (doctors.user.userAddressCollection3.length > 0) {
-        if (doctors.user.userAddressCollection3[0].city != null) {
-          city = doctors.user.userAddressCollection3[0].city.name;
+    if (doctors.user!.userAddressCollection3!.isNotEmpty) {
+      if (doctors.user!.userAddressCollection3!.length > 0) {
+        if (doctors.user!.userAddressCollection3![0].city != null) {
+          city = doctors.user!.userAddressCollection3![0].city!.name;
         } else {
           city = '';
         }
@@ -185,13 +186,13 @@ class CommonWidgets {
     return city;
   }
 
-  String getCityDoctorsModelForReschedule(DoctorResult doctors) {
-    String city;
+  String? getCityDoctorsModelForReschedule(DoctorResult doctors) {
+    String? city;
 
-    if (doctors.user.userAddressCollection3.isNotEmpty) {
-      if (doctors.user.userAddressCollection3.length > 0) {
-        if (doctors.user.userAddressCollection3[0].city != null) {
-          city = doctors.user.userAddressCollection3[0].city.name;
+    if (doctors.user!.userAddressCollection3!.isNotEmpty) {
+      if (doctors.user!.userAddressCollection3!.length > 0) {
+        if (doctors.user!.userAddressCollection3![0].city != null) {
+          city = doctors.user!.userAddressCollection3![0].city!.name;
         } else {
           city = '';
         }
@@ -204,13 +205,13 @@ class CommonWidgets {
     return city;
   }
 
-  String getCityDoctorsModelForHos(DoctorFromHos doctors) {
-    String city;
+  String? getCityDoctorsModelForHos(DoctorFromHos doctors) {
+    String? city;
 
-    if (doctors.user.userAddressCollection3.isNotEmpty) {
-      if (doctors.user.userAddressCollection3.length > 0) {
-        if (doctors.user.userAddressCollection3[0].city != null) {
-          city = doctors.user.userAddressCollection3[0].city.name;
+    if (doctors.user!.userAddressCollection3!.isNotEmpty) {
+      if (doctors.user!.userAddressCollection3!.length > 0) {
+        if (doctors.user!.userAddressCollection3![0].city != null) {
+          city = doctors.user!.userAddressCollection3![0].city!.name;
         } else {
           city = '';
         }
@@ -223,16 +224,16 @@ class CommonWidgets {
     return city;
   }
 
-  String getCityHospitalAddress(Hospitals hospital) {
-    String address;
+  String? getCityHospitalAddress(Hospitals hospital) {
+    String? address;
 
     if (hospital != null) {
-      if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
-        if (hospital.healthOrganizationAddressCollection.length > 0) {
-          if (hospital.healthOrganizationAddressCollection[0].addressLine1 !=
+      if (hospital.healthOrganizationAddressCollection!.isNotEmpty) {
+        if (hospital.healthOrganizationAddressCollection!.length > 0) {
+          if (hospital.healthOrganizationAddressCollection![0].addressLine1 !=
               null) {
             address =
-                hospital.healthOrganizationAddressCollection[0].addressLine1;
+                hospital.healthOrganizationAddressCollection![0].addressLine1;
           } else {
             address = '';
           }
@@ -247,15 +248,15 @@ class CommonWidgets {
     return address;
   }
 
-  String getCityHospital(Hospitals hospital) {
-    String city;
+  String? getCityHospital(Hospitals hospital) {
+    String? city;
 
     if (hospital != null) {
-      if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
+      if (hospital.healthOrganizationAddressCollection!.isNotEmpty) {
         if (((hospital.healthOrganizationAddressCollection?.length ?? 0) > 0) &&
-            hospital.healthOrganizationAddressCollection[0].state != null) {
-          if (hospital.healthOrganizationAddressCollection[0].city != null) {
-            city = hospital.healthOrganizationAddressCollection[0].city.name;
+            hospital.healthOrganizationAddressCollection![0].state != null) {
+          if (hospital.healthOrganizationAddressCollection![0].city != null) {
+            city = hospital.healthOrganizationAddressCollection![0].city!.name;
           } else {
             city = '';
           }
@@ -268,24 +269,24 @@ class CommonWidgets {
     }
 
     if (hospital != null &&
-        hospital.healthOrganizationContactCollection.isNotEmpty &&
-        hospital.healthOrganizationContactCollection.length > 0) {
+        hospital.healthOrganizationContactCollection!.isNotEmpty &&
+        hospital.healthOrganizationContactCollection!.length > 0) {
       if (((hospital.healthOrganizationAddressCollection?.length ?? 0) > 0) &&
-          hospital.healthOrganizationAddressCollection[0].state != null) {
-        city = city +
+          hospital.healthOrganizationAddressCollection![0].state != null) {
+        city = city! +
             "," +
-            hospital.healthOrganizationAddressCollection[0].state.name;
+            hospital.healthOrganizationAddressCollection![0].state!.name!;
       }
     }
 
     return city;
   }
 
-  Widget getHospitalDetails(String address) {
+  Widget getHospitalDetails(String? address) {
     return Container(
       padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
       child: Text(
-        toBeginningOfSentenceCase(address),
+        toBeginningOfSentenceCase(address)!,
         style: TextStyle(
             color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_abt_doc),
         softWrap: true,
@@ -311,7 +312,7 @@ class CommonWidgets {
         onTap: () {
           onClick();
         },
-        child: docs.isDefault
+        child: docs.isDefault!
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -347,7 +348,7 @@ class CommonWidgets {
         onTap: () {
           onClick();
         },
-        child: docs.isDefault
+        child: docs.isDefault!
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -379,11 +380,11 @@ class CommonWidgets {
   }
 
   Widget getIcon(
-      {double width,
-      double height,
-      IconData icon,
-      Colors colors,
-      Function onTap}) {
+      {double? width,
+      double? height,
+      IconData? icon,
+      Colors? colors,
+      Function? onTap}) {
     return Container(
       color: Colors.white,
       child: GestureDetector(
@@ -392,7 +393,7 @@ class CommonWidgets {
           color: Color(new CommonUtil().getMyPrimaryColor()),
           size: width,
         ),
-        onTap: onTap,
+        onTap: onTap as void Function()?,
       ),
     );
   }
@@ -411,7 +412,7 @@ class CommonWidgets {
     ));
   }
 
-  Widget getClipOvalImageNew(Doctors docs) {
+  Widget getClipOvalImageNew(Doctors? docs) {
     return ClipOval(child: getProfilePicWidget(docs));
   }
 
@@ -427,17 +428,17 @@ class CommonWidgets {
     return ClipOval(child: getProfilePicWidgetForHos(docs));
   }
 
-  Widget getClipOvalImageBookConfirm(String url) {
+  Widget getClipOvalImageBookConfirm(String? url) {
     return ClipOval(child: getProfilePic(url));
   }
 
   Widget getProfilePicWidgetForHos(DoctorFromHos docs) {
-    return docs.user.profilePicThumbnailUrl != null
-        ? Image.network(docs.user.profilePicThumbnailUrl,
+    return docs.user!.profilePicThumbnailUrl != null
+        ? Image.network(docs.user!.profilePicThumbnailUrl!,
             height: 40.0.h,
             width: 40.0.h,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                Object exception, StackTrace stackTrace) {
+                Object exception, StackTrace? stackTrace) {
             return Container(
               height: 40.0.h,
               width: 40.0.h,
@@ -456,11 +457,11 @@ class CommonWidgets {
 
   Widget getProfilePicWidgetForDoctorIds(DoctorIds docs) {
     return docs.profilePicThumbnailURL != null
-        ? Image.network(docs.profilePicThumbnailURL,
+        ? Image.network(docs.profilePicThumbnailURL!,
             height: 40.0.h,
             width: 40.0.h,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                Object exception, StackTrace stackTrace) {
+                Object exception, StackTrace? stackTrace) {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
@@ -477,11 +478,11 @@ class CommonWidgets {
           );
   }
 
-  Widget getProfilePic(String url) {
+  Widget getProfilePic(String? url) {
     return url != null
         ? Image.network(url, height: 40.0.h, width: 40.0.h, fit: BoxFit.cover,
             errorBuilder: (BuildContext context, Object exception,
-                StackTrace stackTrace) {
+                StackTrace? stackTrace) {
             return Container(
               height: 50.0.h,
               width: 50.0.h,
@@ -499,13 +500,13 @@ class CommonWidgets {
           );
   }
 
-  Widget getProfilePicWidget(Doctors docs) {
+  Widget getProfilePicWidget(Doctors? docs) {
     return docs?.user?.profilePicThumbnailUrl != null
-        ? Image.network(docs.user.profilePicThumbnailUrl,
+        ? Image.network(docs!.user!.profilePicThumbnailUrl!,
             height: 40.0.h,
             width: 40.0.h,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                Object exception, StackTrace stackTrace) {
+                Object exception, StackTrace? stackTrace) {
             return Container(
               height: 40.0.h,
               width: 40.0.h,
@@ -523,12 +524,12 @@ class CommonWidgets {
   }
 
   Widget getProfilePicWidgetForReschedule(DoctorResult docs) {
-    return docs.user.profilePicThumbnailUrl != null
-        ? Image.network(docs.user.profilePicThumbnailUrl,
+    return docs.user!.profilePicThumbnailUrl != null
+        ? Image.network(docs.user!.profilePicThumbnailUrl!,
             height: 40.0.h,
             width: 40.0.h,
             fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                Object exception, StackTrace stackTrace) {
+                Object exception, StackTrace? stackTrace) {
             return Container(
               height: 40.0.h,
               width: 40.0.h,
@@ -593,21 +594,21 @@ class CommonWidgets {
                                     ? getDoctoSpecialist((docs
                                                     .professionalDetails !=
                                                 null &&
-                                            docs.professionalDetails.length > 0)
-                                        ? docs.professionalDetails[0]
+                                            docs.professionalDetails!.length > 0)
+                                        ? docs.professionalDetails![0]
                                                     .specialty !=
                                                 null
-                                            ? '${docs.professionalDetails[0].specialty.name}'
+                                            ? '${docs.professionalDetails![0].specialty!.name}'
                                             : ''
                                         : '')
                                     : SizedBox(),
                                 getDoctorsAddress('${docs.city}'),
                                 (docs.languages != null &&
-                                        docs.languages.length > 0)
+                                        docs.languages!.length > 0)
                                     ? getTextForDoctors('Can Speak')
                                     : SizedBox(),
                                 (docs.languages != null &&
-                                        docs.languages.length > 0)
+                                        docs.languages!.length > 0)
                                     ? Row(children: getLanguages(docs))
                                     : SizedBox(),
                               ],
@@ -618,7 +619,7 @@ class CommonWidgets {
                       getSizedBox(20),
                       getTextForDoctors('About'),
                       getHospitalDetails(docs.professionalDetails != null
-                          ? docs.professionalDetails[0].aboutMe
+                          ? docs.professionalDetails![0].aboutMe
                           : ''),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -656,7 +657,7 @@ class CommonWidgets {
     String timeSlots = '';
 
     for (Slots dateTiming in dateTimingsSlots) {
-      timeSlots = commonUtil.removeLastThreeDigits(dateTiming.startTime);
+      timeSlots = commonUtil.removeLastThreeDigits(dateTiming.startTime!);
 
       rowSpecificTimeSlots.add(getSpecificSlots(timeSlots));
     }
@@ -670,7 +671,7 @@ class CommonWidgets {
     for (int i = 0; i < dateTimingsSlots.length; i++) {
       if (i > 0 && i % 5 == 0) {
         rowSpecificTimeSlots
-            .add(getSpecificSlots(dateTimingsSlots[i].timeslots));
+            .add(getSpecificSlots(dateTimingsSlots[i].timeslots!));
       } else {
         rowSpecificTimeSlots.add(Row(
           children: [],
@@ -710,7 +711,7 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidgetNew(Doctors docs, int position) {
+  Widget getDoctorStatusWidgetNew(Doctors docs, int? position) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -726,7 +727,7 @@ class CommonWidgets {
   }
 
   Widget getDoctorStatusWidgetForReschedule(
-      DoctorResult docReschedule, int position) {
+      DoctorResult docReschedule, int? position) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -741,8 +742,8 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidgetNewForHos(DoctorFromHos docs, int position,
-      {String status}) {
+  Widget getDoctorStatusWidgetNewForHos(DoctorFromHos? docs, int? position,
+      {String? status}) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -772,7 +773,7 @@ class CommonWidgets {
     );
   }
 
-  Color getDoctorStatus(String s, int position) {
+  Color getDoctorStatus(String? s, int? position) {
     return Colors.transparent;
     // print('getDoctorStatus $s');
     // switch (s) {
@@ -794,9 +795,9 @@ class CommonWidgets {
 
   getLanguages(DoctorIds docs) {
     List<Widget> languageWidget = new List();
-    if (docs.languages != null && docs.languages.length > 0) {
-      for (Languages lang in docs.languages) {
-        languageWidget.add(getDoctorsAddress(lang.name + ','));
+    if (docs.languages != null && docs.languages!.length > 0) {
+      for (Languages lang in docs.languages!) {
+        languageWidget.add(getDoctorsAddress(lang.name! + ','));
       }
     } else {
       languageWidget.add(SizedBox());
@@ -808,10 +809,10 @@ class CommonWidgets {
   getLanguagesNew(Doctors docs) {
     List<Widget> languageWidget = new List();
     if (docs.doctorLanguageCollection != null &&
-        docs.doctorLanguageCollection.length > 0) {
-      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        docs.doctorLanguageCollection!.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
         languageWidget.add(getDoctorsAddress(
-            docs.doctorLanguageCollection[i].language.name + ','));
+            docs.doctorLanguageCollection![i].language!.name! + ','));
       }
     } else {
       languageWidget.add(SizedBox());
@@ -823,10 +824,10 @@ class CommonWidgets {
   getLanguagesForReschedule(DoctorResult docs) {
     List<Widget> languageWidget = new List();
     if (docs.doctorLanguageCollection != null &&
-        docs.doctorLanguageCollection.length > 0) {
-      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        docs.doctorLanguageCollection!.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
         languageWidget.add(getDoctorsAddress(
-            docs.doctorLanguageCollection[i].language.name + ','));
+            docs.doctorLanguageCollection![i].language!.name! + ','));
       }
     } else {
       languageWidget.add(SizedBox());
@@ -838,10 +839,10 @@ class CommonWidgets {
   getLanguagesNewForHos(DoctorFromHos docs) {
     List<Widget> languageWidget = new List();
     if (docs.doctorLanguageCollection != null &&
-        docs.doctorLanguageCollection.length > 0) {
-      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        docs.doctorLanguageCollection!.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection!.length; i++) {
         languageWidget.add(getDoctorsAddress(
-            docs.doctorLanguageCollection[i].language.name + ','));
+            docs.doctorLanguageCollection![i].language!.name! + ','));
       }
     } else {
       languageWidget.add(SizedBox());
@@ -850,7 +851,7 @@ class CommonWidgets {
     return languageWidget;
   }
 
-  Widget showDoctorDetailViewNew(Doctors docs, BuildContext context) {
+  Widget showDoctorDetailViewNew(Doctors? docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -893,29 +894,30 @@ class CommonWidgets {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                setDoctorname(docs.user),
-                                AutoSizeText(
+                                setDoctorname(docs!.user),
+                                Text( //FU2.5
+                                //AutoSizeText( FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
-                                          docs.doctorProfessionalDetailCollection
+                                          docs.doctorProfessionalDetailCollection!
                                                   .length >
                                               0)
                                       ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
                                                   .specialty !=
                                               null
                                           ? docs
-                                                      .doctorProfessionalDetailCollection[
+                                                      .doctorProfessionalDetailCollection![
                                                           0]
-                                                      .specialty
+                                                      .specialty!
                                                       .name !=
                                                   null
                                               ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
-                                                  .specialty
-                                                  .name
+                                                  .specialty!
+                                                  .name!
                                               : ''
                                           : ''
                                       : '',
@@ -924,20 +926,20 @@ class CommonWidgets {
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w400,
                                       color: ColorUtils.lightgraycolor),
-                                ),
+                                ),  
                                 getDoctorsAddress(
-                                    docs.user.userAddressCollection3[0].city !=
+                                    docs.user!.userAddressCollection3![0].city !=
                                             null
-                                        ? docs.user.userAddressCollection3[0]
-                                            .city.name
+                                        ? docs.user!.userAddressCollection3![0]
+                                            .city!.name
                                         : ''),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? getTextForDoctors('Can Speak:')
                                     : SizedBox(),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? Row(children: getLanguagesNew(docs))
                                     : SizedBox(),
@@ -948,14 +950,14 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection
+                      getTextAbout((docs.doctorProfessionalDetailCollection!
                                   .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection.length >
+                              docs.doctorProfessionalDetailCollection!.length >
                                   0 ??
-                              docs.doctorProfessionalDetailCollection[0]
+                              docs.doctorProfessionalDetailCollection![0]
                                       .aboutMe !=
                                   null)
-                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
                   ),
@@ -967,7 +969,7 @@ class CommonWidgets {
   }
 
   Widget showDoctorDetailViewNewForHos(
-      DoctorFromHos docs, BuildContext context) {
+      DoctorFromHos? docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1001,7 +1003,7 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImageForHos(docs),
+                            child: getClipOvalImageForHos(docs!),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -1011,28 +1013,29 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 setDoctornameForHos(docs.user),
-                                AutoSizeText(
+                               // AutoSizeText( FU2.5
+                                Text( // FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
-                                          docs.doctorProfessionalDetailCollection
+                                          docs.doctorProfessionalDetailCollection!
                                                   .length >
                                               0)
                                       ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
                                                   .specialty !=
                                               null
                                           ? docs
-                                                      .doctorProfessionalDetailCollection[
+                                                      .doctorProfessionalDetailCollection![
                                                           0]
-                                                      .specialty
+                                                      .specialty!
                                                       .name !=
                                                   null
                                               ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
-                                                  .specialty
-                                                  .name
+                                                  .specialty!
+                                                  .name!
                                               : ''
                                           : ''
                                       : '',
@@ -1043,18 +1046,18 @@ class CommonWidgets {
                                       color: ColorUtils.lightgraycolor),
                                 ),
                                 getDoctorsAddress(
-                                    docs.user.userAddressCollection3[0].city !=
+                                    docs.user!.userAddressCollection3![0].city !=
                                             null
-                                        ? docs.user.userAddressCollection3[0]
-                                            .city.name
+                                        ? docs.user!.userAddressCollection3![0]
+                                            .city!.name
                                         : ''),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? getTextForDoctors('Can Speak:')
                                     : SizedBox(),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? Row(children: getLanguagesNewForHos(docs))
                                     : SizedBox(),
@@ -1065,14 +1068,14 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection
+                      getTextAbout((docs.doctorProfessionalDetailCollection!
                                   .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection.length >
+                              docs.doctorProfessionalDetailCollection!.length >
                                   0 ??
-                              docs.doctorProfessionalDetailCollection[0]
+                              docs.doctorProfessionalDetailCollection![0]
                                       .aboutMe !=
                                   null)
-                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
                   ),
@@ -1084,7 +1087,7 @@ class CommonWidgets {
   }
 
   Widget showDoctorDetailViewForReschedule(
-      DoctorResult docs, BuildContext context) {
+      DoctorResult? docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1118,7 +1121,7 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImageForReschedule(docs),
+                            child: getClipOvalImageForReschedule(docs!),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -1128,28 +1131,29 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 setDoctorname(docs.user),
-                                AutoSizeText(
+                               // AutoSizeText(  FU2.5
+                               Text( // FU2.5
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
-                                          docs.doctorProfessionalDetailCollection
+                                          docs.doctorProfessionalDetailCollection!
                                                   .length >
                                               0)
                                       ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
                                                   .specialty !=
                                               null
                                           ? docs
-                                                      .doctorProfessionalDetailCollection[
+                                                      .doctorProfessionalDetailCollection![
                                                           0]
-                                                      .specialty
+                                                      .specialty!
                                                       .name !=
                                                   null
                                               ? docs
-                                                  .doctorProfessionalDetailCollection[
+                                                  .doctorProfessionalDetailCollection![
                                                       0]
-                                                  .specialty
-                                                  .name
+                                                  .specialty!
+                                                  .name!
                                               : ''
                                           : ''
                                       : '',
@@ -1160,18 +1164,18 @@ class CommonWidgets {
                                       color: ColorUtils.lightgraycolor),
                                 ),
                                 getDoctorsAddress(
-                                    docs.user.userAddressCollection3[0].city !=
+                                    docs.user!.userAddressCollection3![0].city !=
                                             null
-                                        ? docs.user.userAddressCollection3[0]
-                                            .city.name
+                                        ? docs.user!.userAddressCollection3![0]
+                                            .city!.name
                                         : ''),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? getTextForDoctors('Can Speak:')
                                     : SizedBox(),
                                 (docs.doctorLanguageCollection != null &&
-                                        docs.doctorLanguageCollection.length >
+                                        docs.doctorLanguageCollection!.length >
                                             0)
                                     ? Row(
                                         children:
@@ -1184,14 +1188,14 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextAbout((docs.doctorProfessionalDetailCollection
+                      getTextAbout((docs.doctorProfessionalDetailCollection!
                                   .isNotEmpty ??
-                              docs.doctorProfessionalDetailCollection.length >
+                              docs.doctorProfessionalDetailCollection!.length >
                                   0 ??
-                              docs.doctorProfessionalDetailCollection[0]
+                              docs.doctorProfessionalDetailCollection![0]
                                       .aboutMe !=
                                   null)
-                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          ? docs.doctorProfessionalDetailCollection![0].aboutMe
                           : ''),
                     ],
                   ),
@@ -1202,7 +1206,7 @@ class CommonWidgets {
         });
   }
 
-  String getMoneyWithForamt(String amount) {
+  String getMoneyWithForamt(String? amount) {
     if (amount != null && amount != '') {
       var amountDouble = double.parse(amount);
 
@@ -1221,7 +1225,7 @@ class CommonWidgets {
         onTap: () {
           onClick();
         },
-        child: docs.isTelehealthEnabled
+        child: docs.isTelehealthEnabled!
             ? ImageIcon(
                 AssetImage('assets/providers/bookmarked.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -1234,14 +1238,14 @@ class CommonWidgets {
               ));
   }
 
-  String getAddressLineForDoctors(Doctors result, String whichAddress) {
-    String address;
+  String? getAddressLineForDoctors(Doctors? result, String whichAddress) {
+    String? address;
 
     if (whichAddress == 'address1') {
-      if (result.user.userAddressCollection3.isNotEmpty) {
-        if (result.user.userAddressCollection3.length > 0) {
-          if (result.user.userAddressCollection3[0].addressLine1 != null) {
-            address = result.user.userAddressCollection3[0].addressLine1;
+      if (result!.user!.userAddressCollection3!.isNotEmpty) {
+        if (result.user!.userAddressCollection3!.length > 0) {
+          if (result.user!.userAddressCollection3![0].addressLine1 != null) {
+            address = result.user!.userAddressCollection3![0].addressLine1;
           } else {
             address = '';
           }
@@ -1252,10 +1256,10 @@ class CommonWidgets {
         address = '';
       }
     } else {
-      if (result.user.userAddressCollection3.isNotEmpty) {
-        if (result.user.userAddressCollection3.length > 0) {
-          if (result.user.userAddressCollection3[0].addressLine2 != null) {
-            address = result.user.userAddressCollection3[0].addressLine2;
+      if (result!.user!.userAddressCollection3!.isNotEmpty) {
+        if (result.user!.userAddressCollection3!.length > 0) {
+          if (result.user!.userAddressCollection3![0].addressLine2 != null) {
+            address = result.user!.userAddressCollection3![0].addressLine2;
           } else {
             address = '';
           }
@@ -1270,16 +1274,16 @@ class CommonWidgets {
     return address;
   }
 
-  String getAddressLineForHealthOrg(Hospitals result, String whichAddress) {
-    String address;
+  String? getAddressLineForHealthOrg(Hospitals? result, String whichAddress) {
+    String? address;
 
     if (whichAddress == 'address1') {
-      if (result.healthOrganizationAddressCollection.isNotEmpty) {
-        if (result.healthOrganizationAddressCollection.length > 0) {
-          if (result.healthOrganizationAddressCollection[0].addressLine1 !=
+      if (result!.healthOrganizationAddressCollection!.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection!.length > 0) {
+          if (result.healthOrganizationAddressCollection![0].addressLine1 !=
               null) {
             address =
-                result.healthOrganizationAddressCollection[0].addressLine1;
+                result.healthOrganizationAddressCollection![0].addressLine1;
           } else {
             address = '';
           }
@@ -1290,12 +1294,12 @@ class CommonWidgets {
         address = '';
       }
     } else {
-      if (result.healthOrganizationAddressCollection.isNotEmpty) {
-        if (result.healthOrganizationAddressCollection.length > 0) {
-          if (result.healthOrganizationAddressCollection[0].addressLine2 !=
+      if (result!.healthOrganizationAddressCollection!.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection!.length > 0) {
+          if (result.healthOrganizationAddressCollection![0].addressLine2 !=
               null) {
             address =
-                result.healthOrganizationAddressCollection[0].addressLine2;
+                result.healthOrganizationAddressCollection![0].addressLine2;
           } else {
             address = '';
           }
@@ -1310,15 +1314,15 @@ class CommonWidgets {
     return address;
   }
 
-  Widget setDoctorname(User user) {
+  Widget setDoctorname(User? user) {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name.capitalizeFirstofEach
+              ? user.name!.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName.capitalizeFirstofEach +
-                      user.lastName.capitalizeFirstofEach)
-                  : '')
+                  ? (user.firstName!.capitalizeFirstofEach +
+                      user.lastName!.capitalizeFirstofEach)
+                  : '')!
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
@@ -1327,15 +1331,15 @@ class CommonWidgets {
     );
   }
 
-  Widget setDoctornameForTabBar(User user) {
+  Widget setDoctornameForTabBar(User? user) {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name.capitalizeFirstofEach
+              ? user.name!.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName.capitalizeFirstofEach +
-                      user.lastName.capitalizeFirstofEach)
-                  : '')
+                  ? (user.firstName!.capitalizeFirstofEach +
+                      user.lastName!.capitalizeFirstofEach)
+                  : '')!
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400,
@@ -1346,15 +1350,15 @@ class CommonWidgets {
     );
   }
 
-  Widget setDoctornameForHos(UserResponse user) {
+  Widget setDoctornameForHos(UserResponse? user) {
     return getWidgetWithDoctorName(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-              ? user.name.capitalizeFirstofEach
+              ? user.name!.capitalizeFirstofEach
               : user.firstName != null && user.lastName != null
-                  ? (user.firstName.capitalizeFirstofEach +
-                      user.lastName.capitalizeFirstofEach)
-                  : '')
+                  ? (user.firstName!.capitalizeFirstofEach +
+                      user.lastName!.capitalizeFirstofEach)
+                  : '')!
           : '',
     );
   }
@@ -1372,34 +1376,34 @@ class CommonWidgets {
 
   Widget getFirstLastNameText(Doctors myProfile) {
     String fullName = "";
-    String firstName = "";
-    String lastName = "";
+    String? firstName = "";
+    String? lastName = "";
     if (myProfile.user != null &&
-        myProfile.user.firstName != null &&
-        myProfile.user.firstName != "") {
-      firstName = myProfile.user.firstName;
+        myProfile.user!.firstName != null &&
+        myProfile.user!.firstName != "") {
+      firstName = myProfile.user!.firstName;
     }
     if (myProfile.user != null &&
-        myProfile.user.lastName != null &&
-        myProfile.user.lastName != "") {
-      lastName = myProfile.user.lastName;
+        myProfile.user!.lastName != null &&
+        myProfile.user!.lastName != "") {
+      lastName = myProfile.user!.lastName;
     }
     if (myProfile.user != null &&
-        myProfile.user.firstName != null &&
-        myProfile.user.lastName != null &&
-        myProfile.user.firstName != "" &&
-        myProfile.user.lastName != "") {
+        myProfile.user!.firstName != null &&
+        myProfile.user!.lastName != null &&
+        myProfile.user!.firstName != "" &&
+        myProfile.user!.lastName != "") {
       return Text(
-        firstName[0].toUpperCase() + lastName[0].toUpperCase(),
+        firstName![0].toUpperCase() + lastName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
       );
-    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+    } else if (myProfile.user != null && myProfile.user!.firstName != null) {
       return Text(
-        myProfile.user.firstName[0].toUpperCase(),
+        myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1420,20 +1424,20 @@ class CommonWidgets {
 
   Widget getFirstLastNameForReschedule(DoctorResult myProfile) {
     if (myProfile.user != null &&
-        myProfile.user.firstName != null &&
-        myProfile.user.lastName != null) {
+        myProfile.user!.firstName != null &&
+        myProfile.user!.lastName != null) {
       return Text(
-        myProfile.user.firstName[0].toUpperCase() +
-            myProfile.user.lastName[0].toUpperCase(),
+        myProfile.user!.firstName![0].toUpperCase() +
+            myProfile.user!.lastName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
       );
-    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+    } else if (myProfile.user != null && myProfile.user!.firstName != null) {
       return Text(
-        myProfile.user.firstName[0].toUpperCase(),
+        myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1457,8 +1461,8 @@ class CommonWidgets {
         myProfile.firstName != null &&
         myProfile.lastName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase() +
-            myProfile.lastName[0].toUpperCase(),
+        myProfile.firstName![0].toUpperCase() +
+            myProfile.lastName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1467,7 +1471,7 @@ class CommonWidgets {
       );
     } else if (myProfile != null && myProfile.firstName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase(),
+        myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -1488,20 +1492,20 @@ class CommonWidgets {
 
   Widget getFirstLastNameTextDoctorFromHos(DoctorFromHos myProfile) {
     if (myProfile.user != null &&
-        myProfile.user.firstName != null &&
-        myProfile.user.lastName != null) {
+        myProfile.user!.firstName != null &&
+        myProfile.user!.lastName != null) {
       return Text(
-        myProfile.user.firstName[0].toUpperCase() +
-            myProfile.user.lastName[0].toUpperCase(),
+        myProfile.user!.firstName![0].toUpperCase() +
+            myProfile.user!.lastName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
           fontWeight: FontWeight.w400,
         ),
       );
-    } else if (myProfile.user != null && myProfile.user.firstName != null) {
+    } else if (myProfile.user != null && myProfile.user!.firstName != null) {
       return Text(
-        myProfile.user.firstName[0].toUpperCase(),
+        myProfile.user!.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,

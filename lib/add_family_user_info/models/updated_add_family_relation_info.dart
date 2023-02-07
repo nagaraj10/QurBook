@@ -1,9 +1,10 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class UpdateAddFamilyRelationInfo {
-  int status;
-  bool success;
-  String message;
+  int? status;
+  bool? success;
+  String? message;
 
   UpdateAddFamilyRelationInfo({this.status, this.success, this.message});
 

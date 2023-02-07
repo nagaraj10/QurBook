@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,9 +9,9 @@ class AppLocalizations {
   AppLocalizations(this.locale);
   final Locale locale;
 
-  Map<String, String> _localizedStrings;
+  late Map<String, String> _localizedStrings;
 
-  static AppLocalizations of(context) =>
+  static AppLocalizations? of(context) =>
       Localizations.of<AppLocalizations>(context, AppLocalizations);
 
   Future<bool> load() async {
@@ -22,7 +23,7 @@ class AppLocalizations {
     return true;
   }
 
-  String translate(String key) {
+  String? translate(String key) {
     return _localizedStrings[key];
   }
 

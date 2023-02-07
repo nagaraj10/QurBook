@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 
@@ -27,7 +28,7 @@ import '../../src/utils/colors_utils.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 
 class MyFamilyDetailScreen extends StatefulWidget {
-  MyFamilyDetailArguments arguments;
+  MyFamilyDetailArguments? arguments;
 
   MyFamilyDetailScreen({this.arguments});
 
@@ -40,10 +41,10 @@ class MyFamilyDetailScreen extends StatefulWidget {
 
 class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
-  static File imageURI;
+  int? _currentPage = 0;
+  static File? imageURI;
   final double expandedHeight = 170.0.h;
-  List<int> profileData;
+  List<int>? profileData;
 
   var mobileNoController = TextEditingController();
   FocusNode mobileNoFocus = FocusNode();
@@ -88,24 +89,24 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   final _formkey = GlobalKey<FormState>();
 
-  RelationShipResponseList relationShipResponseList;
-  RelationsShipModel selectedRelationShip;
+  late RelationShipResponseList relationShipResponseList;
+  RelationsShipModel? selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
   // MyProfileModel myProfile;
   bool isCalled = false;
 
-  List<int> fetchedProfileData;
+  List<int>? fetchedProfileData;
 
-  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
-  AddFamilyUserInfoRepository addFamilyUserInfoRepository;
+  AddFamilyUserInfoBloc? addFamilyUserInfoBloc;
+  late AddFamilyUserInfoRepository addFamilyUserInfoRepository;
 
   //MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
-  String selectedBloodGroup;
-  String selectedBloodRange;
+  String? selectedBloodGroup;
+  String? selectedBloodRange;
 
-  String selectedGender;
+  String? selectedGender;
 
   var heightConroller = TextEditingController();
   var heightInchConroller = TextEditingController();
@@ -114,10 +115,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   var weightController = TextEditingController();
   FocusNode weightFocus = FocusNode();
-  MyProfileModel myProfile = MyProfileModel();
+  MyProfileModel? myProfile = MyProfileModel();
   FamilyMemberListRepository _familyResponseListRepository =
       FamilyMemberListRepository();
-  List<SharedByUsers> profilesSharedByMeAry = [];
+  List<SharedByUsers>? profilesSharedByMeAry = [];
 
   bool isFeetOrInches = true;
   bool isKg = true;
@@ -127,13 +128,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     super.initState();
     addFamilyUserInfoBloc = AddFamilyUserInfoBloc();
 
-    if (widget.arguments.caregiverRequestor != null) {
+    if (widget.arguments!.caregiverRequestor != null) {
       getAllCustomRoles();
     } else {
       getAllCustomRoles();
       fetchUserProfileInfo();
       setState(() {
-        _currentPage = widget.arguments.currentPage;
+        _currentPage = widget.arguments!.currentPage;
       });
     }
   }
@@ -141,15 +142,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   void getFamilyMembers() async {
     FamilyMembers familyResponseList =
         await _familyResponseListRepository.getFamilyMembersListNew();
-    profilesSharedByMeAry = familyResponseList.result.sharedByUsers;
+    profilesSharedByMeAry = familyResponseList.result!.sharedByUsers;
     var position = 0;
-    for (var i = 0; i < profilesSharedByMeAry.length; i++) {
-      if (widget.arguments.caregiverRequestor ==
-          profilesSharedByMeAry[i].child.id) {
+    for (var i = 0; i < profilesSharedByMeAry!.length; i++) {
+      if (widget.arguments!.caregiverRequestor ==
+          profilesSharedByMeAry![i].child!.id) {
         position = i;
       }
     }
-    if (widget.arguments.currentPage == null) {
+    if (widget.arguments!.currentPage == null) {
       _currentPage = position;
     }
     setState(() {});
@@ -158,7 +159,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    myProfile = widget.arguments.myProfile;
+    myProfile = widget.arguments!.myProfile;
     getFamilyMembers();
 
     return myProfile;
@@ -213,16 +214,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                 //TODO we need to pass the logged in user id
                                 isForFamilyAddition: false,
                                 isFromAppointmentOrSlotPage: false,
-                                id: widget.arguments
-                                    .profilesSharedByMe[_currentPage].child.id,
+                                id: widget.arguments!
+                                    .profilesSharedByMe![_currentPage!].child!.id,
                                 sharedbyme: widget
-                                    .arguments.profilesSharedByMe[_currentPage],
+                                    .arguments!.profilesSharedByMe![_currentPage!],
                                 fromClass: CommonConstants.my_family,
                                 isForFamily: false,
                                 defaultrelationShips:
                                     relationShipResponseList?.result?.isNotEmpty
                                         ? relationShipResponseList
-                                            ?.result[0].referenceValueCollection
+                                            ?.result![0].referenceValueCollection
                                         : <RelationsShipModel>[]))
                         .then((value) {});
                   })
@@ -230,9 +231,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         body: PageView(
             physics: ClampingScrollPhysics(),
             controller: PageController(
-                initialPage: widget.arguments.caregiverRequestor != null
+                initialPage: widget.arguments!.caregiverRequestor != null
                     ? 0
-                    : _currentPage,
+                    : _currentPage!,
                 keepPage: false,
                 viewportFraction: 1),
             onPageChanged: (page) {
@@ -251,13 +252,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   List<Widget> buildMyFamilDetailPages() {
     var children = <Widget>[];
-    if (widget.arguments.caregiverRequestor != null) {
-      if (profilesSharedByMeAry.length > 0) {
-        children.add(_showPageData(profilesSharedByMeAry[_currentPage]));
+    if (widget.arguments!.caregiverRequestor != null) {
+      if (profilesSharedByMeAry!.length > 0) {
+        children.add(_showPageData(profilesSharedByMeAry![_currentPage!]));
       }
     } else {
-      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
-        children.add(_showPageData(widget.arguments.profilesSharedByMe[i]));
+      for (var i = 0; i < widget.arguments!.profilesSharedByMe!.length; i++) {
+        children.add(_showPageData(widget.arguments!.profilesSharedByMe![i]));
       }
     }
 
@@ -310,8 +311,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     cntrlr_addr_zip = TextEditingController(text: '');
 
     if (sharedbyme.child != null) {
-      if (sharedbyme.child.firstName != null &&
-          sharedbyme.child.lastName != null) {
+      if (sharedbyme.child!.firstName != null &&
+          sharedbyme.child!.lastName != null) {
         firstNameController.text =
             sharedbyme?.child?.firstName?.capitalizeFirstofEach;
         middleNameController.text =
@@ -320,32 +321,32 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             sharedbyme?.child?.lastName?.capitalizeFirstofEach;
       }
     } else {
-      firstNameController.text = sharedbyme?.child?.name;
+      firstNameController.text = sharedbyme?.child?.name!;
       middleNameController.text = '';
       lastNameController.text = '';
     }
 
     if (sharedbyme?.child?.isVirtualUser != null) {
       try {
-        if (sharedbyme.child.isVirtualUser) {
+        if (sharedbyme.child!.isVirtualUser!) {
           try {
             var myProf =
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-            if (myProf.result.userContactCollection3 != null) {
-              if (myProf.result.userContactCollection3.isNotEmpty) {
+            if (myProf.result!.userContactCollection3 != null) {
+              if (myProf.result!.userContactCollection3!.isNotEmpty) {
                 mobileNoController.text =
-                    myProf.result.userContactCollection3[0].phoneNumber;
+                    myProf.result!.userContactCollection3![0]!.phoneNumber!;
                 emailController.text =
-                    myProf.result.userContactCollection3[0].email;
+                    myProf.result!.userContactCollection3![0]!.email!;
               }
             }
           } catch (e) {
-            if (sharedbyme?.child?.isVirtualUser) {
+            if (sharedbyme?.child?.isVirtualUser!) {
               mobileNoController.text =
-                  myProfile?.result?.userContactCollection3[0].phoneNumber;
+                  myProfile?.result?.userContactCollection3![0]!.phoneNumber!;
               emailController.text =
-                  myProfile?.result?.userContactCollection3[0].email;
+                  myProfile?.result?.userContactCollection3![0]!.email!;
             } else {
               mobileNoController.text = '';
               emailController.text = '';
@@ -353,19 +354,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         } else {
           // this is non primary user
-          if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+          if (sharedbyme?.child?.userContactCollection3!.isNotEmpty) {
             mobileNoController.text =
-                sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+                sharedbyme?.child?.userContactCollection3![0].phoneNumber!;
             emailController.text =
-                sharedbyme?.child?.userContactCollection3[0].email;
+                sharedbyme?.child?.userContactCollection3![0].email!;
           }
         }
       } catch (e) {
-        if (sharedbyme?.child?.isVirtualUser) {
+        if (sharedbyme?.child?.isVirtualUser!) {
           mobileNoController.text =
-              myProfile?.result?.userContactCollection3[0].phoneNumber;
+              myProfile?.result?.userContactCollection3![0]!.phoneNumber!;
           emailController.text =
-              myProfile?.result?.userContactCollection3[0].email;
+              myProfile?.result?.userContactCollection3![0]!.email!;
         } else {
           mobileNoController.text = '';
           emailController.text = '';
@@ -373,11 +374,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       }
     } else {
       // this is non primary user
-      if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+      if (sharedbyme?.child?.userContactCollection3!.isNotEmpty) {
         mobileNoController.text =
-            sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+            sharedbyme?.child?.userContactCollection3![0].phoneNumber!;
         emailController.text =
-            sharedbyme?.child?.userContactCollection3[0].email;
+            sharedbyme?.child?.userContactCollection3![0].email!;
       }
     }
 
@@ -385,13 +386,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       if (sharedbyme?.child?.additionalInfo?.heightObj != null) {
         isFeetOrInches = true;
         heightConroller.text =
-            sharedbyme?.child?.additionalInfo.heightObj?.valueFeet ?? '';
+            sharedbyme?.child?.additionalInfo!.heightObj?.valueFeet ?? '';
         heightInchConroller.text =
-            sharedbyme?.child?.additionalInfo.heightObj?.valueInches ?? '';
+            sharedbyme?.child?.additionalInfo!.heightObj?.valueInches ?? '';
       } else {
         isFeetOrInches = false;
 
-        heightConroller.text = sharedbyme?.child?.additionalInfo.height ?? '';
+        heightConroller.text = sharedbyme?.child?.additionalInfo!.height ?? '';
       }
 
       if (sharedbyme?.child?.additionalInfo?.weightUnitCode == 'lb') {
@@ -399,7 +400,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       } else {
         isKg = true;
       }
-      weightController.text = sharedbyme?.child?.additionalInfo.weight ?? '';
+      weightController.text = sharedbyme?.child?.additionalInfo!.weight ?? '';
     } else {
       var preferredMeasurement = PreferenceUtil.getPreferredMeasurement(
           Constants.KEY_PREFERREDMEASUREMENT);
@@ -433,43 +434,43 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       }
     }
 
-    if (CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
+    if (CommonUtil().checkIfStringisNull(sharedbyme.child!.bloodGroup)) {
       //renameBloodGroup(sharedbyme.child.bloodGroup);
-      final bloodGroup = sharedbyme.child.bloodGroup;
+      final bloodGroup = sharedbyme.child!.bloodGroup!;
       bloodGroupController.text = bloodGroup.split(' ')[0];
       bloodRangeController.text = bloodGroup.split(' ')[1];
     }
 
-    if (sharedbyme.child.gender != null) {
+    if (sharedbyme.child!.gender != null) {
       genderController.text =
-          toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
+          toBeginningOfSentenceCase(sharedbyme.child!.gender!.toLowerCase())!;
     }
 
     if (sharedbyme.relationship != null) {
-      relationShipController.text = sharedbyme.relationship.name;
+      relationShipController.text = sharedbyme.relationship!.name!;
     }
 
-    if (sharedbyme.child.dateOfBirth != null) {
+    if (sharedbyme.child!.dateOfBirth != null) {
       dateOfBirthController.text =
-          FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
+          FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
     }
 
-    if (sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
+    if (sharedbyme?.child?.userAddressCollection3!.isNotEmpty) {
       cntrlr_addr_one.text =
-          sharedbyme?.child?.userAddressCollection3[0].addressLine1;
+          sharedbyme?.child?.userAddressCollection3![0].addressLine1!;
       cntrlr_addr_two.text =
-          sharedbyme?.child?.userAddressCollection3[0].addressLine2;
+          sharedbyme?.child?.userAddressCollection3![0].addressLine2!;
       cntrlr_addr_city.text =
-          sharedbyme?.child?.userAddressCollection3[0].city?.name;
+          sharedbyme?.child?.userAddressCollection3![0].city?.name!;
       cntrlr_addr_state.text =
-          sharedbyme?.child?.userAddressCollection3[0].state?.name;
+          sharedbyme?.child?.userAddressCollection3![0].state?.name!;
       cntrlr_addr_zip.text =
-          sharedbyme?.child?.userAddressCollection3[0].pincode;
+          sharedbyme?.child?.userAddressCollection3![0].pincode!;
     }
 
     if (sharedbyme?.membershipOfferedBy != null &&
         sharedbyme?.membershipOfferedBy != '') {
-      cntrlr_corp_name.text = sharedbyme?.membershipOfferedBy;
+      cntrlr_corp_name.text = sharedbyme?.membershipOfferedBy!;
     }
 
     final profilebanner =
@@ -486,16 +487,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               child: Opacity(
                   opacity: 1,
                   child: ClipOval(
-                    child: sharedbyme.child.profilePicThumbnailUrl != null
+                    child: sharedbyme.child!.profilePicThumbnailUrl != null
                         ? Image.network(
-                            sharedbyme.child.profilePicThumbnailUrl,
+                            sharedbyme.child!.profilePicThumbnailUrl!,
                             fit: BoxFit.cover,
                             width: 100.0.h,
                             height: 100.0.h,
                             headers: {
                               HttpHeaders.authorizationHeader:
                                   PreferenceUtil.getStringValue(
-                                      Constants.KEY_AUTHTOKEN)
+                                      Constants.KEY_AUTHTOKEN)!
                             },
                             errorBuilder: (context, exception, stackTrace) {
                               return Container(
@@ -514,8 +515,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                             color: Color(CommonUtil().getMyPrimaryColor()),
                             child: Center(
                               child: Text(
-                                sharedbyme.child.firstName != null
-                                    ? sharedbyme.child.firstName[0]
+                                sharedbyme.child!.firstName != null
+                                    ? sharedbyme.child!.firstName![0]
                                         .toUpperCase()
                                     : '',
                                 style: TextStyle(
@@ -662,9 +663,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   List<Widget> _buildPageIndicator() {
     var list = <Widget>[];
-    if (widget.arguments.profilesSharedByMe != null) {
+    if (widget.arguments!.profilesSharedByMe != null) {
       list = <Widget>[];
-      for (var i = 0; i < widget.arguments.profilesSharedByMe.length; i++) {
+      for (var i = 0; i < widget.arguments!.profilesSharedByMe!.length; i++) {
         list.add(i == _currentPage ? _indicator(true) : _indicator(false));
       }
     }
@@ -696,14 +697,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           for (final bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
-              bloodGroupController.text = selectedBloodGroup;
+              bloodGroupController.text = selectedBloodGroup!;
             }
           }
 
           for (var bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
-              bloodRangeController.text = selectedBloodRange;
+              bloodRangeController.text = selectedBloodRange!;
             }
           }
         } else {
@@ -712,13 +713,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             for (var bloodGroup in variable.bloodGroupArray) {
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
-                bloodGroupController.text = selectedBloodGroup;
+                bloodGroupController.text = selectedBloodGroup!;
               }
 
               for (var bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1][0] == bloodRange) {
                   selectedBloodRange = bloodRange;
-                  bloodRangeController.text = selectedBloodRange;
+                  bloodRangeController.text = selectedBloodRange!;
                 }
               }
             }
@@ -1326,17 +1327,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.relationship),
                 value: selectedRelationShip,
-                items: data.result.map((relationShipDetail) {
+                items: data.result!.map((relationShipDetail) {
                   return DropdownMenuItem(
                     value: relationShipDetail,
-                    child: new Text(relationShipDetail.name,
+                    child: new Text(relationShipDetail.name!,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0.sp,
                             color: ColorUtils.blackcolor)),
                   );
                 }).toList(),
-                onChanged: (newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });
@@ -1365,7 +1366,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                             color: ColorUtils.blackcolor)),
                   );
                 }).toList(),
-                onChanged: (newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     selectedBloodGroup = newValue;
                   });
@@ -1394,7 +1395,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                             color: ColorUtils.blackcolor)),
                   );
                 }).toList(),
-                onChanged: (newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     selectedBloodRange = newValue;
                   });
@@ -1413,7 +1414,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.gender),
                 value: selectedGender != null
-                    ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+                    ? toBeginningOfSentenceCase(selectedGender!.toLowerCase())
                     : selectedGender,
                 items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
@@ -1425,7 +1426,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     value: eachGender,
                   );
                 }).toList(),
-                onChanged: (newValue) {
+                onChanged: (dynamic newValue) {
                   setState(() {
                     selectedGender = newValue;
                   });
@@ -1475,7 +1476,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     .substring(0, CommonConstants.addr_line_1.length - 1),
               ),
               validator: (res) {
-                return (res.isEmpty || res == null)
+                return (res!.isEmpty || res == null)
                     ? 'Address line1 can\'t be empty'
                     : null;
               },
@@ -1538,7 +1539,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   //.substring(0, CommonConstants.addr_zip.length - 1),
                   ),
               validator: (res) {
-                return (res.isEmpty || res == null)
+                return (res!.isEmpty || res == null)
                     ? 'Zip can\'t be empty'
                     : null;
               },
@@ -1549,14 +1550,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
   }
 
-  Widget getFirstLastNameText(Child myProfile) {
+  Widget getFirstLastNameText(Child? myProfile) {
     if (myProfile != null &&
         myProfile.firstName != null &&
         myProfile.lastName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase() +
-            (myProfile.lastName.length > 0
-                ? myProfile.lastName[0].toUpperCase()
+        myProfile.firstName![0].toUpperCase() +
+            (myProfile.lastName!.length > 0
+                ? myProfile.lastName![0].toUpperCase()
                 : ''),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
@@ -1566,7 +1567,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       );
     } else if (myProfile != null && myProfile.firstName != null) {
       return Text(
-        myProfile.firstName[0].toUpperCase(),
+        myProfile.firstName![0].toUpperCase(),
         style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()),
           fontSize: 28.0.sp,

@@ -1,8 +1,9 @@
+
 import '../../constants/fhb_parameters.dart';
 
 class BPValues {
-  bool isSuccess;
-  List<BPResult> result;
+  bool? isSuccess;
+  List<BPResult>? result;
 
   BPValues({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class BPValues {
     if (json[dataResult] != null) {
       result = <BPResult>[];
       json[dataResult].forEach((bpvalue) {
-        result.add(BPResult.fromJson(bpvalue));
+        result!.add(BPResult.fromJson(bpvalue));
       });
     }
   }
@@ -21,21 +22,21 @@ class BPValues {
     data[is_Success] = isSuccess;
     if (result != null) {
       data[dataResult] =
-          result.map((bpvalue) => bpvalue.toJson()).toList();
+          result!.map((bpvalue) => bpvalue.toJson()).toList();
     }
     return data;
   }
 }
 
 class BPResult {
-  String sourceType;
-  String startDateTime;
-  String endDateTime;
-  int systolic;
-  int diastolic;
-  String deviceId;
+  String? sourceType;
+  String? startDateTime;
+  String? endDateTime;
+  int? systolic;
+  int? diastolic;
+  String? deviceId;
   var bpm;
-  DateTime dateTimeValue;
+  DateTime? dateTimeValue;
 
   BPResult(
       {this.sourceType,

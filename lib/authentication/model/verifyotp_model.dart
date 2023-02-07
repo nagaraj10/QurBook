@@ -1,6 +1,7 @@
+
 class VerifyOTPModel {
-  String verificationCode;
-  String phoneNumber;
+  String? verificationCode;
+  String? phoneNumber;
 
   VerifyOTPModel({this.verificationCode, this.phoneNumber});
 

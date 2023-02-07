@@ -1,3 +1,4 @@
+
 import 'package:myfhb/my_providers/models/UserProfessionalCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
@@ -16,16 +17,16 @@ class Doctor {
       this.user,
       this.doctorProfessionalDetailCollection});
 
-  String id;
-  String specialization;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool isActive;
-  DateTime createdOn;
+  String? id;
+  String? specialization;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? isActive;
+  DateTime? createdOn;
   dynamic lastModifiedBy;
   dynamic lastModifiedOn;
-  Booked user;
-  List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
+  Booked? user;
+  List<DoctorProfessionalDetailCollection>? doctorProfessionalDetailCollection;
 
   Doctor.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -43,7 +44,7 @@ class Doctor {
       doctorProfessionalDetailCollection =
           new List<DoctorProfessionalDetailCollection>();
       json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection
+        doctorProfessionalDetailCollection!
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
@@ -56,13 +57,13 @@ class Doctor {
     data[parameters.strisTelehealthEnabled] = isTelehealthEnabled;
     data[parameters.strIsMciVerified] = isMciVerified;
     data[parameters.strIsActive] = isActive;
-    data[parameters.strCreatedOn] = createdOn.toIso8601String();
+    data[parameters.strCreatedOn] = createdOn!.toIso8601String();
     data[parameters.strlastModifiedBy] = lastModifiedBy;
     data[parameters.strLastModifiedOn] = lastModifiedOn;
-    data[parameters.strUser] = user.toJson();
+    data[parameters.strUser] = user!.toJson();
     if (this.doctorProfessionalDetailCollection != null) {
       data['doctorProfessionalDetailCollection'] = this
-          .doctorProfessionalDetailCollection
+          .doctorProfessionalDetailCollection!
           .map((v) => v.toJson())
           .toList();
     }

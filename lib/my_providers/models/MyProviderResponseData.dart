@@ -1,40 +1,41 @@
+
 import 'package:myfhb/my_providers/models/ProviderRequestCollection3.dart';
 
 import 'Doctors.dart';
 import 'Hospitals.dart';
 
 class MyProvidersResponseData {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  List<Doctors> doctors;
-  List<Hospitals> hospitals;
-  List<Hospitals> labs;
-  List<Hospitals> clinics;
-  List<ProviderRequestCollection3> providerRequestCollection3;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  List<Doctors?>? doctors;
+  List<Hospitals>? hospitals;
+  List<Hospitals>? labs;
+  List<Hospitals>? clinics;
+  List<ProviderRequestCollection3>? providerRequestCollection3;
 
   MyProvidersResponseData({
     this.id,
@@ -98,34 +99,34 @@ class MyProvidersResponseData {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['doctors'] != null) {
-      doctors = List<Doctors>();
+      doctors = List<Doctors?>();
       json['doctors'].forEach((v) {
-        doctors.add(Doctors.fromJson(v));
+        doctors!.add(Doctors.fromJson(v));
       });
     }
     if (json['hospitals'] != null) {
       hospitals = List<Hospitals>();
       json['hospitals'].forEach((v) {
-        hospitals.add(Hospitals.fromJson(v));
+        hospitals!.add(Hospitals.fromJson(v));
       });
     }
     if (json['labs'] != null) {
       labs = <Hospitals>[];
       json['labs'].forEach((v) {
-        labs.add(Hospitals.fromJson(v));
+        labs!.add(Hospitals.fromJson(v));
       });
     }
     if (json['clinics'] != null) {
       clinics = <Hospitals>[];
       json['clinics'].forEach((v) {
-        clinics.add(Hospitals.fromJson(v));
+        clinics!.add(Hospitals.fromJson(v));
       });
     }
     if (json.containsKey('providerRequestCollection3')) {
       if (json['providerRequestCollection3'] != null) {
         providerRequestCollection3 = <ProviderRequestCollection3>[];
         json['providerRequestCollection3'].forEach((v) {
-          providerRequestCollection3
+          providerRequestCollection3!
               .add(new ProviderRequestCollection3.fromJson(v));
         });
       }
@@ -161,20 +162,20 @@ class MyProvidersResponseData {
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
     if (doctors != null) {
-      data['doctors'] = doctors.map((v) => v.toJson()).toList();
+      data['doctors'] = doctors!.map((v) => v!.toJson()).toList();
     }
     if (hospitals != null) {
-      data['hospitals'] = hospitals.map((v) => v.toJson()).toList();
+      data['hospitals'] = hospitals!.map((v) => v.toJson()).toList();
     }
     if (labs != null) {
-      data['labs'] = labs.map((v) => v.toJson()).toList();
+      data['labs'] = labs!.map((v) => v.toJson()).toList();
     }
     if (clinics != null) {
-      data['clinics'] = clinics.map((v) => v.toJson()).toList();
+      data['clinics'] = clinics!.map((v) => v.toJson()).toList();
     }
     if (this.providerRequestCollection3 != null) {
       data['providerRequestCollection3'] =
-          this.providerRequestCollection3.map((v) => v.toJson()).toList();
+          this.providerRequestCollection3!.map((v) => v.toJson()).toList();
     }
     return data;
   }

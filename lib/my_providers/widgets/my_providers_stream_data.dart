@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../common/CommonUtil.dart';
 import '../../constants/variable_constant.dart' as variable;
@@ -10,18 +11,18 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'my_providers_tab_bar.dart';
 
 class MyProvidersStreamData extends StatelessWidget {
-  ProvidersBloc providersBloc;
-  TabController tabController;
+  ProvidersBloc? providersBloc;
+  TabController? tabController;
 
   MyProvidersStreamData({this.providersBloc, this.tabController});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ApiResponse<MyProvidersResponse>>(
-      stream: providersBloc.providersListStream,
+      stream: providersBloc!.providersListStream,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          switch (snapshot.data.status) {
+          switch (snapshot.data!.status) {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
@@ -39,7 +40,7 @@ class MyProvidersStreamData extends StatelessWidget {
 
             case Status.COMPLETED:
               return MyProvidersTabBar(
-                  data: snapshot.data.data.result,
+                  data: snapshot.data!.data!.result,
                   tabController: tabController,
                   providersBloc: providersBloc);
               break;

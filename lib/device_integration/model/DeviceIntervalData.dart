@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import '../../constants/fhb_parameters.dart' as param;
@@ -20,8 +21,8 @@ class DeviceInterval {
     this.result,
   });
 
-  bool isSuccess;
-  List<DeviceIntervalData> result;
+  bool? isSuccess;
+  List<DeviceIntervalData>? result;
 
   factory DeviceInterval.fromJson(Map<String, dynamic> json) => DeviceInterval(
         isSuccess: json[param.is_Success],
@@ -31,7 +32,7 @@ class DeviceInterval {
 
   Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
-        param.dataResult: List<dynamic>.from(result.map((x) => x.toJson())),
+        param.dataResult: List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }
 
@@ -52,19 +53,19 @@ class DeviceIntervalData {
     this.oxygenSaturationCollection,
   });
 
-  String deviceId;
-  DateTime startDateTime;
-  DateTime endDateTime;
-  DateTime lastSyncDateTime;
-  RefrenceValueMeta deviceDataType;
-  RefrenceValueMeta deviceType;
-  RefrenceValueMeta sourceType;
-  List<BloodGlucoseEntity> bloodGlucoseCollection;
-  List<BloodPressureEntity> bloodPressureCollection;
-  List<BodyTemperatureEntity> bodyTemperatureCollection;
-  List<BodyWeightEntity> bodyWeightCollection;
-  List<HeartRateEntity> heartRateCollection;
-  List<OxygenSaturationEntity> oxygenSaturationCollection;
+  String? deviceId;
+  DateTime? startDateTime;
+  DateTime? endDateTime;
+  DateTime? lastSyncDateTime;
+  RefrenceValueMeta? deviceDataType;
+  RefrenceValueMeta? deviceType;
+  RefrenceValueMeta? sourceType;
+  List<BloodGlucoseEntity>? bloodGlucoseCollection;
+  List<BloodPressureEntity>? bloodPressureCollection;
+  List<BodyTemperatureEntity>? bodyTemperatureCollection;
+  List<BodyWeightEntity>? bodyWeightCollection;
+  List<HeartRateEntity>? heartRateCollection;
+  List<OxygenSaturationEntity>? oxygenSaturationCollection;
 
   factory DeviceIntervalData.fromJson(Map<String, dynamic> json) =>
       DeviceIntervalData(
@@ -98,23 +99,23 @@ class DeviceIntervalData {
 
   Map<String, dynamic> toJson() => {
         'id': deviceId,
-        param.strsyncStartDate: startDateTime.toIso8601String(),
-        param.strsyncEndDate: endDateTime.toIso8601String(),
-        param.strlastSyncDateTime: lastSyncDateTime.toIso8601String(),
-        param.strdeviceDataType: deviceDataType.toJson(),
-        param.strdeviceType: deviceType.toJson(),
-        param.strdevicesourceName: sourceType.toJson(),
+        param.strsyncStartDate: startDateTime!.toIso8601String(),
+        param.strsyncEndDate: endDateTime!.toIso8601String(),
+        param.strlastSyncDateTime: lastSyncDateTime!.toIso8601String(),
+        param.strdeviceDataType: deviceDataType!.toJson(),
+        param.strdeviceType: deviceType!.toJson(),
+        param.strdevicesourceName: sourceType!.toJson(),
         param.strBloodGlucoseCollection:
-            List<dynamic>.from(bloodGlucoseCollection.map((x) => x)),
+            List<dynamic>.from(bloodGlucoseCollection!.map((x) => x)),
         param.strBloodPressureCollection: List<BloodPressureEntity>.from(
-            bloodPressureCollection.map((x) => x.toJson())),
+            bloodPressureCollection!.map((x) => x.toJson())),
         param.strBodyTemperatureCollection:
-            List<dynamic>.from(bodyTemperatureCollection.map((x) => x)),
+            List<dynamic>.from(bodyTemperatureCollection!.map((x) => x)),
         param.strWeightCollection:
-            List<dynamic>.from(bodyWeightCollection.map((x) => x)),
+            List<dynamic>.from(bodyWeightCollection!.map((x) => x)),
         param.strHearRateCollection:
-            List<dynamic>.from(heartRateCollection.map((x) => x)),
+            List<dynamic>.from(heartRateCollection!.map((x) => x)),
         param.strHearRateCollection:
-            List<dynamic>.from(oxygenSaturationCollection.map((x) => x)),
+            List<dynamic>.from(oxygenSaturationCollection!.map((x) => x)),
       };
 }

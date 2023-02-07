@@ -1,3 +1,4 @@
+
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class AppException implements Exception {
@@ -12,7 +13,7 @@ class AppException implements Exception {
 }
 
 class FetchDataException extends AppException {
-  FetchDataException([String message])
+  FetchDataException([String? message])
       : super(message, variable.err_comm);
 }
 
@@ -25,5 +26,5 @@ class UnauthorisedException extends AppException {
 }
 
 class InvalidInputException extends AppException {
-  InvalidInputException([String message]) : super(message, variable.err_invalid_input);
+  InvalidInputException([String? message]) : super(message, variable.err_invalid_input);
 }

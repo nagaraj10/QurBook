@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../add_family_otp/models/add_family_otp_response.dart';
@@ -12,55 +13,55 @@ import '../../src/blocs/Authentication/LoginBloc.dart';
 import '../../src/resources/network/ApiResponse.dart';
 
 class FamilyListBloc implements BaseBloc {
-  FamilyMemberListRepository _familyResponseListRepository;
+  late FamilyMemberListRepository _familyResponseListRepository;
 
   // 1
-  StreamController _familyListController;
+  StreamController? _familyListController;
 
   StreamSink<ApiResponse<FamilyMembersList>> get familyMemberListSink =>
-      _familyListController.sink;
+      _familyListController!.sink as StreamSink<ApiResponse<FamilyMembersList>>;
   Stream<ApiResponse<FamilyMembersList>> get familyMemberListStream =>
-      _familyListController.stream;
+      _familyListController!.stream as Stream<ApiResponse<FamilyMembersList>>;
 
-  StreamController _familyController;
+  late StreamController _familyController;
 
   StreamSink<ApiResponse<FamilyMembers>> get familyMemberListNewSink =>
-      _familyController.sink;
+      _familyController.sink as StreamSink<ApiResponse<FamilyMembers>>;
   Stream<ApiResponse<FamilyMembers>> get familyMemberListNewStream =>
-      _familyController.stream;
+      _familyController.stream as Stream<ApiResponse<FamilyMembers>>;
 
   // 2
-  StreamController _relationshipListController;
+  StreamController? _relationshipListController;
 
   StreamSink<ApiResponse<RelationShipResponseList>> get relationShipListSink =>
-      _relationshipListController.sink;
+      _relationshipListController!.sink as StreamSink<ApiResponse<RelationShipResponseList>>;
   Stream<ApiResponse<RelationShipResponseList>> get relationShipStream =>
-      _relationshipListController.stream;
+      _relationshipListController!.stream as Stream<ApiResponse<RelationShipResponseList>>;
 
   // 3
-  StreamController _userLinkingController;
+  StreamController? _userLinkingController;
 
   StreamSink<ApiResponse<UserLinkingResponseList>> get userLinkingSink =>
-      _userLinkingController.sink;
+      _userLinkingController!.sink as StreamSink<ApiResponse<UserLinkingResponseList>>;
   Stream<ApiResponse<UserLinkingResponseList>> get userLinkingStream =>
-      _userLinkingController.stream;
+      _userLinkingController!.stream as Stream<ApiResponse<UserLinkingResponseList>>;
 
   // 4
-  StreamController _userDeLinkingController;
+  StreamController? _userDeLinkingController;
 
   StreamSink<ApiResponse<UserLinkingResponseList>> get userDeLinkingSink =>
-      _userDeLinkingController.sink;
+      _userDeLinkingController!.sink as StreamSink<ApiResponse<UserLinkingResponseList>>;
   Stream<ApiResponse<UserLinkingResponseList>> get userDeLinkingStream =>
-      _userDeLinkingController.stream;
+      _userDeLinkingController!.stream as Stream<ApiResponse<UserLinkingResponseList>>;
 
   // 5
-  StreamController _userLinkingForPrimaryNoController;
+  StreamController? _userLinkingForPrimaryNoController;
 
   StreamSink<ApiResponse<AddFamilyOTPResponse>>
       get userLinkingForPrimaryNoSink =>
-          _userLinkingForPrimaryNoController.sink;
+          _userLinkingForPrimaryNoController!.sink as StreamSink<ApiResponse<AddFamilyOTPResponse>>;
   Stream<ApiResponse<AddFamilyOTPResponse>> get userLinkingForPrimaryNoStream =>
-      _userLinkingForPrimaryNoController.stream;
+      _userLinkingForPrimaryNoController!.stream as Stream<ApiResponse<AddFamilyOTPResponse>>;
 
   @override
   void dispose() {
@@ -91,7 +92,7 @@ class FamilyListBloc implements BaseBloc {
   }
 
   getFamilyMembersList() async {
-    FamilyMembersList familyResponseList;
+    FamilyMembersList? familyResponseList;
     familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
     try {
       familyResponseList =
@@ -104,7 +105,7 @@ class FamilyListBloc implements BaseBloc {
   }
 
   getFamilyMembersListNew() async {
-    FamilyMembers familyResponseList;
+    FamilyMembers? familyResponseList;
     familyMemberListNewSink.add(ApiResponse.loading(variable.strFetchFamily));
     try {
       familyResponseList =
@@ -116,8 +117,8 @@ class FamilyListBloc implements BaseBloc {
     return familyResponseList;
   }
 
-  Future<FamilyMembers> getFamilyMembersInfo() async {
-    FamilyMembers familyResponseList;
+  Future<FamilyMembers?> getFamilyMembersInfo() async {
+    FamilyMembers? familyResponseList;
     try {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersListNew();
@@ -138,10 +139,10 @@ class FamilyListBloc implements BaseBloc {
     }
   }
 
-  Future<UserLinkingResponseList> postUserLinking(String jsonString) async {
+  Future<UserLinkingResponseList?> postUserLinking(String jsonString) async {
     userLinkingSink.add(ApiResponse.loading(variable.strPostUserLink));
 
-    UserLinkingResponseList userLinking;
+    UserLinkingResponseList? userLinking;
     try {
       userLinking =
           await _familyResponseListRepository.postUserLinking(jsonString);
@@ -153,10 +154,10 @@ class FamilyListBloc implements BaseBloc {
     return userLinking;
   }
 
-  Future<UserDeLinkingResponseList> postUserDeLinking(String jsonString) async {
+  Future<UserDeLinkingResponseList?> postUserDeLinking(String jsonString) async {
     userDeLinkingSink.add(ApiResponse.loading(variable.strPostuserDelink));
 
-    UserDeLinkingResponseList userDeLinking;
+    UserDeLinkingResponseList? userDeLinking;
     try {
       userDeLinking =
           await _familyResponseListRepository.postUserDeLinking(jsonString);
@@ -168,13 +169,13 @@ class FamilyListBloc implements BaseBloc {
     return userDeLinking;
   }
 
-  Future<AddFamilyOTPResponse> postUserLinkingForPrimaryNo(
+  Future<AddFamilyOTPResponse?> postUserLinkingForPrimaryNo(
       String jsonString) async {
     print(jsonString);
     userLinkingForPrimaryNoSink
         .add(ApiResponse.loading(variable.strPostUserLink));
 
-    AddFamilyOTPResponse addFamilyOTPResponse;
+    AddFamilyOTPResponse? addFamilyOTPResponse;
     try {
       addFamilyOTPResponse = await _familyResponseListRepository
           .postUserLinkingForPrimaryNo(jsonString);

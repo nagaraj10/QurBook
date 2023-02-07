@@ -1,8 +1,9 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Languages {
-  String languageId;
-  String name;
+  String? languageId;
+  String? name;
 
   Languages({this.languageId, this.name});
 

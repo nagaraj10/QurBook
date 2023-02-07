@@ -1,28 +1,29 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import '../../my_providers/models/ProfilePicThumbnail.dart';
 
 class ProfileData {
-  String userId;
-  String id;
-  String phoneNumber;
-  String email;
-  String createdOn;
-  bool isActive;
-  String lastModifiedOn;
-  String name;
-  String gender;
-  bool isTempUser;
-  bool isVirtualUser;
-  String createdBy;
-  ProfilePicThumbnail profilePicThumbnail;
+  String? userId;
+  String? id;
+  String? phoneNumber;
+  String? email;
+  String? createdOn;
+  bool? isActive;
+  String? lastModifiedOn;
+  String? name;
+  String? gender;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  String? createdBy;
+  ProfilePicThumbnail? profilePicThumbnail;
   /*QualifiedFullName qualifiedFullName;*/
-  String bloodGroup;
-  String dateOfBirth;
-  bool isTokenRefresh;
-  String countryCode;
-  bool isEmailVerified;
-  String status;
-  String profilePicThumbnailURL;
+  String? bloodGroup;
+  String? dateOfBirth;
+  bool? isTokenRefresh;
+  String? countryCode;
+  bool? isEmailVerified;
+  String? status;
+  String? profilePicThumbnailURL;
 
   ProfileData(
       {this.userId,
@@ -93,7 +94,7 @@ class ProfileData {
     data[parameters.strCreatedBy] = createdBy;
     if (profilePicThumbnail != null) {
       data[parameters.strprofilePicThumbnail] =
-          profilePicThumbnail.toJson();
+          profilePicThumbnail!.toJson();
     }
     data[parameters.strbloodGroup] = bloodGroup;
     data[parameters.strdateOfBirth] = dateOfBirth;

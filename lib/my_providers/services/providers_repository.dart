@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
@@ -27,22 +28,22 @@ import '../../telehealth/features/chat/model/AppointmentDetailModel.dart';
 
 class ProvidersListRepository {
   final ApiBaseHelper _helper = ApiBaseHelper();
-  AppointmentResult appointments;
+  AppointmentResult? appointments;
 
-  Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
+  Future<MyProvidersResponse> getMedicalPreferencesList({String? userId}) async {
     final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var response = await _helper.getMedicalPreferencesList(query.qr_user +
-        (userId ?? userID) +
+        (userId ?? userID!) +
         query.qr_sections +
         query.qr_medicalPreferences);
     return MyProvidersResponse.fromJson(response);
   }
 
   Future<MyProvidersResponse> getMedicalPreferencesForDoctors(
-      {String userId}) async {
+      {String? userId}) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var response = await _helper.getMedicalPreferencesList(query.qr_user +
-        (userId ?? userID) +
+        (userId ?? userID!) +
         query.qr_sections +
         query.qr_medicalPreferences +
         qr_module_equal +
@@ -51,10 +52,10 @@ class ProvidersListRepository {
   }
 
   Future<MyProvidersResponse> getMedicalPreferencesForHospital(
-      {String userId}) async {
+      {String? userId}) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var response = await _helper.getMedicalPreferencesList(query.qr_user +
-        (userId ?? userID) +
+        (userId ?? userID!) +
         query.qr_sections +
         query.qr_medicalPreferences +
         qr_module_equal +
@@ -63,10 +64,10 @@ class ProvidersListRepository {
   }
 
   Future<MyProvidersResponse> getMedicalPreferencesForAll(
-      {String userId}) async {
+      {String? userId}) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var response = await _helper.getMedicalPreferencesList(query.qr_user +
-        (userId ?? userID) +
+        (userId ?? userID!) +
         query.qr_sections +
         query.qr_medicalPreferences +
         qr_module_equal +
@@ -75,7 +76,7 @@ class ProvidersListRepository {
   }
 
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
-    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
 
     var response = await _helper.getTelehealthDoctorsList(query.qr_User +
         userID +
@@ -86,14 +87,14 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkDoctor(Doctors doctorIds,
-      bool isPreferred, String isFrom, List<String> selectedCategories) async {
+      bool? isPreferred, String isFrom, List<String?>? selectedCategories) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final bookMark = {};
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = doctorIds.id;
     bookMark[parameters.healthOrganization] = null;
     if (isFrom == 'ListItem') {
-      if (doctorIds.isDefault) {
+      if (doctorIds.isDefault!) {
         bookMark[parameters.strisDefault] = false;
         bookMark['sharedCategories'] = null;
       } else {
@@ -101,7 +102,7 @@ class ProvidersListRepository {
         bookMark['sharedCategories'] = selectedCategories;
       }
     } else {
-      if (isPreferred) {
+      if (isPreferred!) {
         bookMark[parameters.strisDefault] = true;
         bookMark['sharedCategories'] = selectedCategories;
       } else {
@@ -111,23 +112,23 @@ class ProvidersListRepository {
     }
     final jsonString = convert.jsonEncode(bookMark);
     var response = await _helper.bookMarkDoctor(
-        query.qr_patient_update_default + doctorIds.providerPatientMappingId,
+        query.qr_patient_update_default + doctorIds.providerPatientMappingId!,
         jsonString);
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkHealthOrganizaton(
       Hospitals hospitals,
-      bool isPreferred,
+      bool? isPreferred,
       String isFrom,
-      List<String> selectedCategories) async {
+      List<String?>? selectedCategories) async {
     var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final bookMark = {};
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = null;
     bookMark[parameters.healthOrganization] = hospitals.id;
     if (isFrom == 'ListItem') {
-      if (hospitals.isDefault) {
+      if (hospitals.isDefault!) {
         bookMark[parameters.strisDefault] = false;
         bookMark['sharedCategories'] = null;
       } else {
@@ -135,7 +136,7 @@ class ProvidersListRepository {
         bookMark['sharedCategories'] = selectedCategories;
       }
     } else {
-      if (isPreferred) {
+      if (isPreferred!) {
         bookMark[parameters.strisDefault] = true;
         bookMark['sharedCategories'] = selectedCategories;
       } else {
@@ -146,13 +147,13 @@ class ProvidersListRepository {
 
     final jsonString = convert.jsonEncode(bookMark);
     var response = await _helper.bookMarkDoctor(
-        query.qr_patient_update_default + hospitals.providerPatientMappingId,
+        query.qr_patient_update_default + hospitals.providerPatientMappingId!,
         jsonString);
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
   Future<AssociateSuccessResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
+      String? doctorId, String? userId, List<String>? healthRecords) async {
     // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final associateRecord = {};
@@ -168,7 +169,7 @@ class ProvidersListRepository {
   }
 
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
-      String bookingID, HealthResult healthResult) async {
+      String? bookingID, HealthResult healthResult) async {
     // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final associateRecord = {};
@@ -207,8 +208,8 @@ class ProvidersListRepository {
   }
 
   Future<AppointmentDetailModel> getAppointmentDetail(
-      String doctorId, String patientId, String careCoorId,String isNormalChatUserList) async {
-    var carCooApiId = null;
+      String doctorId, String patientId, String? careCoorId,String isNormalChatUserList) async {
+    dynamic carCooApiId = null;
     carCooApiId = (careCoorId != '' && careCoorId!=null)? careCoorId : 'null';
     var response = await _helper.getAppointmentDetail(appointmentSlash +
         patientIdEqualTo +
@@ -221,7 +222,7 @@ class ProvidersListRepository {
     return AppointmentDetailModel.fromJson(response);
   }
 
-  Future<GetDoctorsByIdModel> getDoctorsByID({String doctorId}) async {
+  Future<GetDoctorsByIdModel> getDoctorsByID({required String doctorId}) async {
     var response = await _helper.getDoctorsByIdNew(qr_doctor + doctorId);
     return GetDoctorsByIdModel.fromJson(response);
   }

@@ -1,6 +1,7 @@
+
 class ProfilePic {
-  String type;
-  List<int> data;
+  String? type;
+  List<int>? data;
 
   ProfilePic({this.type, this.data});
 

@@ -1,3 +1,4 @@
+
 class UserPlanInfoModel {
   const UserPlanInfoModel({
     this.userId,
@@ -9,13 +10,13 @@ class UserPlanInfoModel {
     this.packageId,
   });
 
-  final int userId;
-  final String userLinkId;
-  final DateTime planStartDate;
-  final String planPackageName;
-  final String planPackageTags;
-  final int packageDuration;
-  final int packageId;
+  final int? userId;
+  final String? userLinkId;
+  final DateTime? planStartDate;
+  final String? planPackageName;
+  final String? planPackageTags;
+  final int? packageDuration;
+  final int? packageId;
 
   factory UserPlanInfoModel.fromJson(Map<String, dynamic> json) =>
       UserPlanInfoModel(
@@ -32,7 +33,7 @@ class UserPlanInfoModel {
         'userId': userId,
         'userLinkId': userLinkId,
         'planStartDate':
-            '${planStartDate.year.toString().padLeft(4, '0')}-${planStartDate.month.toString().padLeft(2, '0')}-${planStartDate.day.toString().padLeft(2, '0')}',
+            '${planStartDate!.year.toString().padLeft(4, '0')}-${planStartDate!.month.toString().padLeft(2, '0')}-${planStartDate!.day.toString().padLeft(2, '0')}',
         'planPackageName': planPackageName,
         'planPackageTags': planPackageTags,
         'packageDuration': packageDuration,

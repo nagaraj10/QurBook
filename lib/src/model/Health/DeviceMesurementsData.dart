@@ -1,9 +1,10 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class DeviceMeasurementsData {
-  String parameter;
-  String unit;
-  String values;
+  String? parameter;
+  String? unit;
+  String? values;
 
   DeviceMeasurementsData({this.parameter, this.unit, this.values});
 

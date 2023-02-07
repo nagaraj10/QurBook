@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -28,10 +29,10 @@ class PlanList extends StatefulWidget {
   @override
   _MyPlanState createState() => _MyPlanState();
 
-  final String categoryId;
-  final String hosIcon;
-  final String catIcon;
-  final String diseases;
+  final String? categoryId;
+  final String? hosIcon;
+  final String? catIcon;
+  final String? diseases;
 
   final List<PlanListResult> planListResult;
 
@@ -40,30 +41,30 @@ class PlanList extends StatefulWidget {
 }
 
 class _MyPlanState extends State<PlanList> {
-  PlanListModel myPlanListModel;
+  PlanListModel? myPlanListModel;
   PlanViewModel myPlanViewModel = PlanViewModel();
   bool isSearch = false;
   List<PlanListResult> myPLanListResult = [];
   SubscribeViewModel subscribeViewModel = SubscribeViewModel();
   FlutterToast toast = FlutterToast();
 
-  String categoryId = '';
-  String hosIcon = '';
-  String catIcon = '';
-  String diseases = '';
-  List<PlanListResult> planListResult;
+  String? categoryId = '';
+  String? hosIcon = '';
+  String? catIcon = '';
+  String? diseases = '';
+  List<PlanListResult>? planListResult;
   bool isSelected = false;
   List<PlanListResult> planListUniq = [];
 
   //final GlobalKey _searchKey = GlobalKey();
   //final GlobalKey _hospitalKey = GlobalKey();
   final GlobalKey _subscribeKey = GlobalKey();
-  bool isFirst;
-  BuildContext _myContext;
+  bool? isFirst;
+  late BuildContext _myContext;
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
@@ -81,19 +82,19 @@ class _MyPlanState extends State<PlanList> {
 
     final isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_Plan);
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext).startShowCase([_subscribeKey]));
+                : ShowCaseWidget.of(_myContext)!.startShowCase([_subscribeKey]));
       });
     } catch (e) {}
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -156,7 +157,7 @@ class _MyPlanState extends State<PlanList> {
     setState(() {});
   }
 
-  Widget planList(List<PlanListResult> planList) {
+  Widget planList(List<PlanListResult>? planList) {
     planListUniq = [];
     isSelected = false;
     if (planList != null && planList.isNotEmpty) {
@@ -308,7 +309,7 @@ class _MyPlanState extends State<PlanList> {
                       children: [
                         Text(
                           planList[i].title != null
-                              ? toBeginningOfSentenceCase(planList[i].title)
+                              ? toBeginningOfSentenceCase(planList[i].title)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -321,7 +322,7 @@ class _MyPlanState extends State<PlanList> {
                         Text(
                           planList[i].providerName != null
                               ? toBeginningOfSentenceCase(
-                                  planList[i].providerName)
+                                  planList[i].providerName)!
                               : '',
                           style: TextStyle(
                               fontSize: 14.0.sp,
@@ -340,7 +341,7 @@ class _MyPlanState extends State<PlanList> {
                                 ),
                                 if (planList[i].packageDuration != null)
                                   Text(
-                                    planList[i].packageDuration + ' days',
+                                    planList[i].packageDuration! + ' days',
                                     maxLines: 1,
                                     style: TextStyle(
                                         fontSize: 10.0.sp,
@@ -393,10 +394,10 @@ class _MyPlanState extends State<PlanList> {
                         children: [
                           if (planList[i].price != null)
                             Visibility(
-                              visible: planList[i].price.isNotEmpty &&
+                              visible: planList[i].price!.isNotEmpty &&
                                   planList[i].price != '0',
                               child: TextWidget(
-                                  text: CommonUtil.CURRENCY + planList[i].price,
+                                  text: CommonUtil.CURRENCY + planList[i].price!,
                                   fontsize: 16.0.sp,
                                   fontWeight: FontWeight.w500,
                                   colors: Color(
@@ -454,7 +455,7 @@ class _MyPlanState extends State<PlanList> {
                                                               .plinkid,
                                                           isFrom:
                                                               strIsFromSubscibe,
-                                                          feeZero: planListResult[
+                                                          feeZero: planListResult![
                                                                           i]
                                                                       ?.price ==
                                                                   '' ||
@@ -568,13 +569,13 @@ class _MyPlanState extends State<PlanList> {
     );
   }
 
-  String getImage(int i, List<PlanListResult> planList) {
-    String image;
+  String? getImage(int i, List<PlanListResult> planList) {
+    String? image;
     if (planList[i] != null) {
       if (planList[i].metadata != null && planList[i].metadata != '') {
-        if (planList[i].metadata.icon != null &&
-            planList[i].metadata.icon != '') {
-          image = planList[i].metadata.icon;
+        if (planList[i].metadata!.icon != null &&
+            planList[i].metadata!.icon != '') {
+          image = planList[i].metadata!.icon;
         } else {
           if (catIcon != null && catIcon != '') {
             image = catIcon;

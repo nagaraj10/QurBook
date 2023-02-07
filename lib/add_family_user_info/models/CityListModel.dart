@@ -1,8 +1,9 @@
+
 class CityListModel {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   CityListModel({this.status, this.success, this.message, this.response});
 
@@ -21,15 +22,15 @@ class CityListModel {
     data['success'] = success;
     data['message'] = message;
     if (response != null) {
-      data['response'] = response.toJson();
+      data['response'] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  List<CityData> data;
+  int? count;
+  List<CityData>? data;
 
   Response({this.count, this.data});
 
@@ -38,7 +39,7 @@ class Response {
     if (json['data'] != null) {
       data = List<CityData>();
       json['data'].forEach((v) {
-        data.add(CityData.fromJson(v));
+        data!.add(CityData.fromJson(v));
       });
     }
   }
@@ -47,15 +48,15 @@ class Response {
     final data = Map<String, dynamic>();
     data['count'] = count;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CityData {
-  String id;
-  String name;
+  String? id;
+  String? name;
 
   CityData({this.id, this.name});
 

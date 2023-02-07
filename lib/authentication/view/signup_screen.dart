@@ -1,3 +1,4 @@
+
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/gestures.dart';
@@ -36,9 +37,9 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   bool _autoValidateBool = false;
   FlutterToast toast = FlutterToast();
   final _SignupKey = GlobalKey<FormState>();
-  List<UserContactCollection3> userCollection;
-  AuthViewModel authViewModel;
-  var checkedValue = true;
+  late List<UserContactCollection3> userCollection;
+  late AuthViewModel authViewModel;
+  bool? checkedValue = true;
   Country _selectedDialogCountry =
       CountryPickerUtils.getCountryByIsoCode(CommonUtil.REGION_CODE);
 
@@ -82,7 +83,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: CommonUtil().isTablet ? 50 : 20),
+                      horizontal: CommonUtil().isTablet! ? 50 : 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -132,7 +133,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 autovalidate: _autoValidateBool,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .charValidation(value, patternChar,
+                                      .charValidation(value!, patternChar as String,
                                           strEnterFirstname);
                                 },
                                 onSaved: (value) {},
@@ -167,7 +168,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: lastNamController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .charValidation(value, patternChar,
+                                      .charValidation(value!, patternChar as String,
                                           strEnterLastNamee);
                                 },
                                 onSaved: (value) {},
@@ -212,7 +213,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 ),
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .phoneValidation(value, patternPhoneNew,
+                                      .phoneValidation(value!, patternPhoneNew as String,
                                           strPhoneCantEmpty);
                                 },
                                 controller: mobileNoController,
@@ -251,7 +252,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: emailController,
                                 validator: (value) {
                                   return CommonUtil.toCheckEmailValidiation(
-                                      value, patternEmail, strEmailValidText);
+                                      value, patternEmail as String, strEmailValidText);
                                 },
                                 onSaved: (value) {},
                               ),
@@ -296,8 +297,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 controller: passwordController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .passwordValidation(value,
-                                          patternPassword, strPassCantEmpty);
+                                      .passwordValidation(value!,
+                                          patternPassword as String, strPassCantEmpty);
                                 },
                               ),
                             ),
@@ -338,7 +339,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           onTap: () {
             AuthenticationValidator().checkNetwork().then((intenet) {
               if (intenet != null && intenet) {
-                checkedValue
+                checkedValue!
                     ? null
                     : FlutterToast().getToast(
                         'Please accept terms and conditions', Colors.black54);
@@ -383,8 +384,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     FocusScope.of(context).unfocus();
     userCollection.clear();
     userCollection = List();
-    if (_SignupKey.currentState.validate() && checkedValue) {
-      _SignupKey.currentState.save();
+    if (_SignupKey.currentState!.validate() && checkedValue!) {
+      _SignupKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);
       var user3 = UserContactCollection3();
       user3.phoneNumber =
@@ -416,7 +417,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   _checkResponse(PatientSignUp response) {
     print(response.toJson().toString());
     LoaderClass.hideLoadingDialog(context);
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -429,7 +430,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                     emailId: emailController.text.trim(),
                   )));
     } else {
-      toast.getToastWithBuildContext(response.message, Colors.red, context);
+      toast.getToastWithBuildContext(response.message!, Colors.red, context);
     }
   }
 

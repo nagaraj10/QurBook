@@ -4,15 +4,15 @@ import 'FamilyMembersRes.dart';
 import 'relationships.dart';
 
 class Result {
-  String id;
-  String code;
-  String name;
-  String description;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedOn;
-  List<RelationsShipModel> referenceValueCollection;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedOn;
+  List<RelationsShipModel>? referenceValueCollection;
 
   Result(
       {this.id,
@@ -37,7 +37,7 @@ class Result {
     if (json['referenceValueCollection'] != null) {
       referenceValueCollection = List<RelationsShipModel>();
       json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection.add(RelationsShipModel.fromJson(v));
+        referenceValueCollection!.add(RelationsShipModel.fromJson(v));
       });
     }
   }
@@ -54,7 +54,7 @@ class Result {
     data['lastModifiedOn'] = lastModifiedOn;
     if (referenceValueCollection != null) {
       data['referenceValueCollection'] =
-          referenceValueCollection.map((v) => v.toJson()).toList();
+          referenceValueCollection!.map((v) => v.toJson()).toList();
     }
     return data;
   }

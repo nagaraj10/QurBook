@@ -1,7 +1,8 @@
+
 class InAppUnReadModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   InAppUnReadModel({this.isSuccess, this.message, this.result});
 

@@ -1,10 +1,11 @@
+
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleAppointmentInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/reshedulePaymentInfo.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
     as parameters;
 
 class ResheduleResult {
-  ResheduleAppointmentInfo appointmentInfo;
+  ResheduleAppointmentInfo? appointmentInfo;
   var paymentInfo;
 
   ResheduleResult({this.appointmentInfo, this.paymentInfo});
@@ -21,7 +22,7 @@ class ResheduleResult {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.appointmentInfo != null) {
-      data['appointmentInfo'] = this.appointmentInfo.toJson();
+      data['appointmentInfo'] = this.appointmentInfo!.toJson();
     }
     if (this.paymentInfo != null) {
       data['paymentInfo'] = this.paymentInfo.toJson();

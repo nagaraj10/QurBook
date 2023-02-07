@@ -1,7 +1,8 @@
+
 class AddToCartModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   AddToCartModel({this.isSuccess, this.message, this.result});
 

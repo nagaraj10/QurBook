@@ -1,29 +1,30 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart';
 
 class AppointmentInfoModel {
-  bool isFollowUp;
-  String slotNumber;
-  DoctorSession doctorSession;
-  bool isActive;
-  DoctorSession lastModifiedBy;
-  DoctorSession bookedFor;
-  DoctorSession createdBy;
-  DoctorSession bookedBy;
-  String bookingId;
-  String plannedStartDateTime;
-  String plannedEndDateTime;
-  DoctorSession status;
-  String doctorSessionId;
-  String actualStartDateTime;
-  String actualEndDateTime;
-  String plannedFollowupDate;
-  bool isFollowup;
-  String lastModifiedOn;
-  String id;
-  bool isHealthRecordShared;
-  bool isRefunded;
-  bool isFollowupFee;
-  String createdOn;
+  bool? isFollowUp;
+  String? slotNumber;
+  DoctorSession? doctorSession;
+  bool? isActive;
+  DoctorSession? lastModifiedBy;
+  DoctorSession? bookedFor;
+  DoctorSession? createdBy;
+  DoctorSession? bookedBy;
+  String? bookingId;
+  String? plannedStartDateTime;
+  String? plannedEndDateTime;
+  DoctorSession? status;
+  String? doctorSessionId;
+  String? actualStartDateTime;
+  String? actualEndDateTime;
+  String? plannedFollowupDate;
+  bool? isFollowup;
+  String? lastModifiedOn;
+  String? id;
+  bool? isHealthRecordShared;
+  bool? isRefunded;
+  bool? isFollowupFee;
+  String? createdOn;
 
   AppointmentInfoModel(
       {this.isFollowUp,
@@ -93,26 +94,26 @@ class AppointmentInfoModel {
     data[strIsFollowUp_C] = this.isFollowUp;
     data[strSlotNumber] = this.slotNumber;
     if (this.doctorSession != null) {
-      data[strDoctorSession] = this.doctorSession.toJson();
+      data[strDoctorSession] = this.doctorSession!.toJson();
     }
     data[strIsActive] = this.isActive;
     if (this.lastModifiedBy != null) {
-      data[strlastModifiedBy] = this.lastModifiedBy.toJson();
+      data[strlastModifiedBy] = this.lastModifiedBy!.toJson();
     }
     if (this.bookedFor != null) {
-      data[strBookedFor] = this.bookedFor.toJson();
+      data[strBookedFor] = this.bookedFor!.toJson();
     }
     if (this.createdBy != null) {
-      data[strCreatedBy] = this.createdBy.toJson();
+      data[strCreatedBy] = this.createdBy!.toJson();
     }
     if (this.bookedBy != null) {
-      data[strBookedBy] = this.bookedBy.toJson();
+      data[strBookedBy] = this.bookedBy!.toJson();
     }
     data[strBookingId_S] = this.bookingId;
     data[strPlannedStartDateTime] = this.plannedStartDateTime;
     data[strPlannedEndDateTime] = this.plannedEndDateTime;
     if (this.status != null) {
-      data[strStatus] = this.status.toJson();
+      data[strStatus] = this.status!.toJson();
     }
     data[strDoctorSessionId] = this.doctorSessionId;
     data[strActualStartDateTime] = this.actualStartDateTime;
@@ -130,7 +131,7 @@ class AppointmentInfoModel {
 }
 
 class DoctorSession {
-  String id;
+  String? id;
 
   DoctorSession({this.id});
 

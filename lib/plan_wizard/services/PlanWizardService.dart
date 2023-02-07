@@ -1,3 +1,4 @@
+
 import 'dart:convert' as convert;
 import 'package:get/get.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
@@ -16,8 +17,8 @@ class PlanWizardService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<PlanListModel> getPlanList(String patientId, String isFrom) async {
-    String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-        .selectedTag;
+    String tag = Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
+        .selectedTag!;
     var body = {};
     var inputForFilter = '';
     if (isFrom == strProviderCare) {
@@ -38,9 +39,9 @@ class PlanWizardService {
   }
 
   Future<PlanListModel> getDietPlanListNew(
-      {String patientId, String isFrom, bool isVeg = false}) async {
-    String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-        .selectedTag;
+      {required String patientId, String? isFrom, bool isVeg = false}) async {
+    String tag = Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
+        .selectedTag!;
     var body = {};
     var inputForFilter = '';
     if (isFrom == strProviderDiet) {
@@ -63,11 +64,11 @@ class PlanWizardService {
   }
 
   Future<DietPlanModel> getDietPlanList(
-      {String patientId, bool isVeg = false}) async {
-    String tag = Provider.of<PlanWizardViewModel>(Get.context, listen: false)
-        .selectedTag;
+      {required String patientId, bool isVeg = false}) async {
+    String tag = Provider.of<PlanWizardViewModel>(Get.context!, listen: false)
+        .selectedTag!;
     String providerId =
-        Provider.of<PlanWizardViewModel>(Get.context, listen: false).providerId;
+        Provider.of<PlanWizardViewModel>(Get.context!, listen: false).providerId!;
     var body = {};
     body['method'] = qr_get;
     body['data'] = getMenuDietPlans +
@@ -85,15 +86,15 @@ class PlanWizardService {
   }
 
   Future<AddToCartModel> addToCartService(
-      {String packageId,
-      String price,
-      bool isRenew,
-      String tag,
-      String remarks,
-      bool isMemberShipAvail,
-      String actualFee,
-      String planType,
-      String packageDuration}) async {
+      {String? packageId,
+      String? price,
+      required bool isRenew,
+      String? tag,
+      String? remarks,
+      bool? isMemberShipAvail,
+      String? actualFee,
+      String? planType,
+      String? packageDuration}) async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     var paymentInput = {};
@@ -109,8 +110,8 @@ class PlanWizardService {
       additionalInfo['remarks'] = remarks;
       additionalInfo['PlanType'] = planType;
       additionalInfo['actualFee'] = actualFee;
-      additionalInfo['newFee'] = isMemberShipAvail ? 0 : price;
-      additionalInfo['duration'] = int.parse(packageDuration);
+      additionalInfo['newFee'] = isMemberShipAvail! ? 0 : price;
+      additionalInfo['duration'] = int.parse(packageDuration!);
     }
     additionalInfo['tag'] = tag;
     paymentInput['additionalInfo'] = additionalInfo;

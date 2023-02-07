@@ -14,14 +14,14 @@ class Status {
     this.lastModifiedOn,
   });
 
-  String id;
-  String code;
-  String name;
-  String description;
-  int sortOrder;
-  bool isActive;
-  String createdBy;
-  String createdOn;
+  String? id;
+  String? code;
+  String? name;
+  String? description;
+  int? sortOrder;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
   dynamic lastModifiedOn;
 
   Status.fromJson(Map<String, dynamic> json) {

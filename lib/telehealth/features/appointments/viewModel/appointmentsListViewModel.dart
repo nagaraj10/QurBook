@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -17,18 +18,18 @@ enum LoadingStatus {
 
 class AppointmentsListViewModel extends ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.searching;
-  AppointmentsModel _appointmentsModel;
+  AppointmentsModel? _appointmentsModel;
   FetchAppointmentsService _fetchAppointmentsService =
       FetchAppointmentsService();
 
-  AppointmentsModel appointmentsModel;
+  AppointmentsModel? appointmentsModel;
 
-  AppointmentsListViewModel({AppointmentsModel appointmentsModel})
+  AppointmentsListViewModel({AppointmentsModel? appointmentsModel})
       : _appointmentsModel = appointmentsModel;
 
-  AppointmentsModel get appointments => _appointmentsModel;
+  AppointmentsModel? get appointments => _appointmentsModel;
 
-  Future<AppointmentsModel> fetchAppointments() async {
+  Future<AppointmentsModel?> fetchAppointments() async {
     try {
       this.loadingStatus = LoadingStatus.searching;
       AppointmentsModel appointments =
@@ -52,39 +53,39 @@ class AppointmentsListViewModel extends ChangeNotifier {
     List<Past> dummySearchListUpcoming = List<Past>();
     List<Past> dummySearchListHistory = List<Past>();
     AppointmentsData data = AppointmentsData();
-    AppointmentsModel appointments = _appointmentsModel;
-    dummySearchListUpcoming = appointments.result.upcoming
+    AppointmentsModel appointments = _appointmentsModel!;
+    dummySearchListUpcoming = appointments.result!.upcoming!
         .where((element) =>
-    element.doctorSessionId == null
+    (element.doctorSessionId == null
             ? element.healthOrganization?.name
                 ?.toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim())
-            :element.doctor.user.firstName
+            :element.doctor!.user!.firstName!
                 .toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim()) ||
-            element.doctor.user.lastName
+            element.doctor!.user!.lastName!
                 .toLowerCase()
                 .trim()
-                .contains(query.toLowerCase().trim()))
+                .contains(query.toLowerCase().trim()))!)
         .toList();
 
-    dummySearchListHistory = appointments.result.past
+    dummySearchListHistory = appointments.result!.past!
         .where((element) =>
-    element.doctorSessionId == null
+    (element.doctorSessionId == null
             ? element.healthOrganization?.name
                 ?.toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim())
-            : element.doctor.user.firstName
+            : element.doctor!.user!.firstName!
                 .toLowerCase()
                 .trim()
                 .contains(query.toLowerCase().trim()) ||
-            element.doctor.user.lastName
+            element.doctor!.user!.lastName!
                 .toLowerCase()
                 .trim()
-                .contains(query.toLowerCase().trim()))
+                .contains(query.toLowerCase().trim()))!)
         .toList();
     data = AppointmentsData(
         upcoming: dummySearchListUpcoming, past: dummySearchListHistory);

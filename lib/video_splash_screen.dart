@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -7,15 +8,15 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/common/common_circular_indicator.dart';
 
 class VideoSplashScreen extends StatefulWidget {
-  VideoSplashScreen({Key key}) : super(key: key);
+  VideoSplashScreen({Key? key}) : super(key: key);
 
   @override
   _VideoSplashScreenState createState() => _VideoSplashScreenState();
 }
 
 class _VideoSplashScreenState extends State<VideoSplashScreen> {
-  VideoPlayerController _controller;
-  Future<void> _initializeVideoPlayerFuture;
+  late VideoPlayerController _controller;
+  Future<void>? _initializeVideoPlayerFuture;
 
   @override
   void initState() {

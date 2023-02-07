@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'add_reminders.dart';
 import '../src/model/ReminderModel.dart';
 import '../src/utils/FHBUtils.dart';
 import '../src/utils/PageNavigator.dart';
-import 'package:random_color/random_color.dart';
+// import 'package:random_color/random_color.dart';  FU2.5
 import 'package:shared_preferences/shared_preferences.dart';
 import '../colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
@@ -14,16 +15,16 @@ import '../constants/router_variable.dart' as router;
 import '../src/utils/screenutils/size_extensions.dart';
 
 class MyReminders extends StatefulWidget {
-  static _MyRemindersState of(BuildContext context) =>
-      context.findAncestorStateOfType<State<MyReminders>>();
+  static _MyRemindersState? of(BuildContext context) =>
+      context.findAncestorStateOfType<State<MyReminders>>() as _MyRemindersState?;
 
   @override
   State<StatefulWidget> createState() => _MyRemindersState();
 }
 
 class _MyRemindersState extends State<MyReminders> {
-  final RandomColor _randomColor = RandomColor();
-  SharedPreferences prefs;
+  //final RandomColor _randomColor = RandomColor();  FU2.5
+  SharedPreferences? prefs;
 
   dynamic detailsList =
       []; // our default setting is to login, and we should switch to creating an account when the user chooses to
@@ -62,7 +63,7 @@ class _MyRemindersState extends State<MyReminders> {
                       itemBuilder: (ctxt, index) {
                         final ReminderModel model = reverseDetailsList[index];
                         final tempDate = DateFormat(variable.dateFormatMMY)
-                            .format(DateTime.parse(model.date));
+                            .format(DateTime.parse(model.date!));
                         final dateArr = tempDate.split(' ');
                         return GestureDetector(
                           onTap: () => Navigator.push(
@@ -154,7 +155,7 @@ class _MyRemindersState extends State<MyReminders> {
                                       children: <Widget>[
                                         Text(
                                           toBeginningOfSentenceCase(
-                                              model.title.toLowerCase()),
+                                              model.title!.toLowerCase())!,
                                           style: TextStyle(
                                             fontSize: 18.0.sp,
                                           ),
@@ -164,7 +165,7 @@ class _MyRemindersState extends State<MyReminders> {
                                         ),
                                         Text(
                                           toBeginningOfSentenceCase(
-                                              model.notes.toLowerCase()),
+                                              model.notes!.toLowerCase())!,
                                           style: TextStyle(
                                               fontSize: 14.0.sp,
                                               fontWeight: FontWeight.normal),
@@ -185,7 +186,7 @@ class _MyRemindersState extends State<MyReminders> {
                                           color: Colors.black,
                                         ),
                                         Text(
-                                          model.interval,
+                                          model.interval!,
                                           style: TextStyle(
                                               fontSize: 14.0.sp,
                                               color: Colors.grey[400]),

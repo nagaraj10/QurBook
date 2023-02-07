@@ -1,3 +1,4 @@
+
 import 'package:myfhb/user_plans/model/user_plan_info_model.dart';
 
 class UserPlansResponseModel {
@@ -6,8 +7,8 @@ class UserPlansResponseModel {
     this.result,
   });
 
-  final bool isSuccess;
-  final List<UserPlanInfoModel> result;
+  final bool? isSuccess;
+  final List<UserPlanInfoModel>? result;
 
   factory UserPlansResponseModel.fromJson(Map<String, dynamic> json) =>
       UserPlansResponseModel(
@@ -20,6 +21,6 @@ class UserPlansResponseModel {
 
   Map<String, dynamic> toJson() => {
         'isSuccess': isSuccess,
-        'result': List<dynamic>.from(result.map((x) => x.toJson())),
+        'result': List<dynamic>.from(result!.map((x) => x.toJson())),
       };
 }

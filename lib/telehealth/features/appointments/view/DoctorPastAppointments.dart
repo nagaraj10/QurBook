@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,9 +31,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 
 class DoctorPastAppointments extends StatefulWidget {
-  Past doc;
-  ValueChanged<String> onChanged;
-  Function(String) closePage;
+  Past? doc;
+  ValueChanged<String>? onChanged;
+  Function(String)? closePage;
 
   DoctorPastAppointments({this.doc, this.onChanged, this.closePage});
 
@@ -45,8 +46,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   CommonWidgets providerCommonWidget = CommonWidgets();
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = new List();
-  AppointmentsListViewModel appointmentsViewModel;
-  SharedPreferences prefs;
+  AppointmentsListViewModel? appointmentsViewModel;
+  SharedPreferences? prefs;
   ChatViewModel chatViewModel = ChatViewModel();
   List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
@@ -68,16 +69,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   @override
   Widget build(BuildContext context) {
-    return doctorsHistoryListCard(widget.doc);
+    return doctorsHistoryListCard(widget.doc!);
   }
 
   Widget doctorsHistoryListCard(Past doc) {
     List<String> recordIds = new List();
-    if (doc.healthRecord.prescription != null &&
-        doc.healthRecord.prescription.length > 0) {
-      for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-        if (!recordIds.contains(doc.healthRecord.prescription[i])) {
-          recordIds.add(doc.healthRecord.prescription[i]);
+    if (doc.healthRecord!.prescription != null &&
+        doc.healthRecord!.prescription!.length > 0) {
+      for (int i = 0; i < doc.healthRecord!.prescription!.length; i++) {
+        if (!recordIds.contains(doc.healthRecord!.prescription![i])) {
+          recordIds.add(doc.healthRecord!.prescription![i]);
         }
       }
     }
@@ -111,50 +112,50 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     commonWidget.docName(
                                         context,
                                         commonWidget.getDoctorAndHealthOrganizationName(
-                                            widget.doc)),
+                                            widget.doc!)),
                                     SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                                    widget.doc.doctorSessionId == null ||
+                                    widget.doc!.doctorSessionId == null ||
                                             widget.doc?.doctor?.specialization == null
                                         ? SizedBox.shrink()
                                         : Container(
                                             width: 1.sw / 2,
                                             child: Text(
                                               toBeginningOfSentenceCase((widget
-                                                              .doc
-                                                              .doctor
+                                                              .doc!
+                                                              .doctor!
                                                               .doctorProfessionalDetailCollection !=
                                                           null &&
                                                       widget
-                                                              .doc
-                                                              .doctor
-                                                              .doctorProfessionalDetailCollection
+                                                              .doc!
+                                                              .doctor!
+                                                              .doctorProfessionalDetailCollection!
                                                               .length >
                                                           0)
                                                   ? widget
-                                                              .doc
-                                                              .doctor
-                                                              .doctorProfessionalDetailCollection[
+                                                              .doc!
+                                                              .doctor!
+                                                              .doctorProfessionalDetailCollection![
                                                                   0]
                                                               .specialty !=
                                                           null
                                                       ? widget
-                                                                  .doc
-                                                                  .doctor
-                                                                  .doctorProfessionalDetailCollection[
+                                                                  .doc!
+                                                                  .doctor!
+                                                                  .doctorProfessionalDetailCollection![
                                                                       0]
-                                                                  .specialty
+                                                                  .specialty!
                                                                   .name !=
                                                               null
                                                           ? widget
-                                                              .doc
-                                                              .doctor
-                                                              .doctorProfessionalDetailCollection[
+                                                              .doc!
+                                                              .doctor!
+                                                              .doctorProfessionalDetailCollection![
                                                                   0]
-                                                              .specialty
+                                                              .specialty!
                                                               .name
                                                           : ''
                                                       : ''
-                                                  : ''),
+                                                  : '')!,
                                               style: TextStyle(
                                                   fontSize:
                                                       fhbStyles.fnt_doc_specialist),
@@ -162,31 +163,31 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                    widget.doc.doctorSessionId == null ||
+                                    widget.doc!.doctorSessionId == null ||
                                             widget.doc?.doctor?.specialization == null
                                         ? SizedBox.shrink()
                                         : SizedBox(height: 3.0.h),
                                     commonWidget.docLoc(
-                                        context, commonWidget.getLocation(widget.doc)),
-                                    widget.doc.doctorSessionId == null ||
+                                        context, commonWidget.getLocation(widget.doc!)),
+                                    widget.doc!.doctorSessionId == null ||
                                             widget.doc?.doctor?.specialization == null
                                         ? SizedBox.shrink()
                                         : SizedBox(height: 3.0),
-                                    widget.doc.doctorSessionId == null
+                                    widget.doc!.doctorSessionId == null
                                         ? commonWidget.docLoc(context,
-                                            commonWidget.getServiceCategory(widget.doc))
+                                            commonWidget.getServiceCategory(widget.doc!))
                                         : SizedBox.shrink(),
-                                    widget.doc.doctorSessionId == null ||
+                                    widget.doc!.doctorSessionId == null ||
                                             widget.doc?.doctor?.specialization == null
                                         ? SizedBox.shrink()
                                         : SizedBox(height: 3.0),
-                                    widget.doc.doctorSessionId == null
+                                    widget.doc!.doctorSessionId == null
                                         ? commonWidget.docLoc(context,
-                                            commonWidget.getModeOfService(widget.doc))
+                                            commonWidget.getModeOfService(widget.doc!))
                                         : SizedBox.shrink(),
                                     SizedBoxWidget(height: 5.0.h),
                                     SizedBoxWidget(height: 15.0.h),
-                                    widget.doc.doctorSessionId == null
+                                    widget.doc!.doctorSessionId == null
                                         ? SizedBox.shrink()
                                         : commonWidget.docIcons(
                                             false, doc, context, () {})
@@ -207,11 +208,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             SizedBoxWidget(
                               height:
                                   widget.doc?.doctor?.specialization == null ||
-                                          widget.doc.doctorSessionId == null
+                                          widget.doc!.doctorSessionId == null
                                       ? 30.0.h
                                       : 40.0.h,
                             ),
-                            widget.doc.doctorSessionId == null
+                            widget.doc!.doctorSessionId == null
                                 ? SizedBox.shrink()
                                 : commonWidget.count(doc.slotNumber),
                             doc.plannedFollowupDate == null
@@ -222,7 +223,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                         : DateFormat(Constants
                                                     .Appointments_time_format)
                                                 .format(DateTime.parse(
-                                                    doc.plannedStartDateTime))
+                                                    doc.plannedStartDateTime!))
                                                 .toString() ??
                                             '',
                                     fontWeight: FontWeight.w600,
@@ -243,12 +244,12 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                       ? ""
                                       : DateFormat.yMMMEd()
                                               .format(DateTime.parse(
-                                                  doc.plannedStartDateTime))
+                                                  doc.plannedStartDateTime!))
                                               .toString() ??
                                           ''
                                   : DateFormat.yMMMEd()
                                           .format(DateTime.parse(
-                                              doc.plannedFollowupDate))
+                                              doc.plannedFollowupDate!))
                                           .toString() ??
                                       '',
                               fontWeight: FontWeight.w500,
@@ -276,7 +277,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
             SizedBoxWidget(height: 5.0.h),
             Container(height: 1.0.h, color: Colors.black26),
 //            SizedBoxWidget(height: 10.0),
-            widget.doc.doctorSessionId == null
+            widget.doc!.doctorSessionId == null
                 ? SizedBox.shrink()
                 : Container(
                     alignment: Alignment.center,
@@ -287,7 +288,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             Constants.Appointments_chatImage,
                             Colors.black38,
                             TranslationConstants.chats.t(), () {
-                          FocusManager.instance.primaryFocus.unfocus();
+                          FocusManager.instance.primaryFocus!.unfocus();
                           goToChatIntegration(doc);
                         }, null),
                         SizedBoxWidget(width: 15.0),
@@ -301,7 +302,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             Constants.Appointments_prescriptionImage,
                             Colors.black38,
                             AppConstants.prescription, () async {
-                          FocusManager.instance.primaryFocus.unfocus();
+                          FocusManager.instance.primaryFocus!.unfocus();
                           if (healthRecord > 0) {
                             int position = await getCategoryPosition(
                                 AppConstants.prescription);
@@ -326,15 +327,15 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             Constants.Appointments_receiptImage,
                             Colors.black38,
                             TranslationConstants.receipt.t(), () async {
-                          FocusManager.instance.primaryFocus.unfocus();
+                          FocusManager.instance.primaryFocus!.unfocus();
                           List<String> paymentID = new List();
                           if (doc.healthRecord != null &&
-                              doc.healthRecord.bills != null &&
-                              doc.healthRecord.bills.length > 0) {
+                              doc.healthRecord!.bills != null &&
+                              doc.healthRecord!.bills!.length > 0) {
                             for (int i = 0;
-                                i < doc.healthRecord.bills.length;
+                                i < doc.healthRecord!.bills!.length;
                                 i++) {
-                              paymentID.add(doc.healthRecord.bills[i]);
+                              paymentID.add(doc.healthRecord!.bills![i]);
                             }
                           }
                           int position =
@@ -357,7 +358,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                         SizedBoxWidget(width: 15.0),
                         GestureDetector(
                           onTap: () {
-                            FocusManager.instance.primaryFocus.unfocus();
+                            FocusManager.instance.primaryFocus!.unfocus();
                             navigateToProviderScreen(doc, false);
                           },
                           child: commonWidget.svgWithText(
@@ -382,7 +383,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                 isReshedule: isReshedule,
                 isFromFollowUpApp: getFollowup(doc),
                 closePage: (value) {
-                  widget.closePage(value);
+                  widget.closePage!(value);
                 },
               )),
     );
@@ -406,11 +407,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   void goToChatIntegration(Past doc) {
     //chat integration start
-    String doctorId = doc.doctor.id;
-    String userId = doc.doctor.user.id;
-    String doctorName = doc.doctor.user.name;
-    String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
-    String chatListId = doc?.chatListId;
+    String? doctorId = doc.doctor!.id;
+    String? userId = doc.doctor!.user!.id;
+    String? doctorName = doc.doctor!.user!.name;
+    String? doctorPic = doc.doctor!.user!.profilePicThumbnailUrl;
+    String? chatListId = doc?.chatListId;
     /*chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/
     Navigator.push(
@@ -432,9 +433,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     List<String> paymentID = new List();
     if (healthRecord != null &&
         healthRecord.bills != null &&
-        healthRecord.bills.length > 0) {
-      for (int i = 0; i < healthRecord.bills.length; i++) {
-        paymentID.add(healthRecord.bills[i]);
+        healthRecord.bills!.length > 0) {
+      for (int i = 0; i < healthRecord.bills!.length; i++) {
+        paymentID.add(healthRecord.bills![i]);
       }
     }
     int position = await getCategoryPosition(AppConstants.bills);
@@ -490,7 +491,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
       if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;
       }
     }
@@ -508,7 +509,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
-        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+        filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);
 
         //filteredCategoryData.add(categoryDataObjClone);
         return filteredCategoryData;

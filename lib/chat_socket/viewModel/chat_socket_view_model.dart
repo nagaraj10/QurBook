@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/chat_socket/model/ChatHistoryModel.dart';
@@ -17,17 +18,17 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   final String _baseUrl = BASE_URL;
 
-  List<PayloadChat> userChatList = [];
-  List<ChatHistoryResult> chatHistoryList = [];
+  List<PayloadChat>? userChatList = [];
+  List<ChatHistoryResult?>? chatHistoryList = [];
   List<PayloadChat> chatHistoryCount = [];
 
-  IO.Socket socket;
+  late IO.Socket socket;
 
   int chatTotalCount = 0;
 
   Future<void> initSocket() async {
-    String token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
-    String userId = PreferenceUtil.getStringValue(KEY_USERID);
+    String? token = PreferenceUtil.getStringValue(KEY_AUTHTOKEN);
+    String? userId = PreferenceUtil.getStringValue(KEY_USERID);
 
     String _socketEndPoint = '';
 
@@ -102,11 +103,11 @@ class ChatSocketViewModel extends ChangeNotifier {
     chatTotalCount = 0;
 
     if (totalCountModel != null) {
-      if (totalCountModel?.isSuccess && totalCountModel?.payload != null) {
+      if (totalCountModel?.isSuccess! && totalCountModel?.payload != null) {
         if (totalCountModel?.payload?.isNotEmpty) {
-          if (totalCountModel?.payload[0]?.count != null &&
-              totalCountModel?.payload[0]?.count != '') {
-            chatTotalCount = int.parse(totalCountModel?.payload[0]?.count ?? 0);
+          if (totalCountModel?.payload![0]?.count != null &&
+              totalCountModel?.payload![0]?.count != '') {
+            chatTotalCount = int.parse(totalCountModel?.payload![0]?.count ?? 0 as String);
           }
         }
       }
@@ -115,7 +116,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateChatHistoryList(List<ChatHistoryResult> list,
+  void updateChatHistoryList(List<ChatHistoryResult?>? list,
       {bool shouldUpdate: true}) {
     chatHistoryList = list;
 
@@ -124,14 +125,14 @@ class ChatSocketViewModel extends ChangeNotifier {
     }
   }
 
-  void messageEmit(ChatHistoryResult list) {
-    chatHistoryList.add(list);
+  void messageEmit(ChatHistoryResult? list) {
+    chatHistoryList!.add(list);
 
     notifyListeners();
   }
 
   void onReceiveMessage(ChatHistoryResult list) {
-    chatHistoryList.add(list);
+    chatHistoryList!.add(list);
 
     notifyListeners();
   }
@@ -143,7 +144,7 @@ class ChatSocketViewModel extends ChangeNotifier {
       String careCoordiantorId,
       bool isFromFamilyList) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       ChatHistoryModel chatHistoryModel = await chocketService.getChatHistory(
           userId,
@@ -159,7 +160,7 @@ class ChatSocketViewModel extends ChangeNotifier {
 
   Future<InitChatModel> initNewChat(String peerId) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
       InitChatModel chatHistoryModel =
           await chocketService.initNewChat(userId, peerId);
@@ -171,7 +172,7 @@ class ChatSocketViewModel extends ChangeNotifier {
   Future<InitChatFamilyModel> initNewFamilyChat(String peerId,
       String familyName, bool isCareCoordinator, String careCooId) async {
     try {
-      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
+      var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
 
       InitChatFamilyModel chatHistoryModel =
           await chocketService.initNewFamilyChat(

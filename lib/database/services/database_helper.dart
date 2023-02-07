@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io' as io;
 
@@ -15,9 +16,9 @@ class DatabaseHelper {
 
   factory DatabaseHelper() => _instance;
 
-  static Database _db;
+  static Database? _db;
 
-  Future<Database> get db async {
+  Future<Database?> get db async {
     if (DatabaseHelper._db != null) {
       return DatabaseHelper._db;
     } else {
@@ -47,15 +48,15 @@ class DatabaseHelper {
   }
 
   Future<int> saveUnitMeasurements(UnitsMesurements unitsMesurements) async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     final res =
         await dbClient.insert(DBConstants.UT_NAME, unitsMesurements.toMap());
     return res;
   }
 
   Future<UnitsMesurements> getMeasurementsBasedOnUnits(
-      String unitsMeasure,String range) async {
-    final dbClient = await db;
+      String? unitsMeasure,String range) async {
+    final dbClient = await (db as FutureOr<Database>);
 
     final results =
         await dbClient.rawQuery(DBConstants.UT_QUERY_BY_UN, [unitsMeasure,range]);
@@ -66,14 +67,14 @@ class DatabaseHelper {
   }
 
   Future<int> saveCountryMetrics(CountryMetrics countryMetrics) async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     var res =
         await dbClient.insert(DBConstants.CM_NAME, countryMetrics.toMap());
     return res;
   }
 
   Future<List<CountryMetrics>> getCountryMetrics() async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
     final List<CountryMetrics> employees = [];
     for (var i = 0; i < list.length; i++) {
@@ -95,14 +96,14 @@ class DatabaseHelper {
   }
 
   Future<int> getDBLength() async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     final List<Map> list = await dbClient.rawQuery(DBConstants.CM_QUERY);
 
     return list.length;
   }
 
-  Future<CountryMetrics> getCustomer(int id) async {
-    final dbClient = await db;
+  Future<CountryMetrics> getCustomer(int? id) async {
+    final dbClient = await (db as FutureOr<Database>);
     var countryName =
         PreferenceUtil.getStringValue(CommonConstants.KEY_COUNTRYNAME);
 
@@ -126,7 +127,7 @@ class DatabaseHelper {
   }
 
   Future<int> deleteCountryMetrics(CountryMetrics user) async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
 
     var res = await dbClient
         .rawDelete(DBConstants.CM_DEL_QUERY_BY_CC, [user.countryCode]);
@@ -134,21 +135,21 @@ class DatabaseHelper {
   }
 
   Future<bool> updateCountryMetrics(CountryMetrics user) async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     var res = await dbClient.update(DBConstants.CM_NAME, user.toMap(),
-        where: DBConstants.CC_WHR_CALUSE, whereArgs: <int>[user.countryCode]);
+        where: DBConstants.CC_WHR_CALUSE, whereArgs: <int?>[user.countryCode]);
     return res > 0 ? true : false;
   }
 
   Future<int> getDBLengthUnit() async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     final List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
 
     return list.length;
   }
 
   Future<List<UnitsMesurements>> getUnitsMeasurement() async {
-    final dbClient = await db;
+    final dbClient = await (db as FutureOr<Database>);
     final List<Map> list = await dbClient.rawQuery(DBConstants.UT_QUERY);
     final List<UnitsMesurements> unitsList = [];
     for (var i = 0; i < list.length; i++) {

@@ -1,11 +1,12 @@
+
 import '../constants/constants.dart';
 
 class PatientForgotPasswordModel {
-  String userName;
-  String source;
-  String message;
-  bool isSuccess;
-  ForgorResult result;
+  String? userName;
+  String? source;
+  String? message;
+  bool? isSuccess;
+  ForgorResult? result;
 
   PatientForgotPasswordModel(
       {this.userName, this.source, this.message, this.isSuccess});
@@ -26,14 +27,14 @@ class PatientForgotPasswordModel {
     data[strmessage] = message;
     data[strIsSuccess] = isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class ForgorResult {
-  bool isVirtualNumber;
+  bool? isVirtualNumber;
 
   ForgorResult({this.isVirtualNumber});
 

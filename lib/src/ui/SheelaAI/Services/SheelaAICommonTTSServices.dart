@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -7,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../Controller/SheelaAIController.dart';
 
 class SheelaAICommonTTSService {
-  AudioPlayer player;
+  AudioPlayer? player;
   SheelaAIController controller = Get.find<SheelaAIController>();
 
   stopTTS() {
@@ -18,7 +19,7 @@ class SheelaAICommonTTSService {
     }
   }
 
-  playTTS(String msg, Function completedPlaying) async {
+  playTTS(String? msg, Function completedPlaying) async {
     if (controller.useLocalTTSEngine) {
       try {
         final status = await controller.playUsingLocalTTSEngineFor(msg);
@@ -28,14 +29,14 @@ class SheelaAICommonTTSService {
         completedPlaying();
       }
     } else {
-      String textForPlaying;
+      String? textForPlaying;
       final result = await controller.getGoogleTTSForText(msg);
       if ((result.payload?.audioContent ?? '').isNotEmpty) {
-        textForPlaying = result.payload.audioContent;
+        textForPlaying = result.payload!.audioContent;
       }
       if ((textForPlaying ?? '').isNotEmpty) {
         try {
-          final bytes = const Base64Decoder().convert(textForPlaying);
+          final bytes = const Base64Decoder().convert(textForPlaying!);
           if (bytes != null) {
             final dir = await getTemporaryDirectory();
             final file = File('${dir.path}/tempAudioFile.mp3');
@@ -43,8 +44,8 @@ class SheelaAICommonTTSService {
             final path = "${dir.path}/tempAudioFile.mp3";
             player = null;
             player = AudioPlayer();
-            player.play(path, isLocal: true);
-            player.onPlayerStateChanged.listen(
+            player!.play(path, isLocal: true);
+            player!.onPlayerStateChanged.listen(
               (event) {
                 if (event == PlayerState.COMPLETED) {
                   completedPlaying();

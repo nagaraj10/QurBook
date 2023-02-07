@@ -1,3 +1,4 @@
+
 // To parse this JSON data, do
 //
 //     final dietPlanModel = dietPlanModelFromJson(jsonString);
@@ -17,8 +18,8 @@ class DietPlanModel {
     this.result,
   });
 
-  final bool isSuccess;
-  final List<List<DietPlanResult>> result;
+  final bool? isSuccess;
+  final List<List<DietPlanResult>>? result;
 
   factory DietPlanModel.fromJson(Map<String, dynamic> json) => DietPlanModel(
     isSuccess: json["isSuccess"],
@@ -27,7 +28,7 @@ class DietPlanModel {
 
   Map<String, dynamic> toJson() => {
     "isSuccess": isSuccess,
-    "result": List<dynamic>.from(result.map((x) => List<dynamic>.from(x?.map((x) => x?.toJson())))),
+    "result": List<dynamic>.from(result!.map((x) => List<dynamic>.from(x?.map((x) => x?.toJson())))),
   };
 }
 
@@ -66,37 +67,37 @@ class DietPlanResult {
     this.isExtendable,
   });
 
-  final String packageid;
-  final String title;
-  final String tags;
-  final String description;
-  final String docid;
-  final String price;
-  final MetaDataForURL metadata;
-  final String issubscription;
-  final String ispublic;
-  final String html;
-  final String packageDuration;
-  final String billingCycle;
-  final DateTime ts;
-  final String providerid;
-  final String providerName;
-  final MetaDataForHospitalLogo providermetadata;
-  final String providerdescription;
-  final String plinkid;
-  final String packcatid;
-  final String catname;
-  final String catdesc;
-  final String catselecttype;
-  final MetaDataForURL catmetadata;
+  final String? packageid;
+  final String? title;
+  final String? tags;
+  final String? description;
+  final String? docid;
+  final String? price;
+  final MetaDataForURL? metadata;
+  final String? issubscription;
+  final String? ispublic;
+  final String? html;
+  final String? packageDuration;
+  final String? billingCycle;
+  final DateTime? ts;
+  final String? providerid;
+  final String? providerName;
+  final MetaDataForHospitalLogo? providermetadata;
+  final String? providerdescription;
+  final String? plinkid;
+  final String? packcatid;
+  final String? catname;
+  final String? catdesc;
+  final String? catselecttype;
+  final MetaDataForURL? catmetadata;
   final dynamic userpackid;
-  final String isSubscribed;
+  final String? isSubscribed;
   final dynamic startdate;
   final dynamic userpackageduration;
   final dynamic enddate;
-  final String isexpired;
-  final String isExtendable;
-  final int matchcount;
+  final String? isexpired;
+  final String? isExtendable;
+  final int? matchcount;
 
   factory DietPlanResult.fromJson(Map<String, dynamic> json) => DietPlanResult(
     packageid: json["packageid"],
@@ -155,7 +156,7 @@ class DietPlanResult {
     "html": html == null ? null : html,
     "PackageDuration": packageDuration,
     "BillingCycle": billingCycle == null ? null : billingCycle,
-    "ts": ts.toIso8601String(),
+    "ts": ts!.toIso8601String(),
     "providerid": providerid,
     "provider_name": providerName,
     "providermetadata": providermetadata,

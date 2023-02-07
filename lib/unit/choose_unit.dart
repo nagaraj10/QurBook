@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -36,19 +37,19 @@ class _ChooseUnitState extends State<ChooseUnit> {
   bool isInchFeet = false;
   bool isCenti = false;
 
-  GetDeviceSelectionModel selectionResult;
-  PreferredMeasurement preferredMeasurement;
-  ProfileSetting profileSetting;
+  GetDeviceSelectionModel? selectionResult;
+  PreferredMeasurement? preferredMeasurement;
+  ProfileSetting? profileSetting;
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
 
-  Height heightObj, weightObj, tempObj;
+  Height? heightObj, weightObj, tempObj;
   FlutterToast toast = new FlutterToast();
-  String userMappingId = '';
+  String? userMappingId = '';
 
   bool isSettingChanged = false;
-  List<Tags> tagsList = [];
+  List<Tags>? tagsList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
         } else {
           Navigator.pop(context, false);
         }
-      },
+      } as Future<bool> Function()?,
       child: Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
@@ -112,8 +113,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
               ),
             ],
           ),
-        ) ??
-        false;
+        ).then((value) => value as bool) ??
+        false as Future<bool>;
   }
 
   closeDialog() {
@@ -124,28 +125,28 @@ class _ChooseUnitState extends State<ChooseUnit> {
   applyUnitSelection() async {
     var preferredMeasurementNew = new PreferredMeasurement(
         height: heightObj, weight: weightObj, temperature: tempObj);
-    profileSetting.preferredMeasurement = preferredMeasurement;
+    profileSetting!.preferredMeasurement = preferredMeasurement;
     var body =
         jsonEncode({'id': userMappingId, 'profileSetting': profileSetting});
     await healthReportListForUserRepository
         .updateUnitPreferences(
-            userMappingId, profileSetting, preferredMeasurementNew, tagsList)
+            userMappingId, profileSetting!, preferredMeasurementNew, tagsList)
         .then((value) {
       if (value?.isSuccess ?? false) {
-        toast.getToast(value?.message, Colors.green);
+        toast.getToast(value?.message!, Colors.green);
 
         PreferenceUtil.savePreferredMeasurement(
             Constants.KEY_PREFERREDMEASUREMENT, preferredMeasurementNew);
       } else {
-        toast.getToast(value?.message, Colors.red);
+        toast.getToast(value?.message!, Colors.red);
       }
     });
 
     await PreferenceUtil.saveString(
-        Constants.STR_KEY_HEIGHT, heightObj.unitCode);
+        Constants.STR_KEY_HEIGHT, heightObj!.unitCode!);
     await PreferenceUtil.saveString(
-        Constants.STR_KEY_WEIGHT, weightObj.unitCode);
-    await PreferenceUtil.saveString(Constants.STR_KEY_TEMP, tempObj.unitCode);
+        Constants.STR_KEY_WEIGHT, weightObj!.unitCode!);
+    await PreferenceUtil.saveString(Constants.STR_KEY_TEMP, tempObj!.unitCode!);
 
     closeDialog();
   }
@@ -439,33 +440,33 @@ class _ChooseUnitState extends State<ChooseUnit> {
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
         .then((value) async {
-      if (value.isSuccess) {
+      if (value.isSuccess!) {
         selectionResult = value;
-        if (value.result != null && value.result.length > 0) {
-          if (value.result[0] != null) {
-            profileSetting = value.result[0].profileSetting;
-            userMappingId = value.result[0].id;
-            if (value.result[0].tags != null) {
-              tagsList = value.result[0].tags != null &&
-                      value.result[0].tags.length > 0
-                  ? value.result[0].tags
+        if (value.result != null && value.result!.length > 0) {
+          if (value.result![0] != null) {
+            profileSetting = value.result![0].profileSetting;
+            userMappingId = value.result![0].id;
+            if (value.result![0].tags != null) {
+              tagsList = value.result![0].tags != null &&
+                      value.result![0].tags!.length > 0
+                  ? value.result![0].tags
                   : new List();
             }
 
             if (profileSetting != null) {
-              if (profileSetting.preferredMeasurement != null) {
-                preferredMeasurement = profileSetting.preferredMeasurement;
+              if (profileSetting!.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting!.preferredMeasurement;
                 try {
                   weightObj = preferredMeasurement?.weight;
 
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement.weight?.unitCode);
+                      preferredMeasurement!.weight?.unitCode!);
                 } catch (e) {
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT, Constants.STR_VAL_WEIGHT_US);
                 }
-                if (preferredMeasurement.weight != null) {
-                  if (preferredMeasurement.weight?.unitCode.toLowerCase() ==
+                if (preferredMeasurement!.weight != null) {
+                  if (preferredMeasurement!.weight?.unitCode!.toLowerCase() ==
                       Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
                     isKg = true;
                     isPounds = false;
@@ -491,7 +492,7 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
                 try {
                   await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode);
+                      preferredMeasurement!.height?.unitCode!);
 
                   heightObj = preferredMeasurement?.height;
                 } catch (e) {
@@ -499,8 +500,8 @@ class _ChooseUnitState extends State<ChooseUnit> {
                       Constants.STR_KEY_HEIGHT, Constants.STR_VAL_HEIGHT_US);
                 }
 
-                if (preferredMeasurement.height != null) {
-                  if (preferredMeasurement.height?.unitCode ==
+                if (preferredMeasurement!.height != null) {
+                  if (preferredMeasurement!.height?.unitCode ==
                       Constants.STR_VAL_HEIGHT_IND) {
                     isInchFeet = true;
                     isCenti = false;
@@ -526,15 +527,15 @@ class _ChooseUnitState extends State<ChooseUnit> {
 
                 try {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement.temperature?.unitCode);
+                      preferredMeasurement!.temperature?.unitCode!);
                   tempObj = preferredMeasurement?.temperature;
                 } catch (e) {
                   await PreferenceUtil.saveString(
                       Constants.STR_KEY_TEMP, Constants.STR_VAL_TEMP_US);
                 }
 
-                if (preferredMeasurement.temperature != null) {
-                  if (preferredMeasurement.temperature?.unitCode
+                if (preferredMeasurement!.temperature != null) {
+                  if (preferredMeasurement!.temperature?.unitCode!
                           .toLowerCase() ==
                       Constants.STR_VAL_TEMP_IND.toLowerCase()) {
                     isFaren = true;

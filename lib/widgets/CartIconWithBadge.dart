@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -9,7 +10,7 @@ import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 class CartIconWithBadge extends StatelessWidget {
   Color color;
   double size;
-  CartIconWithBadge({@required this.color,@required this.size});
+  CartIconWithBadge({required this.color,required this.size});
   @override
   Widget build(BuildContext context) {
     return BadgeIcon(

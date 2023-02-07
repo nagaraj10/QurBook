@@ -1,23 +1,24 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class MediaTypeInfo {
-  String categoryId;
-  String createdOn;
-  String description;
-  String id;
-  bool isAITranscription;
-  bool isActive;
-  bool isCreate;
-  bool isDelete;
-  bool isDisplay;
-  bool isEdit;
-  bool isManualTranscription;
-  bool isRead;
-  String lastModifiedOn;
-  int localid;
-  String logo;
-  String name;
-  String url;
+  String? categoryId;
+  String? createdOn;
+  String? description;
+  String? id;
+  bool? isAITranscription;
+  bool? isActive;
+  bool? isCreate;
+  bool? isDelete;
+  bool? isDisplay;
+  bool? isEdit;
+  bool? isManualTranscription;
+  bool? isRead;
+  String? lastModifiedOn;
+  int? localid;
+  String? logo;
+  String? name;
+  String? url;
 
   MediaTypeInfo(
       {this.categoryId,

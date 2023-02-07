@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,7 +24,7 @@ import 'package:myfhb/ticket_support/model/ticket_details_model.dart';
 import 'package:myfhb/ticket_support/model/ticket_list_model/TicketsListResponse.dart';
 import 'package:myfhb/ticket_support/view_model/tickets_view_model.dart';
 import 'package:path/path.dart' as p;
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';  FU2.5
 import '../../common/CommonUtil.dart';
 import '../../constants/fhb_constants.dart' as strConstants;
 import '../../widgets/GradientAppBar.dart';
@@ -38,9 +39,9 @@ var fullName, date, isUser;
 class DetailedTicketView extends StatefulWidget {
   DetailedTicketView(this.ticket, this.isFromNotification, this.ticketId);
 
-  final Tickets ticket;
+  final Tickets? ticket;
   final bool isFromNotification;
-  final String ticketId;
+  final String? ticketId;
   @override
   State createState() {
     return _DetailedTicketViewState();
@@ -51,7 +52,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     with SingleTickerProviderStateMixin {
   TicketViewModel ticketViewModel = TicketViewModel();
   final FocusNode focusNode = FocusNode();
-  final ItemScrollController listScrollController = ItemScrollController();
+  //final ItemScrollController listScrollController = ItemScrollController();  FU2.5
   final addCommentController = TextEditingController();
 
   final List<Events> listOfEvents = [
@@ -69,10 +70,10 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
         description: "Chat"),
   ];
 
-  Future<TicketDetailResponseModel> future;
-  TabController _controller;
+  Future<TicketDetailResponseModel>? future;
+  late TabController _controller;
   int selectedTab = 0;
-  String authToken = '';
+  String? authToken = '';
   bool isHideInputTextBox = false;
 
   @override
@@ -94,7 +95,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       authToken = token;
       future = ticketViewModel.getTicketDetail(widget.isFromNotification
           ? widget.ticketId.toString()
-          : widget.ticket.uid.toString());
+          : widget.ticket!.uid.toString());
     });
   }
 
@@ -147,7 +148,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.ticket != null)
             return SingleChildScrollView(
-                child: detailView(snapshot.data.result.ticket));
+                child: detailView(snapshot.data!.result!.ticket!));
           else
             return ErrorsWidget();
         }
@@ -169,7 +170,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           isHideInputTextBox = true;
         }
       }
-      strName = CommonUtil().validString(ticket.type.name ?? "").toLowerCase();
+      strName = CommonUtil().validString(ticket.type!.name ?? "").toLowerCase();
       final dataFields = ticket.dataFields;
       if (strName.contains("transportation") ||
           strName.contains("homecare services") ||
@@ -177,15 +178,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           strName.contains("doctor appointment") ||
           strName.contains("lab appointment") ||
           strName.contains("general health")) {
-        if (ticket.type.additionalInfo != null && dataFields != null) {
-          for (int i = 0; i < ticket.type.additionalInfo?.field.length; i++) {
-            Field field = ticket.type.additionalInfo?.field[i];
-            List<FieldData> fieldData = field.fieldData;
+        if (ticket.type!.additionalInfo != null && dataFields != null) {
+          for (int i = 0; i < ticket.type!.additionalInfo?.field!.length; i++) {
+            Field field = ticket.type!.additionalInfo?.field![i];
+            List<FieldData>? fieldData = field.fieldData;
             String fieldName = CommonUtil().validString(field.name ?? "");
             String displayName = CommonUtil().validString(field.displayName);
             displayName = displayName.trim().isNotEmpty
                 ? displayName
-                : CommonUtil().getFieldName(field.name);
+                : CommonUtil().getFieldName(field.name)!;
             for (final name in dataFields.keys) {
               String LabelName = CommonUtil().validString(name.toString());
               var value = dataFields[LabelName];
@@ -196,9 +197,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         LabelName.contains("modeOfService"))) {
                   widgetForColumn.add(
                       (ticket?.additionalInfo?.modeOfService != null &&
-                              ticket?.additionalInfo?.modeOfService.name != "")
+                              ticket?.additionalInfo?.modeOfService!.name != "")
                           ? commonWidgetForDropDownValue("Mode Of Service",
-                              ticket?.additionalInfo?.modeOfService.name)
+                              ticket?.additionalInfo?.modeOfService!.name)
                           : SizedBox.shrink());
                   break;
                 } else if ((fieldName.contains("preferredDate") ||
@@ -243,7 +244,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                       fieldData.length > 0 &&
                       value is! String) {
                     try {
-                      final strText = value['name'] as String;
+                      final strText = value['name'] as String?;
                       widgetForColumn.add(commonWidgetForDropDownValue(
                           displayName, CommonUtil().validString(strText)));
                     } catch (e) {
@@ -290,7 +291,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                             maxLines: 2,
                           ),
                           Text(
-                            getStatusName(ticket),
+                            getStatusName(ticket)!,
                             style: TextStyle(
                                 fontSize: 16.0.sp,
                                 fontWeight: FontWeight.w600,
@@ -316,7 +317,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                 Text(
                                   widget.isFromNotification
                                       ? '#${widget.ticketId}'
-                                      : ' #${widget.ticket.uid.toString()}',
+                                      : ' #${widget.ticket!.uid.toString()}',
                                   style: TextStyle(
                                     fontSize: 16.0.sp,
                                     fontWeight: FontWeight.w100,
@@ -433,7 +434,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Widget _tabWidget(BuildContext context, Ticket ticketList) {
-    for (var historyData in ticketList.history) {
+    for (var historyData in ticketList.history!) {
       fullName = ticketList.assignee?.fullname ?? "N/A";
       date = historyData.date.toString();
       print('History fullname : $fullName & $date');
@@ -579,7 +580,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                                   .grey[400]),
                                                         ),
                                                         listOfEvents[index]
-                                                                    .description
+                                                                    .description!
                                                                     .contains(
                                                                         'assigned') &&
                                                                 fullName != null
@@ -631,7 +632,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                               child: Container(
                                 child: //_getChatWidget(context, ticketList),
                                     ticketList.comments != null &&
-                                            ticketList.comments.isNotEmpty
+                                            ticketList.comments!.isNotEmpty
                                         ? _getChatWidget(context, ticketList)
                                         : Container(
                                             alignment: Alignment.center,
@@ -667,7 +668,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                 height: 50.0.h,
                                                 child: FlatButton(
                                                     onPressed: () async {
-                                                      FilePickerResult result =
+                                                      FilePickerResult? result =
                                                           await FilePicker
                                                               .platform
                                                               .pickFiles(
@@ -679,9 +680,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                       );
                                                       if (result != null) {
                                                         File file = File(result
-                                                            .files.single.path);
+                                                            .files.single.path!);
                                                         uploadFile(
-                                                            widget.ticket.sId,
+                                                            widget.ticket!.sId!,
                                                             file);
                                                       }
                                                     },
@@ -731,9 +732,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                         child: new Container(
                                           child: RawMaterialButton(
                                             onPressed: () {
-                                              onSendMessage(
-                                                  addCommentController.text,
-                                                  widget.ticket ?? ticketList);
+                                              // onSendMessage(
+                                              //     addCommentController.text,
+                                              //     widget.ticket ?? ticketList);  FU2.5
                                             },
                                             elevation: 2.0,
                                             fillColor: Colors.white,
@@ -792,7 +793,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                         child: Container(
                             alignment: Alignment.center,
                             child: ticketList.attachments != null &&
-                                    ticketList.attachments.isNotEmpty
+                                    ticketList.attachments!.isNotEmpty
                                 ? Container(
                                     alignment: Alignment.topCenter,
                                     child: SingleChildScrollView(
@@ -802,7 +803,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                             spacing: 5.0,
                                             runSpacing: 5.0,
                                             children: List<Widget>.generate(
-                                              ticketList.attachments.length,
+                                              ticketList.attachments!.length,
                                               (int index) {
                                                 return InkWell(
                                                     child: Container(
@@ -824,7 +825,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                                 .all(8.0),
                                                         child: Image.asset(
                                                           ticketList
-                                                                      .attachments[
+                                                                      .attachments![
                                                                           index]
                                                                       .path
                                                                       .toString()
@@ -843,12 +844,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
                                                     onTap: () {
                                                       openIntent(
                                                           ticketList
-                                                                  .attachments[
+                                                                  .attachments![
                                                               index],
                                                           widget.isFromNotification
                                                               ? widget.ticketId
                                                               : widget
-                                                                  .ticket.uid
+                                                                  .ticket!.uid
                                                                   .toString());
                                                     });
                                               },
@@ -895,253 +896,254 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 
   Widget _getChatWidget(BuildContext context, Ticket ticketList) {
     print('comments length=======');
-    print(ticketList.comments.length);
-    return ScrollablePositionedList.builder(
-      physics: BouncingScrollPhysics(),
-      itemCount: ticketList.comments.length,
-      reverse: true,
-      itemScrollController: listScrollController,
-      itemBuilder: (context, i) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-                            .isAgent !=
-                        null &&
-                    ticketList.comments[ticketList.comments.length - 1 - i]
-                            .owner.role.isAgent ==
-                        false
-                ? Container(
-                    alignment: Alignment.bottomRight,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Card(
-                            color: Color(CommonUtil().getMyPrimaryColor()),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Color(CommonUtil().getMyPrimaryColor()),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
-                                document[STR_CONTENT],
-                                style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
-                              ),*/
-                              child: ticketList
-                                          .comments[ticketList.comments.length -
-                                              1 -
-                                              i]
-                                          .comment !=
-                                      null
-                                  ? Text(
-                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-                                      style: TextStyle(color: Colors.white))
-                                  : Text('Hi I have a query !!',
-                                      style: TextStyle(color: Colors.white)),
-                            )),
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/maya/maya_india_main.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
-                              ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : Container(),
-            SizedBox(height: 15.h),
-            ticketList.comments[ticketList.comments.length - 1 - i].owner.role
-                            .isAgent !=
-                        null &&
-                    ticketList.comments[ticketList.comments.length - 1 - i]
-                        .owner.role.isAgent
-                ? Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: new Container(
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
-                              },
-                              elevation: 2.0,
-                              fillColor:
-                                  Color(CommonUtil().getMyPrimaryColor()),
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CommonCircularIndicator(),
-                                  width: 30.w,
-                                  height: 30.h,
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color:
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'assets/user/profile_pic_ph.png',
-                                    width: 30.w,
-                                    height: 30.h,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
-                                  clipBehavior: Clip.hardEdge,
-                                ),
-                                imageUrl: '',
-                                width: 30.w,
-                                height: 30.h,
-                                fit: BoxFit.cover,
-                              ),
-                              padding: EdgeInsets.all(12.0),
-                              shape: CircleBorder(),
-                            ),
-                          ),
-                        ),
-                        Card(
-                            color: Colors.grey[200],
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(16),
-                                    topLeft: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16))),
-                            child: Container(
-                              constraints: BoxConstraints(
-                                maxWidth: 1.sw * .6,
-                              ),
-                              padding: const EdgeInsets.all(15.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(16),
-                                  topLeft: Radius.circular(16),
-                                  bottomLeft: Radius.circular(16),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                              ),
-                              /*child: Text(
-                                document[STR_CONTENT],
-                                style: TextStyle(
-                                    color: Color(CommonUtil().getMyPrimaryColor())),
-                              ),*/
-                              child: ticketList
-                                          .comments[ticketList.comments.length -
-                                              1 -
-                                              i]
-                                          .comment !=
-                                      null
-                                  ? Text(
-                                      '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
-                                      style: TextStyle(color: Colors.black))
-                                  : Text('Hi !!',
-                                      style: TextStyle(color: Colors.black)),
-                            )),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ],
-        );
-      },
-    );
-  }
+    print(ticketList.comments!.length);
+    // FU2.5
+  //   return ScrollablePositionedList.builder(
+  //     physics: BouncingScrollPhysics(),
+  //     itemCount: ticketList.comments.length,
+  //     reverse: true,
+  //     itemScrollController: listScrollController,
+  //     itemBuilder: (context, i) {
+  //       return Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: [
+  //           ticketList.comments[ticketList.comments.length - 1 - i].owner.role
+  //                           .isAgent !=
+  //                       null &&
+  //                   ticketList.comments[ticketList.comments.length - 1 - i]
+  //                           .owner.role.isAgent ==
+  //                       false
+  //               ? Container(
+  //                   alignment: Alignment.bottomRight,
+  //                   child: Row(
+  //                     crossAxisAlignment: CrossAxisAlignment.end,
+  //                     mainAxisAlignment: MainAxisAlignment.end,
+  //                     children: [
+  //                       Card(
+  //                           color: Color(CommonUtil().getMyPrimaryColor()),
+  //                           shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.only(
+  //                                   topRight: Radius.circular(16),
+  //                                   topLeft: Radius.circular(16),
+  //                                   bottomLeft: Radius.circular(16),
+  //                                   bottomRight: Radius.circular(16))),
+  //                           child: Container(
+  //                             constraints: BoxConstraints(
+  //                               maxWidth: 1.sw * .6,
+  //                             ),
+  //                             padding: const EdgeInsets.all(15.0),
+  //                             decoration: BoxDecoration(
+  //                               color: Color(CommonUtil().getMyPrimaryColor()),
+  //                               borderRadius: BorderRadius.only(
+  //                                 topRight: Radius.circular(16),
+  //                                 topLeft: Radius.circular(16),
+  //                                 bottomLeft: Radius.circular(16),
+  //                                 bottomRight: Radius.circular(16),
+  //                               ),
+  //                             ),
+  //                             /*child: Text(
+  //                               document[STR_CONTENT],
+  //                               style: TextStyle(
+  //                                   color: Color(CommonUtil().getMyPrimaryColor())),
+  //                             ),*/
+  //                             child: ticketList
+  //                                         .comments[ticketList.comments.length -
+  //                                             1 -
+  //                                             i]
+  //                                         .comment !=
+  //                                     null
+  //                                 ? Text(
+  //                                     '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
+  //                                     style: TextStyle(color: Colors.white))
+  //                                 : Text('Hi I have a query !!',
+  //                                     style: TextStyle(color: Colors.white)),
+  //                           )),
+  //                       Flexible(
+  //                         flex: 1,
+  //                         child: new Container(
+  //                           child: RawMaterialButton(
+  //                             onPressed: () {
+  //                               // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+  //                             },
+  //                             elevation: 2.0,
+  //                             fillColor:
+  //                                 Color(CommonUtil().getMyPrimaryColor()),
+  //                             child: CachedNetworkImage(
+  //                               placeholder: (context, url) => Container(
+  //                                 child: CommonCircularIndicator(),
+  //                                 width: 30.w,
+  //                                 height: 30.h,
+  //                                 padding: EdgeInsets.all(10.0),
+  //                                 decoration: BoxDecoration(
+  //                                   color:
+  //                                       Color(CommonUtil().getMyPrimaryColor()),
+  //                                   borderRadius: BorderRadius.all(
+  //                                     Radius.circular(8.0),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               errorWidget: (context, url, error) => Material(
+  //                                 child: Image.asset(
+  //                                   'assets/maya/maya_india_main.png',
+  //                                   width: 30.w,
+  //                                   height: 30.h,
+  //                                   fit: BoxFit.cover,
+  //                                 ),
+  //                                 borderRadius: BorderRadius.all(
+  //                                   Radius.circular(8.0),
+  //                                 ),
+  //                                 clipBehavior: Clip.hardEdge,
+  //                               ),
+  //                               imageUrl: '',
+  //                               width: 30.w,
+  //                               height: 30.h,
+  //                               fit: BoxFit.cover,
+  //                             ),
+  //                             padding: EdgeInsets.all(12.0),
+  //                             shape: CircleBorder(),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 )
+  //               : Container(),
+  //           SizedBox(height: 15.h),
+  //           ticketList.comments[ticketList.comments.length - 1 - i].owner.role
+  //                           .isAgent !=
+  //                       null &&
+  //                   ticketList.comments[ticketList.comments.length - 1 - i]
+  //                       .owner.role.isAgent
+  //               ? Container(
+  //                   alignment: Alignment.bottomLeft,
+  //                   child: Row(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     mainAxisAlignment: MainAxisAlignment.start,
+  //                     children: [
+  //                       Flexible(
+  //                         flex: 1,
+  //                         child: new Container(
+  //                           child: RawMaterialButton(
+  //                             onPressed: () {
+  //                               // onSendMessage(textEditingController.text?.replaceAll("#", ""), 0);
+  //                             },
+  //                             elevation: 2.0,
+  //                             fillColor:
+  //                                 Color(CommonUtil().getMyPrimaryColor()),
+  //                             child: CachedNetworkImage(
+  //                               placeholder: (context, url) => Container(
+  //                                 child: CommonCircularIndicator(),
+  //                                 width: 30.w,
+  //                                 height: 30.h,
+  //                                 padding: EdgeInsets.all(10.0),
+  //                                 decoration: BoxDecoration(
+  //                                   color:
+  //                                       Color(CommonUtil().getMyPrimaryColor()),
+  //                                   borderRadius: BorderRadius.all(
+  //                                     Radius.circular(8.0),
+  //                                   ),
+  //                                 ),
+  //                               ),
+  //                               errorWidget: (context, url, error) => Material(
+  //                                 child: Image.asset(
+  //                                   'assets/user/profile_pic_ph.png',
+  //                                   width: 30.w,
+  //                                   height: 30.h,
+  //                                   fit: BoxFit.cover,
+  //                                 ),
+  //                                 borderRadius: BorderRadius.all(
+  //                                   Radius.circular(8.0),
+  //                                 ),
+  //                                 clipBehavior: Clip.hardEdge,
+  //                               ),
+  //                               imageUrl: '',
+  //                               width: 30.w,
+  //                               height: 30.h,
+  //                               fit: BoxFit.cover,
+  //                             ),
+  //                             padding: EdgeInsets.all(12.0),
+  //                             shape: CircleBorder(),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                       Card(
+  //                           color: Colors.grey[200],
+  //                           shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.only(
+  //                                   topRight: Radius.circular(16),
+  //                                   topLeft: Radius.circular(16),
+  //                                   bottomLeft: Radius.circular(16),
+  //                                   bottomRight: Radius.circular(16))),
+  //                           child: Container(
+  //                             constraints: BoxConstraints(
+  //                               maxWidth: 1.sw * .6,
+  //                             ),
+  //                             padding: const EdgeInsets.all(15.0),
+  //                             decoration: BoxDecoration(
+  //                               color: Colors.grey[200],
+  //                               borderRadius: BorderRadius.only(
+  //                                 topRight: Radius.circular(16),
+  //                                 topLeft: Radius.circular(16),
+  //                                 bottomLeft: Radius.circular(16),
+  //                                 bottomRight: Radius.circular(16),
+  //                               ),
+  //                             ),
+  //                             /*child: Text(
+  //                               document[STR_CONTENT],
+  //                               style: TextStyle(
+  //                                   color: Color(CommonUtil().getMyPrimaryColor())),
+  //                             ),*/
+  //                             child: ticketList
+  //                                         .comments[ticketList.comments.length -
+  //                                             1 -
+  //                                             i]
+  //                                         .comment !=
+  //                                     null
+  //                                 ? Text(
+  //                                     '${_parseHtmlString(ticketList.comments[ticketList.comments.length - 1 - i].comment)}',
+  //                                     style: TextStyle(color: Colors.black))
+  //                                 : Text('Hi !!',
+  //                                     style: TextStyle(color: Colors.black)),
+  //                           )),
+  //                     ],
+  //                   ),
+  //                 )
+  //               : Container(),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
-  String _parseHtmlString(String htmlString) {
-    RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
+  // String _parseHtmlString(String htmlString) {
+  //   RegExp exp = RegExp(r"<[^>]*>", multiLine: true, caseSensitive: true);
 
-    return htmlString.replaceAll(exp, '');
-  }
+  //   return htmlString.replaceAll(exp, '');
+  // }
 
-  void onSendMessage(var comment, var ticketList) {
-    try {
-      strConstants.tckComment = comment;
-      strConstants.tckID = ticketList.sId; //1038
-      print(
-          'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
-      ticketViewModel.userTicketService.commentTicket().then((value) {
-        if (value != null) {
-          addCommentController.clear();
-          callTicketDetailsApi();
-          print('Hitting Send Comments API .. : ${value.toJson()}');
-        } else {
-          print('Failed Sending Comments ..');
-          return null;
-        }
-      }).catchError((e) {
-        print('Comment ticket exception in catch error: ${e.toString()}');
-        return null;
-      });
-    } catch (e) {
-      print('Comment ticket exception : ${e.toString()}');
-      return null;
-    }
+  // void onSendMessage(var comment, var ticketList) {
+  //   try {
+  //     strConstants.tckComment = comment;
+  //     strConstants.tckID = ticketList.sId; //1038
+  //     print(
+  //         'Values for comment : ${strConstants.tckComment}\n${strConstants.tckID}');
+  //     ticketViewModel.userTicketService.commentTicket().then((value) {
+  //       if (value != null) {
+  //         addCommentController.clear();
+  //         callTicketDetailsApi();
+  //         print('Hitting Send Comments API .. : ${value.toJson()}');
+  //       } else {
+  //         print('Failed Sending Comments ..');
+  //         return null;
+  //       }
+  //     }).catchError((e) {
+  //       print('Comment ticket exception in catch error: ${e.toString()}');
+  //       return null;
+  //     });
+  //   } catch (e) {
+  //     print('Comment ticket exception : ${e.toString()}');
+  //     return null;
+  //   }  FU2.5
   }
 
   void uploadFile(String ticketId, file) {
@@ -1172,15 +1174,15 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     selectedTab = _controller.index;
   }
 
-  Future<void> openIntent(Attachments attachments, String ticketUid) async {
+  Future<void> openIntent(Attachments attachments, String? ticketUid) async {
     FlutterToast().getToast('Please wait', Colors.grey);
     String path = await downloadFileOpen(attachments, ticketUid);
-    if (attachments.path.split('.').last == 'pdf') {
+    if (attachments.path!.split('.').last == 'pdf') {
       final controller = Get.find<PDFViewController>();
       final data = OpenPDF(
           type: PDFLocation.Path,
           path: path,
-          title: attachments.path.split('/').last);
+          title: attachments.path!.split('/').last);
       controller.data = data;
       Get.to(() => PDFView());
     } else {
@@ -1204,7 +1206,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
       BASE_URL + 'trudesk/tickets/getAttachment',
       body: {"fileUrl": fileUrl},
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ' + authToken,
+        HttpHeaders.authorizationHeader: 'Bearer ' + authToken!,
         KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
@@ -1214,8 +1216,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
   }
 
   Future<String> downloadFileOpen(
-      Attachments attachments, String ticketUId) async {
-    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path);
+      Attachments attachments, String? ticketUId) async {
+    String nameWithoutExtension = p.basenameWithoutExtension(attachments.path!);
     String filePath = await FHBUtils.createFolderInAppDocDirClone(
         variable.stAudioPath, attachments.name);
     var file = File('$filePath' /*+ fileType*/);
@@ -1236,7 +1238,7 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     return file.path.toString();
   }
 
-  commonWidgetForDropDownValue(String header, String value,
+  commonWidgetForDropDownValue(String header, String? value,
       {bool isTime = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1256,8 +1258,8 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
           flex: 1,
           child: Text(
             isTime
-                ? value.toUpperCase()
-                : CommonUtil().capitalizeFirstofEach(value),
+                ? value!.toUpperCase()
+                : CommonUtil().capitalizeFirstofEach(value!),
             style: TextStyle(
                 fontSize: 16.0.sp,
                 fontWeight: FontWeight.w400,
@@ -1269,12 +1271,12 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
     );
   }
 
-  String getStatusName(Ticket ticket) {
-    String statusName = '';
+  String? getStatusName(Ticket ticket) {
+    String? statusName = '';
     if (widget.isFromNotification) {
       if (ticket?.additionalInfo != null &&
           ticket?.additionalInfo?.ticketStatus != null) {
-        if (ticket?.additionalInfo.ticketStatus?.name != null &&
+        if (ticket?.additionalInfo!.ticketStatus?.name != null &&
             ticket?.additionalInfo?.ticketStatus?.name != '') {
           statusName = ticket?.additionalInfo?.ticketStatus?.name;
         }
@@ -1291,9 +1293,9 @@ class _DetailedTicketViewState extends State<DetailedTicketView>
 }
 
 class Events {
-  final String time;
-  final String eventName;
-  final String description;
+  final String? time;
+  final String? eventName;
+  final String? description;
 
   Events({this.time, this.eventName, this.description});
 }

@@ -1,6 +1,7 @@
+
 class UploadDocumentModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   UploadDocumentModel({this.isSuccess, this.result});
 
@@ -14,15 +15,15 @@ class UploadDocumentModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class Result {
-  String chatMessageId;
-  String fileUrl;
+  String? chatMessageId;
+  String? fileUrl;
 
   Result({this.chatMessageId, this.fileUrl});
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:myfhb/constants/variable_constant.dart';
@@ -19,21 +20,21 @@ import 'regiment_webview.dart';
 
 class RegimentActivitiesCard extends StatelessWidget {
   final int index;
-  final String title;
+  final String? title;
   final String time;
   final Color color;
-  final String eid;
-  final DateTime startTime;
+  final String? eid;
+  final DateTime? startTime;
   final RegimentDataModel regimentData;
 
   const RegimentActivitiesCard({
-    @required this.index,
-    @required this.title,
-    @required this.time,
-    @required this.color,
-    @required this.eid,
-    @required this.startTime,
-    @required this.regimentData,
+    required this.index,
+    required this.title,
+    required this.time,
+    required this.color,
+    required this.eid,
+    required this.startTime,
+    required this.regimentData,
   });
 
   @override
@@ -128,7 +129,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                             listen: false,
                           ).enableDisableActivity(
                             eidUser: regimentData?.teidUser,
-                            startTime: regimentData?.estart,
+                            startTime: regimentData?.estart!,
                             isDisable: !isEnabled,
                           );
                         },

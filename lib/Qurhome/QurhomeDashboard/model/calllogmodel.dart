@@ -1,14 +1,15 @@
+
 import 'package:myfhb/Qurhome/QurhomeDashboard/model/location_data_model.dart';
 
 class CallLogModel {
-  String callerUser;
-  String recipientUser;
-  String startedTime;
-  String endTime;
-  String status;
-  String patientName;
-  String recipientId;
-  AdditionalInfo additionalInfo;
+  String? callerUser;
+  String? recipientUser;
+  String? startedTime;
+  String? endTime;
+  String? status;
+  String? patientName;
+  String? recipientId;
+  AdditionalInfo? additionalInfo;
 
   CallLogModel({
     this.callerUser,
@@ -49,7 +50,7 @@ class CallLogModel {
       data['patientName'] = this.patientName;
       data['recipientId'] = this.recipientId;
       if (this.additionalInfo != null) {
-        data["additionalInfo"] = this.additionalInfo.toJson();
+        data["additionalInfo"] = this.additionalInfo!.toJson();
       }
     } catch (e) {
       print(e);
@@ -60,15 +61,15 @@ class CallLogModel {
 }
 
 class CallEndModel {
-  String callerUser;
-  String recipientUser;
-  String startedTime;
-  String endTime;
-  String status;
-  String patientName;
-  String recipientId;
-  AdditionalInfo additionalInfo;
-  String id;
+  String? callerUser;
+  String? recipientUser;
+  String? startedTime;
+  String? endTime;
+  String? status;
+  String? patientName;
+  String? recipientId;
+  AdditionalInfo? additionalInfo;
+  String? id;
 
   CallEndModel({
     this.callerUser,
@@ -111,7 +112,7 @@ class CallEndModel {
       data['patientName'] = this.patientName;
       data['recipientId'] = this.recipientId;
       if (this.additionalInfo != null) {
-        data["additionalInfo"] = this.additionalInfo.toJson();
+        data["additionalInfo"] = this.additionalInfo!.toJson();
       }
       data['id'] = this.id;
     } catch (e) {
@@ -123,7 +124,7 @@ class CallEndModel {
 }
 
 class AdditionalInfo {
-  Location location;
+  Location? location;
 
   AdditionalInfo({this.location});
 
@@ -141,7 +142,7 @@ class AdditionalInfo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
       if (this.location != null) {
-        data["location"] = this.location.toJson();
+        data["location"] = this.location!.toJson();
       }
     } catch (e) {
       print(e);
@@ -151,9 +152,9 @@ class AdditionalInfo {
 }
 
 class CallLogResponseModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   CallLogResponseModel(
       {this.isSuccess, this.message, this.result});
@@ -183,8 +184,8 @@ class CallLogResponseModel {
 }
 
 class CallRecordModel {
-  bool isSuccess;
-  Result result;
+  bool? isSuccess;
+  Result? result;
 
   CallRecordModel({this.isSuccess, this.result});
 
@@ -204,7 +205,7 @@ class CallRecordModel {
     try {
       data['isSuccess'] = this.isSuccess;
       if (this.result != null) {
-        data['result'] = this.result.toJson();
+        data['result'] = this.result!.toJson();
       }
     } catch (e) {
       print(e);
@@ -217,8 +218,8 @@ class CallRecordModel {
 
 
 class Result {
-  String resourceId;
-  String sid;
+  String? resourceId;
+  String? sid;
 
   Result({this.resourceId, this.sid});
 
@@ -236,10 +237,10 @@ class Result {
 }
 
 class CallLogErrorResponseModel {
-  int status;
-  bool isSuccess;
-  String message;
-  ResponseData response;
+  int? status;
+  bool? isSuccess;
+  String? message;
+  ResponseData? response;
 
   CallLogErrorResponseModel(
       {this.status, this.isSuccess, this.message, this.response});
@@ -259,15 +260,15 @@ class CallLogErrorResponseModel {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data['response'] = this.response!.toJson();
     }
     return data;
   }
 }
 
 class ResponseData {
-  int count;
-  DataModel data;
+  int? count;
+  DataModel? data;
 
   ResponseData({this.count, this.data});
 
@@ -280,14 +281,14 @@ class ResponseData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['count'] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class DataModel {
-  String msg;
+  String? msg;
 
   DataModel({this.msg});
 

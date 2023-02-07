@@ -1,7 +1,8 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class FollowupIn {
-  List<int> days;
+  List<int>? days;
 
   FollowupIn({this.days});
 

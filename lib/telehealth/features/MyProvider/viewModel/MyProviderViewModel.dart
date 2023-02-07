@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
@@ -17,31 +18,31 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Telehe
 
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
-  List<DoctorIds> doctorIdsList = new List();
+  List<DoctorIds>? doctorIdsList = new List();
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   AssociateSuccessResponse associateRecordResponse = AssociateSuccessResponse();
   AssociateUpdateSuccessResponse associateUpdateRecordResponse =
       AssociateUpdateSuccessResponse();
   List<HealthOrganizationResult> healthOrganizationResult = List();
-  List<ResultFromHospital> doctorsFromHospital = List();
+  List<ResultFromHospital>? doctorsFromHospital = List();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
-  String userID;
-  Future<List<DoctorIds>> fetchProviderDoctors() async {
+  String? userID;
+  Future<List<DoctorIds>?> fetchProviderDoctors() async {
     try {
       TelehealthProviderModel myProvidersResponseList =
           await _providersListRepository.getTelehealthDoctorsList();
 
       doctorIdsList = myProvidersResponseList
-          .response.data.medicalPreferences.preferences.doctorIds;
+          .response!.data!.medicalPreferences!.preferences!.doctorIds;
       return doctorIdsList;
     } catch (e) {}
   }
 
-  Future<bool> bookMarkDoctor(
-      Doctors doctorIds, bool isPreferred, String isFrom,List<String> selectedCategories) async {
+  Future<bool?> bookMarkDoctor(
+      Doctors doctorIds, bool? isPreferred, String isFrom,List<String?>? selectedCategories) async {
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
         await _providersListRepository.bookMarkDoctor(
             doctorIds, isPreferred, isFrom,selectedCategories);
@@ -49,8 +50,8 @@ class MyProviderViewModel extends ChangeNotifier {
     return doctorBookMarkedSucessModel.isSuccess;
   }
 
-  Future<bool> bookMarkHealthOrg(
-      Hospitals hospitals, bool isPreferred, String isFrom,List<String> selectedCategories) async {
+  Future<bool?> bookMarkHealthOrg(
+      Hospitals hospitals, bool? isPreferred, String isFrom,List<String?>? selectedCategories) async {
     bool condition;
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
@@ -62,16 +63,16 @@ class MyProviderViewModel extends ChangeNotifier {
 
   List<DoctorIds> getFilterDoctorList(String doctorName) {
     List<DoctorIds> filterDoctorData = new List();
-    for (DoctorIds doctorData in doctorIdsList) {
-      if (doctorData.name
+    for (DoctorIds doctorData in doctorIdsList!) {
+      if (doctorData.name!
               .toLowerCase()
               .trim()
               .contains(doctorName.toLowerCase().trim()) ||
-          doctorData.specialization
+          doctorData.specialization!
               .toLowerCase()
               .trim()
               .contains(doctorName.toLowerCase().trim()) ||
-          doctorData.city
+          doctorData.city!
               .toLowerCase()
               .trim()
               .contains(doctorName.toLowerCase().trim())) {
@@ -82,7 +83,7 @@ class MyProviderViewModel extends ChangeNotifier {
   }
 
   Future<AssociateSuccessResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
+      String? doctorId, String? userId, List<String>? healthRecords) async {
     try {
       AssociateSuccessResponse bookAppointmentModel =
           await _providersListRepository.associateRecords(
@@ -93,7 +94,7 @@ class MyProviderViewModel extends ChangeNotifier {
   }
 
   Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
-      String bookingID, HealthResult healthResult) async {
+      String? bookingID, HealthResult healthResult) async {
     try {
       AssociateUpdateSuccessResponse bookAppointmentModel =
           await _providersListRepository.associateUpdateRecords(
@@ -115,7 +116,7 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<ResultFromHospital>> getDoctorsFromHospital(
+  Future<List<ResultFromHospital>?> getDoctorsFromHospital(
       String healthOrgId) async {
     try {
       DoctorListFromHospitalModel doctorListFromHospitalModel =
@@ -127,13 +128,13 @@ class MyProviderViewModel extends ChangeNotifier {
   }
 
   List<Hospitals> getHospitalName(
-      {List<Hospitals> hospitalList, String query}) {
+      {required List<Hospitals> hospitalList, String? query}) {
     List<Hospitals> dummySearchHospitalList = List();
     dummySearchHospitalList = hospitalList
-        .where((element) => element.name
+        .where((element) => element.name!
             .toLowerCase()
             .trim()
-            .contains(query.toLowerCase().trim()))
+            .contains(query!.toLowerCase().trim()))
         .toList();
     return dummySearchHospitalList;
   }

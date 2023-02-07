@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -37,13 +38,13 @@ import 'package:myfhb/telehealth/features/chat/view/PDFView.dart';
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
-import 'package:open_file/open_file.dart';
+//import 'package:open_file/open_file.dart';FU2.5
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+//import 'package:scrollable_positioned_list/scrollable_positioned_list.dart'; FU2.5
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:myfhb/src/ui/SheelaAI/Views/youtube_player.dart';
@@ -52,39 +53,39 @@ import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
 import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 
 class ChatDetail extends StatefulWidget {
-  final String patientId;
-  final String patientName;
-  final String patientPicture;
+  final String? patientId;
+  final String? patientName;
+  final String? patientPicture;
 
-  final String peerId;
-  final String peerName;
-  final String peerAvatar;
+  final String? peerId;
+  final String? peerName;
+  final String? peerAvatar;
 
-  final String carecoordinatorId;
+  final String? carecoordinatorId;
 
   final bool isFromVideoCall;
-  final String message;
-  final bool isCareGiver;
+  final String? message;
+  final bool? isCareGiver;
   final bool isForGetUserId;
   final bool isFromFamilyListChat;
-  final bool isFromCareCoordinator;
+  final bool? isFromCareCoordinator;
 
-  final String lastDate;
+  final String? lastDate;
 
-  final String groupId;
-  final String familyUserId;
+  final String? groupId;
+  final String? familyUserId;
   final String isNormalChatUserList;
 
   const ChatDetail(
-      {Key key,
-      @required this.peerId,
-      @required this.peerName,
-      @required this.peerAvatar,
-      @required this.patientId,
-      @required this.patientName,
-      @required this.patientPicture,
-      @required this.isFromVideoCall,
-      @required this.groupId,
+      {Key? key,
+      required this.peerId,
+      required this.peerName,
+      required this.peerAvatar,
+      required this.patientId,
+      required this.patientName,
+      required this.patientPicture,
+      required this.isFromVideoCall,
+      required this.groupId,
       this.message,
       this.isCareGiver,
       this.carecoordinatorId,
@@ -101,15 +102,15 @@ class ChatDetail extends StatefulWidget {
 }
 
 class ChatState extends State<ChatDetail> {
-  var token = '';
-  var userId = '';
+  String? token = '';
+  String? userId = '';
 
   //IO.Socket socket;
 
-  Future<ChatHistoryModel> chatHistoryModel;
+  Future<ChatHistoryModel>? chatHistoryModel;
 
   ChatViewModel chatViewModel = new ChatViewModel();
-  AppointmentResult appointmentResult;
+  AppointmentResult? appointmentResult;
 
   final AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -125,7 +126,7 @@ class ChatState extends State<ChatDetail> {
   var chatEnterMessageController = TextEditingController();
 
   /*final ScrollController listScrollController = ScrollController();*/
-  ItemScrollController listScrollController = ItemScrollController();
+ // ItemScrollController listScrollController = ItemScrollController(); FU2.5
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = new List();
@@ -147,31 +148,31 @@ class ChatState extends State<ChatDetail> {
 
   bool isPlaying = false;
 
-  String peerId = '';
-  String chatPeerId = '';
-  String peerName = '';
-  String peerAvatar = '';
+  String? peerId = '';
+  String? chatPeerId = '';
+  String? peerName = '';
+  String? peerAvatar = '';
 
-  String patientId = '';
+  String? patientId = '';
   String patientName = '';
-  String patientPicUrl = '';
+  String? patientPicUrl = '';
 
-  String bookingId = '-';
-  String lastAppointmentDate = '';
-  String nextAppointmentDate = '';
-  String doctorDeviceToken = '';
-  String patientDeviceToken = '';
+  String? bookingId = '-';
+  String? lastAppointmentDate = '';
+  String? nextAppointmentDate = '';
+  String? doctorDeviceToken = '';
+  String? patientDeviceToken = '';
   String currentPlayedVoiceURL = '';
 
-  String carecoordinatorId = '';
+  String? carecoordinatorId = '';
 
   String textValue = '';
 
-  String groupId = '';
+  String? groupId = '';
 
-  String familyUserId = '';
+  String? familyUserId = '';
 
-  String chatById = '';
+  String? chatById = '';
 
   String careCoordinatorName = '';
 
@@ -185,7 +186,7 @@ class ChatState extends State<ChatDetail> {
 
   var listMessage;
 
-  bool isCareGiver = false;
+  bool? isCareGiver = false;
 
   bool isForGetUserId = false;
 
@@ -201,7 +202,7 @@ class ChatState extends State<ChatDetail> {
 
   bool isFromFamilyListChat = false;
 
-  bool isFromCareCoordinator = false;
+  bool? isFromCareCoordinator = false;
 
   String isNormalChatUserList = 'false';
 
@@ -209,11 +210,11 @@ class ChatState extends State<ChatDetail> {
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
-  String audioPath;
+  String? audioPath;
   final controller = Get.put(ChatUserListController());
-  CaregiverPatientChatModel familyListModel;
+  CaregiverPatientChatModel? familyListModel;
 
-  String lastReceived = '';
+  String? lastReceived = '';
   String lastReceivedFuture = '';
 
   String parsedReferenceText = '';
@@ -222,9 +223,9 @@ class ChatState extends State<ChatDetail> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
       Provider.of<ChatSocketViewModel>(
-        Get.context,
+        Get.context!,
         listen: false,
       )?.updateChatHistoryList([], shouldUpdate: false);
     });
@@ -247,7 +248,7 @@ class ChatState extends State<ChatDetail> {
 
     chatById = widget.carecoordinatorId;
 
-    if (isFromCareCoordinator && isNormalChatUserList == "true") {
+    if (isFromCareCoordinator! && isNormalChatUserList == "true") {
       chatById = familyUserId;
     }
 
@@ -265,7 +266,7 @@ class ChatState extends State<ChatDetail> {
 
     if (isForGetUserId) {
       Provider.of<ChatSocketViewModel>(context, listen: false)
-          .getUserIdFromDocId(peerId)
+          .getUserIdFromDocId(peerId!)
           .then((value) {
         if (value != null) {
           if (value?.result != null) {
@@ -294,16 +295,16 @@ class ChatState extends State<ChatDetail> {
   }
 
   void scrollToPosiiton(int commonIndex) async {
-    await listScrollController.scrollTo(
-        index: listIndex[commonIndex], duration: Duration(milliseconds: 100));
+    // await listScrollController.scrollTo(
+    //     index: listIndex[commonIndex], duration: Duration(milliseconds: 100));//FU2.5
 
     //Scrollable.ensureVisible(context);
   }
 
   void getChatHistory() {
     chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
-        .getChatHistory(chatPeerId, familyUserId, isFromCareCoordinator,
-            carecoordinatorId, isFromFamilyListChat);
+        .getChatHistory(chatPeerId!, familyUserId!, isFromCareCoordinator!,
+            carecoordinatorId!, isFromFamilyListChat);
   }
 
   void getGroupId() {
@@ -311,13 +312,13 @@ class ChatState extends State<ChatDetail> {
       if (isFromFamilyListChat) {
         Provider.of<ChatSocketViewModel>(context, listen: false)
             .initNewFamilyChat(
-                chatPeerId, peerName, isFromCareCoordinator, carecoordinatorId)
+                chatPeerId!, peerName!, isFromCareCoordinator!, carecoordinatorId!)
             .then((value) {
           if (value != null) {
             if (value?.result != null) {
               if (value?.result?.chatListId != null &&
                   value?.result?.chatListId != '') {
-                groupId = value.result.chatListId;
+                groupId = value.result!.chatListId;
                 updateReadCount();
               }
             }
@@ -325,13 +326,13 @@ class ChatState extends State<ChatDetail> {
         });
       } else {
         Provider.of<ChatSocketViewModel>(context, listen: false)
-            .initNewChat(chatPeerId)
+            .initNewChat(chatPeerId!)
             .then((value) {
           if (value != null) {
             if (value?.result != null) {
               if (value?.result?.chatListId != null &&
                   value?.result?.chatListId != '') {
-                groupId = value.result.chatListId;
+                groupId = value.result!.chatListId;
                 updateReadCount();
               }
             }
@@ -373,7 +374,7 @@ class ChatState extends State<ChatDetail> {
     if (patientName == null || patientName == '') {
       MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
       patientName = myProfile.result != null
-          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          ? myProfile.result!.firstName! + ' ' + myProfile.result!.lastName!
           : '';
     }
 
@@ -384,34 +385,34 @@ class ChatState extends State<ChatDetail> {
     parseData();
   }
 
-  String getProfileURL() {
+  String? getProfileURL() {
     MyProfileModel myProfile = PreferenceUtil.getProfileData(KEY_PROFILE);
-    String patientPicURL = myProfile.result.profilePicThumbnailUrl;
+    String? patientPicURL = myProfile.result!.profilePicThumbnailUrl;
 
     return patientPicURL;
   }
 
   void initSocket() {
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .off(message);
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .on(message, (data) {
       if (data != null) {
         //print('OnMessageack$data');
         ChatHistoryResult emitAckResponse = ChatHistoryResult.fromJson(data);
         if (emitAckResponse != null) {
-          if (isFromCareCoordinator) {
-            if (carecoordinatorId == emitAckResponse.messages.idFrom) {
-              Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          if (isFromCareCoordinator!) {
+            if (carecoordinatorId == emitAckResponse.messages!.idFrom) {
+              Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                   ?.onReceiveMessage(emitAckResponse);
               updateReadCount();
             }
           } else {
-            if (chatPeerId == emitAckResponse.messages.idFrom) {
-              Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+            if (chatPeerId == emitAckResponse.messages!.idFrom) {
+              Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                   ?.onReceiveMessage(emitAckResponse);
               updateReadCount();
             }
@@ -424,7 +425,7 @@ class ChatState extends State<ChatDetail> {
   updateReadCount() {
     var data = {"chatListId": groupId, "userId": userId};
 
-    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+    Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
         ?.socket
         .emitWithAck(unreadNotification, data, ack: (res) {
       //print('emitWithackCount$res');
@@ -434,7 +435,7 @@ class ChatState extends State<ChatDetail> {
   parseData() async {
     await chatViewModel
         .fetchAppointmentDetail(
-            widget.peerId, userId, chatById, isNormalChatUserList)
+            widget.peerId!, userId!, chatById, isNormalChatUserList)
         .then((value) {
       appointmentResult = value;
       if (appointmentResult != null) {
@@ -463,29 +464,29 @@ class ChatState extends State<ChatDetail> {
           doctorDeviceToken = appointmentResult?.deviceToken != null
               ? appointmentResult?.deviceToken?.doctor != null
                   ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
-                      ? appointmentResult
-                          .deviceToken?.doctor?.payload[0]?.deviceTokenId
+                      ? appointmentResult!
+                          .deviceToken?.doctor?.payload![0]?.deviceTokenId
                       : ''
                   : ''
               : '';
           patientDeviceToken = '';
           if (appointmentResult?.deviceToken != null) {
-            if (appointmentResult?.deviceToken?.patient?.isSuccess &&
+            if (appointmentResult?.deviceToken?.patient?.isSuccess! &&
                 appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
                 appointmentResult
-                        ?.deviceToken?.patient?.payload[0]?.deviceTokenId !=
+                        ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  ?.deviceToken?.patient?.payload[0]?.deviceTokenId;
+                  ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess &&
+                    ?.deviceToken?.parentMember?.isSuccess! &&
                 appointmentResult
                     ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
-                appointmentResult?.deviceToken?.parentMember?.payload[0]
+                appointmentResult?.deviceToken?.parentMember?.payload![0]
                         ?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
-                  ?.deviceToken?.parentMember?.payload[0]?.deviceTokenId;
+                  ?.deviceToken?.parentMember?.payload![0]?.deviceTokenId;
             }
           }
 
@@ -510,7 +511,7 @@ class ChatState extends State<ChatDetail> {
               careCoordinatorName = careCoordinatorName +
                   ' ' +
                   appointmentResult
-                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorLastName;
+                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorLastName!;
               isFromCareCoordinator = appointmentResult
                   ?.doctorOrCarecoordinatorInfo?.isCareCoordinator;
             }
@@ -549,7 +550,7 @@ class ChatState extends State<ChatDetail> {
           /* if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
               snapshot?.data?.result?.length > 0) {*/
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.updateChatHistoryList(snapshot?.data?.result,
                   shouldUpdate: false);
 
@@ -582,7 +583,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   void onSendMessage(
-      String content, int type, String chatMessageId, bool isNotUpload) async {
+      String? content, int type, String? chatMessageId, bool isNotUpload) async {
     if (content != null) {
       if (content.trim() != '') {
         textValue = textEditingController.text;
@@ -591,7 +592,7 @@ class ChatState extends State<ChatDetail> {
         var data = {
           "id": groupId,
           'idFrom': userId,
-          'idTo': isFromCareCoordinator ? carecoordinatorId : chatPeerId,
+          'idTo': isFromCareCoordinator! ? carecoordinatorId : chatPeerId,
           "type": type,
           "isread": false,
           'content': content,
@@ -601,7 +602,7 @@ class ChatState extends State<ChatDetail> {
         };
 
         try {
-          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
               ?.socket
               .emitWithAck(message, data, ack: (res) {
             //print('emitWithack$res');
@@ -609,7 +610,7 @@ class ChatState extends State<ChatDetail> {
               EmitAckResponse emitAckResponse = EmitAckResponse.fromJson(res);
               if (emitAckResponse != null) {
                 if (emitAckResponse?.lastSentMessageInfo != null) {
-                  Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+                  Provider.of<ChatSocketViewModel>(Get.context!, listen: false)
                       ?.messageEmit(emitAckResponse?.lastSentMessageInfo);
                   /*listScrollController.scrollTo(
                     index: Provider.of<ChatSocketViewModel>(Get.context,listen: false)?.chatHistoryList.length,
@@ -815,7 +816,7 @@ class ChatState extends State<ChatDetail> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        !isCallBackDisable && isCareGiver
+                        !isCallBackDisable && isCareGiver!
                             ? SizedBoxWithChild(
                                 height: 24.0.h,
                                 width: 24.0.w,
@@ -836,10 +837,10 @@ class ChatState extends State<ChatDetail> {
                                                   context,
                                                   listen: false)
                                               .getChatHistory(
-                                                  chatPeerId,
-                                                  familyUserId,
-                                                  isFromCareCoordinator,
-                                                  carecoordinatorId,
+                                                  chatPeerId!,
+                                                  familyUserId!,
+                                                  isFromCareCoordinator!,
+                                                  carecoordinatorId!,
                                                   isFromFamilyListChat);
                                       setState(() {});
                                     });
@@ -883,7 +884,7 @@ class ChatState extends State<ChatDetail> {
       ),
       color: Colors.white,
       padding: EdgeInsets.only(left: 1, right: 2),
-      onSelected: (newValue) {
+      onSelected: (dynamic newValue) {
         if (newValue == 0) {
           isSearchVisible = true;
           showSearch();
@@ -963,8 +964,8 @@ class ChatState extends State<ChatDetail> {
     }
   }
 
-  Widget _patientDetailOrSearch() {
-    var resultWidget = null;
+  Widget? _patientDetailOrSearch() {
+    dynamic resultWidget = null;
     setState(() {
       if (isSearchVisible) {
         resultWidget = AnimatedSwitcher(
@@ -1016,7 +1017,7 @@ class ChatState extends State<ChatDetail> {
                     height: 40.0.h,
                     width: 40.0.h,
                     fit: BoxFit.cover, errorBuilder: (BuildContext context,
-                        Object exception, StackTrace stackTrace) {
+                        Object exception, StackTrace? stackTrace) {
                   return Container(
                     height: 50.0.h,
                     width: 50.0.h,
@@ -1024,7 +1025,7 @@ class ChatState extends State<ChatDetail> {
                     child: Center(
                         child: Text(
                       widget.peerName != null && widget.peerName != ''
-                          ? widget.peerName[0].toString().toUpperCase()
+                          ? widget.peerName![0].toString().toUpperCase()
                           : '',
                       style: TextStyle(
                         color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -1045,10 +1046,10 @@ class ChatState extends State<ChatDetail> {
                   children: <Widget>[
                     Text(
                         widget.peerName != null && widget.peerName != ''
-                            ? isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')
+                            ? (isFromCareCoordinator!&&(familyUserId!=null&&familyUserId!='')
                                 ? widget.peerName?.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
-                                : widget.peerName?.capitalizeFirstofEach
+                                : widget.peerName?.capitalizeFirstofEach)!
                             : '',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
@@ -1060,7 +1061,7 @@ class ChatState extends State<ChatDetail> {
                     getTopBookingDetail(),
                     lastReceived != null && lastReceived != 'null'
                         ? getWidgetTextForLastReceivedDate(
-                            LAST_RECEIVED + lastReceived)
+                            LAST_RECEIVED + lastReceived!)
                         : getLastReceivedDateWidget()
                   ],
                 ),
@@ -1074,7 +1075,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   Widget getTopBookingDetail() {
-    if (isFromCareCoordinator&&(familyUserId!=null&&familyUserId!='')) {
+    if (isFromCareCoordinator!&&(familyUserId!=null&&familyUserId!='')) {
       return Text('Name: ' + careCoordinatorName,
           textAlign: TextAlign.left,
           overflow: TextOverflow.ellipsis,
@@ -1090,7 +1091,7 @@ class ChatState extends State<ChatDetail> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Booking Id: ' + bookingId,
+                Text('Booking Id: ' + bookingId!,
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -1110,7 +1111,7 @@ class ChatState extends State<ChatDetail> {
                         color: Colors.white)),
                 Text(
                     toBeginningOfSentenceCase('Last Appointment: ' +
-                        getFormattedDateTimeAppbar(lastAppointmentDate)),
+                        getFormattedDateTimeAppbar(lastAppointmentDate))!,
                     textAlign: TextAlign.left,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -1132,45 +1133,47 @@ class ChatState extends State<ChatDetail> {
 
   Widget buildListMessage() {
     return Flexible(
-        child: ScrollablePositionedList.builder(
-      padding: EdgeInsets.all(10.0),
-      itemBuilder: (context, index) {
-        var chatList = Provider.of<ChatSocketViewModel>(Get.context)
-            ?.chatHistoryList
-            .reversed
-            .toList();
+      //FU2.5
+      //   child: ScrollablePositionedList.builder(
+      // padding: EdgeInsets.all(10.0),
+      // itemBuilder: (context, index) {
+      //   var chatList = Provider.of<ChatSocketViewModel>(Get.context)
+      //       ?.chatHistoryList
+      //       .reversed
+      //       .toList();
 
-        searchIndexListAll = [];
-        searchIndexListAll.clear();
-        /*listIndex = [];
-        listIndex.clear();*/
-        for (int i = 0; i < chatList.length; i++) {
-          String content = chatList[i]?.messages?.content;
+      //   searchIndexListAll = [];
+      //   searchIndexListAll.clear();
+      //   /*listIndex = [];
+      //   listIndex.clear();*/
+      //   for (int i = 0; i < chatList.length; i++) {
+      //     String content = chatList[i]?.messages?.content;
 
-          searchIndexListAll.add(content);
-        }
+      //     searchIndexListAll.add(content);
+      //   }
 
-        bool isIconNeed = false;
+      //   bool isIconNeed = false;
 
-        if (chatList[index]?.messages?.idFrom == patientId) {
-          isIconNeed = isLastMessageRight(index, chatList);
-        } else if (chatList[index]?.messages?.idFrom != patientId) {
-          isIconNeed = isLastMessageLeft(index, chatList);
-        } else {
-          isIconNeed = false;
-        }
+      //   if (chatList[index]?.messages?.idFrom == patientId) {
+      //     isIconNeed = isLastMessageRight(index, chatList);
+      //   } else if (chatList[index]?.messages?.idFrom != patientId) {
+      //     isIconNeed = isLastMessageLeft(index, chatList);
+      //   } else {
+      //     isIconNeed = false;
+      //   }
 
-        return buildItem(chatList[index], index, isIconNeed);
-      },
-      itemCount: Provider.of<ChatSocketViewModel>(Get.context)
-              ?.chatHistoryList
-              ?.reversed
-              ?.toList()
-              ?.length ??
-          0,
-      reverse: true,
-      itemScrollController: listScrollController,
-    ));
+      //   return buildItem(chatList[index], index, isIconNeed);
+      // },
+      // itemCount: Provider.of<ChatSocketViewModel>(Get.context)
+      //         ?.chatHistoryList
+      //         ?.reversed
+      //         ?.toList()
+      //         ?.length ??
+      //     0,
+      // reverse: true,
+      // itemScrollController: listScrollController,
+    //) FU2.5
+    );
   }
 
   Widget buildInput() {
@@ -1304,7 +1307,7 @@ class ChatState extends State<ChatDetail> {
                               });
                               //uploadFile(audioPath);
                               uploadDocument(
-                                  audioPath, userId, chatPeerId, groupId);
+                                  audioPath!, userId!, chatPeerId!, groupId!);
                             }
                           });
                         },
@@ -1329,7 +1332,7 @@ class ChatState extends State<ChatDetail> {
     List<TextSpan> textSpanList = [];
 
     if (chatList?.messages?.type == 0) {
-      String tempData = chatList?.messages?.content;
+      String tempData = chatList?.messages?.content!;
 
       textSpanList = [
         buildTextWithLinks(
@@ -1544,7 +1547,7 @@ class ChatState extends State<ChatDetail> {
                                   child: Center(
                                       child: Text(
                                     peerName != null && peerName != ''
-                                        ? peerName[0].toString().toUpperCase()
+                                        ? peerName![0].toString().toUpperCase()
                                         : '',
                                     style: TextStyle(
                                       color: Color(
@@ -1739,7 +1742,7 @@ class ChatState extends State<ChatDetail> {
                     child: Text(
                       getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
                               int.parse(
-                                  chatList?.messages?.timestamp?.sSeconds))
+                                  chatList?.messages?.timestamp?.sSeconds!))
                           .toString()),
                       style: TextStyle(
                           color: greyColor,
@@ -1818,7 +1821,7 @@ class ChatState extends State<ChatDetail> {
                 onTap:  isFromBtnDirection
                                ? null
                                : () async {
-                  FocusManager.instance.primaryFocus.unfocus();
+                  FocusManager.instance.primaryFocus!.unfocus();
                   parsedReferenceText = '';
                   //tapDatePicker();
                   //Get.to(ChooseDateSlot());
@@ -1867,9 +1870,9 @@ class ChatState extends State<ChatDetail> {
     final RegExp linkRegExp = RegExp('($urlPattern)', caseSensitive: false);
 
     final List<InlineSpan> list = <InlineSpan>[];
-    final RegExpMatch dateMatch = dateRegExp.firstMatch(text);
-    final RegExpMatch directionMap = btnDirectionExp.firstMatch(text);
-    final RegExpMatch match = linkRegExp.firstMatch(text);
+    final RegExpMatch? dateMatch = dateRegExp.firstMatch(text);
+    final RegExpMatch? directionMap = btnDirectionExp.firstMatch(text);
+    final RegExpMatch? match = linkRegExp.firstMatch(text);
 
     if (match == null && dateMatch == null && directionMap == null) {
       list.add(TextSpan(children: getSplittedTextWidget(text, index)));
@@ -1879,19 +1882,19 @@ class ChatState extends State<ChatDetail> {
     if ((match?.start ?? 0) > 0) {
       list.add(TextSpan(
           children:
-              getSplittedTextWidget(text.substring(0, match.start), index)));
+              getSplittedTextWidget(text.substring(0, match!.start), index)));
     }
 
     if ((dateMatch?.start ?? 0) > 0) {
       list.add(TextSpan(
           children: getSplittedTextWidget(
-              text.substring(0, dateMatch.start), index)));
+              text.substring(0, dateMatch!.start), index)));
     }
 
     if ((directionMap?.start ?? 0) > 0) {
             list.add(TextSpan(
                    children: getSplittedTextWidget(
-                        text.substring(0, directionMap.start), index)));
+                        text.substring(0, directionMap!.start), index)));
         }
 
     final String linkText = match?.group(0) ?? '';
@@ -1922,9 +1925,9 @@ class ChatState extends State<ChatDetail> {
   }
 
   getMatchLinkText(
-        RegExpMatch match,
-        RegExpMatch dateMatch,
-        RegExpMatch directionMap,
+        RegExpMatch? match,
+        RegExpMatch? dateMatch,
+        RegExpMatch? directionMap,
         String linkText,
         String dateText,
         String directionText) {
@@ -2039,7 +2042,7 @@ class ChatState extends State<ChatDetail> {
     return formattedDate;
   }
 
-  String getFormattedDateTimeAppbar(String datetime) {
+  String getFormattedDateTimeAppbar(String? datetime) {
     String formattedDate = '-';
     if (datetime != null && datetime != '') {
       DateTime dateTimeStamp = DateTime.parse(datetime);
@@ -2081,7 +2084,7 @@ class ChatState extends State<ChatDetail> {
         document?.messages?.timestamp?.sSeconds != '') {
       DateTime dateTimeFromServerTimeStamp =
           DateTime.fromMillisecondsSinceEpoch(
-              int.parse(document?.messages?.timestamp?.sSeconds));
+              int.parse(document?.messages?.timestamp?.sSeconds!));
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
@@ -2101,7 +2104,7 @@ class ChatState extends State<ChatDetail> {
   }
 
   openDownloadAlert(
-      String fileUrl, BuildContext contxt, bool isPdf, String type) {
+      String? fileUrl, BuildContext contxt, bool isPdf, String type) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -2131,7 +2134,7 @@ class ChatState extends State<ChatDetail> {
     );
   }
 
-  goToPDFViewBasedonURL(String url) {
+  goToPDFViewBasedonURL(String? url) {
     final controller = Get.find<PDFViewController>();
     final data = OpenPDF(type: PDFLocation.URL, path: url);
     controller.data = data;
@@ -2160,7 +2163,7 @@ class ChatState extends State<ChatDetail> {
     }
   }
 
-  void saveImageToGallery(String fileUrl, BuildContext contxt,
+  void saveImageToGallery(String? fileUrl, BuildContext contxt,
       bool isPdfPresent, String fileType) async {
     //check the storage permission for both android and ios!
     //request gallery permission
@@ -2175,7 +2178,7 @@ class ChatState extends State<ChatDetail> {
           : await Permission.photos.request();
     }
 
-    String _currentImage;
+    String? _currentImage;
 
     final snackBar = SnackBar(
       content: Text(
@@ -2189,11 +2192,11 @@ class ChatState extends State<ChatDetail> {
 
     //Scaffold.of(contxt).showSnackBar();
 
-    _scaffoldKey.currentState.showSnackBar(snackBar);
+    _scaffoldKey.currentState!.showSnackBar(snackBar);
 
     if (isPdfPresent) {
       if (Platform.isIOS) {
-        final file = await CommonUtil.downloadFile(fileUrl, fileType);
+        final file = await CommonUtil.downloadFile(fileUrl!, fileType);
         /*Scaffold.of(contxt).showSnackBar(
           ,
         );*/
@@ -2209,9 +2212,9 @@ class ChatState extends State<ChatDetail> {
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
-              await OpenFile.open(
-                file.path,
-              );
+              // await OpenFile.open(
+              //   file.path,
+              // );FU2.5
               // final controller = Get.find<PDFViewController>();
               // final data = OpenPDF(type: PDFLocation.Path, path: file.path);
               // controller.data = data;
@@ -2220,9 +2223,9 @@ class ChatState extends State<ChatDetail> {
           ),
         );
 
-        _scaffoldKey.currentState.showSnackBar(snackBar);
+        _scaffoldKey.currentState!.showSnackBar(snackBar);
       } else {
-        await ImageGallerySaver.saveFile(fileUrl).then((res) {
+        await ImageGallerySaver.saveFile(fileUrl!).then((res) {
           setState(() {
             downloadStatus = true;
           });
@@ -2231,7 +2234,7 @@ class ChatState extends State<ChatDetail> {
     } else {
       _currentImage = fileUrl;
       try {
-        CommonUtil.downloadFile(_currentImage, fileType).then((filePath) async {
+        CommonUtil.downloadFile(_currentImage!, fileType).then((filePath) async {
           if (Platform.isAndroid) {
             //Scaffold.of(contxt).showSnackBar();
 
@@ -2246,9 +2249,9 @@ class ChatState extends State<ChatDetail> {
               action: SnackBarAction(
                 label: 'Open',
                 onPressed: () async {
-                  await OpenFile.open(
-                    filePath.path,
-                  );
+                  // await OpenFile.open(
+                  //   filePath.path,
+                  // );FU2.5
 
                   // final controller = Get.find<PDFViewController>();
                   // final data =
@@ -2259,7 +2262,7 @@ class ChatState extends State<ChatDetail> {
               ),
             );
 
-            _scaffoldKey.currentState.showSnackBar(snackBar);
+            _scaffoldKey.currentState!.showSnackBar(snackBar);
           }
         });
       } catch (e) {}
@@ -2276,7 +2279,7 @@ class ChatState extends State<ChatDetail> {
           isLoading = false;
         });
         if (value != null) {
-          if (value?.isSuccess) {
+          if (value?.isSuccess!) {
             if (value?.result != null) {
               onSendMessage(value?.result?.fileUrl, 3,
                   value?.result?.chatMessageId, true);
@@ -2316,8 +2319,8 @@ class ChatState extends State<ChatDetail> {
         .then((results) {
       if (results != null) {
         if (results.containsKey(STR_META_ID)) {
-          healthRecordList = results[STR_META_ID] as List;
-          if (healthRecordList != null && healthRecordList?.length > 0 ?? 0) {
+          healthRecordList = results[STR_META_ID] as List?;
+          if (healthRecordList != null && healthRecordList?.length > 0 ?? 0 as bool) {
             getAlertForFileSend(healthRecordList);
           }
           setState(() {});
@@ -2331,7 +2334,7 @@ class ChatState extends State<ChatDetail> {
       context: context,
       builder: (context) => AlertDialog(
         content: Text(
-          'Send to Dr. ' + peerName != null && peerName != '' ? peerName : '',
+          'Send to Dr. ' + peerName! != null && peerName != '' ? peerName! : '',
           style: TextStyle(
             fontSize: 16.0.sp,
           ),
@@ -2365,8 +2368,8 @@ class ChatState extends State<ChatDetail> {
 
   getMediaURL(List<HealthRecordCollection> healthRecordCollection) {
     for (int i = 0; i < healthRecordCollection.length; i++) {
-      String fileType = healthRecordCollection[i].fileType;
-      String fileURL = healthRecordCollection[i].healthRecordUrl;
+      String? fileType = healthRecordCollection[i].fileType;
+      String? fileURL = healthRecordCollection[i].healthRecordUrl;
       if ((fileType == STR_JPG) ||
           (fileType == STR_PNG) ||
           (fileType == STR_JPEG)) {
@@ -2409,11 +2412,11 @@ class ChatState extends State<ChatDetail> {
         if (familyListModel?.result?.isNotEmpty) {
           if (familyListModel?.result?.length > 0) {
             for (Result data in familyListModel.result) {
-              if (widget.peerName.contains(data.firstName)) {
+              if (widget.peerName!.contains(data.firstName!)) {
                 lastReceived = data?.chatListItem?.deliveredOn != null &&
                         data?.chatListItem?.deliveredOn != ''
                     ? CommonUtil()
-                        .getFormattedDateTime(data?.chatListItem?.deliveredOn)
+                        .getFormattedDateTime(data?.chatListItem?.deliveredOn!)
                     : '';
               }
             }
@@ -2435,7 +2438,7 @@ class ChatState extends State<ChatDetail> {
         } else if (snapshot.hasData &&
             snapshot.data != '' &&
             snapshot.data != null) {
-          return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived);
+          return getWidgetTextForLastReceivedDate(LAST_RECEIVED + lastReceived!);
         } else {
           return SizedBox.shrink();
         }
@@ -2466,7 +2469,7 @@ class TextFieldColorizer extends TextEditingController {
             multiLine: true);
 
   @override
-  set text(String newText) {
+  set text(String? newText) {
     value = value.copyWith(
       text: newText,
       selection: TextSelection.collapsed(offset: newText?.length ?? 0),
@@ -2476,15 +2479,15 @@ class TextFieldColorizer extends TextEditingController {
 
   @override
   TextSpan buildTextSpan(
-      {BuildContext context, TextStyle style, bool withComposing}) {
+      {BuildContext? context, TextStyle? style, bool? withComposing}) {
     final List<InlineSpan> children = [];
-    String patternMatched;
-    String formatText;
-    TextStyle myStyle;
+    String? patternMatched;
+    String? formatText;
+    TextStyle? myStyle;
     text.splitMapJoin(
       pattern,
       onMatch: (Match match) {
-        myStyle = map[match[0]] ??
+        myStyle = map[match[0]!] ??
             map[map.keys.firstWhere(
               (e) {
                 bool ret = false;
@@ -2501,13 +2504,13 @@ class TextFieldColorizer extends TextEditingController {
             )];
 
         if (patternMatched == "#(.*?)#") {
-          formatText = match[0].replaceAll("#", " ");
+          formatText = match[0]!.replaceAll("#", " ");
         } else {
           formatText = match[0];
         }
         children.add(TextSpan(
           text: formatText,
-          style: style.merge(myStyle),
+          style: style!.merge(myStyle),
         ));
         return "";
       },

@@ -1,7 +1,8 @@
+
 class AssociateUpdateSuccessResponse {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   AssociateUpdateSuccessResponse({this.isSuccess, this.message, this.result});
 

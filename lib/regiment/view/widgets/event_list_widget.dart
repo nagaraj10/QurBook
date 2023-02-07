@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -12,10 +13,10 @@ import '../../view_model/regiment_view_model.dart';
 
 class EventListWidget extends StatelessWidget {
   EventListWidget({
-    @required this.profileResultModel,
+    required this.profileResultModel,
   });
 
-  final ProfileResultModel profileResultModel;
+  final ProfileResultModel? profileResultModel;
   final _formKey = GlobalKey<FormState>();
   var eventTime = {};
   var eventController = {};
@@ -77,13 +78,13 @@ class EventListWidget extends StatelessWidget {
               }
             },
             onSave: () async {
-              if (_formKey.currentState.validate()) {
+              if (_formKey.currentState!.validate()) {
                 final isValid = eventTimeValidation(tempEventList);
                 if (isValid) {
                   var currentLanguage = '';
                   var lan = CommonUtil.getCurrentLanCode();
                   if (lan != 'undef') {
-                    var langCode = lan.split('-').first;
+                    var langCode = lan!.split('-').first;
                     currentLanguage = langCode;
                   } else {
                     currentLanguage = 'en';
@@ -123,8 +124,8 @@ class EventListWidget extends StatelessWidget {
   }
 
   List<Widget> getDialogItems({
-    Function onTimeSelected,
-    Function onSave,
+    Function? onTimeSelected,
+    Function? onSave,
   }) {
     var dialogItems = <Widget>[];
 
@@ -150,7 +151,7 @@ class EventListWidget extends StatelessWidget {
                 Icons.close,
                 size: 24.0.sp,
               ),
-              onPressed: () => Navigator.pop(Get.context),
+              onPressed: () => Navigator.pop(Get.context!),
             ),
           ],
         ),
@@ -163,7 +164,7 @@ class EventListWidget extends StatelessWidget {
           if (profileResultModel?.profileDataMap?.containsKey(listKey) ??
               false) {
             var key = listKey;
-            var value = profileResultModel?.profileDataMap[listKey] ?? '00:00';
+            var value = profileResultModel?.profileDataMap![listKey] ?? '00:00';
             final List<String> timeData = value?.split(':');
             if (timeData.length == 2) {
               eventTime[key] = toDouble(
@@ -198,7 +199,7 @@ class EventListWidget extends StatelessWidget {
             Container(
               width: 150.0.w,
               child: RaisedButton(
-                onPressed: onSave,
+                onPressed: onSave as void Function()?,
                 color: Color(CommonUtil().getMyPrimaryColor()),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(
@@ -230,7 +231,7 @@ class EventListWidget extends StatelessWidget {
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
   bool eventTimeValidation(List eventList,
-      {String eventName, double currentEventTime}) {
+      {String? eventName, double? currentEventTime}) {
     final eventNames = eventTime.keys.toList();
     for (var i = 0; i < eventList.length; i++) {
       if (i + 1 == eventList.length) {

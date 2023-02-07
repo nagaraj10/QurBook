@@ -1,6 +1,7 @@
+
 class WeekdayPreference {
-  String day;
-  bool isAvailable;
+  String? day;
+  bool? isAvailable;
 
   WeekdayPreference({this.day, this.isAvailable});
 

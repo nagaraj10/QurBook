@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import '../../constants/fhb_parameters.dart' as param;
 
@@ -12,8 +13,8 @@ class LatestSync {
         this.result,
     });
 
-    bool isSuccess;
-    Result result;
+    bool? isSuccess;
+    Result? result;
 
     factory LatestSync.fromJson(Map<String, dynamic> json) => LatestSync(
         isSuccess: json[param.is_Success],
@@ -22,7 +23,7 @@ class LatestSync {
 
     Map<String, dynamic> toJson() => {
         param.is_Success : isSuccess,
-        param.dataResult : result.toJson(),
+        param.dataResult : result?.toJson(),
     };
 }
 
@@ -34,9 +35,9 @@ class Result {
  
     });
 
-    DateTime startDateTime;
-    DateTime endDateTime;
-    DateTime lastSyncDateTime;
+    DateTime? startDateTime;
+    DateTime? endDateTime;
+    DateTime? lastSyncDateTime;
   
     factory Result.fromJson(Map<String, dynamic> json) => Result(
         startDateTime: DateTime.parse(json[param.strStartTimeStamp]),
@@ -47,9 +48,9 @@ class Result {
     );
 
     Map<String, dynamic> toJson() => {
-        param.strStartTimeStamp: startDateTime.toIso8601String(),
-        param.strEndTimeStamp: endDateTime.toIso8601String(),
-        param.strlastSyncDateTime: lastSyncDateTime.toIso8601String(),
+        param.strStartTimeStamp: startDateTime?.toIso8601String(),
+        param.strEndTimeStamp: endDateTime?.toIso8601String(),
+        param.strlastSyncDateTime: lastSyncDateTime?.toIso8601String(),
        
     };
 }

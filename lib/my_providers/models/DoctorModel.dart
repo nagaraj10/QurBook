@@ -1,31 +1,32 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 import 'ProfilePic.dart';
 
 class DoctorsModel {
-  String id;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String website;
-  String googleMapUrl;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  String email;
-  String state;
-  String city;
-  String latitude;
-  String longitude;
-  bool isActive;
-  String specialization;
-  bool isUserDefined;
-  String description;
-  String createdBy;
-  String lastModifiedOn;
-  ProfilePic profilePic;
-  ProfilePic profilePicThumbnail;
-  bool isDefault;
+  String? id;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? website;
+  String? googleMapUrl;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? email;
+  String? state;
+  String? city;
+  String? latitude;
+  String? longitude;
+  bool? isActive;
+  String? specialization;
+  bool? isUserDefined;
+  String? description;
+  String? createdBy;
+  String? lastModifiedOn;
+  ProfilePic? profilePic;
+  ProfilePic? profilePicThumbnail;
+  bool? isDefault;
   var profilePicThumbnailUrl;
 
   DoctorsModel(
@@ -112,11 +113,11 @@ class DoctorsModel {
     data[parameters.strCreatedBy] = createdBy;
     data[parameters.strLastModifiedOn] = lastModifiedOn;
     if (profilePic != null) {
-      data[parameters.strprofilePic] = profilePic.toJson();
+      data[parameters.strprofilePic] = profilePic!.toJson();
     }
     if (profilePicThumbnail != null) {
       data[parameters.strprofilePicThumbnail] =
-          profilePicThumbnail.toJson();
+          profilePicThumbnail!.toJson();
     }
     data[parameters.strisDefault] = isDefault;
     data[parameters.strprofilePicThumbnailURL] = profilePicThumbnailUrl;

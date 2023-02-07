@@ -1,3 +1,4 @@
+
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
@@ -10,16 +11,16 @@ class CreateAppointmentService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<CreateAppointmentModel> bookAppointment(
-    String createdBy,
-    String bookedFor,
-    String doctorSessionId,
-    String scheduleDate,
-    String slotNumber,
+    String? createdBy,
+    String? bookedFor,
+    String? doctorSessionId,
+    String? scheduleDate,
+    String? slotNumber,
     bool isMedicalShared,
     bool isFollowUp,
     List<String> healthRecords,
-    bool isCSRDiscount, {
-    Past doc,
+    bool? isCSRDiscount, {
+    Past? doc,
     bool isResidentDoctorMembership = false,
   }) async {
     var slotInput = {};
@@ -42,7 +43,7 @@ class CreateAppointmentService {
       slotInput[qr_parent_appointment] = {};
     }*/
     if (isFollowUp) {
-      slotInput[qr_parent_appointment] = doc.id;
+      slotInput[qr_parent_appointment] = doc!.id;
     } else {
       slotInput[qr_parent_appointment] = '';
     }

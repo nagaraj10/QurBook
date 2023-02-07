@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import '../../plan_dashboard/model/MetaDataForURL.dart';
@@ -5,8 +6,8 @@ import '../../plan_dashboard/model/MetaDataForURL.dart';
 import 'ProviderMetaModel.dart';
 
 class MyPlanListModel {
-  bool isSuccess;
-  List<MyPlanListResult> result;
+  bool? isSuccess;
+  List<MyPlanListResult>? result;
 
   MyPlanListModel({this.isSuccess, this.result});
 
@@ -15,7 +16,7 @@ class MyPlanListModel {
     if (json['result'] != null) {
       result = List<MyPlanListResult>();
       json['result'].forEach((v) {
-        result.add(MyPlanListResult.fromJson(v));
+        result!.add(MyPlanListResult.fromJson(v));
       });
     }
   }
@@ -24,33 +25,33 @@ class MyPlanListModel {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.map((v) => v.toJson()).toList();
+      data['result'] = result!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class MyPlanListResult {
-  String packageid;
-  String title;
-  String tags;
-  String docid;
-  String price;
-  String paid;
-  String packcatid;
-  String catname;
-  String catdesc;
-  String docNick;
-  String providerid;
-  String providerName;
-  String startdate;
-  String duration;
-  String enddate;
-  String isexpired;
-  String isExtendable;
-  MetaDataForURL metadata;
-  MetaDataForURL catmetadata;
-  ProviderMetaModel providermetadata;
+  String? packageid;
+  String? title;
+  String? tags;
+  String? docid;
+  String? price;
+  String? paid;
+  String? packcatid;
+  String? catname;
+  String? catdesc;
+  String? docNick;
+  String? providerid;
+  String? providerName;
+  String? startdate;
+  String? duration;
+  String? enddate;
+  String? isexpired;
+  String? isExtendable;
+  MetaDataForURL? metadata;
+  MetaDataForURL? catmetadata;
+  ProviderMetaModel? providermetadata;
 
   MyPlanListResult(
       {this.packageid,

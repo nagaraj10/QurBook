@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -17,8 +18,8 @@ class LandingViewModel extends ChangeNotifier {
   bool isSearchVisible = false;
   LandingScreenStatus landingScreenStatus = LandingScreenStatus.Loaded;
   LandingScreenStatus widgetScreenStatus = LandingScreenStatus.Loaded;
-  DashboardModel dashboardData;
-  DashboardModel widgetsData;
+  DashboardModel? dashboardData;
+  DashboardModel? widgetsData;
   bool isLoadDone = true;
   bool isURLCome = false;
   bool isUserMainId = true;
@@ -89,10 +90,10 @@ class LandingViewModel extends ChangeNotifier {
       isLoadDone = false;
       final healthPlanSetting = await LandingService.getHidePlan();
       if(healthPlanSetting!=null){
-        if(healthPlanSetting.isSuccess){
-          PreferenceUtil.setAddPlanButton(healthPlanSetting.result.qurBook.addPlanBtn);
-          PreferenceUtil.setCartEnable(healthPlanSetting.result.qurBook.cart);
-          PreferenceUtil.setUnSubscribeValue(healthPlanSetting.result.qurBook.unSubscribeBtn);
+        if(healthPlanSetting.isSuccess!){
+          PreferenceUtil.setAddPlanButton(healthPlanSetting.result!.qurBook!.addPlanBtn!);
+          PreferenceUtil.setCartEnable(healthPlanSetting.result!.qurBook!.cart!);
+          PreferenceUtil.setUnSubscribeValue(healthPlanSetting.result!.qurBook!.unSubscribeBtn!);
         }else{
           if(CommonUtil.REGION_CODE == 'IN'){
             PreferenceUtil.setAddPlanButton(true);
@@ -132,7 +133,7 @@ class LandingViewModel extends ChangeNotifier {
 
   Future<MemberShipDetailResponse> getMembershipDetails() async => await LandingService.getMemberShipDetails();
 
-  Future<DashboardModel> getQurPlanWidgetsData({
+  Future<DashboardModel?> getQurPlanWidgetsData({
     bool needNotify = false,
     String includeText = qr_all,
   }) async {

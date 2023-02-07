@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/plan_dashboard/model/PlanListModel.dart';
 import 'package:myfhb/plan_wizard/models/DietPlanModel.dart';
@@ -11,11 +12,11 @@ import 'plan_header.dart';
 
 class PlanDietListView extends StatelessWidget {
   const PlanDietListView({
-    @required this.title,
-    @required this.planList,
+    required this.title,
+    required this.planList,
   });
 
-  final String title;
+  final String? title;
   final List<DietPlanResult> planList;
 
   @override

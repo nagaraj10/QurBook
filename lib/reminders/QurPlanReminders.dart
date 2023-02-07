@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -95,7 +96,7 @@ class QurPlanReminders {
 
   static Future<bool> updateRemindersLocally(Reminder data) async {
     final reminders = await getLocalReminder();
-    Reminder foundTheMatched;
+    Reminder? foundTheMatched;
     for (var i = 0; i < reminders.length; i++) {
       if (reminders[i].eid == data.eid) {
         foundTheMatched = reminders.removeAt(i);
@@ -106,28 +107,28 @@ class QurPlanReminders {
         if (Platform.isIOS) {
           reminderMethodChannel
               .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
-          var beforeInt = int.parse(foundTheMatched.remindbefore);
+          var beforeInt = int.parse(foundTheMatched.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid + "00000";
+            var id = foundTheMatched.eid! + "00000";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
-          var afterInt = int.parse(foundTheMatched.remindin);
+          var afterInt = int.parse(foundTheMatched.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid + "11111";
+            var id = foundTheMatched.eid! + "11111";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
         } else {
           await reminderMethodChannelAndroid.invokeMethod(
               removeReminderMethod, {'data': foundTheMatched.eid});
-          var beforeInt = int.parse(foundTheMatched.remindbefore);
+          var beforeInt = int.parse(foundTheMatched.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid + "000";
+            var id = foundTheMatched.eid! + "000";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
-          var afterInt = int.parse(foundTheMatched.remindin);
+          var afterInt = int.parse(foundTheMatched.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid + "111";
+            var id = foundTheMatched.eid! + "111";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
@@ -158,14 +159,14 @@ class QurPlanReminders {
             if (Platform.isIOS) {
               reminderMethodChannel
                   .invokeMethod(removeReminderMethod, [localReminder.eid]);
-              var beforeInt = int.parse(localReminder.remindbefore);
+              var beforeInt = int.parse(localReminder.remindbefore!);
               if (beforeInt != null && beforeInt > 0) {
-                var id = localReminder.eid + "00000";
+                var id = localReminder.eid! + "00000";
                 reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
               }
-              var afterInt = int.parse(localReminder.remindin);
+              var afterInt = int.parse(localReminder.remindin!);
               if (afterInt != null && afterInt > 0) {
-                var id = localReminder.eid + "11111";
+                var id = localReminder.eid! + "11111";
                 reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
               }
               reminderMethodChannel
@@ -173,15 +174,15 @@ class QurPlanReminders {
             } else {
               await reminderMethodChannelAndroid.invokeMethod(
                   removeReminderMethod, {'data': localReminder.eid});
-              var beforeInt = int.parse(localReminder.remindbefore);
+              var beforeInt = int.parse(localReminder.remindbefore!);
               if (beforeInt != null && beforeInt > 0) {
-                var id = localReminder.eid + "000";
+                var id = localReminder.eid! + "000";
                 await reminderMethodChannelAndroid
                     .invokeMethod(removeReminderMethod, {'data': id});
               }
-              var afterInt = int.parse(localReminder.remindin);
+              var afterInt = int.parse(localReminder.remindin!);
               if (afterInt != null && afterInt > 0) {
-                var id = localReminder.eid + "111";
+                var id = localReminder.eid! + "111";
                 await reminderMethodChannelAndroid
                     .invokeMethod(removeReminderMethod, {'data': id});
               }
@@ -208,28 +209,28 @@ class QurPlanReminders {
         if (Platform.isIOS) {
           reminderMethodChannel
               .invokeMethod(removeReminderMethod, [localReminder.eid]);
-          var beforeInt = int.parse(localReminder.remindbefore);
+          var beforeInt = int.parse(localReminder.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = localReminder.eid + "00000";
+            var id = localReminder.eid! + "00000";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
-          var afterInt = int.parse(localReminder.remindin);
+          var afterInt = int.parse(localReminder.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = localReminder.eid + "11111";
+            var id = localReminder.eid! + "11111";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
         } else {
           await reminderMethodChannelAndroid
               .invokeMethod(removeReminderMethod, {'data': localReminder.eid});
-          var beforeInt = int.parse(localReminder.remindbefore);
+          var beforeInt = int.parse(localReminder.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = localReminder.eid + "000";
+            var id = localReminder.eid! + "000";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
-          var afterInt = int.parse(localReminder.remindin);
+          var afterInt = int.parse(localReminder.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = localReminder.eid + "111";
+            var id = localReminder.eid! + "111";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
@@ -241,7 +242,7 @@ class QurPlanReminders {
 
   static Future<bool> deleteReminderLocally(Reminder data) async {
     final reminders = await getLocalReminder();
-    Reminder foundTheMatched;
+    Reminder? foundTheMatched;
 
     if (reminders.isEmpty) {
       return false;
@@ -256,28 +257,28 @@ class QurPlanReminders {
         if (Platform.isIOS) {
           reminderMethodChannel
               .invokeMethod(removeReminderMethod, [foundTheMatched.eid]);
-          var beforeInt = int.parse(foundTheMatched.remindbefore);
+          var beforeInt = int.parse(foundTheMatched.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid + "00000";
+            var id = foundTheMatched.eid! + "00000";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
-          var afterInt = int.parse(foundTheMatched.remindin);
+          var afterInt = int.parse(foundTheMatched.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid + "11111";
+            var id = foundTheMatched.eid! + "11111";
             reminderMethodChannel.invokeMethod(removeReminderMethod, [id]);
           }
         } else {
           await reminderMethodChannelAndroid.invokeMethod(
               removeReminderMethod, {'data': foundTheMatched.eid});
-          var beforeInt = int.parse(foundTheMatched.remindbefore);
+          var beforeInt = int.parse(foundTheMatched.remindbefore!);
           if (beforeInt != null && beforeInt > 0) {
-            var id = foundTheMatched.eid + "000";
+            var id = foundTheMatched.eid! + "000";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
-          var afterInt = int.parse(foundTheMatched.remindin);
+          var afterInt = int.parse(foundTheMatched.remindin!);
           if (afterInt != null && afterInt > 0) {
-            var id = foundTheMatched.eid + "111";
+            var id = foundTheMatched.eid! + "111";
             await reminderMethodChannelAndroid
                 .invokeMethod(removeReminderMethod, {'data': id});
           }
@@ -324,15 +325,15 @@ class QurPlanReminders {
       for (var r in reminders) {
         await reminderMethodChannelAndroid
             .invokeMethod(removeReminderMethod, {'data': r.eid});
-        var beforeInt = int.parse(r.remindbefore);
+        var beforeInt = int.parse(r.remindbefore!);
         if (beforeInt != null && beforeInt > 0) {
-          var id = r.eid + "000";
+          var id = r.eid! + "000";
           await reminderMethodChannelAndroid
               .invokeMethod(removeReminderMethod, {'data': id});
         }
-        var afterInt = int.parse(r.remindin);
+        var afterInt = int.parse(r.remindin!);
         if (afterInt != null && afterInt > 0) {
-          var id = r.eid + "111";
+          var id = r.eid! + "111";
           await reminderMethodChannelAndroid
               .invokeMethod(removeReminderMethod, {'data': id});
         }

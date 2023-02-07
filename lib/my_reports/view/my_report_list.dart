@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
@@ -14,7 +15,7 @@ class MyReportList extends StatefulWidget {
 }
 
 class _MyReportList extends State<MyReportList> {
-  ReportModel reportModel;
+  ReportModel? reportModel;
   MyReportViewModel myReportViewModel = MyReportViewModel();
 
   @override
@@ -64,8 +65,8 @@ class _MyReportList extends State<MyReportList> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
-            return reportList(snapshot.data.result);
+              snapshot?.data?.result!.isNotEmpty) {
+            return reportList(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -88,7 +89,7 @@ class _MyReportList extends State<MyReportList> {
     );
   }
 
-  Widget reportList(List<MyReportResult> reportList) {
+  Widget reportList(List<MyReportResult>? reportList) {
     return (reportList != null && reportList.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
@@ -165,7 +166,7 @@ class _MyReportList extends State<MyReportList> {
                         Text(
                           reportList[i].reportName != null
                               ? toBeginningOfSentenceCase(
-                                  reportList[i].reportName)
+                                  reportList[i].reportName)!
                               : '',
                           style: TextStyle(
                             fontSize: 16.0.sp,

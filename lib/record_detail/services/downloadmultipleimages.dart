@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,14 +19,14 @@ class DownloadMultipleImages {
   DownloadMultipleImages(this.image_list);
 
   void downloadFilesFromServer(BuildContext contxt) async {
-    String authToken =
+    String? authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    List<String> filePathist = new List();
+    List<String?> filePathist = new List();
     for (final _currentImage in image_list) {
       try {
         await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
-                _currentImage.healthRecordUrl.split('/').last)
+                _currentImage.healthRecordUrl!.split('/').last)
             .then((filePath) async {
           var file;
           if (_currentImage.fileType == '.pdf') {
@@ -34,9 +35,9 @@ class DownloadMultipleImages {
             file = File('$filePath');
           }
           final request = await ApiServices.get(
-            _currentImage.healthRecordUrl,
+            _currentImage.healthRecordUrl!,
             headers: {
-              HttpHeaders.authorizationHeader: authToken,
+              HttpHeaders.authorizationHeader: authToken!,
               Constants.KEY_OffSet: CommonUtil().setTimeZone()
             },
           );

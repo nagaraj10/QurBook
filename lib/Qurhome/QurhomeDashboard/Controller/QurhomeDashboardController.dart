@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io';
 
@@ -20,10 +21,10 @@ class QurhomeDashboardController extends GetxController {
   var currentSelectedIndex = 0.obs;
   var appBarTitle = ' '.obs;
   static const streamAppointment = EventChannel('ScheduleAppointment/stream');
-  StreamSubscription _appointmentSubscription;
-  HubListViewController hubController;
-  SheelaBLEController _sheelaBLEController;
-  Timer _bleTimer;
+  StreamSubscription? _appointmentSubscription;
+  late HubListViewController hubController;
+  late SheelaBLEController _sheelaBLEController;
+  Timer? _bleTimer;
 
   @override
   void onInit() {
@@ -42,7 +43,7 @@ class QurhomeDashboardController extends GetxController {
     super.onInit();
   }
 
-  setActiveQurhomeTo({bool status}) {
+  setActiveQurhomeTo({required bool status}) {
     PreferenceUtil.saveIfQurhomeisAcive(
       qurhomeStatus: status,
     );
@@ -71,7 +72,7 @@ class QurhomeDashboardController extends GetxController {
     } else {
       _sheelaBLEController.stopScanning();
       _sheelaBLEController.stopTTS();
-      _bleTimer.cancel();
+      _bleTimer!.cancel();
       _bleTimer = null;
     }
   }
@@ -89,9 +90,9 @@ class QurhomeDashboardController extends GetxController {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       fulName = myProfile.result != null
-          ? myProfile.result.firstName.capitalizeFirstofEach +
+          ? myProfile.result!.firstName!.capitalizeFirstofEach +
               ' ' +
-              myProfile.result.lastName.capitalizeFirstofEach
+              myProfile.result!.lastName!.capitalizeFirstofEach
           : '';
     } catch (e) {}
     switch (currentSelectedIndex.value) {
@@ -118,9 +119,9 @@ class QurhomeDashboardController extends GetxController {
     _appointmentSubscription ??=
         streamAppointment.receiveBroadcastStream().listen((val) {
       print(val);
-      List<String> receivedValues = val.split('|');
+      List<String>? receivedValues = val.split('|');
       if ((receivedValues ?? []).length > 0) {
-        switch ((receivedValues.first ?? "")) {
+        switch ((receivedValues!.first ?? "")) {
           case "scheduleAppointment":
             if (PreferenceUtil.getIfQurhomeisAcive()) {
               redirectToSheelaScheduleAppointment();
@@ -137,7 +138,7 @@ class QurhomeDashboardController extends GetxController {
             redirectToSheelaScheduleAppointment();
           }
         }
-      });
+      } as Future<dynamic> Function(MethodCall)?);
     }
   }
 

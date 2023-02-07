@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -17,23 +18,23 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class BillsList extends StatefulWidget {
-  final HealthRecordList completeData;
+  final HealthRecordList? completeData;
   final Function callBackToRefresh;
 
-  final String categoryName;
-  final String categoryId;
+  final String? categoryName;
+  final String? categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
-  final Function(String, List<HealthRecordCollection>, bool)
+  final Function(String?, bool?) mediaSelected;
+  final Function(String?, List<HealthRecordCollection>, bool)
       healthRecordSelected;
-  final bool allowSelect;
-  final List<String> mediaMeta;
-  final bool isNotesSelect;
-  final bool isAudioSelect;
-  final bool showDetails;
-  final bool allowAttach;
-  final bool isFromBills;
+  final bool? allowSelect;
+  final List<String?>? mediaMeta;
+  final bool? isNotesSelect;
+  final bool? isAudioSelect;
+  final bool? showDetails;
+  final bool? allowAttach;
+  final bool? isFromBills;
 
   BillsList(
       this.completeData,
@@ -56,7 +57,7 @@ class BillsList extends StatefulWidget {
 }
 
 class _BillsListState extends State<BillsList> {
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
   List<HealthRecordCollection> mediMasterId = new List();
 
   FlutterToast toast = new FlutterToast();
@@ -85,7 +86,7 @@ class _BillsListState extends State<BillsList> {
 
   @override
   Widget build(BuildContext context) {
-    return getWidgetToDisplayBillsList(widget.completeData);
+    return getWidgetToDisplayBillsList(widget.completeData!);
   }
 
   Widget getWidgetToDisplayBillsList(HealthRecordList completeData) {
@@ -130,8 +131,8 @@ class _BillsListState extends State<BillsList> {
   getCardWidgetForBills(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
       onLongPress: () {
-        if (widget.allowSelect) {
-          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+        if (widget.allowSelect!) {
+          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
           setState(() {});
           widget.mediaSelected(
@@ -139,15 +140,15 @@ class _BillsListState extends State<BillsList> {
         }
       },
       onTap: () {
-        if (widget.allowSelect && widget.showDetails == false) {
-          if (widget.allowAttach) {
+        if (widget.allowSelect! && widget.showDetails == false) {
+          if (widget.allowAttach!) {
             bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+            if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
               condition = false;
             } else {
               condition = true;
             }
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
             if (mediaMetaInfoObj != null &&
                 (mediaMetaInfoObj.healthRecordCollection?.length ?? 0) > 0) {
               mediMasterId =
@@ -163,12 +164,12 @@ class _BillsListState extends State<BillsList> {
             }
           } else {
             bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+            if (widget.mediaMeta!.contains(mediaMetaInfoObj.id)) {
               condition = false;
             } else {
               condition = true;
             }
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected!;
 
             widget.mediaSelected(mediaMetaInfoObj.id, condition);
           }
@@ -207,7 +208,7 @@ class _BillsListState extends State<BillsList> {
                     ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                     :
                 Constants.BASE_URL +*/
-                mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                mediaMetaInfoObj.metadata!.healthRecordCategory!.logo!,
                 height: 25.0.h,
                 width: 25.0.h,
                 color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -224,8 +225,8 @@ class _BillsListState extends State<BillsList> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    mediaMetaInfoObj.metadata.fileName != null
-                        ? mediaMetaInfoObj.metadata.fileName
+                    mediaMetaInfoObj.metadata!.fileName != null
+                        ? mediaMetaInfoObj.metadata!.fileName!
                         : '',
                     style: TextStyle(fontWeight: FontWeight.w500),
                     softWrap: false,
@@ -249,7 +250,7 @@ class _BillsListState extends State<BillsList> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   IconButton(
-                      icon: mediaMetaInfoObj.isBookmarked
+                      icon: mediaMetaInfoObj.isBookmarked!
                           ? ImageIcon(
                               AssetImage(variable.icon_record_fav_active),
                               //TODO chnage theme
@@ -266,14 +267,14 @@ class _BillsListState extends State<BillsList> {
                         new CommonUtil()
                             .bookMarkRecord(mediaMetaInfoObj, _refresh);
                       }),
-                  (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
-                          mediaMetaInfoObj.metadata.hasVoiceNotes)
+                  (mediaMetaInfoObj.metadata!.hasVoiceNotes != null &&
+                          mediaMetaInfoObj.metadata!.hasVoiceNotes!)
                       ? Icon(
                           Icons.mic,
                           color: Colors.black54,
                         )
                       : Container(),
-                  widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                  widget.mediaMeta!.contains(mediaMetaInfoObj.id)
                       ? Icon(
                           Icons.done,
                           color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -291,7 +292,7 @@ class _BillsListState extends State<BillsList> {
   getDocumentImageWidget(MediaMetaInfo data) {
     return new FutureBuilder(
       future: _healthReportListForUserBlock
-          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)!),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
           return Container(
@@ -302,8 +303,8 @@ class _BillsListState extends State<BillsList> {
           );
         } else {
           return new Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.grey[100],
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
               child: Container(
                 width: 50.0.h,
                 height: 50.0.h,

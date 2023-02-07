@@ -1,7 +1,8 @@
+
 class SheelaBadgeModel {
-  bool isSuccess;
-  String message;
-  SheelaBadgeResult result;
+  bool? isSuccess;
+  String? message;
+  SheelaBadgeResult? result;
 
   SheelaBadgeModel({this.isSuccess, this.message, this.result});
 
@@ -17,14 +18,14 @@ class SheelaBadgeModel {
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
     if (this.result != null) {
-      data['result'] = this.result.toJson();
+      data['result'] = this.result!.toJson();
     }
     return data;
   }
 }
 
 class SheelaBadgeResult {
-  int queueCount;
+  int? queueCount;
   //List<QueueDetails>? queueDetails;
 
   SheelaBadgeResult({this.queueCount/*, this.queueDetails*/});
@@ -50,8 +51,8 @@ class SheelaBadgeResult {
 }
 
 class QueueDetails {
-  String sheelaQueueId;
-  MessageDetails messageDetails;
+  String? sheelaQueueId;
+  MessageDetails? messageDetails;
 
   QueueDetails({this.sheelaQueueId, this.messageDetails});
 
@@ -66,18 +67,18 @@ class QueueDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['sheelaQueueId'] = this.sheelaQueueId;
     if (this.messageDetails != null) {
-      data['messageDetails'] = this.messageDetails.toJson();
+      data['messageDetails'] = this.messageDetails!.toJson();
     }
     return data;
   }
 }
 
 class MessageDetails {
-  String source;
-  Content content;
-  Payload payload;
-  Content rawMessage;
-  MessageContent messageContent;
+  String? source;
+  Content? content;
+  Payload? payload;
+  Content? rawMessage;
+  MessageContent? messageContent;
 
   MessageDetails(
       {this.source,
@@ -104,24 +105,24 @@ class MessageDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['source'] = this.source;
     if (this.content != null) {
-      data['content'] = this.content.toJson();
+      data['content'] = this.content!.toJson();
     }
     if (this.payload != null) {
-      data['payload'] = this.payload.toJson();
+      data['payload'] = this.payload!.toJson();
     }
     if (this.rawMessage != null) {
-      data['rawMessage'] = this.rawMessage.toJson();
+      data['rawMessage'] = this.rawMessage!.toJson();
     }
     if (this.messageContent != null) {
-      data['messageContent'] = this.messageContent.toJson();
+      data['messageContent'] = this.messageContent!.toJson();
     }
     return data;
   }
 }
 
 class Content {
-  String messageBody;
-  String messageTitle;
+  String? messageBody;
+  String? messageTitle;
 
   Content({this.messageBody, this.messageTitle});
 
@@ -139,11 +140,11 @@ class Content {
 }
 
 class Payload {
-  String type;
-  String priority;
-  String redirectTo;
-  String notificationListId;
-  String isSheela;
+  String? type;
+  String? priority;
+  String? redirectTo;
+  String? notificationListId;
+  String? isSheela;
 
   Payload(
       {this.type,
@@ -172,10 +173,10 @@ class Payload {
 }
 
 class MessageContent {
-  String messageBody;
-  String messageTitle;
-  String rawMessageBody;
-  String rawMessageTitle;
+  String? messageBody;
+  String? messageTitle;
+  String? rawMessageBody;
+  String? rawMessageTitle;
 
   MessageContent(
       {this.messageBody,

@@ -1,6 +1,7 @@
+
 class UserChatListModel {
-  bool isSuccess;
-  List<PayloadChat> payload;
+  bool? isSuccess;
+  List<PayloadChat>? payload;
 
   UserChatListModel({this.isSuccess, this.payload});
 
@@ -9,7 +10,7 @@ class UserChatListModel {
     if (json['payload'] != null) {
       payload = new List<PayloadChat>();
       json['payload'].forEach((v) {
-        payload.add(new PayloadChat.fromJson(v));
+        payload!.add(new PayloadChat.fromJson(v));
       });
     }
   }
@@ -18,31 +19,31 @@ class UserChatListModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.payload != null) {
-      data['payload'] = this.payload.map((v) => v.toJson()).toList();
+      data['payload'] = this.payload!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class PayloadChat {
-  String id;
-  String peerId;
-  String firstName;
-  String lastName;
-  String profilePicThumbnailURL;
-  String deliveredDateTime;
-  String messageId;
-  bool isRead;
-  int messageType;
-  Messages messages;
-  String documentId;
-  String unReadCount;
-  bool isDisable;
-  String deliveredTimeStamp;
-  String familyUserId;
-  String familyUserFirstName;
-  String familyUserLastName;
-  bool isFamilyUserCareCoordinator;
+  String? id;
+  String? peerId;
+  String? firstName;
+  String? lastName;
+  String? profilePicThumbnailURL;
+  String? deliveredDateTime;
+  String? messageId;
+  bool? isRead;
+  int? messageType;
+  Messages? messages;
+  String? documentId;
+  String? unReadCount;
+  bool? isDisable;
+  String? deliveredTimeStamp;
+  String? familyUserId;
+  String? familyUserFirstName;
+  String? familyUserLastName;
+  bool? isFamilyUserCareCoordinator;
 
   PayloadChat({
     this.id,
@@ -101,7 +102,7 @@ class PayloadChat {
     data['isRead'] = this.isRead;
     data['messageType'] = this.messageType;
     if (this.messages != null) {
-      data['messages'] = this.messages.toJson();
+      data['messages'] = this.messages!.toJson();
     }
     data['documentId'] = this.documentId;
     data['unReadCount'] = this.unReadCount;
@@ -116,13 +117,13 @@ class PayloadChat {
 }
 
 class Messages {
-  String id;
-  String idTo;
-  int type;
-  String idFrom;
-  bool isread;
-  String content;
-  Timestamp timestamp;
+  String? id;
+  String? idTo;
+  int? type;
+  String? idFrom;
+  bool? isread;
+  String? content;
+  Timestamp? timestamp;
 
   Messages(
       {this.id,
@@ -154,15 +155,15 @@ class Messages {
     data['isread'] = this.isread;
     data['content'] = this.content;
     if (this.timestamp != null) {
-      data['timestamp'] = this.timestamp.toJson();
+      data['timestamp'] = this.timestamp!.toJson();
     }
     return data;
   }
 }
 
 class Timestamp {
-  String sSeconds;
-  String sNanoseconds;
+  String? sSeconds;
+  String? sNanoseconds;
 
   Timestamp({this.sSeconds, this.sNanoseconds});
 

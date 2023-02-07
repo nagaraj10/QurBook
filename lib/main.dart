@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
@@ -166,10 +167,10 @@ import 'landing/view_model/landing_view_model.dart';
 import 'package:facebook_app_events/facebook_app_events.dart';
 
 var firstCamera;
-List<CameraDescription> listOfCameras;
+late List<CameraDescription> listOfCameras;
 
 //variable for all outer
-var routes;
+late var routes;
 
 Future<void> main() async {
   var reminderMethodChannelAndroid =
@@ -247,7 +248,7 @@ Future<void> main() async {
         registerOnAppOpenAttributionCallback: true,
         registerOnDeepLinkingCallback: true);
 
-    appsflyerSdk.onDeepLinkingStream.forEach((element) {
+    appsflyerSdk.onDeepLinkingStream!.forEach((element) {
       final facebookAppEvents = FacebookAppEvents();
       facebookAppEvents.logEvent(name: "deeplinkclicked", parameters: {
         "user_id": PreferenceUtil.getStringValue(KEY_USERID_MAIN),
@@ -306,7 +307,7 @@ Future<void> main() async {
           call.arguments.toString(),
         );
       }
-    });
+    } as Future<dynamic> Function(MethodCall)?);
 
     var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
@@ -417,21 +418,21 @@ class _MyFHBState extends State<MyFHB> {
   var sheelaMethodChannelAndroid = const MethodChannel('sheela.channel');
   int myPrimaryColor = CommonUtil().getMyPrimaryColor();
   static const platform = variable.version_platform;
-  String _responseFromNative = variable.strWaitLoading;
+  String? _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
   static const nav_platform = MethodChannel('navigation.channel');
   String navRoute = '';
   bool isAlreadyLoaded = false;
   final Connectivity _connectivity = Connectivity();
-  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  StreamSubscription<ConnectivityResult>? _connectivitySubscription;
   bool _internetconnection = true;
   FlutterToast toast = FlutterToast();
 
   /// event channel for listening ns
   static const stream =
       EventChannel('com.example.agoraflutterquickstart/stream');
-  StreamSubscription _timerSubscription;
+  StreamSubscription? _timerSubscription;
   final String _msg = 'waiting for message';
   final ValueNotifier<String> _msgListener = ValueNotifier('');
 
@@ -439,7 +440,7 @@ class _MyFHBState extends State<MyFHB> {
   var globalContext;
   AuthService authService = AuthService();
   ChatViewModel chatViewModel = ChatViewModel();
-  bool isFirstTime;
+  bool? isFirstTime;
   var apiBaseHelper = ApiBaseHelper();
   bool avoidExtraNotification = true;
 
@@ -507,13 +508,13 @@ class _MyFHBState extends State<MyFHB> {
 
   void _disableTimer() {
     if (_timerSubscription != null) {
-      _timerSubscription.cancel();
+      _timerSubscription!.cancel();
       _timerSubscription = null;
     }
   }
 
   getSpeechToText(message) {
-    String sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
+    String? sheela_lang = PreferenceUtil.getStringValue(SHEELA_LANG);
     Get.toNamed(
       rt_Sheela,
       arguments: SheelaArgument(
@@ -524,8 +525,8 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void _updateTimer(msg) {
-    var doctorPic = '';
-    var patientPic = '';
+    String? doctorPic = '';
+    String? patientPic = '';
     var callType = '';
     var notificationListId = '';
     _msgListener.value = _msg;
@@ -769,7 +770,7 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'User Profile page',
           });
           Get.toNamed(router.rt_UserAccounts,
-                  arguments: UserAccountsArguments(selectedIndex: 0))
+                  arguments: UserAccountsArguments(selectedIndex: 0))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'googlefit') {
           fbaLog(eveParams: {
@@ -786,7 +787,7 @@ class _MyFHBState extends State<MyFHB> {
             'navigationPage': 'Tele Health Provider',
           });
           Get.toNamed(router.rt_TelehealthProvider,
-                  arguments: HomeScreenArguments(selectedIndex: 1))
+                  arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'my_record' ||
             passedValArr[1] == 'prescription_list' ||
@@ -798,7 +799,7 @@ class _MyFHBState extends State<MyFHB> {
           });
           getProfileData();
           Get.toNamed(router.rt_HomeScreen,
-                  arguments: HomeScreenArguments(selectedIndex: 1))
+                  arguments: HomeScreenArguments(selectedIndex: 1))!
               .then((value) => setState(() {}));
         } else if (passedValArr[1] == 'regiment_screen') {
           //this need to be navigte to Regiment screen
@@ -894,7 +895,7 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 1),
-          ).then((value) =>
+          )!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'bills') {
           fbaLog(eveParams: {
@@ -905,7 +906,7 @@ class _MyFHBState extends State<MyFHB> {
           Get.toNamed(
             router.rt_HomeScreen,
             arguments: HomeScreenArguments(selectedIndex: 1, thTabIndex: 4),
-          ).then((value) =>
+          )!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else if (passedValArr[1] == 'chat') {
           fbaLog(eveParams: {
@@ -934,7 +935,7 @@ class _MyFHBState extends State<MyFHB> {
                     patientPicture: '',
                     isFromVideoCall: false,
                     isCareGiver: false,
-                  ))
+                  ))!
               .then((value) =>
                   PageNavigator.goToPermanent(context, router.rt_Landing));
           ;
@@ -956,19 +957,19 @@ class _MyFHBState extends State<MyFHB> {
                       notificationListId: passedValArr[3],
                       cartId: passedValArr[4],
                       patientName: passedValArr[6],
-                    )).then((value) => PageNavigator.goToPermanent(
+                    ))!.then((value) => PageNavigator.goToPermanent(
                         context, router.rt_Landing)));
           });
         } else if (passedValArr[1] == 'familyProfile') {
           new CommonUtil()
-              .getDetailsOfAddedFamilyMember(Get.context, passedValArr[2]);
+              .getDetailsOfAddedFamilyMember(Get.context!, passedValArr[2]);
         } else if (passedValArr[1] == 'manageActivities') {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
             'ns_type': 'manageActivities',
             'navigationPage': 'Manage Activities',
           });
-          Get.to(ManageActivitiesScreen()).then((value) =>
+          Get.to(ManageActivitiesScreen())!.then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
         } else {
           fbaLog(eveParams: {
@@ -976,7 +977,7 @@ class _MyFHBState extends State<MyFHB> {
             'ns_type': 'appointment_list',
             'navigationPage': 'Tele Health Appointment list',
           });
-          PageNavigator.goToPermanent(Get.context, router.rt_Landing);
+          PageNavigator.goToPermanent(Get.context!, router.rt_Landing);
         }
       } else if (passedValArr[1] == 'appointmentList' ||
           passedValArr[1] == 'appointmentHistory') {
@@ -1165,10 +1166,10 @@ class _MyFHBState extends State<MyFHB> {
               'navigationPage': 'TeleHelath Call screen',
             });
             if (callType.toLowerCase() == 'audio') {
-              Provider.of<AudioCallProvider>(Get.context, listen: false)
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
                   .enableAudioCall();
             } else if (callType.toLowerCase() == 'video') {
-              Provider.of<AudioCallProvider>(Get.context, listen: false)
+              Provider.of<AudioCallProvider>(Get.context!, listen: false)
                   .disableAudioCall();
             }
 
@@ -1213,7 +1214,7 @@ class _MyFHBState extends State<MyFHB> {
     final platform = InitializationSettings(
         android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
-    Future notificationAction(String payload) async {
+    Future notificationAction(String? payload) async {
       await Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddReminder()));
     }
@@ -1308,7 +1309,7 @@ class _MyFHBState extends State<MyFHB> {
   Widget findHomeWidget(String navRoute) {
     if (navRoute.isEmpty && navRoute != 'null') {
       // return SplashScreen();
-      if (isFirstTime != null && !isFirstTime) {
+      if (isFirstTime != null && !isFirstTime!) {
         return CommonUtil.REGION_CODE == 'IN'
             ? IntroductionScreen()
             : SplashScreen();
@@ -1602,7 +1603,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Future<void> gettingResponseFromNative() async {
-    var res = '';
+    String? res = '';
     try {
       final result = await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
@@ -1623,7 +1624,7 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   Future<void> initConnectivity() async {
-    ConnectivityResult result;
+    ConnectivityResult? result;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       result = await _connectivity.checkConnectivity();
@@ -1641,7 +1642,7 @@ class _MyFHBState extends State<MyFHB> {
     return _updateConnectionStatus(result);
   }
 
-  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  Future<void> _updateConnectionStatus(ConnectivityResult? result) async {
     switch (result) {
       case ConnectivityResult.wifi:
         if (!_internetconnection) {
@@ -1710,10 +1711,10 @@ class _MyFHBState extends State<MyFHB> {
     });
 
     if (callType.toLowerCase() == 'audio') {
-      Provider.of<AudioCallProvider>(Get.context, listen: false)
+      Provider.of<AudioCallProvider>(Get.context!, listen: false)
           .enableAudioCall();
     } else if (callType.toLowerCase() == 'video') {
-      Provider.of<AudioCallProvider>(Get.context, listen: false)
+      Provider.of<AudioCallProvider>(Get.context!, listen: false)
           .disableAudioCall();
     }
     return CallMain(

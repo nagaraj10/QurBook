@@ -1,11 +1,12 @@
+
 import 'DoctorLanguageCollection.dart';
 import 'User.dart';
 import 'UserProfessionalCollection.dart';
 
 class GetDoctorsByIdModel {
-  bool isSuccess;
-  String message;
-  DoctorResult result;
+  bool? isSuccess;
+  String? message;
+  DoctorResult? result;
 
   GetDoctorsByIdModel({this.isSuccess, this.message, this.result});
 
@@ -21,26 +22,26 @@ class GetDoctorsByIdModel {
     data['isSuccess'] = isSuccess;
     data['message'] = message;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class DoctorResult {
-  String id;
-  String specialization;
-  bool isTelehealthEnabled;
-  bool isMciVerified;
-  bool isActive;
-  bool isWelcomeMailSent;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  bool isResident = false;
-  User user;
-  List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
-  List<DoctorLanguageCollection> doctorLanguageCollection;
+  String? id;
+  String? specialization;
+  bool? isTelehealthEnabled;
+  bool? isMciVerified;
+  bool? isActive;
+  bool? isWelcomeMailSent;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  bool? isResident = false;
+  User? user;
+  List<DoctorProfessionalDetailCollection>? doctorProfessionalDetailCollection;
+  List<DoctorLanguageCollection>? doctorLanguageCollection;
 
   DoctorResult({
     this.id,
@@ -73,14 +74,14 @@ class DoctorResult {
       doctorProfessionalDetailCollection =
           <DoctorProfessionalDetailCollection>[];
       json['doctorProfessionalDetailCollection'].forEach((v) {
-        doctorProfessionalDetailCollection
+        doctorProfessionalDetailCollection!
             .add(DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
     if (json['doctorLanguageCollection'] != null) {
       doctorLanguageCollection = <DoctorLanguageCollection>[];
       json['doctorLanguageCollection'].forEach((v) {
-        doctorLanguageCollection.add(DoctorLanguageCollection.fromJson(v));
+        doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
       });
     }
     isResident = json['isResident'] ?? false;
@@ -98,15 +99,15 @@ class DoctorResult {
     data['lastModifiedBy'] = lastModifiedBy;
     data['lastModifiedOn'] = lastModifiedOn;
     if (user != null) {
-      data['user'] = user.toJson();
+      data['user'] = user!.toJson();
     }
     if (doctorProfessionalDetailCollection != null) {
       data['doctorProfessionalDetailCollection'] =
-          doctorProfessionalDetailCollection.map((v) => v.toJson()).toList();
+          doctorProfessionalDetailCollection!.map((v) => v.toJson()).toList();
     }
     if (doctorLanguageCollection != null) {
       data['doctorLanguageCollection'] =
-          doctorLanguageCollection.map((v) => v.toJson()).toList();
+          doctorLanguageCollection!.map((v) => v.toJson()).toList();
     }
     data['isResident'] = isResident;
     return data;

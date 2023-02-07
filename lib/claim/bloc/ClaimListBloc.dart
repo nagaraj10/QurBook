@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:myfhb/claim/model/claimexpiry/ClaimExpiryResponse.dart';
@@ -7,15 +8,15 @@ import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
 class ClaimListBloc implements BaseBloc {
-  StreamController _claimExpiryListControlller;
+  StreamController? _claimExpiryListControlller;
 
-  ClaimListRepository claimLosRepository;
+  late ClaimListRepository claimLosRepository;
   StreamSink<ApiResponse<ClaimExpiryResponse>> get claimExpiryListSink =>
-      _claimExpiryListControlller.sink;
+      _claimExpiryListControlller!.sink as StreamSink<ApiResponse<ClaimExpiryResponse>>;
   Stream<ApiResponse<ClaimExpiryResponse>> get claimExpiryListStream =>
-      _claimExpiryListControlller.stream;
+      _claimExpiryListControlller!.stream as Stream<ApiResponse<ClaimExpiryResponse>>;
 
-  List<ClaimExpiryResult> claimExpiryResult;
+  List<ClaimExpiryResult>? claimExpiryResult;
   @override
   void dispose() {
     _claimExpiryListControlller?.close();
@@ -27,9 +28,9 @@ class ClaimListBloc implements BaseBloc {
     claimLosRepository = new ClaimListRepository();
   }
 
-  Future<ClaimExpiryResponse> getExpiryListResponse() async {
+  Future<ClaimExpiryResponse?> getExpiryListResponse() async {
     // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
-    ClaimExpiryResponse claimExpiryResponse;
+    ClaimExpiryResponse? claimExpiryResponse;
     try {
       claimExpiryResponse = await claimLosRepository
           .getClaimExpiryResponseList();

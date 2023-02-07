@@ -1,3 +1,4 @@
+
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -41,16 +42,16 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   var isLoading = false;
   final _loginKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
-  AuthViewModel authViewModel;
+  late AuthViewModel authViewModel;
   FlutterToast toast = FlutterToast();
-  String decodesstring;
+  String? decodesstring;
   UserModel saveuser = UserModel();
-  String user_mobile_no;
-  String id_token_string;
-  Map<String, dynamic> dataForResendOtp;
+  String? user_mobile_no;
+  String? id_token_string;
+  Map<String, dynamic>? dataForResendOtp;
   //CommonUtil commonUtil = new CommonUtil();
   bool _isHidden = true;
-  bool isVirtualNumber = false;
+  bool? isVirtualNumber = false;
 
   @override
   void initState() {
@@ -92,7 +93,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: CommonUtil().isTablet ? 50 : 20),
+                      horizontal: CommonUtil().isTablet! ? 50 : 20),
                   child: SingleChildScrollView(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +155,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                 ),
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .phoneValidation(value, patternPhoneNew,
+                                      .phoneValidation(value!, patternPhoneNew as String,
                                           strPhoneCantEmpty);
                                 },
                                 controller: numberController,
@@ -201,8 +202,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                 controller: passwordController,
                                 validator: (value) {
                                   return AuthenticationValidator()
-                                      .loginPasswordValidation(value,
-                                          patternPassword, strPassCantEmpty);
+                                      .loginPasswordValidation(value!,
+                                          patternPassword as String, strPassCantEmpty);
                                 },
                               ),
                             ),
@@ -287,8 +288,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   _savepatientdetails() async {
     FocusScope.of(context).unfocus();
-    if (_loginKey.currentState.validate()) {
-      _loginKey.currentState.save();
+    if (_loginKey.currentState!.validate()) {
+      _loginKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);
       var logInModel = PatientLogIn(
         userName:
@@ -311,7 +312,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 
   _checkResponse(PatientLogIn response) {
     //print(response.toJson().toString());
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -330,15 +331,15 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             context,
             MaterialPageRoute(
                 builder: (context) => VerifyPatient(
-                      PhoneNumber: response.diagnostics.errorData.userName,
+                      PhoneNumber: response.diagnostics!.errorData!.userName,
                       from: strFromSignUp,
                       userConfirm: true,
-                      userId: response.diagnostics.errorData.userId,
+                      userId: response.diagnostics!.errorData!.userId,
                       forFamilyMember: false,
                       isVirtualNumber: isVirtualNumber,
                     )));
       } else {
-        toast.getToast(response.message, Colors.red);
+        toast.getToast(response.message!, Colors.red);
       }
     }
   }
@@ -392,40 +393,40 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   }
 
   void _checkifItsGuest(PatientLogIn response) async {
-    if (response.isSuccess) {
+    if (response.isSuccess!) {
       decodesstring = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
       saveuser.auth_token = decodesstring;
       final bool isSkipMFA =
-          parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
+          parseJwtPayLoad(decodesstring!)[strToken][strIsSkipMFA];
       isVirtualNumber =
-          parseJwtPayLoad(decodesstring)[strToken][strIsVirtualNumberUser];
+          parseJwtPayLoad(decodesstring!)[strToken][strIsVirtualNumberUser];
       print(isSkipMFA);
       if (isSkipMFA) {
         final String userId =
-            parseJwtPayLoad(decodesstring)[strToken][strUserId];
+            parseJwtPayLoad(decodesstring!)[strToken][strUserId];
 
         saveuser.userId = userId;
-        id_token_string = parseJwtPayLoad(decodesstring)[strToken]
+        id_token_string = parseJwtPayLoad(decodesstring!)[strToken]
             [strProviderPayLoad][strIdToken];
-        final idTokens = parseJwtPayLoad(id_token_string);
+        final idTokens = parseJwtPayLoad(id_token_string!);
         print(idTokens);
         user_mobile_no = idTokens[strphonenumber];
         print(idTokens[strphonenumber]);
         saveuser.family_name = idTokens[strFamilyName];
         print(idTokens[strFamilyName]);
         saveuser.phone_number = idTokens[strphonenumber];
-        final String ph = idTokens[strphonenumber];
+        final String? ph = idTokens[strphonenumber];
         print(idTokens[strphonenumber]);
         saveuser.given_name = idTokens[strGivenName];
         print(idTokens[strGivenName]);
         saveuser.email = idTokens[stremail];
         print(idTokens[stremail]);
-        await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+        await PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no!)
             .then((onValue) {});
         await PreferenceUtil.saveString(
                 Constants.KEY_EMAIL, saveuser?.email ?? '')
             .then((onValue) {});
-        await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
+        await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring!)
             .then((onValue) {});
         print(decodesstring);
         await PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
@@ -448,7 +449,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           } else {
             FHBBasicWidget().showDialogWithTwoButtons(context, () {
               PageNavigator.goToPermanent(context, router.rt_Landing);
-            }, value.message, strConfirmDialog);
+            }, value.message!, strConfirmDialog);
           }
         });
         // openHomeScreenOrProfile(userDetails, doctorId);

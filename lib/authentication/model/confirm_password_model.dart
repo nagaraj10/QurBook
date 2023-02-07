@@ -1,12 +1,13 @@
+
 import '../constants/constants.dart';
 
 class PatientConfirmPasswordModel {
-  String verificationCode;
-  String userName;
-  String password;
-  String source;
-  String message;
-  bool isSuccess;
+  String? verificationCode;
+  String? userName;
+  String? password;
+  String? source;
+  String? message;
+  bool? isSuccess;
 
   PatientConfirmPasswordModel(
       {this.verificationCode,

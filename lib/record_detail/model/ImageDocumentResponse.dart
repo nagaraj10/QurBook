@@ -1,9 +1,10 @@
 
+
 class ImageDocumentResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   ImageDocumentResponse(
       {this.status, this.success, this.message, this.response});
@@ -23,15 +24,15 @@ class ImageDocumentResponse {
     data['success'] = success;
     data['message'] = message;
     if (response != null) {
-      data['response'] = response.toJson();
+      data['response'] = response!.toJson();
     }
     return data;
   }
 }
 
 class Response {
-  int count;
-  Data data;
+  int? count;
+  Data? data;
 
   Response({this.count, this.data});
 
@@ -44,15 +45,15 @@ class Response {
     final data = <String, dynamic>{};
     data['count'] = count;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data['data'] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  String fileContent;
-  String fileType;
+  String? fileContent;
+  String? fileType;
 
   Data({this.fileContent, this.fileType});
 

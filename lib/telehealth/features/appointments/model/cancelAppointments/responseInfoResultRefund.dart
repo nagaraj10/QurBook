@@ -1,16 +1,17 @@
+
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class ResponseInfoResultRefund {
-  String id;
-  String paymentId;
-  String status;
-  String type;
-  String body;
-  String refundAmount;
-  String totalAmount;
-  String transactionId;
-  String creatorName;
-  String createdAt;
+  String? id;
+  String? paymentId;
+  String? status;
+  String? type;
+  String? body;
+  String? refundAmount;
+  String? totalAmount;
+  String? transactionId;
+  String? creatorName;
+  String? createdAt;
 
   ResponseInfoResultRefund(
       {this.id,

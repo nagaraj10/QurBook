@@ -1,4 +1,5 @@
-import 'package:auto_size_text/auto_size_text.dart';
+
+// import 'package:auto_size_text/auto_size_text.dart';  FU2.5
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../add_providers/models/add_providers_arguments.dart';
@@ -19,10 +20,10 @@ import '../../src/utils/screenutils/size_extensions.dart';
 import 'my_provider.dart';
 
 class MyProvidersHospitalsList extends StatefulWidget {
-  final List<Hospitals> hospitalsModel;
-  final ProvidersBloc providersBloc;
-  final MyProviderState myProviderState;
-  Function isRefresh;
+  final List<Hospitals>? hospitalsModel;
+  final ProvidersBloc? providersBloc;
+  final MyProviderState? myProviderState;
+  Function? isRefresh;
 
   MyProvidersHospitalsList(
       {this.hospitalsModel,
@@ -35,10 +36,10 @@ class MyProvidersHospitalsList extends StatefulWidget {
 }
 
 class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
-  List<Hospitals> hospitalsModel;
-  ProvidersBloc providersBloc;
-  MyProviderState myProviderState;
-  MyProviderViewModel providerViewModel;
+  List<Hospitals>? hospitalsModel;
+  ProvidersBloc? providersBloc;
+  late MyProviderState myProviderState;
+  late MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = CommonWidgets();
 
   @override
@@ -67,7 +68,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (context, index) {
-        var eachHospitalModel = widget.hospitalsModel[index];
+        var eachHospitalModel = widget.hospitalsModel![index];
         return ((getHospitalName(eachHospitalModel) ?? '').isNotEmpty)
             ? InkWell(
                 onTap: () {
@@ -78,7 +79,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                           fromClass: router.rt_myprovider,
                           hasData: true,
                           isRefresh: () {
-                            widget.isRefresh();
+                            widget.isRefresh!();
                           })).then((value) {
                     myProviderState.refreshPage();
                   });
@@ -113,7 +114,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                     color: Color(fhbColors.bgColorContainer),
                                     child: Center(
                                       child: Text(
-                                        getHospitalName(eachHospitalModel)[0]
+                                        getHospitalName(eachHospitalModel)![0]
                                             .toUpperCase(),
                                         style: TextStyle(
                                             color: Color(CommonUtil()
@@ -136,9 +137,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             SizedBox(height: 5.0.h),
-                            AutoSizeText(
+                           // AutoSizeText( FU2.5
+                            Text( //FU2.5
                               getHospitalName(
-                                  eachHospitalModel) /* toBeginningOfSentenceCase(
+                                  eachHospitalModel)! /* toBeginningOfSentenceCase(
                                     eachHospitalModel.name) */
                               ,
                               maxLines: 1,
@@ -147,12 +149,13 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                 fontWeight: FontWeight.w500,
                               ),
                               textAlign: TextAlign.start,
-                            ),
+                            ), 
                             SizedBox(height: 5.0.h),
-                            AutoSizeText(
+                           // AutoSizeText( FU2.5
+                             Text(  //FU2.5
                               '' +
                                   commonWidgets
-                                      .getCityHospital(eachHospitalModel),
+                                      .getCityHospital(eachHospitalModel)!,
                               maxLines: 1,
                               style: TextStyle(
                                   fontSize: 15.0.sp,
@@ -178,8 +181,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
                                       'ListItem',
                                       eachHospitalModel.sharedCategories)
                                   .then((status) {
-                                if (status) {
-                                  widget.isRefresh();
+                                if (status!) {
+                                  widget.isRefresh!();
                                 }
                               });
                             }),
@@ -198,12 +201,12 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
           color: Colors.transparent,
         );
       },
-      itemCount: widget.hospitalsModel.length,
+      itemCount: widget.hospitalsModel!.length,
     );
   }
 
-  String getHospitalName(Hospitals eachHospitalModel) {
-    String name = "";
+  String? getHospitalName(Hospitals eachHospitalModel) {
+    String? name = "";
 
     if (eachHospitalModel.name != null) {
       if (eachHospitalModel.name != "Self" &&
@@ -211,13 +214,13 @@ class _MyProvidersDoctorsList extends State<MyProvidersHospitalsList> {
         name = eachHospitalModel?.name?.capitalizeFirstofEach;
       } else {
         if (eachHospitalModel.createdBy != null) {
-          if (eachHospitalModel.createdBy.firstName != "" &&
-              eachHospitalModel.createdBy.firstName != null) {
-            name = eachHospitalModel.createdBy.firstName;
+          if (eachHospitalModel.createdBy!.firstName != "" &&
+              eachHospitalModel.createdBy!.firstName != null) {
+            name = eachHospitalModel.createdBy!.firstName;
           }
-          if (eachHospitalModel.createdBy.lastName != "" &&
-              eachHospitalModel.createdBy.lastName != null) {
-            name = name + " " + eachHospitalModel.createdBy.lastName;
+          if (eachHospitalModel.createdBy!.lastName != "" &&
+              eachHospitalModel.createdBy!.lastName != null) {
+            name = name! + " " + eachHospitalModel.createdBy!.lastName!;
           }
         }
       }

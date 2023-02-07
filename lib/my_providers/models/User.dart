@@ -1,38 +1,39 @@
+
 import 'UserAddressCollection.dart';
 import 'UserContactCollection.dart';
 import 'UserRoleCollection.dart';
 
 class User {
-  String id;
-  String name;
-  String userName;
-  String firstName;
-  String middleName;
-  String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
-  bool isVirtualUser;
-  bool isMigrated;
-  bool isClaimed;
-  bool isIeUser;
-  bool isEmailVerified;
-  bool isCpUser;
-  String communicationPreferences;
-  String medicalPreferences;
-  bool isSignedIn;
-  bool isActive;
-  String createdBy;
-  String createdOn;
-  String lastModifiedBy;
-  String lastModifiedOn;
-  List<UserContactCollection3> userContactCollection3;
-  List<UserRoleCollection3> userRoleCollection3;
-  List<UserAddressCollection3> userAddressCollection3;
+  String? id;
+  String? name;
+  String? userName;
+  String? firstName;
+  String? middleName;
+  String? lastName;
+  String? gender;
+  String? dateOfBirth;
+  String? bloodGroup;
+  String? countryCode;
+  String? profilePicUrl;
+  String? profilePicThumbnailUrl;
+  bool? isTempUser;
+  bool? isVirtualUser;
+  bool? isMigrated;
+  bool? isClaimed;
+  bool? isIeUser;
+  bool? isEmailVerified;
+  bool? isCpUser;
+  String? communicationPreferences;
+  String? medicalPreferences;
+  bool? isSignedIn;
+  bool? isActive;
+  String? createdBy;
+  String? createdOn;
+  String? lastModifiedBy;
+  String? lastModifiedOn;
+  List<UserContactCollection3>? userContactCollection3;
+  List<UserRoleCollection3>? userRoleCollection3;
+  List<UserAddressCollection3>? userAddressCollection3;
 
   User(
       {this.id,
@@ -97,19 +98,19 @@ class User {
     if (json['userContactCollection3'] != null) {
       userContactCollection3 = <UserContactCollection3>[];
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(UserContactCollection3.fromJson(v));
+        userContactCollection3!.add(UserContactCollection3.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
       userRoleCollection3 = <UserRoleCollection3>[];
       json['userRoleCollection3'].forEach((v) {
-        userRoleCollection3.add(UserRoleCollection3.fromJson(v));
+        userRoleCollection3!.add(UserRoleCollection3.fromJson(v));
       });
     }
     if (json['userAddressCollection3'] != null) {
       userAddressCollection3 = <UserAddressCollection3>[];
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(UserAddressCollection3.fromJson(v));
+        userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
       });
     }
   }
@@ -145,15 +146,15 @@ class User {
     data['lastModifiedOn'] = lastModifiedOn;
     if (userContactCollection3 != null) {
       data['userContactCollection3'] =
-          userContactCollection3.map((v) => v.toJson()).toList();
+          userContactCollection3!.map((v) => v.toJson()).toList();
     }
     if (userRoleCollection3 != null) {
       data['userRoleCollection3'] =
-          userRoleCollection3.map((v) => v.toJson()).toList();
+          userRoleCollection3!.map((v) => v.toJson()).toList();
     }
     if (userAddressCollection3 != null) {
       data['userAddressCollection3'] =
-          userAddressCollection3.map((v) => v.toJson()).toList();
+          userAddressCollection3!.map((v) => v.toJson()).toList();
     }
     return data;
   }

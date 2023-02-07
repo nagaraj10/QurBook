@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -12,7 +13,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 
 class ApiServices {
   static Future<Response> get(String path,
-      {Map<String, String> headers, int timeout = 20}) async {
+      {Map<String, String>? headers, int timeout = 20}) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
     final String _baseUrl = '';
@@ -52,9 +53,9 @@ class ApiServices {
 
   static Future<Response> post(
     String path, {
-    Map<String, String> headers,
-    Object body,
-    Encoding encoding,
+    Map<String, String?>? headers,
+    Object? body,
+    Encoding? encoding,
     timeOutSeconds = 20,
   }) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
@@ -67,7 +68,7 @@ class ApiServices {
           .post(
             Uri.parse(_baseUrl + path),
             body: body,
-            headers: headers,
+            headers: headers as Map<String, String>?,
             encoding: encoding,
           )
           .timeout(
@@ -99,9 +100,9 @@ class ApiServices {
 
   static Future<Response> put(
     String path, {
-    Map<String, String> headers,
-    Object body,
-    Encoding encoding,
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
   }) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
@@ -141,9 +142,9 @@ class ApiServices {
 
   static Future<Response> delete(
     String path, {
-    Map<String, String> headers,
-    Object body,
-    Encoding encoding,
+    Map<String, String>? headers,
+    Object? body,
+    Encoding? encoding,
   }) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;

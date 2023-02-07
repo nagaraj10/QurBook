@@ -1,13 +1,14 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class State {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  String lastModifiedBy;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  String? lastModifiedBy;
 
   State(
       {this.id,

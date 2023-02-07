@@ -1,17 +1,18 @@
+
 import 'PhoneNumberType.dart';
 
 class UserAddressCollection3 {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  City city;
-  State state;
-  PhoneNumberType addressType;
+  String? id;
+  String? addressLine1;
+  String? addressLine2;
+  String? pincode;
+  bool? isPrimary;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
+  City? city;
+  State? state;
+  PhoneNumberType? addressType;
 
   UserAddressCollection3(
       {this.id,
@@ -53,24 +54,24 @@ class UserAddressCollection3 {
     data['createdOn'] = createdOn;
     data['lastModifiedOn'] = lastModifiedOn;
     if (city != null) {
-      data['city'] = city.toJson();
+      data['city'] = city!.toJson();
     }
     if (state != null) {
-      data['state'] = state.toJson();
+      data['state'] = state!.toJson();
     }
     if (addressType != null) {
-      data['addressType'] = addressType.toJson();
+      data['addressType'] = addressType!.toJson();
     }
     return data;
   }
 }
 
 class City {
-  String id;
-  String name;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   City(
       {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
@@ -95,12 +96,12 @@ class City {
 }
 
 class State {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? countryCode;
+  bool? isActive;
+  String? createdOn;
+  String? lastModifiedOn;
 
   State(
       {this.id,

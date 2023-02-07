@@ -1,3 +1,4 @@
+
 // To parse this JSON data, do
 //
 //     final userTicketModel = userTicketModelFromJson(jsonString);
@@ -15,9 +16,9 @@ class UserTicketModel {
     this.result,
   });
 
-  bool isSuccess;
-  String message;
-  Result result;
+  bool? isSuccess;
+  String? message;
+  Result? result;
 
   factory UserTicketModel.fromJson(Map<String, dynamic> json) => UserTicketModel(
     isSuccess: json["isSuccess"],
@@ -28,7 +29,7 @@ class UserTicketModel {
   Map<String, dynamic> toJson() => {
     "isSuccess": isSuccess,
     "message": message,
-    "result": result.toJson(),
+    "result": result!.toJson(),
   };
 }
 
@@ -43,13 +44,13 @@ class Result {
     this.nextPage,
   });
 
-  bool success;
-  List<Ticket> tickets;
-  int count;
-  int totalCount;
-  int page;
-  int prevPage;
-  int nextPage;
+  bool? success;
+  List<Ticket>? tickets;
+  int? count;
+  int? totalCount;
+  int? page;
+  int? prevPage;
+  int? nextPage;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
     success: json["success"],
@@ -63,7 +64,7 @@ class Result {
 
   Map<String, dynamic> toJson() => {
     "success": success,
-    "tickets": List<dynamic>.from(tickets.map((x) => x.toJson())),
+    "tickets": List<dynamic>.from(tickets!.map((x) => x.toJson())),
     "count": count,
     "totalCount": totalCount,
     "page": page,
@@ -96,26 +97,26 @@ class Ticket {
     this.updated,
   });
 
-  bool deleted;
-  int status;
-  List<dynamic> tags;
-  List<Owner> subscribers;
-  String id;
-  String subject;
-  String issue;
-  Type type;
-  Priority priority;
-  DateTime preferredDate;
-  Group group;
-  Owner owner;
-  DateTime date;
-  List<Comment> comments;
-  List<dynamic> notes;
-  List<dynamic> attachments;
-  List<History> history;
-  int uid;
-  int v;
-  DateTime updated;
+  bool? deleted;
+  int? status;
+  List<dynamic>? tags;
+  List<Owner>? subscribers;
+  String? id;
+  String? subject;
+  String? issue;
+  Type? type;
+  Priority? priority;
+  DateTime? preferredDate;
+  Group? group;
+  Owner? owner;
+  DateTime? date;
+  List<Comment>? comments;
+  List<dynamic>? notes;
+  List<dynamic>? attachments;
+  List<History>? history;
+  int? uid;
+  int? v;
+  DateTime? updated;
 
   factory Ticket.fromJson(Map<String, dynamic> json) => Ticket(
     deleted: json["deleted"],
@@ -143,24 +144,24 @@ class Ticket {
   Map<String, dynamic> toJson() => {
     "deleted": deleted,
     "status": status,
-    "tags": List<dynamic>.from(tags.map((x) => x)),
-    "subscribers": List<dynamic>.from(subscribers.map((x) => x.toJson())),
+    "tags": List<dynamic>.from(tags!.map((x) => x)),
+    "subscribers": List<dynamic>.from(subscribers!.map((x) => x.toJson())),
     "_id": id,
     "subject": subject,
     "issue": issue,
-    "type": type == null ? null : type.toJson(),
-    "priority": priority == null ? null : priority.toJson(),
-    "preferredDate": preferredDate.toIso8601String(),
-    "group": group.toJson(),
-    "owner": owner.toJson(),
-    "date": date.toIso8601String(),
-    "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
-    "notes": List<dynamic>.from(notes.map((x) => x)),
-    "attachments": List<dynamic>.from(attachments.map((x) => x)),
-    "history": List<dynamic>.from(history.map((x) => x.toJson())),
+    "type": type == null ? null : type!.toJson(),
+    "priority": priority == null ? null : priority!.toJson(),
+    "preferredDate": preferredDate!.toIso8601String(),
+    "group": group!.toJson(),
+    "owner": owner!.toJson(),
+    "date": date!.toIso8601String(),
+    "comments": List<dynamic>.from(comments!.map((x) => x.toJson())),
+    "notes": List<dynamic>.from(notes!.map((x) => x)),
+    "attachments": List<dynamic>.from(attachments!.map((x) => x)),
+    "history": List<dynamic>.from(history!.map((x) => x.toJson())),
     "uid": uid,
     "__v": v,
-    "updated": updated == null ? null : updated.toIso8601String(),
+    "updated": updated == null ? null : updated!.toIso8601String(),
   };
 }
 
@@ -173,11 +174,11 @@ class Comment {
     this.comment,
   });
 
-  bool deleted;
-  String id;
-  Owner owner;
-  DateTime date;
-  String comment;
+  bool? deleted;
+  String? id;
+  Owner? owner;
+  DateTime? date;
+  String? comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
     deleted: json["deleted"],
@@ -190,8 +191,8 @@ class Comment {
   Map<String, dynamic> toJson() => {
     "deleted": deleted,
     "_id": id,
-    "owner": owner.toJson(),
-    "date": date.toIso8601String(),
+    "owner": owner!.toJson(),
+    "date": date!.toIso8601String(),
     "comment": comment,
   };
 }
@@ -208,14 +209,14 @@ class Owner {
     this.userRefId,
   });
 
-  String id;
-  String username;
-  String fullname;
-  String email;
-  Role role;
-  TitleEnum title;
-  bool deleted;
-  String userRefId;
+  String? id;
+  String? username;
+  String? fullname;
+  String? email;
+  Role? role;
+  TitleEnum? title;
+  bool? deleted;
+  String? userRefId;
 
   factory Owner.fromJson(Map<String, dynamic> json) => Owner(
     id: json["_id"],
@@ -233,8 +234,8 @@ class Owner {
     "username": username,
     "fullname": fullname,
     "email": email,
-    "role": role.toJson(),
-    "title": titleEnumValues.reverse[title],
+    "role": role!.toJson(),
+    "title": titleEnumValues.reverse![title!],
     "deleted": deleted == null ? null : deleted,
     "userRefId": userRefId == null ? null : userRefId,
   };
@@ -251,13 +252,13 @@ class Role {
     this.roleId,
   });
 
-  RoleId id;
-  RoleName name;
-  RoleDescription description;
-  Normalized normalized;
-  bool isAdmin;
-  bool isAgent;
-  RoleId roleId;
+  RoleId? id;
+  RoleName? name;
+  RoleDescription? description;
+  Normalized? normalized;
+  bool? isAdmin;
+  bool? isAgent;
+  RoleId? roleId;
 
   factory Role.fromJson(Map<String, dynamic> json) => Role(
     id: roleIdValues.map[json["_id"]],
@@ -270,13 +271,13 @@ class Role {
   );
 
   Map<String, dynamic> toJson() => {
-    "_id": roleIdValues.reverse[id],
-    "name": roleNameValues.reverse[name],
-    "description": roleDescriptionValues.reverse[description],
-    "normalized": normalizedValues.reverse[normalized],
+    "_id": roleIdValues.reverse![id!],
+    "name": roleNameValues.reverse![name!],
+    "description": roleDescriptionValues.reverse![description!],
+    "normalized": normalizedValues.reverse![normalized!],
     "isAdmin": isAdmin,
     "isAgent": isAgent,
-    "id": roleIdValues.reverse[roleId],
+    "id": roleIdValues.reverse![roleId!],
   };
 }
 
@@ -325,12 +326,12 @@ class Group {
     this.v,
   });
 
-  List<Owner> members;
-  List<dynamic> sendMailTo;
-  bool public;
-  GroupId id;
-  TitleEnum name;
-  int v;
+  List<Owner>? members;
+  List<dynamic>? sendMailTo;
+  bool? public;
+  GroupId? id;
+  TitleEnum? name;
+  int? v;
 
   factory Group.fromJson(Map<String, dynamic> json) => Group(
     members: List<Owner>.from(json["members"].map((x) => Owner.fromJson(x))),
@@ -342,11 +343,11 @@ class Group {
   );
 
   Map<String, dynamic> toJson() => {
-    "members": List<dynamic>.from(members.map((x) => x.toJson())),
-    "sendMailTo": List<dynamic>.from(sendMailTo.map((x) => x)),
+    "members": List<dynamic>.from(members!.map((x) => x.toJson())),
+    "sendMailTo": List<dynamic>.from(sendMailTo!.map((x) => x)),
     "public": public,
-    "_id": groupIdValues.reverse[id],
-    "name": titleEnumValues.reverse[name],
+    "_id": groupIdValues.reverse![id!],
+    "name": titleEnumValues.reverse![name!],
     "__v": v,
   };
 }
@@ -366,11 +367,11 @@ class History {
     this.date,
   });
 
-  String id;
-  Action action;
-  HistoryDescription description;
-  Owner owner;
-  DateTime date;
+  String? id;
+  Action? action;
+  HistoryDescription? description;
+  Owner? owner;
+  DateTime? date;
 
   factory History.fromJson(Map<String, dynamic> json) => History(
     id: json["_id"],
@@ -382,10 +383,10 @@ class History {
 
   Map<String, dynamic> toJson() => {
     "_id": id,
-    "action": actionValues.reverse[action],
-    "description": historyDescriptionValues.reverse[description],
-    "owner": owner.toJson(),
-    "date": date.toIso8601String(),
+    "action": actionValues.reverse![action!],
+    "description": historyDescriptionValues.reverse![description!],
+    "owner": owner!.toJson(),
+    "date": date!.toIso8601String(),
   };
 }
 
@@ -416,15 +417,15 @@ class Priority {
     this.priorityId,
   });
 
-  int overdueIn;
-  HtmlColor htmlColor;
-  PriorityId id;
-  PriorityName name;
-  int migrationNum;
-  bool priorityDefault;
-  int v;
-  DurationFormatted durationFormatted;
-  PriorityId priorityId;
+  int? overdueIn;
+  HtmlColor? htmlColor;
+  PriorityId? id;
+  PriorityName? name;
+  int? migrationNum;
+  bool? priorityDefault;
+  int? v;
+  DurationFormatted? durationFormatted;
+  PriorityId? priorityId;
 
   factory Priority.fromJson(Map<String, dynamic> json) => Priority(
     overdueIn: json["overdueIn"],
@@ -440,14 +441,14 @@ class Priority {
 
   Map<String, dynamic> toJson() => {
     "overdueIn": overdueIn,
-    "htmlColor": htmlColorValues.reverse[htmlColor],
-    "_id": priorityIdValues.reverse[id],
-    "name": priorityNameValues.reverse[name],
+    "htmlColor": htmlColorValues.reverse![htmlColor!],
+    "_id": priorityIdValues.reverse![id!],
+    "name": priorityNameValues.reverse![name!],
     "migrationNum": migrationNum,
     "default": priorityDefault,
     "__v": v,
-    "durationFormatted": durationFormattedValues.reverse[durationFormatted],
-    "id": priorityIdValues.reverse[priorityId],
+    "durationFormatted": durationFormattedValues.reverse![durationFormatted!],
+    "id": priorityIdValues.reverse![priorityId!],
   };
 }
 
@@ -489,10 +490,10 @@ class Type {
     this.v,
   });
 
-  List<Priority> priorities;
-  TypeId id;
-  TypeName name;
-  int v;
+  List<Priority>? priorities;
+  TypeId? id;
+  TypeName? name;
+  int? v;
 
   factory Type.fromJson(Map<String, dynamic> json) => Type(
     priorities: List<Priority>.from(json["priorities"].map((x) => Priority.fromJson(x))),
@@ -502,9 +503,9 @@ class Type {
   );
 
   Map<String, dynamic> toJson() => {
-    "priorities": List<dynamic>.from(priorities.map((x) => x.toJson())),
-    "_id": typeIdValues.reverse[id],
-    "name": typeNameValues.reverse[name],
+    "priorities": List<dynamic>.from(priorities!.map((x) => x.toJson())),
+    "_id": typeIdValues.reverse![id!],
+    "name": typeNameValues.reverse![name!],
     "__v": v,
   };
 }
@@ -525,11 +526,11 @@ final typeNameValues = EnumValues({
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

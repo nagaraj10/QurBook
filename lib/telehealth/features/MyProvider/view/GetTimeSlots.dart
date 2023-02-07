@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -33,30 +34,30 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppoin
 import 'package:provider/provider.dart';
 
 class GetTimeSlots extends StatelessWidget {
-  SlotsResultModel dateSlotTimingsObj;
-  final List<Doctors> docs;
-  final List<DoctorResult> docsReschedule;
-  final int j;
-  final int doctorListIndex;
-  Past doctorsData;
-  final DateTime selectedDate;
-  bool isReshedule;
+  SlotsResultModel? dateSlotTimingsObj;
+  final List<Doctors?>? docs;
+  final List<DoctorResult?>? docsReschedule;
+  final int? j;
+  final int? doctorListIndex;
+  Past? doctorsData;
+  final DateTime? selectedDate;
+  bool? isReshedule;
   FlutterToast toast = new FlutterToast();
-  List<String> bookingIds = [];
-  final List<HealthOrganizationResult> healthOrganizationResult;
-  final List<ResultFromHospital> resultFromHospitalList;
-  final int doctorListPos;
-  Function(String) closePage;
-  Function() isRefresh;
-  bool isFromNotification;
-  bool isFromHospital;
+  List<String?> bookingIds = [];
+  final List<HealthOrganizationResult>? healthOrganizationResult;
+  final List<ResultFromHospital>? resultFromHospitalList;
+  final int? doctorListPos;
+  Function(String)? closePage;
+  Function()? isRefresh;
+  bool? isFromNotification;
+  bool? isFromHospital;
   dynamic body;
-  bool isFromFollowReschedule;
+  bool? isFromFollowReschedule;
 
-  bool isFromFollowUpApp;
-  bool isFromFollowUpTake;
+  bool? isFromFollowUpApp;
+  bool? isFromFollowUpTake;
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
@@ -88,7 +89,7 @@ class GetTimeSlots extends StatelessWidget {
     return Column(
       children: <Widget>[
         SessionList(
-          sessionData: dateSlotTimingsObj.sessions,
+          sessionData: dateSlotTimingsObj!.sessions,
           selectedPosition: (rowPos, itemPos) {
             rowPosition = rowPos;
             itemPosition = itemPos;
@@ -115,9 +116,9 @@ class GetTimeSlots extends StatelessWidget {
               onPressed: () {
                 if (isReshedule == true) {
                   String docSesstionID =
-                      dateSlotTimingsObj.sessions[rowPosition].doctorSessionId;
-                  String selectedSlot = dateSlotTimingsObj
-                      .sessions[rowPosition].slots[itemPosition].slotNumber
+                      dateSlotTimingsObj!.sessions![rowPosition].doctorSessionId!;
+                  String selectedSlot = dateSlotTimingsObj!
+                      .sessions![rowPosition].slots![itemPosition].slotNumber
                       .toString();
                   resheduleAppoitment(context, [doctorsData], selectedSlot,
                       selectedDate.toString().substring(0, 10), docSesstionID);
@@ -127,7 +128,7 @@ class GetTimeSlots extends StatelessWidget {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           var userId = PreferenceUtil.getStringValue(
-                              Constants.KEY_USERID);
+                              Constants.KEY_USERID)!;
                           profileValidationCheck(
                               context, rowPosition, itemPosition, userId);
                         } else {
@@ -138,7 +139,7 @@ class GetTimeSlots extends StatelessWidget {
                     } else {
                       //follow up appointment
                       navigateToConfirmBook(context, rowPosition, itemPosition,
-                          doctorsData.doctorFollowUpFee, true, true);
+                          doctorsData!.doctorFollowUpFee, true, true);
                     }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
@@ -160,7 +161,7 @@ class GetTimeSlots extends StatelessWidget {
   }
 
   navigateToConfirmBook(BuildContext context, int rowPos, int itemPos,
-      String followUpFee, bool isNewAppointment, bool isFollowUp) {
+      String? followUpFee, bool isNewAppointment, bool isFollowUp) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -172,7 +173,7 @@ class GetTimeSlots extends StatelessWidget {
             i: j,
             doctorListIndex: doctorListIndex,
             selectedDate: selectedDate,
-            sessionData: dateSlotTimingsObj.sessions,
+            sessionData: dateSlotTimingsObj!.sessions,
             rowPosition: rowPos,
             itemPosition: itemPos,
             isFollowUp: isFollowUp,
@@ -182,10 +183,10 @@ class GetTimeSlots extends StatelessWidget {
             doctorListPos: doctorListPos,
             isFromPaymentNotification: false,
             closePage: (value) {
-              closePage(value);
+              closePage!(value);
             },
             refresh: () {
-              isRefresh();
+              isRefresh!();
             },
             isFromHospital: isFromHospital,
             isFromFollowReschedule: isFromFollowReschedule,
@@ -195,7 +196,7 @@ class GetTimeSlots extends StatelessWidget {
         ));
   }
 
-  resheduleAppoitment(BuildContext context, List<Past> appointments,
+  resheduleAppoitment(BuildContext context, List<Past?> appointments,
       String slotNumber, String resheduledDate, String doctorSessionId) {
     resheduleAppointment(
             context, appointments, slotNumber, resheduledDate, doctorSessionId)
@@ -239,7 +240,7 @@ class GetTimeSlots extends StatelessWidget {
         toast.getToast(
             TranslationConstants.yourResheduleSuccess.t(), Colors.green);
         //TODO call the ns action api
-      } else if (value.message
+      } else if (value.message!
           .contains(TranslationConstants.notAvailable.t())) {
         toast.getToast(TranslationConstants.slotNotAvailable.t(), Colors.red);
       } else {
@@ -250,12 +251,12 @@ class GetTimeSlots extends StatelessWidget {
 
   Future<ResheduleModel> resheduleAppointment(
       BuildContext context,
-      List<Past> appointments,
+      List<Past?> appointments,
       String slotNumber,
       String resheduledDate,
       String doctorSessionId) async {
     for (int i = 0; i < appointments.length; i++) {
-      bookingIds.add(appointments[i].bookingId);
+      bookingIds.add(appointments[i]!.bookingId);
     }
     ResheduleAppointmentViewModel reshedule =
         Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
@@ -279,48 +280,48 @@ class GetTimeSlots extends StatelessWidget {
 
   addressValidation(BuildContext context, int rowPosition, int itemPosition) {
     if (myProfile != null) {
-      if (myProfile.isSuccess) {
-        if (myProfile.result != null) {
-          if (myProfile.result.gender != null &&
-              myProfile.result.gender.isNotEmpty) {
-            if (myProfile.result.dateOfBirth != null &&
-                myProfile.result.dateOfBirth.isNotEmpty) {
-              if (myProfile.result.additionalInfo != null) {
-                if ((myProfile.result.additionalInfo.height != null &&
-                        myProfile.result.additionalInfo.height.isNotEmpty) ||
-                    myProfile.result.additionalInfo.heightObj != null) {
-                  if (myProfile.result.additionalInfo.weight != null &&
-                      myProfile.result.additionalInfo.weight.isNotEmpty) {
-                    if (myProfile.result.userAddressCollection3 != null) {
-                      if (myProfile.result.userAddressCollection3.length > 0) {
-                        if (myProfile.result.userAddressCollection3[0]
+      if (myProfile!.isSuccess!) {
+        if (myProfile!.result != null) {
+          if (myProfile!.result!.gender != null &&
+              myProfile!.result!.gender!.isNotEmpty) {
+            if (myProfile!.result!.dateOfBirth != null &&
+                myProfile!.result!.dateOfBirth!.isNotEmpty) {
+              if (myProfile!.result!.additionalInfo != null) {
+                if ((myProfile!.result!.additionalInfo!.height != null &&
+                        myProfile!.result!.additionalInfo!.height!.isNotEmpty) ||
+                    myProfile!.result!.additionalInfo!.heightObj != null) {
+                  if (myProfile!.result!.additionalInfo!.weight != null &&
+                      myProfile!.result!.additionalInfo!.weight!.isNotEmpty) {
+                    if (myProfile!.result!.userAddressCollection3 != null) {
+                      if (myProfile!.result!.userAddressCollection3!.length > 0) {
+                        if (myProfile!.result!.userAddressCollection3![0]
                                     .addressLine1 !=
                                 null &&
-                            myProfile.result.userAddressCollection3[0]
-                                .addressLine1.isNotEmpty) {
-                          if (myProfile.result.userAddressCollection3[0]
+                            myProfile!.result!.userAddressCollection3![0]
+                                .addressLine1!.isNotEmpty) {
+                          if (myProfile!.result!.userAddressCollection3![0]
                                       .pincode !=
                                   null &&
-                              myProfile.result.userAddressCollection3[0].pincode
+                              myProfile!.result!.userAddressCollection3![0].pincode!
                                   .isNotEmpty) {
-                            if (myProfile.result.userAddressCollection3[0]
+                            if (myProfile!.result!.userAddressCollection3![0]
                                         .addressLine1 !=
                                     null &&
-                                myProfile.result.userAddressCollection3[0]
-                                    .addressLine1.isNotEmpty) {
-                              if (myProfile.result.userAddressCollection3[0]
+                                myProfile!.result!.userAddressCollection3![0]
+                                    .addressLine1!.isNotEmpty) {
+                              if (myProfile!.result!.userAddressCollection3![0]
                                           .addressLine1 !=
                                       null &&
-                                  myProfile.result.userAddressCollection3[0]
-                                      .addressLine1.isNotEmpty) {
-                                if (myProfile.result.userAddressCollection3[0]
+                                  myProfile!.result!.userAddressCollection3![0]
+                                      .addressLine1!.isNotEmpty) {
+                                if (myProfile!.result!.userAddressCollection3![0]
                                             .pincode !=
                                         null &&
-                                    myProfile.result.userAddressCollection3[0]
-                                        .pincode.isNotEmpty) {
+                                    myProfile!.result!.userAddressCollection3![0]
+                                        .pincode!.isNotEmpty) {
                                   patientAddressCheck(
-                                      myProfile
-                                          .result.userAddressCollection3[0],
+                                      myProfile!
+                                          .result!.userAddressCollection3![0],
                                       context,
                                       rowPosition,
                                       itemPosition);
@@ -333,11 +334,11 @@ class GetTimeSlots extends StatelessWidget {
                                     context, noAddress1, 'Go To Profile');
                               }
                             } else {
-                              if (myProfile.result.userAddressCollection3[0]
+                              if (myProfile!.result!.userAddressCollection3![0]
                                           .pincode ==
                                       null ||
-                                  myProfile.result.userAddressCollection3[0]
-                                      .pincode.isEmpty) {
+                                  myProfile!.result!.userAddressCollection3![0]
+                                      .pincode!.isEmpty) {
                                 CommonUtil().mSnackbar(
                                     context, no_addr1_zip, 'Go To Profile');
                               } else {
@@ -352,10 +353,10 @@ class GetTimeSlots extends StatelessWidget {
                             //CommonUtil().mSnackbar(context, noAddress, 'Add');
                           }
                         } else {
-                          if (myProfile.result.userAddressCollection3[0]
+                          if (myProfile!.result!.userAddressCollection3![0]
                                       .pincode ==
                                   null ||
-                              myProfile.result.userAddressCollection3[0].pincode
+                              myProfile!.result!.userAddressCollection3![0].pincode!
                                   .isEmpty) {
                             CommonUtil().mSnackbar(
                                 context, no_addr1_zip, 'Go To Profile');
@@ -410,14 +411,14 @@ class GetTimeSlots extends StatelessWidget {
 
   patientAddressCheck(UserAddressCollection3 userAddressCollection,
       BuildContext context, int rowPosition, int itemPosition) {
-    String address1 = userAddressCollection?.addressLine1 != null
+    String? address1 = userAddressCollection?.addressLine1 != null
         ? userAddressCollection.addressLine1
         : '';
-    String city = userAddressCollection?.city?.name != null
-        ? userAddressCollection.city.name
+    String? city = userAddressCollection?.city?.name != null
+        ? userAddressCollection.city!.name
         : '';
-    String state = userAddressCollection?.state?.name != null
-        ? userAddressCollection.state.name
+    String? state = userAddressCollection?.state?.name != null
+        ? userAddressCollection.state!.name
         : '';
 
     if (address1 != '' && city != '' && state != '') {

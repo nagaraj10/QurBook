@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -32,7 +33,7 @@ import 'package:myfhb/common/errors_widget.dart';
 
 class ChatHomeScreen extends StatefulWidget {
   ChatHomeScreen({
-    Key key,
+    Key? key,
     this.isHome = false,
     this.onBackPressed,
     this.careGiversList,
@@ -40,8 +41,8 @@ class ChatHomeScreen extends StatefulWidget {
   }) : super(key: key);
 
   final bool isHome;
-  final Function onBackPressed;
-  final List<CareGiverInfo> careGiversList;
+  final Function? onBackPressed;
+  final List<CareGiverInfo>? careGiversList;
   final bool isDynamicLink;
 
   @override
@@ -49,7 +50,7 @@ class ChatHomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<ChatHomeScreen> {
-  HomeScreenState({Key key});
+  HomeScreenState({Key? key});
 
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -57,7 +58,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   bool isLoading = false;
 
-  String patientId = '';
+  String? patientId = '';
   String patientName = '';
 
   ChatViewModel chatViewModel = ChatViewModel();
@@ -81,14 +82,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
     });
   }
 
-  Future<String> getPatientDetails() async {
+  Future<String?> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     print(patientId);
 
     MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.result != null
-        ? myProfile.result.firstName + myProfile.result.firstName
+        ? myProfile.result!.firstName! + myProfile.result!.firstName!
         : '';
     return patientId;
   }
@@ -112,7 +113,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     );
 
     firebaseMessaging.getToken().then((token) {
-      print('FCMToken: ' + token);
+      print('FCMToken: ' + token!);
 
       FirebaseFirestore.instance
           .collection(STR_USERS)
@@ -167,7 +168,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
         );
       }
     } else {
-      widget.onBackPressed();
+      widget.onBackPressed!();
     }
     return Future.value(false);
   }
@@ -314,7 +315,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget checkIfDoctorIdExist() {
-    return new FutureBuilder<String>(
+    return new FutureBuilder<String?>(
       future: getPatientDetails(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -362,22 +363,22 @@ class HomeScreenState extends State<ChatHomeScreen> {
         // List
         Container(
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-            stream: stream,
+            stream: stream as Stream<QuerySnapshot<Map<String, dynamic>>>?,
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (!snapshot.hasData) {
                 return CommonCircularIndicator();
               } else {
-                return countChatListUsers(patientId, snapshot) > 0
+                return countChatListUsers(patientId, snapshot)! > 0
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
                         itemBuilder: (context, index) => buildItem(
                             context,
-                            snapshot.data.docs[index],
+                            snapshot.data!.docs[index],
                             snapshot,
                             index,
                             careGiverIds),
-                        itemCount: snapshot.data.docs.length,
+                        itemCount: snapshot.data!.docs.length,
                       )
                     : Container(
                         child: Center(
@@ -415,7 +416,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
           .snapshots(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshotUser) {
         if (snapshotUser.hasData) {
-          String lastMessage = document[STR_LAST_MESSAGE];
+          String? lastMessage = document[STR_LAST_MESSAGE];
           if (document[STR_ID] == patientId) {
             return Container();
           } else {
@@ -430,8 +431,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   peerId: document.id,
                                   peerAvatar: document[STR_PHOTO_URL],
                                   peerName:
-                                      snapshotUser?.data[STR_NICK_NAME] != ''
-                                          ? snapshotUser?.data[STR_NICK_NAME]
+                                      snapshotUser?.data![STR_NICK_NAME] != ''
+                                          ? snapshotUser?.data![STR_NICK_NAME]
                                           : '',
                                   lastDate: getFormattedDateTime(
                                       (document[STR_CREATED_AT] as Timestamp)
@@ -477,11 +478,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                 color: Colors.grey[200],
                                                 child: Center(
                                                     child: Text(
-                                                  snapshotUser?.data[
+                                                  snapshotUser?.data![
                                                               STR_NICK_NAME] !=
                                                           ''
                                                       ? snapshotUser
-                                                          ?.data[STR_NICK_NAME]
+                                                          ?.data![STR_NICK_NAME]
                                                               [0]
                                                           .toString()
                                                           .toUpperCase()
@@ -517,13 +518,13 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   child: Text(
                                     /* toBeginningOfSentenceCase(
                                         snapshotUser.data[STR_NICK_NAME]), */
-                                    snapshotUser?.data[STR_NICK_NAME] != '' &&
-                                            snapshotUser?.data[STR_NICK_NAME] !=
+                                    (snapshotUser?.data![STR_NICK_NAME] != '' &&
+                                            snapshotUser?.data![STR_NICK_NAME] !=
                                                 null
-                                        ? snapshotUser?.data[STR_NICK_NAME]
+                                        ? snapshotUser?.data![STR_NICK_NAME]
                                             ?.toString()
                                             ?.capitalizeFirstofEach
-                                        : '',
+                                        : '')!,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
                                     style: TextStyle(
@@ -573,7 +574,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                   fontFamily:
                                                       variable.font_poppins),
                                             )
-                                      : '',
+                                      : '' as Widget?,
                                 ),
                                 SizedBox(
                                   height: 1,
@@ -651,11 +652,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                               ? ((notReadMSGSnapshot
                                                                           .hasData &&
                                                                       notReadMSGSnapshot
-                                                                              .data
+                                                                              .data!
                                                                               .docs
                                                                               .length >
                                                                           0)
-                                                                  ? '${notReadMSGSnapshot.data.docs.length}'
+                                                                  ? '${notReadMSGSnapshot.data!.docs.length}'
                                                                   : '')
                                                               : '',
                                                           style: TextStyle(
@@ -664,14 +665,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                                         ),
                                                         backgroundColor: (notReadMSGSnapshot.hasData &&
                                                                 notReadMSGSnapshot
-                                                                        .data
+                                                                        .data!
                                                                         .docs
                                                                         .length >
                                                                     0 &&
                                                                 notReadMSGSnapshot
                                                                     .hasData &&
                                                                 notReadMSGSnapshot
-                                                                        .data
+                                                                        .data!
                                                                         .docs
                                                                         .length >
                                                                     0)
@@ -736,8 +737,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
     return formattedDate;
   }
 
-  int countChatListUsers(myID, snapshot) {
-    int resultInt = snapshot.data.docs.length;
+  int? countChatListUsers(myID, snapshot) {
+    int? resultInt = snapshot.data.docs.length;
     for (var data in snapshot.data.docs) {
       if (data[STR_ID] == myID) {
         resultInt--;

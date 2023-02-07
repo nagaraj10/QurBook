@@ -1,6 +1,7 @@
+
 class UpdatePaymentStatusSubscribe {
-  bool isSuccess;
-  PaymentSubscribeResult result;
+  bool? isSuccess;
+  PaymentSubscribeResult? result;
 
   UpdatePaymentStatusSubscribe({this.isSuccess, this.result});
 
@@ -14,19 +15,19 @@ class UpdatePaymentStatusSubscribe {
     final data = <String, dynamic>{};
     data['isSuccess'] = isSuccess;
     if (result != null) {
-      data['result'] = result.toJson();
+      data['result'] = result!.toJson();
     }
     return data;
   }
 }
 
 class PaymentSubscribeResult {
-  PlanPackage planPackage;
-  String paymentId;
-  String paymentOrderId;
-  String paymentRequestId;
-  String paymentStatus;
-  PdfGenResult pdfGenResult;
+  PlanPackage? planPackage;
+  String? paymentId;
+  String? paymentOrderId;
+  String? paymentRequestId;
+  String? paymentStatus;
+  PdfGenResult? pdfGenResult;
 
   PaymentSubscribeResult(
       {this.planPackage,
@@ -52,36 +53,36 @@ class PaymentSubscribeResult {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (planPackage != null) {
-      data['planPackage'] = planPackage.toJson();
+      data['planPackage'] = planPackage!.toJson();
     }
     data['paymentId'] = paymentId;
     data['paymentOrderId'] = paymentOrderId;
     data['paymentRequestId'] = paymentRequestId;
     data['paymentStatus'] = paymentStatus;
     if (pdfGenResult != null) {
-      data['pdfGenResult'] = pdfGenResult.toJson();
+      data['pdfGenResult'] = pdfGenResult!.toJson();
     }
     return data;
   }
 }
 
 class PlanPackage {
-  int packageid;
-  int providerid;
-  int packcatid;
-  int careteamid;
-  String title;
-  String description;
-  String price;
-  int issubscription;
-  int ispublic;
-  String html;
-  int packageDuration;
-  int billingCycle;
-  String ts;
-  int deleted;
-  int docid;
-  Providers providers;
+  int? packageid;
+  int? providerid;
+  int? packcatid;
+  int? careteamid;
+  String? title;
+  String? description;
+  String? price;
+  int? issubscription;
+  int? ispublic;
+  String? html;
+  int? packageDuration;
+  int? billingCycle;
+  String? ts;
+  int? deleted;
+  int? docid;
+  Providers? providers;
 
   PlanPackage(
       {this.packageid,
@@ -140,20 +141,20 @@ class PlanPackage {
     data['deleted'] = deleted;
     data['docid'] = docid;
     if (providers != null) {
-      data['providers'] = providers.toJson();
+      data['providers'] = providers!.toJson();
     }
     return data;
   }
 }
 
 class Providers {
-  int providerid;
-  String title;
-  String description;
-  String metadata;
-  int deleted;
-  String linkid;
-  String ts;
+  int? providerid;
+  String? title;
+  String? description;
+  String? metadata;
+  int? deleted;
+  String? linkid;
+  String? ts;
 
   Providers(
       {this.providerid,
@@ -188,8 +189,8 @@ class Providers {
 }
 
 class PdfGenResult {
-  bool isSuccess;
-  Payload payload;
+  bool? isSuccess;
+  Payload? payload;
 
   PdfGenResult({this.isSuccess, this.payload});
 
@@ -203,17 +204,17 @@ class PdfGenResult {
     final data = Map<String, dynamic>();
     data['isSuccess'] = isSuccess;
     if (payload != null) {
-      data['payload'] = payload.toJson();
+      data['payload'] = payload!.toJson();
     }
     return data;
   }
 }
 
 class Payload {
-  ResponseMetadata responseMetadata;
-  String mD5OfMessageBody;
-  String messageId;
-  String sequenceNumber;
+  ResponseMetadata? responseMetadata;
+  String? mD5OfMessageBody;
+  String? messageId;
+  String? sequenceNumber;
 
   Payload(
       {this.responseMetadata,
@@ -233,7 +234,7 @@ class Payload {
   Map<String, dynamic> toJson() {
     final data = Map<String, dynamic>();
     if (responseMetadata != null) {
-      data['ResponseMetadata'] = responseMetadata.toJson();
+      data['ResponseMetadata'] = responseMetadata!.toJson();
     }
     data['MD5OfMessageBody'] = mD5OfMessageBody;
     data['MessageId'] = messageId;
@@ -243,7 +244,7 @@ class Payload {
 }
 
 class ResponseMetadata {
-  String requestId;
+  String? requestId;
 
   ResponseMetadata({this.requestId});
 

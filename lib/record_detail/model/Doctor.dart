@@ -1,25 +1,26 @@
+
 import '../../constants/fhb_parameters.dart' as parameters;
 
 class Doctor {
-  String id;
-  String name;
-  String addressLine1;
-  String addressLine2;
-  String website;
-  String googleMapUrl;
-  String phoneNumber1;
-  String phoneNumber2;
-  String phoneNumber3;
-  String phoneNumber4;
-  String email;
-  String state;
-  String city;
-  bool isActive;
-  String specialization;
-  bool isUserDefined;
-  String description;
-  String createdBy;
-  String lastModifiedOn;
+  String? id;
+  String? name;
+  String? addressLine1;
+  String? addressLine2;
+  String? website;
+  String? googleMapUrl;
+  String? phoneNumber1;
+  String? phoneNumber2;
+  String? phoneNumber3;
+  String? phoneNumber4;
+  String? email;
+  String? state;
+  String? city;
+  bool? isActive;
+  String? specialization;
+  bool? isUserDefined;
+  String? description;
+  String? createdBy;
+  String? lastModifiedOn;
 
   Doctor(
       {this.id,

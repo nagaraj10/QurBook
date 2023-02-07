@@ -1,3 +1,4 @@
+
 import '../../../../constants/fhb_parameters.dart' as parameters;
 
 class Payload {
@@ -33,40 +34,40 @@ class Payload {
     this.notificationListId,
   });
 
-  String type;
-  String meetingId;
-  String priority;
-  String appointmentDate;
-  String userName;
-  String doctorId;
+  String? type;
+  String? meetingId;
+  String? priority;
+  String? appointmentDate;
+  String? userName;
+  String? doctorId;
   dynamic payloadMeetingId;
-  String templateName;
-  String providerRequestId;
-  String bookingId;
-  String doctorSessionId;
-  String healthOrganizationId;
-  String plannedStartDateTime;
-  String redirectTo;
-  String healthRecordMetaIds;
-  String planId;
-  String userId;
-  String patientName;
-  String claimId;
-  String patientPhoneNumber;
-  String verificationCode;
-  String caregiverRequestor;
-  String caregiverReceiver;
-  String appointmentId;
-  String createdBy;
-  String careCoordinatorUserId;
-  String isFromCareCoordinator;
-  String isCareGiver;
-  String deliveredDateTime;
-  String senderProfilePic;
+  String? templateName;
+  String? providerRequestId;
+  String? bookingId;
+  String? doctorSessionId;
+  String? healthOrganizationId;
+  String? plannedStartDateTime;
+  String? redirectTo;
+  String? healthRecordMetaIds;
+  String? planId;
+  String? userId;
+  String? patientName;
+  String? claimId;
+  String? patientPhoneNumber;
+  String? verificationCode;
+  String? caregiverRequestor;
+  String? caregiverReceiver;
+  String? appointmentId;
+  String? createdBy;
+  String? careCoordinatorUserId;
+  late String isFromCareCoordinator;
+  late String isCareGiver;
+  String? deliveredDateTime;
+  String? senderProfilePic;
   dynamic uid;
-  String sheelaAudioMsgUrl;
-  bool isSheela;
-  String notificationListId;
+  String? sheelaAudioMsgUrl;
+  bool? isSheela;
+  String? notificationListId;
   dynamic eventId;
   Payload.fromJson(Map<String, dynamic> json) {
     type = json["type"];

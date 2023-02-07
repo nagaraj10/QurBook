@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,12 +10,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class RegimentWebView extends StatefulWidget {
-  final String title;
-  final String selectedUrl;
+  final String? title;
+  final String? selectedUrl;
 
   const RegimentWebView({
-    @required this.title,
-    @required this.selectedUrl,
+    required this.title,
+    required this.selectedUrl,
   });
 
   @override
@@ -22,7 +23,7 @@ class RegimentWebView extends StatefulWidget {
 }
 
 class _RegimentWebViewState extends State<RegimentWebView> {
-  WebViewController _controller;
+  WebViewController? _controller;
   bool isLoading = true;
 
   @override
@@ -56,7 +57,7 @@ class _RegimentWebViewState extends State<RegimentWebView> {
               Navigator.of(context).pop();
             },
           ),
-          title: Text(widget.title),
+          title: Text(widget.title!),
         ),
         body: Stack(
           children: <Widget>[

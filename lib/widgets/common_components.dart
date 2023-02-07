@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
@@ -29,7 +30,7 @@ class CommonComponents {
 
   showOverlayMessage(
       BuildContext context, String message, dynamic icon, Color color) async {
-    OverlayState overlayState = Overlay.of(context);
+    OverlayState overlayState = Overlay.of(context)!;
     OverlayEntry overlayEntry = OverlayEntry(
         builder: (context) => Positioned(
             top: 20.0,

@@ -1,14 +1,15 @@
+
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentRequestModel.dart';
 
 class PaymentGatewayDetail {
-  String sourceId;
-  String sourceCode;
-  ResponseInfo responseInfo;
-  String createdOn;
-  bool isActive;
-  String paymentGatewayRequestId;
-  String lastModifiedOn;
-  String id;
+  String? sourceId;
+  String? sourceCode;
+  ResponseInfo? responseInfo;
+  String? createdOn;
+  bool? isActive;
+  String? paymentGatewayRequestId;
+  String? lastModifiedOn;
+  String? id;
 
   PaymentGatewayDetail({this.sourceId,
     this.sourceCode,
@@ -37,7 +38,7 @@ class PaymentGatewayDetail {
     data['sourceId'] = this.sourceId;
     data['sourceCode'] = this.sourceCode;
     if (this.responseInfo != null) {
-      data['responseInfo'] = this.responseInfo.toJson();
+      data['responseInfo'] = this.responseInfo!.toJson();
     }
     data['createdOn'] = this.createdOn;
     data['isActive'] = this.isActive;
@@ -49,27 +50,27 @@ class PaymentGatewayDetail {
 }
 
 class ResponseInfo {
-  String id;
-  String phone;
-  String email;
-  String buyerName;
+  String? id;
+  String? phone;
+  String? email;
+  String? buyerName;
   var amount;
-  String purpose;
-  String expiresAt;
-  String status;
-  bool sendSms;
-  bool sendEmail;
-  String smsStatus;
-  String emailStatus;
-  String shorturl;
-  String longurl;
-  String redirectUrl;
-  String webhook;
-  bool allowRepeatedPayments;
-  String customerId;
+  String? purpose;
+  String? expiresAt;
+  String? status;
+  bool? sendSms;
+  bool? sendEmail;
+  String? smsStatus;
+  String? emailStatus;
+  String? shorturl;
+  String? longurl;
+  String? redirectUrl;
+  String? webhook;
+  bool? allowRepeatedPayments;
+  String? customerId;
   var createdAt;
-  String modifiedAt;
-  String paymentGateWay;
+  String? modifiedAt;
+  String? paymentGateWay;
 
   ResponseInfo({this.id,
     this.phone,
@@ -145,8 +146,8 @@ class ResponseInfo {
 }
 
 class PaymentRequestResult {
-  bool success;
-  PaymentRequestModel paymentRequest;
+  bool? success;
+  PaymentRequestModel? paymentRequest;
 
   PaymentRequestResult({this.success, this.paymentRequest});
 
@@ -161,7 +162,7 @@ class PaymentRequestResult {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
     if (this.paymentRequest != null) {
-      data['payment_request'] = this.paymentRequest.toJson();
+      data['payment_request'] = this.paymentRequest!.toJson();
     }
     return data;
   }

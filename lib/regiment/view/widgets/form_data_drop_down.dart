@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import '../../../src/utils/screenutils/size_extensions.dart';
 import '../../../common/CommonUtil.dart';
@@ -6,9 +7,9 @@ import '../../../constants/fhb_constants.dart' as Constants;
 
 class FormDataDropDown extends StatefulWidget {
   const FormDataDropDown({
-    @required this.fieldData,
-    @required this.updateValue,
-    @required this.canEdit,
+    required this.fieldData,
+    required this.updateValue,
+    required this.canEdit,
     this.isFromQurHomeSymptom = false,
   });
 

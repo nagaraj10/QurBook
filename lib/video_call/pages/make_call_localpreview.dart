@@ -1,3 +1,4 @@
+
 import 'package:agora_rtc_engine/rtc_local_view.dart' as RtcLocalView;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,7 +79,7 @@ class _MakeCallLocalPreviewState extends State<MakeCallLocalPreview> {
                             color: Colors.white,
                             onPressed: () {
                               try {
-                                Provider.of<RTCEngineProvider>(Get.context,
+                                Provider.of<RTCEngineProvider>(Get.context!,
                                         listen: false)
                                     ?.rtcEngine
                                     ?.switchCamera();

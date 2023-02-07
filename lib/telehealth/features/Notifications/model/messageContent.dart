@@ -1,6 +1,7 @@
+
 class MessageContent {
-  String messageBody;
-  String messageTitle;
+  String? messageBody;
+  String? messageTitle;
 
   MessageContent({this.messageBody, this.messageTitle});
 

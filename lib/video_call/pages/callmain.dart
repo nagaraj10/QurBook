@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:io';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -28,24 +29,24 @@ import '../../constants/fhb_constants.dart' as Constants;
 
 class CallMain extends StatefulWidget {
   /// non-modifiable channel name of the page
-  String channelName;
+  String? channelName;
 
-  String doctorName;
-  String doctorId;
-  String doctorPic;
+  String? doctorName;
+  String? doctorId;
+  String? doctorPic;
 
-  String patientId;
-  String patientName;
-  String patientPicUrl;
+  String? patientId;
+  String? patientName;
+  String? patientPicUrl;
 
   /// non-modifiable client role of the page
-  ClientRole role;
-  CallArguments arguments;
+  ClientRole? role;
+  CallArguments? arguments;
 
   ///check call is made from NS
-  bool isAppExists;
+  bool? isAppExists;
 
-  bool isWeb;
+  bool? isWeb;
 
   CallMain({
     this.channelName,
@@ -66,9 +67,9 @@ class CallMain extends StatefulWidget {
 }
 
 class _CallMainState extends State<CallMain> {
-  BuildContext globalContext;
+  late BuildContext globalContext;
 
-  RtcEngine rtcEngine;
+  RtcEngine? rtcEngine;
 
   bool _isFirstTime = true;
 
@@ -92,8 +93,8 @@ class _CallMainState extends State<CallMain> {
 
   @override
   void dispose() {
-    rtcEngine.leaveChannel();
-    rtcEngine.destroy();
+    rtcEngine!.leaveChannel();
+    rtcEngine!.destroy();
     Provider.of<RTCEngineProvider>(context, listen: false)?.isVideoPaused =
         false;
     super.dispose();
@@ -108,7 +109,7 @@ class _CallMainState extends State<CallMain> {
     final audioCallStatus =
         Provider.of<AudioCallProvider>(context, listen: false);
     final videoIconStatus =
-        Provider.of<VideoIconProvider>(Get.context, listen: false);
+        Provider.of<VideoIconProvider>(Get.context!, listen: false);
     videoIconStatus?.isVideoOn = audioCallStatus?.isAudioCall ? false : true;
     //_isVideoHide = audioCallStatus?.isAudioCall;
 
@@ -144,15 +145,15 @@ class _CallMainState extends State<CallMain> {
                         isAppExists: widget.isAppExists,
                         doctorName: widget.doctorName,
                         isWeb: Platform.isIOS
-                            ? widget.arguments.isWeb
+                            ? widget.arguments!.isWeb
                             : widget.isWeb ?? false,
                       ),
                       LocalPreview(
                         rtcEngine: rtcEngine,
                       ),
                       CustomAppBar(Platform.isIOS
-                          ? widget.arguments.userName
-                          : widget.doctorName),
+                          ? widget.arguments!.userName!
+                          : widget.doctorName!),
                       Consumer<HideProvider>(builder: (context, status, child) {
                         if (status.isAudioSwitchToVideo >= 0) {
                           _isVideoHide =
@@ -173,7 +174,7 @@ class _CallMainState extends State<CallMain> {
                                     widget.role,
                                     widget.isAppExists,
                                     Platform.isIOS
-                                        ? widget.arguments.doctorId!=null?widget.arguments.doctorId:""
+                                        ? widget.arguments!.doctorId!=null?widget.arguments!.doctorId:""
                                         : widget.doctorId!=null?widget.doctorId:"",
                                     (isMute, isVideoHide) {
                                       _isMute = isMute;
@@ -187,7 +188,7 @@ class _CallMainState extends State<CallMain> {
                                     widget.patientName,
                                     widget.patientPicUrl,
                                     Platform.isIOS
-                                        ? widget.arguments.channelName
+                                        ? widget.arguments!.channelName
                                         : widget.channelName,
                                     widget.isWeb,
                                   ),
@@ -201,7 +202,7 @@ class _CallMainState extends State<CallMain> {
                       SizedBoxWidget(
                         height: 20.0.h,
                       ),
-                      PrescriptionModule(isPatientSwitched,widget.patientName,widget.patientId),
+                      PrescriptionModule(isPatientSwitched,widget.patientName!,widget.patientId!),
                     ],
                   )
                 : CommonCircularIndicator(),
@@ -212,7 +213,7 @@ class _CallMainState extends State<CallMain> {
   }
 
   Future<bool> _onBackPressed() {
-    return userAlert() ?? false;
+    return userAlert().then((value) => value as bool) ?? false as Future<bool>;
   }
 
   Future userAlert() {
@@ -252,7 +253,7 @@ class _CallMainState extends State<CallMain> {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
-                            if (widget.isAppExists) {
+                            if (widget.isAppExists!) {
                               Navigator.of(context).pop(true);
                               Navigator.pop(context);
                             } else {

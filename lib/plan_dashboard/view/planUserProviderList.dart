@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../common/CommonUtil.dart';
@@ -31,25 +32,25 @@ class SearchListHome extends StatefulWidget {
 
 class _SearchListState extends State<SearchListHome> {
   PlanViewModel myPlanViewModel = PlanViewModel();
-  SearchListModel searchModel;
+  SearchListModel? searchModel;
   SearchListService searchListService = SearchListService();
 
   //bool isListVisible = false;
   bool isLoaderVisible = false;
 
-  Future<SearchListModel> providerList;
+  Future<SearchListModel>? providerList;
 
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocus = FocusNode();
   final GlobalKey _hospitalKey = GlobalKey();
-  bool isFirst;
-  BuildContext _myContext;
+  late bool isFirst;
+  late BuildContext _myContext;
 
-  List<SearchListResult> providerListSelected = [];
+  List<SearchListResult>? providerListSelected = [];
 
   @override
   void initState() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
@@ -58,19 +59,19 @@ class _SearchListState extends State<SearchListHome> {
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
     try {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
         Future.delayed(
             Duration(milliseconds: 1000),
             () => isFirst
                 ? null
-                : ShowCaseWidget.of(_myContext).startShowCase([_hospitalKey]));
+                : ShowCaseWidget.of(_myContext)!.startShowCase([_hospitalKey]));
       });
     } catch (e) {}
   }
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     super.dispose();
   }
 
@@ -110,8 +111,8 @@ class _SearchListState extends State<SearchListHome> {
                       ),
                     )),
                 Expanded(
-                    child: searchModel != null ?? searchModel.isSuccess
-                        ? searchListView(searchModel.result)
+                    child: searchModel != null ?? searchModel!.isSuccess!
+                        ? searchListView(searchModel!.result)
                         : getProviderList())
               ],
             ),
@@ -159,9 +160,9 @@ class _SearchListState extends State<SearchListHome> {
         } else {
           if (snapshot?.hasData &&
               snapshot?.data?.result != null &&
-              snapshot?.data?.result.isNotEmpty) {
+              snapshot?.data?.result!.isNotEmpty) {
             providerListSelected = snapshot?.data?.result;
-            return searchListView(snapshot.data.result);
+            return searchListView(snapshot.data!.result);
           } else {
             return SafeArea(
               child: SizedBox(
@@ -184,7 +185,7 @@ class _SearchListState extends State<SearchListHome> {
         isLoaderVisible = true;
       });
       await searchListService.getSearchList(title).then((value) {
-        if (value.isSuccess) {
+        if (value.isSuccess!) {
           if (value.result != null) {
             setState(() {
               isLoaderVisible = false;
@@ -247,7 +248,7 @@ class _SearchListState extends State<SearchListHome> {
     );
   }*/
 
-  Widget searchListView(List<SearchListResult> searchListResult) {
+  Widget searchListView(List<SearchListResult>? searchListResult) {
     return (searchListResult != null && searchListResult.isNotEmpty)
         ? ListView.builder(
             shrinkWrap: true,
@@ -327,7 +328,7 @@ class _SearchListState extends State<SearchListHome> {
                       children: [
                         Text(
                           searchList[i].title != null
-                              ? toBeginningOfSentenceCase(searchList[i].title)
+                              ? toBeginningOfSentenceCase(searchList[i].title)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,
@@ -340,7 +341,7 @@ class _SearchListState extends State<SearchListHome> {
                         Text(
                           searchList[i].description != null
                               ? toBeginningOfSentenceCase(
-                                  searchList[i].description)
+                                  searchList[i].description)!
                               : '',
                           style: TextStyle(
                             fontSize: 15.0.sp,

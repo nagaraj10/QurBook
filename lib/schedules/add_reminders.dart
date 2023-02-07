@@ -1,3 +1,4 @@
+
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,7 +14,7 @@ import '../constants/variable_constant.dart' as variable;
 import '../src/utils/screenutils/size_extensions.dart';
 
 class AddReminder extends StatefulWidget {
-  final ReminderModel model;
+  final ReminderModel? model;
 
   const AddReminder({this.model});
 
@@ -25,9 +26,9 @@ class _AddReminderState extends State<AddReminder> {
   bool isUpdate = false;
   List<bool> isSelected = [false, false, false];
 
-  static DateTime selectedDate;
-  static TimeOfDay selectedTime;
-  String id = '';
+  static DateTime? selectedDate;
+  static TimeOfDay? selectedTime;
+  String? id = '';
   String myCurrentDate = '';
   String myCurrentTime = '';
 
@@ -37,15 +38,15 @@ class _AddReminderState extends State<AddReminder> {
   void initState() {
     if (widget.model != null) {
       isUpdate = true;
-      tileContoller.text = widget.model.title;
-      notesController.text = widget.model.notes;
-      final timeArray = widget.model.time.split(':');
-      selectedDate = DateTime.parse(widget.model.date);
+      tileContoller.text = widget.model!.title!;
+      notesController.text = widget.model!.notes!;
+      final timeArray = widget.model!.time!.split(':');
+      selectedDate = DateTime.parse(widget.model!.date!);
       selectedTime = TimeOfDay(
           hour: int.parse(timeArray[0]),
           minute: int.parse(timeArray[1].substring(0, 2)));
       var intervalIndex =
-          variable.selectedInterval.indexOf(widget.model.interval);
+          variable.selectedInterval.indexOf(widget.model!.interval);
       isSelected[intervalIndex] = true;
     } else {
       isUpdate = false;
@@ -62,7 +63,7 @@ class _AddReminderState extends State<AddReminder> {
 
   int intervalIndex = 0;
 
-  SharedPreferences prefs;
+  SharedPreferences? prefs;
   dynamic detailsList =
       List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList = List();
@@ -151,7 +152,7 @@ class _AddReminderState extends State<AddReminder> {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                      FHBUtils().formatTimeOfDay(selectedTime)),
+                                      FHBUtils().formatTimeOfDay(selectedTime!)),
                                   SizedBox(width: 10.0.w),
                                   Icon(
                                     Icons.alarm,
@@ -270,7 +271,7 @@ class _AddReminderState extends State<AddReminder> {
   Future<Null> _selectDate(BuildContext context) async {
     final pickedDate = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: selectedDate!,
         firstDate: DateTime.now().subtract(Duration(days: 1)),
         lastDate: DateTime(2100));
 
@@ -280,12 +281,12 @@ class _AddReminderState extends State<AddReminder> {
       });
     }
 
-    if (FHBUtils().checkdate(selectedDate)) {
+    if (FHBUtils().checkdate(selectedDate!)) {
       setState(() {
         _isTimeAfter = true;
       });
     } else {
-      if (FHBUtils().checkTime(selectedTime)) {
+      if (FHBUtils().checkTime(selectedTime!)) {
         setState(() {
           _isTimeAfter = true;
         });
@@ -300,11 +301,11 @@ class _AddReminderState extends State<AddReminder> {
   Future<Null> _selectTime(BuildContext context) async {
     final pickedTime = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: selectedTime!,
       builder: (context, child) {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-          child: child,
+          child: child!,
         );
       },
     );
@@ -315,8 +316,8 @@ class _AddReminderState extends State<AddReminder> {
       });
     }
 
-    if (!FHBUtils().checkdate(selectedDate)) {
-      if (FHBUtils().checkTime(selectedTime)) {
+    if (!FHBUtils().checkdate(selectedDate!)) {
+      if (FHBUtils().checkTime(selectedTime!)) {
         setState(() {
           _isTimeAfter = true;
         });
@@ -346,8 +347,8 @@ class _AddReminderState extends State<AddReminder> {
           notes: notesController.text,
           interval: variable.selectedInterval[intervalIndex],
           date: selectedDate.toString(),
-          time: FHBUtils().formatTimeOfDay(selectedTime),
-          id: isUpdate ? id = widget.model.id : DateTime.now().toString());
+          time: FHBUtils().formatTimeOfDay(selectedTime!),
+          id: isUpdate ? id = widget.model!.id : DateTime.now().toString());
 
       if (isUpdate) {
         await FHBUtils().update(variable.strremainder, model).then((res) {
@@ -371,12 +372,12 @@ class _AddReminderState extends State<AddReminder> {
         priority: Priority.high);
     final iosPlatformChannelSpecifies = IOSNotificationDetails();
     final platformChannelSpecifies = NotificationDetails();
-    final timeArray = model.time.split(':');
+    final timeArray = model.time!.split(':');
     var hour = int.parse(timeArray[0]);
     final mintues = int.parse(timeArray[1].substring(0, 2));
     final isAMPM = timeArray[1].substring(3);
     final dayFormat =
-        DateFormat(variable.strFormatEE).format(DateTime.parse(model.date));
+        DateFormat(variable.strFormatEE).format(DateTime.parse(model.date!));
     final weekDays = {
       variable.strSunday: 0,
       variable.strMonday: 1,
@@ -409,14 +410,14 @@ class _AddReminderState extends State<AddReminder> {
               2,
               model.title,
               model.notes,
-              Day.values[myCurrentDay],
+              Day.values[myCurrentDay!],
               time,
               platformChannelSpecifies);
         }
         break;
       case variable.strMonth:
         {
-          final time = DateTime.parse(widget.model.date);
+          final time = DateTime.parse(widget.model!.date!);
           await flutterLocalNotificationsPlugin.schedule(
               3, model.title, model.notes, time, platformChannelSpecifies);
         }

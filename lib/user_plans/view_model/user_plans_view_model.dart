@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -11,7 +12,7 @@ class UserPlansViewModel extends ChangeNotifier {
   Future<void> getUserPlanInfo() async {
     UserPlansResponseModel userPlansData =
         await UserPlansService.getUserPlanInfo();
-    if (userPlansData?.isSuccess &&
+    if (userPlansData?.isSuccess! &&
         ((userPlansData?.result?.length ?? 0) > 0)) {
       await PreferenceUtil.saveString(KEY_MEMBERSHIP, GOLD_MEMBERSHIP);
       isGoldMember = true;

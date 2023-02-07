@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import '../../../common/PreferenceUtil.dart';
@@ -12,19 +13,19 @@ import '../../../constants/variable_constant.dart' as variable;
 import '../../../constants/fhb_constants.dart' as Constants;
 
 class CategoryListBlock implements BaseBloc {
-  CategoryResponseListRepository _categoryResponseListRepository;
-  StreamController _categoryListControlller;
-  StreamController _categoryListControlllers;
+  late CategoryResponseListRepository _categoryResponseListRepository;
+  StreamController? _categoryListControlller;
+  StreamController? _categoryListControlllers;
 
   StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink =>
-      _categoryListControlller.sink;
+      _categoryListControlller!.sink as StreamSink<ApiResponse<CategoryResponseList>>;
   Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
-      _categoryListControlller.stream;
+      _categoryListControlller!.stream as Stream<ApiResponse<CategoryResponseList>>;
 
   StreamSink<ApiResponse<CategoryDataList>> get categoryListSinks =>
-      _categoryListControlllers.sink;
+      _categoryListControlllers!.sink as StreamSink<ApiResponse<CategoryDataList>>;
   Stream<ApiResponse<CategoryDataList>> get categoryListStreams =>
-      _categoryListControlllers.stream;
+      _categoryListControlllers!.stream as Stream<ApiResponse<CategoryDataList>>;
 
   @override
   void dispose() {
@@ -41,8 +42,8 @@ class CategoryListBlock implements BaseBloc {
     _categoryResponseListRepository = CategoryResponseListRepository();
   }
 
-  Future<CategoryResponseList> getCategoryList() async {
-    CategoryResponseList categoryResponseList;
+  Future<CategoryResponseList?> getCategoryList() async {
+    CategoryResponseList? categoryResponseList;
     categoryListSink.add(ApiResponse.loading(variable.strGettingCategory));
     try {
       categoryResponseList =
@@ -54,15 +55,15 @@ class CategoryListBlock implements BaseBloc {
     return categoryResponseList;
   }
 
-  Future<CategoryDataList> getCategoryLists() async {
-    CategoryDataList categoryDataList;
+  Future<CategoryDataList?> getCategoryLists() async {
+    CategoryDataList? categoryDataList;
     categoryListSinks.add(ApiResponse.loading(variable.strGettingCategory));
     try {
       categoryDataList =
           await _categoryResponseListRepository.getCategoryLists();
 
       await PreferenceUtil.saveCategoryList(
-          Constants.KEY_CATEGORYLIST, categoryDataList.result);
+          Constants.KEY_CATEGORYLIST, categoryDataList.result!);
 
       categoryListSinks.add(ApiResponse.completed(categoryDataList));
     } catch (e) {

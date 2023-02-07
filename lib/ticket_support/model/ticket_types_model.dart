@@ -1,3 +1,4 @@
+
 // To parse this JSON data, do
 //
 //     final ticketTypesModel = ticketTypesModelFromJson(jsonString);
@@ -17,9 +18,9 @@ class TicketTypesModel {
     this.ticketTypeResults,
   });
 
-  bool isSuccess;
-  String message;
-  List<TicketTypesResult> ticketTypeResults;
+  bool? isSuccess;
+  String? message;
+  List<TicketTypesResult>? ticketTypeResults;
 
   factory TicketTypesModel.fromJson(Map<String, dynamic> json) =>
       TicketTypesModel(
@@ -32,7 +33,7 @@ class TicketTypesModel {
   Map<String, dynamic> toJson() => {
         "isSuccess": isSuccess,
         "message": message,
-        "result": List<dynamic>.from(ticketTypeResults.map((x) => x.toJson())),
+        "result": List<dynamic>.from(ticketTypeResults!.map((x) => x.toJson())),
       };
 }
 
@@ -46,12 +47,12 @@ class TicketTypesResult {
     this.additionalInfo,
   });
 
-  List<Priority> priorities;
-  String id;
-  String name;
-  String iconUrl;
-  int v;
-  AdditionalInfo additionalInfo;
+  List<Priority>? priorities;
+  String? id;
+  String? name;
+  String? iconUrl;
+  int? v;
+  AdditionalInfo? additionalInfo;
 
   factory TicketTypesResult.fromJson(Map<String, dynamic> json) =>
       TicketTypesResult(
@@ -67,12 +68,12 @@ class TicketTypesResult {
       );
 
   Map<String, dynamic> toJson() => {
-        "priorities": List<dynamic>.from(priorities.map((x) => x.toJson())),
+        "priorities": List<dynamic>.from(priorities!.map((x) => x.toJson())),
         "_id": id,
         "name": name,
         "iconUrl": iconUrl,
         "__v": v,
-        "additionalInfo": additionalInfo.toJson()
+        "additionalInfo": additionalInfo!.toJson()
       };
 }
 
@@ -89,15 +90,15 @@ class Priority {
     this.priorityId,
   });
 
-  int overdueIn;
-  String htmlColor;
-  String id;
-  String name;
-  int migrationNum;
-  bool priorityDefault;
-  int v;
-  String durationFormatted;
-  String priorityId;
+  int? overdueIn;
+  String? htmlColor;
+  String? id;
+  String? name;
+  int? migrationNum;
+  bool? priorityDefault;
+  int? v;
+  String? durationFormatted;
+  String? priorityId;
 
   factory Priority.fromJson(Map<String, dynamic> json) => Priority(
         overdueIn: json["overdueIn"],
@@ -125,8 +126,8 @@ class Priority {
 }
 
 class AdditionalInfo {
-  List<Field> field;
-  String healthOrgTypeId;
+  List<Field>? field;
+  String? healthOrgTypeId;
 
   AdditionalInfo({this.field,this.healthOrgTypeId});
 
@@ -135,7 +136,7 @@ class AdditionalInfo {
       if (json['field'] != null) {
             field = <Field>[];
             json['field'].forEach((v) {
-              field.add(new Field.fromJson(v));
+              field!.add(new Field.fromJson(v));
             });
           }
       healthOrgTypeId = json['healthOrgTypeId'];
@@ -148,7 +149,7 @@ class AdditionalInfo {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     try {
       if (this.field != null) {
-            data['field'] = this.field.map((v) => v.toJson()).toList();
+            data['field'] = this.field!.map((v) => v.toJson()).toList();
           }
       data['healthOrgTypeId'] = this.healthOrgTypeId;
     } catch (e) {
@@ -159,19 +160,19 @@ class AdditionalInfo {
 }
 
 class Field {
-  String name;
-  String type;
-  String field;
-  bool isDoctor;
-  bool isHospital;
-  bool isCategory;
-  bool isLab;
-  bool isRequired;
-  List<FieldData> fieldData;
-  String displayName;
-  String placeholder;
-  FieldData selValueDD;
-  String isVisible;
+  String? name;
+  String? type;
+  String? field;
+  bool? isDoctor;
+  bool? isHospital;
+  bool? isCategory;
+  bool? isLab;
+  bool? isRequired;
+  List<FieldData>? fieldData;
+  String? displayName;
+  String? placeholder;
+  FieldData? selValueDD;
+  String? isVisible;
 
   Field(
       {this.name,
@@ -197,7 +198,7 @@ class Field {
       if (json['data'] != null) {
         fieldData = <FieldData>[];
         json['data'].forEach((v) {
-          fieldData.add(new FieldData.fromJson(v));
+          fieldData!.add(new FieldData.fromJson(v));
         });
       }
       displayName = json['display_name'];
@@ -221,7 +222,7 @@ class Field {
       data['isLab'] = this.isLab;
       data['is_required'] = this.isRequired;
       if (this.fieldData != null) {
-            data['data'] = this.fieldData.map((v) => v.toJson()).toList();
+            data['data'] = this.fieldData!.map((v) => v.toJson()).toList();
           }
       data['display_name'] = this.displayName;
       data['placeholder'] = this.placeholder;
@@ -235,9 +236,9 @@ class Field {
 }
 
 class FieldData {
-  String id;
-  String name;
-  String fieldName;
+  String? id;
+  String? name;
+  String? fieldName;
 
   FieldData({this.id, this.name,this.fieldName=null});
 

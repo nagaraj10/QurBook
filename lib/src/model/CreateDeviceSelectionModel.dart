@@ -1,7 +1,8 @@
+
 class CreateDeviceSelectionModel {
-  bool isSuccess;
-  String message;
-  String result;
+  bool? isSuccess;
+  String? message;
+  String? result;
 
   CreateDeviceSelectionModel({this.isSuccess, this.message, this.result});
 

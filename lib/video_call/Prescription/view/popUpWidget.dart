@@ -1,40 +1,41 @@
+
 import 'dart:ui';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowMoreTextPopup {
-  double _popupWidth = 200.0.h;
-  double _popupHeight = 200.0.h;
+  double? _popupWidth = 200.0.h;
+  double? _popupHeight = 200.0.h;
   double arrowHeight = 10.0.h;
-  OverlayEntry _entry;
-  Widget _Widget;
-  TextStyle _textStyle;
-  Offset _offset;
-  Rect _showRect;
+  late OverlayEntry _entry;
+  Widget? _Widget;
+  TextStyle? _textStyle;
+  Offset? _offset;
+  late Rect _showRect;
   bool _isDownArrow = true;
 
-  VoidCallback dismissCallback;
+  VoidCallback? dismissCallback;
 
-  Size _screenSize;
+  late Size _screenSize;
 
   BuildContext context;
-  Color _backgroundColor;
+  Color? _backgroundColor;
 
   bool _isVisible = false;
 
-  BorderRadius _borderRadius;
-  EdgeInsetsGeometry _padding;
+  BorderRadius? _borderRadius;
+  EdgeInsetsGeometry? _padding;
 
   ShowMoreTextPopup(this.context,
-      {double height,
-      double width,
-      VoidCallback onDismiss,
-      Color backgroundColor,
-      Widget widget,
-      TextStyle textStyle,
-      BorderRadius borderRadius,
-      EdgeInsetsGeometry padding}) {
+      {double? height,
+      double? width,
+      VoidCallback? onDismiss,
+      Color? backgroundColor,
+      Widget? widget,
+      TextStyle? textStyle,
+      BorderRadius? borderRadius,
+      EdgeInsetsGeometry? padding}) {
     this.dismissCallback = onDismiss;
     this._popupHeight = height;
     this._popupWidth = width;
@@ -47,14 +48,14 @@ class ShowMoreTextPopup {
   }
 
   /// Shows a popup near a widget with key [widgetKey] or [rect].
-  void show({Rect rect, GlobalKey widgetKey}) {
+  void show({Rect? rect, GlobalKey? widgetKey}) {
     if (rect == null && widgetKey == null) {
       print("both 'rect' and 'key' can't be null");
       return;
     }
 
     this._Widget = _Widget ?? this._Widget;
-    this._showRect = rect ?? _getWidgetGlobalRect(widgetKey);
+    this._showRect = rect ?? _getWidgetGlobalRect(widgetKey!);
     this._screenSize = window.physicalSize / window.devicePixelRatio;
     this.dismissCallback = dismissCallback;
 
@@ -64,7 +65,7 @@ class ShowMoreTextPopup {
       return buildPopupLayout(_offset);
     });
 
-    Overlay.of(context).insert(_entry);
+    Overlay.of(context)!.insert(_entry);
     _isVisible = true;
   }
 
@@ -74,7 +75,7 @@ class ShowMoreTextPopup {
 
   /// Returns globalRect of widget with key [key]
   Rect _getWidgetGlobalRect(GlobalKey key) {
-    RenderBox renderBox = key.currentContext.findRenderObject();
+    RenderBox renderBox = key.currentContext!.findRenderObject() as RenderBox;
     var offset = renderBox.localToGlobal(Offset.zero);
     return Rect.fromLTWH(
         offset.dx, offset.dy, renderBox.size.width, renderBox.size.height);
@@ -82,17 +83,17 @@ class ShowMoreTextPopup {
 
   /// Returns calculated widget offset using [context]
   Offset _calculateOffset(BuildContext context) {
-    double dx = _showRect.left + _showRect.width / 2.0 - _popupWidth / 2.0;
+    double dx = _showRect.left + _showRect.width / 2.0 - _popupWidth! / 2.0;
     if (dx < 10.0) {
       dx = 10.0;
     }
 
-    if (dx + _popupWidth > _screenSize.width && dx > 10.0) {
-      double tempDx = _screenSize.width - _popupWidth - 10;
+    if (dx + _popupWidth! > _screenSize.width && dx > 10.0) {
+      double tempDx = _screenSize.width - _popupWidth! - 10;
       if (tempDx > 10) dx = tempDx;
     }
 
-    double dy = _showRect.top - _popupHeight;
+    double dy = _showRect.top - _popupHeight!;
     if (dy <= MediaQuery.of(context).padding.top + 10) {
       // not enough space above, show popup under the widget.
       dy = arrowHeight + _showRect.height + _showRect.top;
@@ -106,7 +107,7 @@ class ShowMoreTextPopup {
   }
 
   /// Builds Layout of popup for specific [offset]
-  LayoutBuilder buildPopupLayout(Offset offset) {
+  LayoutBuilder buildPopupLayout(Offset? offset) {
     return LayoutBuilder(builder: (context, constraints) {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
@@ -121,8 +122,8 @@ class ShowMoreTextPopup {
               Positioned(
                 left: _showRect.left + _showRect.width / 2.0 - 7.5,
                 top: _isDownArrow
-                    ? offset.dy + _popupHeight
-                    : offset.dy - arrowHeight,
+                    ? offset!.dy + _popupHeight!
+                    : offset!.dy - arrowHeight,
                 child: CustomPaint(
                   size: Size(15.0, arrowHeight),
                   painter: TrianglePainter(
@@ -162,7 +163,7 @@ class ShowMoreTextPopup {
     _entry.remove();
     _isVisible = false;
     if (dismissCallback != null) {
-      dismissCallback();
+      dismissCallback!();
     }
   }
 }
@@ -171,7 +172,7 @@ class ShowMoreTextPopup {
 /// to point specific widget
 class TrianglePainter extends CustomPainter {
   bool isDownArrow;
-  Color color;
+  Color? color;
 
   TrianglePainter({this.isDownArrow = true, this.color});
 
@@ -181,7 +182,7 @@ class TrianglePainter extends CustomPainter {
     Path path = new Path();
     Paint paint = new Paint();
     paint.strokeWidth = 2.0;
-    paint.color = color;
+    paint.color = color!;
     paint.style = PaintingStyle.fill;
 
     if (isDownArrow) {

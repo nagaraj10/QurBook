@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
@@ -24,7 +25,7 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'MyProfilePage.dart';
 
 class UserAccounts extends StatefulWidget {
-  UserAccountsArguments arguments;
+  UserAccountsArguments? arguments;
 
   UserAccounts({this.arguments});
 
@@ -35,14 +36,14 @@ class UserAccounts extends StatefulWidget {
 class _UserAccountsState extends State<UserAccounts>
     with SingleTickerProviderStateMixin {
   double sliverBarHeight = 220;
-  TabController _sliverTabController;
+  TabController? _sliverTabController;
   int selectedTab = 0;
   bool _isEditable = false;
-  File imageURIProfile, profileImage;
+  File? imageURIProfile, profileImage;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
 
-  MyProfileModel myProfile;
+  MyProfileModel? myProfile;
   bool islogout = false;
 
   @override
@@ -51,19 +52,19 @@ class _UserAccountsState extends State<UserAccounts>
     PreferenceUtil.init();
     //fetchUserProfileInfo();
     _sliverTabController = TabController(
-        vsync: this, length: 4, initialIndex: widget.arguments.selectedIndex);
-    _sliverTabController.addListener(_handleSelected);
+        vsync: this, length: 4, initialIndex: widget.arguments!.selectedIndex!);
+    _sliverTabController!.addListener(_handleSelected);
   }
 
   fetchUserProfileInfo() async {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
   void _handleSelected() {
-    FocusManager.instance.primaryFocus.unfocus();
+    FocusManager.instance.primaryFocus!.unfocus();
     this.setState(() {
-      selectedTab = _sliverTabController.index;
+      selectedTab = _sliverTabController!.index;
 //      if (selectedTab != 0) {
       sliverBarHeight = 50;
 //      } else {

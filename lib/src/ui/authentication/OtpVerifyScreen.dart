@@ -1,3 +1,4 @@
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,16 +22,16 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
-  final String enteredMobNumber;
-  final String selectedCountryCode;
-  final bool fromSignIn;
-  final bool fromSignUp;
-  final bool forEmailVerify;
+  final String? enteredMobNumber;
+  final String? selectedCountryCode;
+  final bool? fromSignIn;
+  final bool? fromSignUp;
+  final bool? forEmailVerify;
 
   const OtpVerifyScreen(
-      {Key key,
-      @required this.enteredMobNumber,
-      @required this.selectedCountryCode,
+      {Key? key,
+      required this.enteredMobNumber,
+      required this.selectedCountryCode,
       this.fromSignIn,
       this.fromSignUp,
       this.forEmailVerify})
@@ -47,8 +48,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   TextEditingController controller4 = new TextEditingController(text: '');
   TextEditingController currController = new TextEditingController(text: '');
 
-  OTPVerifyBloc _otpVerifyBloc;
-  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+  late OTPVerifyBloc _otpVerifyBloc;
+  late AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
@@ -174,7 +175,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       key: scaffold_state,
       body: Column(
         children: <Widget>[
-          !widget.forEmailVerify
+          !widget.forEmailVerify!
               ? Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
@@ -186,7 +187,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               : Container(
                   height: 10.0.h,
                 ),
-          widget.forEmailVerify || widget.fromSignIn
+          widget.forEmailVerify! || widget.fromSignIn!
               ? Expanded(
                   child: ImageIcon(
                     AssetImage(variable.icon_otp),
@@ -195,7 +196,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ),
                 )
               : SizedBox(height: 0.0.h),
-          widget.forEmailVerify
+          widget.forEmailVerify!
               ? Column(
                   children: <Widget>[
                     Padding(
@@ -213,7 +214,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                     Constants.PROFILE_EMAIL) !=
                                 null
                             ? PreferenceUtil.getStringValue(
-                                Constants.PROFILE_EMAIL)
+                                Constants.PROFILE_EMAIL)!
                             : '',
                         style: TextStyle(
                             color: Colors.black38, fontWeight: FontWeight.w500),
@@ -253,7 +254,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     onPressed: () {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
-                          if (widget.forEmailVerify) {
+                          if (widget.forEmailVerify!) {
                             verifyOTPFromEmai();
                           } else {
                             generateOtp(
@@ -275,7 +276,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     )),
                 SizedBox(height: 20.0.h)
               ])),
-          !widget.fromSignIn && !widget.forEmailVerify
+          !widget.fromSignIn! && !widget.forEmailVerify!
               ? Expanded(child: acceptanceWidget())
               : SizedBox(height: 0.0.h),
           Expanded(
@@ -453,29 +454,29 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
                                   new FHBUtils().check().then((intenet) {
                                     if (intenet != null && intenet) {
-                                      if (widget.forEmailVerify) {
+                                      if (widget.forEmailVerify!) {
                                         _otpVerifyBloc
                                             .verifyOTPFromEmail(otp)
                                             .then((value) {
-                                          if (value.success &&
+                                          if (value!.success! &&
                                               value.message ==
                                                   Constants
                                                       .MSG_EMAIL_OTP_VERIFIED) {
                                             updateProfile();
                                           } else {
                                             new FHBBasicWidget().showInSnackBar(
-                                                value.message, scaffold_state);
+                                                value.message!, scaffold_state);
                                           }
                                         });
                                       } else {
                                         _otpVerifyBloc
                                             .verifyOtp(
                                                 widget.enteredMobNumber,
-                                                widget.selectedCountryCode,
+                                                widget.selectedCountryCode!,
                                                 otp,
-                                                widget.fromSignIn)
+                                                widget.fromSignIn!)
                                             .then((otpResponse) {
-                                          checkOTPResponse(otpResponse);
+                                          checkOTPResponse(otpResponse!);
                                         });
                                       }
                                     } else {
@@ -526,22 +527,22 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     controller3.text +
                     controller4.text;
 
-                if (widget.forEmailVerify) {
+                if (widget.forEmailVerify!) {
                   _otpVerifyBloc.verifyOTPFromEmail(otp).then((value) {
-                    if (value.success &&
+                    if (value!.success! &&
                         value.message == Constants.MSG_EMAIL_OTP_VERIFIED) {
                       updateProfile();
                     } else {
                       new FHBBasicWidget()
-                          .showInSnackBar(value.message, scaffold_state);
+                          .showInSnackBar(value.message!, scaffold_state);
                     }
                   });
                 } else {
                   _otpVerifyBloc
                       .verifyOtp(widget.enteredMobNumber,
-                          widget.selectedCountryCode, otp, widget.fromSignIn)
+                          widget.selectedCountryCode!, otp, widget.fromSignIn!)
                       .then((otpResponse) {
-                    checkOTPResponse(otpResponse);
+                    checkOTPResponse(otpResponse!);
                   });
                 }
               }),
@@ -621,7 +622,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void moveToDashboardScreen() {
     var firebase = FirebaseAnalyticsService();
     firebase.setUserId(PreferenceUtil.getStringValue(KEY_USERID_MAIN));
-    if (widget.fromSignUp != null && widget.fromSignUp) {
+    if (widget.fromSignUp != null && widget.fromSignUp!) {
       PreferenceUtil.isCorpUserWelcomeMessageDialogShown(false);
     } else {
       PreferenceUtil.isCorpUserWelcomeMessageDialogShown(true);
@@ -635,21 +636,21 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           .showInSnackBar(Constants.STR_OTPMISMATCHED_STRING, scaffold_state);
     } else {
       PreferenceUtil.saveString(
-              Constants.KEY_USERID_MAIN, otpResponse.response.id)
+              Constants.KEY_USERID_MAIN, otpResponse.response!.id!)
           .then((onValue) {
-        PreferenceUtil.saveString(Constants.KEY_USERID, otpResponse.response.id)
+        PreferenceUtil.saveString(Constants.KEY_USERID, otpResponse.response!.id!)
             .then((onValue) {
           PreferenceUtil.saveString(
-                  Constants.KEY_AUTHTOKEN, otpResponse.response.authToken)
+                  Constants.KEY_AUTHTOKEN, otpResponse.response!.authToken!)
               .then((onValue) {
             PreferenceUtil.saveString(
-                    Constants.MOB_NUM, otpResponse.response.phoneNumber)
+                    Constants.MOB_NUM, otpResponse.response!.phoneNumber!)
                 .then((onValue) {
               PreferenceUtil.saveString(
-                      Constants.COUNTRY_CODE, widget.selectedCountryCode)
+                      Constants.COUNTRY_CODE, widget.selectedCountryCode!)
                   .then((onValue) {
                 PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
-                        int.parse(widget.selectedCountryCode))
+                        int.parse(widget.selectedCountryCode!))
                     .then((value) {
                   moveToDashboardScreen();
                 });
@@ -662,18 +663,18 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 
   void generateOtp(
-      OTPVerifyBloc bloc, String selectedCountryCode, String enteredMobNumber) {
+      OTPVerifyBloc bloc, String? selectedCountryCode, String? enteredMobNumber) {
     bloc
-        .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode,
-            widget.fromSignIn)
+        .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode!,
+            widget.fromSignIn!)
         .then((onValue) {
-      new FHBBasicWidget().showInSnackBar(onValue.message, scaffold_state);
+      new FHBBasicWidget().showInSnackBar(onValue!.message!, scaffold_state);
     });
   }
 
   void verifyOTPFromEmai() {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
-      new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
+      new FHBBasicWidget().showInSnackBar(value!.message!, scaffold_state);
     });
   }
 

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
@@ -58,10 +59,10 @@ class EachDeviceValues extends StatefulWidget {
       this.sheelaRequestString,
       this.deviceNameForAdding});
 
-  final String device_name;
-  final String device_icon;
-  final String sheelaRequestString;
-  final String deviceNameForAdding;
+  final String? device_name;
+  final String? device_icon;
+  final String? sheelaRequestString;
+  final String? deviceNameForAdding;
 
   @override
   _EachDeviceValuesState createState() => _EachDeviceValuesState();
@@ -77,7 +78,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   final CategoryListBlock _categoryListBlock = CategoryListBlock();
   List<CategoryResult> catgoryDataList = List();
   final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
-  MediaDataList mediaTypesResponse = MediaDataList();
+  MediaDataList? mediaTypesResponse = MediaDataList();
 
   CategoryResult categoryDataObj = CategoryResult();
   String categoryID = '14c3f2a1-70d3-49dd-a922-6bee255eed26';
@@ -88,7 +89,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool> isSelected = List(3);
+  List<bool?> isSelected = List(3);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
@@ -97,14 +98,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
   FlutterToast toast = FlutterToast();
 
-  String validationMsg;
+  late String validationMsg;
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
 
   var commonConstants = CommonConstants();
 
-  String tempUnit = 'C';
-  String weightUnit = 'kg';
+  String? tempUnit = 'C';
+  String? weightUnit = 'kg';
 
   bool isTouched = true;
 
@@ -117,18 +118,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   bool isInchFeet = false;
   bool isCenti = false;
 
-  GetDeviceSelectionModel selectionResult;
-  PreferredMeasurement preferredMeasurement;
-  ProfileSetting profileSetting;
+  GetDeviceSelectionModel? selectionResult;
+  PreferredMeasurement? preferredMeasurement;
+  ProfileSetting? profileSetting;
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
 
-  Height heightObj, weightObj, tempObj;
-  String userMappingId = '';
-  List<RegimentDataModel> activitiesFilteredList = [];
-  RegimentDataModel selectedActivity;
-  String vitalDevices;
+  Height? heightObj, weightObj, tempObj;
+  String? userMappingId = '';
+  List<RegimentDataModel>? activitiesFilteredList = [];
+  RegimentDataModel? selectedActivity;
+  String? vitalDevices;
   Map<String, dynamic> saveMap = {};
 
   @override
@@ -140,8 +141,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       catgoryDataList = PreferenceUtil.getCategoryType();
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
-          catgoryDataList = value.result;
-        });
+          catgoryDataList = value.result!;
+        } as FutureOr<_> Function(CategoryDataList?));
       }
       _mediaTypeBlock.getMediTypesList().then((value) {
         mediaTypesResponse = value;
@@ -179,7 +180,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       }
 
       activitiesFilteredList =
-          await CommonUtil().getMasterData(Get.context, '');
+          await CommonUtil().getMasterData(Get.context!, '');
     } catch (e) {
       //print(e);
     }
@@ -236,7 +237,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         ),
         actions: <Widget>[
           Image.asset(
-            widget.device_icon,
+            widget.device_icon!,
             height: 40.0.h,
             width: 40.0.h,
           ),
@@ -259,7 +260,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             arguments: SheelaArgument(
               sheelaInputs: widget.sheelaRequestString,
             ),
-          ).then((value) {
+          )!.then((value) {
             setState(() {});
           });
           /* Navigator.of(context).push(
@@ -363,7 +364,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         .deleteDeviceRecords(deviceId)
         .then((value) {
       deviceHealthRecord = value;
-      if (deviceHealthRecord.isSuccess) {
+      if (deviceHealthRecord.isSuccess!) {
         toast.getToast('Deleted Successfully', Colors.green);
         setState(() {});
       } else {
@@ -372,7 +373,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     });
   }
 
-  void createDeviceRecords(String deviceName) async {
+  void createDeviceRecords(String? deviceName) async {
     if (doValidation(deviceName)) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
@@ -388,34 +389,34 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       } catch (e) {
         if (catgoryDataList == null) {
           await _categoryListBlock.getCategoryLists().then((value) {
-            catgoryDataList = value.result;
+            catgoryDataList = value.result!;
             categoryDataObj = CommonUtil()
                 .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
             postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
-          });
+          } as FutureOr<_> Function(CategoryDataList?));
         }
       }
 
-      var metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = List<MediaResult>();
       if (mediaTypesResponse != null &&
-          mediaTypesResponse.result != null &&
-          mediaTypesResponse.result.isNotEmpty) {
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+          mediaTypesResponse!.result != null &&
+          mediaTypesResponse!.result!.isNotEmpty) {
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       } else {
         mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
-        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+        metaDataFromSharedPrefernce = mediaTypesResponse!.result;
       }
       if (activitiesFilteredList == null && selectedActivity == null) {
         activitiesFilteredList =
-            await CommonUtil().getMasterData(Get.context, '');
+            await CommonUtil().getMasterData(Get.context!, '');
         if (activitiesFilteredList != null &&
-            activitiesFilteredList.length > 0) {
+            activitiesFilteredList!.length > 0) {
           selectedActivity = getActivityFromDeviceName(getDeviceName());
         }
       }
       mediaDataObj = CommonUtil().getMediaTypeInfoForParticularDevice(
-          deviceName, metaDataFromSharedPrefernce);
+          deviceName, metaDataFromSharedPrefernce!);
 
       postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
@@ -508,7 +509,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         }
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
         postMediaData[parameters.strfileName] =
-            deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+            deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
         var dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
@@ -522,7 +523,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             .createHealtRecords(params.toString(), imagePathMain, '',
                 isVital: true)
             .then((value) {
-          if (value != null && value.isSuccess) {
+          if (value != null && value.isSuccess!) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               /*Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();*/
@@ -563,7 +564,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
   }
 
-  bool doValidation(String deviceName) {
+  bool doValidation(String? deviceName) {
     var validationConditon = false;
     if (categoryName == STR_DEVICES) {
       if (deviceName == STR_GLUCOMETER) {
@@ -645,7 +646,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return validationConditon;
   }
 
-  Widget getCardBasedOnDevices(String deviceName) {
+  Widget getCardBasedOnDevices(String? deviceName) {
     switch (deviceName) {
       case CommonConstants.STR_BP_MONITOR:
         return getCardForBPMonitor(deviceName);
@@ -654,13 +655,13 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         return getCardForThermometer(deviceName);
         break;
       case CommonConstants.STR_PULSE_OXIDOMETER:
-        return getCardForPulseOxidometer(deviceName);
+        return getCardForPulseOxidometer(deviceName!);
         break;
       case CommonConstants.STR_WEIGHING_SCALE:
         return getCardForWeighingScale(deviceName);
         break;
       case CommonConstants.STR_GLUCOMETER:
-        return getCardForGlucometer(deviceName);
+        return getCardForGlucometer(deviceName!);
         break;
       default:
         return getCardForBPMonitor(deviceName);
@@ -668,7 +669,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
   }
 
-  Widget getCardForBPMonitor(String deviceName) {
+  Widget getCardForBPMonitor(String? deviceName) {
     return Container(
         //height: 70.0.h,
         padding: EdgeInsets.all(10),
@@ -892,7 +893,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         ));
   }
 
-  Widget getCardForThermometer(String deviceName) {
+  Widget getCardForThermometer(String? deviceName) {
     try {
       tempUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
     } catch (e) {
@@ -981,12 +982,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strTemperature,
-                          tempUnit.toUpperCase(),
+                          tempUnit!.toUpperCase(),
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, tempUnit.toUpperCase(), deviceName,
+                      }, errorMsg, tempUnit!.toUpperCase(), deviceName,
                           range: "", device: "Temp")
                     ],
                   ),
@@ -1005,7 +1006,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                             child: Text(
-                              tempUnit != null ? tempUnit.toUpperCase() : 'C',
+                              tempUnit != null ? tempUnit!.toUpperCase() : 'C',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0.sp,
@@ -1167,7 +1168,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         ));
   }
 
-  Widget getCardForWeighingScale(String deviceName) {
+  Widget getCardForWeighingScale(String? deviceName) {
     try {
       weightUnit = PreferenceUtil.getStringValue(Constants.STR_KEY_WEIGHT);
     } catch (e) {
@@ -1229,12 +1230,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                       fhbBasicWidget.getErrorMsgForUnitEntered(
                           context,
                           CommonConstants.strWeight,
-                          weightUnit.toLowerCase(),
+                          weightUnit!.toLowerCase(),
                           deviceController, (errorValue) {
                         setState(() {
                           errorMsg = errorValue;
                         });
-                      }, errorMsg, weightUnit.toLowerCase(), deviceName,
+                      }, errorMsg, weightUnit!.toLowerCase(), deviceName,
                           range: ""),
                     ],
                   ),
@@ -1253,7 +1254,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         constraints: BoxConstraints(maxWidth: 100.0.w),
                         child: InkWell(
                             child: Text(
-                              weightUnit != null ? weightUnit : 'kg',
+                              weightUnit != null ? weightUnit! : 'kg',
                               style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14.0.sp,
@@ -1486,19 +1487,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 final translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<BPResult> bpResultNew =
+                final List<BPResult>? bpResultNew =
                     translis?.isNotEmpty ? translis?.first : [];
                 bpResultNew?.sort((translisCopy, translisClone) {
-                  return translisClone.dateTimeValue
-                      .compareTo(translisCopy.dateTimeValue);
+                  return translisClone.dateTimeValue!
+                      .compareTo(translisCopy.dateTimeValue!);
                 });
                 final bpResult = bpResultNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return bpResult?.isNotEmpty
                     ? GroupedListView<BPResult, String>(
                         groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: bpResult,
+                            getFormattedDateTime(element.startDateTime!),
+                        elements: bpResult!,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1519,14 +1520,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           return buildRowForBp(
                               bpResult[index].sourceType,
                               getFormattedDateTime(
-                                  bpResult[index].startDateTime),
+                                  bpResult[index].startDateTime!),
                               '${bpResult[index].systolic}',
                               '${bpResult[index].diastolic}',
                               '',
                               'Systolic',
                               'Diastolic',
                               '',
-                              getFormattedTime(bpResult[index].startDateTime),
+                              getFormattedTime(bpResult[index].startDateTime!),
                               bpResult[index].bpm != null
                                   ? bpResult[index].bpm.toString()
                                   : '',
@@ -1560,19 +1561,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<GVResult> translistNew =
+                final List<GVResult>? translistNew =
                     translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
-                  return translisClone.dateTimeValue
-                      .compareTo(translisCopy.dateTimeValue);
+                  return translisClone.dateTimeValue!
+                      .compareTo(translisCopy.dateTimeValue!);
                 });
                 final translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<GVResult, String>(
                         groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
+                            getFormattedDateTime(element.startDateTime!),
+                        elements: translist!,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1593,7 +1594,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           return buildRowForGulcose(
                               translist[index].sourceType,
                               getFormattedDateTime(
-                                  translist[index].startDateTime),
+                                  translist[index].startDateTime!),
                               '${translist[index].bloodGlucoseLevel}',
                               translist[index].mealContext == null ||
                                       translist[index].mealContext == ''
@@ -1603,7 +1604,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                               'Blood Glucose',
                               'Meal Type',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              getFormattedTime(translist[index].startDateTime!),
                               translist[index].bgUnit,
                               translist[index].deviceId);
                         },
@@ -1635,19 +1636,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<OxyResult> translistNew =
+                final List<OxyResult>? translistNew =
                     translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
-                  return translisClone.dateTimeValue
-                      .compareTo(translisCopy.dateTimeValue);
+                  return translisClone.dateTimeValue!
+                      .compareTo(translisCopy.dateTimeValue!);
                 });
                 var translist = translistNew;
                 // final List<DeviceIntervalData> deviceFullList = translis.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<OxyResult, String>(
                         groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
+                            getFormattedDateTime(element.startDateTime!),
+                        elements: translist!,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1668,14 +1669,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           return buildRowForOxygen(
                               translist[index].sourceType,
                               getFormattedDateTime(
-                                  translist[index].startDateTime),
+                                  translist[index].startDateTime!),
                               '${translist[index].oxygenSaturation}',
                               '',
                               '',
                               'SpO2',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              getFormattedTime(translist[index].startDateTime!),
                               '',
                               translist[index].bpm,
                               translist[index].deviceId);
@@ -1708,19 +1709,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<WVResult> translistNew =
+                final List<WVResult>? translistNew =
                     translis?.isNotEmpty ? translis?.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
-                  return translisClone.dateTimeValue
-                      .compareTo(translisCopy.dateTimeValue);
+                  return translisClone.dateTimeValue!
+                      .compareTo(translisCopy.dateTimeValue!);
                 });
                 var translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<WVResult, String>(
                         groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
+                            getFormattedDateTime(element.startDateTime!),
+                        elements: translist!,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1741,14 +1742,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           return buildRowForTempWeight(
                               translist[index].sourceType,
                               getFormattedDateTime(
-                                  translist[index].startDateTime),
+                                  translist[index].startDateTime!),
                               translist[index].weight,
                               '',
                               '',
                               'Weight',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              getFormattedTime(translist[index].startDateTime!),
                               translist[index].weightUnit,
                               translist[index].deviceId);
                         },
@@ -1780,22 +1781,22 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<TMPResult> translistNew = translis?.isNotEmpty
+                final List<TMPResult>? translistNew = translis?.isNotEmpty
                     ? translis?.isNotEmpty
                         ? translis?.first
                         : []
                     : [];
                 translistNew?.sort((translisCopy, translisClone) {
-                  return translisClone.dateTimeValue
-                      .compareTo(translisCopy.dateTimeValue);
+                  return translisClone.dateTimeValue!
+                      .compareTo(translisCopy.dateTimeValue!);
                 });
                 var translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
                 return translist?.isNotEmpty
                     ? GroupedListView<TMPResult, String>(
                         groupBy: (element) =>
-                            getFormattedDateTime(element.startDateTime),
-                        elements: translist,
+                            getFormattedDateTime(element.startDateTime!),
+                        elements: translist!,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1816,14 +1817,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                           return buildRowForTempWeight(
                               translist[index].sourceType,
                               getFormattedDateTime(
-                                  translist[index].startDateTime),
+                                  translist[index].startDateTime!),
                               translist[index].temperature,
                               '',
                               '',
                               'Temperature',
                               '',
                               '',
-                              getFormattedTime(translist[index].startDateTime),
+                              getFormattedTime(translist[index].startDateTime!),
                               translist[index].temperatureUnit,
                               translist[index].deviceId);
                         },
@@ -1888,7 +1889,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget buildRowForBp(
-      String type,
+      String? type,
       String date,
       String value1,
       String value2,
@@ -1898,7 +1899,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String valuename3,
       String time,
       String bpm,
-      String deviceId) {
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2111,7 +2112,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     );
   }
 
-  Widget getDeleteIcon(String deviceId, String type) {
+  Widget getDeleteIcon(String? deviceId, String? type) {
     if (type == strsourceHK ||
         type == strsourceGoogle ||
         type == strsourceCARGIVER) {
@@ -2119,7 +2120,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     } else {
       return GestureDetector(
         onTap: () {
-          deleteDeviceRecord(deviceId);
+          deleteDeviceRecord(deviceId!);
         },
         child: Image.asset(
           'assets/icons/delete_icon.png',
@@ -2131,17 +2132,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget buildRowForGulcose(
-      String type,
+      String? type,
       String date,
       String value1,
-      String value2,
+      String? value2,
       String value3,
       String valuename1,
       String valuename2,
       String valuename3,
       String time,
-      String unit,
-      String deviceId) {
+      String? unit,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2201,7 +2202,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             width: 2,
                           ),
                           Text(
-                            value1 == '' ? '' : unit,
+                            value1 == '' ? '' : unit!,
                             style: TextStyle(
                                 color: Color(CommonUtil().getMyPrimaryColor()),
                                 fontSize: 11.0.sp),
@@ -2273,7 +2274,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     );
   }
 
-  getMealText(String mealText) {
+  getMealText(String? mealText) {
     if (mealText != null) {
       if (mealText == 'After Meal') {
         mealText = 'PP';
@@ -2291,17 +2292,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget buildRowForTempWeight(
-      String type,
+      String? type,
       String date,
-      String value1,
+      String? value1,
       String value2,
       String value3,
       String valuename1,
       String valuename2,
       String valuename3,
       String time,
-      String unit,
-      String deviceId) {
+      String? unit,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2370,7 +2371,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      value1 == '' ? '' : value1,
+                                      value1 == '' ? '' : value1!,
                                       style: TextStyle(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -2381,7 +2382,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                       width: 2,
                                     ),
                                     Text(
-                                      unit != '' ? unit : '',
+                                      unit != '' ? unit! : '',
                                       style: TextStyle(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -2406,7 +2407,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   }
 
   Widget buildRowForOxygen(
-      String type,
+      String? type,
       String date,
       String value1,
       String value2,
@@ -2416,8 +2417,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       String valuename3,
       String time,
       String unit,
-      String bpm,
-      String deviceId) {
+      String? bpm,
+      String? deviceId) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Container(
@@ -2529,7 +2530,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      bpm == '' ? '' : bpm,
+                                      bpm == '' ? '' : bpm!,
                                       style: TextStyle(
                                           color: Color(
                                               CommonUtil().getMyPrimaryColor()),
@@ -2596,7 +2597,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         height: 32.0.h,
         width: 32.0.h,
         errorBuilder:
-            (BuildContext context, Object exception, StackTrace stackTrace) {
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
           return Image.asset(
             'assets/icons/myfhb_source.png',
             height: 32.0.h,
@@ -2621,22 +2622,22 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     await healthReportListForUserRepository
         .getDeviceSelection(userIdFromBloc: userId)
         .then((value) async {
-      if (value.isSuccess) {
+      if (value.isSuccess!) {
         selectionResult = value;
-        if (value.result != null && value.result.length > 0) {
-          if (value.result[0] != null) {
-            profileSetting = value.result[0].profileSetting;
-            userMappingId = value.result[0].id;
+        if (value.result != null && value.result!.length > 0) {
+          if (value.result![0] != null) {
+            profileSetting = value.result![0].profileSetting;
+            userMappingId = value.result![0].id;
 
             if (profileSetting != null) {
-              if (profileSetting.preferredMeasurement != null) {
-                preferredMeasurement = profileSetting.preferredMeasurement;
-                weightObj = preferredMeasurement.weight;
+              if (profileSetting!.preferredMeasurement != null) {
+                preferredMeasurement = profileSetting!.preferredMeasurement;
+                weightObj = preferredMeasurement!.weight;
 
                 if (weightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement.weight?.unitCode);
-                  if (preferredMeasurement.weight?.unitCode.toLowerCase() ==
+                      preferredMeasurement!.weight?.unitCode!);
+                  if (preferredMeasurement!.weight?.unitCode!.toLowerCase() ==
                       Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
                     isKg = true;
                     isPounds = false;
@@ -2648,12 +2649,12 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   commonMethodToSetPreference();
                 }
 
-                heightObj = preferredMeasurement.height;
+                heightObj = preferredMeasurement!.height;
 
                 if (heightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement.height?.unitCode);
-                  if (preferredMeasurement.height?.unitCode ==
+                      preferredMeasurement!.height?.unitCode!);
+                  if (preferredMeasurement!.height?.unitCode ==
                       Constants.STR_VAL_HEIGHT_IND) {
                     isInchFeet = true;
                     isCenti = false;
@@ -2665,11 +2666,11 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                   commonMethodToSetPreference();
                 }
 
-                tempObj = preferredMeasurement.temperature;
+                tempObj = preferredMeasurement!.temperature;
                 if (tempObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement.temperature?.unitCode);
-                  if (preferredMeasurement.temperature?.unitCode
+                      preferredMeasurement!.temperature?.unitCode!);
+                  if (preferredMeasurement!.temperature?.unitCode!
                           .toLowerCase() ==
                       Constants.STR_VAL_TEMP_IND.toLowerCase()) {
                     isFaren = true;
@@ -2700,21 +2701,21 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     var unitConfiguration = await apiBaseHelper
         .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
 
-    if (unitConfiguration?.isSuccess) {
+    if (unitConfiguration?.isSuccess!) {
       if (unitConfiguration?.result != null) {
-        var configurationData = unitConfiguration?.result[0]?.configurationData;
+        var configurationData = unitConfiguration?.result![0]?.configurationData;
         if (configurationData != null) {
           if (CommonUtil.REGION_CODE != "IN") {
             await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                    configurationData.unitSystemList?.us?.height[0]?.unitCode)
+                    configurationData.unitSystemList?.us?.height![0]?.unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      configurationData.unitSystemList?.us?.weight[0]?.unitCode)
+                      configurationData.unitSystemList?.us?.weight![0]?.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.us?.temperature[0]?.unitCode)
+                            .unitSystemList?.us?.temperature![0]?.unitCode!)
                     .then((value) {});
               });
             });
@@ -2722,17 +2723,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             await PreferenceUtil.saveString(
                     Constants.STR_KEY_HEIGHT,
                     configurationData
-                        .unitSystemList?.india?.height[0]?.unitCode)
+                        .unitSystemList?.india?.height![0]?.unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT,
                       configurationData
-                          .unitSystemList?.india?.weight[0]?.unitCode)
+                          .unitSystemList?.india?.weight![0]?.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.india?.temperature[0]?.unitCode)
+                            .unitSystemList?.india?.temperature![0]?.unitCode!)
                     .then((value) {});
               });
             });
@@ -2824,9 +2825,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     );
   }
 
-  RegimentDataModel getActivityFromDeviceName(String device_name) {
+  RegimentDataModel? getActivityFromDeviceName(String device_name) {
     selectedActivity = null;
-    activitiesFilteredList.forEach((element) {
+    activitiesFilteredList!.forEach((element) {
       print(element.activityname);
       print(element.uformname1);
       if (element.activityOrgin == 'Vitals' &&
@@ -2838,16 +2839,16 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return selectedActivity;
   }
 
-  void createActivityMethod(String device_name) async {
+  void createActivityMethod(String? device_name) async {
     saveMap = {};
     DateTime initDate =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     TimeOfDay _currentTime = new TimeOfDay.now();
     final fieldsResponseModel =
         await Provider.of<RegimentViewModel>(context, listen: false)
-            .getFormData(eid: selectedActivity.eid);
+            .getFormData(eid: selectedActivity!.eid);
     print(fieldsResponseModel);
-    fieldsResponseModel.result.fields.forEach((fields) {
+    fieldsResponseModel.result!.fields!.forEach((fields) {
       switch (device_name) {
         case strDataTypeBP:
           {
@@ -2900,7 +2901,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     final saveResponse =
         await Provider.of<RegimentViewModel>(context, listen: false)
             .saveFormData(
-                eid: selectedActivity.eid,
+                eid: selectedActivity!.eid,
                 events: events,
                 isFollowEvent: false,
                 followEventContext: '',

@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
@@ -14,14 +15,14 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 class AddNewPlan {
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
   TextEditingController planContent = new TextEditingController();
-  String validationMsg;
+  String? validationMsg;
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String feedBackType;
-  String titleName;
+  String? feedBackType;
+  late String titleName;
   bool _validate = false;
   AddNewBlock _addNewPlanBlock = new AddNewBlock();
 
-  Future<Widget> addNewPlan(BuildContext context, String feedbackCode,
+  Future<Widget?> addNewPlan(BuildContext context, String feedbackCode,
       String titleNameNew, String hintText, Function(bool) refresh) {
     feedBackType = feedbackCode;
     titleName = titleNameNew;
@@ -63,7 +64,7 @@ class AddNewPlan {
                 onPostAddPlan(context, onRefresh: refresh);
               } else {
                 validationMsg =
-                    "Please Enter " + feedBackType.replaceAll("Missing", "");
+                    "Please Enter " + feedBackType!.replaceAll("Missing", "");
                 setState(() {
                   planContent.text.isEmpty
                       ? _validate = true
@@ -83,9 +84,9 @@ class AddNewPlan {
   void onPostAddPlan(BuildContext context, {onRefresh}) async {
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
-    List<PlanCodeResult> planCodeResult = await _addNewPlanBlock.getPlanCode();
+    List<PlanCodeResult> planCodeResult = await (_addNewPlanBlock.getPlanCode() as FutureOr<List<PlanCodeResult>>);
 
-    String feedBackID = getFeedbackId(planCodeResult, feedBackType);
+    String? feedBackID = getFeedbackId(planCodeResult, feedBackType);
 
     Map<String, dynamic> postMediaData = new Map();
     Map<String, dynamic> postMediaFeedBack = new Map();
@@ -96,7 +97,7 @@ class AddNewPlan {
     print(params);
 
     _addNewPlanBlock.addNewPlan(params).then((value) {
-      if (value.isSuccess) {
+      if (value!.isSuccess!) {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         onRefresh(value.isSuccess);
@@ -110,16 +111,16 @@ class AddNewPlan {
     bool validationConditon = false;
     if (planContent.text == '') {
       validationConditon = false;
-      validationMsg = "Please Enter " + feedBackType.replaceAll("Missing", "");
+      validationMsg = "Please Enter " + feedBackType!.replaceAll("Missing", "");
     } else {
       validationConditon = true;
     }
     return validationConditon;
   }
 
-  String getFeedbackId(
-      List<PlanCodeResult> planCodeResultList, String feedBackType) {
-    String feedbackID;
+  String? getFeedbackId(
+      List<PlanCodeResult> planCodeResultList, String? feedBackType) {
+    String? feedbackID;
     for (PlanCodeResult planCodeResult in planCodeResultList) {
       if (feedBackType == planCodeResult.code) {
         feedbackID = planCodeResult.id;

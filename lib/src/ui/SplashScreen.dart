@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -58,13 +59,13 @@ import 'SheelaAI/Models/sheela_arguments.dart';
 import 'SheelaAI/Views/SuperMaya.dart';
 
 class SplashScreen extends StatefulWidget {
-  final String nsRoute;
-  final String bookingID;
-  final String doctorID;
-  final String appointmentDate;
-  final String doctorSessionId;
-  final String healthOrganizationId;
-  final String templateName;
+  final String? nsRoute;
+  final String? bookingID;
+  final String? doctorID;
+  final String? appointmentDate;
+  final String? doctorSessionId;
+  final String? healthOrganizationId;
+  final String? templateName;
   final dynamic bundle;
 
   SplashScreen(
@@ -86,14 +87,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   HealthReportListForUserRepository healthReportListForUserRepository =
       HealthReportListForUserRepository();
-  GetDeviceSelectionModel selectionResult;
+  GetDeviceSelectionModel? selectionResult;
 
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
-    Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
   }
 
   @override
@@ -110,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
               var deviceIfo =
                   PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
               PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
-              String authToken =
+              String? authToken =
                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
               Future.delayed(const Duration(seconds: 3), () {
@@ -172,7 +173,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute ==
                         parameters.doctorCancellation) {
@@ -195,12 +196,12 @@ class _SplashScreenState extends State<SplashScreen> {
                                   patientPicture: '',
                                   isFromVideoCall: false,
                                   isCareGiver: false,
-                                ))
+                                ))!
                             .then((value) => PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                         ;
                       } else {
-                        Get.to(ChatUserList()).then((value) =>
+                        Get.to(ChatUserList())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
@@ -218,7 +219,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             bookingId: widget.bookingID,
                             date: widget.appointmentDate,
                             templateName: widget.templateName),
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'sheela') {
                       fbaLog(eveParams: {
@@ -229,8 +230,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle;
                         var rawBody;
-                        var eventType = "";
-                        var others = "";
+                        String? eventType = "";
+                        String? others = "";
                         var notificationListId;
                         final parsedData = widget.bundle?.split('|');
 
@@ -265,7 +266,7 @@ class _SplashScreenState extends State<SplashScreen> {
                               isSheelaAskForLang: true,
                               textSpeechSheela: rawTitle,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
                           Get.toNamed(
@@ -276,11 +277,11 @@ class _SplashScreenState extends State<SplashScreen> {
                               eventType: eventType,
                               others: others,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         }
                       } else {
-                        Get.to(SuperMaya()).then((value) =>
+                        Get.to(SuperMaya())!.then((value) =>
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing));
                       }
@@ -293,7 +294,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           arguments: SheelaArgument(
                             audioMessage: temp[1].toString(),
                           ),
-                        ).then((value) => PageNavigator.goToPermanent(
+                        )!.then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       } else {
                         Get.toNamed(
@@ -302,7 +303,7 @@ class _SplashScreenState extends State<SplashScreen> {
                             isSheelaFollowup: true,
                             message: temp[1],
                           ),
-                        ).then((value) => PageNavigator.goToPermanent(
+                        )!.then((value) => PageNavigator.goToPermanent(
                             context, router.rt_Landing));
                       }
                     } else if (widget.nsRoute ==
@@ -375,7 +376,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 0))
+                                  UserAccountsArguments(selectedIndex: 0))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'googlefit') {
@@ -384,7 +385,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'googlefit',
                         'navigationPage': 'Google Fit page',
                       });
-                      Get.toNamed(router.rt_AppSettings).then((value) =>
+                      Get.toNamed(router.rt_AppSettings)!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'th_provider' ||
@@ -395,7 +396,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'navigationPage': 'Tele Health Provider',
                       });
                       Get.toNamed(router.rt_TelehealthProvider,
-                              arguments: HomeScreenArguments(selectedIndex: 1))
+                              arguments: HomeScreenArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'my_record' ||
@@ -408,7 +409,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       getProfileData();
                       Get.toNamed(router.rt_HomeScreen,
-                              arguments: HomeScreenArguments(selectedIndex: 1))
+                              arguments: HomeScreenArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myRecords' &&
@@ -419,7 +420,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'myRecords',
                         'navigationPage': '${widget.templateName}',
                       });
-                      final temp = widget.templateName.split('|');
+                      final temp = widget.templateName!.split('|');
                       final dataOne = temp[1] ?? '';
                       final dataTwo = temp[2];
                       if (dataTwo.runtimeType == String &&
@@ -493,7 +494,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_TelehealthProvider,
                               arguments: HomeScreenArguments(
-                                  selectedIndex: 1, thTabIndex: 1))
+                                  selectedIndex: 1, thTabIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myfamily_list' ||
@@ -505,7 +506,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 1))
+                                  UserAccountsArguments(selectedIndex: 1))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myprovider_list') {
@@ -516,7 +517,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 2))
+                                  UserAccountsArguments(selectedIndex: 2))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'myplans') {
@@ -527,7 +528,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       });
                       Get.toNamed(router.rt_UserAccounts,
                               arguments:
-                                  UserAccountsArguments(selectedIndex: 3))
+                                  UserAccountsArguments(selectedIndex: 3))!
                           .then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else if (widget.nsRoute == 'devices_tab') {
@@ -540,7 +541,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 1),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'bills') {
                       fbaLog(eveParams: {
@@ -552,7 +553,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         router.rt_HomeScreen,
                         arguments: HomeScreenArguments(
                             selectedIndex: 1, thTabIndex: 4),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'openurl') {
                       fbaLog(eveParams: {
@@ -590,17 +591,17 @@ class _SplashScreenState extends State<SplashScreen> {
                         notificationListId: passedValArr[3],
                         cartId: passedValArr[4],
                         patientName: passedValArr[6],
-                      )).then((value) => PageNavigator.goToPermanent(
+                      ))!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == "familyProfile") {
                       var passedValArr = widget.bundle?.split('&');
 
                       new CommonUtil()
                           .getDetailsOfAddedFamilyMember(
-                              Get.context, passedValArr[2].toString())
+                              Get.context!, passedValArr[2].toString())
                           .then((value) {
                         try {
-                          if (!value?.isSuccess || value == null) {
+                          if (!value?.isSuccess! || value == null) {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }
@@ -633,7 +634,7 @@ class _SplashScreenState extends State<SplashScreen> {
                               showRenew: widget.nsRoute != 'myplandetails',
                               templateName: template,
                             ),
-                          ).then((value) => PageNavigator.goToPermanent(
+                          )!.then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                         } else {
                           CommonUtil.showFamilyMemberPlanExpiryDialog(patName,
@@ -677,7 +678,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         ClaimRecordDisplay(
                           claimID: claimId,
                         ),
-                      ).then((value) => PageNavigator.goToPermanent(
+                      )!.then((value) => PageNavigator.goToPermanent(
                           context, router.rt_Landing));
                     } else if (widget.nsRoute == 'manageActivities') {
                       fbaLog(eveParams: {
@@ -685,7 +686,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         'ns_type': 'manageActivities',
                         'navigationPage': 'Manage Activities',
                       });
-                      Get.to(ManageActivitiesScreen()).then((value) =>
+                      Get.to(ManageActivitiesScreen())!.then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
                     } else {

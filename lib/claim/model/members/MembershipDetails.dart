@@ -1,8 +1,9 @@
+
 import 'package:myfhb/claim/model/members/MembershipResult.dart';
 
 class MemberShipDetails {
-  bool isSuccess;
-  List<MemberShipResult> result;
+  bool? isSuccess;
+  List<MemberShipResult>? result;
 
   MemberShipDetails({this.isSuccess, this.result});
 
@@ -11,7 +12,7 @@ class MemberShipDetails {
     if (json['result'] != null) {
       result = new List<MemberShipResult>();
       json['result'].forEach((v) {
-        result.add(new MemberShipResult.fromJson(v));
+        result!.add(new MemberShipResult.fromJson(v));
       });
     }
   }
@@ -20,7 +21,7 @@ class MemberShipDetails {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     if (this.result != null) {
-      data['result'] = this.result.map((v) => v.toJson()).toList();
+      data['result'] = this.result!.map((v) => v.toJson()).toList();
     }
     return data;
   }

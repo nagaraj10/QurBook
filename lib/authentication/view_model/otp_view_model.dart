@@ -1,3 +1,4 @@
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -12,8 +13,8 @@ class OtpViewModel extends ChangeNotifier {
   final AuthService _authService = AuthService();
   String timeForResend = '00:30';
   int timerSeconds = 30;
-  Timer _timer;
-  Timer _otpTimer;
+  Timer? _timer;
+  Timer? _otpTimer;
   bool isDialogOpen = false;
 
   void updateDialogStatus(bool newStatus) {
@@ -46,12 +47,12 @@ class OtpViewModel extends ChangeNotifier {
   }
 
   void confirmViaCall({
-    @required String phoneNumber,
-    @required Function(String otpCode) onOtpReceived,
+    required String phoneNumber,
+    required Function(String otpCode) onOtpReceived,
   }) async {
-    LoaderClass.showLoadingDialog(Get.context, canDismiss: false);
+    LoaderClass.showLoadingDialog(Get.context!, canDismiss: false);
     final ivrNumberslist = await getIVRNumbers();
-    LoaderClass.hideLoadingDialog(Get.context);
+    LoaderClass.hideLoadingDialog(Get.context!);
     updateDialogStatus(true);
     if ((ivrNumberslist?.result?.length ?? 0) > 0) {
       await Get.dialog(

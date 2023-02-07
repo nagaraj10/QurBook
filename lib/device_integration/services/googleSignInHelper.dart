@@ -1,3 +1,4 @@
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myfhb/src/resources/network/api_services.dart';
 import '../../constants/fhb_parameters.dart';
@@ -6,7 +7,7 @@ import 'package:myfhb/src/resources/network/api_services.dart';
 import 'dart:io';
 
 class GoogleSignInHelper {
-  GoogleSignInAccount m_currentUser;
+  GoogleSignInAccount? m_currentUser;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final String _url = gfAggregateURL;
 
@@ -92,7 +93,7 @@ class GoogleSignInHelper {
       var response = await ApiServices.post(
         _url,
         body: jsonBody,
-        headers: await m_currentUser.authHeaders,
+        headers: await m_currentUser!.authHeaders,
       );
       if (response.statusCode != 200) {
         throw '${response.statusCode} and ${response.body}';

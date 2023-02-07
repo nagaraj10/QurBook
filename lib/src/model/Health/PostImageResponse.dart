@@ -1,10 +1,11 @@
+
 import '../../../constants/fhb_parameters.dart' as parameters;
 
 class PostImageResponse {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  int? status;
+  bool? success;
+  String? message;
+  Response? response;
 
   PostImageResponse({this.status, this.success, this.message, this.response});
 
@@ -23,7 +24,7 @@ class PostImageResponse {
     data[parameters.strSuccess] = success;
     data[parameters.strMessage] = message;
     if (response != null) {
-      data[parameters.strResponse] = response.toJson();
+      data[parameters.strResponse] = response!.toJson();
     }
   
     return data;
@@ -31,8 +32,8 @@ class PostImageResponse {
 }
 
 class Response {
-  int count;
-  Data data;
+  int? count;
+  Data? data;
 
   Response({this.count, this.data});
 
@@ -45,14 +46,14 @@ class Response {
     final data = <String, dynamic>{};
     data[parameters.strCount] = count;
     if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+      data[parameters.strData] = this.data!.toJson();
     }
     return data;
   }
 }
 
 class Data {
-  String mediaMasterId;
+  String? mediaMasterId;
 
   Data({this.mediaMasterId});
 

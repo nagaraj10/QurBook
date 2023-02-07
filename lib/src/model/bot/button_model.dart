@@ -1,10 +1,11 @@
+
 class Buttons {
-  String payload;
-  String title;
-  bool isPlaying;
-  bool skipTTS;
-  bool isSelected;
-  String redirectTo;
+  String? payload;
+  String? title;
+  bool? isPlaying;
+  bool? skipTTS;
+  bool? isSelected;
+  String? redirectTo;
 
   Buttons({
     this.payload,

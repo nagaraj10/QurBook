@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -31,7 +32,7 @@ import 'video_screen.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({
-    @required this.refresh,
+    required this.refresh,
   });
 
   final Function(bool userChanged) refresh;
@@ -41,7 +42,7 @@ class HomeWidget extends StatefulWidget {
 }
 
 class _HomeWidgetState extends State<HomeWidget> {
-  bool addPlanButton = false;
+  bool? addPlanButton = false;
   @override
   void initState() {
     try {
@@ -183,7 +184,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         },
                         onAddPressed: activePlanCount > 0
                             ? null
-                            : addPlanButton
+                            : addPlanButton!
                                 ? () async {
                                     await Get.toNamed(rt_PlanWizard);
                                     await landingViewModel
@@ -199,7 +200,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           final userId = PreferenceUtil.getStringValue(
                               constants.KEY_USERID);
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).regimentMode = RegimentMode.Schedule;
                           // Provider.of<RegimentViewModel>(
@@ -211,7 +212,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                             listen: false,
                           ).regimentFilter = RegimentFilter.Scheduled;
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).redirectEventId =
                               '${dashboardData?.regimenDue?.eid ?? ''}';
@@ -247,7 +248,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                           final userId = PreferenceUtil.getStringValue(
                               constants.KEY_USERID);
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).regimentMode = RegimentMode.Schedule;
                           Provider.of<RegimentViewModel>(
@@ -282,11 +283,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 final userId = PreferenceUtil.getStringValue(
                                     constants.KEY_USERID);
                                 Provider.of<RegimentViewModel>(
-                                  Get.context,
+                                  Get.context!,
                                   listen: false,
                                 ).regimentMode = RegimentMode.Schedule;
                                 Provider.of<RegimentViewModel>(
-                                  Get.context,
+                                  Get.context!,
                                   listen: false,
                                 ).regimentFilter = RegimentFilter.Missed;
                                 await Get.toNamed(rt_Regimen);
@@ -321,15 +322,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                           final userId = PreferenceUtil.getStringValue(
                               constants.KEY_USERID);
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).regimentMode = RegimentMode.Symptoms;
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).regimentFilter = RegimentFilter.Event;
                           Provider.of<RegimentViewModel>(
-                            Get.context,
+                            Get.context!,
                             listen: false,
                           ).redirectEventId =
                               '${dashboardData?.symptomsCheckIn?.eid ?? ''}';
@@ -341,7 +342,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         },
                         lastStatus: dashboardData?.symptomsCheckIn?.ack != null
                             ? CommonUtil().regimentDateFormat(
-                                dashboardData?.symptomsCheckIn?.ack,
+                                dashboardData?.symptomsCheckIn?.ack!,
                                 isLanding: true,
                               )
                             : '',
@@ -355,7 +356,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                                 final userId = PreferenceUtil.getStringValue(
                                     constants.KEY_USERID);
                                 Provider.of<RegimentViewModel>(
-                                  Get.context,
+                                  Get.context!,
                                   listen: false,
                                 ).regimentMode = RegimentMode.Symptoms;
                                 Provider.of<RegimentViewModel>(
@@ -396,7 +397,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         color: Color(CommonConstants.bplightColor),
                         onPressed: () async {
                           await Navigator.pushNamed(
-                            Get.context,
+                            Get.context!,
                             rt_UserAccounts,
                             arguments: UserAccountsArguments(
                               selectedIndex: 1,
@@ -425,7 +426,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         color: Color(CommonConstants.pulselightColor),
                         onPressed: () async {
                           await Navigator.pushNamed(
-                            Get.context,
+                            Get.context!,
                             rt_UserAccounts,
                             arguments: UserAccountsArguments(
                               selectedIndex: 2,

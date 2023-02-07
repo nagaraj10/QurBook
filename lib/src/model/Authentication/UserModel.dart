@@ -1,11 +1,12 @@
+
 class UserModel {
-  String auth_token;
-  String birthdate;
-  String given_name;
-  String phone_number;
-  String family_name;
-  String email;
-  String userId;
+  String? auth_token;
+  String? birthdate;
+  String? given_name;
+  String? phone_number;
+  String? family_name;
+  String? email;
+  String? userId;
   UserModel(
       {this.auth_token,
       this.birthdate,

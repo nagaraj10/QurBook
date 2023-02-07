@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import '../../common/PreferenceUtil.dart';
 import '../model/myPlanDetailModel.dart';
@@ -8,14 +9,14 @@ import '../../constants/fhb_constants.dart' as Constants;
 class MyPlanViewModel extends ChangeNotifier {
   MyPlanService myPlanService = MyPlanService();
 
-  List<MyPlanListResult> myPLanListResult = [];
+  List<MyPlanListResult>? myPLanListResult = [];
 
   Future<MyPlanListModel> getMyPlanList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
         var myPlanListModel = await myPlanService.getMyPlanList(userid);
-        if (myPlanListModel.isSuccess) {
+        if (myPlanListModel.isSuccess!) {
           myPLanListResult = myPlanListModel.result;
         }
         return myPlanListModel;
@@ -31,22 +32,22 @@ class MyPlanViewModel extends ChangeNotifier {
   }
 
   List<MyPlanListResult> getProviderName(
-      {List<MyPlanListResult> planList, String query}) {
+      {required List<MyPlanListResult> planList, String? query}) {
     var dummyPlanList = List<MyPlanListResult>();
     dummyPlanList = planList
-        .where((element) => element.providerName
+        .where((element) => element.providerName!
             .toLowerCase()
             .trim()
-            .contains(query.toLowerCase().trim()))
+            .contains(query!.toLowerCase().trim()))
         .toList();
     return dummyPlanList;
   }
 
   List<MyPlanListResult> getProviderSearch(String doctorName) {
     var filterDoctorData = List<MyPlanListResult>();
-    for (final doctorData in myPLanListResult) {
+    for (final doctorData in myPLanListResult!) {
       if (doctorData.title != null && doctorData.title != '') {
-        if (doctorData.title
+        if (doctorData.title!
             .toLowerCase()
             .trim()
             .contains(doctorName.toLowerCase().trim())) {
@@ -57,12 +58,12 @@ class MyPlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  Future<MyPlanListModel> getMyPlanListDetail(String packageId) async {
+  Future<MyPlanListModel> getMyPlanListDetail(String? packageId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
         var myPlanListModel =
-            await myPlanService.getPlanDetailById(userid, packageId);
+            await myPlanService.getPlanDetailById(userid, packageId!);
         return myPlanListModel;
       } catch (e) {}
     }

@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:myfhb/claim/screen/ClaimRecordCreate.dart';
@@ -41,11 +42,11 @@ import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:get/get.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
-  final List<String> imagePath;
+  final List<String?> imagePath;
 
   const DisplayPictureScreen({
-    Key key,
-    @required this.imagePath,
+    Key? key,
+    required this.imagePath,
   }) : super(key: key);
 
   @override
@@ -57,13 +58,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   TextEditingController hospitalName = new TextEditingController();
   TextEditingController labName = new TextEditingController();
 
-  TextEditingController fileName;
-  TextEditingController dateOfVisit;
-  TextEditingController deviceController;
-  TextEditingController memoController;
+  late TextEditingController fileName;
+  late TextEditingController dateOfVisit;
+  late TextEditingController deviceController;
+  TextEditingController? memoController;
 
-  TextEditingController pulse;
-  TextEditingController diaStolicPressure;
+  late TextEditingController pulse;
+  late TextEditingController diaStolicPressure;
 
   DateTime dateTime = DateTime.now();
 
@@ -76,13 +77,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       errPoPulse = '',
       errPoOs = '';
 
-  String categoryName, categoryNameClone;
-  String categoryID;
+  String? categoryName, categoryNameClone;
+  String? categoryID;
   bool firstTym = false;
 
   GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
-  HealthReportListForUserBlock _healthReportListForUserBlock;
+  late HealthReportListForUserBlock _healthReportListForUserBlock;
 
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
 
@@ -92,28 +93,28 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   var doctorsData, hospitalData, labData;
 
-  File imageFile;
+  File? imageFile;
   bool isCategoryNameDevices = false;
 
   bool categoryPressesd = false;
-  String deviceName;
+  String? deviceName;
 
-  String validationMsg;
+  String? validationMsg;
 
-  List<bool> isSelected;
-  String selectedID;
+  List<bool>? isSelected;
+  String? selectedID;
 
   bool containsAudio = false;
   String audioPath = '';
 
-  bool skipTapped;
+  bool? skipTapped;
 
-  String tempUnit = "F";
-  String weightUnit = "kg";
-  String heightUnit = "feet";
+  String? tempUnit = "F";
+  String? weightUnit = "kg";
+  String? heightUnit = "feet";
 
-  List<T> map<T>(List list, Function handler) {
-    List<T> result = [];
+  List<T?> map<T>(List list, Function handler) {
+    List<T?> result = [];
     for (var i = 0; i < list.length; i++) {
       result.add(handler(i, list[i]));
     }
@@ -122,7 +123,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  CarouselController carouselSlider;
+  CarouselController? carouselSlider;
   int _current = 0;
 
   @override
@@ -187,8 +188,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       saveMediaDialog(
                           context,
                           categoryName,
-                          deviceName[0].toUpperCase() +
-                              deviceName.substring(1));
+                          deviceName![0].toUpperCase() +
+                              deviceName!.substring(1));
                     },
                   ),
                 )
@@ -208,7 +209,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   saveMediaDialog(
-      BuildContext context, String categoryName, String deviceName) async {
+      BuildContext context, String? categoryName, String? deviceName) async {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
     tempUnit = await PreferenceUtil.getStringValue(Constants.STR_KEY_TEMP);
@@ -390,8 +391,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
   }
 
-  readingDeviceDetails(String device) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
+  readingDeviceDetails(String? device) {
+    _scaffoldKey.currentState!.showSnackBar(new SnackBar(
         backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
         content: new Container(
             height: 50,
@@ -412,10 +413,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 ]))));
   }
 
-  Widget _showSkipButton(BuildContext context, String device) {
+  Widget _showSkipButton(BuildContext context, String? device) {
     final GestureDetector skipButtonWithGesture = new GestureDetector(
       onTap: () {
-        _skipBtnTapped(device);
+        _skipBtnTapped(device!);
       },
       child: new Container(
         width: 100,
@@ -451,21 +452,21 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   _skipBtnTapped(String device) {
-    _scaffoldKey.currentState.hideCurrentSnackBar();
+    _scaffoldKey.currentState!.hideCurrentSnackBar();
     displayDevicesList(device[0].toUpperCase() + device.substring(1), null);
     skipTapped = true;
   }
 
-  displayDevicesList(String device, DigitRecogResponse digitRecogResponse) {
+  displayDevicesList(String? device, DigitRecogResponse? digitRecogResponse) {
     switch (device) {
       case Constants.STR_GLUCOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse.result.deviceMeasurementsHead
-                    .deviceMeasurements[0].values !=
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
+            if (digitRecogResponse.result!.deviceMeasurementsHead!
+                    .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -496,12 +497,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_THERMOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse.result.deviceMeasurementsHead
-                    .deviceMeasurements[0].values !=
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
+            if (digitRecogResponse.result!.deviceMeasurementsHead!
+                    .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -536,12 +537,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse.result.deviceMeasurementsHead
-                    .deviceMeasurements[0].values !=
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
+            if (digitRecogResponse.result!.deviceMeasurementsHead!
+                    .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -577,14 +578,14 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse.result.deviceMeasurementsHead
-                    .deviceMeasurements[0].values !=
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
+            if (digitRecogResponse.result!.deviceMeasurementsHead!
+                    .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
               pulse.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
             }
           }
         }
@@ -615,16 +616,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_BP_MONITOR:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse.result.deviceMeasurementsHead
-                    .deviceMeasurements[0].values !=
+          if (digitRecogResponse.result!.deviceMeasurementsHead != null) {
+            if (digitRecogResponse.result!.deviceMeasurementsHead!
+                    .deviceMeasurements![0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![0].values!;
               diaStolicPressure.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[1].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![1].values!;
               pulse.text = digitRecogResponse
-                  .result.deviceMeasurementsHead.deviceMeasurements[2].values;
+                  .result!.deviceMeasurementsHead!.deviceMeasurements![2].values!;
             }
           }
         }
@@ -721,7 +722,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+    final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(2015, 8),
@@ -774,14 +775,14 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ),
       ],
       onPressed: (int index) => onToggleBUttonPressed(index),
-      isSelected: isSelected,
+      isSelected: isSelected!,
     );
   }
 
   onToggleBUttonPressed(int index) async {
     setState(() {
-      for (int i = 0; i < isSelected.length; i++) {
-        isSelected[i] = i == index;
+      for (int i = 0; i < isSelected!.length; i++) {
+        isSelected![i] = i == index;
       }
     });
   }
@@ -790,10 +791,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     if (categoryName == variable.strDevices) {
       fileName = new TextEditingController(
           text:
-              deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+              deviceName! + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     } else {
       fileName = new TextEditingController(
-          text: categoryName +
+          text: categoryName! +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     }
   }
@@ -832,7 +833,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         decoration: BoxDecoration(),
                         child: Container(
                           height: double.infinity,
-                          child: imgUrl.contains(variable.strpdf)
+                          child: imgUrl!.contains(variable.strpdf)
                               ? new CommonUtil().showPDFInWidget(imgUrl)
                               : Image.file(
                                   File(imgUrl),
@@ -884,16 +885,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   goToPrevious() {
-    carouselSlider.previousPage(
+    carouselSlider!.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 
   goToNext() {
-    carouselSlider.nextPage(
+    carouselSlider!.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  onPostDeviceImageData(String deviceName) async {
+  onPostDeviceImageData(String? deviceName) async {
     Map<String, dynamic> postMainData = new Map();
     Map<String, dynamic> postMediaData = new Map();
     // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -910,15 +911,15 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
 
-    MediaDataList mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+    MediaDataList mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
-    List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
+    List<MediaResult>? metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
-          categoryID, metaDataFromSharedPrefernce, categoryName);
+          categoryID, metaDataFromSharedPrefernce!, categoryName);
     } else {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
-          deviceName, metaDataFromSharedPrefernce);
+          deviceName, metaDataFromSharedPrefernce!);
     }
 
     postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
@@ -940,7 +941,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     _healthReportListForUserBlock
         .saveDeviceImage(widget.imagePath, params.toString(), '')
         .then((postImageResponse) {
-      _scaffoldKey.currentState.hideCurrentSnackBar();
+      _scaffoldKey.currentState!.hideCurrentSnackBar();
 
       if (skipTapped == false) {
         displayDevicesList(deviceName, postImageResponse);
@@ -954,7 +955,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       children: <Widget>[
         Expanded(
           child: InkWell(
-            child: Text(categoryName),
+            child: Text(categoryName!),
             onTap: () {
               _showOverlayCategoryDialog(context);
             },
