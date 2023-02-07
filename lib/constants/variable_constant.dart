@@ -785,6 +785,12 @@ const String strAlert = 'Alert';
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
 
+const String appointmentDetails = "Appointment Details";
+const String appointmentSchedule = "Schedule";
+const String appointmentInformation = "Appointment Information";
+const String appointmentTestName = "Test Name";
+const String appointmentAddress = "Address";
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   var parts = token.split('.');
