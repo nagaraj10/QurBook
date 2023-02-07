@@ -189,7 +189,10 @@ class HubListViewController extends GetxController {
           ),
         ),
       ).then(
-        (value) => getHubList(),
+        (value) {
+          getHubList();
+          bleMacId = "";
+        },
       );
     }
   }

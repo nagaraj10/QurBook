@@ -50,13 +50,13 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
                         controller.deviceIdController,
                         'Device ID',
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      getFormField(
-                        controller.nickNameController,
-                        'Nick Name',
-                      ),
+                      // SizedBox(
+                      //   height: 15,
+                      // ),
+                      // getFormField(
+                      //   controller.nickNameController,
+                      //   'Nick Name',
+                      // ),
                       SizedBox(
                         height: 15,
                       ),
@@ -80,13 +80,13 @@ class AddDeviceView extends GetView<AddDeviceViewController> {
         ),
       ),
       onPressed: () {
-        if ((controller.nickNameController.text ?? "").isEmpty) {
-          FlutterToast().getToast(
-            'Please Enter Nick Name',
-            Colors.red,
-          );
-          return;
-        }
+        // if ((controller.nickNameController.text ?? "").isEmpty) {
+        //   FlutterToast().getToast(
+        //     'Please Enter Nick Name',
+        //     Colors.red,
+        //   );
+        //   return;
+        // }
         controller.saveDevice();
       },
       child: const Padding(

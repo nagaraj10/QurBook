@@ -729,7 +729,8 @@ class AppointmentsCommonWidget {
         doc?.doctor?.user != null &&
         doc?.doctor?.user?.userAddressCollection3 != null &&
         doc?.doctor?.user?.userAddressCollection3.length > 0) {
-      location = doc?.doctor?.user?.userAddressCollection3[0]?.city.name;
+      location =
+          doc?.doctor?.user?.userAddressCollection3[0]?.city?.name ?? "";
     }
 
     return location;

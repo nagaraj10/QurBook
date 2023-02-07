@@ -692,8 +692,8 @@ WOWGoDataUpload = 1
                 DataToPost += " \"hubId\" : \"HB:AD:00:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceId\" : \"DV:WG:WT:00:00:$DevSeq\" ,"
                 DataToPost += " \"deviceType\" : \"WEIGHT\" , \"unit\" : \"lbs\" , \"Data\" : {"
-                DataToPost += " \"weight\" : \""
-                DataToPost += v1
+                DataToPost += " \"Weight\" : \""
+                DataToPost += weight.toString()
                 DataToPost += "\" "
                 DataToPost += " }}"
             } else if (deviceType == DEVICE_BP) // BP2
