@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
@@ -30,6 +31,7 @@ class QurhomeDashboard extends StatefulWidget {
 
 class _QurhomeDashboardState extends State<QurhomeDashboard> {
   final controller = Get.put(QurhomeDashboardController());
+  final qurHomeRegimenController = Get.put(QurhomeRegimenController());
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
@@ -160,7 +162,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           controller.currentSelectedIndex.value == 1) ...{
                         SizedBox(height: 3),
                         Text(
-                          'Today, ' + getFormatedDate(),
+                          'Today, ' + qurHomeRegimenController.dateHeader.value,
                           style: TextStyle(
                             fontSize: 12.h,
                             color: Colors.grey,
