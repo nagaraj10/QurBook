@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/Qurhome/Common/GradientAppBarQurhome.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/CaregiverPatientChatModel.dart';
@@ -50,12 +51,14 @@ class ChatUserList extends StatefulWidget {
     this.onBackPressed,
     this.careGiversList,
     this.isDynamicLink = false,
+    this.isFromQurDay = false,
   }) : super(key: key);
 
   final bool isHome;
   final Function onBackPressed;
   final List<CareGiverInfo> careGiversList;
   final bool isDynamicLink;
+  final bool isFromQurDay;
 
   @override
   _ChatUserListState createState() => _ChatUserListState();
@@ -184,7 +187,9 @@ class _ChatUserListState extends State<ChatUserList> {
         appBar: widget.isHome
             ? null
             : AppBar(
-                flexibleSpace: GradientAppBar(),
+                flexibleSpace: widget.isFromQurDay
+                    ? GradientAppBarQurhome()
+                    : GradientAppBar(),
                 leading: IconButton(
                     icon: Icon(
                       Icons.arrow_back_ios,
@@ -358,37 +363,37 @@ class _ChatUserListState extends State<ChatUserList> {
           onTap: () {
             try {
               String strLastDate = data?.chatListItem?.deliveredOn != null &&
-                              data?.chatListItem?.deliveredOn != ''
-                              ? CommonUtil().getFormattedDateTime(
-                              data?.chatListItem?.deliveredOn): '';
+                      data?.chatListItem?.deliveredOn != ''
+                  ? CommonUtil()
+                      .getFormattedDateTime(data?.chatListItem?.deliveredOn)
+                  : '';
               Get.back();
               Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatDetail(
-                                      peerId: data?.id,
-                                      peerAvatar: data?.profilePicThumbnailUrl,
-                                      peerName: getFamilyName(data),
-                                      patientId: '',
-                                      patientName: '',
-                                      patientPicture: '',
-                                      isFromVideoCall: false,
-                                      familyUserId: data?.id,
-                                      isFromFamilyListChat: true,
-                                      isFromCareCoordinator: data?.isCarecoordinator,
-                                      carecoordinatorId: data?.carecoordinatorId,
-                                      isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
-                                          ? true
-                                          : false,
-                                      groupId: data?.chatListItem?.id ?? '',
-                                      lastDate: strLastDate))).then(
-                              (value) {
-                            if (value) {
-                              initSocket(true);
-                            } else {
-                              initSocket(false);
-                            }
-                          });
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatDetail(
+                          peerId: data?.id,
+                          peerAvatar: data?.profilePicThumbnailUrl,
+                          peerName: getFamilyName(data),
+                          patientId: '',
+                          patientName: '',
+                          patientPicture: '',
+                          isFromVideoCall: false,
+                          familyUserId: data?.id,
+                          isFromFamilyListChat: true,
+                          isFromCareCoordinator: data?.isCarecoordinator,
+                          carecoordinatorId: data?.carecoordinatorId,
+                          isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
+                              ? true
+                              : false,
+                          groupId: data?.chatListItem?.id ?? '',
+                          lastDate: strLastDate))).then((value) {
+                if (value) {
+                  initSocket(true);
+                } else {
+                  initSocket(false);
+                }
+              });
             } catch (e) {
               print(e);
             }
@@ -469,11 +474,11 @@ class _ChatUserListState extends State<ChatUserList> {
                             Expanded(
                               child: Text(
                                 fulName != null
-                                    ? CommonUtil().titleCase(
-                                    fulName.toLowerCase()) +
-                                    (data?.isCarecoordinator
-                                        ? CARE_COORDINATOR_STRING
-                                        : '')
+                                    ? CommonUtil()
+                                            .titleCase(fulName.toLowerCase()) +
+                                        (data?.isCarecoordinator
+                                            ? CARE_COORDINATOR_STRING
+                                            : '')
                                     : '',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w500,
@@ -483,7 +488,6 @@ class _ChatUserListState extends State<ChatUserList> {
                                 // overflow: TextOverflow.ellipsis,
                               ),
                             ),
-
                           ],
                         ),
                         // data?.isCarecoordinator
@@ -602,12 +606,10 @@ class _ChatUserListState extends State<ChatUserList> {
     var ccName = '';
     if (userChatList?.isFamilyUserCareCoordinator) {
       try {
-        if (userChatList?.firstName != null &&
-            userChatList?.firstName != '') {
+        if (userChatList?.firstName != null && userChatList?.firstName != '') {
           ccName = userChatList?.firstName;
         }
-        if (userChatList?.lastName != null &&
-            userChatList?.lastName != '') {
+        if (userChatList?.lastName != null && userChatList?.lastName != '') {
           ccName = ccName + ' ' + userChatList?.lastName;
         }
       } catch (e) {}
@@ -628,9 +630,13 @@ class _ChatUserListState extends State<ChatUserList> {
                         patientPicture: '',
                         isFromVideoCall: false,
                         isNormalChatUserList: 'true',
-                        carecoordinatorId: userChatList?.isFamilyUserCareCoordinator?userChatList?.peerId:'',
+                        carecoordinatorId:
+                            userChatList?.isFamilyUserCareCoordinator
+                                ? userChatList?.peerId
+                                : '',
                         familyUserId: userChatList?.familyUserId,
-                        isFromCareCoordinator: userChatList?.isFamilyUserCareCoordinator,
+                        isFromCareCoordinator:
+                            userChatList?.isFamilyUserCareCoordinator,
                         isCareGiver: (widget?.careGiversList?.length ?? 0) > 0
                             ? true
                             : false,
@@ -716,10 +722,12 @@ class _ChatUserListState extends State<ChatUserList> {
                           child: Row(
                             children: [
                               Expanded(
-                                child :Text(
+                                child: Text(
                                   CommonUtil().capitalizeFirstofEach(
-                                      getDocName(userChatList))+(userChatList?.isFamilyUserCareCoordinator
-                                      ?CARE_COORDINATOR_STRING:''),
+                                          getDocName(userChatList)) +
+                                      (userChatList?.isFamilyUserCareCoordinator
+                                          ? CARE_COORDINATOR_STRING
+                                          : ''),
                                   // overflow: TextOverflow.ellipsis,
                                   // softWrap: true,
                                   style: TextStyle(
@@ -918,20 +926,27 @@ class _ChatUserListState extends State<ChatUserList> {
   String getDocName(PayloadChat userChatList) {
     String name = '';
     if (userChatList != null) {
-      if(userChatList?.isFamilyUserCareCoordinator){
-        if (userChatList?.familyUserFirstName != null && userChatList?.familyUserFirstName != '') {
-          if (userChatList?.familyUserLastName != null && userChatList?.familyUserLastName != '') {
-            name = userChatList?.familyUserFirstName + ' ' + userChatList?.familyUserLastName ?? '';
+      if (userChatList?.isFamilyUserCareCoordinator) {
+        if (userChatList?.familyUserFirstName != null &&
+            userChatList?.familyUserFirstName != '') {
+          if (userChatList?.familyUserLastName != null &&
+              userChatList?.familyUserLastName != '') {
+            name = userChatList?.familyUserFirstName +
+                    ' ' +
+                    userChatList?.familyUserLastName ??
+                '';
           } else {
             name = (userChatList?.familyUserFirstName ?? '').toString();
           }
         } else {
           name = '';
         }
-      }else{
+      } else {
         if (userChatList != null) {
-          if (userChatList?.firstName != null && userChatList?.firstName != '') {
-            if (userChatList?.lastName != null && userChatList?.lastName != '') {
+          if (userChatList?.firstName != null &&
+              userChatList?.firstName != '') {
+            if (userChatList?.lastName != null &&
+                userChatList?.lastName != '') {
               name = userChatList.firstName + ' ' + userChatList.lastName ?? '';
             } else {
               name = (userChatList?.firstName ?? '').toString();
@@ -943,11 +958,9 @@ class _ChatUserListState extends State<ChatUserList> {
           name = '';
         }
       }
-
     } else {
       name = '';
     }
-
 
     return name;
   }
