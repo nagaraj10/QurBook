@@ -105,7 +105,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                         ),
                         Expanded(
                           child: Text(
-                            title?.trim(),
+                            title!.trim(),
                             style: TextStyle(
                               fontSize: 16.0.sp,
                               fontWeight: FontWeight.w500,
@@ -120,7 +120,7 @@ class RegimentActivitiesCard extends StatelessWidget {
                   activeColor: Colors.green,
                   inactiveThumbColor: Colors.grey[200],
                   inactiveTrackColor: Colors.grey[400],
-                  value: !regimentData?.isEventDisabled,
+                  value: !regimentData.isEventDisabled,
                   onChanged: (regimentData?.isMandatory ?? false)
                       ? null
                       : (isEnabled) {
@@ -128,8 +128,8 @@ class RegimentActivitiesCard extends StatelessWidget {
                             context,
                             listen: false,
                           ).enableDisableActivity(
-                            eidUser: regimentData?.teidUser,
-                            startTime: regimentData?.estart!,
+                            eidUser: regimentData.teidUser,
+                            startTime: regimentData.estart!,
                             isDisable: !isEnabled,
                           );
                         },

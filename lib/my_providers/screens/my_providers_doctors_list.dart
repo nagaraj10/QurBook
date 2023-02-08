@@ -68,7 +68,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   }
 
   void filterDuplicateDoctor() {
-    if (widget?.doctorsModel!.isNotEmpty) {
+    if (widget.doctorsModel!.isNotEmpty) {
       copyOfdoctorsModel = widget.doctorsModel;
       var ids = copyOfdoctorsModel!.map((e) => e?.user?.id).toSet();
       copyOfdoctorsModel!.retainWhere((x) => ids.remove(x?.user?.id));

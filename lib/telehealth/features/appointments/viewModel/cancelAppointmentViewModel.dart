@@ -8,7 +8,7 @@ class CancelAppointmentViewModel extends ChangeNotifier {
   CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
 
 
-  Future<CancelAppointmentModel> fetchCancelAppointment(
+  Future<CancelAppointmentModel?> fetchCancelAppointment(
       List<String?> bookingId,List<String?> date) async {
     try {
       CancelAppointmentModel cancelAppointment =

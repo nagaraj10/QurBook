@@ -6,7 +6,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 
 class BottomNavigationViewModel extends ChangeNotifier {
-    List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
+    List<BottomNavigationArguments> bottomNavigationArgumentsList = [];
 
   
   Future<void>  getAllValuesForBottom() async {

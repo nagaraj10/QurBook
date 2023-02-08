@@ -40,7 +40,7 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
       count = json[parameters.strCount];
     if (json[parameters.strData] != null) {
-      data = List<DoctorsData>();
+      data = <DoctorsData>[];
       json[parameters.strData].forEach((v) {
         data!.add(DoctorsData.fromJson(v));
       });

@@ -52,7 +52,7 @@ class TakePictureScreenForDevicesState
   Future<void>? _initializeControllerFuture;
   bool isMultipleImages = false;
   bool isThumbnails = false;
-  List<String> imagePaths = new List();
+  List<String> imagePaths = [];
   String? categoryName;
   String? deviceName;
   String? chosenDevice;
@@ -62,7 +62,7 @@ class TakePictureScreenForDevicesState
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
 
-  List<Asset> images = List<Asset>();
+  List<Asset> images = <Asset>[];
   String _error = 'No Error Dectected';
   TextEditingController? fileName;
 
@@ -386,7 +386,7 @@ class TakePictureScreenForDevicesState
                                             XFile xpath =
                                                 await _controller.takePicture();
 
-                                            imagePaths.add(xpath?.path);
+                                            imagePaths.add(xpath.path);
 
                                             setState(() {});
                                           } catch (e) {
@@ -508,7 +508,7 @@ class TakePictureScreenForDevicesState
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
+    List<Asset> resultList = <Asset>[];
 
     try {
       resultList = await MultiImagePicker.pickImages(

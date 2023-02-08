@@ -34,7 +34,7 @@ class ScreenUtil {
     bool allowFontScaling = false,
   }) {
     _instance ??= ScreenUtil._();
-    _instance
+    _instance!
       ..uiSize = designSize
       ..allowFontScaling = allowFontScaling;
     _screenWidth = constraints.maxWidth;

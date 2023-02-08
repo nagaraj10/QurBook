@@ -62,7 +62,7 @@ class MyPlanDetailView extends StatefulWidget {
     // @required this.description,
     // @required this.price,
     // @required this.issubscription,
-    required this.packageId,
+     this.packageId,
     // @required this.providerName,
     // @required this.packageDuration,
     // @required this.providerId,
@@ -71,7 +71,7 @@ class MyPlanDetailView extends StatefulWidget {
     // @required this.iconApi,
     // @required this.catIcon,
     // @required this.isRenew,
-    required this.isFrom,
+     this.isFrom,
     // @required this.isExtendable,
     // @required this.metaDataForURL,
   }) : super(key: key);
@@ -109,7 +109,7 @@ class PlanDetail extends State<MyPlanDetailView> {
     super.initState();
     mInitialTime = DateTime.now();
     // setValues();
-    planListModel = PlanViewModel().getPlanDetail(widget?.packageId);
+    planListModel = PlanViewModel().getPlanDetail(widget.packageId) as Future<PlanListModel>?;
   }
 
   @override
@@ -202,9 +202,9 @@ class PlanDetail extends State<MyPlanDetailView> {
             } else if (snapshot.hasError) {
               return ErrorsWidget();
             } else {
-              if (snapshot?.hasData &&
-                  snapshot?.data?.result != null &&
-                  snapshot?.data?.result!.isNotEmpty) {
+              if (snapshot.hasData &&
+                  snapshot.data!.result != null &&
+                  snapshot.data!.result!.isNotEmpty) {
                 PlanListResult planList =
                     snapshot?.data?.result![0] as PlanListResult;
                 setValues(planList);

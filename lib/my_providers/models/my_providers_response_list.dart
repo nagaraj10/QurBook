@@ -71,7 +71,7 @@ class MyProvidersData {
 
       if (preferencesJson != null) {
         if (preferencesJson[parameters.strdoctorIds] != null) {
-          doctorsModel = List<DoctorsModel>();
+          doctorsModel = <DoctorsModel>[];
           preferencesJson[parameters.strdoctorIds].forEach((v) {
             doctorsModel!.add(DoctorsModel.fromJson(v));
           });

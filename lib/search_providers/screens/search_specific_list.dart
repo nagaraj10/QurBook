@@ -562,10 +562,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
                       (data[i].name != null && data[i].name != '')
-                          ? data[i]?.name?.capitalizeFirstofEach
-                          : data[i]?.firstName?.capitalizeFirstofEach +
+                          ? data[i].name!.capitalizeFirstofEach
+                          : data[i].firstName!.capitalizeFirstofEach +
                               ' ' +
-                              data[i]?.lastName?.capitalizeFirstofEach,
+                              data[i].lastName!.capitalizeFirstofEach,
                       getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
@@ -604,12 +604,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       child: getCardToDisplaySearchList(
                           (data.result![i].name != null &&
                                   data.result![i].name != '')
-                              ? data?.result![i]?.name?.capitalizeFirstofEach
-                              : data?.result![i]?.firstName
-                                      ?.capitalizeFirstofEach +
+                              ? data.result![i].name!.capitalizeFirstofEach
+                              : data.result![i].firstName
+                                      !.capitalizeFirstofEach +
                                   ' ' +
-                                  data?.result![i]?.lastName
-                                      ?.capitalizeFirstofEach,
+                                  data.result![i].lastName
+                                      !.capitalizeFirstofEach,
                           getDoctorsAddress(data.result![i]),
                           data.result![i].doctorId,
                           data.result![i].profilePicThumbnailUrl,
@@ -823,7 +823,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     ? passHospitalValue(hospitalData, context)
                     : passLaboratoryValue(labData, context);
           } else {
-            passdataToNextScreen(data?.name!.capitalizeFirstofEach, context,
+            passdataToNextScreen(data.name!.capitalizeFirstofEach, context,
                 data, hospitalData, labData);
           }
         });
@@ -1622,13 +1622,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       print(params.toString());
 
       hospitalListRepository.addHospitalList(params).then((value) {
-        if (value.isSuccess!) {
+        if (value!.isSuccess!) {
           Navigator.pop(context);
           HospitalsListResult hospitaData = new HospitalsListResult();
           hospitaData.name = '';
-          hospitaData.healthOrganizationName = value.result?.name;
+          hospitaData.healthOrganizationName = value!.result!.name;
           hospitaData.healthOrganizationId = null;
-          hospitaData.healthOrganizationReferenceId = value.result?.id;
+          hospitaData.healthOrganizationReferenceId = value.result!.id;
           hospitaData.healthOrganizationTypeId = Constants.STR_HEALTHORG_HOSPID;
           hospitaData.healthOrganizationTypeName = 'Hospital';
           hospitaData.pincode = null;

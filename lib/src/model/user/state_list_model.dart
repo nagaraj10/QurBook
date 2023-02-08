@@ -10,7 +10,7 @@ class StateModel {
   StateModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<State>();
+      result = <State>[];
       json['result'].forEach((v) {
         result!.add(State.fromJson(v));
       });

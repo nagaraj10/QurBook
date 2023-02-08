@@ -82,10 +82,10 @@ class QurhomeRegimenController extends GetxController {
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
       qurHomeRegimenResponseModel!.regimentsList!.removeWhere((element) =>
-          element?.isEventDisabled && !element?.isSymptom ||
-          !element?.scheduled);
+          element.isEventDisabled && !element.isSymptom ||
+          !element.scheduled);
       for (int i = 0;
-          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0 as bool;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length ?? 0 as bool;
           i++) {
         String strCurrLoggedEID = CommonUtil().validString(currLoggedEID.value);
         String strCurrRegimenEID = CommonUtil().validString(
@@ -98,10 +98,10 @@ class QurhomeRegimenController extends GetxController {
           restartTimer();
           break;
         } else if (DateTime.now()
-            .isBefore(qurHomeRegimenResponseModel?.regimentsList![i]?.estart!)) {
-          if (qurHomeRegimenResponseModel?.regimentsList![i]?.ack_local !=
+            .isBefore(qurHomeRegimenResponseModel!.regimentsList![i].estart!)) {
+          if (qurHomeRegimenResponseModel!.regimentsList![i].ack_local !=
               null) {
-            if (qurHomeRegimenResponseModel?.regimentsList?.length > (i + 1)) {
+            if (qurHomeRegimenResponseModel!.regimentsList!.length > (i + 1)) {
               nextRegimenPosition = i + 1;
               currentIndex = i + 1;
             } else {
@@ -116,16 +116,16 @@ class QurhomeRegimenController extends GetxController {
         }
       }
       for (int i = 0;
-          i < qurHomeRegimenResponseModel?.regimentsList?.length ?? 0 as bool;
+          i < qurHomeRegimenResponseModel!.regimentsList!.length ?? 0 as bool;
           i++) {
-        if (qurHomeRegimenResponseModel?.regimentsList![i]?.activityOrgin !=
+        if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin !=
             null) {
-          if (qurHomeRegimenResponseModel?.regimentsList![i]?.activityOrgin ==
+          if (qurHomeRegimenResponseModel!.regimentsList![i].activityOrgin ==
               'Appointment') {
-            if (qurHomeRegimenResponseModel?.regimentsList![i]?.estart != null &&
-                qurHomeRegimenResponseModel?.regimentsList![i]?.estart != '') {
-              if (qurHomeRegimenResponseModel?.regimentsList![i]?.eid != null &&
-                  qurHomeRegimenResponseModel?.regimentsList![i]?.eid != '') {
+            if (qurHomeRegimenResponseModel!.regimentsList![i].estart != null &&
+                qurHomeRegimenResponseModel!.regimentsList![i].estart != '') {
+              if (qurHomeRegimenResponseModel!.regimentsList![i].eid != null &&
+                  qurHomeRegimenResponseModel!.regimentsList![i].eid != '') {
                 var apiReminder = qurHomeRegimenResponseModel!.regimentsList![i];
                 const platform = MethodChannel(APPOINTMENT_DETAILS);
                 if (Platform.isIOS) {

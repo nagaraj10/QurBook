@@ -11,7 +11,7 @@ class CancelAppointmentModel {
   CancelAppointmentModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json[parameters.strIsSuccess];
     if (json[parameters.dataResult] != null) {
-      result = new List<CancelResult>();
+      result = <CancelResult>[];
       json[parameters.dataResult].forEach((v) {
         result!.add(new CancelResult.fromJson(v));
       });

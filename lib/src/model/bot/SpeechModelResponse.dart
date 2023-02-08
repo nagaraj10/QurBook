@@ -80,7 +80,7 @@ class Result {
     text = json['text'];
     endOfConv = json['endOfConv'];
     if (json[strButtons] != null) {
-      buttons = List<Buttons>();
+      buttons = <Buttons>[];
       json[strButtons].forEach((v) {
         buttons!.add(Buttons.fromJson(v));
       });

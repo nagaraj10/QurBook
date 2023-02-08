@@ -10,7 +10,7 @@ class GetRecordIdsFilter {
   GetRecordIdsFilter.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<Result>();
+      result = <Result>[];
       json['result'].forEach((v) {
         result!.add(new Result.fromJson(v));
       });
@@ -73,7 +73,7 @@ class Result {
     doctorId = json['doctorId'];
     createdOn = json['createdOn'];
     if (json['healthRecordCollection'] != null) {
-      healthRecordCollection = new List<HealthRecordCollection>();
+      healthRecordCollection = <HealthRecordCollection>[];
       json['healthRecordCollection'].forEach((v) {
         healthRecordCollection!.add(new HealthRecordCollection.fromJson(v));
       });

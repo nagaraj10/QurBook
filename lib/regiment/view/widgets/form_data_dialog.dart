@@ -46,7 +46,7 @@ class FormDataDialog extends StatefulWidget {
       this.followEventContext,
       this.isFromQurHomeSymptom = false,
       this.isFromQurHomeRegimen = false,
-      required this.providerId});
+      this.providerId});
 
   final List<FieldModel>? fieldsData;
   final String? eid;
@@ -1020,7 +1020,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents?.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     if (widget.isFromQurHomeSymptom || widget.isFromQurHomeRegimen) {
@@ -1185,7 +1185,7 @@ class FormDataDialogState extends State<FormDataDialog> {
                               ),
                             ),
                           ),
-                          getLaterButton(returnAction),
+                          getLaterButton(returnAction)!,
                         ],
                       ),
                       SizedBox(height: 5.h),
@@ -1210,7 +1210,7 @@ class FormDataDialogState extends State<FormDataDialog> {
     }
   }
 
-  Widget getLaterButton(ReturnModel? returnAction) {
+  Widget? getLaterButton(ReturnModel? returnAction) {
     if ((returnAction?.eid != null) && (returnAction?.activityName != '')) {
       if (returnAction?.action == startActivity) {
         return Padding(

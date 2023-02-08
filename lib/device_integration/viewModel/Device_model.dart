@@ -28,7 +28,7 @@ class DevicesViewModel with ChangeNotifier {
   List<DeviceData>? deviceList;
 
   List<DeviceData> getDeviceValues() {
-    var devicelist = List<DeviceData>();
+    var devicelist = <DeviceData>[];
     devicelist.add(DeviceData(
         title: Constants.STR_BP_MONITOR,
         icon: Constants.Devices_BP,
@@ -173,7 +173,7 @@ class DevicesViewModel with ChangeNotifier {
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
-      var ret = List<GVResult>();
+      var ret = <GVResult>[];
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodGlucoseCollection!.isEmpty) {
           return [];
@@ -378,7 +378,7 @@ class DevicesViewModel with ChangeNotifier {
       var parsedResponse = json.decode(resp.toString())[dataResult] as List;
       final deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
-      var ret = List<HRResult>();
+      var ret = <HRResult>[];
 
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.heartRateCollection!.isEmpty) {

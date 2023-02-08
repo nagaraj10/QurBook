@@ -173,7 +173,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ),
                                   onPressed: () {
                                     if (sheelBadgeController
-                                            ?.sheelaIconBadgeCount?.value >
+                                            .sheelaIconBadgeCount.value >
                                         0) {
                                       Get.toNamed(
                                         rt_Sheela,

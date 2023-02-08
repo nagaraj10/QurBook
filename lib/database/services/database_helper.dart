@@ -54,7 +54,7 @@ class DatabaseHelper {
     return res;
   }
 
-  Future<UnitsMesurements> getMeasurementsBasedOnUnits(
+  Future<UnitsMesurements?> getMeasurementsBasedOnUnits(
       String? unitsMeasure,String range) async {
     final dbClient = await (db as FutureOr<Database>);
 

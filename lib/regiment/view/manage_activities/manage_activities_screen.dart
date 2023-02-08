@@ -52,7 +52,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color!.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -227,7 +227,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen> {
                           title: regimentData.title,
                           time: regimentData?.estart != null
                               ? DateFormat('hh:mm\na')
-                                  .format(regimentData?.estart!)
+                                  .format(regimentData.estart!)
                               : '',
                           color: getColor(regimentData.activityname,
                               regimentData.uformname, regimentData.metadata),

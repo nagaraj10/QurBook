@@ -46,7 +46,7 @@ String categories='[\"HOSPTL\",\"CLINIC\"]';
     return HospitalsSearchListResponse.fromJson(response);
   }
 
-  Future<NewHospitalResponse> addHospitalList(String jsonData) async {
+  Future<NewHospitalResponse?> addHospitalList(String jsonData) async {
     var response = await _helper.addHospitalFromProvider(
         "${query.qr_health_organization}${query.qr_non_qurpro_hospital}",
         jsonData);

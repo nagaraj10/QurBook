@@ -1114,7 +1114,7 @@ class FHBBasicWidget {
     }
   }
 
-  bool checkifValueisInRange(String text, String? device) {
+  checkifValueisInRange(String text, String? device) {
     try {
       if (text != null && text != '') {
         var number;

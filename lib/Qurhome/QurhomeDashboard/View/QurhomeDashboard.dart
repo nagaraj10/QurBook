@@ -238,7 +238,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   onPressed: () {
-                    if (sheelBadgeController?.sheelaIconBadgeCount?.value > 0) {
+                    if (sheelBadgeController.sheelaIconBadgeCount.value > 0) {
                       Get.toNamed(
                         rt_Sheela,
                         arguments: SheelaArgument(

@@ -15,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<CheckboxListTile> data = List();
+  List<CheckboxListTile> data = [];
 
   @override
   void initState() {

@@ -221,7 +221,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                 fromClass: CommonConstants.my_family,
                                 isForFamily: false,
                                 defaultrelationShips:
-                                    relationShipResponseList?.result?.isNotEmpty
+                                    relationShipResponseList!.result!.isNotEmpty
                                         ? relationShipResponseList
                                             ?.result![0].referenceValueCollection
                                         : <RelationsShipModel>[]))
@@ -314,14 +314,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       if (sharedbyme.child!.firstName != null &&
           sharedbyme.child!.lastName != null) {
         firstNameController.text =
-            sharedbyme?.child?.firstName?.capitalizeFirstofEach;
+            sharedbyme.child!.firstName!.capitalizeFirstofEach;
         middleNameController.text =
-            sharedbyme?.child?.middleName?.capitalizeFirstofEach;
+            sharedbyme.child!.middleName!.capitalizeFirstofEach;
         lastNameController.text =
-            sharedbyme?.child?.lastName?.capitalizeFirstofEach;
+            sharedbyme.child!.lastName!.capitalizeFirstofEach;
       }
     } else {
-      firstNameController.text = sharedbyme?.child?.name!;
+      firstNameController.text = sharedbyme!.child!.name!;
       middleNameController.text = '';
       lastNameController.text = '';
     }
@@ -342,11 +342,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               }
             }
           } catch (e) {
-            if (sharedbyme?.child?.isVirtualUser!) {
+            if (sharedbyme.child!.isVirtualUser!) {
               mobileNoController.text =
-                  myProfile?.result?.userContactCollection3![0]!.phoneNumber!;
+                  myProfile!.result!.userContactCollection3![0]!.phoneNumber!;
               emailController.text =
-                  myProfile?.result?.userContactCollection3![0]!.email!;
+                  myProfile!.result!.userContactCollection3![0]!.email!;
             } else {
               mobileNoController.text = '';
               emailController.text = '';
@@ -354,19 +354,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           }
         } else {
           // this is non primary user
-          if (sharedbyme?.child?.userContactCollection3!.isNotEmpty) {
+          if (sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
             mobileNoController.text =
-                sharedbyme?.child?.userContactCollection3![0].phoneNumber!;
+                sharedbyme!.child!.userContactCollection3![0].phoneNumber!;
             emailController.text =
-                sharedbyme?.child?.userContactCollection3![0].email!;
+                sharedbyme.child!.userContactCollection3![0].email!;
           }
         }
       } catch (e) {
-        if (sharedbyme?.child?.isVirtualUser!) {
+        if (sharedbyme.child!.isVirtualUser!) {
           mobileNoController.text =
-              myProfile?.result?.userContactCollection3![0]!.phoneNumber!;
+              myProfile!.result!.userContactCollection3![0]!.phoneNumber!;
           emailController.text =
-              myProfile?.result?.userContactCollection3![0]!.email!;
+              myProfile!.result!.userContactCollection3![0]!.email!;
         } else {
           mobileNoController.text = '';
           emailController.text = '';
@@ -374,11 +374,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       }
     } else {
       // this is non primary user
-      if (sharedbyme?.child?.userContactCollection3!.isNotEmpty) {
+      if (sharedbyme.child!.userContactCollection3!.isNotEmpty) {
         mobileNoController.text =
-            sharedbyme?.child?.userContactCollection3![0].phoneNumber!;
+            sharedbyme.child!.userContactCollection3![0].phoneNumber!;
         emailController.text =
-            sharedbyme?.child?.userContactCollection3![0].email!;
+            sharedbyme.child!.userContactCollection3![0].email!;
       }
     }
 
@@ -455,22 +455,22 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           FHBUtils().getFormattedDateOnlyNew(sharedbyme.child!.dateOfBirth)!;
     }
 
-    if (sharedbyme?.child?.userAddressCollection3!.isNotEmpty) {
+    if (sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
       cntrlr_addr_one.text =
-          sharedbyme?.child?.userAddressCollection3![0].addressLine1!;
+          sharedbyme!.child!.userAddressCollection3![0].addressLine1!;
       cntrlr_addr_two.text =
-          sharedbyme?.child?.userAddressCollection3![0].addressLine2!;
+          sharedbyme.child!.userAddressCollection3![0].addressLine2!;
       cntrlr_addr_city.text =
-          sharedbyme?.child?.userAddressCollection3![0].city?.name!;
+          sharedbyme.child!.userAddressCollection3![0].city!.name!;
       cntrlr_addr_state.text =
-          sharedbyme?.child?.userAddressCollection3![0].state?.name!;
+          sharedbyme.child!.userAddressCollection3![0].state!.name!;
       cntrlr_addr_zip.text =
-          sharedbyme?.child?.userAddressCollection3![0].pincode!;
+          sharedbyme!.child!.userAddressCollection3![0].pincode!;
     }
 
     if (sharedbyme?.membershipOfferedBy != null &&
         sharedbyme?.membershipOfferedBy != '') {
-      cntrlr_corp_name.text = sharedbyme?.membershipOfferedBy!;
+      cntrlr_corp_name.text = sharedbyme!.membershipOfferedBy!;
     }
 
     final profilebanner =

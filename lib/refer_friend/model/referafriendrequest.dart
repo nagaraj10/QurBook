@@ -7,7 +7,7 @@ class ReferAFriendRequest {
 
   ReferAFriendRequest.fromJson(Map<String, dynamic> json) {
     if (json['contacts'] != null) {
-      contacts = List<Contacts>();
+      contacts = <Contacts>[];
       json['contacts'].forEach((v) {
         contacts!.add(Contacts.fromJson(v));
       });

@@ -30,7 +30,7 @@ class SymptomListController extends GetxController {
       if (isLoading) {
         loadingData.value = true;
       }
-      http.Response? response = await (_apiProvider.getSymptomList() as FutureOr<Response?>);
+      http.Response? response = (await (_apiProvider.getSymptomList() as Future<Response?>)) as http.Response?;
       if (response == null) {
         loadingData.value = false;
         return RegimentResponseModel(
@@ -98,7 +98,7 @@ class SymptomListController extends GetxController {
   void startSymptomTTS(int index,
       {String? staticText, String? dynamicText}) async {
     stopSymptomTTS();
-    if (index < symptomList.value?.length) {
+    if (index < symptomList.value.length) {
       Future.delayed(
           Duration(
             milliseconds: 100,

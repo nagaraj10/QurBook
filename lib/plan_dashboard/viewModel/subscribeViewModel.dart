@@ -17,7 +17,7 @@ import '../services/subscribeService.dart';
 class SubscribeViewModel extends ChangeNotifier {
   SubscribeService myPlanService = SubscribeService();
 
-  Future<SubscribeModel> subScribePlan(String packageId) async {
+  Future<SubscribeModel?> subScribePlan(String packageId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     try {
       var myPlanListModel =
@@ -28,7 +28,7 @@ class SubscribeViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<SubscribeModel> UnsubScribePlan(String packageId) async {
+  Future<SubscribeModel?> UnsubScribePlan(String packageId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     try {
       var myPlanListModel =
@@ -39,7 +39,7 @@ class SubscribeViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<CreateSubscribeModel> createSubscribePayment(String packageId) async {
+  Future<CreateSubscribeModel?> createSubscribePayment(String packageId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     try {
       var createSubscribeModel =

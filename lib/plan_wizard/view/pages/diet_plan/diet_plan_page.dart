@@ -32,7 +32,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
 
   bool isSearch = false;
 
-  List<List<DietPlanResult>> planSearchList = List();
+  List<List<DietPlanResult>> planSearchList = [];
 
   String? _selectedView = popUpChoiceDefault;
 
@@ -53,7 +53,7 @@ class _DietPlanPageState extends State<DietPlanPage> {
     Provider.of<PlanWizardViewModel>(context, listen: false)
         .currentPackageIdDiet = '';
 
-    planListModel = planWizardViewModel.getDietPlanList();
+    planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
   }
   @override
   void dispose() {
@@ -176,13 +176,13 @@ class _DietPlanPageState extends State<DietPlanPage> {
           return ErrorsWidget();
         } else {
           int? totalListCount = 0;
-          totalListCount = (snapshot?.data?.result?.length ?? 0) > 0
-              ? snapshot?.data?.result?.length
+          totalListCount = (snapshot.data!.result!.length ?? 0) > 0
+              ? snapshot.data!.result!.length
               : 0;
-          if (totalListCount! > 0) {
+          if (totalListCount > 0) {
             totalListCount = 0;
-            snapshot?.data?.result?.forEach((element) {
-              totalListCount += element?.length ?? 0;
+            snapshot.data!.result!.forEach((element) {
+              totalListCount += element.length ?? 0;
             });
           }
           if (totalListCount! > 0) {
@@ -382,12 +382,12 @@ class _DietPlanPageState extends State<DietPlanPage> {
     if (isSwitched == false) {
       setState(() {
         isSwitched = true;
-        planListModel = planWizardViewModel.getDietPlanList(isVeg: true);
+        planListModel = planWizardViewModel.getDietPlanList(isVeg: true) as Future<DietPlanModel>?;
       });
     } else {
       setState(() {
         isSwitched = false;
-        planListModel = planWizardViewModel.getDietPlanList();
+        planListModel = planWizardViewModel.getDietPlanList() as Future<DietPlanModel>?;
       });
     }
   }

@@ -65,7 +65,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  List<HealthRecordCollection> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = [];
   FlutterToast toast = new FlutterToast();
 
   @override
@@ -94,7 +94,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   }
 
   Widget _getWidgetToDisplayDeviceList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionDevice);
@@ -357,7 +357,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   Widget getDeviceReadings(
       HealthResult data, List<DeviceReadings> deviceReadings) {
-    List<Widget> list = new List<Widget>();
+    List<Widget> list = <Widget>[];
     for (var i = 0; i < deviceReadings.length; i++) {
       list.add(Padding(
         padding: EdgeInsets.all(5.0.sp),

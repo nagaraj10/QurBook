@@ -179,9 +179,9 @@ class AddProviderPlanState extends State<AddProviderPlan> {
           /*if (providerMainList != null && providerMainList.length > 0) {
             return hospitalList(providerMainList);
           } else*/
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             //providerMainList = snapshot.data.result;
             hasData = true;
             planListProvider.updateBool(true);
@@ -393,7 +393,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    planList?.name!,
+                    planList.name!,
                     style: TextStyle(fontWeight: FontWeight.w500),
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
@@ -436,7 +436,7 @@ class AddProviderPlanState extends State<AddProviderPlan> {
       if (selectedCategories != null && selectedCategories.length > 0) {
         LoaderClass.showLoadingDialog(context);
         AddProviderPlanResponse response =
-            await planListProvider?.addproviderPlan(selectedCategories);
+            await planListProvider.addproviderPlan(selectedCategories);
         LoaderClass.hideLoadingDialog(context);
         if (response.isSuccess!) {
           toast.getToast("Added Successfully", Colors.green);

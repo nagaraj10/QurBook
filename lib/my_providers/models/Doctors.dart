@@ -50,14 +50,14 @@ class Doctors {
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-          List<DoctorProfessionalDetailCollection>();
+          <DoctorProfessionalDetailCollection>[];
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection!
             .add(DoctorProfessionalDetailCollection.fromJson(v));
       });
     }
     if (json['doctorLanguageCollection'] != null) {
-      doctorLanguageCollection = List<DoctorLanguageCollection>();
+      doctorLanguageCollection = <DoctorLanguageCollection>[];
       json['doctorLanguageCollection'].forEach((v) {
         doctorLanguageCollection!.add(DoctorLanguageCollection.fromJson(v));
       });

@@ -57,7 +57,7 @@ class PlanNavigationWidget extends StatelessWidget {
     );
   }
 
-  String _getAppBarText(int currentPage) {
+  String? _getAppBarText(int currentPage) {
     switch (currentPage) {
       case 0:
         return strHealthconLine;

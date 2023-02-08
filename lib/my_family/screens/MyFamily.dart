@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/QurHub/Models/hub_list_response.dart';
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import '../../add_family_otp/models/add_family_otp_arguments.dart';
@@ -317,7 +318,7 @@ class _MyFamilyState extends State<MyFamily> {
         fulName = data?.child?.firstName;
       }
       if (data?.child?.lastName != null && data?.child?.lastName != '') {
-        fulName = fulName! + ' ' + data?.child?.lastName!;
+        fulName = fulName! + ' ' + data!.child!.lastName!;
       }
     }
 
@@ -381,7 +382,7 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            data.child?.profilePicThumbnailUrl!,
+                            data.child!.profilePicThumbnailUrl!,
                             fit: BoxFit.cover,
                             width: 60.0.h,
                             height: 60.0.h,
@@ -501,20 +502,20 @@ class _MyFamilyState extends State<MyFamily> {
                       position == 0 //this is checking self
                           ? ((myProfile?.result?.userContactCollection3 !=
                                       null &&
-                                  myProfile?.result?.userContactCollection3!
+                                  myProfile!.result!.userContactCollection3!
                                       .isNotEmpty)
                               ? myProfile?.result?.userContactCollection3![0]!
                                   .phoneNumber!
                               : '')!
                           : (data?.child?.isVirtualUser != null &&
-                                  data?.child?.isVirtualUser!)
+                                  data!.child!.isVirtualUser!)
                               /*? data?.child?.isVirtualUser
                                 */
                               ? userCollection
                                       ?.virtualUserParent?.phoneNumber ??
                                   ''
                               : ((data?.child?.userContactCollection3 != null &&
-                                      data?.child?.userContactCollection3!
+                                      data!.child!.userContactCollection3!
                                           .isNotEmpty)
                                   ? data?.child?.userContactCollection3![0]
                                       .phoneNumber!
@@ -1159,7 +1160,7 @@ class _MyFamilyState extends State<MyFamily> {
                             id: addFamilyOTPResponse.result!.childInfo!.id,
                             isForFamily: false,
                             addFamilyUserInfo:
-                                addFamilyOTPResponse.result ?? '' as Result?),
+                                addFamilyOTPResponse.result ?? '' as Result),
                       ).then((value) {
                         mobileNoController.text = '';
                         nameController.text = '';

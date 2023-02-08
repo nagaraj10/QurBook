@@ -43,7 +43,7 @@ class _DiseasesList extends State<DiseasesList> {
     FocusManager.instance.primaryFocus!.unfocus();
     super.initState();
 
-    planListModel = myPlanViewModel.getPlanList('');
+    planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
   }
 
   @override
@@ -273,9 +273,9 @@ class _DiseasesList extends State<DiseasesList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             return diseasesList(snapshot.data!.result);
           } else {
             return SafeArea(
@@ -322,7 +322,7 @@ class _DiseasesList extends State<DiseasesList> {
                     planList[i]?.metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('');
+                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }
@@ -345,7 +345,7 @@ class _DiseasesList extends State<DiseasesList> {
                       planList[i]?.metadata?.diseases ?? '', planListFull)),
             ).then((value) => {
                   setState(() {
-                    planListModel = myPlanViewModel.getPlanList('');
+                    planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                   })
                 });
           }
@@ -357,7 +357,7 @@ class _DiseasesList extends State<DiseasesList> {
                     planList[i]?.metadata?.diseases ?? '', planListFull)),
           ).then((value) => {
                 setState(() {
-                  planListModel = myPlanViewModel.getPlanList('');
+                  planListModel = myPlanViewModel.getPlanList('') as Future<PlanListModel>?;
                 })
               });
         }

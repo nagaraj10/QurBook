@@ -129,7 +129,7 @@ class ChatState extends State<ChatDetail> {
  // ItemScrollController listScrollController = ItemScrollController(); FU2.5
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
-  List<String> recordIds = new List();
+  List<String> recordIds = [];
   FlutterToast toast = new FlutterToast();
 
   //List<String> wordsList = [];
@@ -304,7 +304,7 @@ class ChatState extends State<ChatDetail> {
   void getChatHistory() {
     chatHistoryModel = Provider.of<ChatSocketViewModel>(context, listen: false)
         .getChatHistory(chatPeerId!, familyUserId!, isFromCareCoordinator!,
-            carecoordinatorId!, isFromFamilyListChat);
+            carecoordinatorId!, isFromFamilyListChat) as Future<ChatHistoryModel>?;
   }
 
   void getGroupId() {
@@ -463,25 +463,25 @@ class ChatState extends State<ChatDetail> {
               : '';
           doctorDeviceToken = appointmentResult?.deviceToken != null
               ? appointmentResult?.deviceToken?.doctor != null
-                  ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
+                  ? appointmentResult!.deviceToken!.doctor!.payload!.isNotEmpty
                       ? appointmentResult!
-                          .deviceToken?.doctor?.payload![0]?.deviceTokenId
+                          .deviceToken!.doctor!.payload![0].deviceTokenId
                       : ''
                   : ''
               : '';
           patientDeviceToken = '';
-          if (appointmentResult?.deviceToken != null) {
-            if (appointmentResult?.deviceToken?.patient?.isSuccess! &&
-                appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
+          if (appointmentResult!.deviceToken != null) {
+            if (appointmentResult!.deviceToken!.patient!.isSuccess! &&
+                appointmentResult!.deviceToken!.patient!.payload!.isNotEmpty &&
                 appointmentResult
                         ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess! &&
+                    !.deviceToken!.parentMember!.isSuccess! &&
                 appointmentResult
-                    ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
+                    !.deviceToken!.parentMember!.payload!.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload![0]
                         ?.deviceTokenId !=
                     null) {
@@ -511,7 +511,7 @@ class ChatState extends State<ChatDetail> {
               careCoordinatorName = careCoordinatorName +
                   ' ' +
                   appointmentResult
-                      ?.doctorOrCarecoordinatorInfo?.carecoordinatorLastName!;
+                      !.doctorOrCarecoordinatorInfo!.carecoordinatorLastName!;
               isFromCareCoordinator = appointmentResult
                   ?.doctorOrCarecoordinatorInfo?.isCareCoordinator;
             }
@@ -841,7 +841,7 @@ class ChatState extends State<ChatDetail> {
                                                   familyUserId!,
                                                   isFromCareCoordinator!,
                                                   carecoordinatorId!,
-                                                  isFromFamilyListChat);
+                                                  isFromFamilyListChat) as Future<ChatHistoryModel>?;
                                       setState(() {});
                                     });
                                   },
@@ -951,9 +951,9 @@ class ChatState extends State<ChatDetail> {
 
       if (listIndex != null) {
         if (commonIndex <
-            (listIndex?.length > 1
-                ? listIndex?.length - 1
-                : listIndex?.length ?? 0)) {
+            (listIndex.length > 1
+                ? listIndex.length - 1
+                : listIndex.length ?? 0)) {
           commonIndex = commonIndex;
           scrollToPosiiton(commonIndex);
         }
@@ -1047,9 +1047,9 @@ class ChatState extends State<ChatDetail> {
                     Text(
                         widget.peerName != null && widget.peerName != ''
                             ? (isFromCareCoordinator!&&(familyUserId!=null&&familyUserId!='')
-                                ? widget.peerName?.capitalizeFirstofEach +
+                                ? widget.peerName!.capitalizeFirstofEach +
                                     CARE_COORDINATOR_STRING
-                                : widget.peerName?.capitalizeFirstofEach)!
+                                : widget.peerName!.capitalizeFirstofEach)!
                             : '',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
@@ -1133,6 +1133,7 @@ class ChatState extends State<ChatDetail> {
 
   Widget buildListMessage() {
     return Flexible(
+      child: Container(), // FU2.5
       //FU2.5
       //   child: ScrollablePositionedList.builder(
       // padding: EdgeInsets.all(10.0),
@@ -1332,11 +1333,11 @@ class ChatState extends State<ChatDetail> {
     List<TextSpan> textSpanList = [];
 
     if (chatList?.messages?.type == 0) {
-      String tempData = chatList?.messages?.content!;
+      String tempData = chatList.messages!.content!;
 
       textSpanList = [
         buildTextWithLinks(
-            tempData, index, chatList?.messages?.idFrom == patientId)
+            tempData, index, chatList.messages!.idFrom == patientId)
       ];
       //firstTime = false;
       //commonIndex=indexList.length-1;
@@ -1742,7 +1743,7 @@ class ChatState extends State<ChatDetail> {
                     child: Text(
                       getFormattedDateTime(DateTime.fromMillisecondsSinceEpoch(
                               int.parse(
-                                  chatList?.messages?.timestamp?.sSeconds!))
+                                  chatList.messages!.timestamp!.sSeconds!))
                           .toString()),
                       style: TextStyle(
                           color: greyColor,
@@ -1841,7 +1842,7 @@ class ChatState extends State<ChatDetail> {
                       List<String> result = [];
                       result.add(value);
                       try {
-                        if (result?.length > 0) {
+                        if (result.length > 0) {
                           final removedBrackets = result
                               .toString()
                               .substring(2, result.toString().length - 2);
@@ -1935,12 +1936,12 @@ class ChatState extends State<ChatDetail> {
 
       try {
         if (match != null) {
-          value = match?.start + linkText?.length;
+          value = match.start + linkText.length;
         } else {
           if (dateMatch != null) {
-            value = dateMatch?.start + dateText?.length;
+            value = dateMatch.start + dateText.length;
           } else if (directionMap != null) {
-            value = directionMap?.start + directionText?.length;
+            value = directionMap.start + directionText.length;
           } else {
             value = 0;
           }
@@ -2084,7 +2085,7 @@ class ChatState extends State<ChatDetail> {
         document?.messages?.timestamp?.sSeconds != '') {
       DateTime dateTimeFromServerTimeStamp =
           DateTime.fromMillisecondsSinceEpoch(
-              int.parse(document?.messages?.timestamp?.sSeconds!));
+              int.parse(document.messages!.timestamp!.sSeconds!));
       return Text(
         'File ' + dateTimeFromServerTimeStamp.millisecondsSinceEpoch.toString(),
         style: TextStyle(
@@ -2279,10 +2280,10 @@ class ChatState extends State<ChatDetail> {
           isLoading = false;
         });
         if (value != null) {
-          if (value?.isSuccess!) {
-            if (value?.result != null) {
-              onSendMessage(value?.result?.fileUrl, 3,
-                  value?.result?.chatMessageId, true);
+          if (value.isSuccess!) {
+            if (value.result != null) {
+              onSendMessage(value.result?.fileUrl, 3,
+                  value.result?.chatMessageId, true);
             } else {
               FlutterToast().getToast(upload_failed, Colors.red);
             }
@@ -2398,7 +2399,7 @@ class ChatState extends State<ChatDetail> {
   void getListIndexMapFilter() {
     searchIndexListAll.asMap().forEach((index, value) {
       if (value != null) {
-        if (value?.toLowerCase().contains('$textFieldValue'.toLowerCase())) {
+        if (value.toLowerCase().contains('$textFieldValue'.toLowerCase())) {
           listIndex.add(index);
         }
       }
@@ -2416,7 +2417,7 @@ class ChatState extends State<ChatDetail> {
                 lastReceived = data?.chatListItem?.deliveredOn != null &&
                         data?.chatListItem?.deliveredOn != ''
                     ? CommonUtil()
-                        .getFormattedDateTime(data?.chatListItem?.deliveredOn!)
+                        .getFormattedDateTime(data.chatListItem!.deliveredOn!)
                     : '';
               }
             }

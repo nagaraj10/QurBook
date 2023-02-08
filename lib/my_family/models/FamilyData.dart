@@ -13,13 +13,13 @@ class FamilyData {
 
   FamilyData.fromJson(Map<String, dynamic> json) {
     if (json[parameters.strsharedbyme] != null) {
-      sharedbyme = List<Sharedbyme>();
+      sharedbyme = <Sharedbyme>[];
       json[parameters.strsharedbyme].forEach((v) {
         sharedbyme!.add(Sharedbyme.fromJson(v));
       });
     }
     if (json[parameters.strsharedToMe] != null) {
-      sharedToMe = List<SharedToMe>();
+      sharedToMe = <SharedToMe>[];
       json[parameters.strsharedToMe].forEach((v) {
         sharedToMe!.add(SharedToMe.fromJson(v));
       });

@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
@@ -227,7 +228,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   fetchUserProfileInfo() async {
     addFamilyUserInfoRepository = AddFamilyUserInfoRepository();
-    final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
     myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
     return myProfile;
@@ -235,9 +236,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   dynamic checkAddressValidation(
       UserAddressCollection3 userAddressCollection3) {
-    final addrLine1 = userAddressCollection3?.addressLine1;
-    final city = userAddressCollection3?.city?.name;
-    final state = userAddressCollection3?.state?.name;
+    var addrLine1 = userAddressCollection3?.addressLine1;
+    var city = userAddressCollection3?.city?.name;
+    var state = userAddressCollection3?.state?.name;
     if (addrLine1 != '' && city != '' && state != '') {
       return true;
     } else {
@@ -265,10 +266,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
     else  */
     if (widget.arguments!.isFromCSIR) {
-      final myProfile = await CommonUtil().fetchUserProfileInfo();
-      if (myProfile?.result?.userAddressCollection3?.isNotEmpty) {
+      var myProfile = await CommonUtil().fetchUserProfileInfo();
+      if (myProfile.result!.userAddressCollection3!.isNotEmpty) {
         var callback = checkAddressValidation(
-            myProfile?.result?.userAddressCollection3![0]);
+            myProfile.result!.userAddressCollection3![0]);
         if (callback) {
           await CommonUtil().mDisclaimerAlertDialog(
             context: Get.context!,
@@ -615,9 +616,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   addressList: _addressList,
                   onSelected: (addressResult, addressList) {
                     setState(() {
-                      _addressResult = addressResult;
+                      _addressResult = addressResult!;
                       addressTypeId = addressResult.id;
-                      _addressList = addressList;
+                      _addressList = addressList!;
                     });
                   },
                 ),
@@ -755,7 +756,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final picked = await showDatePicker(
+    var picked = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(1940),
@@ -1036,7 +1037,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showSaveButton() {
-    final addButtonWithGesture = GestureDetector(
+    var addButtonWithGesture = GestureDetector(
       onTap: _saveBtnTappedClone,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1084,7 +1085,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showOKButton() {
-    final addButtonWithGesture = GestureDetector(
+    var addButtonWithGesture = GestureDetector(
       onTap: _onOkPressed,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1421,7 +1422,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   bool doValidation() {
     var isValid = false;
 
-    final emailValid = '@'.allMatches(emailController.text.trim()).length > 1
+    var emailValid = '@'.allMatches(emailController.text.trim()).length > 1
         ? false
         : RegExp(patternEmail as String).hasMatch(emailController.text);
 
@@ -1481,12 +1482,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (widget.arguments!.sharedbyme != null) {
         try {
-          if (widget?.arguments?.sharedbyme?.child?.userContactCollection3!
+          if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
               .isNotEmpty) {
-            mobileNoController.text = widget?.arguments?.sharedbyme?.child
-                ?.userContactCollection3![0].phoneNumber!;
+            mobileNoController.text = widget.arguments!.sharedbyme!.child
+                !.userContactCollection3![0].phoneNumber!;
             emailController.text = widget
-                ?.arguments?.sharedbyme?.child?.userContactCollection3![0].email!;
+                .arguments!.sharedbyme!.child!.userContactCollection3![0].email!;
           }
         } catch (e) {
           mobileNoController.text = '';
@@ -1495,12 +1496,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         if (widget.arguments!.isForFamilyAddition!) {
           try {
-            if (widget?.arguments?.myProfileResult?.userContactCollection3!
+            if (widget.arguments!.myProfileResult!.userContactCollection3!
                 .isNotEmpty) {
-              mobileNoController.text = widget?.arguments?.myProfileResult
-                  ?.userContactCollection3![0]!.phoneNumber!;
+              mobileNoController.text = widget.arguments!.myProfileResult
+                  !.userContactCollection3![0]!.phoneNumber!;
               emailController.text = widget
-                  ?.arguments?.myProfileResult?.userContactCollection3![0]!.email!;
+                  .arguments!.myProfileResult!.userContactCollection3![0]!.email!;
             }
           } catch (e) {
             mobileNoController.text = '';
@@ -1508,7 +1509,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else {
           try {
-            final myProf =
+            var myProf =
                 await PreferenceUtil.getProfileData(Constants.KEY_PROFILE) ??
                     PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
             if (myProf.result!.userContactCollection3 != null &&
@@ -1520,7 +1521,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     myProf.result!.userContactCollection3![0]!.email!;
               }
             } else {
-              final myProf = await PreferenceUtil.getProfileData(
+              var myProf = await PreferenceUtil.getProfileData(
                   Constants.KEY_PROFILE_MAIN);
               if (myProf.result!.userContactCollection3 != null &&
                   myProf.result!.userContactCollection3!.length > 0) {
@@ -1565,9 +1566,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           cntrlr_addr_two.text = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].addressLine2!;
           cntrlr_addr_city.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].city?.name!;
+              .arguments!.myProfileResult!.userAddressCollection3![0].city!.name!;
           cntrlr_addr_state.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].state?.name!;
+              .arguments!.myProfileResult!.userAddressCollection3![0].state!.name!;
           cntrlr_addr_zip.text = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].pincode!;
 
@@ -1651,7 +1652,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         selectedTags = addFamilyUserInfoBloc!.tagsList != null &&
                 addFamilyUserInfoBloc!.tagsList!.length > 0
             ? addFamilyUserInfoBloc!.tagsList
-            : new List();
+            :[];
         setTheValuesForDropdown(selectedTags);
       }
       await setValueLanguages();
@@ -1686,8 +1687,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
 
             try {
-              if (myProf.result?.userProfileSettingCollection3 != null &&
-                  myProf.result?.userProfileSettingCollection3!.length > 0) {
+              if (myProf.result!.userProfileSettingCollection3 != null &&
+                  myProf.result!.userProfileSettingCollection3!.length > 0) {
                 var preferredMesurement = myProf
                     .result
                     ?.userProfileSettingCollection3![0]
@@ -1699,7 +1700,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             } catch (e) {}
           } else {
             //! this must be loook
-            if (widget?.arguments?.sharedbyme?.child?.userContactCollection3!
+            if (widget.arguments!.sharedbyme!.child!.userContactCollection3!
                 .isNotEmpty) {
               mobileNoController.text = widget.arguments!.sharedbyme!.child!
                   .userContactCollection3![0].phoneNumber!;
@@ -1715,23 +1716,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           emailController.text = '';
         }
 
-        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
+            widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget?.arguments?.sharedbyme?.membershipOfferedBy!;
+              widget.arguments!.sharedbyme!.membershipOfferedBy!;
         }
       } else {
         if (widget
-            ?.arguments?.sharedbyme?.child?.userContactCollection3!.isNotEmpty) {
-          mobileNoController.text = widget?.arguments?.sharedbyme?.child
-              ?.userContactCollection3![0].phoneNumber!;
+            .arguments!.sharedbyme!.child!.userContactCollection3!.isNotEmpty) {
+          mobileNoController.text = widget.arguments!.sharedbyme!.child
+              !.userContactCollection3![0].phoneNumber!;
           emailController.text = widget
-              ?.arguments?.sharedbyme?.child?.userContactCollection3![0].email!;
+              .arguments!.sharedbyme!.child!.userContactCollection3![0].email!;
         }
-        if (widget?.arguments?.sharedbyme?.membershipOfferedBy != null &&
-            widget?.arguments?.sharedbyme?.membershipOfferedBy != '') {
+        if (widget.arguments!.sharedbyme!.membershipOfferedBy != null &&
+            widget.arguments!.sharedbyme!.membershipOfferedBy != '') {
           cntrlr_corp_name.text =
-              widget?.arguments?.sharedbyme?.membershipOfferedBy!;
+              widget.arguments!.sharedbyme!.membershipOfferedBy!;
         }
       }
       if (widget.arguments!.sharedbyme != null) {
@@ -1797,13 +1798,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         if (widget
-            ?.arguments?.sharedbyme?.child?.userAddressCollection3!.isNotEmpty) {
+            .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
           var currentAddress =
               widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
           cntrlr_addr_one.text = currentAddress.addressLine1!;
           cntrlr_addr_two.text = currentAddress.addressLine2!;
-          cntrlr_addr_city.text = currentAddress.city?.name!;
-          cntrlr_addr_state.text = currentAddress.state?.name!;
+          cntrlr_addr_city.text = currentAddress.city!.name!;
+          cntrlr_addr_state.text = currentAddress.state!.name!;
           cntrlr_addr_zip.text = currentAddress.pincode!;
           setState(() {
             _addressResult = AddressResult(
@@ -1859,12 +1860,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           mContactInfo = value?.result?.userContactCollection3![0];
         }
         //*user already user exist set the address data if available
-        if (value?.result?.userAddressCollection3!.isNotEmpty) {
-          UserAddressCollection3 currentAddress = value?.result?.userAddressCollection3![0];
+        if (value!.result!.userAddressCollection3!.isNotEmpty) {
+          UserAddressCollection3 currentAddress = value.result!.userAddressCollection3![0];
           cntrlr_addr_one.text = currentAddress.addressLine1!;
           cntrlr_addr_two.text = currentAddress.addressLine2!;
-          cntrlr_addr_city.text = currentAddress.city?.name!;
-          cntrlr_addr_state.text = currentAddress.state?.name!;
+          cntrlr_addr_city.text = currentAddress.city!.name!;
+          cntrlr_addr_state.text = currentAddress.state!.name!;
           cntrlr_addr_zip.text = currentAddress.pincode!;
           setState(() {
             _addressResult = AddressResult(
@@ -1879,24 +1880,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
 
         firstNameController.text =
-            value?.result?.firstName?.capitalizeFirstofEach;
+            value.result!.firstName!.capitalizeFirstofEach;
         middleNameController.text =
-            value?.result?.middleName?.capitalizeFirstofEach;
+            value.result!.middleName!.capitalizeFirstofEach;
         lastNameController.text =
-            value?.result?.lastName?.capitalizeFirstofEach;
+            value.result!.lastName!.capitalizeFirstofEach;
         //? check relatioship id against logged in user
-        if (value?.result?.userRelationshipCollection!.isNotEmpty) {
-          for (var cRelationship in value?.result?.userRelationshipCollection!) {
-            if (cRelationship?.parent?.id ==
+        if (value.result!.userRelationshipCollection!.isNotEmpty) {
+          for (var cRelationship in value.result!.userRelationshipCollection!) {
+            if (cRelationship.parent?.id ==
                 PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
-              relationShipController.text = cRelationship?.relationship?.name!;
+              relationShipController.text = cRelationship.relationship!.name!;
             } else {
               relationShipController.text =
-                  widget?.arguments?.relationShip?.name!;
+                  widget.arguments!.relationShip!.name!;
             }
           }
         } else {
-          relationShipController.text = widget?.arguments?.relationShip?.name!;
+          relationShipController.text = widget.arguments!.relationShip!.name!;
         }
         try {
           setState(() {
@@ -1937,9 +1938,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void setValues() async {
     addFamilyUserInfoBloc!.phoneNo = mobileNoController.text;
-    final myProf = MyProfileModel();
+    var myProf = MyProfileModel();
 
-    final profileResult = MyProfileResult();
+    var profileResult = MyProfileResult();
     profileResult.firstName = firstNameController.text.trim();
     profileResult.middleName = middleNameController.text.trim();
     profileResult.lastName = lastNameController.text.trim();
@@ -2173,24 +2174,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       profileResult.id = widget.arguments!.sharedbyme!.id;
 
       if (widget
-          .arguments?.sharedbyme?.child?.userAddressCollection3!.isNotEmpty) {
+          .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
         userAddressCollection3.id =
-            widget?.arguments?.sharedbyme?.child?.userAddressCollection3![0].id;
+            widget.arguments?.sharedbyme?.child?.userAddressCollection3![0].id;
       }
     } else if (widget.arguments!.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc!.isUpdate = false;
       profileResult.id = widget.arguments!.myProfileResult!.id;
       if (widget
-          .arguments?.myProfileResult?.userAddressCollection3!.isNotEmpty) {
+          .arguments!.myProfileResult!.userAddressCollection3!.isNotEmpty) {
         userAddressCollection3.id =
             widget.arguments?.myProfileResult?.userAddressCollection3![0].id;
       }
 
       //allow only user who logged in to update their email address
       if (widget
-          .arguments?.myProfileResult?.userContactCollection3!.isNotEmpty) {
+          .arguments!.myProfileResult!.userContactCollection3!.isNotEmpty) {
         UserContactCollection3 userContact =
-            widget.arguments?.myProfileResult?.userContactCollection3![0]!;
+            widget.arguments!.myProfileResult!.userContactCollection3![0]!;
         userContact.email = emailController.text;
         final List<UserContactCollection3> userContactCollection3List = [];
         userContactCollection3List.add(userContact);
@@ -2200,10 +2201,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       profileResult.id = widget.arguments!.addFamilyUserInfo!.childInfo!.id;
       addFamilyUserInfoBloc!.isUpdate = false;
       if (widget
-          ?.arguments?.addFamilyUserInfo?.childInfo?.contactInfo!.isNotEmpty) {
+          .arguments!.addFamilyUserInfo!.childInfo!.contactInfo!.isNotEmpty) {
         var userContact = mContactInfo;
         userContact?.email = emailController.text;
-        final userContactCollection3List = List<UserContactCollection3?>();
+        var userContactCollection3List = <UserContactCollection3?>[];
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
       }
@@ -2247,13 +2248,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           isIndianTime: true),
     );
 
-    var userAddressCollection3List = List<UserAddressCollection3>();
+    var userAddressCollection3List = <UserAddressCollection3>[];
     userAddressCollection3List.add(userAddressCollection3);
     profileResult.userAddressCollection3 = userAddressCollection3List;
 
     myProf.result = profileResult;
     addFamilyUserInfoBloc!.myProfileModel = myProf;
-    final _familyListBloc = FamilyListBloc();
+    var _familyListBloc = FamilyListBloc();
     if (widget.arguments!.fromClass == CommonConstants.my_family) {
       //*update the myfamily member details
       if (doValidation()) {
@@ -2313,7 +2314,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     firstNameController.text + ' ' + lastNameController.text);
                 addFamilyUserInfoBloc!.getMyProfileInfo().then((profileValue) {
                   if (profileValue!.result!.firstName != null) {
-                    final firstName = profileValue.result!.firstName != null
+                    var firstName = profileValue.result!.firstName != null
                         ? profileValue.result!.firstName!.capitalizeFirstofEach
                         : '';
                     var lastName = profileValue.result!.lastName != null
@@ -2406,7 +2407,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Future<void> setMyProfilePic(String userId, File image) async {
-    final response =
+    var response =
         await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
     if (response.isSuccess!) {
       if (!Platform.isIOS) {
@@ -2619,7 +2620,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       currentUserID = widget.arguments?.addFamilyUserInfo?.childInfo?.id;
       return FutureBuilder<CommonResponse>(
         future: _addFamilyUserInfoRepository.getUserProfilePic(
-            widget.arguments?.addFamilyUserInfo?.childInfo?.id!),
+            widget.arguments!.addFamilyUserInfo!.childInfo!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot?.data?.isSuccess != null &&
@@ -2852,8 +2853,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   void setMobileAndEmail() {
     mobileNoController.text =
-        myProfile?.result?.userContactCollection3![0]!.phoneNumber!;
-    emailController.text = myProfile?.result?.userContactCollection3![0]!.email!;
+        myProfile.result!.userContactCollection3![0]!.phoneNumber!;
+    emailController.text = myProfile.result!.userContactCollection3![0]!.email!;
   }
 
   Future<String?> setValueLanguages() async {
@@ -2879,7 +2880,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (selectedLanguage != null && selectedLanguage != '') {
     } else {
       if (addFamilyUserInfoBloc!
-          .myprofileObject!.result?.userProfileSettingCollection3?.isNotEmpty) {
+          .myprofileObject!.result!.userProfileSettingCollection3!.isNotEmpty) {
         var profileSetting = addFamilyUserInfoBloc!.myprofileObject?.result
             ?.userProfileSettingCollection3![0].profileSetting;
         if (profileSetting != null) {
@@ -2997,7 +2998,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
     } else if (widget.arguments!.fromClass == CommonConstants.my_family) {
-      if (widget.arguments!.sharedbyme?.child?.isVirtualUser!) {
+      if (widget.arguments!.sharedbyme!.child!.isVirtualUser!) {
         var preferredMeasurment = await PreferenceUtil.getPreferredMeasurement(
             Constants.KEY_PREFERREDMEASUREMENT);
 
@@ -3033,7 +3034,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             isClickable: true,
             tags: mediaResultFiltered,
             onChecked: (result) {
-              addSelectedcategoriesToList(result);
+              addSelectedcategoriesToList(result!);
             },
           );
         });
@@ -3064,7 +3065,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   List<Tags> removeUnwantedCategories(List<Tags> tagsList) {
-    final tagsListDuplicate = List<Tags>();
+    var tagsListDuplicate = <Tags>[];
     for (var i = 0; i < tagsList.length; i++) {
       if (!tagsListDuplicate.contains(tagsList[i].name)) {
         tagsListDuplicate.add(tagsList[i]);
@@ -3146,7 +3147,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                               isClickable: true,
                               tags: mediaResultFiltered,
                               onChecked: (result) {
-                                addSelectedcategoriesToList(result);
+                                addSelectedcategoriesToList(result!);
                                 refreshDropDown(result);
                               },
                             ),
@@ -3166,8 +3167,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void methodToAddFamilyFromNotification() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
-    final mobileNo = '${mobileNoController.text}';
-    final addFamilyMemberRequest = {};
+    var mobileNo = '${mobileNoController.text}';
+    var addFamilyMemberRequest = {};
     addFamilyMemberRequest['isVirtualUser'] = false;
     addFamilyMemberRequest['firstName'] = firstNameController.text;
     addFamilyMemberRequest['lastName'] = lastNameController.text;
@@ -3178,7 +3179,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyMemberRequest['email'] = emailController.text;
     addFamilyMemberRequest['isPrimary'] = true;
 
-    final jsonString = convert.jsonEncode(addFamilyMemberRequest);
+    var jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
     var userId = await PreferenceUtil.getStringValue(KEY_USERID_MAIN);
 

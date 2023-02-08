@@ -11,7 +11,7 @@ class MyPlanViewModel extends ChangeNotifier {
 
   List<MyPlanListResult>? myPLanListResult = [];
 
-  Future<MyPlanListModel> getMyPlanList() async {
+  Future<MyPlanListModel?> getMyPlanList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {
@@ -24,7 +24,7 @@ class MyPlanViewModel extends ChangeNotifier {
     }
   }
 
-  Future<MyPlanDetailModel> getMyPlanDetails(String packageId) async {
+  Future<MyPlanDetailModel?> getMyPlanDetails(String packageId) async {
     try {
       var myPlanDetailModel = await myPlanService.getMyPlanDetails(packageId);
       return myPlanDetailModel;
@@ -33,7 +33,7 @@ class MyPlanViewModel extends ChangeNotifier {
 
   List<MyPlanListResult> getProviderName(
       {required List<MyPlanListResult> planList, String? query}) {
-    var dummyPlanList = List<MyPlanListResult>();
+    var dummyPlanList = <MyPlanListResult>[];
     dummyPlanList = planList
         .where((element) => element.providerName!
             .toLowerCase()
@@ -44,7 +44,7 @@ class MyPlanViewModel extends ChangeNotifier {
   }
 
   List<MyPlanListResult> getProviderSearch(String doctorName) {
-    var filterDoctorData = List<MyPlanListResult>();
+    var filterDoctorData = <MyPlanListResult>[];
     for (final doctorData in myPLanListResult!) {
       if (doctorData.title != null && doctorData.title != '') {
         if (doctorData.title!
@@ -58,7 +58,7 @@ class MyPlanViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  Future<MyPlanListModel> getMyPlanListDetail(String? packageId) async {
+  Future<MyPlanListModel?> getMyPlanListDetail(String? packageId) async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {

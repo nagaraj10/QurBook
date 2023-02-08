@@ -248,7 +248,7 @@ class VitalDetailController extends GetxController {
       var deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<dynamic> finalResult;
-      var ret = List<GVResult>();
+      var ret = <GVResult>[];
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodGlucoseCollection!.isEmpty) {
           loadingData.value = false;
