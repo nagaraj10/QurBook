@@ -42,7 +42,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
-      CommonUtil().requestQurhomeDialog();
+      if (CommonUtil.REGION_CODE == "IN") {
+        CommonUtil().requestQurhomeDialog();
+      }
       controller.setActiveQurhomeTo(
         status: true,
       );
