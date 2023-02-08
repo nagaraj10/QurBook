@@ -2513,13 +2513,6 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                         }
                         imm.hideSoftInputFromWindow(view.windowToken, 0)
                         dialog.show()
-
-                        val view: View? = getCurrentFocus()
-                        if (view != null) {
-                            val imm: InputMethodManager =
-                                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                            imm.hideSoftInputFromWindow(view.windowToken, 0)
-                        }
                     }
                 }
 
