@@ -195,13 +195,13 @@ class Preferences {
       });
     }
     if (json[parameters.strhospitalIds] != null) {
-      hospitalIds = <HospitalIds>[];
+      hospitalIds = List<HospitalIds>();
       json[parameters.strhospitalIds].forEach((v) {
         hospitalIds!.add(HospitalIds.fromJson(v));
       });
     }
     if (json[parameters.strlaboratoryIds] != null) {
-      laboratoryIds = <LaboratoryIds>[];
+      laboratoryIds = List<LaboratoryIds>();
       json[parameters.strlaboratoryIds].forEach((v) {
         laboratoryIds!.add(LaboratoryIds.fromJson(v));
       });

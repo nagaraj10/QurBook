@@ -11,7 +11,7 @@ class HospitalsSearchListResponse {
   HospitalsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <HospitalsListResult>[];
+      result = List<HospitalsListResult>();
       json['result'].forEach((v) {
         result!.add(HospitalsListResult.fromJson(v));
       });

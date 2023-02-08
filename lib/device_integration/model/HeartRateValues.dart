@@ -10,7 +10,7 @@ class HeartRateValues {
   HeartRateValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = <HRResult>[];
+      result = List<HRResult>();
       json[dataResult].forEach((hrtvalue) {
         result!.add(HRResult.fromJson(hrtvalue));
       });

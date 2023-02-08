@@ -8,7 +8,7 @@ class AddProviderPlanResponse {
   AddProviderPlanResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result =  <AddProviderPlanResponseResult>[];
+      result = new List<AddProviderPlanResponseResult>();
       json['result'].forEach((v) {
         result!.add(new AddProviderPlanResponseResult.fromJson(v));
       });

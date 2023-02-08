@@ -10,7 +10,7 @@ class GlucoseValues {
   GlucoseValues.fromJson(Map<String, dynamic> json) {
     isSuccess = json[is_Success];
     if (json[dataResult] != null) {
-      result = <GVResult>[];
+      result = List<GVResult>();
       json[dataResult].forEach((glucosevalue) {
         result!.add(GVResult.fromJson(glucosevalue));
       });

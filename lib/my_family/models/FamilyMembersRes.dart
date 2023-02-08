@@ -39,13 +39,13 @@ class FamilyMemberResult {
 
   FamilyMemberResult.fromJson(Map<String, dynamic> json) {
     if (json['sharedByUsers'] != null) {
-      sharedByUsers = <SharedByUsers>[];
+      sharedByUsers = List<SharedByUsers>();
       json['sharedByUsers'].forEach((v) {
         sharedByUsers!.add(SharedByUsers.fromJson(v));
       });
     }
     if (json['sharedToUsers'] != null) {
-      sharedToUsers = <SharedToUsers>[];
+      sharedToUsers = List<SharedToUsers>();
       json['sharedToUsers'].forEach((v) {
         sharedToUsers!.add(SharedToUsers.fromJson(v));
       });
@@ -304,7 +304,7 @@ class Child {
       });
     }
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = <UserAddressCollection3>[];
+      userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
         userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
       });

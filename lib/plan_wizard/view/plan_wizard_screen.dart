@@ -44,9 +44,9 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     } else {
       Future.delayed(Duration(), () {
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            .changeCurrentPage(
+            ?.changeCurrentPage(
           Provider.of<PlanWizardViewModel>(context, listen: false)
-              .dynamicLinkPage,
+              ?.dynamicLinkPage,
         );
       });
     }
@@ -89,7 +89,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
           flexibleSpace: GradientAppBar(),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           elevation: 0,
-          title: Text(_getAppBarText(planWizardViewModel.currentPage)!),
+          title: Text(_getAppBarText(planWizardViewModel.currentPage)),
           leading: IconWidget(
             icon: Icons.arrow_back_ios,
             colors: Colors.white,
@@ -149,7 +149,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                   _getBottomText(
                                       planWizardViewModel.currentPage,
                                       planWizardViewModel.currentTab,
-                                      planWizardViewModel.currentTabDiet)!,
+                                      planWizardViewModel.currentTabDiet),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16.0.sp,
@@ -194,7 +194,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
                                 _getBottomButtonText(
                                     planWizardViewModel.currentPage,
                                     planWizardViewModel.currentTab,
-                                    planWizardViewModel.currentTabDiet)!,
+                                    planWizardViewModel.currentTabDiet),
                               ),
                             ),
                           ],
@@ -209,7 +209,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     );
   }
 
-  String? _getBottomText(int currentPage, int currentTab, int currentTabDiet) {
+  String _getBottomText(int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
         return strDontCondition;
@@ -223,7 +223,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     }
   }
 
-  String? _getBottomButtonText(
+  String _getBottomButtonText(
       int currentPage, int currentTab, int currentTabDiet) {
     switch (currentPage) {
       case 0:
@@ -247,7 +247,7 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
     }
   }
 
-  String? _getAppBarText(int currentPage) {
+  String _getAppBarText(int currentPage) {
     switch (currentPage) {
       case 0:
         return strHealthcon;
@@ -279,14 +279,14 @@ class _PlanWizardScreenState extends State<PlanWizardScreen> {
       }
     } else {
       var newPage = 0;
-      if (planWizardViewModel.isDynamicLink ?? false) {
-        planWizardViewModel.isDynamicLink = false;
-        planWizardViewModel.dynamicLinkSearchText = '';
+      if (planWizardViewModel?.isDynamicLink ?? false) {
+        planWizardViewModel?.isDynamicLink = false;
+        planWizardViewModel?.dynamicLinkSearchText = '';
         newPage = 0;
       } else {
-        newPage = planWizardViewModel.currentPage - 1;
+        newPage = planWizardViewModel?.currentPage - 1;
       }
-      planWizardViewModel.changeCurrentPage(newPage);
+      planWizardViewModel?.changeCurrentPage(newPage);
     }
   }
 }

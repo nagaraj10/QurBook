@@ -43,7 +43,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Future<void>? _initializeControllerFuture;
   bool isMultipleImages = false;
   bool isThumbnails = false;
-  List<String?> imagePaths = [];
+  List<String?> imagePaths = new List();
 
   BuildContext? _cameraScreenContext;
   //final GlobalKey _titleCategory = GlobalKey();
@@ -55,7 +55,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   bool selectSingleImage = false;
   String _platformMessage = 'No Error';
 
-  List<Asset> images = <Asset>[];
+  List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
 
   String? categoryName;
@@ -366,7 +366,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           String filePath;
                                           var image = await (ImagePicker.platform
                                               .pickImage(
-                                                  source: ImageSource.gallery) as Future<PickedFile>);
+                                                  source: ImageSource.gallery) as FutureOr<PickedFile>);
                                           filePath = image.path;
                                           imagePaths.add(filePath);
                                           callDisplayPictureScreen(context);
@@ -540,7 +540,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> loadAssets() async {
-    List<Asset> resultList = <Asset>[];
+    List<Asset> resultList = List<Asset>();
 
     try {
       resultList = await MultiImagePicker.pickImages(
@@ -638,7 +638,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       allowedExtensions: [variable.strpdf],
     );
     if ((filePaths?.files?.length ?? 0) > 0) {
-      for (PlatformFile file in filePaths!.files) {
+      for (PlatformFile file in filePaths?.files) {
         // String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
         // imagePaths.add(filePath);  FU2.5
       }

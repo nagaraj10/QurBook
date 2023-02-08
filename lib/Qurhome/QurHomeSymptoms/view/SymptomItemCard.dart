@@ -448,7 +448,7 @@ class SymptomItemCard extends StatelessWidget {
                                                   : 0.0),
                                           child: Text(
                                             '${CommonUtil().regimentDateFormat(
-                                              regimentData.asNeeded
+                                              regimentData?.asNeeded
                                                   ? regimentData?.ack_local ??
                                                       DateTime.now()
                                                   : regimentData?.ack_local ??
@@ -662,7 +662,7 @@ class SymptomItemCard extends StatelessWidget {
                                             children: [
                                               Text(
                                                 '${CommonUtil().regimentDateFormat(
-                                                  regimentData.asNeeded
+                                                  regimentData?.asNeeded
                                                       ? regimentData
                                                               ?.ack_local ??
                                                           DateTime.now()
@@ -1054,9 +1054,9 @@ class SymptomItemCard extends StatelessWidget {
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&
-        ((selectedDate.year <= currentTime.year)
-            ? (selectedDate.month <= currentTime.month
-                ? selectedDate.day <= currentTime.day
+        ((selectedDate?.year <= currentTime.year)
+            ? (selectedDate?.month <= currentTime.month
+                ? selectedDate?.day <= currentTime.day
                 : false)
             : false);
   }
@@ -1097,7 +1097,7 @@ class SymptomItemCard extends StatelessWidget {
     if (eventId == null || eventId == '' || eventId == 0) {
       final response = await _apiProvider.getEventIdQurHome(
           uid: uid, aid: aid, formId: formId, formName: formName);
-      if (response != null && response.isSuccess! && response?.result != null) {
+      if (response != null && response?.isSuccess! && response?.result != null) {
         print('forEventId: ' + response.toJson().toString());
         eventId = response?.result?.eid.toString();
       }
@@ -1125,8 +1125,8 @@ class SymptomItemCard extends StatelessWidget {
           mediaData: mediaData,
           formTitle: getDialogTitle(context, activityName),
           canEdit: canEdit || isValidSymptom(context),
-          triggerAction: (String? triggerEventId, String? followContext,
-              String? activityName) {
+          triggerAction: (String triggerEventId, String followContext,
+              String activityName) {
             Provider.of<RegimentViewModel>(Get.context!, listen: false)
                 .updateRegimentStatus(RegimentStatus.DialogClosed);
             Get.back();
@@ -1187,11 +1187,11 @@ class SymptomItemCard extends StatelessWidget {
       return Row(
         children: [
           Text(
-            DateFormat('hh:mm a').format(regimentData.estart!),
+            DateFormat('hh:mm a').format(regimentData?.estart!),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           Text(
-            ' - ' + DateFormat('hh:mm a').format(regimentData.eend!),
+            ' - ' + DateFormat('hh:mm a').format(regimentData?.eend!),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           Text(

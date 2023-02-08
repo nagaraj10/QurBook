@@ -42,7 +42,7 @@ class ClaimListResult {
     claimNumber = json['claimNumber'];
     claimAmountTotal = json['claimAmountTotal'];
     if (json['documentMetadata'] != null) {
-      documentMetadata = <DocumentMetadata>[];
+      documentMetadata = new List<DocumentMetadata>();
       json['documentMetadata'].forEach((v) {
         documentMetadata!.add(new DocumentMetadata.fromJson(v));
       });

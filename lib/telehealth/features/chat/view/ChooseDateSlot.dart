@@ -154,7 +154,7 @@ class _ChooseDateSlotState extends State<ChooseDateSlot> {
                   child: Text('Ok', style: TextStyle(fontSize: 20)),
                   onPressed: () {
                     try {
-                      if (finalList.length > 0) {
+                      if (finalList?.length > 0) {
                         List<String> appendedList = [];
 
                         for (var array in finalList) {

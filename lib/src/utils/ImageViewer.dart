@@ -174,7 +174,7 @@ class _ImageViewerState extends State<ImageViewer> {
     var picker = ImagePicker();
     var pickedFile = await (picker.getImage(
       source: ImageSource.camera,
-    ) as Future<PickedFile>);
+    ) as FutureOr<PickedFile>);
     LoaderClass.showLoadingDialog(Get.context!, canDismiss: false);
     setState(() {});
     _image = File(pickedFile.path);

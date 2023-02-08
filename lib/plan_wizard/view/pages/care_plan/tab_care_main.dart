@@ -35,8 +35,8 @@ class _TabCareMainState extends State<TabCareMain>
         var tabIndex = Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.dynamicLinkTabIndex;
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.changeCurrentTab(tabIndex!);
-        _tabController!.animateTo(tabIndex!);
+            ?.changeCurrentTab(tabIndex);
+        _tabController!.animateTo(tabIndex);
       });
     } else {
       Provider.of<PlanWizardViewModel>(context, listen: false)?.currentTab = 0;

@@ -71,7 +71,7 @@ class FamilyListView {
   }
 
   Widget setupAlertDialoadContainer(
-      List<SharedByUsers>? sharedByMeList,
+      List<SharedByUsers> sharedByMeList,
       BuildContext context,
       Function(BuildContext context, String? searchParam, String? name,
               String profilePic)
@@ -87,7 +87,7 @@ class FamilyListView {
         LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     try {
-      sharedByMeList!.insert(
+      sharedByMeList.insert(
           0,
           SharedByUsers(
               id: myProfile.result!.id,
@@ -107,7 +107,7 @@ class FamilyListView {
       }
     }*/
     var sharedByMe =
-        removeDuplicates(sharedByMeList!, condition: removeDuplicate);
+        removeDuplicates(sharedByMeList, condition: removeDuplicate);
 
     if (sharedByMe.isNotEmpty) {
       return Container(

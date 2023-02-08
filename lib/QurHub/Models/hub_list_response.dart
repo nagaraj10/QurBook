@@ -54,7 +54,7 @@ class Result {
     hub = json['hub'] != null ? new Hub.fromJson(json['hub']) : null;
 
     if (json['userDeviceCollection'] != null) {
-      userDeviceCollection = <UserDeviceCollection>[];
+      userDeviceCollection = new List<UserDeviceCollection>();
       json['userDeviceCollection'].forEach((v) {
         userDeviceCollection!.add(new UserDeviceCollection.fromJson(v));
       });

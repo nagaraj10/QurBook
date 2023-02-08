@@ -32,7 +32,7 @@ class OtpViewModel extends ChangeNotifier {
           stopTimer(resetValues: false);
         }
         timeForResend =
-            '00:${timerSeconds.toString().length > 1 ? timerSeconds : '0$timerSeconds'}';
+            '00:${timerSeconds?.toString()?.length > 1 ? timerSeconds : '0$timerSeconds'}';
         notifyListeners();
       },
     );
@@ -43,7 +43,7 @@ class OtpViewModel extends ChangeNotifier {
       timerSeconds = 30;
       timeForResend = '00:30';
     }
-    if (_timer!.isActive) _timer?.cancel();
+    if (_timer?.isActive) _timer?.cancel();
   }
 
   void confirmViaCall({
@@ -64,14 +64,14 @@ class OtpViewModel extends ChangeNotifier {
         Duration(seconds: 5),
         (timer) async {
           var otpResponse =
-              await getOTPFromCall(phoneNumber.replaceAll('+', ''));
-          if (otpResponse.isSuccess ?? false) {
-            timer.cancel();
+              await getOTPFromCall(phoneNumber?.replaceAll('+', ''));
+          if (otpResponse?.isSuccess ?? false) {
+            timer?.cancel();
             if (isDialogOpen) {
               updateDialogStatus(true);
               Get.back();
             }
-            onOtpReceived(otpResponse.otpData?.otpCode ?? '');
+            onOtpReceived(otpResponse?.otpData?.otpCode ?? '');
             notifyListeners();
           }
         },

@@ -9,7 +9,7 @@ class CompleteData {
 
   CompleteData.fromJson(Map<String, dynamic> json) {
     if (json[parameters.strmediaMetaInfo] != null) {
-      mediaMetaInfo = <MediaMetaInfo>[];
+      mediaMetaInfo = List<MediaMetaInfo>();
       json[parameters.strmediaMetaInfo].forEach((v) {
         mediaMetaInfo!.add(MediaMetaInfo.fromJson(v));
       });

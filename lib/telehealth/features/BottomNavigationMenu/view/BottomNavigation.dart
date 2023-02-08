@@ -57,7 +57,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   }
 
   List<Widget> getAllWidgetsInsideBottom() {
-    List<Widget> widgetsForBottom = [];
+    List<Widget> widgetsForBottom = new List();
     int i = 0;
 
     for (BottomNavigationArguments bottomNavigationArguments

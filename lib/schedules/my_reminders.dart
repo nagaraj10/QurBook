@@ -29,7 +29,7 @@ class _MyRemindersState extends State<MyReminders> {
   dynamic detailsList =
       []; // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList =
-      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
+      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
 
   void refresh() {
     setState(() {});

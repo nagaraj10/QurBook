@@ -35,7 +35,7 @@ class PreferenceUtil {
   static SharedPreferences? _prefsInstance;
   static bool _initCalled = false;
 
-  static Future<void> init() async {
+  static void init() async {
     _initCalled = true;
     _prefsInstance = await _prefs;
   }
@@ -91,7 +91,7 @@ class PreferenceUtil {
   } */
 
   static List<MediaResult> getMediaType() {
-    var mediaData = <MediaResult>[];
+    var mediaData = List<MediaResult>();
 
     if (_prefsInstance == null) {}
     json
@@ -162,8 +162,8 @@ class PreferenceUtil {
         json.decode(_prefsInstance!.getString(keyProfile) ?? ''));
   }
 
-  static List<CategoryResult>? getCategoryType() {
-    final categoryData = <CategoryResult>[];
+  static List<CategoryResult> getCategoryType() {
+    final categoryData = List<CategoryResult>();
 
     try {
       if (_prefsInstance == null) {}
@@ -311,7 +311,7 @@ class PreferenceUtil {
     return instance.setString(keyCompletedData, completeDataStr);
   }
 
-  static HealthRecordList? getCompleteData(String keyCompletedData) {
+  static HealthRecordList getCompleteData(String keyCompletedData) {
     try {
       if (_prefsInstance == null) {}
       return HealthRecordList.fromJson(
@@ -319,8 +319,8 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
-  static List<CategoryResult>? getCategoryTypeDisplay(String key) {
-    var categoryData = <CategoryResult>[];
+  static List<CategoryResult> getCategoryTypeDisplay(String key) {
+    var categoryData = List<CategoryResult>();
 
     try {
       if (_prefsInstance == null) {}
@@ -347,7 +347,7 @@ class PreferenceUtil {
     }
   }
 
-  static FamilyData? getFamilyData(String keyFamily) {
+  static FamilyData getFamilyData(String keyFamily) {
     try {
       if (_prefsInstance == null) {}
 
@@ -376,8 +376,8 @@ class PreferenceUtil {
     return instance.setString(membershipKey, json.encode(categoryList));
   }
 
-  static List<LanguageResult>? getLanguagegeList(String keyLanguage) {
-    var categoryData = <LanguageResult>[];
+  static List<LanguageResult> getLanguagegeList(String keyLanguage) {
+    var categoryData = List<LanguageResult>();
 
     try {
       if (_prefsInstance == null) {}
@@ -389,7 +389,7 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
-  static FamilyMemberResult? getFamilyDataNew(String keyFamily) {
+  static FamilyMemberResult getFamilyDataNew(String keyFamily) {
     try {
       if (_prefsInstance == null) {}
 
@@ -429,9 +429,9 @@ class PreferenceUtil {
     return instance.setString(familyRelation, json.encode(relationShipAry));
   }
 
-  static List<RelationsShipModel>? getFamilyRelationship(
+  static List<RelationsShipModel> getFamilyRelationship(
       String keyFamilyRelation) {
-    var categoryData = <RelationsShipModel>[];
+    var categoryData = List<RelationsShipModel>();
 
     try {
       if (_prefsInstance == null) {}
@@ -479,7 +479,7 @@ class PreferenceUtil {
         false;
   }
 
-  static Future<bool?> saveQurhomeAsDefaultUI({
+  static Future<bool> saveQurhomeAsDefaultUI({
     bool qurhomeStatus = false,
   }) async {
     try {
@@ -525,7 +525,7 @@ class PreferenceUtil {
     return instance.setString(keyCompletedData, completeDataStr);
   }
 
-  static PreferredMeasurement? getPreferredMeasurement(String keyCompletedData) {
+  static PreferredMeasurement getPreferredMeasurement(String keyCompletedData) {
     try {
       if (_prefsInstance == null) {}
       return PreferredMeasurement.fromJson(

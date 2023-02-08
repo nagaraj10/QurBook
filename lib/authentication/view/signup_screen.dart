@@ -51,7 +51,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     super.initState();
 
     authViewModel = AuthViewModel();
-    userCollection = [];
+    userCollection = List();
   }
 
   @override
@@ -383,7 +383,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
     userCollection.clear();
-    userCollection = [];
+    userCollection = List();
     if (_SignupKey.currentState!.validate() && checkedValue!) {
       _SignupKey.currentState!.save();
       LoaderClass.showLoadingDialog(context);

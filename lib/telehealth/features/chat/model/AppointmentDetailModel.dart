@@ -478,7 +478,7 @@ class Doctor {
   Doctor.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['payload'] != null) {
-      payload = <Payload>[];
+      payload = new List<Payload>();
       json['payload'].forEach((v) {
         payload!.add(new Payload.fromJson(v));
       });

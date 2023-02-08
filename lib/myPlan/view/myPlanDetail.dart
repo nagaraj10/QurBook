@@ -92,7 +92,7 @@ class PlanDetail extends State<MyPlanDetail> {
     mInitialTime = DateTime.now();
     //setValues();
     getConfiguration();
-    planListFetch = myPlanViewModel.getMyPlanListDetail(widget.packageId) as Future<MyPlanListModel>?;
+    planListFetch = myPlanViewModel.getMyPlanListDetail(widget?.packageId);
   }
 
   Future<void> getConfiguration() async {
@@ -173,9 +173,9 @@ class PlanDetail extends State<MyPlanDetail> {
           } else if (snapshot.hasError) {
             return ErrorsWidget();
           } else {
-            if (snapshot.hasData &&
-                snapshot.data!.result != null &&
-                snapshot.data!.result!.isNotEmpty) {
+            if (snapshot?.hasData &&
+                snapshot?.data?.result != null &&
+                snapshot?.data?.result!.isNotEmpty) {
               MyPlanListResult planList =
                   snapshot?.data?.result![0] as MyPlanListResult;
               setValues(planList);
@@ -215,7 +215,7 @@ class PlanDetail extends State<MyPlanDetail> {
   }
 
   Widget getMainWidget() {
-    if (widget.showRenew) {
+    if (widget?.showRenew) {
       showRenewAlert();
       widget?.showRenew = false;
     }

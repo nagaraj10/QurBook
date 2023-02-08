@@ -31,7 +31,7 @@ class _EventTimeTileState extends State<EventTimeTile> {
       // if (timeOfDay?.hour == 12) {
       //   hour = 12;
       // }
-      return '${hour! > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+      return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
     } else {
       return '';
     }

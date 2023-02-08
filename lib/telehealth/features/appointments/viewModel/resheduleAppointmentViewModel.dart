@@ -8,7 +8,7 @@ class ResheduleAppointmentViewModel extends ChangeNotifier {
       ResheduleAppointmentsService();
   ResheduleModel resheduleAppointmentModel = new ResheduleModel();
 
-  Future<ResheduleModel?> resheduleAppointment(List<String?> bookingId,
+  Future<ResheduleModel> resheduleAppointment(List<String?> bookingId,
       String slotNumber, String resheduleDate, String doctorSessionId) async {
     try {
       ResheduleModel resheduleAp = await _resheduleAppointmentsService.resheduleAppointment(

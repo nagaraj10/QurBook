@@ -348,7 +348,7 @@ class SheelaAIController extends GetxController {
             stopTTS();
             return;
           }
-          currentResponse = (await getGoogleTTSForConversation(currentResponse))!;
+          currentResponse = await getGoogleTTSForConversation(currentResponse);
           currentPlayingConversation = currentResponse;
           conversations.last = currentResponse;
           if ((currentResponse.buttons ?? []).length > 0) {
@@ -482,7 +482,7 @@ class SheelaAIController extends GetxController {
           textForPlaying = currentButton.ttsResponse!.payload!.audioContent;
         } else if ((currentButton.title ?? '').isNotEmpty) {
           final result = await getGoogleTTSForText(currentButton.title);
-          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
+          if ((result.payload?.audioContent ?? '').isNotEmpty) {
             textForPlaying = result.payload!.audioContent;
           }
         }
@@ -495,8 +495,8 @@ class SheelaAIController extends GetxController {
         } else if ((currentPlayingConversation!.text ?? '').isNotEmpty) {
           final result =
               await getGoogleTTSForText(currentPlayingConversation!.text);
-          if ((result!.payload!.audioContent ?? '').isNotEmpty) {
-            textForPlaying = result!.payload!.audioContent;
+          if ((result.payload?.audioContent ?? '').isNotEmpty) {
+            textForPlaying = result.payload!.audioContent;
           }
         }
       }
@@ -565,7 +565,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future<SheelaResponse?> getGoogleTTSForConversation(
+  Future<SheelaResponse> getGoogleTTSForConversation(
       SheelaResponse conversation) async {
     try {
       final result = await getGoogleTTSForText(conversation.text);
@@ -587,7 +587,7 @@ class SheelaAIController extends GetxController {
     }
   }
 
-  Future<GoogleTTSResponseModel?> getGoogleTTSForText(String? text) async {
+  Future<GoogleTTSResponseModel> getGoogleTTSForText(String? text) async {
     try {
       final req = GoogleTTSRequestModel.fromJson({});
       req.input!.text = text;
@@ -639,7 +639,7 @@ class SheelaAIController extends GetxController {
             },
           ).then((response) {
             isMicListening.value = false;
-            if ((response ?? '').toString().isNotEmpty) {
+            if ((response ?? '').toString()?.isNotEmpty) {
               final newConversation = SheelaResponse(text: response);
               if (conversations.isNotEmpty &&
                   ((conversations.last?.buttons?.length ?? 0) > 0)) {
@@ -798,7 +798,7 @@ class SheelaAIController extends GetxController {
         prof.caregiverCommunicationSetting?.symptoms ?? true;
   }
 
-  Future<CreateDeviceSelectionModel?> createDeviceSel() async {
+  Future<CreateDeviceSelectionModel> createDeviceSel() async {
     try {
       final data = await HealthReportListForUserRepository()
           .createDeviceSelection(
@@ -838,7 +838,7 @@ class SheelaAIController extends GetxController {
       }
     } else {
       currentDeviceStatus = DeviceStatus();
-      createDeviceSelectionModel = (await createDeviceSel())!;
+      createDeviceSelectionModel = await createDeviceSel();
       if (createDeviceSelectionModel.isSuccess!) {
         updateDeviceSelectionModel(preferredLanguage: preferredLanguage);
       } else {
@@ -882,7 +882,7 @@ class SheelaAIController extends GetxController {
     try {
       sheelaBadgeServices.getSheelaBadgeCount().then((value) {
         if (value != null) {
-          if (value.isSuccess!) {
+          if (value?.isSuccess!) {
             if (value?.result != null) {
               sheelaIconBadgeCount.value = value?.result?.queueCount ?? 0;
               if (isNeedSheelaDialog) {

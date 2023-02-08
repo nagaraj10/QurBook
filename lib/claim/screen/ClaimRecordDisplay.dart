@@ -396,7 +396,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
               getRecordIdsFilter = snapshot.data;
               final getMediaMasterIDForPdfTypeStr = CommonUtil()
                   .getMediaMasterIDForPdfTypeStr(
-                      getRecordIdsFilter!.result![0].healthRecordCollection!);
+                      getRecordIdsFilter?.result![0]?.healthRecordCollection!);
               if (getMediaMasterIDForPdfTypeStr != null) {
                 ispdfPresent = true;
                 pdfId = getMediaMasterIDForPdfTypeStr;
@@ -540,7 +540,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
 
   getPDFFile(
       HealthRecordCollection? audioMediaId, String? fileType, String? fileName) {
-    return FutureBuilder<String?>(
+    return FutureBuilder<String>(
         future: downloadFile(audioMediaId, fileType, fileName),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -553,7 +553,7 @@ class _ClaimRecordDisplayState extends State<ClaimRecordDisplay> {
         });
   }
 
-  Future<String?> downloadFile(HealthRecordCollection? audioMediaId,
+  Future<String> downloadFile(HealthRecordCollection? audioMediaId,
       String? fileType, String? fileName) async {
     final storagePermission = Platform.isAndroid
         ? await Permission.storage.status

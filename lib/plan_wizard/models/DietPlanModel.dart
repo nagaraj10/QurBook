@@ -23,12 +23,12 @@ class DietPlanModel {
 
   factory DietPlanModel.fromJson(Map<String, dynamic> json) => DietPlanModel(
     isSuccess: json["isSuccess"],
-    result: List<List<DietPlanResult>>.from(json["result"]?.map((x) => List<DietPlanResult>.from(x.map((x) => DietPlanResult.fromJson(x??{}))))),
+    result: List<List<DietPlanResult>>.from(json["result"]?.map((x) => List<DietPlanResult>.from(x?.map((x) => DietPlanResult.fromJson(x??{}))))),
   );
 
   Map<String, dynamic> toJson() => {
     "isSuccess": isSuccess,
-    "result": List<dynamic>.from(result!.map((x) => List<dynamic>.from(x.map((x) => x.toJson())))),
+    "result": List<dynamic>.from(result!.map((x) => List<dynamic>.from(x?.map((x) => x?.toJson())))),
   };
 }
 

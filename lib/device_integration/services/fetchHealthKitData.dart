@@ -8,7 +8,7 @@ import '../../common/PreferenceUtil.dart';
 import '../../constants/fhb_constants.dart' as Constants;
 
 class FetchHealthKitData {
-  final String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+  final String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
   HealthFactory Health = HealthFactory();
   List<HealthDataType> types = [

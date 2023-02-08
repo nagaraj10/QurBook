@@ -13,7 +13,7 @@ class MyProfileRepository {
     if (profileKey == null || profileKey == '') {
       profileKey = Constants.KEY_USERID_MAIN;
     }
-    String userID = PreferenceUtil.getStringValue(profileKey)!;
+    String userID = PreferenceUtil.getStringValue(profileKey);
     final response = await _helper.getProfileInfo(query.qr_user +
         userID +
         query.qr_slash +
@@ -28,7 +28,7 @@ class MyProfileRepository {
     if (profileKey == null || profileKey == '') {
       profileKey = Constants.KEY_USERID_MAIN;
     }
-    String userID = PreferenceUtil.getStringValue(profileKey)!;
+    String userID = PreferenceUtil.getStringValue(profileKey);
 
     final response = await _helper.getProfileInfo(query.qr_user +
         userID +

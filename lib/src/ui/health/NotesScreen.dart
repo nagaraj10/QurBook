@@ -83,7 +83,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
   }
 
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = [];
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);

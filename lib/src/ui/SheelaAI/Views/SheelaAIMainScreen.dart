@@ -247,8 +247,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                   onPressed: () {
                     if (controller.isLoading.isFalse) {
                       if (controller.currentPlayingConversation != null &&
-                              controller.currentPlayingConversation!.isPlaying
-                                  .value ??
+                              controller.currentPlayingConversation?.isPlaying
+                                  ?.value ??
                           false) {
                         controller.stopTTS();
                       } else {
@@ -264,8 +264,8 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
                           : Color(CommonUtil().getMyPrimaryColor()),
                   child: Icon(
                     (controller.currentPlayingConversation != null &&
-                                controller.currentPlayingConversation!.isPlaying
-                                    .value ??
+                                controller.currentPlayingConversation?.isPlaying
+                                    ?.value ??
                             false)
                         ? Icons.pause
                         : controller.isLoading.isTrue

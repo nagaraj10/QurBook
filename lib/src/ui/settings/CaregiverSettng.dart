@@ -67,7 +67,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
 
   String? userMappingId = '';
   bool isTouched = false;
-  List<Tags>? tagsList = <Tags>[];
+  List<Tags>? tagsList = new List<Tags>();
 
   bool? allowAppointmentNotification = true;
   bool? allowVitalNotification = true;
@@ -78,7 +78,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    selectedList = [];
+    selectedList = List();
     _deviceModel = new DevicesViewModel();
     super.initState();
 
@@ -347,7 +347,7 @@ class _CareGiverSettingsState extends State<CareGiverSettings> {
       tagsList = getDeviceSelectionModel.result![0].tags != null &&
               getDeviceSelectionModel.result![0].tags!.length > 0
           ? getDeviceSelectionModel.result![0].tags
-          : [];
+          : new List();
 
       allowAppointmentNotification = getDeviceSelectionModel
                       .result![0].profileSetting!.caregiverCommunicationSetting !=

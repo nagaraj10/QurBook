@@ -8,7 +8,7 @@ class UserChatListModel {
   UserChatListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['payload'] != null) {
-      payload = <PayloadChat>[];
+      payload = new List<PayloadChat>();
       json['payload'].forEach((v) {
         payload!.add(new PayloadChat.fromJson(v));
       });

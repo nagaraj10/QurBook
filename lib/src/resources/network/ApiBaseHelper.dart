@@ -729,7 +729,7 @@ class ApiBaseHelper {
       var response = await ApiServices.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
-      print(response!.body.toString());
+      print(response.body.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -820,7 +820,7 @@ class ApiBaseHelper {
     try {
       var response =
           await ApiServices.get(path, headers: headers, timeout: timeout);
-      if (response!.statusCode != 200) {
+      if (response.statusCode != 200) {
         await _returnResponse(response);
       }
       responseJson = response;
@@ -893,7 +893,7 @@ class ApiBaseHelper {
 
   Future<List<dynamic>> getDocumentImageListOld(
       String url, List<MediaMasterIds> metaMasterIdList) async {
-    final imagesList = <dynamic>[];
+    final imagesList = List<dynamic>();
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     for (var i = 0; i < metaMasterIdList.length; i++) {
@@ -914,7 +914,7 @@ class ApiBaseHelper {
 
   Future<List<ImageDocumentResponse>> getDocumentImageList(
       String url, List<MediaMasterIds> metaMasterIdList) async {
-    final imagesList = <ImageDocumentResponse>[];
+    final imagesList = List<ImageDocumentResponse>();
     var authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     for (var i = 0; i < metaMasterIdList.length; i++) {
@@ -1300,7 +1300,7 @@ class ApiBaseHelper {
         Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    if (response!.statusCode == 200) {
+    if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       return body;
     } else {
@@ -1355,7 +1355,7 @@ class ApiBaseHelper {
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: '["ADDTYP"]');
 
-    print(response!.body);
+    print(response.body);
 
     if (response.statusCode == 200) {
       return AddressTypeResult.fromJson(jsonDecode(response.body));
@@ -1641,8 +1641,8 @@ class ApiBaseHelper {
   Future<dynamic> getUserProfilePic(String url) async {
     CommonResponse responseJson;
     try {
-      var response = (await ApiServices.get(_baseUrl + url,
-          headers: await headerRequest.getRequestHeader()))!;
+      var response = await ApiServices.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader());
       //responseJson = _returnResponse(response);
       responseJson = CommonResponse.fromJson(json.decode(response.body));
       print(responseJson.toJson());
@@ -2024,13 +2024,13 @@ class ApiBaseHelper {
   Future<dynamic> getLoginDetails() async {
     final authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)!;
 
-    final response = (await ApiServices.get(
+    final response = await ApiServices.get(
       _baseUrl + 'user/loggedin-details/',
       headers: {
         HttpHeaders.authorizationHeader: authToken,
         Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
-    ))!;
+    );
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
       return body;
@@ -2092,7 +2092,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<FetchingCartItemsModel?> fetchCartItems(
+  Future<FetchingCartItemsModel> fetchCartItems(
       {String? cartUserId,
       String? notificationListId,
       bool isPaymentLinkViaPush = false,
@@ -2116,10 +2116,10 @@ class ApiBaseHelper {
           jsobBodyMap['cartId'] = cartId ?? '';
         }
         try {
-          final response = (await ApiServices.post(
+          final response = await ApiServices.post(
               _baseUrl + "cart/getAllItems?isCount=false",
               body: json.encode(jsobBodyMap),
-              headers: await headerRequest.getRequestHeadersAuthContent()))!;
+              headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
           responseJson = FetchingCartItemsModel.fromJson(
               json.decode(response.body.toString()));
@@ -2133,7 +2133,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<FetchingCartItemsModel?> clearCartItems() async {
+  Future<FetchingCartItemsModel> clearCartItems() async {
     try {
       String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
@@ -2151,7 +2151,7 @@ class ApiBaseHelper {
               headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
           responseJson = FetchingCartItemsModel.fromJson(
-              json.decode(response!.body.toString()));
+              json.decode(response.body.toString()));
         } on SocketException {
           throw FetchDataException(variable.strNoInternet);
         }
@@ -2160,7 +2160,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<CartGenricResponse?> removeCartItems(dynamic body) async {
+  Future<CartGenricResponse> removeCartItems(dynamic body) async {
     try {
       String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
@@ -2178,7 +2178,7 @@ class ApiBaseHelper {
               headers: await headerRequest.getRequestHeadersAuthContent());
           //responseJson = _returnResponse(response);
           responseJson = CartGenricResponse.fromJson(
-              json.decode(response!.body.toString()));
+              json.decode(response.body.toString()));
         } on SocketException {
           throw FetchDataException(variable.strNoInternet);
         }
@@ -2187,7 +2187,7 @@ class ApiBaseHelper {
     } catch (e) {}
   }
 
-  Future<MakePaymentResponse?> makePayment(dynamic body) async {
+  Future<MakePaymentResponse> makePayment(dynamic body) async {
     try {
       String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
@@ -2202,7 +2202,7 @@ class ApiBaseHelper {
             headers: await headerRequest.getRequestHeadersAuthContent());
         //responseJson = _returnResponse(response);
         responseJson =
-            MakePaymentResponse.fromJson(json.decode(response!.body.toString()));
+            MakePaymentResponse.fromJson(json.decode(response.body.toString()));
       } on SocketException {
         throw FetchDataException(variable.strNoInternet);
       }
@@ -2226,7 +2226,7 @@ class ApiBaseHelper {
             body: json.encode(body),
             headers: await headerRequest.getRequestHeadersAuthContent());
         //responseJson = _returnResponse(response);
-        responseJson = json.decode(response!.body.toString());
+        responseJson = json.decode(response.body.toString());
       } on SocketException {
         throw FetchDataException(variable.strNoInternet);
       }
@@ -2252,7 +2252,7 @@ class ApiBaseHelper {
         headers: await headerRequest.getRequestHeadersAuthContent(),
         body: '["FEEDBKTYP"]');
 
-    print(response!.body);
+    print(response.body);
 
     if (response.statusCode == 200) {
       return PlanCode.fromJson(jsonDecode(response.body));
@@ -2261,7 +2261,7 @@ class ApiBaseHelper {
     }
   }
 
-  Future<UpdatePaymentResponse?> updatePaymentStatus(dynamic body) async {
+  Future<UpdatePaymentResponse> updatePaymentStatus(dynamic body) async {
     try {
       String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
       String? createBy =
@@ -2277,7 +2277,7 @@ class ApiBaseHelper {
             headers: await headerRequest.getRequestHeadersAuthContent());
         //responseJson = _returnResponse(response);
         responseJson = UpdatePaymentResponse.fromJson(
-            json.decode(response!.body.toString()));
+            json.decode(response.body.toString()));
       } on SocketException {
         throw FetchDataException(variable.strNoInternet);
       }
@@ -2739,7 +2739,7 @@ class ApiBaseHelper {
 
     dio.options.headers['authorization'] = authToken;
 
-    List<FormData> formData = [];
+    List<FormData> formData = List();
 
     if (imagePaths != null && imagePaths.isNotEmpty) {
       for (ImagesModel image in imagePaths) {
@@ -2773,7 +2773,7 @@ class ApiBaseHelper {
       }
     }
     var response;
-    List responses = [];
+    List responses = List();
 
     formData.forEach((element) async {
       if (responses.length != formData.length) {

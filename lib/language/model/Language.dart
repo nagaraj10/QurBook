@@ -8,7 +8,7 @@ class LanguageModel {
   LanguageModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <LanguageResult>[];
+      result = List<LanguageResult>();
       json['result'].forEach((v) {
         result!.add(LanguageResult.fromJson(v));
       });
@@ -57,7 +57,7 @@ class LanguageResult {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = <ReferenceValueCollection>[];
+      referenceValueCollection = List<ReferenceValueCollection>();
       json['referenceValueCollection'].forEach((v) {
         referenceValueCollection!.add(ReferenceValueCollection.fromJson(v));
       });

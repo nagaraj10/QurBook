@@ -64,7 +64,7 @@ class _MySettingsState extends State<MySettings> {
 
   String? userMappingId = '';
   bool isTouched = false;
-  List<Tags>? tagsList = <Tags>[];
+  List<Tags>? tagsList = new List<Tags>();
 
   bool? allowAppointmentNotification = true;
   bool? allowVitalNotification = true;
@@ -75,7 +75,7 @@ class _MySettingsState extends State<MySettings> {
   @override
   void initState() {
     mInitialTime = DateTime.now();
-    selectedList = [];
+    selectedList = List();
     _deviceModel = new DevicesViewModel();
     super.initState();
 
@@ -358,7 +358,7 @@ class _MySettingsState extends State<MySettings> {
       tagsList = getDeviceSelectionModel.result![0].tags != null &&
               getDeviceSelectionModel.result![0].tags!.length > 0
           ? getDeviceSelectionModel.result![0].tags
-          : [];
+          : new List();
 
       allowAppointmentNotification = getDeviceSelectionModel
                       .result![0].profileSetting!.caregiverCommunicationSetting !=
@@ -702,7 +702,7 @@ class _MySettingsState extends State<MySettings> {
                                   itemBuilder: (context, i) {
                                     return DeviceCard(
                                         deviceData: snapshot.data![i],
-                                        isSelected: (bool? value) {
+                                        isSelected: (bool value) {
                                           isTouched = true;
                                           switch (i) {
                                             case 0:
@@ -739,7 +739,7 @@ class _MySettingsState extends State<MySettings> {
                                             default:
                                           }
                                           setState(() {
-                                            if (value!) {
+                                            if (value) {
                                               selectedList
                                                   .add(snapshot.data![i]);
                                             } else {

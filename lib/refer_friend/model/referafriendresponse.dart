@@ -8,7 +8,7 @@ class ReferAFriendResponse {
   ReferAFriendResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <Result>[];
+      result = List<Result>();
       json['result'].forEach((v) {
         result!.add(Result.fromJson(v));
       });

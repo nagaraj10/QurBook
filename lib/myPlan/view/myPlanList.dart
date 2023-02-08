@@ -269,7 +269,7 @@ class _MyPlanState extends State<MyPlanList> {
   }
 
   Widget getPlanList() {
-    return FutureBuilder<MyPlanListModel?>(
+    return FutureBuilder<MyPlanListModel>(
       future: myPlanViewModel.getMyPlanList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -288,9 +288,9 @@ class _MyPlanState extends State<MyPlanList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot.hasData &&
-              snapshot.data!.result != null &&
-              snapshot.data!.result!.isNotEmpty) {
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result!.isNotEmpty) {
             return hospitalList(snapshot.data!.result);
           } else {
             return SafeArea(

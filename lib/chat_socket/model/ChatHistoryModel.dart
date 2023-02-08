@@ -8,7 +8,7 @@ class ChatHistoryModel {
   ChatHistoryModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <ChatHistoryResult?>[];
+      result = new List<ChatHistoryResult?>();
       json['result'].forEach((v) {
         result!.add(new ChatHistoryResult.fromJson(v));
       });

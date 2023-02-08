@@ -13,7 +13,7 @@ class PlanListModel {
   PlanListModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <PlanListResult>[];
+      result = List<PlanListResult>();
       json['result'].forEach((v) {
         result!.add(PlanListResult.fromJson(v));
       });

@@ -4,7 +4,6 @@ import 'package:myfhb/feedback/Model/FeedbackTypeModel.dart';
 import 'package:myfhb/feedback/Provider/FeedbackApiProvider.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
 
 class FeedbackController extends GetxController {
   final _apiProvider = FeedbackApiProvider();
@@ -17,8 +16,8 @@ class FeedbackController extends GetxController {
   getFeedbacktypes() async {
     try {
       loadingData.value = true;
-      Response? responseCat = await (_apiProvider.getFeedbackCat() as FutureOr<Response?>);
-      Response? response = await (_apiProvider.getFeedbacktypes() as FutureOr<Response?>);
+      http.Response? responseCat = await (_apiProvider.getFeedbackCat() as FutureOr<Response?>);
+      http.Response? response = await (_apiProvider.getFeedbacktypes() as FutureOr<Response?>);
       if (response == null || responseCat == null) {
         // failed to get the data, we are showing the error on UI
       } else {

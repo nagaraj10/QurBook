@@ -666,7 +666,7 @@ class _VerifyPatientState extends State<VerifyPatient>
     }
   }
 
-  Future<String?> _getPatientDetails() async {
+  Future<String> _getPatientDetails() async {
     String? userId;
     decodesstring = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;

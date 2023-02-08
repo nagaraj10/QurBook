@@ -188,7 +188,7 @@ class RegimentDataCard extends StatelessWidget {
                                       children: [
                                         Text(
                                           '${CommonUtil().regimentDateFormat(
-                                            regimentData.asNeeded
+                                            regimentData?.asNeeded
                                                 ? regimentData?.ack_local ??
                                                     DateTime.now()
                                                 : regimentData?.ack_local ??
@@ -456,8 +456,8 @@ class RegimentDataCard extends StatelessWidget {
         imageUrl = vital.photo?.url;
       }
     });
-    if (regimentData.ack == null) if (mediaData?.snoozeText != null &&
-        mediaData!.snoozeText!.length > 0) {
+    if (regimentData?.ack == null) if (mediaData?.snoozeText != null &&
+        mediaData?.snoozeText!.length > 0) {
       fieldWidgets.add(Padding(
         padding: EdgeInsets.all(5.0.sp),
         child: Text(
@@ -665,9 +665,9 @@ class RegimentDataCard extends StatelessWidget {
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&
-        ((selectedDate.year <= currentTime.year)
-            ? (selectedDate.month <= currentTime.month
-                ? selectedDate.day <= currentTime.day
+        ((selectedDate?.year <= currentTime.year)
+            ? (selectedDate?.month <= currentTime.month
+                ? selectedDate?.day <= currentTime.day
                 : false)
             : false);
   }
@@ -709,10 +709,10 @@ class RegimentDataCard extends StatelessWidget {
                 listen: false)
             .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
         if (response != null &&
-            response.isSuccess! &&
-            response.result != null) {
+            response?.isSuccess! &&
+            response?.result != null) {
           print('forEventId: ' + response.toJson().toString());
-          eventId = response.result?.eid.toString();
+          eventId = response?.result?.eid.toString();
         }
       }
       var canEdit = startTime!.difference(DateTime.now()).inMinutes <= 15 &&
@@ -740,8 +740,8 @@ class RegimentDataCard extends StatelessWidget {
             mediaData: mediaData,
             formTitle: getDialogTitle(context, activityName),
             canEdit: canEdit || isValidSymptom(context),
-            triggerAction: (String? triggerEventId, String? followContext,
-                String? activityName) {
+            triggerAction: (String triggerEventId, String followContext,
+                String activityName) {
               Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .updateRegimentStatus(RegimentStatus.DialogClosed);
               Get.back();
@@ -781,10 +781,10 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   getHealthOrgName(RegimentDataModel regimen) {
-    if (regimentData.healthOrgName != null &&
-        regimentData.healthOrgName != '') {
+    if (regimentData?.healthOrgName != null &&
+        regimentData?.healthOrgName != '') {
       return Text(
-        regimentData.healthOrgName?.trim(),
+        regimentData?.healthOrgName?.trim(),
         style: TextStyle(
             fontSize: 16.0.sp,
             fontWeight: FontWeight.w500,
@@ -805,18 +805,18 @@ class RegimentDataCard extends StatelessWidget {
   }
 
   getStartEndTime(RegimentDataModel regimen) {
-    if (regimentData.estart != null &&
-        regimentData.estart != '' &&
-        regimentData.eend != null &&
-        regimentData.eend != '') {
+    if (regimentData?.estart != null &&
+        regimentData?.estart != '' &&
+        regimentData?.eend != null &&
+        regimentData?.eend != '') {
       return Row(
         children: [
           Text(
-            DateFormat('hh:mm a').format(regimentData.estart!),
+            DateFormat('hh:mm a').format(regimentData?.estart!),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           Text(
-            ' - ' + DateFormat('hh:mm a').format(regimentData.eend!),
+            ' - ' + DateFormat('hh:mm a').format(regimentData?.eend!),
             style: TextStyle(fontSize: 16.0.sp, color: Colors.white),
           ),
           Text(

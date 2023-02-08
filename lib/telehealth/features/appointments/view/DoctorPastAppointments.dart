@@ -45,11 +45,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   CommonWidgets providerCommonWidget = CommonWidgets();
   FlutterToast toast = new FlutterToast();
-  List<String> bookingIds = [];
+  List<String> bookingIds = new List();
   AppointmentsListViewModel? appointmentsViewModel;
   SharedPreferences? prefs;
   ChatViewModel chatViewModel = ChatViewModel();
-  List<CategoryResult> filteredCategoryData = [];
+  List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override
@@ -73,7 +73,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   }
 
   Widget doctorsHistoryListCard(Past doc) {
-    List<String> recordIds = [];
+    List<String> recordIds = new List();
     if (doc.healthRecord!.prescription != null &&
         doc.healthRecord!.prescription!.length > 0) {
       for (int i = 0; i < doc.healthRecord!.prescription!.length; i++) {
@@ -328,7 +328,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             Colors.black38,
                             TranslationConstants.receipt.t(), () async {
                           FocusManager.instance.primaryFocus!.unfocus();
-                          List<String> paymentID = [];
+                          List<String> paymentID = new List();
                           if (doc.healthRecord != null &&
                               doc.healthRecord!.bills != null &&
                               doc.healthRecord!.bills!.length > 0) {
@@ -430,7 +430,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   }
 
   void moveToBilsPage(HealthRecord healthRecord) async {
-    List<String> paymentID = [];
+    List<String> paymentID = new List();
     if (healthRecord != null &&
         healthRecord.bills != null &&
         healthRecord.bills!.length > 0) {
@@ -485,12 +485,12 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult>? categoryDataList = [];
+    List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
     for (int i = 0;
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
-      if (categoryName == categoryDataList![i].categoryName) {
+      if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;
       }
@@ -502,10 +502,10 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     }
   }
 
-  List<CategoryResult>? getCategoryList() {
+  List<CategoryResult> getCategoryList() {
     try {
       filteredCategoryData =
-          PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST)!;
+          PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST);
     } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {

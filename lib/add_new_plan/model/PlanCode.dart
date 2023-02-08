@@ -8,7 +8,7 @@ class PlanCode {
   PlanCode.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result =  <PlanCodeResult>[];
+      result = new List<PlanCodeResult>();
       json['result'].forEach((v) {
         result!.add(new PlanCodeResult.fromJson(v));
       });

@@ -1,5 +1,4 @@
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
@@ -22,7 +21,6 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -83,7 +81,7 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
 
   late FamilyListBloc _familyListBloc;
   FamilyMembers? familyData = new FamilyMembers();
-  List<SharedByUsers> _familyNames = [];
+  List<SharedByUsers> _familyNames = new List();
   bool isFamilyChanged = false;
 
   SharedByUsers? selectedUser;
@@ -310,8 +308,8 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
           ),
 
           (familyData != null &&
-                  familyData!.result!.sharedByUsers != null &&
-                  familyData!.result!.sharedByUsers!.length > 0)
+                  familyData!.result?.sharedByUsers != null &&
+                  familyData!.result?.sharedByUsers!.length > 0)
               ? FittedBox(
                   fit: BoxFit.cover,
                   child: Row(
@@ -568,14 +566,14 @@ class _ClaimRecordCreateState extends State<ClaimRecordCreate> {
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result!.firstName!.capitalizeFirstofEach +
+          ? myProfile.result!.firstName?.capitalizeFirstofEach +
               ' ' +
-              myProfile.result!.lastName!.capitalizeFirstofEach
+              myProfile.result!.lastName?.capitalizeFirstofEach
           : '';
     } catch (e) {}
 
     if (sharedByMeList == null) {
-      sharedByMeList = [];
+      sharedByMeList = new List();
       sharedByMeList
           .add(new SharedByUsers(id: myProfile?.result?.id, nickName: 'Self'));
     } else {

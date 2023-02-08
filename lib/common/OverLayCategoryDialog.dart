@@ -105,12 +105,12 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   }
 
   List<Widget> getWidgetsFordevices(BuildContext? context) {
-    var categoryWidgetList = <Widget>[];
+    var categoryWidgetList = List<Widget>();
 
     final catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
         Constants.KEY_CATEGORYLIST_VISIBLE);
 
-    for (var i = 0; i < catgoryDataList!.length; i++) {
+    for (var i = 0; i < catgoryDataList.length; i++) {
       categoryWidgetList.add(
         InkWell(
           child: Column(

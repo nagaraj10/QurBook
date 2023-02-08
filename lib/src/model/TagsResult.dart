@@ -10,7 +10,7 @@ class TagsResult {
   TagsResult.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <Tags>[];
+      result = new List<Tags>();
       json['result'].forEach((v) {
         result!.add(new Tags.fromJson(v));
       });

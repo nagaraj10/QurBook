@@ -42,7 +42,7 @@ class Doctor {
         : Booked.fromJson(json[parameters.strUser]);
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-          <DoctorProfessionalDetailCollection>[];
+          new List<DoctorProfessionalDetailCollection>();
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection!
             .add(new DoctorProfessionalDetailCollection.fromJson(v));

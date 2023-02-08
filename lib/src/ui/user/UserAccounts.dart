@@ -73,7 +73,7 @@ class _UserAccountsState extends State<UserAccounts>
     });
   }
 
-  Future<bool>? onBackPressed(BuildContext context) {
+  Future<bool> onBackPressed(BuildContext context) {
     // if (widget?.cartType == CartType.RETRY_CART) {
     //   PageNavigator.goToPermanent(context, router.rt_Landing);
     // }
@@ -97,7 +97,7 @@ class _UserAccountsState extends State<UserAccounts>
     if (!islogout) fetchUserProfileInfo();
 
     return new WillPopScope(
-        onWillPop: () => onBackPressed(context)!,
+        onWillPop: () => onBackPressed(context),
         child: Scaffold(
           backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           appBar: AppBar(

@@ -23,7 +23,7 @@ class PlanProviderViewModel extends ChangeNotifier {
     });
   }
 
-  Future<ProviderOrganisationResponse?> getCarePlanList(
+  Future<ProviderOrganisationResponse> getCarePlanList(
       String selectedTag) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
@@ -53,7 +53,7 @@ class PlanProviderViewModel extends ChangeNotifier {
   }
 
   List<Result> getProviderSearch(String providerName) {
-    var filterDoctorData = <Result>[];
+    var filterDoctorData = List<Result>();
     for (final doctorData in providerPlanResult!) {
       if (doctorData.name != null && doctorData.name != '') {
         if (doctorData.name!

@@ -601,7 +601,7 @@ class _SplashScreenState extends State<SplashScreen> {
                               Get.context!, passedValArr[2].toString())
                           .then((value) {
                         try {
-                          if (!value!.isSuccess! || value == null) {
+                          if (!value?.isSuccess! || value == null) {
                             PageNavigator.goToPermanent(
                                 context, router.rt_Landing);
                           }

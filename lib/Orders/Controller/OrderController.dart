@@ -19,8 +19,8 @@ class OrderController extends GetxController {
     if (response != null) {
       try {
         final usersOrders = OrderDataModel.fromJson(response);
-        if (usersOrders.isSuccess!) {
-          orders.value = usersOrders.result!;
+        if (usersOrders.isSuccess) {
+          orders.value = usersOrders.result;
         }
       } catch (e) {
         FlutterToast().getToast('Failed to get the past orders', Colors.red);
@@ -37,7 +37,7 @@ class OrderController extends GetxController {
         url,
         headers: headers,
       );
-      if (response!.statusCode == 200) {
+      if (response.statusCode == 200) {
         return response.body;
       } else {
         FlutterToast().getToast('Failed to get the past orders', Colors.red);

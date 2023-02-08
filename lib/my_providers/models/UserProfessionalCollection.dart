@@ -33,7 +33,7 @@ class DoctorProfessionalDetailCollection {
         ? MedicalCouncilInfo.fromJson(json['specialty'])
         : null;
     if (json['clinicName'] != null) {
-      clinicName = <ClinicName>[];
+      clinicName = List<ClinicName>();
       json['clinicName'].forEach((v) {
         clinicName!.add(ClinicName.fromJson(v));
       });
@@ -81,7 +81,7 @@ class QualificationInfo {
       });
     }
     if (json['university'] != null) {
-      university = <Degree>[];
+      university = List<Degree>();
       json['university'].forEach((v) {
         university!.add(Degree.fromJson(v));
       });

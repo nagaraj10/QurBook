@@ -76,10 +76,10 @@ class RecordInfoCard {
                                     ? metaInfo
                                         .doctor!.name?.capitalizeFirstofEach
                                     : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                            ?.capitalizeFirstofEach +
                                         ' ' +
                                         metaInfo.doctor!.lastName
-                                            !.capitalizeFirstofEach)!
+                                            ?.capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -181,8 +181,8 @@ class RecordInfoCard {
                               ? Text(
                                   /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName), */
-                                  metaInfo.hospital!.healthOrganizationName
-                                      !.capitalizeFirstofEach,
+                                  metaInfo?.hospital?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16.0.sp,
@@ -214,11 +214,11 @@ class RecordInfoCard {
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
                                         ?.doctor?.name?.capitalizeFirstofEach
-                                    : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                    : metaInfo?.doctor?.firstName
+                                            ?.capitalizeFirstofEach +
                                         ' ' +
-                                        metaInfo.doctor!.lastName!
-                                            .capitalizeFirstofEach)!
+                                        metaInfo?.doctor?.lastName
+                                            ?.capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
                               fontSize: 15.0.sp,
@@ -298,8 +298,8 @@ class RecordInfoCard {
                               ? Text(
                                   // toBeginningOfSentenceCase(metaInfo
                                   //     .laboratory.healthOrganizationName),
-                                  metaInfo.laboratory!.healthOrganizationName!
-                                      .capitalizeFirstofEach,
+                                  metaInfo?.laboratory?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 16.0.sp,
@@ -331,11 +331,11 @@ class RecordInfoCard {
                                         metaInfo.doctor!.name != '')
                                     ? metaInfo
                                         ?.doctor?.name?.capitalizeFirstofEach
-                                    : metaInfo.doctor!.firstName
-                                            !.capitalizeFirstofEach +
+                                    : metaInfo?.doctor?.firstName
+                                            ?.capitalizeFirstofEach +
                                         ' ' +
-                                        metaInfo.doctor!.lastName
-                                            !.capitalizeFirstofEach)!
+                                        metaInfo?.doctor?.lastName
+                                            ?.capitalizeFirstofEach)!
                                 : '',
                             style: TextStyle(
                               fontSize: 15.0.sp,
@@ -465,7 +465,7 @@ class RecordInfoCard {
           ),
           if (metaInfo.doctor != null)
             Text(
-              metaInfo.doctor!.name!.capitalizeFirstofEach,
+              metaInfo?.doctor?.name?.capitalizeFirstofEach,
               style: TextStyle(
                 fontSize: 15.0.sp,
               ),
@@ -528,7 +528,7 @@ class RecordInfoCard {
           ),
           if (metaInfo.doctor != null)
             Text(
-              metaInfo.doctor!.name!,
+              metaInfo?.doctor?.name!,
               style: TextStyle(fontSize: 15.0.sp),
             )
           else
@@ -623,8 +623,8 @@ class RecordInfoCard {
                               ? Text(
                                   /* toBeginningOfSentenceCase(metaInfo
                                         .hospital.healthOrganizationName) */
-                                  metaInfo.hospital!.healthOrganizationName
-                                      !.capitalizeFirstofEach,
+                                  metaInfo?.hospital?.healthOrganizationName
+                                      ?.capitalizeFirstofEach,
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 16.0.sp),
@@ -641,7 +641,7 @@ class RecordInfoCard {
                         if (metaInfo.doctor != null)
                           Text(
                             //toBeginningOfSentenceCase(metaInfo.doctor.name),
-                            metaInfo.doctor!.name!.capitalizeFirstofEach,
+                            metaInfo?.doctor?.name?.capitalizeFirstofEach,
                             style: TextStyle(fontSize: 15.0.sp),
                           )
                         else
@@ -681,7 +681,7 @@ class RecordInfoCard {
 }
 
 Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
-  final list = <Widget>[];
+  final list = List<Widget>();
   for (var i = 0; i < deviceReadings.length; i++) {
     list.add(
       Padding(

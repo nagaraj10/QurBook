@@ -30,7 +30,7 @@ class MediaTypeRepository {
   }
 
   Future<dynamic> getDocumentImage(String metaMasterID) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImage(query.qr_mediameta +
         userID +

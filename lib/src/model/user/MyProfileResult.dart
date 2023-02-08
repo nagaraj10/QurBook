@@ -111,13 +111,13 @@ class MyProfileResult {
     if (json.containsKey('membershipOfferedBy'))
       membershipOfferedBy = json['membershipOfferedBy'];
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = <UserAddressCollection3>[];
+      userAddressCollection3 = List<UserAddressCollection3>();
       json['userAddressCollection3'].forEach((v) {
         userAddressCollection3!.add(UserAddressCollection3.fromJson(v));
       });
     }
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = <UserContactCollection3>[];
+      userContactCollection3 = List<UserContactCollection3>();
       json['userContactCollection3'].forEach((v) {
         userContactCollection3!.add(UserContactCollection3.fromJson(v));
       });
@@ -135,7 +135,7 @@ class MyProfileResult {
       });
     }
     if (json['userProfileSettingCollection3'] != null) {
-      userProfileSettingCollection3 = <UserProfileSettingCollection3>[];
+      userProfileSettingCollection3 = List<UserProfileSettingCollection3>();
       json['userProfileSettingCollection3'].forEach((v) {
         userProfileSettingCollection3!
             .add(UserProfileSettingCollection3.fromJson(v));

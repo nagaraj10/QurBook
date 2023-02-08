@@ -1,5 +1,4 @@
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -135,7 +134,7 @@ class _LandingScreenState extends State<LandingScreen> {
       userId = PreferenceUtil.getStringValue(KEY_USERID);
       QurPlanReminders.getTheRemindersFromAPI();
       Provider.of<ChatSocketViewModel>(Get.context!)?.initSocket();
-      callImportantsMethod();
+      await callImportantsMethod();
       moveToQurhome();
       callGetFamiltMappingCaregiver();
       var profilebanner =
@@ -315,13 +314,13 @@ class _LandingScreenState extends State<LandingScreen> {
       landingViewModel!.isURLCome = false;
       Future.delayed(Duration(seconds: 2), () {
         if (widget?.landingArguments?.url != null &&
-            widget.landingArguments!.url!.isNotEmpty) {
-          CommonUtil().launchURL(widget.landingArguments!.url!);
+            widget?.landingArguments?.url!.isNotEmpty) {
+          CommonUtil().launchURL(widget?.landingArguments?.url!);
         }
       });
     }
     return FutureBuilder<MyProfileModel?>(
-      future: profileData!.then((value) => value as MyProfileModel?),
+      future: profileData.then((value) => value as MyProfileModel?),
       builder: (context, snapshot) {
         return Scaffold(
           key: _scaffoldKey,
@@ -751,21 +750,21 @@ class _LandingScreenState extends State<LandingScreen> {
         myProfile = value;
 
         if (value != null) {
-          if (value.result!.userProfileSettingCollection3!.isNotEmpty) {
+          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
             var profileSetting =
-                value.result?.userProfileSettingCollection3![0].profileSetting;
+                value?.result?.userProfileSettingCollection3![0].profileSetting;
             if (profileSetting?.preferredMeasurement != null) {
-              PreferredMeasurement? preferredMeasurement =
+              PreferredMeasurement preferredMeasurement =
                   profileSetting?.preferredMeasurement!;
               await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement!.height!.unitCode!)
+                      preferredMeasurement.height?.unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                        preferredMeasurement.weight!.unitCode!)
+                        preferredMeasurement.weight?.unitCode!)
                     .then((value) {
                   PreferenceUtil.saveString(
                           Constants.STR_KEY_TEMP,
-                          preferredMeasurement.temperature!.unitCode!
+                          preferredMeasurement.temperature?.unitCode!
                               .toUpperCase())
                       .then((value) {});
                 });

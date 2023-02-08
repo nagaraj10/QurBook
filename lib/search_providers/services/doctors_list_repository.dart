@@ -42,7 +42,7 @@ class DoctorsListRepository {
     return DoctorsSearchListResponse.fromJson(response);
   }
 
-  Future<DoctorsListResult?> addDoctorFromProvider(String jsonData) async {
+  Future<DoctorsListResult> addDoctorFromProvider(String jsonData) async {
     var response = await _helper.addDoctorFromProvider(
         "${query.qr_doctor}${query.qr_reference_doctor}${query.qr_non_qurpro}",
         jsonData);

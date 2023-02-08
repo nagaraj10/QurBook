@@ -1,5 +1,4 @@
 
-import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:io';
 import 'dart:typed_data';
@@ -285,13 +284,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget
-          .arguments!.sharedbyme!.child!.userAddressCollection3!.isNotEmpty) {
+          ?.arguments?.sharedbyme?.child?.userAddressCollection3!.isNotEmpty) {
         final currentAddress =
             widget.arguments!.sharedbyme!.child!.userAddressCollection3![0];
         cntrlr_addr_one.text = currentAddress.addressLine1!;
         cntrlr_addr_two.text = currentAddress.addressLine2!;
-        cntrlr_addr_city.text = currentAddress.city!.name!;
-        cntrlr_addr_state.text = currentAddress.state!.name!;
+        cntrlr_addr_city.text = currentAddress.city?.name!;
+        cntrlr_addr_state.text = currentAddress.state?.name!;
         cntrlr_addr_zip.text = currentAddress.pincode!;
         _addressResult = AddressResult(
             id: currentAddress.addressType!.id,
@@ -342,9 +341,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           cntrlr_addr_two.text = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].addressLine2!;
           cntrlr_addr_city.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].city!.name!;
+              .arguments!.myProfileResult!.userAddressCollection3![0].city?.name!;
           cntrlr_addr_state.text = widget
-              .arguments!.myProfileResult!.userAddressCollection3![0].state!.name!;
+              .arguments!.myProfileResult!.userAddressCollection3![0].state?.name!;
           cntrlr_addr_zip.text = widget
               .arguments!.myProfileResult!.userAddressCollection3![0].pincode!;
 
@@ -566,7 +565,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.sharedbyme!.child!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data!.isSuccess! && snapshot?.data?.result != null) {
+            if (snapshot?.data?.isSuccess! && snapshot?.data?.result != null) {
               return Image.network(
                 snapshot.data!.result!,
                 fit: BoxFit.cover,
@@ -618,7 +617,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.myProfileResult!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data!.isSuccess! && snapshot.data?.result != null) {
+            if (snapshot?.data?.isSuccess! && snapshot?.data?.result != null) {
               return Image.network(
                 snapshot.data!.result!,
                 fit: BoxFit.cover,
@@ -671,7 +670,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments!.addFamilyUserInfo!.id!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.data!.isSuccess! && snapshot.data?.result != null) {
+            if (snapshot?.data?.isSuccess! && snapshot?.data?.result != null) {
               return Image.network(
                 snapshot.data!.result!,
                 fit: BoxFit.cover,
@@ -974,9 +973,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       addressList: _addressList,
                       onSelected: (addressResult, addressList) {
                         setState(() {
-                          _addressResult = addressResult!;
+                          _addressResult = addressResult;
                           addressTypeId = addressResult.id;
-                          _addressList = addressList!;
+                          _addressList = addressList;
                         });
                       },
                     ),
@@ -1954,10 +1953,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
             final userAddressCollection3 = UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = true;
-            if (widget.arguments!.sharedbyme!.child!.userAddressCollection3!
+            if (widget.arguments?.sharedbyme?.child?.userAddressCollection3!
                 .isNotEmpty) {
               userAddressCollection3.id = widget
-                  .arguments!.sharedbyme!.child!.userAddressCollection3![0].id;
+                  ?.arguments?.sharedbyme?.child?.userAddressCollection3![0].id;
               userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
               userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
               userAddressCollection3.pincode = cntrlr_addr_zip.text;
@@ -2140,10 +2139,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
             final userAddressCollection3 = UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = false;
-            if (widget.arguments!.myProfileResult!.userAddressCollection3!
+            if (widget.arguments?.myProfileResult?.userAddressCollection3!
                 .isNotEmpty) {
               userAddressCollection3.id = widget
-                  .arguments!.myProfileResult!.userAddressCollection3![0].id;
+                  .arguments?.myProfileResult?.userAddressCollection3![0].id;
               userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
               userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
               userAddressCollection3.pincode = cntrlr_addr_zip.text;
@@ -2181,7 +2180,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
             );
 
-            final userAddressCollection3List = <UserAddressCollection3>[];
+            final userAddressCollection3List = List<UserAddressCollection3>();
             userAddressCollection3List.add(userAddressCollection3);
             profileResult.userAddressCollection3 = userAddressCollection3List;
 
@@ -2328,7 +2327,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
             );
 
-            var userAddressCollection3List = <UserAddressCollection3>[];
+            var userAddressCollection3List = List<UserAddressCollection3>();
             userAddressCollection3List.add(userAddressCollection3);
             profileResult.userAddressCollection3 = userAddressCollection3List;
 

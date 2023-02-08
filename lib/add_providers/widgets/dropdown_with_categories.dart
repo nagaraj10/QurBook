@@ -15,7 +15,7 @@ class DropdownWithCategories extends StatefulWidget {
 }
 
 class _DropdownWithCategoriesState extends State<DropdownWithCategories> {
-  List<CheckboxListTile> data = [];
+  List<CheckboxListTile> data = List();
 
   @override
   void initState() {

@@ -59,7 +59,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
 
   FlutterToast toast = new FlutterToast();
 
-  List<CategoryResult> filteredCategoryData = [];
+  List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override

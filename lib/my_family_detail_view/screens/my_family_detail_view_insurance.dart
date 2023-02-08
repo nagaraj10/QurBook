@@ -56,7 +56,7 @@ class MyFamilyDetailViewInsuranceState
   }
 
   Widget getWidgetToDisplayIDDocs(HealthRecordList completeData) {
-    var mediaMetaInfoObj = <HealthResult>[];
+    var mediaMetaInfoObj = List<HealthResult>();
 
     mediaMetaInfoObj = CommonUtil().getDataForInsurance(
         completeData,
@@ -193,7 +193,7 @@ class MyFamilyDetailViewInsuranceState
   }
 
   void getCategoryPreference() {
-    for (final e in PreferenceUtil.getCategoryType()!) {
+    for (final e in PreferenceUtil.getCategoryType()) {
       if (e.categoryDescription == CommonConstants.categoryDescriptionIDDocs) {
         PreferenceUtil.saveString(Constants.KEY_DEVICENAME, '').then((onValue) {
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, e.categoryName!)

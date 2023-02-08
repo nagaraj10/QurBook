@@ -375,7 +375,7 @@ class ChildInfo {
       membershipOfferedBy = json['membershipOfferedBy'];
     }
     if (json['contactInfo'] != null) {
-      contactInfo = <ContactInfo>[];
+      contactInfo = List<ContactInfo>();
       json['contactInfo'].forEach((v) {
         contactInfo!.add(ContactInfo.fromJson(v));
       });

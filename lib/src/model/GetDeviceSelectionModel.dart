@@ -11,7 +11,7 @@ class GetDeviceSelectionModel {
   GetDeviceSelectionModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <SelectionResult>[];
+      result = List<SelectionResult>();
       json['result'].forEach((v) {
         result!.add(SelectionResult.fromJson(v));
       });
@@ -56,7 +56,7 @@ class SelectionResult {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['tags'] != null) {
-      tags = <Tags>[];
+      tags = new List<Tags>();
       json['tags'].forEach((v) {
         tags!.add(new Tags.fromJson(v));
       });

@@ -67,7 +67,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
-  List<HealthRecordCollection> mediMasterId = [];
+  List<HealthRecordCollection> mediMasterId = new List();
 
   FlutterToast toast = new FlutterToast();
 
@@ -101,7 +101,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = [];
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionPrescription);

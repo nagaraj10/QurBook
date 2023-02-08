@@ -77,7 +77,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                     itemBuilder: (context, index) {
                                       final symptomData = (index <
                                               controller
-                                                  .symptomList.value.length)
+                                                  .symptomList?.value?.length)
                                           ? controller.symptomList?.value[index]
                                           : RegimentDataModel();
                                       return SymptomItemCard(
@@ -147,7 +147,7 @@ class _SymptomListScreen extends State<SymptomListScreen> {
                                   itemBuilder: (context, index) {
                                     final symptomData = (index <
                                             controller
-                                                .symptomList.value.length)
+                                                .symptomList?.value?.length)
                                         ? controller.symptomList?.value[index]
                                         : RegimentDataModel();
                                     return SymptomItemCard(
@@ -340,16 +340,16 @@ class _SymptomListScreen extends State<SymptomListScreen> {
     final iconSize = 40.0.sp;
     try {
       if (metadata?.icon != null) {
-        if (metadata?.icon?.toLowerCase().contains('.svg') ?? false) {
+        if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata!.icon!,
+            metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata!.icon!,
+            imageUrl: metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,

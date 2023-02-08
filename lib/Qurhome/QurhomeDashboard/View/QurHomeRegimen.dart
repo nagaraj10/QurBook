@@ -79,10 +79,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       chatGetXController.getUnreadCountFamily().then(
         (value) {
           if (value != null) {
-            if (value.isSuccess!) {
-              if (value.result != null) {
-                if (value.result![0].count != null) {
-                  if (int.parse(value.result![0].count ?? 0 as String) > 0) {
+            if (value?.isSuccess!) {
+              if (value?.result != null) {
+                if (value?.result![0]?.count != null) {
+                  if (int.parse(value?.result![0]?.count ?? 0 as String) > 0) {
                     if (PreferenceUtil.getIfQurhomeisAcive()) {
                       redirectToSheelaUnreadMessage();
                     }
@@ -136,8 +136,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         UnreadChatSocketNotify unreadCountNotify =
             UnreadChatSocketNotify.fromJson(data);
         if (unreadCountNotify != null) {
-          if (unreadCountNotify.result != null) {
-            if (unreadCountNotify.result!.isSuccess!) {
+          if (unreadCountNotify?.result != null) {
+            if (unreadCountNotify?.result?.isSuccess!) {
               if (PreferenceUtil.getIfQurhomeisAcive()) {
                 redirectToSheelaUnreadMessage();
               }
@@ -414,9 +414,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
                             ),
                             Text(
                               '${CommonUtil().regimentDateFormatV2(
-                                regimen.asNeeded
-                                    ? regimen.ack ?? DateTime.now()
-                                    : regimen.ack ?? DateTime.now(),
+                                regimen?.asNeeded
+                                    ? regimen?.ack ?? DateTime.now()
+                                    : regimen?.ack ?? DateTime.now(),
                                 isAck: true,
                               )}',
                               style: TextStyle(
@@ -483,14 +483,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata!.icon!,
+            metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: getTextAndIconColor(itemIndex, nextRegimenPosition),
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata!.icon!,
+            imageUrl: metadata?.icon!,
             height: iconSize,
             width: iconSize,
             color: getTextAndIconColor(itemIndex, nextRegimenPosition),
@@ -894,7 +894,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       final response = await Provider.of<RegimentViewModel>(context,
               listen: false)
           .getEventId(uid: uid, aid: aid, formId: formId, formName: formName);
-      if (response != null && response.isSuccess! && response.result != null) {
+      if (response != null && response?.isSuccess! && response?.result != null) {
         print('forEventId: ' + response.toJson().toString());
         eventId = response?.result?.eid.toString();
       }
@@ -1087,8 +1087,8 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             canEdit: canEdit || isValidSymptom(context),
             isFromQurHomeSymptom: false,
             isFromQurHomeRegimen: true,
-            triggerAction: (String? triggerEventId, String? followContext,
-                String? activityName) {
+            triggerAction: (String triggerEventId, String followContext,
+                String activityName) {
               Provider.of<RegimentViewModel>(Get.context!, listen: false)
                   .updateRegimentStatus(RegimentStatus.DialogClosed);
               Get.back();
@@ -1143,9 +1143,9 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     return (Provider.of<RegimentViewModel>(context, listen: false)
                 .regimentMode ==
             RegimentMode.Symptoms) &&
-        ((selectedDate.year <= currentTime.year)
-            ? (selectedDate.month <= currentTime.month
-                ? selectedDate.day <= currentTime.day
+        ((selectedDate?.year <= currentTime.year)
+            ? (selectedDate?.month <= currentTime.month
+                ? selectedDate?.day <= currentTime.day
                 : false)
             : false);
   }
@@ -1177,7 +1177,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata.color!.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata?.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:

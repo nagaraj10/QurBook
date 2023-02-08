@@ -12,7 +12,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 
 class ApiServices {
-  static Future<Response?> get(String path,
+  static Future<Response> get(String path,
       {Map<String, String>? headers, int timeout = 20}) async {
     //TODO: use BaseUrl as common after removing baseurl from all method params
     // final String _baseUrl = BASE_URL;
@@ -51,7 +51,7 @@ class ApiServices {
     }
   }
 
-  static Future<Response?> post(
+  static Future<Response> post(
     String path, {
     Map<String, String?>? headers,
     Object? body,
@@ -98,7 +98,7 @@ class ApiServices {
     }
   }
 
-  static Future<Response?> put(
+  static Future<Response> put(
     String path, {
     Map<String, String>? headers,
     Object? body,
@@ -140,7 +140,7 @@ class ApiServices {
     }
   }
 
-  static Future<Response?> delete(
+  static Future<Response> delete(
     String path, {
     Map<String, String>? headers,
     Object? body,

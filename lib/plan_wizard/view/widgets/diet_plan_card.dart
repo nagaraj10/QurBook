@@ -247,7 +247,7 @@ class DietPlanCard extends StatelessWidget {
                                           Provider.of<PlanWizardViewModel>(
                                                   context,
                                                   listen: false)
-                                              .currentPackageProviderDietId!);
+                                              ?.currentPackageProviderDietId!);
                                     }
 
                                     bool isItemInCart =
@@ -262,7 +262,7 @@ class DietPlanCard extends StatelessWidget {
                                           Provider.of<PlanWizardViewModel>(
                                                   context,
                                                   listen: false)
-                                              .currentCartProviderDietPackageId);
+                                              ?.currentCartProviderDietPackageId);
                                     }
 
                                     checkIfMemberShipIsAvailable(
@@ -279,7 +279,7 @@ class DietPlanCard extends StatelessWidget {
                                           Provider.of<PlanWizardViewModel>(
                                                   context,
                                                   listen: false)
-                                              .currentPackageFreeDietId!);
+                                              ?.currentPackageFreeDietId!);
                                     }
 
                                     bool isItemInCart =
@@ -294,7 +294,7 @@ class DietPlanCard extends StatelessWidget {
                                           Provider.of<PlanWizardViewModel>(
                                                   context,
                                                   listen: false)
-                                              .currentCartFreeDietPackageId);
+                                              ?.currentCartFreeDietPackageId);
                                     }
 
                                     checkIfMemberShipIsAvailable(
@@ -346,7 +346,7 @@ class DietPlanCard extends StatelessWidget {
                             null,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                .currentPackageProviderDietId!);
+                                ?.currentPackageProviderDietId!);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
@@ -359,7 +359,7 @@ class DietPlanCard extends StatelessWidget {
                             null,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                .currentCartProviderDietPackageId);
+                                ?.currentCartProviderDietPackageId);
                       }
 
                       checkIfMemberShipIsAvailable(
@@ -377,7 +377,7 @@ class DietPlanCard extends StatelessWidget {
                             null,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                .currentPackageFreeDietId!);
+                                ?.currentPackageFreeDietId!);
                       }
 
                       bool isItemInCart = Provider.of<PlanWizardViewModel>(
@@ -390,7 +390,7 @@ class DietPlanCard extends StatelessWidget {
                             null,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                .currentCartFreeDietPackageId);
+                                ?.currentCartFreeDietPackageId);
                       }
 
                       checkIfMemberShipIsAvailable(
@@ -410,10 +410,10 @@ class DietPlanCard extends StatelessWidget {
       BuildContext context, PlanListResult? planList, String price) async {
     bool isMemberShip =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            .isMembershipAVailable!;
+            ?.isMembershipAVailable!;
     int dietCount =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            .dietPlanCount;
+            ?.dietPlanCount;
     int priceValue = int.parse(price);
     if (isMemberShip && priceValue > 0 && dietCount > 0) {
       print("Condition Statisfied dietCount******************** Show Alert");

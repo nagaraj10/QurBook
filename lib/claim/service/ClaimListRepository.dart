@@ -42,7 +42,7 @@ class ClaimListRepository{
     return ClaimListResponse.fromJson(response);
   }
   Future<GetRecordIdsFilter> getHealthRecordDetailViaId(String? healthRecordID) async {
-    List<String?> recordId=[];
+    List<String?> recordId=new List();
     recordId.add(healthRecordID);
     String? userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 

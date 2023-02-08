@@ -89,7 +89,7 @@ class MyRecords extends StatefulWidget {
 }
 
 class _MyRecordsState extends State<MyRecords> {
-  List<TabModel> tabModelList = [];
+  List<TabModel> tabModelList = new List();
   CategoryListBlock? _categoryListBlocks;
   HealthReportListForUserBlock? _healthReportListForUserBlock;
   MediaTypeBlock? _mediaTypeBlock;
@@ -105,9 +105,9 @@ class _MyRecordsState extends State<MyRecords> {
 
   GlobalSearchBloc? _globalSearchBloc;
   bool fromSearch = false;
-  List<CategoryResult> categoryDataList = [];
+  List<CategoryResult> categoryDataList = new List();
   HealthRecordList? completeData;
-  List<MediaData> mediaData = [];
+  List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   int? initPosition = 0;
@@ -117,7 +117,7 @@ class _MyRecordsState extends State<MyRecords> {
   late BuildContext _myContext;
   CategoryResult categoryDataObjClone = new CategoryResult();
 
-  List<String> selectedMedia = [];
+  List<String> selectedMedia = new List();
   static bool audioPage = false;
   LandingViewModel? landingViewModel;
   BuildContext context;
@@ -236,7 +236,7 @@ class _MyRecordsState extends State<MyRecords> {
 
     return PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null
         ? getMainWidgets(PreferenceUtil.getCategoryTypeDisplay(
-            Constants.KEY_SEARCHED_CATEGORY)!)
+            Constants.KEY_SEARCHED_CATEGORY))
         : StreamBuilder<ApiResponse<GlobalSearch>>(
             stream: _globalSearchBloc!.globalSearchStream,
             builder:
@@ -294,7 +294,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getResponseFromApiWidget() {
     List<CategoryResult> categoryDataFromPrefernce =
-        PreferenceUtil.getCategoryType()!;
+        PreferenceUtil.getCategoryType();
     /* if (categoryDataFromPrefernce != null &&
         categoryDataFromPrefernce.length > 0)
       return getMainWidgets(categoryDataFromPrefernce);
@@ -355,13 +355,13 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getMainWidgets(List<CategoryResult> data) {
     _categoryListBlocks = null;
     _categoryListBlocks = new CategoryListBlock();
-    List<CategoryResult> categoryData = [];
+    List<CategoryResult> categoryData = new List();
     if (!fromSearch) {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
       List<CategoryResult> categoryDataFromPrefernce =
           PreferenceUtil.getCategoryTypeDisplay(
-              Constants.KEY_CATEGORYLIST_VISIBLE)!;
+              Constants.KEY_CATEGORYLIST_VISIBLE);
       if (data != null && data.length > 0) {
         categoryData = fliterCategories(data);
         categoryData.add(categoryDataObjClone);
@@ -399,8 +399,8 @@ class _MyRecordsState extends State<MyRecords> {
         try {
           initPosition = index;
 
-          getDataForParticularLabel(categoryData.elementAt(index!).categoryName,
-              categoryData.elementAt(index!).id);
+          getDataForParticularLabel(categoryData.elementAt(index).categoryName,
+              categoryData.elementAt(index).id);
 
           PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName!)
               .then((value) {
@@ -571,7 +571,7 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
-    List<CategoryResult> filteredCategoryData = [];
+    List<CategoryResult> filteredCategoryData = new List();
     for (CategoryResult dataObj in data) {
       if (dataObj.isDisplay! &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
@@ -626,7 +626,7 @@ class CustomTabView extends StatefulWidget {
   GlobalKey<ScaffoldState>? scaffold_state;
   bool? fromSearch;
   HealthRecordList? completeData;
-  List<String?>? selectedMedia = [];
+  List<String?>? selectedMedia = new List();
   bool? allowSelect;
   bool? allowSelectNotes;
   bool? allowSelectVoice;
@@ -634,7 +634,7 @@ class CustomTabView extends StatefulWidget {
   bool? showDetails;
   _MyRecordsState? recordsState;
   HealthResult? healthResult;
-  List<HealthRecordCollection>? selectedRecordsId = [];
+  List<HealthRecordCollection>? selectedRecordsId = new List();
   bool? isAssociateOrChat;
   bool? isFromBills;
   String? userID;
@@ -690,7 +690,7 @@ class _CustomTabsState extends State<CustomTabView>
   int? _currentCount;
   int? _currentPosition;
 
-  List<TabModel> tabModelList = [];
+  List<TabModel> tabModelList = new List();
   CategoryListBlock? _categoryListBlock;
   HealthReportListForUserBlock? _healthReportListForUserBlock;
   MediaTypeBlock? _mediaTypeBlock;
@@ -706,8 +706,8 @@ class _CustomTabsState extends State<CustomTabView>
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   GlobalSearchBloc? _globalSearchBloc;
-  List<CategoryData> categoryDataList = [];
-  List<MediaData> mediaData = [];
+  List<CategoryData> categoryDataList = new List();
+  List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   bool containsAudio = false;
@@ -847,11 +847,11 @@ class _CustomTabsState extends State<CustomTabView>
   Widget getAllTabsToDisplayInBodyClone(List<CategoryResult>? data) {
     rebuildAllBlocks();
     if (widget.selectedMedia == null) {
-      widget.selectedMedia = [];
+      widget.selectedMedia = new List();
     }
 
     if (widget.selectedRecordsId == null) {
-      widget.selectedRecordsId = [];
+      widget.selectedRecordsId = new List();
     }
 
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
@@ -885,11 +885,11 @@ class _CustomTabsState extends State<CustomTabView>
                         child: IconButton(
                           icon: Icon(
                             Icons.camera_alt,
-                            color: widget.isFromVideoCall!
+                            color: widget?.isFromVideoCall!
                                 ? Colors.black38
                                 : Colors.white,
                           ),
-                          onPressed: widget.isFromVideoCall!
+                          onPressed: widget?.isFromVideoCall!
                               ? null
                               : () {
                                   onCameraClicked();
@@ -910,11 +910,11 @@ class _CustomTabsState extends State<CustomTabView>
                         child: IconButton(
                           icon: Icon(
                             Icons.mic,
-                            color: widget.isFromVideoCall!
+                            color: widget?.isFromVideoCall!
                                 ? Colors.black38
                                 : Colors.white,
                           ),
-                          onPressed: widget.isFromVideoCall!
+                          onPressed: widget?.isFromVideoCall!
                               ? null
                               : () {
                                   onVoiceRecordClicked();
@@ -971,7 +971,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getAllTabsToDisplayInBody(List<CategoryResult>? data) {
-    HealthRecordList? completeDataFromPreference =
+    HealthRecordList completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch!
         ? getMediTypeForlabels(data, widget.completeData)
@@ -1022,7 +1022,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryResult> data) {
-    HealthRecordList? completeDataFromPreference =
+    HealthRecordList completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch!
         ? getMediTypeForlabels(data, widget.completeData)
@@ -1189,30 +1189,29 @@ class _CustomTabsState extends State<CustomTabView>
     categoryID = categoryId;
   }
 
-  void addHealthRecords(String? metaId,
-      List<HealthRecordCollection>? healthRecords, bool? condition) {
+  void addHealthRecords(String metaId,
+      List<HealthRecordCollection> healthRecords, bool condition) {
     if (widget.isFromChat!) {
-      if (condition!) {
+      if (condition) {
         if (!(widget.selectedRecordsId!.contains(metaId))) {}
       } else {
         widget.selectedRecordsId!.remove(metaId);
       }
       if (condition) {
-        if (!(widget.selectedMedia!.contains(metaId!))) {
-          widget.selectedMedia!.add(metaId!);
-          widget.selectedRecordsId!.addAll(healthRecords!);
+        if (!(widget.selectedMedia!.contains(metaId))) {
+          widget.selectedMedia!.add(metaId);
+          widget.selectedRecordsId!.addAll(healthRecords);
         }
       } else {
-        widget.selectedMedia!.remove(metaId!);
-        widget.selectedRecordsId!.remove(healthRecords!);
+        widget.selectedMedia!.remove(metaId);
+        widget.selectedRecordsId!.remove(healthRecords);
       }
     }
     callBackToRefresh();
   }
 
-
-void addMediaRemoveMaster(String? metaId, bool? condition) {
-    commonMethodToAddOrRemove(metaId!, condition!, null);
+  void addMediaRemoveMaster(String metaId, bool condition) {
+    commonMethodToAddOrRemove(metaId, condition, null);
   }
 
   void commonMethodToAddOrRemove(
@@ -1257,13 +1256,13 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
   }
 
   void addMediaRemoveMasterForNotesAndVoice(
-      String? metaId, bool? condition, HealthResult? healthCategoryID) {
-    commonMethodToAddOrRemove(metaId!, condition!, healthCategoryID);
+      String metaId, bool condition, HealthResult healthCategoryID) {
+    commonMethodToAddOrRemove(metaId, condition, healthCategoryID);
   }
 
   List<Widget> _getAllDataForTheTabs(List<CategoryResult> data,
       HealthRecordList? completeData, List<MediaResult> mediaData) {
-    List<Widget> tabWidgetList = [];
+    List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
     for (CategoryResult dataObj in data) {
       /* if (dataObj
@@ -1385,7 +1384,7 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
         if (CommonUtil.audioPage == false && widget.fromClass == '') {
-          widget.selectedMedia = [];
+          widget.selectedMedia = new List();
         }
 
         if (CommonUtil.audioPage == false && widget.fromClass == 'audio') {
@@ -1496,7 +1495,7 @@ void addMediaRemoveMaster(String? metaId, bool? condition) {
   }
 
   List<Widget> getAllTabsToDisplayInHeader(List<CategoryResult> data) {
-    List<Widget> tabWidgetList = [];
+    List<Widget> tabWidgetList = new List();
 
     data.sort((a, b) {
       return a.categoryDescription!

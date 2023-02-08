@@ -125,7 +125,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     if (newPage == 2 && checkCartForBundle()) {
       Get.to(CheckoutPage());
     } else {
-      if (pageController.hasClients) {
+      if (pageController?.hasClients) {
         pageController.animateToPage(newPage,
             duration: Duration(milliseconds: 100), curve: Curves.easeIn);
       }
@@ -165,7 +165,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PlanListModel?> getCarePlanList(String isFrom,
+  Future<PlanListModel> getCarePlanList(String isFrom,
       {String? conditionChosen}) async {
     ProviderOrganisationResponse providerOrganizationResult;
     try {
@@ -173,8 +173,8 @@ class PlanWizardViewModel extends ChangeNotifier {
 
       if (isFrom == strProviderCare) {
         providerOrganizationResult =
-            (await Provider.of<PlanProviderViewModel>(Get.context!, listen: false)
-                .getCarePlanList(conditionChosen!))!;
+            await Provider.of<PlanProviderViewModel>(Get.context!, listen: false)
+                .getCarePlanList(conditionChosen!);
 
         planWizardProviderCount =
             providerOrganizationResult?.result?.length ?? 0;
@@ -194,7 +194,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<PlanListModel?> getDietPlanListNew(
+  Future<PlanListModel> getDietPlanListNew(
       {String? isFrom, bool isVeg = false}) async {
     try {
       var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
@@ -211,7 +211,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<DietPlanModel?> getDietPlanList({bool isVeg = false}) async {
+  Future<DietPlanModel> getDietPlanList({bool isVeg = false}) async {
     try {
       var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
       DietPlanModel myPlanListModel = await planWizardService.getDietPlanList(
@@ -256,11 +256,11 @@ class PlanWizardViewModel extends ChangeNotifier {
     if ((filterText ?? '')?.isNotEmpty ?? false) {
       isHealthSearch = true;
       filteredHealthConditions = {};
-      healthConditions.forEach((categoryName, menuItemsList) {
-        menuItemsList.forEach((menuItem) {
+      healthConditions?.forEach((categoryName, menuItemsList) {
+        menuItemsList?.forEach((menuItem) {
           if (menuItem.menuitemtype != Menuitemtype.SEPERATOR &&
-              (menuItem.title!.toLowerCase().trim() ?? '')
-                  .contains(filterText.toLowerCase().trim())) {
+              (menuItem?.title?.toLowerCase()?.trim() ?? '')
+                  .contains(filterText?.toLowerCase()?.trim())) {
             filteredHealthConditions.putIfAbsent(categoryName, () => []);
             filteredHealthConditions[categoryName ?? '']!.add(menuItem);
           }
@@ -273,14 +273,14 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   List<PlanListResult> filterPlanNameProvider(String title) {
-    List<PlanListResult> filterSearch = [];
+    List<PlanListResult> filterSearch = new List();
     for (PlanListResult searchList in providerPlanListResult!) {
-      if (searchList.title != null && searchList.title != '') {
-        if (searchList.title!
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim()) ||
-            searchList.providerName!
+            searchList?.providerName!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim())) {
@@ -292,14 +292,14 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   List<PlanListResult> filterPlanNameProviderDiet(String title) {
-    List<PlanListResult> filterSearch = [];
+    List<PlanListResult> filterSearch = new List();
     for (PlanListResult searchList in providerDietPlanListResult!) {
       if (searchList?.title != null && searchList?.title != '') {
-        if (searchList.title!
+        if (searchList?.title!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim()) ||
-            searchList.providerName!
+            searchList?.providerName!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim())) {
@@ -311,14 +311,14 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   List<PlanListResult> filterPlanNameFree(String title) {
-    List<PlanListResult> filterSearch = [];
+    List<PlanListResult> filterSearch = new List();
     for (PlanListResult searchList in freePlanListResult!) {
-      if (searchList.title != null && searchList.title != '') {
-        if (searchList.title!
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim()) ||
-            searchList.providerName!
+            searchList?.providerName!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim())) {
@@ -330,14 +330,14 @@ class PlanWizardViewModel extends ChangeNotifier {
   }
 
   List<PlanListResult> filterPlanNameFreeDiet(String title) {
-    List<PlanListResult> filterSearch = [];
+    List<PlanListResult> filterSearch = new List();
     for (PlanListResult searchList in freeDietPlanListResult!) {
-      if (searchList.title != null && searchList.title != '') {
-        if (searchList.title!
+      if (searchList?.title != null && searchList?.title != '') {
+        if (searchList?.title!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim()) ||
-            searchList.providerName!
+            searchList?.providerName!
                 .toLowerCase()
                 .trim()
                 .contains(title.toLowerCase().trim())) {
@@ -356,7 +356,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
           var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+          return priceA?.compareTo(priceB ?? 0);
         });
       }
       planListLocal = List.from(planLisDefault);
@@ -365,7 +365,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
           var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+          return duraA?.compareTo(duraB ?? 0);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -388,7 +388,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
           var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+          return priceA?.compareTo(priceB ?? 0);
         });
       }
       planListLocal = List.from(planLisDefault);
@@ -397,7 +397,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
           var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+          return duraA?.compareTo(duraB ?? 0);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -420,7 +420,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
           var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+          return priceA?.compareTo(priceB ?? 0);
         });
       }
       planListLocal = List.from(planLisDefault);
@@ -429,7 +429,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
           var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+          return duraA?.compareTo(duraB ?? 0);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -453,7 +453,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var priceA = double.tryParse(a?.price ?? 0 as String) ?? 0;
           var priceB = double.tryParse(b?.price ?? 0 as String) ?? 0;
-          return priceA.compareTo(priceB ?? 0);
+          return priceA?.compareTo(priceB ?? 0);
         });
       }
       planListLocal = List.from(planLisDefault);
@@ -462,7 +462,7 @@ class PlanWizardViewModel extends ChangeNotifier {
         planLisDefault?.sort((a, b) {
           var duraA = double.tryParse(a?.packageDuration ?? 0 as String) ?? 0;
           var duraB = double.tryParse(b?.packageDuration ?? 0 as String) ?? 0;
-          return duraA.compareTo(duraB ?? 0);
+          return duraA?.compareTo(duraB ?? 0);
         });
         planListLocal = List.from(planLisDefault);
       }
@@ -563,7 +563,7 @@ class PlanWizardViewModel extends ChangeNotifier {
     return tag;
   }
 
-  Future<AddToCartModel?> addToCartItem(
+  Future<AddToCartModel> addToCartItem(
       {String? packageId,
       String? price,
       required bool isRenew,

@@ -49,13 +49,13 @@ class DoctorUpcomingAppointments extends StatefulWidget {
 class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   FlutterToast toast = new FlutterToast();
-  List<String?> bookingIds = [];
-  List<String?> dates = [];
+  List<String?> bookingIds = new List();
+  List<String?> dates = new List();
 
   late CancelAppointmentViewModel cancelAppointmentViewModel;
   SharedPreferences? prefs;
   ChatViewModel chatViewModel = ChatViewModel();
-  List<CategoryResult> filteredCategoryData = [];
+  List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override
@@ -319,10 +319,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String? userId = doc.doctor!.user!.id;
     String? doctorName = doc.doctor!.user!.name;
     String? doctorPic = doc.doctor!.user!.profilePicThumbnailUrl;
-    String? chatListId = doc.chatListId;
-    String strLastDate = doc.chatMessage!.deliveredOn != null &&
-        doc.chatMessage!.deliveredOn != ''
-        ? CommonUtil().getFormattedDateTime(doc.chatMessage!.deliveredOn!)
+    String? chatListId = doc?.chatListId;
+    String strLastDate = doc?.chatMessage?.deliveredOn != null &&
+        doc?.chatMessage?.deliveredOn != ''
+        ? CommonUtil().getFormattedDateTime(doc?.chatMessage?.deliveredOn!)
         : '';
     /* chatViewModel.storePatientDetailsToFCM(
         doctorId, doctorName, doctorPic, '', '', '', context, false);*/
@@ -505,14 +505,14 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
       bookingIds.add(appointments[i]!.bookingId);
       dates.add(appointments[i]!.plannedStartDateTime);
     }
-    CancelAppointmentModel? cancelAppointment = await cancelAppointmentViewModel
+    CancelAppointmentModel cancelAppointment = await cancelAppointmentViewModel
         .fetchCancelAppointment(bookingIds, dates);
 
-    return cancelAppointment!;
+    return cancelAppointment;
   }
 
   void moveToBilsPage(HealthRecord? healthRecord) async {
-    List<String> paymentID = [];
+    List<String> paymentID = new List();
     if (healthRecord != null &&
         healthRecord.bills != null &&
         healthRecord.bills!.length > 0) {
@@ -568,12 +568,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult>? categoryDataList = [];
+    List<CategoryResult> categoryDataList = List();
     categoryDataList = getCategoryList();
     for (int i = 0;
     i < (categoryDataList == null ? 0 : categoryDataList.length);
     i++) {
-      if (categoryName == categoryDataList![i].categoryName) {
+      if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName!);
         position = i;
       }
@@ -585,7 +585,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     }
   }
 
-  List<CategoryResult>? getCategoryList() {
+  List<CategoryResult> getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value!.result!);

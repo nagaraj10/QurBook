@@ -1,5 +1,4 @@
 
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -45,7 +44,7 @@ class HubListViewController extends GetxController {
     try {
       loadingData.value = true;
       hubListResponse = null;
-      http.Response response = (await (_apiProvider.getHubList() as FutureOr<Response>)) as http.Response;
+      http.Response response = await (_apiProvider.getHubList() as FutureOr<Response>);
       if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
         hubListResponse = null;
         return;
@@ -61,7 +60,7 @@ class HubListViewController extends GetxController {
 
   Future<bool> callCreateVirtualHub() async {
     try {
-      http.Response response = (await (_apiProvider.callCreateVirtualHub() as FutureOr<Response>)) as http.Response;
+      http.Response response = await (_apiProvider.callCreateVirtualHub() as FutureOr<Response>);
       if (response.statusCode != 200 || (response.body ?? "").isEmpty) {
         FlutterToast().getToast(
           CommonUtil().validString(
@@ -158,7 +157,7 @@ class HubListViewController extends GetxController {
   unPairDevice(String deviceId) async {
     try {
       loadingData.value = true;
-      http.Response? response = (await (_apiProvider.unPairDevice(deviceId) as FutureOr<Response?>)) as http.Response?;
+      http.Response? response = await (_apiProvider.unPairDevice(deviceId) as FutureOr<Response?>);
       if (response == null) {
         FlutterToast().getToast('Oops Something went wrong', Colors.red);
       }

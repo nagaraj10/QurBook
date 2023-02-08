@@ -8,7 +8,7 @@ class ProviderOrganisationResponse {
   ProviderOrganisationResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <Result>[];
+      result = new List<Result>();
       json['result'].forEach((v) {
         result!.add(new Result.fromJson(v));
       });
@@ -72,7 +72,7 @@ class Result {
     communicationEmails = json['communicationEmails'];
     emailDomain = json['emailDomain'];
     if (json['specialty'] != null) {
-      specialty = <Specialty>[];
+      specialty = new List<Specialty>();
       json['specialty'].forEach((v) {
         specialty!.add(new Specialty.fromJson(v));
       });

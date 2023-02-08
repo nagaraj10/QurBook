@@ -142,9 +142,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   String? setValueLanguages(MyProfileResult? myProfile) {
     String? languagePreferred = "English";
-    if (myProfile!.userProfileSettingCollection3!.isNotEmpty) {
+    if (myProfile?.userProfileSettingCollection3?.isNotEmpty) {
       ProfileSetting? profileSetting =
-          myProfile.userProfileSettingCollection3![0].profileSetting;
+          myProfile?.userProfileSettingCollection3![0].profileSetting;
       if (profileSetting != null) {
         CommonUtil.langaugeCodes.forEach((language, languageCode) {
           if (language == profileSetting.preferred_language) {
@@ -260,8 +260,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       if (data != null) {
         // name.text = toBeginningOfSentenceCase(
         //     data.firstName.toLowerCase() + data.lastName.toLowerCase());
-        name.text = data.firstName!.capitalizeFirstofEach +
-            data.lastName!.capitalizeFirstofEach;
+        name.text = data?.firstName?.capitalizeFirstofEach +
+            data?.lastName?.capitalizeFirstofEach;
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3!.length > 0) {
@@ -290,23 +290,23 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data.bloodGroup != null) {
         print('current blood group ${data?.bloodGroup}');
-        bloodGroupController.text = data.bloodGroup!.split(' ')[0];
-        bloodRangeController.text = data.bloodGroup!.split(' ')[1];
+        bloodGroupController.text = data?.bloodGroup!.split(' ')[0];
+        bloodRangeController.text = data?.bloodGroup!.split(' ')[1];
         //renameBloodGroup(data.bloodGroup);
       }
       if (data.dateOfBirth != null) {
         dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth)!;
       }
       if (data != null) {
-        firstName.text = data.firstName!.capitalizeFirstofEach;
+        firstName.text = data?.firstName?.capitalizeFirstofEach;
         middleName.text = ((data.middleName != null && data.middleName != '')
             ? data?.middleName?.capitalizeFirstofEach
             : '')!;
-        lastName.text = data.lastName!.capitalizeFirstofEach;
+        lastName.text = data?.lastName?.capitalizeFirstofEach;
       } else {
         firstName.text = data != null
-            ? data.firstName!.capitalizeFirstofEach +
-                data.lastName!.capitalizeFirstofEach
+            ? data?.firstName?.capitalizeFirstofEach +
+                data?.lastName?.capitalizeFirstofEach
             : '';
         middleName.text = '';
         lastName.text = '';
@@ -317,8 +317,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           cntrlr_addr_one.text = data.userAddressCollection3![0].addressLine1!;
           cntrlr_addr_two.text = data.userAddressCollection3![0].addressLine2!;
           cntrlr_addr_zip.text = data.userAddressCollection3![0].pincode!;
-          cntrlr_addr_city.text = data.userAddressCollection3![0].city!.name!;
-          cntrlr_addr_state.text = data.userAddressCollection3![0].state!.name!;
+          cntrlr_addr_city.text = data.userAddressCollection3![0].city?.name!;
+          cntrlr_addr_state.text = data.userAddressCollection3![0].state?.name!;
         }
       }
 
@@ -885,7 +885,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           if (!snapshot.hasData) {
             return CommonCircularIndicator();
           }
-          final List<Tags>? tagslist = snapshot.data!.result;
+          final List<Tags>? tagslist = snapshot.data.result;
 
           //  final mediaResultFiltered = removeUnwantedCategories(tagslist);
 
@@ -894,7 +894,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
             isClickable: true,
             tags: addFamilyUserInfoBloc.tagsList,
             onChecked: (result) {
-              addSelectedcategoriesToList(result!);
+              addSelectedcategoriesToList(result);
             },
           );
         });

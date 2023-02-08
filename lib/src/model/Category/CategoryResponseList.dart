@@ -41,7 +41,7 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     count = json[parameters.strCount];
     if (json[parameters.strData] != null) {
-      data = <CategoryData>[];
+      data = List<CategoryData>();
       json[parameters.strData].forEach((v) {
         data!.add(CategoryData.fromJson(v));
       });

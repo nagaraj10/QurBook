@@ -8,7 +8,7 @@ class LabsSearchListResponse {
   LabsSearchListResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = <LabListResult>[];
+      result = List<LabListResult>();
       json['result'].forEach((v) {
         result!.add(LabListResult.fromJson(v));
       });

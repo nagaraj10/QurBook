@@ -19,7 +19,7 @@ class LandingService {
         variable.qr_include +
         includeText +
         variable.qr_userid_dashboard +
-        userId! +
+        userId +
         variable.qr_date +
         '${DateTime.now()}';
     var response = await _helper.getQurPlanDashBoard(
@@ -43,7 +43,7 @@ class LandingService {
   static Future<MemberShipDetailResponse> getMemberShipDetails() async {
     var _helper = ApiBaseHelper();
     final userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
-    final url = variable.qr_membership + userId! + variable.qr_organizationid;
+    final url = variable.qr_membership + userId + variable.qr_organizationid;
 
     var response = await _helper.getMemberShipDetails(
       url,

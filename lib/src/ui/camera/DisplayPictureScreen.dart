@@ -702,7 +702,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     pulse = new TextEditingController(text: '');
     diaStolicPressure = new TextEditingController(text: '');
 
-    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType()!;
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
@@ -901,7 +901,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     //postMainData[parameters.struserId] = userID;
 
-    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType()!;
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
@@ -911,7 +911,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
 
-    MediaDataList mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as Future<MediaDataList>);
+    MediaDataList mediaTypesResponse = await (_mediaTypeBlock.getMediTypesList() as FutureOr<MediaDataList>);
 
     List<MediaResult>? metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {

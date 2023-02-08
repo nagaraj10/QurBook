@@ -40,7 +40,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
   List<Doctors?>? doctorsModel = [];
   List<Doctors?> doctorsModelPatientAssociated = [];
 
-  List<Hospitals>? labsModel = [];
+  List<Hospitals>? labsModel = List();
 
   @override
   void initState() {
@@ -49,10 +49,10 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     if (widget.data != null) {
       hospitalsModel = widget.dataHospitalLab?.hospitals;
       doctorsModel = widget.data?.doctors;
-      if (widget.data!.providerRequestCollection3 != null &&
-          widget.data!.providerRequestCollection3!.length > 0)
+      if (widget.data?.providerRequestCollection3 != null &&
+          widget.data?.providerRequestCollection3!.length > 0)
         for (ProviderRequestCollection3 providerRequestCollection3
-            in widget.data!.providerRequestCollection3!) {
+            in widget.data?.providerRequestCollection3!) {
           Doctors patientAddedDoctor = providerRequestCollection3.doctor!;
           patientAddedDoctor.isPatientAssociatedRequest = true;
           doctorsModelPatientAssociated.add(providerRequestCollection3.doctor);

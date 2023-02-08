@@ -131,7 +131,7 @@ class RegimentViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> switchRegimentMode() async{
+  Future<void> switchRegimentMode() {
     regimentMode = (regimentMode == RegimentMode.Schedule)
         ? RegimentMode.Symptoms
         : RegimentMode.Schedule;
@@ -483,7 +483,7 @@ class RegimentViewModel extends ChangeNotifier {
     var response = await RegimentService.getEventId(
         uid: uid, aid: aid, formId: formId, formName: formName);
     LoaderClass.hideLoadingDialog(Get.context!);
-    return response!;
+    return response;
   }
 
   Future<ProfileResponseModel> getProfile() async {

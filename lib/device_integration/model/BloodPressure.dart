@@ -81,7 +81,7 @@ class DeviceHealthRecord {
         ? SourceType.fromJson(json['sourceType'])
         : null;
     if (json['heartRateCollection'] != null) {
-      heartRateCollection = <HeartRateCollection>[];
+      heartRateCollection = List<HeartRateCollection>();
       json['heartRateCollection'].forEach((v) {
         heartRateCollection!.add(HeartRateCollection.fromJson(v));
       });

@@ -34,7 +34,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = [];
+  List<PlanListResult> planSearchList = List();
 
   String? _selectedView = popUpChoiceDefault;
 
@@ -63,7 +63,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
 
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel>?;
+        .getCarePlanList(strProviderCare,conditionChosen: conditionChosen);
   }
 
   @override
@@ -158,14 +158,14 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot.hasData &&
-              snapshot.data!.result != null &&
-              snapshot.data!.result!.length > 0) {
+          if (snapshot?.hasData &&
+              snapshot?.data?.result != null &&
+              snapshot?.data?.result?.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot.data!.result!.length ?? 0;
+                : snapshot?.data?.result?.length ?? 0;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
-                    .isDynamicLink) ??
+                    ?.isDynamicLink) ??
                 false)) {
               Future.delayed(Duration(), () {
                 var searchText =
@@ -187,11 +187,11 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
                     Provider
                         .of<PlanWizardViewModel>(context, listen: false)
                         ?.isListEmpty !=
-                        (snapshot.data!.result!.length > 0 ? true : false);
+                        (snapshot?.data?.result?.length > 0 ? true : false);
 
                 Provider.of<PlanWizardViewModel>(context, listen: false)
                     ?.updateBottonLayoutEmptyList(
-                    snapshot.data!.result!.length > 0 ? true : false,
+                    snapshot?.data?.result?.length > 0 ? true : false,
                     needReload: needReload);
               }catch(e){
 
@@ -284,7 +284,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer care plans yet for ' +
-                        planListProvider!.healthTitle ??
+                        planListProvider?.healthTitle ??
                     ''),
             TextSpan(
                 text: '. Tap here',
@@ -336,7 +336,7 @@ class _ProviderCarePlans extends State<ProviderCarePlans> {
         .then((value) => setState(() {
               planListModel =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen) as Future<PlanListModel>?;
+                      .getCarePlanList(strProviderCare,conditionChosen: conditionChosen);
             }));
     /*Navigator.pushNamed(
       Get.context,

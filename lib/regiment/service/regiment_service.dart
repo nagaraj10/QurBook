@@ -197,7 +197,7 @@ class RegimentService {
           var provider =
               Provider.of<RegimentViewModel>(Get.context!, listen: false);
           provider.cachedEvents
-              ?.removeWhere((element) => element.contains(name));
+              ?.removeWhere((element) => element?.contains(name));
           provider.cachedEvents.add('&$name=$value'.toString());
         }
       }
@@ -432,7 +432,7 @@ class RegimentService {
     }
   }
 
-  static Future<GetEventIdModel?> getEventId(
+  static Future<GetEventIdModel> getEventId(
       {dynamic uid, dynamic aid, dynamic formId, dynamic formName}) async {
     final userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var urlForGetEventId = Constants.BASE_URL + variable.getEventId;

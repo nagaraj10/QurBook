@@ -22,7 +22,7 @@ class DownloadMultipleImages {
     String? authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    List<String?> filePathist = [];
+    List<String?> filePathist = new List();
     for (final _currentImage in image_list) {
       try {
         await FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath,
@@ -41,7 +41,7 @@ class DownloadMultipleImages {
               Constants.KEY_OffSet: CommonUtil().setTimeZone()
             },
           );
-          final bytes = request!.bodyBytes; //close();
+          final bytes = request.bodyBytes; //close();
           await file.writeAsBytes(bytes);
 
           print("file.path" + file.path);

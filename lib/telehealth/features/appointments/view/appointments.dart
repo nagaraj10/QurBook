@@ -46,11 +46,11 @@ class _AppointmentsState extends State<Appointments> {
   TextEditingController _searchQueryController = TextEditingController();
   late AppointmentsListViewModel appointmentsViewModel;
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
-  List<Past>? upcomingInfo = [];
-  List<String> bookingIds = [];
-  List<Past>? historyInfo = [];
+  List<Past>? upcomingInfo = List();
+  List<String> bookingIds = new List();
+  List<Past>? historyInfo = List();
   bool isSearch = false;
-  List<Past> upcomingTimeInfo = [];
+  List<Past> upcomingTimeInfo = List();
   SharedPreferences? prefs;
   Function(String)? closePage;
   final GlobalKey<State> _key = new GlobalKey<State>();
@@ -229,10 +229,10 @@ class _AppointmentsState extends State<Appointments> {
             final AppointmentsModel? appointmentsData =
                 appointmentsViewModel.appointments;
             if (appointmentsData != null) {
-              return ((appointmentsData.result!.past != null &&
-                          appointmentsData.result!.past!.length > 0) ||
-                      (appointmentsData.result!.upcoming != null &&
-                          appointmentsData.result!.upcoming!.length > 0))
+              return ((appointmentsData?.result?.past != null &&
+                          appointmentsData?.result?.past?.length > 0) ||
+                      (appointmentsData?.result?.upcoming != null &&
+                          appointmentsData?.result?.upcoming?.length > 0))
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -297,8 +297,8 @@ class _AppointmentsState extends State<Appointments> {
                           width: 0.0.h,
                           height: 10.0.h,
                         ),
-                        (appointmentsData.result!.past != null &&
-                                appointmentsData.result!.past!.length > 0)
+                        (appointmentsData?.result?.past != null &&
+                                appointmentsData?.result?.past!.length > 0)
                             ? new ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
