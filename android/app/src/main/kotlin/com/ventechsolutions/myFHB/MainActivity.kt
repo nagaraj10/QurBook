@@ -2504,7 +2504,14 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                             }
                         )
                         displayText?.setText("")
-
+                        edit_view.clearFocus()
+                        val imm: InputMethodManager =
+                            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        var view = activity.currentFocus
+                        if (view == null) {
+                            view = View(activity)
+                        }
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
                         dialog.show()
 
                         val view: View? = getCurrentFocus()
