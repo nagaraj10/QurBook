@@ -395,7 +395,7 @@ class SheelaBLEController extends GetxController {
             receivedData = false;
             showFailure();
           }
-        } else if (model.deviceType == "WEIGHT") {
+        } else if (model.deviceType.toLowerCase() == "weight") {
           if ((model.data.weight ?? '').isNotEmpty) {
             addToConversationAndPlay(
               SheelaResponse(
