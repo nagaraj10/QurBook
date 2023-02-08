@@ -744,7 +744,12 @@ class _VerifyPatientState extends State<VerifyPatient>
       PreferenceUtil.save(strUserDetails, saveuser);
       authToken = decodesstring;
       final _firebaseMessaging = FirebaseMessaging.instance;
-      var token = await _firebaseMessaging.getToken();
+      var token='';
+      try{
+        token = await _firebaseMessaging.getToken();
+      }catch(e){
+
+      }
       await CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
