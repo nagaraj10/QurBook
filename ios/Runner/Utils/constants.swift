@@ -67,4 +67,6 @@ struct Constants {
     static let WOWGOWT2 = "GSH-231";
     static let WOWGOWT3 = "0202B-0001";
     static let closeSheelaDialog = "closeSheelaDialog"
+    static let deviceInformationServiceUUID = CBUUID(string: "180a")
+    static let deviceSerialNumberServiceUUID = CBUUID(string: "2A25")
 }

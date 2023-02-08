@@ -64,7 +64,7 @@ import LS202_DeviceManager
     var idForBP :UUID?
     var isQurhomeDefaultUI = false
     var ResponseNotificationChannel : FlutterMethodChannel!
-    
+    var connectedWithWeighingscale = false
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
