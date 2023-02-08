@@ -60,6 +60,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      if (CommonUtil.REGION_CODE == "IN") {
+        CommonUtil().requestQurhomeDialog();
+      }
       getProfileApi();
       landingViewModel = Provider.of<LandingViewModel>(context);
       CommonUtil().requestQurhomeDialog();

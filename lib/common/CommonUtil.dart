@@ -137,6 +137,7 @@ import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -5438,6 +5439,71 @@ class CommonUtil {
     });
 
     return missedActvities;
+  }
+
+  OnInitAction() async {
+    dbInitialize();
+    QurPlanReminders.getTheRemindersFromAPI();
+    initSocket();
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      if (Platform.isIOS) {
+        if (PreferenceUtil.isKeyValid(NotificationData)) {
+          // changeTabToAppointments();
+        }
+      }
+    });
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    if (!Get.isRegistered<ChatUserListController>()) {
+      Get.put(ChatUserListController());
+    }
+
+    Get.find<SheelaAIController>().getSheelaBadgeCount();
+  }
+
+  // 1
+  void dbInitialize() {
+    final commonConstants = CommonConstants();
+    commonConstants.getCountryMetrics();
+  }
+
+  // 2
+  void initSocket() {
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+
+    if (userId == null)
+      return Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          ?.socket
+          .off(getChatTotalCountOn);
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .emitWithAck(getChatTotalCountEmit, {
+      'userId': userId,
+    }, ack: (countResponseEmit) {
+      if (countResponseEmit != null) {
+        TotalCountModel totalCountModel =
+            TotalCountModel.fromJson(countResponseEmit);
+        if (totalCountModel != null) {
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(totalCountModel);
+        }
+      }
+    });
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .on(getChatTotalCountOn, (countResponseOn) {
+      if (countResponseOn != null) {
+        TotalCountModel totalCountModelOn =
+            TotalCountModel.fromJson(countResponseOn);
+        if (totalCountModelOn != null) {
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(totalCountModelOn);
+        }
+      }
+    });
   }
 
   static bool isNotINDReg() {

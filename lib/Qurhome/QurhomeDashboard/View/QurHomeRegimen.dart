@@ -61,7 +61,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   SheelaBLEController _sheelaBLEController;
-  var chatGetXController = Get.find<ChatUserListController>();
+  ChatUserListController chatGetXController;
 
   AnimationController animationController;
 
@@ -77,6 +77,10 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         controller.dateHeader.value = controller.getFormatedDate();
       });
 
+      if (!Get.isRegistered<ChatUserListController>()) {
+        Get.put(ChatUserListController());
+      }
+      chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(

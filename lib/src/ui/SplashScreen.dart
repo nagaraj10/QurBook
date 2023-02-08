@@ -94,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    CommonUtil().OnInitAction();
   }
 
   @override
@@ -243,7 +244,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
-                        }else if (parsedData.length == 5)
+                        } else if (parsedData.length == 5) 
                         {
                           eventType = parsedData[0];
                           others = parsedData[1];
