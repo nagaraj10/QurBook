@@ -707,6 +707,7 @@ var tckPackageTitle = "package_title";
 var tckMainTitle = "title";
 var tckMainDescription = "description";
 var tckTypeModeOfService = "mode_of_service";
+var tckTypeFileUpload = "File Upload";
 
 const String keyMembeShipID = 'memberShipID';
 const String keyClaimAmount = 'claimAmt';
@@ -759,7 +760,8 @@ const String UnSubscribed = 'UnSubscribed';
 
 const String Expired = 'Expired';
 
-const String msgData = 'Values will not have an impact. Are you sure you want to update?';
+const String msgData =
+    'Values will not have an impact. Are you sure you want to update?';
 
 const String sheelaRecepId = 'Sheela Response';
 

@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -38,7 +40,7 @@ class SheelaBLEController extends GetxController {
   bool receivedData = false;
   AudioPlayer player;
   int randomNum = 0;
-
+  String weightUnit = "";
   @override
   void onInit() {
     super.onInit();
@@ -338,6 +340,25 @@ class SheelaBLEController extends GetxController {
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
+        if (model.deviceType.toLowerCase() == "weight" &&
+            (model.data.weight ?? '').isNotEmpty) {
+          try {
+            weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
+          } catch (e) {
+            weightUnit = CommonUtil.REGION_CODE == "IN"
+                ? STR_VAL_WEIGHT_IND
+                : STR_VAL_WEIGHT_US;
+          }
+          if (weightUnit == STR_VAL_WEIGHT_US) {
+            double convertedWeight = 1;
+            try {
+              convertedWeight = double.parse(model.data.weight);
+            } catch (e) {
+              convertedWeight = 1;
+            }
+            model.data.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+          }
+        }
         // model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId;
         model.eid = hublistController.eid;
@@ -401,7 +422,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your Weight ${model.data.weight} is successfully recorded, Bye!",
+                    "Thank you. Your Weight ${model.data.weight} ${weightUnit} is successfully recorded, Bye!",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
