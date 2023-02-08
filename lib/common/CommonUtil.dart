@@ -1923,8 +1923,12 @@ class CommonUtil {
     var jsonParam;
     final _firebaseMessaging = FirebaseMessaging.instance;
     final apiBaseHelper = ApiBaseHelper();
+    var token='';
+    try{
+      token = await _firebaseMessaging.getToken();
+    }catch(e){
 
-    var token = await _firebaseMessaging.getToken();
+    }
     await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
