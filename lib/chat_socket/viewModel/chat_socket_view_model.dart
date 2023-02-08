@@ -103,11 +103,11 @@ class ChatSocketViewModel extends ChangeNotifier {
     chatTotalCount = 0;
 
     if (totalCountModel != null) {
-      if (totalCountModel?.isSuccess! && totalCountModel?.payload != null) {
-        if (totalCountModel?.payload?.isNotEmpty) {
-          if (totalCountModel?.payload![0]?.count != null &&
-              totalCountModel?.payload![0]?.count != '') {
-            chatTotalCount = int.parse(totalCountModel?.payload![0]?.count ?? 0 as String);
+      if (totalCountModel.isSuccess! && totalCountModel?.payload != null) {
+        if (totalCountModel.payload!.isNotEmpty) {
+          if (totalCountModel.payload![0].count != null &&
+              totalCountModel.payload![0].count != '') {
+            chatTotalCount = int.parse(totalCountModel.payload![0].count ?? 0 as String);
           }
         }
       }
@@ -137,7 +137,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<ChatHistoryModel> getChatHistory(
+  Future<ChatHistoryModel?> getChatHistory(
       String peerId,
       String familyUserId,
       bool isCareCoordinator,
@@ -158,7 +158,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<InitChatModel> initNewChat(String peerId) async {
+  Future<InitChatModel?> initNewChat(String peerId) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID)!;
 
@@ -169,7 +169,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<InitChatFamilyModel> initNewFamilyChat(String peerId,
+  Future<InitChatFamilyModel?> initNewFamilyChat(String peerId,
       String familyName, bool isCareCoordinator, String careCooId) async {
     try {
       var userId = PreferenceUtil.getStringValue(KEY_USERID_MAIN)!;
@@ -182,7 +182,7 @@ class ChatSocketViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<GetUserIdModel> getUserIdFromDocId(String docId) async {
+  Future<GetUserIdModel?> getUserIdFromDocId(String docId) async {
     try {
       GetUserIdModel getUserIdModel =
           await chocketService.getUserIdFromDocId(docId);

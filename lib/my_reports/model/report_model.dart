@@ -8,7 +8,7 @@ class ReportModel {
   ReportModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<MyReportResult>();
+      result = <MyReportResult>[];
       json['result'].forEach((v) {
         result!.add(new MyReportResult.fromJson(v));
       });

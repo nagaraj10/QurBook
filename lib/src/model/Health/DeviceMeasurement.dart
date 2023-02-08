@@ -10,7 +10,7 @@ class DeviceMeasurements {
 
   DeviceMeasurements.fromJson(Map<String, dynamic>? json) {
     if (json != null) {
-      data = List<DeviceMeasurementsData>();
+      data = <DeviceMeasurementsData>[];
       json[parameters.strData].forEach((v) {
         data!.add(DeviceMeasurementsData.fromJson(v));
       });

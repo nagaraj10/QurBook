@@ -39,8 +39,8 @@ class _TabDietMainState extends State<TabDietMain>
         var tabIndex = Provider.of<PlanWizardViewModel>(context, listen: false)
             ?.dynamicLinkTabIndex;
         Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.changeCurrentTab(tabIndex);
-        _tabController!.animateTo(tabIndex);
+            ?.changeCurrentTab(tabIndex!);
+        _tabController!.animateTo(tabIndex!);
       });
     }
   }

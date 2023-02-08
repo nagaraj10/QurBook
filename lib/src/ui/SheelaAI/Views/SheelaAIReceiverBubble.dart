@@ -240,7 +240,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                     controller.stopTTS();
                                     String? videoId;
                                     videoId = YoutubePlayer.convertUrlToId(
-                                        currentVideoLink?.url!);
+                                        currentVideoLink.url!);
                                     Get.to(
                                       MyYoutubePlayer(
                                         videoId: videoId,

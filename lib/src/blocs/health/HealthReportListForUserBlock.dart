@@ -152,7 +152,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     return saveMetaDataResponse;
   }
 
-  Future<DoctorImageResponse> getProfilePic(String doctorsId) async {
+  Future<DoctorImageResponse?> getProfilePic(String doctorsId) async {
     try {
       var userHealthResponseList =
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
@@ -160,7 +160,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     } catch (e) {}
   }
 
-  Future<ImageDocumentResponse> getDocumentImage(String metaMasterId) async {
+  Future<ImageDocumentResponse?> getDocumentImage(String metaMasterId) async {
     try {
       final userHealthResponseList = await _healthReportListForUserRepository
           .getDocumentImage(metaMasterId);

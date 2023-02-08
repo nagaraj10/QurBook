@@ -58,7 +58,7 @@ class BillsList extends StatefulWidget {
 
 class _BillsListState extends State<BillsList> {
   late HealthReportListForUserBlock _healthReportListForUserBlock;
-  List<HealthRecordCollection> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = [];
 
   FlutterToast toast = new FlutterToast();
 
@@ -90,7 +90,7 @@ class _BillsListState extends State<BillsList> {
   }
 
   Widget getWidgetToDisplayBillsList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionBills);

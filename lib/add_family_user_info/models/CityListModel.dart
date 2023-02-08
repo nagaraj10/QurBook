@@ -37,7 +37,7 @@ class Response {
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     if (json['data'] != null) {
-      data = List<CityData>();
+      data = <CityData>[];
       json['data'].forEach((v) {
         data!.add(CityData.fromJson(v));
       });

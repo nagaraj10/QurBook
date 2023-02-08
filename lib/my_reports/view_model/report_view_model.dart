@@ -25,7 +25,7 @@ class MyReportViewModel extends ChangeNotifier {
 
   ReportService reportService = ReportService();
 
-  Future<ReportModel> getReportList() async {
+  Future<ReportModel?> getReportList() async {
     final userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (userid != null) {
       try {

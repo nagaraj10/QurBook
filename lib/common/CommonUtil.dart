@@ -19,6 +19,7 @@ import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/service/regiment_service.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
@@ -222,7 +223,7 @@ class CommonUtil {
   String? userMappingId = '';
   SheelaQueueServices queueServices = SheelaQueueServices();
 
-  Future<GetDeviceSelectionModel> getProfileSetings() async {
+  Future<GetDeviceSelectionModel?> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
@@ -242,8 +243,8 @@ class CommonUtil {
 
                 if (weightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement!.weight?.unitCode!);
-                  if (preferredMeasurement!.weight?.unitCode!.toLowerCase() ==
+                      preferredMeasurement!.weight!.unitCode!);
+                  if (preferredMeasurement!.weight!.unitCode!.toLowerCase() ==
                       Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
                     isKg = true;
                     isPounds = false;
@@ -259,8 +260,8 @@ class CommonUtil {
 
                 if (heightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement!.height?.unitCode!);
-                  if (preferredMeasurement!.height?.unitCode ==
+                      preferredMeasurement!.height!.unitCode!);
+                  if (preferredMeasurement!.height!.unitCode ==
                       Constants.STR_VAL_HEIGHT_IND) {
                     isInchFeet = true;
                     isCenti = false;
@@ -275,8 +276,8 @@ class CommonUtil {
                 tempObj = preferredMeasurement!.temperature;
                 if (tempObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement!.temperature?.unitCode!);
-                  if (preferredMeasurement!.temperature?.unitCode!
+                      preferredMeasurement!.temperature!.unitCode!);
+                  if (preferredMeasurement!.temperature!.unitCode!
                           .toLowerCase() ==
                       Constants.STR_VAL_TEMP_IND.toLowerCase()) {
                     isFaren = true;
@@ -307,21 +308,21 @@ class CommonUtil {
     var unitConfiguration = await apiBaseHelper
         .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
 
-    if (unitConfiguration?.isSuccess!) {
-      if (unitConfiguration?.result != null) {
-        var configurationData = unitConfiguration?.result![0]?.configurationData;
+    if (unitConfiguration.isSuccess!) {
+      if (unitConfiguration.result != null) {
+        var configurationData = unitConfiguration.result![0].configurationData;
         if (configurationData != null) {
           if (CommonUtil.REGION_CODE != "IN") {
             await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                    configurationData.unitSystemList?.us?.height![0]?.unitCode!)
+                    configurationData.unitSystemList!.us!.height![0].unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      configurationData.unitSystemList?.us?.weight![0]?.unitCode!)
+                      configurationData.unitSystemList!.us!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.us?.temperature![0]?.unitCode!)
+                            .unitSystemList!.us!.temperature![0].unitCode!)
                     .then((value) {});
               });
             });
@@ -329,17 +330,17 @@ class CommonUtil {
             await PreferenceUtil.saveString(
                     Constants.STR_KEY_HEIGHT,
                     configurationData
-                        .unitSystemList?.india?.height![0]?.unitCode!)
+                        .unitSystemList!.india!.height![0].unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT,
                       configurationData
-                          .unitSystemList?.india?.weight![0]?.unitCode!)
+                          .unitSystemList!.india!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.india?.temperature![0]?.unitCode!)
+                            .unitSystemList!.india!.temperature![0].unitCode!)
                     .then((value) {});
               });
             });
@@ -477,7 +478,7 @@ class CommonUtil {
 
   List<HealthResult> getDataForHospitals(HealthRecordList completeData,
       String categoryDescription, String mediaTypeDescription) {
-    var mediaMetaInfoObj = List<HealthResult>();
+    var mediaMetaInfoObj = <HealthResult>[];
 
     for (var mediaMetaInfo in completeData.result!) {
       if (mediaMetaInfo.metadata!.healthRecordCategory != null) {
@@ -537,7 +538,7 @@ class CommonUtil {
   }
 
   String? getMetaMasterId(MediaMetaInfo data) {
-    var mediaMasterIdsList = List<MediaMasterIds>();
+    var mediaMasterIdsList = <MediaMasterIds>[];
     if (data.mediaMasterIds!.isNotEmpty) {
       for (var mediaMasterIds in data.mediaMasterIds!) {
         mediaMasterIdsList.add(mediaMasterIds);
@@ -564,10 +565,10 @@ class CommonUtil {
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
-    DateTime date;
+    DateTime? date;
     final picked = await showDatePicker(
         context: context,
-        initialDate: date,
+        initialDate: date!,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
     return date;
@@ -577,7 +578,7 @@ class CommonUtil {
     HealthReportListForUserBlock _healthReportListForUserBlock;
     _healthReportListForUserBlock = HealthReportListForUserBlock();
 
-    var imageList = List<dynamic>();
+    var imageList =<dynamic>[];
     if (data.healthRecordCollection!.isNotEmpty) {
       var mediMasterId = CommonUtil().getMetaMasterIdList(data);
       var k = 0;
@@ -600,7 +601,7 @@ class CommonUtil {
   }
 
   List<DeviceModel> getAllDevices(List<MediaResult> mediaList) {
-    final deviceList = List<DeviceModel>();
+    final deviceList = <DeviceModel>[];
 
     for (var mediaMetaInfo in mediaList) {
       if (mediaMetaInfo.description!
@@ -677,7 +678,7 @@ class CommonUtil {
       }
     } catch (e) {}
 
-    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList : List();
+    return mediaMasterIdsList.isNotEmpty ? mediaMasterIdsList :[];
   }
 
   MediaMasterIds getMediaMasterIDForPdfType(
@@ -1110,7 +1111,7 @@ class CommonUtil {
   }
 
   List<CategoryData> removeDuplicatevalues(List<CategoryData> items) {
-    final categoryDataList = List<CategoryData>();
+    final categoryDataList = <CategoryData>[];
     for (final categoryDataObj in items) {
       if (categoryDataList.isEmpty) {
         categoryDataList.add(categoryDataObj);
@@ -1349,7 +1350,7 @@ class CommonUtil {
     });
   }
 
-  Future<MyProfileModel> getUserProfileData() async {
+  Future<MyProfileModel?> getUserProfileData() async {
     final _myProfileBloc = MyProfileBloc();
 
     var myProfileModel = MyProfileModel();
@@ -1485,7 +1486,7 @@ class CommonUtil {
     return devicelist;
   }
 
-  Future<MyProfileModel> getMyProfile() async {
+  Future<MyProfileModel?> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
       return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } else {
@@ -1674,7 +1675,7 @@ class CommonUtil {
   }
 
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
-    final filteredCategoryData = List<CategoryResult>();
+    final filteredCategoryData = <CategoryResult>[];
     for (final dataObj in data) {
       if (dataObj.isDisplay! &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
@@ -1798,8 +1799,8 @@ class CommonUtil {
   }
 
   getDoctorProfileImageWidget(String? doctorUrl, Doctor? doctor) {
-    String name = doctor?.firstName?.capitalizeFirstofEach ??
-        " " + doctor?.lastName?.capitalizeFirstofEach ??
+    String name = doctor!.firstName!.capitalizeFirstofEach ??
+        " " + doctor.lastName!.capitalizeFirstofEach ??
         " ";
     if (doctorUrl != null && doctorUrl != '') {
       return Image.network(
@@ -1963,7 +1964,7 @@ class CommonUtil {
     return DeviceInfoSucess.fromJson(response);
   }
 
-  static Future<File> downloadFile(String url, String? extension) async {
+  static Future<File?> downloadFile(String url, String? extension) async {
     try {
       final req = await ApiServices.get(url);
       final bytes = req.bodyBytes;
@@ -2511,10 +2512,10 @@ class CommonUtil {
     }
   }
 
-  Future<int> getCategoryListPos(String? categoryName) async {
+  Future<int?> getCategoryListPos(String? categoryName) async {
     var position = 0;
     _categoryResponseListRepository = CategoryResponseListRepository();
-    var filteredCategoryData = List<CategoryResult>();
+    var filteredCategoryData = <CategoryResult>[];
     if (filteredCategoryData == null || filteredCategoryData.isEmpty) {
       try {
         var categoryResponseList =
@@ -3530,7 +3531,7 @@ class CommonUtil {
 
                                 refresh!();
                                 if (moveToCart) {
-                                  if ((response.message?.toLowerCase() ==
+                                  if ((response!.message!.toLowerCase() ==
                                           'Product already exists in cart'
                                               .toLowerCase()) ||
                                       response.isSuccess!) {
@@ -3706,9 +3707,9 @@ class CommonUtil {
       var planWords = planInitial?.split(' ') ?? [];
       if (planWords.length > 1) {
         defaultInitial =
-            planWords[0]?.substring(0, 1) + planWords[1]?.substring(0, 1);
+            planWords[0].substring(0, 1) + planWords[1].substring(0, 1);
       } else {
-        defaultInitial = planWords[0]?.substring(0, 1);
+        defaultInitial = planWords[0].substring(0, 1);
       }
     }
 
@@ -3740,7 +3741,7 @@ class CommonUtil {
           color: Colors.transparent,
         ),
         child: iconApi != null && iconApi != ''
-            ? iconApi.toString().toLowerCase()?.contains('.svg')
+            ? iconApi.toString().toLowerCase().contains('.svg')
                 ? Center(
                     child: SizedBox(
                       height: 50.h,
@@ -3774,7 +3775,7 @@ class CommonUtil {
                     ),
                   )
             : iconApi != null && iconApi != ''
-                ? iconApi.toString().toLowerCase()?.contains('.svg')
+                ? iconApi.toString().toLowerCase().contains('.svg')
                     ? SvgPicture.network(
                         iconApi,
                         placeholderBuilder: (context) =>
@@ -3816,7 +3817,7 @@ class CommonUtil {
   static Future<void> saveLog({
     String? message,
     bool isError = false,
-  }) {
+  }) async{
     if (Platform.isAndroid) {
       var userIdMain = PreferenceUtil.getStringValue(KEY_USERID_MAIN);
       var userIdCurrent = PreferenceUtil.getStringValue(KEY_USERID);
@@ -3928,7 +3929,7 @@ class CommonUtil {
 
   static Future<void> sendLogToServer() async {
     if (Platform.isAndroid) {
-      await FlutterLogs.exportLogs(
+      FlutterLogs.exportLogs(
         exportType: ExportType.ALL,
       );
     }
@@ -4265,23 +4266,23 @@ class CommonUtil {
                                               .createSubscribePayment(packageId!)
                                               .then((value) {
                                             if (value != null) {
-                                              if (value?.isSuccess!) {
-                                                if (value?.result != null) {
-                                                  if (value?.result?.payment !=
+                                              if (value.isSuccess!) {
+                                                if (value.result != null) {
+                                                  if (value.result?.payment !=
                                                       null) {
-                                                    if (value?.result?.payment
+                                                    if (value.result?.payment
                                                             ?.status ==
                                                         'PAYITA') {
                                                       if (value?.result
                                                               ?.paymentGatewayDetail !=
                                                           null) {
                                                         if (value
-                                                                ?.result
+                                                                .result
                                                                 ?.paymentGatewayDetail
                                                                 ?.metadata !=
                                                             null) {
                                                           if (value
-                                                                  ?.result
+                                                                  .result
                                                                   ?.paymentGatewayDetail
                                                                   ?.metadata!
                                                                   .paymentGateWay ==
@@ -4297,9 +4298,9 @@ class CommonUtil {
                                                                   MaterialPageRoute(
                                                                       builder: (context) => PaymentPage(
                                                                             redirectUrl:
-                                                                                value?.result?.paymentGatewayDetail?.metadata?.shorturl,
+                                                                                value.result!.paymentGatewayDetail!.metadata!.shorturl,
                                                                             paymentId:
-                                                                                value?.result?.payment?.id.toString(),
+                                                                                value.result!.payment!.id.toString(),
                                                                             isFromSubscribe:
                                                                                 true,
                                                                             isFromRazor:
@@ -4423,7 +4424,7 @@ class CommonUtil {
                                                         packageId!)
                                                     .then((value) {
                                                   if (value != null) {
-                                                    if (value?.isSuccess!) {
+                                                    if (value.isSuccess!) {
                                                       if (value?.result !=
                                                           null) {
                                                         if (value?.result
@@ -4884,12 +4885,12 @@ class CommonUtil {
     queueServices
         .postNotificationQueue(PreferenceUtil.getStringValue(KEY_USERID)!, json)
         .then((value) {
-      if (value != null && value?.isSuccess!) {
-        if (value?.result != null) {
-          if (value?.result?.queueCount != null &&
-              value?.result?.queueCount! > 0) {
+      if (value != null && value.isSuccess!) {
+        if (value.result != null) {
+          if (value.result!.queueCount != null &&
+              value.result!.queueCount! > 0) {
             CommonUtil().dialogForSheelaQueue(
-                Get.context!, value?.result?.queueCount ?? 0);
+                Get.context!, value.result?.queueCount ?? 0);
           }
         }
       }
@@ -4902,8 +4903,8 @@ class CommonUtil {
         .trim()
         .toLowerCase()
         .split(' ')
-        .map((str) => str?.length > 0
-            ? '${str[0]?.toUpperCase()}${str.substring(1)}'
+        .map((str) => str.length > 0
+            ? '${str[0].toUpperCase()}${str.substring(1)}'
             : '')
         .join(' ');
   }
@@ -5362,7 +5363,7 @@ class CommonUtil {
     return Device.get().isTablet;
   }
 
-  Future<MyProfileModel> getDetailsOfAddedFamilyMember(
+  Future<MyProfileModel?> getDetailsOfAddedFamilyMember(
       BuildContext context, String userID) async {
     final GlobalKey<State> _keyLoader = GlobalKey<State>();
 
@@ -5474,7 +5475,7 @@ class VideoCallCommonUtils {
   static ValueNotifier callActions = ValueNotifier(CallActions.CALLING);
 
   //static String callStartTime = '';
-  Future<bool> makeCallToPatient(
+  Future<bool?> makeCallToPatient(
       {BuildContext? context,
       required String bookId,
       String? appointmentId,
@@ -5531,7 +5532,7 @@ class VideoCallCommonUtils {
         recipients: [
           (regController.careCoordinatorId.value != null
               ? regController.careCoordinatorId.value
-              : null)
+              : null)!
         ],
         messageDetails: msg,
         transportMedium: [keysConstant.c_trans_medium_push],
@@ -5704,9 +5705,9 @@ class VideoCallCommonUtils {
       {BuildContext? context}) async {
     final audioStatus =
         Provider.of<AudioCallProvider>(Get.context!, listen: false);
-    if (!audioStatus?.isAudioCall) {
+    if (!audioStatus.isAudioCall) {
       //* Video call
-      await rtcProvider?.rtcEngine?.enableWebSdkInteroperability(true);
+      await rtcProvider.rtcEngine?.enableWebSdkInteroperability(true);
       VideoEncoderConfiguration configuration = VideoEncoderConfiguration();
       configuration.dimensions = VideoDimensions(width: 640, height: 360);
       configuration.frameRate = VideoFrameRate.Fps15;
@@ -5918,7 +5919,7 @@ class VideoCallCommonUtils {
         CommonUtil.isRemoteUserOnPause = false;
       } else if (reason == VideoRemoteStateReason.RemoteUnmuted) {
         CommonUtil.isRemoteUserOnPause = false;
-        if (!audioStatus?.isAudioCall) {
+        if (!audioStatus.isAudioCall) {
           FlutterToast().getToast('Patient Video is resumed', Colors.green);
         }
         videoPauseResumeState = 1;
@@ -5938,7 +5939,7 @@ class VideoCallCommonUtils {
               ?.turnOffVideo();
         } else {
           if (!(Provider.of<AudioCallProvider>(Get.context!, listen: false)
-              ?.isAudioCall)) {
+              .isAudioCall)) {
             FlutterToast().getToast('Patient Video is paused', Colors.red);
           }
           videoPauseResumeState = 2;
@@ -6357,7 +6358,7 @@ class VideoCallCommonUtils {
     } catch (e) {}
   }
 
-  Future<bool> updateCallCurrentStatus(
+  Future<bool?> updateCallCurrentStatus(
       {BuildContext? mContext,
       String? cid,
       CallMetaData? callMetaData,
@@ -6405,9 +6406,9 @@ class VideoCallCommonUtils {
       bool callPageShouldEndAutomatically = true;
       Future.delayed(Duration(seconds: 30), () async {
         if (callPageShouldEndAutomatically) {
-          String? appointMentId = (callMetaData?.mappointmentId != null ||
-                  callMetaData?.mappointmentId.isNotEmpty)
-              ? callMetaData?.mappointmentId
+          String? appointMentId = (callMetaData!.mappointmentId != null ||
+                  callMetaData.mappointmentId.isNotEmpty)
+              ? callMetaData.mappointmentId
               : '';
           if (appointMentId == '') {
             try {
@@ -6427,9 +6428,9 @@ class VideoCallCommonUtils {
           } else {
             if (isCallActualTime) {
               await apiResponse
-                  .updateCallStatus((callMetaData?.mappointmentId != null ||
-                          callMetaData?.mappointmentId.isNotEmpty)
-                      ? callMetaData?.mappointmentId
+                  .updateCallStatus((callMetaData.mappointmentId != null ||
+                          callMetaData.mappointmentId.isNotEmpty)
+                      ? callMetaData.mappointmentId
                       : '')
                   .then((value) {
                 clearAudioPlayer(audioPlayer!);
@@ -6487,10 +6488,10 @@ class VideoCallCommonUtils {
           }
           VideoCallCommonUtils().startTheCall(
               context: context!,
-              bookId: callMetaData?.mbookId,
-              appointmentId: (callMetaData?.mappointmentId != null ||
-                      callMetaData?.mappointmentId.isNotEmpty)
-                  ? callMetaData?.mappointmentId
+              bookId: callMetaData!.mbookId,
+              appointmentId: (callMetaData.mappointmentId != null ||
+                      callMetaData.mappointmentId.isNotEmpty)
+                  ? callMetaData.mappointmentId
                   : '',
               healthOrganizationId: healthOrganizationId,
               gender:

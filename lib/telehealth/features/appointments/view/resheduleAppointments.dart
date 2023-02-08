@@ -60,7 +60,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   AppointmentsCommonWidget appointmentsCommonWidget =
       AppointmentsCommonWidget();
   MyProviderViewModel providerViewModel = MyProviderViewModel();
-  List<DoctorIds> doctorIdsList = new List();
+  List<DoctorIds> doctorIdsList = [];
   DoctorIds docs = DoctorIds();
   bool noData = false;
   String? placeHolder = null;
@@ -574,12 +574,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot?.data?.isSuccess != null &&
-              !snapshot?.data?.isSuccess! &&
-              (snapshot?.data?.message ?? '').isNotEmpty) {
+          if (snapshot.data!.isSuccess != null &&
+              !snapshot.data!.isSuccess! &&
+              (snapshot.data!.message ?? '').isNotEmpty) {
             return Container(
               child: Center(
-                child: Text(snapshot?.data?.message!),
+                child: Text(snapshot.data!.message!),
               ),
             );
           } else {

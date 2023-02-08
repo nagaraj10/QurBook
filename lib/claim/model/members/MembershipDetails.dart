@@ -10,7 +10,7 @@ class MemberShipDetails {
   MemberShipDetails.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<MemberShipResult>();
+      result = <MemberShipResult>[];
       json['result'].forEach((v) {
         result!.add(new MemberShipResult.fromJson(v));
       });

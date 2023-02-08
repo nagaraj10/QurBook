@@ -80,7 +80,7 @@ class EventListWidget extends StatelessWidget {
             onSave: () async {
               if (_formKey.currentState!.validate()) {
                 final isValid = eventTimeValidation(tempEventList);
-                if (isValid) {
+                if (isValid!) {
                   var currentLanguage = '';
                   var lan = CommonUtil.getCurrentLanCode();
                   if (lan != 'undef') {
@@ -225,12 +225,12 @@ class EventListWidget extends StatelessWidget {
 
   getTimeAsString(TimeOfDay timeOfDay) {
     var hour = timeOfDay?.hour;
-    return '${hour > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
+    return '${hour! > 9 ? '' : '0'}$hour:${timeOfDay.minute > 9 ? '' : '0'}${timeOfDay.minute}';
   }
 
   double toDouble(TimeOfDay myTime) => myTime.hour + myTime.minute / 60.0;
 
-  bool eventTimeValidation(List eventList,
+  bool? eventTimeValidation(List eventList,
       {String? eventName, double? currentEventTime}) {
     final eventNames = eventTime.keys.toList();
     for (var i = 0; i < eventList.length; i++) {

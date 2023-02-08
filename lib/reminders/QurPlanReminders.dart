@@ -46,12 +46,12 @@ class QurPlanReminders {
           headers: headers,
           body: params);
 
-      var dataArray = await json.decode(responseFromApi.body);
+      var dataArray = await json.decode(responseFromApi!.body);
       final List<dynamic> data = dataArray['result'];
       var reminders = <Reminder>[];
       data.forEach((element) {
         var newData = Reminder.fromMap(element);
-        if (!newData?.evDisabled) {
+        if (!newData.evDisabled) {
           if (newData?.ack_local == '' || newData?.ack_local == null)
             reminders.add(newData);
         }
@@ -64,7 +64,7 @@ class QurPlanReminders {
     }
   }
 
-  static Future<bool> addReminder(Reminder data) {
+  static Future<bool>? addReminder(Reminder data) {
     var reminderMap = data.toMap();
     if (Platform.isIOS) {
       reminderMethodChannel.invokeMethod(addReminderMethod, [reminderMap]);
@@ -94,7 +94,7 @@ class QurPlanReminders {
     }
   }
 
-  static Future<bool> updateRemindersLocally(Reminder data) async {
+  static Future<bool>? updateRemindersLocally(Reminder data) async {
     final reminders = await getLocalReminder();
     Reminder? foundTheMatched;
     for (var i = 0; i < reminders.length; i++) {
@@ -240,7 +240,7 @@ class QurPlanReminders {
     return await saveRemindersLocally(data);
   }
 
-  static Future<bool> deleteReminderLocally(Reminder data) async {
+  static Future<bool>? deleteReminderLocally(Reminder data) async {
     final reminders = await getLocalReminder();
     Reminder? foundTheMatched;
 

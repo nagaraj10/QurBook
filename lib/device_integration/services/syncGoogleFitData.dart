@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'fetchGoogleFitData.dart';
 import '../../src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import '../model/myFHBResponseModel.dart';

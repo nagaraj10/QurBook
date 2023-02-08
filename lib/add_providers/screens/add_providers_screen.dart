@@ -432,7 +432,7 @@ class AddProvidersState extends State<AddProviders> {
       } else {
         isPreferred = false;
         doctorController.text =
-            widget?.arguments?.searchText?.capitalizeFirstofEach;
+            widget.arguments!.searchText!.capitalizeFirstofEach;
 
         if (widget.arguments!.placeDetail != null &&
             widget.arguments!.placeDetail != null) {
@@ -866,7 +866,7 @@ class AddProvidersState extends State<AddProviders> {
       createTicketController.selPrefLabId.value =
           CommonUtil().validString(widget.arguments!.labsModel!.id);
       createTicketController.labsList = widget.arguments!.labsDataList;
-      if (createTicketController.labsList?.length > 0) {
+      if (createTicketController.labsList!.length > 0) {
         await createTicketController.getLabList(updateLab: true);
       } else {
         await createTicketController.getLabList(updateLab: false);
@@ -1463,7 +1463,7 @@ class AddProvidersState extends State<AddProviders> {
           return DropdownWithCategories(
             mediaData: mediaResultFiltered,
             onChecked: (result) {
-              addSelectedcategoriesToList(result);
+              addSelectedcategoriesToList(result!);
             },
           );
         });
@@ -1490,7 +1490,7 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   List<MediaResult> removeUnwantedCategories(MediaDataList mediaType) {
-    final mediaResultDuplicate = List<MediaResult>();
+    final mediaResultDuplicate = <MediaResult>[];
     for (var i = 0; i < mediaType.result!.length; i++) {
       if (mediaType.result![i].name != Constants.STR_FEEDBACK &&
           mediaType.result![i].name != Constants.STR_CLAIMSRECORD &&

@@ -201,7 +201,7 @@ class ChatScreenState extends State<ChatScreen> {
   //final ItemScrollController listScrollController = ItemScrollController();  FU2.5
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
-  List<String> recordIds = new List();
+  List<String> recordIds = [];
   FlutterToast toast = new FlutterToast();
 
   var isSearchVisible = false;
@@ -418,25 +418,25 @@ class ChatScreenState extends State<ChatScreen> {
           nextAppointmentDate = appointmentResult?.upcoming != null
               ? appointmentResult?.upcoming?.plannedStartDateTime
               : '';
-          doctorDeviceToken = appointmentResult?.deviceToken != null
-              ? appointmentResult?.deviceToken?.doctor?.payload?.isNotEmpty
+          doctorDeviceToken = appointmentResult!.deviceToken != null
+              ? appointmentResult!.deviceToken!.doctor!.payload!.isNotEmpty
                   ? appointmentResult!
-                      .deviceToken?.doctor?.payload![0]?.deviceTokenId
+                      .deviceToken!.doctor!.payload![0].deviceTokenId
                   : ''
               : '';
           patientDeviceToken = '';
-          if (appointmentResult?.deviceToken != null) {
-            if (appointmentResult?.deviceToken?.patient?.isSuccess! &&
-                appointmentResult?.deviceToken?.patient?.payload?.isNotEmpty &&
+          if (appointmentResult!.deviceToken != null) {
+            if (appointmentResult!.deviceToken!.patient!.isSuccess! &&
+                appointmentResult!.deviceToken!.patient!.payload!.isNotEmpty &&
                 appointmentResult
                         ?.deviceToken?.patient?.payload![0]?.deviceTokenId !=
                     null) {
               patientDeviceToken = appointmentResult
                   ?.deviceToken?.patient?.payload![0]?.deviceTokenId;
             } else if (appointmentResult
-                    ?.deviceToken?.parentMember?.isSuccess! &&
+                    !.deviceToken!.parentMember!.isSuccess! &&
                 appointmentResult
-                    ?.deviceToken?.parentMember?.payload?.isNotEmpty &&
+                    !.deviceToken!.parentMember!.payload!.isNotEmpty &&
                 appointmentResult?.deviceToken?.parentMember?.payload![0]
                         ?.deviceTokenId !=
                     null) {
@@ -762,7 +762,7 @@ class ChatScreenState extends State<ChatScreen> {
       }
     } else {
       _currentImage = fileUrl;
-      List<String> imageList = new List();
+      List<String> imageList = [];
       try {
         await downloadFile(fileType, fileUrl!);
         //final file = await CommonUtil.downloadFile(fileUrl, fileType);
@@ -799,7 +799,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<bool> downloadFile(String fileType, String fileUrl) async {
+  Future<bool?> downloadFile(String fileType, String fileUrl) async {
     await FHBUtils.createFolderInAppDocDirClone(
             variable.stAudioPath, fileUrl.split('/').last)
         .then((filePath) async {
@@ -816,7 +816,7 @@ class ChatScreenState extends State<ChatScreen> {
           Constants.KEY_OffSet: CommonUtil().setTimeZone()
         },
       );
-      final bytes = request.bodyBytes; //close();
+      final bytes = request!.bodyBytes; //close();
       await file.writeAsBytes(bytes);
 
       setState(() {
@@ -2068,7 +2068,7 @@ class ChatScreenState extends State<ChatScreen> {
                 child: RawMaterialButton(
                   onPressed: () {
                     onSendMessage(
-                        textEditingController.text?.replaceAll("#", ""), 0);
+                        textEditingController.text.replaceAll("#", ""), 0);
                   },
                   elevation: 2.0,
                   fillColor: Colors.white,
@@ -2328,7 +2328,7 @@ class ChatScreenState extends State<ChatScreen> {
                       List<String> result = [];
                       result.add(value);
                       try {
-                        if (result?.length > 0) {
+                        if (result.length > 0) {
                           final removedBrackets = result
                               .toString()
                               .substring(2, result.toString().length - 2);
@@ -2385,8 +2385,8 @@ class ChatScreenState extends State<ChatScreen> {
 
     list.addAll(linkify(
         text.substring(match != null
-            ? match?.start + linkText?.length
-            : (dateMatch != null ? dateMatch?.start + dateText?.length : 0)),
+            ? match.start + linkText.length
+            : (dateMatch != null ? dateMatch.start + dateText.length : 0)),
         index,
         isPatient));
 

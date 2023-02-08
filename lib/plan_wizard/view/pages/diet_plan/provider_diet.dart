@@ -33,7 +33,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = List();
+  List<PlanListResult> planSearchList = [];
 
   String? _selectedView = popUpChoiceDefault;
 
@@ -52,7 +52,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         .currentPackageProviderDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strProviderDiet);
+        .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
 
     Provider.of<PlanWizardViewModel>(context, listen: false)?.isDietListEmpty =
         false;
@@ -170,12 +170,12 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
-                : snapshot?.data?.result?.length ?? 0;
+                : snapshot.data!.result!.length ?? 0;
             if (((Provider.of<PlanWizardViewModel>(context, listen: false)
                     ?.isDynamicLink) ??
                 false)) {
@@ -196,12 +196,12 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
             Future.delayed(Duration(milliseconds: 100), () {
               bool needReload =
                   Provider.of<PlanWizardViewModel>(context, listen: false)
-                          ?.isDietListEmpty !=
-                      (snapshot?.data?.result!.length > 0 ? true : false);
+                          .isDietListEmpty !=
+                      (snapshot.data!.result!.length > 0 ? true : false);
 
               Provider.of<PlanWizardViewModel>(context, listen: false)
-                  ?.updateBottonLayoutEmptyDietList(
-                      snapshot?.data?.result!.length > 0 ? true : false,
+                  .updateBottonLayoutEmptyDietList(
+                      snapshot.data!.result!.length > 0 ? true : false,
                       needReload: needReload);
             });
 
@@ -345,13 +345,13 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
       setState(() {
         isSwitched = true;
         planListModel = planListProvider!.getDietPlanListNew(
-            isFrom: strProviderDiet, isVeg: true);
+            isFrom: strProviderDiet, isVeg: true) as Future<PlanListModel>?;
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet);
+            planListProvider!.getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
       });
     }
   }
@@ -401,7 +401,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
           children: <TextSpan>[
             TextSpan(
                 text: 'Your providers do not offer diet plans yet for ' +
-                    planListProvider?.healthTitle ??
+                    planListProvider!.healthTitle ??
                     ''),
             TextSpan(
                 text: ' Tap here',
@@ -455,7 +455,7 @@ class _ProviderDietPlans extends State<ProviderDietPlans> {
     Get.to(AddProviderPlan(
         planListProvider!.selectedTag))!.then((value) =>  setState(() {
       planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-          .getDietPlanListNew(isFrom: strProviderDiet);
+          .getDietPlanListNew(isFrom: strProviderDiet) as Future<PlanListModel>?;
     }));
 
     /*Navigator.pushNamed(

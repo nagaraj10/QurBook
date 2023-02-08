@@ -49,7 +49,7 @@ class Result {
     date = json['date'];
 
     if (json['upcomingActivities'] != null) {
-      upcomingActivities = new List<RegimentDataModel>();
+      upcomingActivities = <RegimentDataModel>[];
       json['upcomingActivities'].forEach((v) {
         upcomingActivities!.add(new RegimentDataModel.fromJson(v));
       });

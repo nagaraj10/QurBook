@@ -35,7 +35,7 @@ class Result {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = List<RelationsShipModel>();
+      referenceValueCollection = <RelationsShipModel>[];
       json['referenceValueCollection'].forEach((v) {
         referenceValueCollection!.add(RelationsShipModel.fromJson(v));
       });

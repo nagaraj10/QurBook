@@ -45,7 +45,7 @@ class FirebaseAnalyticsService {
           screenName: currentScreen, screenClassOverride: classOverrides);
       print("user prop analytics");
     }catch(e){
-      print("error: "+e);
+      print("error: "+e.toString());
     }
 
   }

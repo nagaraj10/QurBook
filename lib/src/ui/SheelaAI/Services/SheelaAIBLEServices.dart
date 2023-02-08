@@ -437,7 +437,7 @@ class SheelaBLEController extends GetxController {
       if ((currentPlayingConversation.text ?? '').isNotEmpty) {
         final result = await SheelaController.getGoogleTTSForText(
             currentPlayingConversation.text);
-        if ((result.payload?.audioContent ?? '').isNotEmpty) {
+        if ((result!.payload!.audioContent ?? '').isNotEmpty) {
           textForPlaying = result.payload!.audioContent;
         }
       }

@@ -95,7 +95,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) ?? 0xff753aec;
 
   String version = '';
-  List<Tags>? tagsList = new List<Tags>();
+  List<Tags>? tagsList = [];
   List<Widget> devices = [];
   bool? allowAppointmentNotification = true;
   bool? allowVitalNotification = true;
@@ -128,7 +128,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     PackageInfo.fromPlatform().then((packageInfo) {
       version = packageInfo.version;
     });
-    selectedList = List();
+    selectedList = [];
     _deviceModel = new DevicesViewModel();
   }
 
@@ -249,8 +249,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               myProfile.result.lastName ?? '') */
                       myProfile?.result?.firstName?.capitalizeFirstofEach ??
                           '' ' ' +
-                              myProfile
-                                  ?.result?.lastName?.capitalizeFirstofEach ??
+                              myProfile!.result!.lastName!.capitalizeFirstofEach ??
                           ''
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
@@ -627,7 +626,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     tagsList = getDeviceSelectionModel.result![0].tags != null &&
             getDeviceSelectionModel.result![0].tags!.length > 0
         ? getDeviceSelectionModel.result![0].tags
-        : new List();
+        : [];
 
     allowAppointmentNotification = getDeviceSelectionModel
                     .result![0].profileSetting!.caregiverCommunicationSetting !=
@@ -824,8 +823,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               myProfile.result.lastName ?? '') */
                       myProfile?.result?.firstName?.capitalizeFirstofEach ??
                           '' ' ' +
-                              myProfile
-                                  ?.result?.lastName?.capitalizeFirstofEach ??
+                              myProfile!.result!.lastName!.capitalizeFirstofEach ??
                           ''
                       : '',
                   style: TextStyle(fontWeight: FontWeight.w500),
@@ -1251,7 +1249,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                           itemBuilder: (context, i) {
                                             return DeviceCard(
                                                 deviceData: snapshot.data![i],
-                                                isSelected: (bool value) {
+                                                isSelected: (bool? value) {
                                                   isTouched = true;
                                                   switch (i) {
                                                     case 0:
@@ -1288,7 +1286,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                                     default:
                                                   }
                                                   setState(() {
-                                                    if (value) {
+                                                    if (value!) {
                                                       selectedList.add(
                                                           snapshot.data![i]);
                                                     } else {

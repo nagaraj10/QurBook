@@ -44,7 +44,7 @@ class _MyReportList extends State<MyReportList> {
   }
 
   Widget getReportList() {
-    return FutureBuilder<ReportModel>(
+    return FutureBuilder<ReportModel?>(
       future: myReportViewModel.getReportList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -63,9 +63,9 @@ class _MyReportList extends State<MyReportList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             return reportList(snapshot.data!.result);
           } else {
             return SafeArea(

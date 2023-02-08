@@ -29,7 +29,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = List();
+  List<PlanListResult> planSearchList = [];
 
   String? _selectedView = popUpChoiceDefault;
 
@@ -46,7 +46,7 @@ class _CarePlanPageState extends State<CarePlanPage> {
         '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getCarePlanList('');
+        .getCarePlanList('') as Future<PlanListModel>?;
 
 
 
@@ -153,9 +153,9 @@ class _CarePlanPageState extends State<CarePlanPage> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
                 : snapshot?.data?.result?.length ?? 0;

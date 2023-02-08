@@ -207,7 +207,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
     Color cardColor;
     try {
       if ((metadata?.color?.length ?? 0) == 7) {
-        cardColor = Color(int.parse(metadata?.color!.replaceFirst('#', '0xFF')));
+        cardColor = Color(int.parse(metadata!.color!.replaceFirst('#', '0xFF')));
       } else {
         switch (activityname) {
           case Activityname.DIET:
@@ -249,14 +249,14 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
       if (metadata?.icon != null) {
         if (metadata?.icon?.toLowerCase()?.contains('.svg') ?? false) {
           return SvgPicture.network(
-            metadata?.icon!,
+            metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
           );
         } else {
           return CachedNetworkImage(
-            imageUrl: metadata?.icon!,
+            imageUrl: metadata!.icon!,
             height: iconSize,
             width: iconSize,
             color: Colors.white,
@@ -628,7 +628,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                     title: regimentData.title,
                                     time: regimentData?.estart != null
                                         ? DateFormat('hh:mm\na')
-                                            .format(regimentData?.estart!)
+                                            .format(regimentData.estart!)
                                         : '',
                                     color: getColor(
                                         regimentData.activityname,
@@ -659,7 +659,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                                       title: regimentData.title,
                                       time: regimentData?.estart != null
                                           ? DateFormat('hh:mm\na')
-                                              .format(regimentData?.estart!)
+                                              .format(regimentData.estart!)
                                           : '',
                                       color: getColor(
                                           regimentData.activityname,
@@ -760,9 +760,9 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
           return ErrorsWidget();
         } else {
           if (snapshot.hasData) {
-            if (snapshot?.data != null) {
-              if (snapshot?.data?.regimentsList!.length > 0) {
-                final regimentsList = snapshot?.data?.regimentsList;
+            if (snapshot.data != null) {
+              if (snapshot.data!.regimentsList!.length > 0) {
+                final regimentsList = snapshot.data!.regimentsList;
                 return Expanded(
                   child: ListView.builder(
                     controller: scrollController,
@@ -781,7 +781,7 @@ class _RegimentTabState extends State<RegimentTab> with WidgetsBindingObserver {
                         title: regimentData.title,
                         time: regimentData?.estart != null
                             ? DateFormat('hh:mm\na')
-                                .format(regimentData?.estart!)
+                                .format(regimentData.estart!)
                             : '',
                         color: getColor(regimentData.activityname,
                             regimentData.uformname, regimentData.metadata),

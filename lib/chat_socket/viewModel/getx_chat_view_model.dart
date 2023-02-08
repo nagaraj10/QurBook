@@ -38,7 +38,7 @@ class ChatUserListController extends GetxController {
     } catch (e) {}
   }
 
-  Future<GetUnreadCountFamily> getUnreadCountFamily() async {
+  Future<GetUnreadCountFamily?> getUnreadCountFamily() async {
     try {
 
       var userId = PreferenceUtil.getStringValue(KEY_USERID)!;

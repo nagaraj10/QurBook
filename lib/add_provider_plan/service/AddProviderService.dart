@@ -9,9 +9,9 @@ class AddProviderService{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<ProviderOrganisationResponse> getUnassociatedProvider(String patientId,String selectedTag) async {
-    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String? userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    String url="provider-mapping/unassociated-providers/"+userID+"?condition="+selectedTag;
+    String url="provider-mapping/unassociated-providers/"+userID!+"?condition="+selectedTag;
     final response = await _helper.getProviderPlan(url);
     return ProviderOrganisationResponse.fromJson(response);
   }

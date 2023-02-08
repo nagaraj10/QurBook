@@ -22,6 +22,7 @@ import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
 
@@ -74,7 +75,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
   String categoryName = STR_DEVICES;
 
   final CategoryListBlock _categoryListBlock = CategoryListBlock();
-  List<CategoryResult> catgoryDataList = List();
+  List<CategoryResult> catgoryDataList = [];
   final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
   MediaDataList? mediaTypesResponse = MediaDataList();
 
@@ -87,12 +88,12 @@ class _VitalsDetailsState extends State<VitalsDetails>
   TextEditingController memoController = TextEditingController(text: '');
   TextEditingController diaStolicPressure = TextEditingController(text: '');
 
-  List<bool?> isSelected = List(3);
+  List<bool?> isSelected = List.filled(3, null, growable: false);
 
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String> imagePathMain = [];
 
   FlutterToast toast = FlutterToast();
 
@@ -120,7 +121,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
       mInitialTime = DateTime.now();
       super.initState();
       _events.add(180);
-      catgoryDataList = PreferenceUtil.getCategoryType();
+      catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
@@ -426,7 +427,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
                         ),
                       )
                     : Expanded(
-                        child: getValues(context),
+                        child: getValues(context)!,
                       ),
               ],
             ),
@@ -563,7 +564,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
 
       final userID = PreferenceUtil.getStringValue(KEY_USERID);
       try {
-        catgoryDataList = PreferenceUtil.getCategoryType();
+        catgoryDataList = PreferenceUtil.getCategoryType()!;
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
@@ -578,7 +579,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
         }
       }
 
-      List<MediaResult>? metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = <MediaResult>[];
       if (mediaTypesResponse != null &&
           mediaTypesResponse!.result != null &&
           mediaTypesResponse!.result!.isNotEmpty) {
@@ -1600,7 +1601,7 @@ class _VitalsDetailsState extends State<VitalsDetails>
     return formattedDate;
   }
 
-  Widget getValues(BuildContext context) {
+  Widget? getValues(BuildContext context) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (widget.device_name) {
       case strDataTypeBP:
@@ -1608,14 +1609,14 @@ class _VitalsDetailsState extends State<VitalsDetails>
           final translis = controllerGetx?.bpList?.value;
           //List<WVResult> translist = translis.first;
           final List<BPResult> bpResultNew =
-              translis?.isNotEmpty ? translis?.first : [];
+              translis!.isNotEmpty ? translis?.first : [];
           bpResultNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
           final bpResult = bpResultNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return bpResult?.isNotEmpty
+          return bpResult.isNotEmpty
               ? GroupedListView<BPResult, String>(
                   groupBy: (element) =>
                       getFormattedDateTime(element.startDateTime!),
@@ -1669,17 +1670,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strGlusoceLevel:
         {
-          var translis = controllerGetx?.gulList?.value;
+          var translis = controllerGetx.gulList.value;
           //List<WVResult> translist = translis.first;
           final List<GVResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
+              translis.isNotEmpty ? translis.first : [];
+          translistNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
           final translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<GVResult, String>(
                   groupBy: (element) =>
                       getFormattedDateTime(element.startDateTime!),
@@ -1734,17 +1735,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strOxgenSaturation:
         {
-          var translis = controllerGetx?.oxyList?.value;
+          var translis = controllerGetx.oxyList.value;
           //List<WVResult> translist = translis.first;
           final List<OxyResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
-          translistNew?.sort((translisCopy, translisClone) {
+              translis.isNotEmpty ? translis.first : [];
+          translistNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           // final List<DeviceIntervalData> deviceFullList = translis.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<OxyResult, String>(
                   groupBy: (element) =>
                       getFormattedDateTime(element.startDateTime!),
@@ -1797,17 +1798,17 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strWeight:
         {
-          var translis = controllerGetx?.weightList?.value;
+          var translis = controllerGetx.weightList.value;
           //List<WVResult> translist = translis.first;
           final List<WVResult> translistNew =
-              translis?.isNotEmpty ? translis?.first : [];
+              translis.isNotEmpty ? translis.first : [];
           translistNew?.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<WVResult, String>(
                   groupBy: (element) =>
                       getFormattedDateTime(element.startDateTime!),
@@ -1859,20 +1860,20 @@ class _VitalsDetailsState extends State<VitalsDetails>
         break;
       case strTemperature:
         {
-          var translis = controllerGetx?.tempList?.value;
+          var translis = controllerGetx.tempList.value;
           //List<WVResult> translist = translis.first;
-          final List<TMPResult> translistNew = translis?.isNotEmpty
-              ? translis?.isNotEmpty
-                  ? translis?.first
+          final List<TMPResult> translistNew = translis.isNotEmpty
+              ? translis.isNotEmpty
+                  ? translis.first
                   : []
               : [];
-          translistNew?.sort((translisCopy, translisClone) {
+          translistNew.sort((translisCopy, translisClone) {
             return translisClone.dateTimeValue!
                 .compareTo(translisCopy.dateTimeValue!);
           });
           var translist = translistNew;
           //final List<DeviceIntervalData> deviceFullList = translis?.last;
-          return translist?.isNotEmpty
+          return translist.isNotEmpty
               ? GroupedListView<TMPResult, String>(
                   groupBy: (element) =>
                       getFormattedDateTime(element.startDateTime!),

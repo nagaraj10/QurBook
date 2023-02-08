@@ -8,7 +8,7 @@ class MyPlanDetailModel {
   MyPlanDetailModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = List<MyPlanDetailResult>();
+      result = <MyPlanDetailResult>[];
       json['result'].forEach((v) {
         result!.add(MyPlanDetailResult.fromJson(v));
       });

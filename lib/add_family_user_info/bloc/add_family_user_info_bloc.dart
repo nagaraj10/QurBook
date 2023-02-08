@@ -79,7 +79,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   MyProfileModel? myprofileObject;
 
-  String name,
+  String? name,
       phoneNo,
       email,
       gender,
@@ -131,7 +131,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   File? profilePic, profileBanner;
   CreateDeviceSelectionModel? createDeviceSelectionModel;
-  List<Tags>? tagsList = new List<Tags>();
+  List<Tags>? tagsList = <Tags>[];
 
   bool? allowAppointmentNotification = true;
   bool? allowVitalNotification = true;
@@ -492,7 +492,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     tagsList = getDeviceSelectionModel.result![0].tags != null &&
             getDeviceSelectionModel.result![0].tags!.length > 0
         ? getDeviceSelectionModel.result![0].tags
-        : new List();
+        : [];
 
     if (tagsList!.length > 0) {
       for (Tags tags in tagsList!) {
@@ -536,7 +536,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
         : null;
   }
 
-  Future<UpdateDeviceModel> updateDeviceSelectionModel(
+  Future<UpdateDeviceModel?> updateDeviceSelectionModel(
       {String? preferredLanguage}) async {
     var healthReportListForUserRepository = HealthReportListForUserRepository();
     await healthReportListForUserRepository

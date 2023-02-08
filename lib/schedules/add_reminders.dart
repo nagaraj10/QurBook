@@ -65,8 +65,8 @@ class _AddReminderState extends State<AddReminder> {
 
   SharedPreferences? prefs;
   dynamic detailsList =
-      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
-  dynamic reverseDetailsList = List();
+      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
+  dynamic reverseDetailsList = [];
 
   @override
   Widget build(BuildContext context) {

@@ -95,7 +95,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int _current = 0;
   int index = 0;
   int length = 0;
-  List<ImageDocumentResponse> imagesPathMain = List();
+  List<ImageDocumentResponse> imagesPathMain = [];
 
   // PermissionStatus permissionStatus = PermissionStatus.unknown;
   //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
@@ -301,7 +301,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 icon: ImageIcon(
                               AssetImage(variable.icon_record_switch),
                               color: Colors.grey,
-                            ))
+                            ),
+                            onPressed: (){},
+                            )
                           else
                             IconButton(
                                 icon: ImageIcon(
@@ -345,7 +347,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 icon: ImageIcon(
                               AssetImage(variable.icon_edit),
                               color: Colors.grey,
-                            ))
+                            ),
+                            onPressed: (){},
+                            )
                           else
                             IconButton(
                                 icon: ImageIcon(
@@ -374,7 +378,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   icon: ImageIcon(
                                   AssetImage(variable.icon_delete),
                                   color: Colors.grey,
-                                ))
+                                ),
+                                onPressed: (){},
+                                )
                               : IconButton(
                                   icon: ImageIcon(
                                     AssetImage(variable.icon_delete),
@@ -877,7 +883,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -957,7 +963,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             containsAudio = containsAudio;
 
             setState(() {});
-          }, List(), widget.data, true, TextEditingController(text: fileName));
+          }, [], widget.data, true, TextEditingController(text: fileName));
 
           break;
         case Constants.STR_CLAIMSRECORD:
@@ -1051,7 +1057,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -1077,7 +1083,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   containsAudio = containsAudio;
                 });
               },
-              List(),
+              [],
               (containsAudio, audioPath) {
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -1192,7 +1198,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                List(),
+                [],
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1234,7 +1240,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     containsAudio = containsAudio;
                   });
                 },
-                List(),
+                [],
                 (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -1581,7 +1587,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           },
           timeout: 60,
         );
-        final bytes = request.bodyBytes; //close();
+        final bytes = request!.bodyBytes; //close();
         await file.writeAsBytes(bytes);
 
         setState(() {
@@ -1619,7 +1625,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         Constants.KEY_OffSet: CommonUtil().setTimeZone()
       },
     );
-    final bytes = request.bodyBytes; //close();
+    final bytes = request!.bodyBytes; //close();
     await file.writeAsBytes(bytes);
 
     setState(

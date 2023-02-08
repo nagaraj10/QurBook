@@ -16,7 +16,7 @@ class ClaimListResponse {
     }
     if(json.containsKey('result')) {
       if (json['result'] != null) {
-        result = new List<ClaimListResult>();
+        result = <ClaimListResult>[];
         json['result'].forEach((v) {
           result!.add(new ClaimListResult.fromJson(v));
         });

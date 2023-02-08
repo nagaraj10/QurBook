@@ -80,7 +80,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   }
 
   Widget getWidgetToDisplayVoiceRecords(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionVoiceRecord);

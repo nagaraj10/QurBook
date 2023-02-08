@@ -29,7 +29,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
 
   bool isSearch = false;
 
-  List<PlanListResult> planSearchList = List();
+  List<PlanListResult> planSearchList = [];
 
   String? _selectedView = popUpChoiceDefault;
 
@@ -48,7 +48,7 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         .currentPackageFreeDietId = '';
 
     planListModel = Provider.of<PlanWizardViewModel>(context, listen: false)
-        .getDietPlanListNew(isFrom: strFreeDiet);
+        .getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel>?;
   }
 
   @override
@@ -162,9 +162,9 @@ class _FreeDietPlans extends State<FreeDietPlans> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result?.length > 0) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.length > 0) {
             carePlanListLength = isSearch
                 ? planSearchList.length
                 : snapshot?.data?.result?.length ?? 0;
@@ -324,13 +324,13 @@ class _FreeDietPlans extends State<FreeDietPlans> {
       setState(() {
         isSwitched = true;
         planListModel = planListProvider!.getDietPlanListNew(
-            isFrom: strFreeDiet, isVeg: true);
+            isFrom: strFreeDiet, isVeg: true) as Future<PlanListModel>?;
       });
     } else {
       setState(() {
         isSwitched = false;
         planListModel =
-            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet);
+            planListProvider!.getDietPlanListNew(isFrom: strFreeDiet) as Future<PlanListModel>?;
       });
     }
   }

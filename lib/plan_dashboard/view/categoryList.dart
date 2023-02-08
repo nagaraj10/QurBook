@@ -76,7 +76,7 @@ class _CategoryState extends State<CategoryList> {
     icon = widget.icon;
     diseases = widget.diseases;
 
-    planListModel = myPlanViewModel.getPlanList(providerId!);
+    planListModel = myPlanViewModel.getPlanList(providerId!) as Future<PlanListModel>?;
   }
 
   @override
@@ -292,9 +292,9 @@ class _CategoryState extends State<CategoryList> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             return categoryList(snapshot.data!.result);
           } else {
             return SafeArea(
@@ -328,7 +328,7 @@ class _CategoryState extends State<CategoryList> {
                   planList[i]?.metadata?.diseases)),
         ).then((value) {
           setState(() {
-            planListModel = myPlanViewModel.getPlanList(providerId!);
+            planListModel = myPlanViewModel.getPlanList(providerId!) as Future<PlanListModel>?;
           });
         });
       },
@@ -432,11 +432,11 @@ class _CategoryState extends State<CategoryList> {
   }
 
   Widget _itemBuilder(BuildContext context, IndexPath inx) {
-    if ((planListResultMap?.length ?? 0) > 0 &&
-        (categoryListUniq?.length ?? 0) > 0) {
+    if ((planListResultMap!.length ?? 0) > 0 &&
+        (categoryListUniq.length ?? 0) > 0) {
       final planListResult = planListResultMap![isSearch
-          ? myPLanListResult[inx.section]?.packcatid
-          : categoryListUniq[inx.section]?.packcatid]!;
+          ? myPLanListResult[inx.section].packcatid
+          : categoryListUniq[inx.section].packcatid]!;
       return InkWell(
         onTap: () {
           Navigator.push(
@@ -447,7 +447,7 @@ class _CategoryState extends State<CategoryList> {
                       // providerName: planListResult[inx.index]?.providerName,
                       // description: planListResult[inx.index]?.description,
                       // issubscription: planListResult[inx.index]?.isSubscribed,
-                      packageId: planListResult[inx.index]?.packageid,
+                      packageId: planListResult[inx.index].packageid,
                       // price: planListResult[inx.index]?.price,
                       // packageDuration:
                       //     planListResult[inx.index]?.packageDuration,
@@ -545,11 +545,11 @@ class _CategoryState extends State<CategoryList> {
                                         fontWeight: FontWeight.w400),
                                   ),
                                   if (planListResult[inx.index]
-                                          ?.packageDuration !=
+                                          .packageDuration !=
                                       null)
                                     Text(
                                       planListResult[inx.index]
-                                              ?.packageDuration! +
+                                              .packageDuration! +
                                           ' days',
                                       maxLines: 1,
                                       style: TextStyle(
@@ -617,7 +617,7 @@ class _CategoryState extends State<CategoryList> {
                                             CommonUtil().getMyPrimaryColor())),
                                     child: TextWidget(
                                         text: CommonUtil.CURRENCY +
-                                            planListResult[inx.index]?.price!,
+                                            planListResult[inx.index].price!,
                                         fontsize: 16.0.sp,
                                         fontWeight: FontWeight.w500,
                                         colors: Color(new CommonUtil()
@@ -682,7 +682,7 @@ class _CategoryState extends State<CategoryList> {
                                                       '0', refresh: () {
                                             setState(() {
                                               planListModel = myPlanViewModel
-                                                  .getPlanList(providerId!);
+                                                  .getPlanList(providerId!) as Future<PlanListModel>?;
                                             });
                                           });
                                         }

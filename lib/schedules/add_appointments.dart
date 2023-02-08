@@ -44,7 +44,7 @@ class _AddAppointmentState extends State<AddAppointments> {
 
   SharedPreferences? prefs;
   dynamic detailsList =
-      List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
+      []; // our default setting is to login, and we should switch to creating an account when the user chooses to
   dynamic reverseDetailsList = [];
 
   @override

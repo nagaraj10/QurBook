@@ -55,7 +55,7 @@ class _SearchListState extends State<SearchListHome> {
     // Provider.of<RegimentViewModel>(context, listen: false).fetchRegimentData(
     //   isInitial: true,
     // );
-    providerList = myPlanViewModel.getUserSearchListInit();
+    providerList = myPlanViewModel.getUserSearchListInit() as Future<SearchListModel>?;
     isFirst = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_hospitalList);
 
     try {
@@ -158,9 +158,9 @@ class _SearchListState extends State<SearchListHome> {
         } else if (snapshot.hasError) {
           return ErrorsWidget();
         } else {
-          if (snapshot?.hasData &&
-              snapshot?.data?.result != null &&
-              snapshot?.data?.result!.isNotEmpty) {
+          if (snapshot.hasData &&
+              snapshot.data!.result != null &&
+              snapshot.data!.result!.isNotEmpty) {
             providerListSelected = snapshot?.data?.result;
             return searchListView(snapshot.data!.result);
           } else {

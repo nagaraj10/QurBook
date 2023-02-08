@@ -99,22 +99,22 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic,
-      String firstName,
-      String middleName,
-      String lastName,
-      String cityId,
-      String stateId,
-      String addressLine1,
-      String addressLine2,
-      String zipcode,
+      String? userID,
+      String? name,
+      String? phoneNo,
+      String? email,
+      String? gender,
+      String? bloodGroup,
+      String? dateOfBirth,
+      File? profilePic,
+      String? firstName,
+      String? middleName,
+      String? lastName,
+      String? cityId,
+      String? stateId,
+      String? addressLine1,
+      String? addressLine2,
+      String? zipcode,
       bool fromFamily) async {
     final query = '';
 
@@ -141,10 +141,10 @@ class AddFamilyUserInfoRepository {
               zipcode,
               fromFamily),
           profilePic,
-          webserviceCall.getUrlToUpdateDoctor(userID));
+          webserviceCall.getUrlToUpdateDoctor(userID!));
     } else {
       response = await _helper.updateFamilyUserProfile(
-          webserviceCall.getUrlToUpdateDoctor(userID),
+          webserviceCall.getUrlToUpdateDoctor(userID!),
           webserviceCall.getQueryToUpdateProfile(
               userID,
               name,
@@ -169,26 +169,26 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<UpdateSelfProfileModel> updateUserInfoNew(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic,
-      String firstName,
-      String middleName,
-      String lastName,
-      String cityId,
-      String stateId,
+      String? userID,
+      String? name,
+      String? phoneNo,
+      String? email,
+      String? gender,
+      String? bloodGroup,
+      String? dateOfBirth,
+      File? profilePic,
+      String? firstName,
+      String? middleName,
+      String? lastName,
+      String? cityId,
+      String? stateId,
       bool isUpdate,
-      String addressLine1,
-      String addressLine2,
-      String zipcode,
+      String? addressLine1,
+      String? addressLine2,
+      String? zipcode,
       bool fromFamily,
-      MyProfileModel myProfileModel,
-      UpdateRelationshipModel relationship) async {
+      MyProfileModel? myProfileModel,
+      UpdateRelationshipModel? relationship) async {
     var query = '';
 
     var response;
@@ -214,10 +214,10 @@ class AddFamilyUserInfoRepository {
               zipcode,
               fromFamily),
           profilePic,
-          webserviceCall.getUrlToUpdateDoctor(userID));
+          webserviceCall.getUrlToUpdateDoctor(userID!));
     } else {
       response = await _helper.updateSelfProfileNew(
-          webserviceCall.getQueryDoctorUpdate(userID),
+          webserviceCall.getQueryDoctorUpdate(userID!),
           webserviceCall.makeJsonForUpdateProfile(
               userID,
               name,
@@ -324,7 +324,7 @@ class AddFamilyUserInfoRepository {
     final userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.verifyEmail(
-        query.qr_Userprofile + userID + query.qr_sendVerificationMail);
+        query.qr_Userprofile + userID! + query.qr_sendVerificationMail);
     return VerifyEmailResponse.fromJson(response);
   }
 

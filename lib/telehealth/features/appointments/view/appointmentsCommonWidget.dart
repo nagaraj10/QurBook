@@ -32,8 +32,8 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_constants.dart' as ConstantKey;
 
 class AppointmentsCommonWidget {
-  List<CategoryResult> filteredCategoryData = new List();
-  List<CategoryResult> categoryDataList = new List();
+  List<CategoryResult> filteredCategoryData = [];
+  List<CategoryResult> categoryDataList = [];
   CategoryResult categoryDataObjClone = new CategoryResult();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
@@ -97,9 +97,9 @@ class AppointmentsCommonWidget {
 
   Widget docIcons(
       bool isUpcoming, Past doc, BuildContext context, Function refresh) {
-    List<String>? recordIds = new List();
-    List<String?> notesId = new List();
-    List<String?> voiceIds = new List();
+    List<String>? recordIds = [];
+    List<String?> notesId = [];
+    List<String?> voiceIds = [];
 
     FlutterToast toast = new FlutterToast();
     bool containsNotes, containsVoice, containsRecord;
@@ -512,12 +512,12 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = List();
+    List<CategoryResult>? categoryDataList = [];
     categoryDataList = getCategoryList();
     for (int i = 0;
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
+      if (categoryName == categoryDataList![i].categoryName) {
         position = i;
       }
     }
@@ -528,10 +528,10 @@ class AppointmentsCommonWidget {
     }
   }
 
-  List<CategoryResult> getCategoryList() {
+  List<CategoryResult>? getCategoryList() {
     try {
       filteredCategoryData = PreferenceUtil.getCategoryTypeDisplay(
-          ConstantKey.KEY_CATEGORYLIST_VISIBLE);
+          ConstantKey.KEY_CATEGORYLIST_VISIBLE)!;
     } catch (e) {}
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
@@ -593,7 +593,7 @@ class AppointmentsCommonWidget {
       return Text(
         strName2.trim().isNotEmpty
             ? strName1[0].toUpperCase() + strName2[0].toUpperCase()
-            : strName1[0].toUpperCase() + strName1[1]?.toUpperCase(),
+            : strName1[0].toUpperCase() + strName1[1].toUpperCase(),
         style: TextStyle(
           color: Color(new CommonUtil().getMyPrimaryColor()),
           fontSize: 16.0.sp,
@@ -699,16 +699,16 @@ class AppointmentsCommonWidget {
     } else if (doc.doctorSessionId != null &&
         doc?.doctor != null &&
         doc?.doctor?.user != null) {
-      name = doc?.doctor?.user?.firstName != null
-          ? doc?.doctor?.user?.firstName?.capitalizeFirstofEach +
+      name = doc.doctor!.user!.firstName != null
+          ? doc.doctor!.user!.firstName!.capitalizeFirstofEach +
               ' ' +
-              doc?.doctor?.user?.lastName?.capitalizeFirstofEach
+              doc.doctor!.user!.lastName!.capitalizeFirstofEach
           : '';
     }
 
     if (name == '') {
-      if (doc?.serviceCategory?.code == 'LAB') {
-        name = doc?.additionalinfo?.lab_name ?? '';
+      if (doc.serviceCategory!.code == 'LAB') {
+        name = doc.additionalinfo!.lab_name ?? '';
       }
     }
 
@@ -718,19 +718,19 @@ class AppointmentsCommonWidget {
   getLocation(Past doc) {
     String? location = '';
     if (doc.doctorSessionId == null &&
-        doc?.healthOrganization != null &&
-        doc?.healthOrganization?.healthOrganizationAddressCollection != null &&
-        doc?.healthOrganization?.healthOrganizationAddressCollection?.length >
+        doc.healthOrganization != null &&
+        doc.healthOrganization!.healthOrganizationAddressCollection != null &&
+        doc.healthOrganization!.healthOrganizationAddressCollection!.length >
             0) {
-      location = doc?.healthOrganization?.healthOrganizationAddressCollection![0]
-              .city?.name ??
+      location = doc.healthOrganization!.healthOrganizationAddressCollection![0]
+              .city!.name ??
           '';
     } else if (doc.doctorSessionId != null &&
-        doc?.doctor != null &&
-        doc?.doctor?.user != null &&
-        doc?.doctor?.user?.userAddressCollection3 != null &&
-        doc?.doctor?.user?.userAddressCollection3!.length > 0) {
-      location = doc?.doctor?.user?.userAddressCollection3![0]?.city!.name;
+        doc.doctor != null &&
+        doc.doctor!.user != null &&
+        doc.doctor!.user!.userAddressCollection3 != null &&
+        doc.doctor!.user!.userAddressCollection3!.length > 0) {
+      location = doc!.doctor!.user!.userAddressCollection3![0].city!.name;
     }
 
     return location;

@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
@@ -12,6 +14,7 @@ import 'package:myfhb/regiment/models/field_response_model.dart';
 import 'package:myfhb/regiment/models/regiment_data_model.dart';
 import 'package:myfhb/regiment/models/regiment_response_model.dart';
 import 'package:myfhb/regiment/view_model/regiment_view_model.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/unit/choose_unit.dart';
@@ -76,7 +79,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   String categoryName = STR_DEVICES;
 
   final CategoryListBlock _categoryListBlock = CategoryListBlock();
-  List<CategoryResult> catgoryDataList = List();
+  List<CategoryResult> catgoryDataList = [];
   final MediaTypeBlock _mediaTypeBlock = MediaTypeBlock();
   MediaDataList? mediaTypesResponse = MediaDataList();
 
@@ -94,7 +97,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String> imagePathMain = [];
 
   FlutterToast toast = FlutterToast();
 
@@ -138,7 +141,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
       super.initState();
       onInit();
       mInitialTime = DateTime.now();
-      catgoryDataList = PreferenceUtil.getCategoryType();
+      catgoryDataList = PreferenceUtil.getCategoryType()!;
       if (catgoryDataList == null) {
         _categoryListBlock.getCategoryLists().then((value) {
           catgoryDataList = value.result!;
@@ -199,7 +202,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         Container(child: getAddDeviceReadings()),
         SizedBoxWidget(height: 5.0.h),
         Expanded(
-          child: getValues(context, devicesmodel),
+          child: getValues(context, devicesmodel)!,
         ),
       ],
     );
@@ -382,7 +385,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
       final userID = PreferenceUtil.getStringValue(KEY_USERID);
       try {
-        catgoryDataList = PreferenceUtil.getCategoryType();
+        catgoryDataList = PreferenceUtil.getCategoryType()!;
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[strhealthRecordCategory] = categoryDataObj.toJson();
@@ -397,7 +400,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
         }
       }
 
-      List<MediaResult>? metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = <MediaResult>[];
       if (mediaTypesResponse != null &&
           mediaTypesResponse!.result != null &&
           mediaTypesResponse!.result!.isNotEmpty) {
@@ -1472,7 +1475,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     return formattedDate;
   }
 
-  Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
+  Widget? getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     final todayDate = getFormattedDateTime(DateTime.now().toString());
     selectedActivity = getActivityFromDeviceName(getDeviceName());
     switch (widget.device_name) {
@@ -1488,14 +1491,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 final translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<BPResult>? bpResultNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                    translis!.isNotEmpty ? translis.first : [];
                 bpResultNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue!
                       .compareTo(translisCopy.dateTimeValue!);
                 });
                 final bpResult = bpResultNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
-                return bpResult?.isNotEmpty
+                return bpResult!.isNotEmpty
                     ? GroupedListView<BPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
@@ -1562,14 +1565,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<GVResult>? translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                    translis!.isNotEmpty ? translis.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue!
                       .compareTo(translisCopy.dateTimeValue!);
                 });
                 final translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
-                return translist?.isNotEmpty
+                return translist!.isNotEmpty
                     ? GroupedListView<GVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
@@ -1637,18 +1640,18 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<OxyResult>? translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                    translis!.isNotEmpty ? translis.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue!
                       .compareTo(translisCopy.dateTimeValue!);
                 });
                 var translist = translistNew;
                 // final List<DeviceIntervalData> deviceFullList = translis.last;
-                return translist?.isNotEmpty
+                return translist!.isNotEmpty
                     ? GroupedListView<OxyResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
-                        elements: translist!,
+                        elements: translist,
                         sort: false,
                         groupSeparatorBuilder: (value) => Padding(
                           padding: const EdgeInsets.all(6),
@@ -1710,14 +1713,14 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
                 final List<WVResult>? translistNew =
-                    translis?.isNotEmpty ? translis?.first : [];
+                    translis!.isNotEmpty ? translis.first : [];
                 translistNew?.sort((translisCopy, translisClone) {
                   return translisClone.dateTimeValue!
                       .compareTo(translisCopy.dateTimeValue!);
                 });
                 var translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
-                return translist?.isNotEmpty
+                return translist!.isNotEmpty
                     ? GroupedListView<WVResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
@@ -1781,9 +1784,9 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 var translis = snapshot.data;
                 //List<WVResult> translist = translis.first;
-                final List<TMPResult>? translistNew = translis?.isNotEmpty
-                    ? translis?.isNotEmpty
-                        ? translis?.first
+                final List<TMPResult>? translistNew = translis!.isNotEmpty
+                    ? translis!.isNotEmpty
+                        ? translis.first
                         : []
                     : [];
                 translistNew?.sort((translisCopy, translisClone) {
@@ -1792,7 +1795,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 });
                 var translist = translistNew;
                 //final List<DeviceIntervalData> deviceFullList = translis?.last;
-                return translist?.isNotEmpty
+                return translist!.isNotEmpty
                     ? GroupedListView<TMPResult, String>(
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime!),
@@ -2616,7 +2619,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     }
   }
 
-  Future<GetDeviceSelectionModel> getProfileSetings() async {
+  Future<GetDeviceSelectionModel?> getProfileSetings() async {
     var userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     await healthReportListForUserRepository
@@ -2636,8 +2639,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 if (weightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      preferredMeasurement!.weight?.unitCode!);
-                  if (preferredMeasurement!.weight?.unitCode!.toLowerCase() ==
+                      preferredMeasurement!.weight!.unitCode!);
+                  if (preferredMeasurement!.weight!.unitCode!.toLowerCase() ==
                       Constants.STR_VAL_WEIGHT_IND.toLowerCase()) {
                     isKg = true;
                     isPounds = false;
@@ -2653,8 +2656,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
 
                 if (heightObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                      preferredMeasurement!.height?.unitCode!);
-                  if (preferredMeasurement!.height?.unitCode ==
+                      preferredMeasurement!.height!.unitCode!);
+                  if (preferredMeasurement!.height!.unitCode ==
                       Constants.STR_VAL_HEIGHT_IND) {
                     isInchFeet = true;
                     isCenti = false;
@@ -2669,8 +2672,8 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 tempObj = preferredMeasurement!.temperature;
                 if (tempObj != null) {
                   await PreferenceUtil.saveString(Constants.STR_KEY_TEMP,
-                      preferredMeasurement!.temperature?.unitCode!);
-                  if (preferredMeasurement!.temperature?.unitCode!
+                      preferredMeasurement!.temperature!.unitCode!);
+                  if (preferredMeasurement!.temperature!.unitCode!
                           .toLowerCase() ==
                       Constants.STR_VAL_TEMP_IND.toLowerCase()) {
                     isFaren = true;
@@ -2701,21 +2704,21 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     var unitConfiguration = await apiBaseHelper
         .getUnitConfiguration(CommonUtil.UNIT_CONFIGURATION_URL);
 
-    if (unitConfiguration?.isSuccess!) {
-      if (unitConfiguration?.result != null) {
-        var configurationData = unitConfiguration?.result![0]?.configurationData;
+    if (unitConfiguration!.isSuccess!) {
+      if (unitConfiguration.result != null) {
+        var configurationData = unitConfiguration.result![0].configurationData;
         if (configurationData != null) {
           if (CommonUtil.REGION_CODE != "IN") {
             await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
-                    configurationData.unitSystemList?.us?.height![0]?.unitCode!)
+                    configurationData.unitSystemList!.us!.height![0].unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
-                      configurationData.unitSystemList?.us?.weight![0]?.unitCode!)
+                      configurationData.unitSystemList!.us!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.us?.temperature![0]?.unitCode!)
+                            .unitSystemList!.us!.temperature![0].unitCode!)
                     .then((value) {});
               });
             });
@@ -2723,17 +2726,17 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
             await PreferenceUtil.saveString(
                     Constants.STR_KEY_HEIGHT,
                     configurationData
-                        .unitSystemList?.india?.height![0]?.unitCode!)
+                        .unitSystemList!.india!.height![0].unitCode!)
                 .then((value) {
               PreferenceUtil.saveString(
                       Constants.STR_KEY_WEIGHT,
                       configurationData
-                          .unitSystemList?.india?.weight![0]?.unitCode!)
+                          .unitSystemList!.india!.weight![0].unitCode!)
                   .then((value) {
                 PreferenceUtil.saveString(
                         Constants.STR_KEY_TEMP,
                         configurationData
-                            .unitSystemList?.india?.temperature![0]?.unitCode!)
+                            .unitSystemList!.india!.temperature![0].unitCode!)
                     .then((value) {});
               });
             });
@@ -2806,19 +2809,19 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
           return ErrorsWidget();
         } else {
           if (snapshot.hasData) {
-            if (snapshot?.data != null) {
-              if (snapshot?.data?.length > 0) {
-                activitiesFilteredList = snapshot?.data;
+            if (snapshot.data != null) {
+              if (snapshot.data!.length > 0) {
+                activitiesFilteredList = snapshot.data;
 
-                return getValues(context, devicesmodel);
+                return getValues(context, devicesmodel)!;
               } else {
-                return getValues(context, devicesmodel);
+                return getValues(context, devicesmodel)!;
               }
             } else {
-              return getValues(context, devicesmodel);
+              return getValues(context, devicesmodel)!;
             }
           } else {
-            return getValues(context, devicesmodel);
+            return getValues(context, devicesmodel)!;
           }
         }
       },
@@ -2895,7 +2898,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
     saveMap.forEach((key, value) {
       events += '&$key=$value';
       var provider = Provider.of<RegimentViewModel>(context, listen: false);
-      provider.cachedEvents?.removeWhere((element) => element?.contains(key));
+      provider.cachedEvents?.removeWhere((element) => element.contains(key));
       provider.cachedEvents.add('&$key=$value'.toString());
     });
     final saveResponse =

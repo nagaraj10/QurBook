@@ -13,7 +13,7 @@ class DoctorsSearchListResponse {
     message = json['message'];
     if (json.containsKey('result')) {
       if (json['result'] != null) {
-        result = List<DoctorsListResult>();
+        result = <DoctorsListResult>[];
         json['result'].forEach((v) {
           result!.add(DoctorsListResult.fromJson(v));
         });

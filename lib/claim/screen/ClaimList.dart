@@ -46,12 +46,12 @@ class _ClaimListState extends State<ClaimList> {
 
   bool isCreditBalnceZero = false;
 
-  List<CategoryResult> categoryDataList = new List();
+  List<CategoryResult> categoryDataList = [];
   late CategoryResponseListRepository _categoryResponseListRepository;
   late CategoryListBlock _categoryListBlock;
 
   FlutterToast toast = FlutterToast();
-  List<ClaimExpiryResult>? claimExpiryList = new List();
+  List<ClaimExpiryResult>? claimExpiryList = [];
   int? _selected;
   late ClaimListBloc _claimListBloc;
   Future<ClaimExpiryResponse?>? claimExpiryResponse;
@@ -85,8 +85,8 @@ class _ClaimListState extends State<ClaimList> {
           children: [
             Expanded(
                 child: (claimListResponse != null &&
-                        claimListResponse?.result != null &&
-                        claimListResponse?.result!.length > 0)
+                        claimListResponse!.result != null &&
+                        claimListResponse!.result!.length > 0)
                     ? getCliamList()
                     : getClaimListFromFutureBuilder()),
           ],
@@ -121,9 +121,9 @@ class _ClaimListState extends State<ClaimList> {
 
   getCliamList() {
     return (claimListResponse != null &&
-            (claimListResponse?.isSuccess ?? false) &&
-            claimListResponse?.result != null &&
-            claimListResponse?.result!.length > 0)
+            (claimListResponse!.isSuccess ?? false) &&
+            claimListResponse!.result != null &&
+            claimListResponse!.result!.length > 0)
         ? ClaimWidget()
         : Expanded(
             child: Container(
@@ -521,7 +521,7 @@ class _ClaimListState extends State<ClaimList> {
                                   Text(
                                       " " +
                                               claimResultList[index]
-                                                  ?.claimNumber! ??
+                                                  !.claimNumber! ??
                                           '',
                                       style: getTextStyleForValue())
                                 ],
@@ -531,12 +531,12 @@ class _ClaimListState extends State<ClaimList> {
                                   Text("Membership : ",
                                       style: getTextStyleForTags()),
                                   Text(
-                                      (claimResultList[index]?.planName !=
+                                      (claimResultList[index].planName !=
                                                   null &&
                                               claimResultList[index]
-                                                      ?.planName !=
+                                                      .planName !=
                                                   '')
-                                          ? claimResultList[index]?.planName!
+                                          ? claimResultList[index].planName!
                                           : memberShipType!,
                                       style: getTextStyleForValue())
                                 ],
@@ -683,7 +683,7 @@ class _ClaimListState extends State<ClaimList> {
                     maxHeight: MediaQuery.of(context).size.height * 0.4,
                   ),
                   child:
-                      (claimExpiryList != null && claimExpiryList?.length > 0)
+                      (claimExpiryList != null && claimExpiryList!.length > 0)
                           ? getWidgetForMemberShipList()
                           : getClaimMemberShipListFromFutureBuilder(),
                 ),
@@ -751,7 +751,7 @@ class _ClaimListState extends State<ClaimList> {
   }
 
   void conditionToCheckAmt(int index) {
-    String balanceAmt = claimExpiryList![index]?.balanceAmount!;
+    String balanceAmt = claimExpiryList![index].balanceAmount!;
     if (balanceAmt.contains(".")) {
       balanceAmt =
           balanceAmt.contains(".") ? balanceAmt.split(".")[0] : balanceAmt;

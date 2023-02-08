@@ -99,13 +99,13 @@ class MyProvidersResponseData {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['doctors'] != null) {
-      doctors = List<Doctors?>();
+      doctors = <Doctors?>[];
       json['doctors'].forEach((v) {
         doctors!.add(Doctors.fromJson(v));
       });
     }
     if (json['hospitals'] != null) {
-      hospitals = List<Hospitals>();
+      hospitals = <Hospitals>[];
       json['hospitals'].forEach((v) {
         hospitals!.add(Hospitals.fromJson(v));
       });

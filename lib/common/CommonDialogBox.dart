@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -89,7 +89,7 @@ class CommonDialogBox {
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String?> imagePathMain = List();
+  List<String?> imagePathMain = [];
 
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
   MediaMetaInfo? mediaMetaInfo;
@@ -164,7 +164,7 @@ class CommonDialogBox {
             : null;*/
         mediaMetaInfo = mediaMetaInfo ?? null;
 
-        setDoctorValueFromResponse(mediaMetaInfo);
+        setDoctorValueFromResponse(mediaMetaInfo!);
 
         if (mediaMetaInfo != null) {
           metaInfoId = mediaMetaInfo.id;
@@ -429,7 +429,7 @@ class CommonDialogBox {
         mediaMetaInfo = mediaMetaInfo ?? null;
         deviceHealthResult = mediaMetaInfo;
 
-        doctorsData = mediaMetaInfo.metadata!.doctor;
+        doctorsData = mediaMetaInfo!.metadata!.doctor;
         setDoctorValueFromResponse(mediaMetaInfo);
 
         labData = mediaMetaInfo.metadata!.laboratory ?? null;
@@ -2164,7 +2164,7 @@ class CommonDialogBox {
                           allowSelect: false,
                           isAudioSelect: true,
                           isNotesSelect: false,
-                          selectedMedias: List(),
+                          selectedMedias:[],
                           isFromChat: false,
                           showDetails: true,
                           isAssociateOrChat: false,
@@ -2829,13 +2829,13 @@ class CommonDialogBox {
 
   int pickPosition(String categoryName) {
     var position = 0;
-    List<CategoryResult> categoryDataList = [];
+    List<CategoryResult?> categoryDataList = [];
     categoryDataList = getCategoryList();
     for (var i = 0;
         i < (categoryDataList == null ? 0 : categoryDataList.length);
         i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName!);
+      if (categoryName == categoryDataList[i]!.categoryName!) {
+        print(categoryName + ' ****' + categoryDataList[i]!.categoryName!);
         position = i;
       }
     }
@@ -2900,7 +2900,7 @@ class CommonDialogBox {
                   onAdd,
                 );
               } else {
-                doctorsListFromProvider = List();
+                doctorsListFromProvider = [];
                 familyWidget = getDoctorDropDownWhenNoList(
                     doctorsListFromProvider, null, onAdd);
               }
@@ -2960,7 +2960,7 @@ class CommonDialogBox {
                   onAdd,
                 );
               } else {
-                hospitalListFromProvider = List();
+                hospitalListFromProvider =[];
                 familyWidget = getHospitalsDropDownWhenNoList(
                     hospitalListFromProvider, null, onAdd);
               }
@@ -3288,7 +3288,7 @@ class CommonDialogBox {
       final userAddressCollection3 = address.UserAddressCollection3(
           addressLine1: doctorFromRespon.addressLine1,
           addressLine2: doctorFromRespon.addressLine2);
-      var userAddressCollection3List = List<address.UserAddressCollection3>();
+      var userAddressCollection3List = <address.UserAddressCollection3>[];
       userAddressCollection3List.add(userAddressCollection3);
       var user = User(
           id: doctorFromRespon.userId,
@@ -3311,6 +3311,7 @@ class CommonDialogBox {
       icon: Icon(Icons.arrow_drop_down),
       color: Color(CommonUtil().getMyPrimaryColor()),
       iconSize: 40,
+      onPressed: (){},
     );
   }
 
@@ -3442,7 +3443,7 @@ class CommonDialogBox {
                   onAdd,
                 );
               } else {
-                hospitalListFromProvider = List();
+                hospitalListFromProvider = [];
                 familyWidget = getHospitalsDropDownWhenNoList(
                     hospitalListFromProvider, null, onAdd);
               }

@@ -1,6 +1,8 @@
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:get/get.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import '../constants/router_variable.dart';
 import '../src/utils/screenutils/size_extensions.dart';
@@ -52,7 +54,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   final HealthReportListForUserBlock _healthReportListForUserBlock =
       HealthReportListForUserBlock();
 
-  List<String> imagePathMain = List();
+  List<String> imagePathMain = [];
   FlutterToast toast = FlutterToast();
   var commonConstants = CommonConstants();
   bool? _value;
@@ -74,7 +76,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
     mInitialTime = DateTime.now();
     super.initState();
     deviceName = widget.arguments!.deviceName;
-    catgoryDataList = PreferenceUtil.getCategoryType();
+    catgoryDataList = PreferenceUtil.getCategoryType()!;
     if (catgoryDataList == null) {
       _categoryListBlock.getCategoryLists().then((value) {
         catgoryDataList = value.result!;
@@ -423,7 +425,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
       var userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       try {
-        catgoryDataList = PreferenceUtil.getCategoryType();
+        catgoryDataList = PreferenceUtil.getCategoryType()!;
         categoryDataObj = CommonUtil()
             .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
         postMediaData[parameters.strhealthRecordCategory] =
@@ -440,7 +442,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         }
       }
 
-      List<MediaResult>? metaDataFromSharedPrefernce = List<MediaResult>();
+      List<MediaResult>? metaDataFromSharedPrefernce = <MediaResult>[];
       if (mediaTypesResponse != null &&
           mediaTypesResponse!.result != null &&
           mediaTypesResponse!.result!.isNotEmpty) {
@@ -467,7 +469,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       final commonConstants = CommonConstants();
 
       if (categoryName == variable.strDevices) {
-        var postDeviceData = List<Map<String, dynamic>>();
+        var postDeviceData = <Map<String, dynamic>>[];
         final Map<String, dynamic> postDeviceValues = {};
         final Map<String, dynamic> postDeviceValuesExtra = {};
         final postDeviceValuesExtraClone = Map<String, dynamic>();

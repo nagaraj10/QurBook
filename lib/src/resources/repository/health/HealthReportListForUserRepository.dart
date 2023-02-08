@@ -157,7 +157,7 @@ class HealthReportListForUserRepository {
   Future<List<ImageDocumentResponse>> getDocumentImageList(
       List<MediaMasterIds> metaMasterIdList) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID)!;
-    var imagesList = new List<ImageDocumentResponse>();
+    var imagesList = <ImageDocumentResponse>[];
 
     imagesList = await _helper.getDocumentImageList(
         query.qr_mediameta + userID + query.qr_slash + query.qr_rawMedia,

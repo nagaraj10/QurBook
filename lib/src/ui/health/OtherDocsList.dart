@@ -60,7 +60,7 @@ class _OtherDocsState extends State<OtherDocsList> {
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  List<HealthRecordCollection> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = [];
 
   FlutterToast toast = new FlutterToast();
 
@@ -89,7 +89,7 @@ class _OtherDocsState extends State<OtherDocsList> {
   }
 
   Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
-    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = [];
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);

@@ -27,7 +27,7 @@ class ProvidersBloc implements BaseBloc {
       _providershospitalListControlller!.stream as Stream<ApiResponse<MyProvidersResponse>>;
 
   List<Doctors?>? doctors = [];
-  List<Hospitals>? hospitals = List();
+  List<Hospitals>? hospitals = [];
   List<Hospitals> labs = [];
 
   @override
@@ -123,7 +123,7 @@ class ProvidersBloc implements BaseBloc {
   }
 
   List<Doctors?> getFilterDoctorListNew(String doctorName) {
-    final filterDoctorData = List<Doctors?>();
+    final filterDoctorData = <Doctors?>[];
     for (final doctorData in doctors!) {
       if (doctorData!.user!.name != null && doctorData.user!.name != '') {
         var speciality = doctorData.doctorProfessionalDetailCollection !=

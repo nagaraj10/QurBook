@@ -50,8 +50,8 @@ class AppointmentsListViewModel extends ChangeNotifier {
   }
 
   AppointmentsData filterSearchResults(String query) {
-    List<Past> dummySearchListUpcoming = List<Past>();
-    List<Past> dummySearchListHistory = List<Past>();
+    List<Past> dummySearchListUpcoming = <Past>[];
+    List<Past> dummySearchListHistory = <Past>[];
     AppointmentsData data = AppointmentsData();
     AppointmentsModel appointments = _appointmentsModel!;
     dummySearchListUpcoming = appointments.result!.upcoming!

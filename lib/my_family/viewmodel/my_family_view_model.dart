@@ -21,7 +21,7 @@ class MyFamilyViewModel with ChangeNotifier {
 
   // 1
   // Get Family Members
-  Future<FamilyMembersList> getFamilyMembersInfo() async {
+  Future<FamilyMembersList?> getFamilyMembersInfo() async {
     try {
       var response = await _helper
           .getFamilyMembersList(webserviceCall.getQueryForFamilyMemberList());
@@ -34,7 +34,7 @@ class MyFamilyViewModel with ChangeNotifier {
 
   // 2
   // Get Roles
-  Future<RelationShipResponseList> getCustomRoles() async {
+  Future<RelationShipResponseList?> getCustomRoles() async {
     try {
       var response =
           await _helper.getCustomRoles(query.qr_customRole);

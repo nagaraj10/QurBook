@@ -43,7 +43,7 @@ class Feedbacks extends StatefulWidget {
 class _FeedbacksState extends State<Feedbacks> {
   List<Asset> resultList = <Asset>[];
   List<Asset> assests = <Asset>[];
-  List<ByteData> byteDataList = List();
+  List<ByteData> byteDataList = [];
 
   List<dynamic> byteDataClonelist = [];
   List<Asset> images = <Asset>[];
@@ -51,7 +51,7 @@ class _FeedbacksState extends State<Feedbacks> {
   String? audioPathMain = '';
   bool containsAudioMain = false;
   FHBBasicWidget fhbBasicWidget = FHBBasicWidget();
-  List<String> imagePaths = List();
+  List<String> imagePaths = [];
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   //CategoryResult categoryDataObj = CategoryResult();
   //MediaResult mediaDataObj = MediaResult();

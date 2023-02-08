@@ -271,7 +271,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
       physics: AlwaysScrollableScrollPhysics(),
       itemCount: contacts?.length ?? 0,
       itemBuilder: (context, index) {
-        final contact = contacts?.elementAt(index);
+        final contact = contacts.elementAt(index);
         final phone = contact.phones!.toList();
         return phone == null || phone.isEmpty
             ? Container()
@@ -364,7 +364,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   }
 
   sendInviteToFriends() async {
-    var contacts = List<Contacts>();
+    var contacts = <Contacts>[];
     selectedList.forEach((e) {
       e.phones!.forEach((element) {
         if (element.value!.isNotEmpty) {
@@ -391,7 +391,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
   sendReferalRequest(ReferAFriendRequest friendRequest) {
     referAFriend(friendRequest).then((value) {
       List<Result> referalList = value?.result ?? [];
-      if (value?.isSuccess! && referalList?.length > 0) {
+      if (value.isSuccess! && referalList.length > 0) {
         LoaderClass.hideLoadingDialog(context);
         showDialog(
             barrierDismissible: false,
@@ -443,7 +443,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                         radius: 15,
                                         child: Text(
                                           (referalList[index]
-                                                      ?.name!
+                                                      .name!
                                                       .split(' ')
                                                       .length >
                                                   1
@@ -466,7 +466,7 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
                                     children: [
                                       Text(
                                         referalList[index]
-                                            ?.name!
+                                            .name!
                                             .capitalizeFirstofEach,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -597,6 +597,6 @@ class _InviteContactsScreenState extends State<InviteContactsScreen> {
         Provider.of<ReferAFriendViewModel>(context, listen: false);
     final response =
         await contactsPatientsViewModel.referFriendVMModel(referAFriendRequest);
-    return response;
+    return response!;
   }
 }

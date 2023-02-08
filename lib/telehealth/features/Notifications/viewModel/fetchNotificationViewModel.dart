@@ -34,7 +34,7 @@ class FetchNotificationViewModel extends ChangeNotifier {
     invisibleItemsThreshold: 1,
   );
   static const _pageSize = 50;
-  Future<NotificationModel> fetchNotifications() async {
+  Future<NotificationModel?> fetchNotifications() async {
     deleteLogId = [];
     deleteMode = false;
     selectAllTapped = false;

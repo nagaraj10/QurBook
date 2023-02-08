@@ -280,7 +280,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentPackageProviderCareId!,
+                                                  .currentPackageProviderCareId!,
                                               orginalPrice);
                                         }
 
@@ -296,7 +296,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentCartProviderCarePackageId,
+                                                  .currentCartProviderCarePackageId,
                                               orginalPrice);
                                         }
                                         checkIfMemberShipIsAvailable(
@@ -313,7 +313,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentPackageFreeCareId!,
+                                                  .currentPackageFreeCareId!,
                                               orginalPrice);
                                         }
 
@@ -329,7 +329,7 @@ class CarePlanCard extends StatelessWidget {
                                               Provider.of<PlanWizardViewModel>(
                                                       context,
                                                       listen: false)
-                                                  ?.currentCartFreeCarePackageId,
+                                                  .currentCartFreeCarePackageId,
                                               orginalPrice);
                                         }
                                         checkIfMemberShipIsAvailable(
@@ -417,7 +417,7 @@ class CarePlanCard extends StatelessWidget {
                             planList,
                             Provider.of<PlanWizardViewModel>(context,
                                     listen: false)
-                                ?.currentPackageProviderCareId!,
+                                .currentPackageProviderCareId!,
                             orginalPrice);
                       }
 
@@ -431,7 +431,7 @@ class CarePlanCard extends StatelessWidget {
                             planList,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentCartProviderCarePackageId,
+                                .currentCartProviderCarePackageId,
                             orginalPrice);
                       }
                       checkIfMemberShipIsAvailable(
@@ -449,7 +449,7 @@ class CarePlanCard extends StatelessWidget {
                             planList,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentPackageFreeCareId!,
+                                .currentPackageFreeCareId!,
                             orginalPrice);
                       }
 
@@ -463,7 +463,7 @@ class CarePlanCard extends StatelessWidget {
                             planList,
                             Provider.of<PlanWizardViewModel>(Get.context!,
                                     listen: false)
-                                ?.currentCartFreeCarePackageId,
+                                .currentCartFreeCarePackageId,
                             orginalPrice);
                       }
                       checkIfMemberShipIsAvailable(
@@ -531,10 +531,10 @@ class CarePlanCard extends StatelessWidget {
       BuildContext context, PlanListResult? planList, String price) async {
     bool isMemberShip =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.isMembershipAVailable!;
+            .isMembershipAVailable!;
     int careCount =
         await Provider.of<PlanWizardViewModel>(context, listen: false)
-            ?.carePlanCount;
+            .carePlanCount;
     int priceValue = int.parse(price);
     if (isMemberShip && priceValue > 0 && careCount > 0) {
       _alertForMemberShip(context, planList!, isMemberShip);
