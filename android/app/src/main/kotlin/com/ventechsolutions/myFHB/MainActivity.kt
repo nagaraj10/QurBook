@@ -35,6 +35,7 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
@@ -2503,8 +2504,22 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
                             }
                         )
                         displayText?.setText("")
-
+                        edit_view.clearFocus()
+                        val imm: InputMethodManager =
+                            activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                        var view = activity.currentFocus
+                        if (view == null) {
+                            view = View(activity)
+                        }
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
                         dialog.show()
+
+                        val view: View? = getCurrentFocus()
+                        if (view != null) {
+                            val imm: InputMethodManager =
+                                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(view.windowToken, 0)
+                        }
                     }
                 }
 
