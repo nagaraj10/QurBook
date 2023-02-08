@@ -97,7 +97,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                               : CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          chat.text,
+                                          chat.text ?? '',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyText2
