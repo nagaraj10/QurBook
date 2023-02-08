@@ -319,6 +319,16 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             SizedBox(height: 10.h),
             commonWidgetForTitleValue(parameters.dateAndTime,
                 appointmentDetailsController.scheduleDateTime.value),
+            appointmentDetailsController.appointmentType.value.toLowerCase() ==
+                    "doctor appointment"
+                ? Column(
+                    children: [
+                      SizedBox(height: 5.h),
+                      commonWidgetForTitleValue(appointmentSlot,
+                          appointmentDetailsController.slotNumber.value),
+                    ],
+                  )
+                : SizedBox.shrink(),
             SizedBox(height: 10.h),
             Text(
               appointmentInformation,
@@ -331,14 +341,72 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               maxLines: 2,
             ),
             SizedBox(height: 10.h),
+            showWidget(),
+            SizedBox(height: 20.h),
+          ],
+        ));
+  }
+
+  showWidget() {
+    switch (appointmentDetailsController.appointmentType.value.toLowerCase()) {
+      case "lab appointment":
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             commonWidgetForTitleValue(appointmentTestName,
                 appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
             commonWidgetForTitleValue(appointmentAddress,
                 appointmentDetailsController.providerAddress.value),
-            SizedBox(height: 20.h),
           ],
-        ));
+        );
+        break;
+      case "homecare service":
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            commonWidgetForTitleValue(
+                strTitle, appointmentDetailsController.testName.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentDescription,
+                appointmentDetailsController.description.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentAddress,
+                appointmentDetailsController.providerAddress.value),
+          ],
+        );
+        break;
+      case "transportation":
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            commonWidgetForTitleValue(
+                strTitle, appointmentDetailsController.testName.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentDescription,
+                appointmentDetailsController.description.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentPickupaddress,
+                appointmentDetailsController.pickUpAddress.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentDropAddress,
+                appointmentDetailsController.dropAddress.value),
+          ],
+        );
+        break;
+      case "doctor appointment":
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            commonWidgetForTitleValue(appointmentHospitalName,
+                appointmentDetailsController.hospitalName.value),
+            SizedBox(height: 5.h),
+            commonWidgetForTitleValue(appointmentHospitalAddress,
+                appointmentDetailsController.providerAddress.value),
+          ],
+        );
+        break;
+    }
   }
 
   commonWidgetForTitleValue(String header, String value) {
@@ -359,13 +427,23 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 color: Colors.black.withOpacity(0.5),
               ),
             )),
+        Text(
+          " : ",
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            fontSize: 13.0.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.black.withOpacity(0.7),
+          ),
+        ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: Text(
-            ":  " + value,
+            value,
             textAlign: TextAlign.start,
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            overflow: TextOverflow.visible,
+            softWrap: true,
+            //maxLines: 3,
             style: TextStyle(
               fontSize: 13.0.sp,
               fontWeight: FontWeight.w600,

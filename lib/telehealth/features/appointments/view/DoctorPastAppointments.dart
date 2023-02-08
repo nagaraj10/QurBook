@@ -87,8 +87,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     int healthRecord = (recordIds.length > 0) ? recordIds.length : 0;
     return InkWell(
       onTap: () {
-        appointmentDetailsController.getAppointmentDetail(widget.doc?.id ?? "");
-        Get.to(() => AppointmentDetailScreen());
+        try {
+          appointmentDetailsController
+              .getAppointmentDetail(widget.doc?.id ?? "");
+          Get.to(() => AppointmentDetailScreen());
+        } catch (e) {}
       },
       child: Card(
           color: Colors.white,

@@ -81,8 +81,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        appointmentDetailsController.getAppointmentDetail(widget.doc?.id ?? "");
-        Get.to(() => AppointmentDetailScreen());
+        try {
+          appointmentDetailsController
+              .getAppointmentDetail(widget.doc?.id ?? "");
+          Get.to(() => AppointmentDetailScreen());
+        } catch (e) {}
       },
       child: Card(
           color: Colors.white,

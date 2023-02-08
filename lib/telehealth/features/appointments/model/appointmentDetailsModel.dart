@@ -51,6 +51,7 @@ class Result {
   HealthRecord healthRecord;
   int duration;
   String chatListId;
+  Doctor doctor;
 
   Result(
       {this.id,
@@ -82,61 +83,66 @@ class Result {
       this.feeDetails,
       this.healthRecord,
       this.duration,
-      this.chatListId});
+      this.chatListId,
+      this.doctor});
 
   Result.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    bookingId = json['bookingId'];
-    doctorSessionId = json['doctorSessionId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    slotNumber = json['slotNumber'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    isFollowup = json['isFollowup'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isBookedByProvider = json['isBookedByProvider'];
-    isCallDenied = json['isCallDenied'];
-    additionalInfo = json['additionalInfo'] != null
-        ? new AdditionalInfo.fromJson(json['additionalInfo'])
-        : null;
-    bookedFor = json['bookedFor'] != null
-        ? new BookedFor.fromJson(json['bookedFor'])
-        : null;
-    bookedBy = json['bookedBy'] != null
-        ? new BookedBy.fromJson(json['bookedBy'])
-        : null;
-    status =
-        json['status'] != null ? new Status.fromJson(json['status']) : null;
-    serviceCategory = json['serviceCategory'] != null
-        ? new ServiceCategory.fromJson(json['serviceCategory'])
-        : null;
-    modeOfService = json['modeOfService'] != null
-        ? new Status.fromJson(json['modeOfService'])
-        : null;
-    /*if (json['prescriptionCollection'] != null) {
-      prescriptionCollection = <Null>[];
-      json['prescriptionCollection'].forEach((v) {
-        prescriptionCollection!.add(new Null.fromJson(v));
-      });
-    }*/
-    healthOrganization = json['healthOrganization'] != null
-        ? new HealthOrganization.fromJson(json['healthOrganization'])
-        : null;
-    feeDetails = json['feeDetails'] != null
-        ? new FeeDetails.fromJson(json['feeDetails'])
-        : null;
-    healthRecord = json['healthRecord'] != null
-        ? new HealthRecord.fromJson(json['healthRecord'])
-        : null;
-    duration = json['duration'];
-    chatListId = json['chatListId'];
+    try {
+      id = json['id'];
+      bookingId = json['bookingId'];
+      doctorSessionId = json['doctorSessionId'];
+      plannedStartDateTime = json['plannedStartDateTime'];
+      plannedEndDateTime = json['plannedEndDateTime'];
+      actualStartDateTime = json['actualStartDateTime'];
+      actualEndDateTime = json['actualEndDateTime'];
+      slotNumber = json['slotNumber'];
+      isHealthRecordShared = json['isHealthRecordShared'];
+      plannedFollowupDate = json['plannedFollowupDate'];
+      isRefunded = json['isRefunded'];
+      isFollowupFee = json['isFollowupFee'];
+      isFollowup = json['isFollowup'];
+      isActive = json['isActive'];
+      createdOn = json['createdOn'];
+      lastModifiedOn = json['lastModifiedOn'];
+      isBookedByProvider = json['isBookedByProvider'];
+      isCallDenied = json['isCallDenied'];
+      additionalInfo = json['additionalInfo'] != null
+          ? new AdditionalInfo.fromJson(json['additionalInfo'])
+          : AdditionalInfo();
+      /*bookedFor = json['bookedFor'] != null
+              ? new BookedFor.fromJson(json['bookedFor'])
+              : null;
+      bookedBy = json['bookedBy'] != null
+              ? new BookedBy.fromJson(json['bookedBy'])
+              : null;
+      status =
+              json['status'] != null ? new Status.fromJson(json['status']) : null;*/
+      serviceCategory = json['serviceCategory'] != null
+          ? new ServiceCategory.fromJson(json['serviceCategory'])
+          : null;
+      modeOfService = json['modeOfService'] != null
+          ? new Status.fromJson(json['modeOfService'])
+          : null;
+      /*if (json['prescriptionCollection'] != null) {
+            prescriptionCollection = <Null>[];
+            json['prescriptionCollection'].forEach((v) {
+              prescriptionCollection!.add(new Null.fromJson(v));
+            });
+          }*/
+      healthOrganization = json['healthOrganization'] != null
+          ? new HealthOrganization.fromJson(json['healthOrganization'])
+          : null;
+      feeDetails = json['feeDetails'] != null
+          ? new FeeDetails.fromJson(json['feeDetails'])
+          : null;
+      healthRecord = json['healthRecord'] != null
+          ? new HealthRecord.fromJson(json['healthRecord'])
+          : null;
+      duration = json['duration'];
+      chatListId = json['chatListId'];
+      doctor =
+          json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+    } catch (e) {}
   }
 
   Map<String, dynamic> toJson() {
@@ -192,15 +198,21 @@ class Result {
     }
     data['duration'] = this.duration;
     data['chatListId'] = this.chatListId;
+    if (this.doctor != null) {
+      data['doctor'] = this.doctor.toJson();
+    }
     return data;
   }
 }
 
 class AdditionalInfo {
+  String to;
   int fee;
+  String from;
   String city;
   String notes;
   String state;
+  String title;
   String endTime;
   String labName;
   String pinCode;
@@ -212,12 +224,16 @@ class AdditionalInfo {
   String addressLine2;
   String preferredDate;
   String modeOfService;
+  String providerName;
 
   AdditionalInfo(
       {this.fee,
+      this.to,
+      this.from,
       this.city,
       this.notes,
       this.state,
+      this.title,
       this.endTime,
       this.labName,
       this.pinCode,
@@ -228,13 +244,17 @@ class AdditionalInfo {
       this.addressLine1,
       this.addressLine2,
       this.preferredDate,
-      this.modeOfService});
+      this.modeOfService,
+      this.providerName});
 
   AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    to = json['to'];
     fee = json['fee'];
+    from = json['from'];
     city = json['city'];
     notes = json['notes'];
     state = json['state'];
+    title = json['title'];
     endTime = json['end_time'];
     labName = json['lab_name'];
     pinCode = json['pin_code'];
@@ -246,14 +266,18 @@ class AdditionalInfo {
     addressLine2 = json['address_line_2'];
     preferredDate = json['preferred_date'];
     modeOfService = json['mode_of_service'];
+    providerName = json['provider_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['to'] = this.to;
     data['fee'] = this.fee;
+    data['from'] = this.from;
     data['city'] = this.city;
     data['notes'] = this.notes;
     data['state'] = this.state;
+    data['title'] = this.title;
     data['end_time'] = this.endTime;
     data['lab_name'] = this.labName;
     data['pin_code'] = this.pinCode;
@@ -265,6 +289,7 @@ class AdditionalInfo {
     data['address_line_2'] = this.addressLine2;
     data['preferred_date'] = this.preferredDate;
     data['mode_of_service'] = this.modeOfService;
+    data['provider_name'] = this.providerName;
     return data;
   }
 }
@@ -1136,6 +1161,337 @@ class HealthRecord {
     if (this.prescription != null) {
       data['prescription'] = this.prescription!.map((v) => v.toJson()).toList();
     }*/
+    return data;
+  }
+}
+
+class Doctor {
+  String id;
+  String specialization;
+  bool isTelehealthEnabled;
+  bool isMciVerified;
+  bool isActive;
+  bool isWelcomeMailSent;
+  String createdOn;
+  String lastModifiedBy;
+  String lastModifiedOn;
+  bool isResident;
+  BusinessDetail businessDetail;
+  bool patientAssociationRequest;
+  User user;
+  List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
+
+  Doctor(
+      {this.id,
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.isWelcomeMailSent,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.isResident,
+      this.businessDetail,
+      this.patientAssociationRequest,
+      this.user,
+      this.doctorProfessionalDetailCollection});
+
+  Doctor.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    specialization = json['specialization'];
+    isTelehealthEnabled = json['isTelehealthEnabled'];
+    isMciVerified = json['isMciVerified'];
+    isActive = json['isActive'];
+    isWelcomeMailSent = json['isWelcomeMailSent'];
+    createdOn = json['createdOn'];
+    lastModifiedBy = json['lastModifiedBy'];
+    lastModifiedOn = json['lastModifiedOn'];
+    isResident = json['isResident'];
+    businessDetail = json['businessDetail'] != null
+        ? new BusinessDetail.fromJson(json['businessDetail'])
+        : null;
+    patientAssociationRequest = json['patientAssociationRequest'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    if (json['doctorProfessionalDetailCollection'] != null) {
+      doctorProfessionalDetailCollection =
+          <DoctorProfessionalDetailCollection>[];
+      json['doctorProfessionalDetailCollection'].forEach((v) {
+        doctorProfessionalDetailCollection
+            .add(new DoctorProfessionalDetailCollection.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['specialization'] = this.specialization;
+    data['isTelehealthEnabled'] = this.isTelehealthEnabled;
+    data['isMciVerified'] = this.isMciVerified;
+    data['isActive'] = this.isActive;
+    data['isWelcomeMailSent'] = this.isWelcomeMailSent;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedBy'] = this.lastModifiedBy;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['isResident'] = this.isResident;
+    if (this.businessDetail != null) {
+      data['businessDetail'] = this.businessDetail.toJson();
+    }
+    data['patientAssociationRequest'] = this.patientAssociationRequest;
+    if (this.user != null) {
+      data['user'] = this.user.toJson();
+    }
+    if (this.doctorProfessionalDetailCollection != null) {
+      data['doctorProfessionalDetailCollection'] = this
+          .doctorProfessionalDetailCollection
+          .map((v) => v.toJson())
+          .toList();
+    }
+    return data;
+  }
+}
+
+class User {
+  String id;
+  String name;
+  String userName;
+  String firstName;
+  String middleName;
+  String lastName;
+  String gender;
+  String dateOfBirth;
+  String bloodGroup;
+  String countryCode;
+  String profilePicThumbnailUrl;
+  String isTempUser;
+  String isVirtualUser;
+  String isMigrated;
+  String isClaimed;
+  bool isIeUser;
+  String isEmailVerified;
+  bool isCpUser;
+  String communicationPreferences;
+  String medicalPreferences;
+  bool isSignedIn;
+  bool isActive;
+  String createdBy;
+  String createdOn;
+  String lastModifiedBy;
+  String lastModifiedOn;
+  String providerId;
+  String additionalInfo;
+  List<UserAddressCollection3> userAddressCollection3;
+
+  User(
+      {this.id,
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.providerId,
+      this.additionalInfo,
+      this.userAddressCollection3});
+
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    userName = json['userName'];
+    firstName = json['firstName'];
+    middleName = json['middleName'];
+    lastName = json['lastName'];
+    gender = json['gender'];
+    dateOfBirth = json['dateOfBirth'];
+    bloodGroup = json['bloodGroup'];
+    countryCode = json['countryCode'];
+    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+    isTempUser = json['isTempUser'];
+    isVirtualUser = json['isVirtualUser'];
+    isMigrated = json['isMigrated'];
+    isClaimed = json['isClaimed'];
+    isIeUser = json['isIeUser'];
+    isEmailVerified = json['isEmailVerified'];
+    isCpUser = json['isCpUser'];
+    communicationPreferences = json['communicationPreferences'];
+    medicalPreferences = json['medicalPreferences'];
+    isSignedIn = json['isSignedIn'];
+    isActive = json['isActive'];
+    createdBy = json['createdBy'];
+    createdOn = json['createdOn'];
+    lastModifiedBy = json['lastModifiedBy'];
+    lastModifiedOn = json['lastModifiedOn'];
+    providerId = json['providerId'];
+    additionalInfo = json['additionalInfo'];
+    if (json['userAddressCollection3'] != null) {
+      userAddressCollection3 = <UserAddressCollection3>[];
+      json['userAddressCollection3'].forEach((v) {
+        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['userName'] = this.userName;
+    data['firstName'] = this.firstName;
+    data['middleName'] = this.middleName;
+    data['lastName'] = this.lastName;
+    data['gender'] = this.gender;
+    data['dateOfBirth'] = this.dateOfBirth;
+    data['bloodGroup'] = this.bloodGroup;
+    data['countryCode'] = this.countryCode;
+    data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
+    data['isTempUser'] = this.isTempUser;
+    data['isVirtualUser'] = this.isVirtualUser;
+    data['isMigrated'] = this.isMigrated;
+    data['isClaimed'] = this.isClaimed;
+    data['isIeUser'] = this.isIeUser;
+    data['isEmailVerified'] = this.isEmailVerified;
+    data['isCpUser'] = this.isCpUser;
+    data['communicationPreferences'] = this.communicationPreferences;
+    data['medicalPreferences'] = this.medicalPreferences;
+    data['isSignedIn'] = this.isSignedIn;
+    data['isActive'] = this.isActive;
+    data['createdBy'] = this.createdBy;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedBy'] = this.lastModifiedBy;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['providerId'] = this.providerId;
+    data['additionalInfo'] = this.additionalInfo;
+    if (this.userAddressCollection3 != null) {
+      data['userAddressCollection3'] =
+          this.userAddressCollection3.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class UserAddressCollection3 {
+  String id;
+  String addressLine1;
+  String addressLine2;
+  String pincode;
+  bool isPrimary;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  City city;
+  State state;
+
+  UserAddressCollection3(
+      {this.id,
+      this.addressLine1,
+      this.addressLine2,
+      this.pincode,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.city,
+      this.state});
+
+  UserAddressCollection3.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    addressLine1 = json['addressLine1'];
+    addressLine2 = json['addressLine2'];
+    pincode = json['pincode'];
+    isPrimary = json['isPrimary'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+    city = json['city'] != null ? new City.fromJson(json['city']) : null;
+    state = json['state'] != null ? new State.fromJson(json['state']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['addressLine1'] = this.addressLine1;
+    data['addressLine2'] = this.addressLine2;
+    data['pincode'] = this.pincode;
+    data['isPrimary'] = this.isPrimary;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.city != null) {
+      data['city'] = this.city.toJson();
+    }
+    if (this.state != null) {
+      data['state'] = this.state.toJson();
+    }
+    return data;
+  }
+}
+
+class DoctorProfessionalDetailCollection {
+  String id;
+  String aboutMe;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  BusinessDetail additionalInfo;
+  bool isAvailableForTeleconsultation;
+  bool isDoctor;
+
+  DoctorProfessionalDetailCollection(
+      {this.id,
+      this.aboutMe,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.additionalInfo,
+      this.isAvailableForTeleconsultation,
+      this.isDoctor});
+
+  DoctorProfessionalDetailCollection.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    aboutMe = json['aboutMe'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+    additionalInfo = json['additionalInfo'] != null
+        ? new BusinessDetail.fromJson(json['additionalInfo'])
+        : null;
+    isAvailableForTeleconsultation = json['isAvailableForTeleconsultation'];
+    isDoctor = json['isDoctor'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['aboutMe'] = this.aboutMe;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
+    data['isAvailableForTeleconsultation'] =
+        this.isAvailableForTeleconsultation;
+    data['isDoctor'] = this.isDoctor;
     return data;
   }
 }

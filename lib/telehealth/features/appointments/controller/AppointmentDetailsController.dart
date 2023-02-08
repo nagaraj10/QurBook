@@ -23,7 +23,12 @@ class AppointmentDetailsController extends GetxController {
   var providerName = "".obs;
   var providerAddress = "".obs;
   var testName = "".obs;
+  var description = "".obs;
+  var pickUpAddress = "".obs;
+  var dropAddress = "".obs;
   var scheduleDateTime = "".obs;
+  var slotNumber = "".obs;
+  var hospitalName = "".obs;
 
   getAppointmentDetail(String appointmentId) async {
     try {
@@ -55,72 +60,116 @@ class AppointmentDetailsController extends GetxController {
             ? "${scheduleDateTime.value} - ${DateFormat(CommonUtil.REGION_CODE == 'IN' ? Constants.Appointments_time_format : Constants.Appointments_time_formatUS).format(DateTime.parse(appointmentDetailsModel.result?.plannedEndDateTime ?? "")).toString() ?? ''}"
             : "";
 
-        switch (appointmentType.value.toLowerCase()) {
-          case "lab appointment":
-            if (appointmentDetailsModel.result?.healthOrganization != null) {
-              providerName.value =
-                  appointmentDetailsModel.result?.healthOrganization?.name ??
-                      "";
-              if (appointmentDetailsModel.result?.healthOrganization
-                          ?.healthOrganizationAddressCollection !=
-                      null &&
-                  appointmentDetailsModel.result?.healthOrganization
-                          ?.healthOrganizationAddressCollection.length >
-                      0) {
-                List<String> list = [];
+        if (appointmentDetailsModel.result?.healthOrganization != null) {
+          if (appointmentType.value.toLowerCase() == "doctor appointment") {
+            providerName.value = appointmentDetailsModel.result.doctor != null
+                ? toBeginningOfSentenceCase(
+                    (appointmentDetailsModel.result.doctor?.user.firstName ??
+                            '') +
+                        ' ' +
+                        (appointmentDetailsModel.result.doctor?.user.lastName ??
+                            ""))
+                : '';
+          } else {
+            providerName.value = toBeginningOfSentenceCase(
+                appointmentDetailsModel.result?.healthOrganization?.name ?? "");
+          }
+          if (appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection !=
+                  null &&
+              appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection.length >
+                  0) {
+            List<String> list = [];
 
-                var addressLine1 = "";
-                var addressLine2 = "";
-                var city = "";
-                var state = "";
+            var addressLine1 = "";
+            var addressLine2 = "";
+            var city = "";
+            var state = "";
 
-                addressLine1 = appointmentDetailsModel
-                        .result
-                        ?.healthOrganization
-                        ?.healthOrganizationAddressCollection[0]
-                        .addressLine1 ??
-                    "";
+            if (appointmentType.value.toLowerCase() == "lab appointment"||appointmentType.value.toLowerCase() == "doctor appointment") {
+              addressLine1 = appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection[0].addressLine1 ??
+                  "";
 
-                if (addressLine1.trim().isNotEmpty) {
-                  list.add(addressLine1);
-                }
+              if (addressLine1.trim().isNotEmpty) {
+                list.add(addressLine1);
+              }
 
-                addressLine2 = appointmentDetailsModel
-                        .result
-                        ?.healthOrganization
-                        ?.healthOrganizationAddressCollection[0]
-                        .addressLine2 ??
-                    "";
+              addressLine2 = appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection[0].addressLine2 ??
+                  "";
 
-                if (addressLine2.trim().isNotEmpty) {
-                  list.add(addressLine2);
-                }
+              if (addressLine2.trim().isNotEmpty) {
+                list.add(addressLine2);
+              }
 
-                city = appointmentDetailsModel.result?.healthOrganization
-                        ?.healthOrganizationAddressCollection[0].city.name ??
-                    "";
+              city = appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection[0].city.name ??
+                  "";
 
-                if (city.trim().isNotEmpty) {
-                  list.add(city);
-                }
+              if (city.trim().isNotEmpty) {
+                list.add(city);
+              }
 
-                state = appointmentDetailsModel.result?.healthOrganization
-                        ?.healthOrganizationAddressCollection[0].state.name ??
-                    "";
+              state = appointmentDetailsModel.result?.healthOrganization
+                      ?.healthOrganizationAddressCollection[0].state.name ??
+                  "";
 
-                state = state +
-                    " ${appointmentDetailsModel.result?.healthOrganization?.healthOrganizationAddressCollection[0].pincode ?? ""}";
+              state = state +
+                  " ${appointmentDetailsModel.result?.healthOrganization?.healthOrganizationAddressCollection[0]?.pincode ?? ""}";
 
-                if (state.trim().isNotEmpty) {
-                  list.add(state);
-                }
-
-                providerAddress.value = list.join(',');
+              if (state.trim().isNotEmpty) {
+                list.add(state);
               }
             } else {
-              providerName.value =
-                  appointmentDetailsModel.result?.additionalInfo?.labName ?? "";
+              addressLine1 =
+                  appointmentDetailsModel.result?.additionalInfo.addressLine1 ??
+                      "";
+
+              if (addressLine1.trim().isNotEmpty) {
+                list.add(addressLine1);
+              }
+
+              addressLine2 =
+                  appointmentDetailsModel.result?.additionalInfo.addressLine2 ??
+                      "";
+
+              if (addressLine2.trim().isNotEmpty) {
+                list.add(addressLine2);
+              }
+
+              city = appointmentDetailsModel.result?.additionalInfo.city ?? "";
+
+              if (city.trim().isNotEmpty) {
+                list.add(city);
+              }
+
+              state =
+                  appointmentDetailsModel.result?.additionalInfo.state ?? "";
+
+              state = state +
+                  " ${appointmentDetailsModel.result?.additionalInfo?.pinCode ?? ""}";
+
+              if (state.trim().isNotEmpty) {
+                list.add(state);
+              }
             }
+            providerAddress.value = list.join(',');
+          }
+        } else {
+          if (appointmentType.value.toLowerCase() == "lab appointment") {
+            providerName.value = toBeginningOfSentenceCase(
+                appointmentDetailsModel.result?.additionalInfo?.labName ?? "");
+          } else {
+            providerName.value = toBeginningOfSentenceCase(
+                appointmentDetailsModel.result?.additionalInfo?.providerName ??
+                    "");
+          }
+        }
+
+        switch (appointmentType.value.toLowerCase()) {
+          case "lab appointment":
             for (int i = 0;
                 i <
                         appointmentDetailsModel.result?.serviceCategory
@@ -142,18 +191,31 @@ class AppointmentDetailsController extends GetxController {
             }
             break;
           case "homecare service":
-            //TODO
+            testName.value =
+                appointmentDetailsModel.result?.additionalInfo.title ?? "";
+            description.value =
+                appointmentDetailsModel.result?.additionalInfo.notes ?? "";
             break;
           case "transportation":
-            //TODO
+            testName.value =
+                appointmentDetailsModel.result?.additionalInfo.title ?? "";
+            description.value =
+                appointmentDetailsModel.result?.additionalInfo.notes ?? "";
+            pickUpAddress.value =
+                appointmentDetailsModel.result?.additionalInfo.from ?? "";
+            dropAddress.value =
+                appointmentDetailsModel.result?.additionalInfo.to ?? "";
             break;
           case "doctor appointment":
-            //TODO
+            slotNumber.value =
+                appointmentDetailsModel.result?.slotNumber?.toString() ?? "--";
+            hospitalName.value = toBeginningOfSentenceCase(
+                appointmentDetailsModel.result?.healthOrganization?.name ?? "--");
             break;
         }
       }
 
-      if(providerAddress.value.trim().isEmpty){
+      if (providerAddress.value.trim().isEmpty) {
         providerAddress.value = "--";
       }
 
@@ -161,5 +223,9 @@ class AppointmentDetailsController extends GetxController {
     } catch (e) {
       //print(e);
     }
+  }
+
+  onClear() {
+    try {} catch (e) {}
   }
 }

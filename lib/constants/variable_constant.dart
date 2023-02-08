@@ -790,6 +790,12 @@ const String appointmentSchedule = "Schedule";
 const String appointmentInformation = "Appointment Information";
 const String appointmentTestName = "Test Name";
 const String appointmentAddress = "Address";
+const String appointmentDescription = "Description";
+const String appointmentPickupaddress = "Pick up address";
+const String appointmentDropAddress = "Drop address";
+const String appointmentSlot = "Slot";
+const String appointmentHospitalName = "Hospital Name";
+const String appointmentHospitalAddress = "Hospital Address";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
