@@ -2108,10 +2108,8 @@ class CommonUtil {
         Constants.KEY_LASTLOGGEDTIME, loginDetails.result.lastLoggedIn);
   }
 
-  Widget getNotificationIcon(
-    BuildContext context, {
-    Color color,
-  }) {
+  Widget getNotificationIcon(BuildContext context,
+      {Color color, bool isFromQurday = false}) {
     try {
       var count = 0;
       var targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2139,7 +2137,7 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
-                    navigateToNotificationScreen();
+                    navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
                     print(e);
                   }
@@ -2157,7 +2155,7 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
-                    navigateToNotificationScreen();
+                    navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
                     print(e);
                   }
@@ -2176,7 +2174,7 @@ class CommonUtil {
       return GestureDetector(
         onTap: () {
           try {
-            navigateToNotificationScreen();
+            navigateToNotificationScreen(isFromQurday);
           } catch (e) {
             print(e);
           }
@@ -2192,10 +2190,10 @@ class CommonUtil {
     }
   }
 
-  navigateToNotificationScreen() async {
+  navigateToNotificationScreen(bool isFromQurday) async {
     try {
       Get.to(
-        NotificationMain(),
+        NotificationMain(isFromQurday: isFromQurday),
       );
     } catch (e) {}
   }
@@ -5510,6 +5508,20 @@ class CommonUtil {
         }
       }
     });
+  }
+
+  static bool isNotINDReg() {
+    try {
+      bool value = false;
+      if (CommonUtil.REGION_CODE != IND_REG) {
+        value = true;
+      } else {
+        value = false;
+      }
+      return value;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
