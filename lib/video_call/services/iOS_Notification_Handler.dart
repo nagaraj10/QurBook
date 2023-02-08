@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../caregiverAssosication/caregiverAPIProvider.dart';
@@ -46,6 +47,7 @@ class IosNotificationHandler {
   bool notificationReceivedFromKilledState = false;
   bool viewRecordAction, chatWithCC = false;
   SheelaAIController sheelaAIController = Get.find();
+
   setUpListerForTheNotification() {
     variable.reponseToRemoteNotificationMethodChannel.setMethodCallHandler(
       (call) async {
@@ -190,13 +192,31 @@ class IosNotificationHandler {
     } else if (communicationSettingAction) {
       Get.to(CareGiverSettings());
     } else if (model.isSheela ?? false) {
-      if ((model.rawBody ?? '').isNotEmpty) {
+      if (model.eventType != null && model.eventType == strWrapperCall) {
+        Get.toNamed(
+          rt_Sheela,
+          arguments: SheelaArgument(
+            isSheelaAskForLang: true,
+            rawMessage: model.rawBody,
+            eventType: model.eventType,
+            others: model.others,
+          ),
+        );
+      } else if ((model.rawBody ?? '').isNotEmpty) {
         if (sheelaAIController.isSheelaScreenActive) {
-          var reqJson = {
-            KIOSK_task: KIOSK_read,
-            KIOSK_message_api: model.rawBody,
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
+          if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: model.sheelaAudioMsgUrl
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          } else {
+            var reqJson = {
+              KIOSK_task: KIOSK_read,
+              KIOSK_message_api: model.rawBody,
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJson);
+          }
         } else {
           Get.toNamed(
             rt_Sheela,
@@ -214,14 +234,38 @@ class IosNotificationHandler {
           ),
         );
       } else if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
-        await Future.delayed(const Duration(seconds: 5));
-        Get.toNamed(
-          router.rt_Sheela,
-          arguments: SheelaArgument(
-            audioMessage: model.sheelaAudioMsgUrl,
-          ),
-        );
+        if (sheelaAIController.isSheelaScreenActive) {
+          if ((model.sheelaAudioMsgUrl ?? '').isNotEmpty) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: model.sheelaAudioMsgUrl
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          }
+        } else {
+          await Future.delayed(const Duration(seconds: 5));
+          Get.toNamed(
+            router.rt_Sheela,
+            arguments: SheelaArgument(
+              audioMessage: model.sheelaAudioMsgUrl,
+            ),
+          );
+        }
       }
+    } else if (model.templateName == strNotifyPatientServiceTicketByCC &&
+        (model.eventId ?? '').isNotEmpty) {
+      fbaLog(eveParams: {
+        'eventTime': '${DateTime.now()}',
+        'ns_type': 'notifyPatientServiceTicketByCC',
+        'navigationPage': 'TicketDetails',
+      });
+      Get.to(
+        DetailedTicketView(
+          null,
+          true,
+          model.eventId,
+        ),
+      );
     } else if (model.templateName ==
             parameters.notifyCaregiverForMedicalRecord &&
         chatWithCC) {

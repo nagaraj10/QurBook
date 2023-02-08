@@ -1327,6 +1327,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             widget.ticketList.additionalInfo.healthOrgTypeId ?? "";
         commonMethodToCreateTicket(ticketListData);
       } else if (strName.contains("general health")) {
+        controller.dynamicTextFiledObj["title"] =
+            titleController.text.toString();
+        controller.dynamicTextFiledObj["description"] =
+            descController.text.toString();
         controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
 
         commonMethodToCreateTicket(ticketListData);

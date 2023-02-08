@@ -3,15 +3,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/View/QurHomeRegimen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaBadgeServices.dart';
 import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -60,6 +64,7 @@ class SheelaAIController extends GetxController {
   int randomNum = 0;
   String relationshipId;
   String conversationFlag;
+  var additionalInfo = {};
   bool lastMsgIsOfButtons = false;
   AudioCache _audioCache;
   Timer _popTimer;
@@ -87,6 +92,7 @@ class SheelaAIController extends GetxController {
         ? '${profile.result.firstName} ${profile.result.lastName}'
         : '';
     conversationFlag = null;
+    additionalInfo = {};
     player = AudioPlayer();
     listnerForAudioPlayer();
     if (Platform.isIOS) {
@@ -116,7 +122,10 @@ class SheelaAIController extends GetxController {
               if ((index < buttons.length - 1) &&
                   buttons[index + 1].skipTts &&
                   !currentPlayingConversation.isButtonNumber) {
-                currentPlayingConversation.currentButtonPlayingIndex++;
+                if (currentPlayingConversation.currentButtonPlayingIndex !=
+                    null) {
+                  currentPlayingConversation.currentButtonPlayingIndex++;
+                }
               }
               checkForButtonsAndPlay();
             }
@@ -125,9 +134,28 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strRegimen.toLowerCase()) {
+                if (PreferenceUtil.getIfQurhomeisAcive()) {
+                  Get.to(
+                    () => QurHomeRegimenScreen(
+                      addAppBar: true,
+                    ),
+                  );
+                } else {
+                  Get.toNamed(rt_Regimen);
+                }
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strMyFamilyList.toLowerCase()) {
+                Get.to(UserAccounts(
+                    arguments: UserAccountsArguments(selectedIndex: 1)));
               }
             } catch (e) {
               //gettingReposnseFromNative();
+              if (kDebugMode)
+                printError(
+                  info: e.toString(),
+                );
             }
           }
         }
@@ -242,6 +270,7 @@ class SheelaAIController extends GetxController {
                 : message
             : relationshipId,
         conversationFlag: conversationFlag,
+        additionalInfo: json.encode(additionalInfo),
         localDateTime:
             CommonUtil.dateFormatterWithdatetimeseconds(DateTime.now()),
         endPoint: BASE_URL,
@@ -274,6 +303,9 @@ class SheelaAIController extends GetxController {
         reqJson = {"task": "messages"};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.showUnreadMessage = false;
+      } else if (arguments?.eventType != null &&
+          arguments?.eventType == strWrapperCall) {
+        sheelaRequest.additionalInfo = arguments?.others ?? "";
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
@@ -333,9 +365,22 @@ class SheelaAIController extends GetxController {
           if ((currentResponse.conversationFlag ?? '').isNotEmpty) {
             conversationFlag = currentResponse.conversationFlag;
           }
+          if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
+            additionalInfo = currentResponse.additionalInfo;
+          }
+          if ((currentResponse?.audioURL != null) &&
+              (currentResponse?.audioURL ?? '').isNotEmpty) {
+            isLoading(true);
+            SheelaResponse audioResponse = SheelaResponse();
+            audioResponse.recipientId = sheelaAudioMsgUrl;
+            audioResponse.audioFile = currentResponse?.audioURL;
+            audioResponse.playAudioInit = true;
+            conversations.add(audioResponse);
+          }
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();
             conversationFlag = null;
+            additionalInfo = {};
             sessionToken = const Uuid().v1();
             relationshipId = userId;
           }
@@ -406,6 +451,17 @@ class SheelaAIController extends GetxController {
             try {
               if (!conversations.last.endOfConv) {
                 gettingReposnseFromNative();
+              } else if ((conversations.last.redirectTo ?? "") ==
+                  strRegimen.toLowerCase()) {
+                if (PreferenceUtil.getIfQurhomeisAcive()) {
+                  Get.to(
+                    () => QurHomeRegimenScreen(
+                      addAppBar: true,
+                    ),
+                  );
+                } else {
+                  Get.toNamed(rt_Regimen);
+                }
               }
             } catch (e) {
               //gettingReposnseFromNative();

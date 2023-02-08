@@ -498,6 +498,12 @@ class _NotificationScreen extends State<NotificationScreen> {
                               notification,
                               payload?.templateName,
                             );
+                          } else if (payload?.templateName ==
+                              'notifyPatientServiceTicketByCC') {
+                            notificationOnTapActions(
+                              notification,
+                              payload?.templateName,
+                            );
                           } else if (payload?.redirectTo ==
                                   constants.strMyCardDetails ||
                               payload?.redirectTo == 'mycartdetails') {
@@ -1006,6 +1012,13 @@ class _NotificationScreen extends State<NotificationScreen> {
         readUnreadAction(result);
 
         break;
+
+      case strNotifyPatientServiceTicketByCC:
+        Get.to(DetailedTicketView(
+            null, true, result?.messageDetails?.payload?.eventId));
+        readUnreadAction(result);
+
+        break;
       case "appointmentPayment":
         break;
       case "PaymentConfirmation":
@@ -1161,9 +1174,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                   audioMessage:
                       result?.messageDetails?.payload?.sheelaAudioMsgUrl,
                 ),
-              ).then((value) =>
-                  PageNavigator.goToPermanent(context, router.rt_Landing));
-              readUnreadAction(result);
+              ).then((value) {
+                readUnreadAction(result, isRead: true);
+              });
             }
           } else {
             Get.to(SuperMaya());

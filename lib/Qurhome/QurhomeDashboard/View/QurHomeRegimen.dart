@@ -39,9 +39,13 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/variable_constant.dart' as variable;
 import 'dart:convert' as convert;
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 
 class QurHomeRegimenScreen extends StatefulWidget {
-  const QurHomeRegimenScreen({Key key}) : super(key: key);
+  bool addAppBar;
+  QurHomeRegimenScreen({
+    this.addAppBar = false,
+  });
 
   @override
   _QurHomeRegimenScreenState createState() => _QurHomeRegimenScreenState();
@@ -69,23 +73,29 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.dateHeader.value = controller.getFormatedDate();
+      });
+
       controller.currLoggedEID.value = "";
       controller.getRegimenList();
-      chatGetXController.getUnreadCountFamily().then((value) {
-        if (value != null) {
-          if (value?.isSuccess) {
-            if (value?.result != null) {
-              if (value?.result[0]?.count != null) {
-                if (int.parse(value?.result[0]?.count ?? 0) > 0) {
-                  if (PreferenceUtil.getIfQurhomeisAcive()) {
-                    redirectToSheelaUnreadMessage();
+      chatGetXController.getUnreadCountFamily().then(
+        (value) {
+          if (value != null) {
+            if (value?.isSuccess) {
+              if (value?.result != null) {
+                if (value?.result[0]?.count != null) {
+                  if (int.parse(value?.result[0]?.count ?? 0) > 0) {
+                    if (PreferenceUtil.getIfQurhomeisAcive()) {
+                      redirectToSheelaUnreadMessage();
+                    }
                   }
                 }
               }
             }
           }
-        }
-      });
+        },
+      );
       initSocketCountUnread();
       //initGeoLocation();
       //checkMobileOrTablet();
@@ -164,49 +174,86 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
     var isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
+      appBar: widget.addAppBar
+          ? AppBar(
+              backgroundColor: Colors.white,
+              toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
+              elevation: 0,
+              centerTitle: true,
+              title: Text(
+                strRegimen,
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+              leading: IconWidget(
+                icon: Icons.arrow_back_ios,
+                colors: Colors.black,
+                size: CommonUtil().isTablet ? 38.0 : 24.0,
+                onTap: () {
+                  Get.back();
+                },
+              ),
+              bottom: PreferredSize(
+                child: Container(
+                  color: Color(
+                    CommonUtil().getQurhomeGredientColor(),
+                  ),
+                  height: 1.0,
+                ),
+                preferredSize: Size.fromHeight(
+                  1.0,
+                ),
+              ),
+            )
+          : null,
       body: Stack(
         children: [
-          GestureDetector(
-            onTap: () {
-              try {
-                FHBUtils().check().then((intenet) {
-                  if (intenet != null && intenet) {
-                    initSOSCall();
-                  } else {
-                    FlutterToast().getToast(STR_NO_CONNECTIVITY, Colors.red);
-                  }
-                });
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: Container(
-                  height: 40.h,
-                  width: 80.h,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFB5422),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(100),
-                      bottomRight: Radius.circular(100),
+          if (!widget.addAppBar)
+            GestureDetector(
+              onTap: () {
+                try {
+                  FHBUtils().check().then((intenet) {
+                    if (intenet != null && intenet) {
+                      initSOSCall();
+                    } else {
+                      FlutterToast().getToast(
+                        STR_NO_CONNECTIVITY,
+                        Colors.red,
+                      );
+                    }
+                  });
+                } catch (e) {
+                  print(e);
+                }
+              },
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: Container(
+                    height: 40.h,
+                    width: 80.h,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFB5422),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'SOS',
-                      style: TextStyle(
-                          fontSize: 14.0.h,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                    child: Center(
+                      child: Text(
+                        'SOS',
+                        style: TextStyle(
+                            fontSize: 14.0.h,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
           Obx(() => controller.loadingData.isTrue
               ? controller.loadingDataWithoutProgress.isTrue
                   ? getDataFromAPI(controller, isPortrait)
@@ -883,6 +930,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -893,6 +941,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectPulseMeter,
             isFromVital: false,
@@ -920,6 +969,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -956,6 +1006,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -966,6 +1017,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
             isFromVital: false,

@@ -360,7 +360,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotificationForFamilyAddition(data)
         } else if (data[Constants.PROP_TEMP_NAME] == "qurbookServiceRequestStatusUpdate") {
             createNotificationForPartnerServiceTicketDetail(data)
-        } else {
+        }else if (data[Constants.PROP_TEMP_NAME] == "notifyPatientServiceTicketByCC") {
+            createNotificationForPartnerServiceTicketDetail(data)
+        }
+         else {
              getRegularNotification(data)
         }
     }
@@ -373,11 +376,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         else {
             getRegularNotification(data)
             val intent = Intent("remainderSheelaInvokeEvent")
-            intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
-            intent.putExtra("message", data[getString(R.string.pro_ns_body)])
-            intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
-            intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
-
+            if (data[Constants.EVENT_TYPE] != null && data[Constants.EVENT_TYPE] == Constants.WRAPPERCALL) {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "sheela")
+                intent.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+                intent.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+                intent.putExtra(Constants.PROP_RAWTITLE, data[Constants.PROP_RAWTITLE])
+                intent.putExtra(Constants.PROP_RAWBODY, data[Constants.PROP_RAWBODY])
+                intent.putExtra(Constants.NOTIFICATIONLISTID, data[Constants.NOTIFICATIONLISTID])
+            }else {
+                intent.putExtra(Constants.PROP_REDIRECT_TO, "isSheelaFollowup")
+                intent.putExtra("message", data[getString(R.string.pro_ns_body)])
+                intent.putExtra("rawMessage", data[getString(R.string.pro_ns_raw)])
+                intent.putExtra("sheelaAudioMsgUrl", data[getString(R.string.pro_ns_audioURL)])
+            }
             this.sendBroadcast(intent)
         }
     }
@@ -445,6 +456,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_MSG, data[getString(R.string.pro_ns_body)])
         onTapNS.putExtra(Constants.PROP_sheelaAudioMsgUrl, data[Constants.PROP_sheelaAudioMsgUrl])
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
+        onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
+        onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)
@@ -2070,6 +2083,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptCareGiverIntent.putExtra(Intent.EXTRA_TEXT, "ack")
         acceptCareGiverIntent.putExtra(Constants.PROP_REDIRECT_TO, data[Constants.PROP_TEMP_NAME])
         acceptCareGiverIntent.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
+        acceptCareGiverIntent.putExtra(Constants.PROP_EVEID, data[Constants.PROP_EVEID])
 
         val acceptCareGiverPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PendingIntent.getBroadcast(
@@ -2111,4 +2125,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID, notification)
     }
+
+
 }

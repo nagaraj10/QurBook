@@ -28,6 +28,7 @@ class SpeechModelAPIResponse {
 class SheelaResponse {
   String recipientId;
   String text;
+  String audioURL;
   bool endOfConv = true;
   List<Buttons> buttons;
   var imageURL;
@@ -54,14 +55,17 @@ class SheelaResponse {
   int currentButtonPlayingIndex;
   bool loading = false;
   String conversationFlag;
+  var additionalInfo;
   String sessionId;
   String relationshipId;
   String audioFile;
+  bool playAudioInit = false;
   bool isButtonNumber;
 
   SheelaResponse({
     this.recipientId,
     this.text,
+    this.audioURL,
     this.endOfConv,
     this.buttons,
     this.imageURL,
@@ -83,16 +87,19 @@ class SheelaResponse {
     this.ttsResponse,
     this.loading,
     this.conversationFlag,
+    this.additionalInfo,
     this.sessionId,
     this.relationshipId,
     this.imageURLS,
     this.audioFile,
+    this.playAudioInit,
     this.isButtonNumber
   });
 
   SheelaResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
     text = json['text'];
+    audioURL = json['audioURL'];
     endOfConv = json['endOfConv'];
     if (json['buttons'] != null) {
       buttons = <Buttons>[];
@@ -126,6 +133,7 @@ class SheelaResponse {
     directCall = (json['directCall']?? false);
     recipient = json['recipient'];
     conversationFlag = json['conversationFlag'];
+    additionalInfo = json['additionalInfo'];
     sessionId = json['sessionId'];
     relationshipId = json['relationshipId'];
     isButtonNumber = (json['IsButtonNumber']?? false);
@@ -135,6 +143,7 @@ class SheelaResponse {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['recipient_id'] = this.recipientId;
     data['text'] = this.text;
+    data['audioURL'] = this.audioURL;
     data['endOfConv'] = this.endOfConv;
     if (this.buttons != null) {
       data['buttons'] = this.buttons?.map((v) => v.toJson()).toList();
@@ -158,6 +167,7 @@ class SheelaResponse {
     data['directCall'] = this.directCall;
     data['recipient'] = this.recipient;
     data['conversationFlag'] = this.conversationFlag;
+    data['additionalInfo'] = this.additionalInfo;
     data['sessionId'] = this.sessionId;
     data['relationshipId'] = this.relationshipId;
     data['IsButtonNumber'] = this.isButtonNumber;

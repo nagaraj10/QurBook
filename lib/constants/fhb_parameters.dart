@@ -103,6 +103,8 @@ const String KIOSK_task = 'task';
 const String KIOSK_messages = 'messages';
 const String KIOSK_remind = 'remind';
 const String KIOSK_read = 'read';
+const String KIOSK_audio = 'audio';
+const String KIOSK_audio_url = 'audioUrl';
 const String KIOSK_appointment_avail = 'availability';
 const String KIOSK_eid = 'eid';
 const String KIOSK_action = 'Action';
@@ -641,6 +643,8 @@ const String strIsFollowUpFee = 'isFollowUpFee';
 const String strAppointmentInfo = 'appointmentInfo';
 const String strPlannedFollowupDate = 'plannedFollowupDate';
 const String strPaymentInfo = 'paymentInfo';
+const String eventType = 'eventType';
+const String others = 'others';
 
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
@@ -717,6 +721,9 @@ const String strCaregiverNotifyPlanSubscription =
     'caregiverNotifyPlanSubscription';
 const String strQurbookServiceRequestStatusUpdate =
     'qurbookServiceRequestStatusUpdate';
+const String serviceRequest = "serviceRequest";
+const String strNotifyPatientServiceTicketByCC =
+    'notifyPatientServiceTicketByCC';
 
 const String patientPhoneNumber = 'patientPhoneNumber';
 const String uid = 'uid';

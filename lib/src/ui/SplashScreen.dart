@@ -229,6 +229,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle;
                         var rawBody;
+                        var eventType = "";
+                        var others = "";
                         var notificationListId;
                         final parsedData = widget.bundle?.split('|');
 
@@ -241,6 +243,11 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
+                        }else if (parsedData.length == 5)
+                        {
+                          eventType = parsedData[0];
+                          others = parsedData[1];
+                          rawBody = parsedData[3];
                         }
 
                         if (notificationListId != null &&
@@ -266,6 +273,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             arguments: SheelaArgument(
                               isSheelaAskForLang: true,
                               rawMessage: rawBody,
+                              eventType: eventType,
+                              others: others,
                             ),
                           ).then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));
@@ -349,6 +358,11 @@ class _SplashScreenState extends State<SplashScreen> {
                           appointmentId: passedValArr[1] ?? ""));
                     } else if (widget.nsRoute ==
                         'qurbookServiceRequestStatusUpdate') {
+                      var passedValArr = widget.bundle?.split('&');
+
+                      Get.to(DetailedTicketView(null, true, passedValArr[0]));
+                    } else if (widget.nsRoute ==
+                        'notifyPatientServiceTicketByCC') {
                       var passedValArr = widget.bundle?.split('&');
 
                       Get.to(DetailedTicketView(null, true, passedValArr[0]));

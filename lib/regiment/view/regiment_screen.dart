@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
 import '../../common/CommonUtil.dart';
 import '../../common/SwitchProfile.dart';
 import '../../constants/fhb_constants.dart';
@@ -43,6 +44,8 @@ class RegimentScreen extends StatelessWidget {
                   .fetchRegimentData(
                 isInitial: true,
               );
+              QurPlanReminders.getTheRemindersFromAPI();
+
               (context as Element).markNeedsBuild();
             },
             true,

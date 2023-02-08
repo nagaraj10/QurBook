@@ -576,6 +576,7 @@ const String strSheelaG = 'Sheela';
 const String strAppointment = 'Appointments';
 const String strNiceDay = 'Have a nice day';
 const String strRegimen = 'Regimen';
+const String strMyFamilyList = 'myfamily_list';
 const String strManageActivities = 'Enable / Disable Activities';
 const String strHospitals = 'Hospitals';
 const String strMyPlans = 'My Plans';
@@ -762,6 +763,8 @@ const String sheelaRecepId = 'Sheela Response';
 
 //fetchProfilePic
 const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
+
+const String strWrapperCall = 'wrapperCall';
 
 double height = 0.0;
 double width = 0.0;

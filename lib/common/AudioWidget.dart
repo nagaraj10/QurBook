@@ -25,6 +25,7 @@ class AudioWidget extends StatefulWidget {
   String audioUrl;
   bool isFromChat;
   bool isFromSheela;
+  bool isPlayAudioUrl;
 
   Function(bool, String) deleteAudioFile;
 
@@ -33,6 +34,7 @@ class AudioWidget extends StatefulWidget {
     this.deleteAudioFile, {
     this.isFromChat = false,
     this.isFromSheela = false,
+    this.isPlayAudioUrl = false,
   });
 
   @override
@@ -68,11 +70,16 @@ class AudioWidgetState extends State<AudioWidget> {
     initializeDateFormatting();
     _pathOfFile = widget.audioFile;
     audioUrl = widget.audioUrl;
-    if (widget.isFromSheela) {
+    if(!widget.isPlayAudioUrl){
+      if (widget.isFromSheela) {
+        _sheelaAIController = Get.find();
+        Future.delayed(const Duration(milliseconds: 5))
+            .then((value) => onStartPlayerPressed());
+      }
+    }else{
       _sheelaAIController = Get.find();
-      Future.delayed(const Duration(milliseconds: 5))
-          .then((value) => onStartPlayerPressed());
     }
+
   }
 
   set_up_audios() async {
@@ -121,7 +128,7 @@ class AudioWidgetState extends State<AudioWidget> {
             child: Row(
               children: [
                 IconButton(
-                  iconSize: 24,
+                  iconSize: 30,
                   onPressed: () {
                     isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
                     if (isPlaying) {
@@ -131,13 +138,15 @@ class AudioWidgetState extends State<AudioWidget> {
                   icon: !isPlaying
                       ? Icon(
                           Icons.play_arrow,
+                          size: 30,
                         )
                       : Icon(
                           Icons.pause,
+                          size: 30,
                         ),
                 ),
                 IconButton(
-                  iconSize: 24,
+                  iconSize: 30,
                   onPressed: () {
                     onStopPlayerPressed();
                     setState(() {});
@@ -145,6 +154,7 @@ class AudioWidgetState extends State<AudioWidget> {
                   },
                   icon: Icon(
                     Icons.repeat,
+                    size: 30,
                   ),
                 ),
               ],
@@ -190,16 +200,16 @@ class AudioWidgetState extends State<AudioWidget> {
     );
   }
 
-  Widget getAudioWidgetWithPlayer() {
-    return Container(
+  Widget getAudioWidgetWithPlayer() => Container(
       width: widget.isFromChat ? 1.sw / 1.7 : 1.sw,
       color: Colors.grey[200],
       padding: EdgeInsets.all(5),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            height: 24,
-            width: 24,
+            height: 30,
+            width: 30,
             child: IconButton(
               onPressed: () {
                 isPlaying ? onPausePlayerPressed() : onStartPlayerPressed();
@@ -208,8 +218,12 @@ class AudioWidgetState extends State<AudioWidget> {
               icon: !isPlaying
                   ? Icon(
                       Icons.play_arrow,
+                      size: 30,
                     )
-                  : Icon(Icons.pause),
+                  : Icon(
+                      Icons.pause,
+                      size: 30,
+                    ),
             ),
           ),
           Expanded(
@@ -229,7 +243,7 @@ class AudioWidgetState extends State<AudioWidget> {
                     ),
                   );
                 },
-                divisions: maxDuration.toInt(),
+                divisions: maxDuration.toInt()>0?maxDuration.toInt():null,
               ),
             ),
           ),
@@ -275,7 +289,6 @@ class AudioWidgetState extends State<AudioWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
       ),
     );
-  }
 
   onStartPlayerPressed() {
     return flutterSound.playerState == PlayerState.isPaused
@@ -316,7 +329,6 @@ class AudioWidgetState extends State<AudioWidget> {
         );
         maxDuration = DuarationOfFile.inSeconds.toDouble();
       }
-
       // if (_media == t_MEDIA.ASSET) {
       //   var buffer = (await rootBundle.load(variable.assetSample[_codec.index]))
       //       .buffer

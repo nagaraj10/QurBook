@@ -3986,17 +3986,18 @@ class CommonUtil {
         : await getExternalStorageDirectory();
   }
 
-  Future<void> isFirstTime() async {
+  Future<bool> isFirstTime() async {
     var prefs = await SharedPreferences.getInstance();
     var firstTime = prefs.getBool('first_time');
     if (firstTime != null && !firstTime) {
       // Not first time
-
+      return false;
     } else {
       // First time
       await prefs.setBool('first_time', false);
       await _deleteAppDir();
       await _deleteCacheDir();
+      return true;
     }
   }
 
@@ -5166,15 +5167,19 @@ class CommonUtil {
   }
 
   void dialogForSheelaQueue(BuildContext context, int count) async {
+    bool isFirstTime = true;
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
         barrierLabel: 'Label',
         barrierDismissible: false,
         pageBuilder: (_, __, ___) {
-          Future.delayed(Duration(seconds: 2), () {
-            Get.back();
-          });
+          if(isFirstTime){
+            isFirstTime = false;
+            Future.delayed(Duration(seconds: 2), () {
+              Get.back();
+            });
+          }
           return Center(
             child: Container(
               width: double.infinity,
@@ -6437,12 +6442,10 @@ class VideoCallCommonUtils {
           }
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
-            if (regController.isFromSOS.value) {
+            if (regController.isFromSOS.value??false) {
               regController.onGoingSOSCall.value = false;
             }else{
-              var sheelaAIController = Get.find<SheelaAIController>();
-              sheelaAIController.isUnAvailableCC = true;
-              sheelaAIController.getAIAPIResponseFor("Call my CC", null);
+              unavailabilityOfCC();
             }
             createMissedCallNS(
                 docName: regController.userName.value,
@@ -6459,7 +6462,7 @@ class VideoCallCommonUtils {
         Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
 
         var recStatus = firestoreInfo['call_status'];
-        if (recStatus == "accept") {
+        if (recStatus!=null&&recStatus == "accept") {
           String startedTime = '';
           clearAudioPlayer(audioPlayer);
           if (!isFromAppointment) {
@@ -6509,14 +6512,18 @@ class VideoCallCommonUtils {
               startedTime: startedTime,
               isDoctor: isDoctor);
           callPageShouldEndAutomatically = false;
-        } else if (recStatus == "decline") {
+        } else if (recStatus!=null&&recStatus == "decline") {
           clearAudioPlayer(audioPlayer);
           callPageShouldEndAutomatically = false;
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
           var regController = Get.find<QurhomeRegimenController>();
-          regController.onGoingSOSCall.value = false;
-          Future.delayed(Duration(seconds: 2), () {
+          if (regController.isFromSOS.value??false) {
+            regController.onGoingSOSCall.value = false;
+          } else {
+            unavailabilityOfCC();
+          }
+          Future.delayed(Duration(seconds: 1), () {
             Navigator.pop(context);
           });
         }
@@ -6651,6 +6658,7 @@ class VideoCallCommonUtils {
 
     CallLogModel callLogModel = CallLogModel(
         callerUser: regController.userId.value,
+        recipientUser: regController.careCoordinatorId.value,
         recipientId: regController.careCoordinatorId.value,
         startedTime: callStartTime,
         endTime: !isCallLog?callEndTime:null,
@@ -6690,6 +6698,16 @@ class VideoCallCommonUtils {
       return yearDiff.toString();
     } else {
       return '';
+    }
+  }
+
+  unavailabilityOfCC() async {
+    try {
+      var sheelaAIController = Get.find<SheelaAIController>();
+      sheelaAIController.isUnAvailableCC = true;
+      sheelaAIController.getAIAPIResponseFor(strCallMyCC, null);
+    } catch (e) {
+      //print(e);
     }
   }
 }
