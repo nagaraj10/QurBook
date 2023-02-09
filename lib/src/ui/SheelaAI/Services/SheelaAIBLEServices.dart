@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import '../../../../Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -38,7 +40,7 @@ class SheelaBLEController extends GetxController {
   bool receivedData = false;
   AudioPlayer player;
   int randomNum = 0;
-
+  String weightUnit = "";
   @override
   void onInit() {
     super.onInit();
@@ -187,7 +189,11 @@ class SheelaBLEController extends GetxController {
             case "measurement":
               receivedData = true;
               if (hublistController.bleDeviceType.toLowerCase() ==
-                  "BP".toLowerCase()) {
+                      "BP".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "SPO2".toLowerCase() ||
+                  hublistController.bleDeviceType.toLowerCase() ==
+                      "Weight".toLowerCase()) {
                 //show next method
                 if (SheelaController.isSheelaScreenActive) {
                   updateUserData(
@@ -334,6 +340,26 @@ class SheelaBLEController extends GetxController {
         final model = BleDataModel.fromJson(
           jsonDecode(data),
         );
+        if (model.deviceType.toLowerCase() == "weight" &&
+            (model.data.weight ?? '').isNotEmpty) {
+          model.deviceType = model.deviceType.toUpperCase();
+          try {
+            weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
+          } catch (e) {
+            weightUnit = CommonUtil.REGION_CODE == "IN"
+                ? STR_VAL_WEIGHT_IND
+                : STR_VAL_WEIGHT_US;
+          }
+          if (weightUnit == STR_VAL_WEIGHT_US) {
+            double convertedWeight = 1;
+            try {
+              convertedWeight = double.parse(model.data.weight);
+            } catch (e) {
+              convertedWeight = 1;
+            }
+            model.data.weight = (convertedWeight * 2.205).toStringAsFixed(2);
+          }
+        }
         // model.hubId = hublistController.virtualHubId;
         model.deviceId = hublistController.bleMacId;
         model.eid = hublistController.eid;
@@ -343,6 +369,7 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
+
         final bool response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,
@@ -366,7 +393,7 @@ class SheelaBLEController extends GetxController {
               SheelaResponse(
                 recipientId: conversationType,
                 text:
-                    "Thank you. Your last reading for SPO2 is  ${model.data.sPO2} and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
+                    "Thank you. Your last reading for SPO2 ${model.data.sPO2} and Pulse ${model.data.pulse} are successfully recorded, Bye!",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));
@@ -381,9 +408,23 @@ class SheelaBLEController extends GetxController {
             addToConversationAndPlay(
               SheelaResponse(
                 recipientId: conversationType,
-                text: "Thank you. Your BP systolic is ${model.data.systolic} "
-                    ", Diastolic is ${model.data.diastolic} "
-                    "and Pulse is ${model.data.pulse} is successfully recorded, Bye!",
+                text: "Thank you. Your BP systolic ${model.data.systolic} "
+                    ", Diastolic ${model.data.diastolic} "
+                    "and Pulse ${model.data.pulse} are successfully recorded, Bye!",
+              ),
+            );
+            await Future.delayed(const Duration(seconds: 2));
+          } else {
+            receivedData = false;
+            showFailure();
+          }
+        } else if (model.deviceType.toLowerCase() == "weight") {
+          if ((model.data.weight ?? '').isNotEmpty) {
+            addToConversationAndPlay(
+              SheelaResponse(
+                recipientId: conversationType,
+                text:
+                    "Thank you. Your Weight ${model.data.weight} ${weightUnit} is successfully recorded, Bye!",
               ),
             );
             await Future.delayed(const Duration(seconds: 2));

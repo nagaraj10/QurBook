@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -121,7 +122,10 @@ class SheelaAIController extends GetxController {
               if ((index < buttons.length - 1) &&
                   buttons[index + 1].skipTts &&
                   !currentPlayingConversation.isButtonNumber) {
-                currentPlayingConversation.currentButtonPlayingIndex++;
+                if (currentPlayingConversation.currentButtonPlayingIndex !=
+                    null) {
+                  currentPlayingConversation.currentButtonPlayingIndex++;
+                }
               }
               checkForButtonsAndPlay();
             }
@@ -148,6 +152,10 @@ class SheelaAIController extends GetxController {
               }
             } catch (e) {
               //gettingReposnseFromNative();
+              if (kDebugMode)
+                printError(
+                  info: e.toString(),
+                );
             }
           }
         }
@@ -295,6 +303,9 @@ class SheelaAIController extends GetxController {
         reqJson = {"task": "messages"};
         sheelaRequest.message = KIOSK_SHEELA;
         arguments.showUnreadMessage = false;
+      } else if (arguments?.eventType != null &&
+          arguments?.eventType == strWrapperCall) {
+        sheelaRequest.additionalInfo = arguments?.others ?? "";
       }
       if (reqJson != null) {
         sheelaRequest.kioskData = reqJson;
@@ -356,6 +367,15 @@ class SheelaAIController extends GetxController {
           }
           if ((currentResponse.additionalInfo ?? '').isNotEmpty) {
             additionalInfo = currentResponse.additionalInfo;
+          }
+          if ((currentResponse?.audioURL != null) &&
+              (currentResponse?.audioURL ?? '').isNotEmpty) {
+            isLoading(true);
+            SheelaResponse audioResponse = SheelaResponse();
+            audioResponse.recipientId = sheelaAudioMsgUrl;
+            audioResponse.audioFile = currentResponse?.audioURL;
+            audioResponse.playAudioInit = true;
+            conversations.add(audioResponse);
           }
           if (currentResponse.endOfConv ?? false) {
             QurPlanReminders.getTheRemindersFromAPI();

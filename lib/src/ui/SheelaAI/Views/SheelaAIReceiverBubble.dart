@@ -83,6 +83,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                               chat.audioFile,
                               null,
                               isFromSheela: true,
+                              isPlayAudioUrl: chat?.playAudioInit ?? false,
                             )
                           : Obx(() {
                               return Row(
@@ -96,7 +97,7 @@ class SheelaAIReceiverBubble extends StatelessWidget {
                                               : CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          chat.text,
+                                          chat.text ?? '',
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyText2

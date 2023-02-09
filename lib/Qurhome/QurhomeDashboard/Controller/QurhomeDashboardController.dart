@@ -27,9 +27,6 @@ class QurhomeDashboardController extends GetxController {
 
   @override
   void onInit() {
-    PreferenceUtil.saveIfQurhomeisAcive(
-      qurhomeStatus: true,
-    );
     if (!Get.isRegistered<SheelaAIController>()) {
       Get.put(SheelaAIController());
     }
@@ -41,30 +38,42 @@ class QurhomeDashboardController extends GetxController {
     }
     _sheelaBLEController = Get.find();
     getHubDetails();
-    _bleTimer = Timer.periodic(
-        const Duration(
-          seconds: 20,
-        ), (time) {
-      if (Get.find<SheelaAIController>().isSheelaScreenActive) {
-        return;
-      }
-      _sheelaBLEController.setupListenerForReadings();
-    });
+    updateBLETimer();
     super.onInit();
+  }
+
+  setActiveQurhomeTo({bool status}) {
+    PreferenceUtil.saveIfQurhomeisAcive(
+      qurhomeStatus: status,
+    );
   }
 
   @override
   void onClose() {
-    PreferenceUtil.saveIfQurhomeisAcive(
-      qurhomeStatus: false,
-    );
     // _disableTimer();
     //bleController.stopBleScan();
-    _sheelaBLEController.stopScanning();
-    _sheelaBLEController.stopTTS();
-    _bleTimer.cancel();
-    _bleTimer = null;
+    updateBLETimer(Enable: false);
     super.onClose();
+  }
+
+  updateBLETimer({bool Enable = true}) {
+    if (Enable) {
+      if (_bleTimer != null) return;
+      _bleTimer = Timer.periodic(
+          const Duration(
+            seconds: 20,
+          ), (time) {
+        if (Get.find<SheelaAIController>().isSheelaScreenActive) {
+          return;
+        }
+        _sheelaBLEController.setupListenerForReadings();
+      });
+    } else {
+      _sheelaBLEController.stopScanning();
+      _sheelaBLEController.stopTTS();
+      _bleTimer.cancel();
+      _bleTimer = null;
+    }
   }
 
   getHubDetails() async {
@@ -88,15 +97,19 @@ class QurhomeDashboardController extends GetxController {
     switch (currentSelectedIndex.value) {
       case 0:
         appBarTitle = '$fulName'.obs;
+        updateBLETimer();
         break;
       case 1:
         appBarTitle = '$fulName'.obs;
+        updateBLETimer();
         break;
       case 2:
         appBarTitle = 'Vitals'.obs;
+        updateBLETimer(Enable: false);
         break;
       case 3:
         appBarTitle = 'Symptoms'.obs;
+        updateBLETimer(Enable: false);
         break;
     }
   }

@@ -1,27 +1,34 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/Qurhome/QurHomeSymptoms/view/SymptomListScreen.dart';
 import 'package:myfhb/Qurhome/QurHomeVitals/view/VitalsList.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeRegimenController.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/chat_socket/view/ChatUserList.dart';
+import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/landing/view/widgets/qurhome_nav_drawer.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Models/sheela_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
-import '../../../common/PreferenceUtil.dart';
-import '../../../constants/router_variable.dart';
+import 'package:provider/provider.dart';
+
 import '../../../common/CommonUtil.dart';
+import '../../../common/PreferenceUtil.dart';
 import '../../../constants/fhb_constants.dart';
+import '../../../constants/router_variable.dart';
 import '../../../constants/variable_constant.dart';
+import '../../../src/utils/screenutils/size_extensions.dart';
 import '../Controller/QurhomeDashboardController.dart';
 import 'QurHomeRegimen.dart';
-import '../../../src/utils/screenutils/size_extensions.dart';
-import 'package:intl/intl.dart';
 
 class QurhomeDashboard extends StatefulWidget {
   @override
@@ -30,17 +37,38 @@ class QurhomeDashboard extends StatefulWidget {
 
 class _QurhomeDashboardState extends State<QurhomeDashboard> {
   final controller = Get.put(QurhomeDashboardController());
+  final qurHomeRegimenController = Get.put(QurhomeRegimenController());
   double buttonSize = 70;
   double textFontSize = 16;
   int index = 0;
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
+  LandingViewModel landingViewModel;
+
+  double selOption = 30.0.sp;
+  double unSelOption = 28.0.sp;
+
+  MyProfileModel myProfile;
+
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     try {
       super.initState();
+      if (CommonUtil.REGION_CODE == "IN") {
+        CommonUtil().requestQurhomeDialog();
+      }
+      getProfileApi();
+      landingViewModel = Provider.of<LandingViewModel>(context);
       CommonUtil().requestQurhomeDialog();
+      controller.setActiveQurhomeTo(
+        status: true,
+      );
       if (CommonUtil().isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
@@ -67,6 +95,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
+      controller.setActiveQurhomeTo(
+        status: false,
+      );
       CommonUtil().initPortraitMode();
       super.dispose();
     } catch (e) {
@@ -78,6 +109,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   Widget build(BuildContext context) {
     return Obx(() => WillPopScope(
           child: Scaffold(
+            key: _scaffoldKey,
             appBar: AppBar(
               backgroundColor: Colors.white,
               toolbarHeight: CommonUtil().isTablet ? 110.00 : null,
@@ -85,7 +117,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
               centerTitle: true,
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: (CommonUtil.isNotINDReg())
+                    ? controller.currentSelectedIndex == 0
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.center
+                    : MainAxisAlignment.center,
                 children: [
                   (controller.currentSelectedIndex != 0 &&
                           controller.currentSelectedIndex != 1)
@@ -125,6 +161,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                                     : SizedBox.shrink(),
                           ))
                       : SizedBox.shrink(),
+                  if (CommonUtil.isNotINDReg()) SizedBox(width: 22.w),
                   Column(
                     children: [
                       RichText(
@@ -154,7 +191,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           controller.currentSelectedIndex.value == 1) ...{
                         SizedBox(height: 3),
                         Text(
-                          'Today, ' + getFormatedDate(),
+                          'Today, ' + qurHomeRegimenController.dateHeader.value,
                           style: TextStyle(
                             fontSize: 12.h,
                             color: Colors.grey,
@@ -163,18 +200,47 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       },
                     ],
                   ),
-                  SizedBox(width: 70.w)
+                  if (CommonUtil.isNotINDReg() &&
+                      controller.currentSelectedIndex == 0)
+                    Container(
+                      child: Row(
+                        children: [
+                          SizedBox(width: 24.w),
+                          getChatSocketIcon(),
+                          SizedBox(width: 20.w),
+                          CommonUtil().getNotificationIcon(context,
+                              color:
+                                  Color(CommonUtil().getQurhomePrimaryColor()),
+                              isFromQurday: true),
+                        ],
+                      ),
+                    ),
+                  getSizedBoxIndReg(),
                 ],
               ),
               leading: controller.currentSelectedIndex == 0
-                  ? IconWidget(
-                      icon: Icons.arrow_back_ios,
-                      colors: Colors.black,
-                      size: CommonUtil().isTablet ? 38.0 : 24.0,
-                      onTap: () {
-                        Get.back();
-                      },
-                    )
+                  ? (CommonUtil.isNotINDReg())
+                      ? Material(
+                          color: Colors.transparent,
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.menu_rounded,
+                            ),
+                            color: Color(CommonUtil().getQurhomePrimaryColor()),
+                            iconSize: CommonUtil().isTablet ? 34.0.sp : 24.0.sp,
+                            onPressed: () {
+                              _scaffoldKey.currentState.openDrawer();
+                            },
+                          ),
+                        )
+                      : IconWidget(
+                          icon: Icons.arrow_back_ios,
+                          colors: Colors.black,
+                          size: CommonUtil().isTablet ? 38.0 : 24.0,
+                          onTap: () {
+                            Get.back();
+                          },
+                        )
                   : Container(
                       margin: EdgeInsets.only(
                         left: 8.h,
@@ -182,15 +248,29 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                       child: InkWell(
                           onTap: () {
                             bottomTapped(0);
-                            sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                            sheelBadgeController.getSheelaBadgeCount(
+                                isNeedSheelaDialog: true);
                           },
-                          child: CommonUtil().isTablet
-                              ? AssetImageWidget(
-                                  icon: icon_qurhome,
-                                  height: 48.h,
-                                  width: 48.h,
+                          child: CommonUtil.isNotINDReg()
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8.h,
+                                    vertical: 4.h,
+                                  ),
+                                  child: Icon(
+                                    Icons.home,
+                                    size: 32.sp,
+                                    color: Color(
+                                        CommonUtil().getQurhomePrimaryColor()),
+                                  ),
                                 )
-                              : CommonUtil().qurHomeMainIcon())),
+                              : CommonUtil().isTablet
+                                  ? AssetImageWidget(
+                                      icon: icon_qurhome,
+                                      height: 48.h,
+                                      width: 48.h,
+                                    )
+                                  : CommonUtil().qurHomeMainIcon())),
               bottom: PreferredSize(
                 child: Container(
                   color: Color(
@@ -236,8 +316,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                         arguments: SheelaArgument(
                           rawMessage: sheelaQueueShowRemind,
                         ),
-                      ).then((value){
-                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                      ).then((value) {
+                        sheelBadgeController.getSheelaBadgeCount(
+                            isNeedSheelaDialog: true);
                       });
                     } else {
                       String sheela_lang =
@@ -249,7 +330,8 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                           langCode: (sheela_lang ?? ''),
                         ),
                       ).then((value) {
-                        sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+                        sheelBadgeController.getSheelaBadgeCount(
+                            isNeedSheelaDialog: true);
                       });
                     }
                   },
@@ -385,10 +467,17 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
                 ),
               ),
             ),
+            drawer: QurHomeNavigationDrawer(
+              myProfile: myProfile,
+              moveToLoginPage: moveToLoginPage,
+              userChangedbool: landingViewModel?.isUserMainId ?? false,
+              refresh: (userChanged) => refresh(
+                userChanged: userChanged,
+              ),
+            ),
           ),
           onWillPop: () async {
             Get.back();
-
             return true;
           },
         ));
@@ -435,5 +524,66 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       badgeCount: sheelBadgeController?.sheelaIconBadgeCount?.value ?? 0,
       isForSheelaQueue: true,
     );
+  }
+
+  Widget getChatSocketIcon() {
+    return BadgeIcon(
+      icon: GestureDetector(
+        onTap: () {
+          Get.to(ChatUserList(careGiversList: [], isFromQurDay: true));
+        },
+        child: ImageIcon(AssetImage(icon_chat),
+            size: CommonUtil().isTablet ? 33.0.sp : unSelOption,
+            color: Color(CommonUtil().getQurhomePrimaryColor())),
+      ),
+      badgeColor: ColorUtils.countColor,
+      badgeCount: Provider.of<ChatSocketViewModel>(Get.context)?.chatTotalCount,
+    );
+  }
+
+  getProfileApi() async {
+    final userId = await PreferenceUtil.getStringValue(KEY_USERID);
+    MyProfileModel value =
+        await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+    myProfile = value;
+  }
+
+  void moveToLoginPage() {
+    PreferenceUtil.clearAllData().then(
+      (value) {
+        Navigator.pushAndRemoveUntil(
+          Get.context,
+          MaterialPageRoute(
+            builder: (context) => PatientSignInScreen(),
+          ),
+          (route) => false,
+        );
+      },
+    );
+  }
+
+  void refresh({
+    bool userChanged = false,
+  }) {
+    try {
+      if (userChanged) {
+        //profileData = getMyProfile();
+      }
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget getSizedBoxIndReg() {
+    if (CommonUtil.isNotINDReg()) {
+      if (controller.currentSelectedIndex == 0) {
+        return SizedBox.shrink();
+      } else {
+        return SizedBox(width: 70.w);
+      }
+    } else {
+      return SizedBox(width: 70.w);
+    }
   }
 }

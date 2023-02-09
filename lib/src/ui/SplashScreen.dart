@@ -94,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    CommonUtil().OnInitAction();
   }
 
   @override
@@ -229,6 +230,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       if (widget.bundle != null && widget.bundle.isNotEmpty) {
                         var rawTitle;
                         var rawBody;
+                        var eventType = "";
+                        var others = "";
                         var notificationListId;
                         final parsedData = widget.bundle?.split('|');
 
@@ -241,6 +244,11 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
+                        } else if (parsedData.length == 5) 
+                        {
+                          eventType = parsedData[0];
+                          others = parsedData[1];
+                          rawBody = parsedData[3];
                         }
 
                         if (notificationListId != null &&
@@ -266,6 +274,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             arguments: SheelaArgument(
                               isSheelaAskForLang: true,
                               rawMessage: rawBody,
+                              eventType: eventType,
+                              others: others,
                             ),
                           ).then((value) => PageNavigator.goToPermanent(
                               context, router.rt_Landing));

@@ -224,11 +224,6 @@ Future<void> main() async {
     // } else {
     CommonUtil().initPortraitMode();
     // }
-    try {
-      CategoryListBlock _categoryListBlock = new CategoryListBlock();
-
-      _categoryListBlock.getCategoryLists().then((value) {});
-    } catch (e) {}
 
     Map appsFlyerOptions;
     if (Platform.isIOS) {
@@ -274,7 +269,12 @@ Future<void> main() async {
     }
 
     // check if the app install on first time
-    await CommonUtil().isFirstTime();
+    var isFirstTime = await CommonUtil().isFirstTime();
+    if (!isFirstTime) {
+      try {
+        CategoryListBlock().getCategoryLists();
+      } catch (e) {}
+    }
     // SystemChrome.setSystemUIOverlayStyle(
     //   const SystemUiOverlayStyle(
     //     statusBarIconBrightness: Brightness.light,
@@ -567,11 +567,20 @@ class _MyFHBState extends State<MyFHB> {
       }
       if (passedValArr[0] == 'isSheelaFollowup') {
         if (sheelaAIController.isSheelaScreenActive) {
-          var reqJson = {
-            KIOSK_task: KIOSK_read,
-            KIOSK_message_api: passedValArr[2].toString()
-          };
-          CommonUtil().callQueueNotificationPostApi(reqJson);
+          if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
+              (passedValArr[3] != 'null')) {
+            var reqJsonAudio = {
+              KIOSK_task: KIOSK_audio,
+              KIOSK_audio_url: passedValArr[3].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonAudio);
+          } else {
+            var reqJsonText = {
+              KIOSK_task: KIOSK_read,
+              KIOSK_message_api: passedValArr[2].toString()
+            };
+            CommonUtil().callQueueNotificationPostApi(reqJsonText);
+          }
         } else {
           if (((passedValArr[3].toString() ?? '').isNotEmpty) &&
               (passedValArr[3] != 'null')) {
@@ -717,12 +726,24 @@ class _MyFHBState extends State<MyFHB> {
           });
           try {
             if (passedValArr[2] != null && passedValArr[2].isNotEmpty) {
-              final rawTitle = passedValArr[2]?.split('|')[0];
-              final rawBody = passedValArr[2]?.split('|')[1];
-              if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
-                notificationListId = passedValArr[3];
-                FetchNotificationService()
-                    .inAppUnreadAction(notificationListId);
+              var rawTitle = "";
+              var rawBody = "";
+              var eventType = "";
+              var others = "";
+
+              if (passedValArr[2] == strWrapperCall) {
+                eventType = passedValArr[2];
+                rawTitle = passedValArr[3]?.split('|')[1];
+                rawBody = passedValArr[3]?.split('|')[2];
+                others = passedValArr[3]?.split('|')[0];
+              } else {
+                rawTitle = passedValArr[2]?.split('|')[0];
+                rawBody = passedValArr[2]?.split('|')[1];
+                if (passedValArr[3] != null && passedValArr[3].isNotEmpty) {
+                  notificationListId = passedValArr[3];
+                  FetchNotificationService()
+                      .inAppUnreadAction(notificationListId);
+                }
               }
 
               Get.toNamed(
@@ -730,6 +751,8 @@ class _MyFHBState extends State<MyFHB> {
                 arguments: SheelaArgument(
                   isSheelaAskForLang: true,
                   rawMessage: rawBody,
+                  eventType: eventType,
+                  others: others,
                 ),
               );
             } else {
@@ -1348,7 +1371,10 @@ class _MyFHBState extends State<MyFHB> {
               );
             } else if (parsedData[1] == 'sheela') {
               var bundleText;
-              if (parsedData.length == 4) {
+              if (parsedData.length == 5) {
+                bundleText =
+                    parsedData[2] + '|' + parsedData[3] + '|' + parsedData[4];
+              } else if (parsedData.length == 4) {
                 bundleText = parsedData[2] + '|' + parsedData[3];
               } else if (parsedData.length == 3) {
                 bundleText = parsedData[2] + '|' + parsedData[1];

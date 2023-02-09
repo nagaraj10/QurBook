@@ -61,7 +61,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   SheelaBLEController _sheelaBLEController;
-  var chatGetXController = Get.find<ChatUserListController>();
+  ChatUserListController chatGetXController;
 
   AnimationController animationController;
 
@@ -73,6 +73,14 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
   @override
   void initState() {
     try {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.dateHeader.value = controller.getFormatedDate();
+      });
+
+      if (!Get.isRegistered<ChatUserListController>()) {
+        Get.put(ChatUserListController());
+      }
+      chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(
@@ -926,6 +934,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -936,6 +945,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectPulseMeter,
             isFromVital: false,
@@ -963,6 +973,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -999,6 +1010,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressManual: () {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
               Get.toNamed(
                 rt_Sheela,
                 arguments: SheelaArgument(
@@ -1009,6 +1021,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             onPressCancel: () async {
               Get.back();
               _sheelaBLEController.stopTTS();
+              _sheelaBLEController.stopScanning();
             },
             title: strConnectBpMeter,
             isFromVital: false,

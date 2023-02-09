@@ -41,7 +41,9 @@ class OnTapNotification:BroadcastReceiver() {
         val claimId = p1?.getStringExtra(Constants.PROP_CLAIM_ID)
         val audioURL = p1?.getStringExtra(Constants.PROP_sheelaAudioMsgUrl)
         val message1 = p1?.getStringExtra(Constants.PROP_MSG)
-                val isSheela = p1?.getStringExtra(Constants.PROP_ISSHEELA)
+        val isSheela = p1?.getStringExtra(Constants.PROP_ISSHEELA)
+        val eventType = p1?.getStringExtra(Constants.EVENT_TYPE)
+        val others = p1?.getStringExtra(Constants.OTHERS)
 
 
         val appLog = p1?.getStringExtra(p0?.getString(R.string.ns_type_applog))
@@ -92,7 +94,9 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROB_USER_ID,user_id)
         launchIntent?.putExtra(Constants.PROP_CLAIM_ID,claimId)
         launchIntent?.putExtra(p0.getString(R.string.ns_type_applog),appLog)
-       
+        launchIntent?.putExtra(Constants.EVENT_TYPE,eventType)
+        launchIntent?.putExtra(Constants.OTHERS,others)
+
 
         p0.startActivity(launchIntent)
     }

@@ -204,6 +204,7 @@ class AdditionalInfo {
     this.description,
     this.serviceType,
     this.fee,
+    this.provider_name,
   });
 
   String title;
@@ -211,6 +212,7 @@ class AdditionalInfo {
   String description;
   String serviceType;
   String lab_name;
+  String provider_name;
 
   int fee;
 
@@ -220,6 +222,7 @@ class AdditionalInfo {
     description = json.containsKey('description') ? json["description"] : '';
     serviceType = json.containsKey('serviceType') ? json["serviceType"] : '';
     lab_name = json.containsKey('lab_name') ? json["lab_name"] : '';
+    provider_name = json.containsKey('provider_name') ? json["provider_name"] : '';
 
     fee = json.containsKey('fee') ? json["fee"] : 0;
   }
