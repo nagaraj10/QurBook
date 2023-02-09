@@ -82,6 +82,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
       }
       chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
+      controller.isFirstTime.value = true;
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(
         (value) {
@@ -217,8 +218,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             GestureDetector(
               onTap: () {
                 try {
-                  FHBUtils().check().then((intenet) {
+                  FHBUtils().check().then((intenet) async {
                     if (intenet != null && intenet) {
+                      if (CommonUtil().isTablet &&
+                          controller.careCoordinatorId.value.trim().isEmpty) {
+                        await controller.getCareCoordinatorId();
+                      }
                       initSOSCall();
                     } else {
                       FlutterToast().getToast(
