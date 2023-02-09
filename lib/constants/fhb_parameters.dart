@@ -815,6 +815,7 @@ const String strHealthRecordMetaId = 'healthRecordMetaId';
 const String strDestinationUserId = 'destinationUserId';
 const String strSourceUserId = 'sourceUserId';
 const String strcityName = 'cityName';
+const String strstateName = 'stateName';
 
 const String errAssociateRecords =
     'Error while creating shared record details.';

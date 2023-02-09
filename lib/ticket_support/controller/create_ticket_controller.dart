@@ -31,7 +31,8 @@ class CreateTicketController extends GetxController {
   var strAddressLine = "".obs;
   var strCityName = "".obs;
   var strPincode = "".obs;
-
+   var strStateName = "".obs;
+   
   @override
   void onClose() {
     try {
