@@ -21,7 +21,9 @@ import 'SheelaAISenderBubble.dart';
 
 class SheelaAIMainScreen extends StatefulWidget {
   final SheelaArgument arguments;
+
   SheelaAIMainScreen({this.arguments});
+
   @override
   State<SheelaAIMainScreen> createState() => _SheelaAIMainScreenState();
 }
@@ -32,6 +34,7 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
   SheelaQueueServices servicesQueue = SheelaQueueServices();
   AnimationController animationController;
   Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
@@ -337,38 +340,49 @@ class _SheelaAIMainScreenState extends State<SheelaAIMainScreen>
           left: 8.h,
         ),
         child: InkWell(
-          onTap: () {
-            controller.stopTTS();
-            controller.canSpeak = false;
-            controller.isSheelaScreenActive = false;
-            controller.getSheelaBadgeCount();
-            controller.updateTimer(enable: false);
-            Get.back();
-          },
-          child: CommonUtil().isTablet
-              ? IconWidget(
-                  icon: Icons.arrow_back_ios,
-                  colors: Colors.black,
-                  size: CommonUtil().isTablet ? 38.0 : 24.0,
-                  onTap: () {
-                    controller.canSpeak = false;
-                    controller.stopTTS();
-                    controller.updateTimer(enable: false);
-                    Get.back();
-                  },
-                )
-              : Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.h,
-                    vertical: 4.h,
-                  ),
-                  child: AssetImageWidget(
-                    icon: icon_qurhome,
-                    height: 30.h,
-                    width: 30.h,
-                  ),
-                ),
-        ),
+            onTap: () {
+              controller.stopTTS();
+              controller.canSpeak = false;
+              controller.isSheelaScreenActive = false;
+              controller.getSheelaBadgeCount();
+              controller.updateTimer(enable: false);
+              Get.back();
+            },
+            child: CommonUtil().isTablet
+                ? IconWidget(
+                    icon: Icons.arrow_back_ios,
+                    colors: Colors.black,
+                    size: CommonUtil().isTablet ? 38.0 : 24.0,
+                    onTap: () {
+                      controller.canSpeak = false;
+                      controller.stopTTS();
+                      controller.updateTimer(enable: false);
+                      Get.back();
+                    },
+                  )
+                : CommonUtil.isNotINDReg()
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.h,
+                          vertical: 4.h,
+                        ),
+                        child: Icon(
+                          Icons.home,
+                          size: 32.sp,
+                          color: Color(CommonUtil().getQurhomePrimaryColor()),
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.h,
+                          vertical: 4.h,
+                        ),
+                        child: AssetImageWidget(
+                          icon: icon_qurhome,
+                          height: 30.h,
+                          width: 30.h,
+                        ),
+                      )),
       ),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(
