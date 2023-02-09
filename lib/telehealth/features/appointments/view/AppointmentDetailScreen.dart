@@ -23,9 +23,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
 
   @override
   void initState() {
-    try {
-      super.initState();
-    } catch (e) {}
+    super.initState();
   }
 
   @override

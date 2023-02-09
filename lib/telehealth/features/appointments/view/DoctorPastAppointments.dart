@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -52,7 +53,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
-  final appointmentDetailsController = Get.put(AppointmentDetailsController());
+  AppointmentDetailsController appointmentDetailsController;
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         Provider.of<AppointmentsListViewModel>(context, listen: false);
     getCategoryList();
     commonWidget.getCategoryList();
+    appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
     super.initState();
   }
 
@@ -91,7 +93,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e) {}
+        } catch (e) {
+          if (kDebugMode) {
+            printError(info: e.toString());
+          }
+        }
       },
       child: Card(
           color: Colors.white,
@@ -517,7 +523,11 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
     try {
       filteredCategoryData =
           PreferenceUtil.getCategoryTypeDisplay(ConstantKey.KEY_CATEGORYLIST);
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);

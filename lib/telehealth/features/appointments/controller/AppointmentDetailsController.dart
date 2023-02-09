@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
@@ -188,7 +189,11 @@ class AppointmentDetailsController extends GetxController {
       }
 
       loadingData.value = false;
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 
   onClear() {
@@ -210,7 +215,11 @@ class AppointmentDetailsController extends GetxController {
       addressLine2 = "";
       city = "";
       state = "";
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 
   getTitleDescription() {
@@ -219,7 +228,11 @@ class AppointmentDetailsController extends GetxController {
           appointmentDetailsModel.result?.additionalInfo.title ?? "--";
       description.value =
           appointmentDetailsModel.result?.additionalInfo.notes ?? "--";
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 
   getAddress() {
@@ -236,6 +249,10 @@ class AppointmentDetailsController extends GetxController {
 
       state = state +
           " ${appointmentDetailsModel.result?.additionalInfo?.pinCode ?? ""}";
-    } catch (e) {}
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
   }
 }

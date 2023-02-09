@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -60,7 +61,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
-  final appointmentDetailsController = Get.put(AppointmentDetailsController());
+  AppointmentDetailsController appointmentDetailsController;
 
   @override
   void initState() {
@@ -69,6 +70,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     getCategoryList();
     commonWidget.getCategoryList();
+    appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
     super.initState();
   }
 
@@ -85,7 +87,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           appointmentDetailsController
               .getAppointmentDetail(widget.doc?.id ?? "");
           Get.to(() => AppointmentDetailScreen());
-        } catch (e) {}
+        } catch (e) {
+          if (kDebugMode) {
+            printError(info: e.toString());
+          }
+        }
       },
       child: Card(
           color: Colors.white,
