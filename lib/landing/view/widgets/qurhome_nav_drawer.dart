@@ -14,6 +14,9 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/landing/view/widgets/help_support.dart';
 import 'package:myfhb/my_reports/view/my_report_screen.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/MyRecordsArguments.dart';
+import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/user_plans/view/user_profile_image.dart';
 import '../../../colors/fhb_colors.dart';
 import '../../../common/CommonUtil.dart';
@@ -119,6 +122,32 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                             if (refresh != null) {
                               refresh(true);
                             }
+                          } catch (e) {
+                            //print(e);
+                          }
+                        },
+                      ),
+                      DrawerTile(
+                        title: variable.strAppointments,
+                        icon: variable.icon_th,
+                        onPressed: () async {
+                          try {
+                            Get.back();
+                            Get.to(AppointmentsMain(isFromQurday: true));
+                          } catch (e) {
+                            //print(e);
+                          }
+                        },
+                      ),
+                      DrawerTile(
+                        title: variable.strMyRecords,
+                        icon: variable.icon_records,
+                        onPressed: () async {
+                          try {
+                            Get.back();
+                            Get.to(MyRecords(
+                              argument: MyRecordsArgument(),
+                            ));
                           } catch (e) {
                             //print(e);
                           }

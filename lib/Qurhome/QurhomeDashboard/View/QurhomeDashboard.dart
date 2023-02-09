@@ -60,15 +60,18 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      if (CommonUtil.isNotINDReg()) {
+        Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+        CommonUtil().initSocket();
+
+        Provider.of<LandingViewModel>(context, listen: false)
+            .getQurPlanDashBoard(needNotify: true);
+      }
       if (CommonUtil.REGION_CODE == "IN") {
         CommonUtil().requestQurhomeDialog();
       }
       getProfileApi();
-      landingViewModel = Provider.of<LandingViewModel>(context);
-      CommonUtil().requestQurhomeDialog();
-      controller.setActiveQurhomeTo(
-        status: true,
-      );
+
       if (CommonUtil().isTablet) {
         CommonUtil().initQurHomePortraitLandScapeMode();
         buttonSize = 100;
@@ -79,6 +82,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
+
+        landingViewModel = Provider.of<LandingViewModel>(context);
+        controller.setActiveQurhomeTo(
+          status: true,
+        );
       });
     } catch (e) {
       print(e);

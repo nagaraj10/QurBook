@@ -5448,7 +5448,7 @@ class CommonUtil {
   OnInitAction() async {
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
-    initSocket();
+    //initSocket();
     Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(NotificationData)) {
