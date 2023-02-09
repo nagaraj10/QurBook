@@ -1252,6 +1252,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
               }
             }
 
+            if (field.type == tckConstants.tckTypeTitle &&
+                field.name == tckConstants.tckPackageTitle) {
+              if (field.isRequired && package_title_ctrl.text.isEmpty) {
+                showAlertMsg(CommonConstants.ticketPackage);
+                return;
+              }
+            }
+
             if (field.type == tckConstants.tckTypeDescription &&
                 field.name == tckConstants.tckMainDescription) {
               if (descController.text.isNotEmpty) {
@@ -1313,6 +1321,22 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 return;
               }
             }
+
+            if (field.type == tckConstants.tckTypeDropdown &&
+                field.isCategory) {
+              if (field.isRequired && package_title_ctrl.text != "") {
+                showAlertMsg(CommonConstants.ticketPackage);
+                return;
+              }
+            }
+
+            if (field.type == tckConstants.tckTypeFile &&
+                field.name == tckConstants.tckTypeFileUpload) {
+              if (field.isRequired && imagePaths.length == 0) {
+                showAlertMsg(CommonConstants.ticketFile);
+                return;
+              }
+            }
           }
       }
 
@@ -1335,28 +1359,13 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
 
         commonMethodToCreateTicket(ticketListData);
       } else if (strName.contains("order prescription")) {
-        if (imagePaths.length > 0) {
-          controller.dynamicTextFiledObj["serviceType"] =
-              widget.ticketList.name;
-          commonMethodToCreateTicket(ticketListData);
-        } else {
-          showAlertMsg(CommonConstants.ticketFile);
-        }
+        controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
+        commonMethodToCreateTicket(ticketListData);
       } else if (strName.contains("care/diet plan")) {
-        if (dropdownValue != null) {
-          tckConstants.tckSelectedCategory = dropdownValue.title;
-          if (package_title_ctrl.text != null &&
-              package_title_ctrl.text != "") {
-            Constants.tckPackageName = package_title_ctrl.text;
-            controller.dynamicTextFiledObj["serviceType"] =
-                widget.ticketList.name;
-            commonMethodToCreateTicket(ticketListData);
-          } else {
-            showAlertMsg(CommonConstants.ticketPackage);
-          }
-        } else {
-          showAlertMsg(CommonConstants.ticketCategory);
-        }
+        tckConstants.tckSelectedCategory = dropdownValue?.title ?? "";
+        Constants.tckPackageName = package_title_ctrl.text;
+        controller.dynamicTextFiledObj["serviceType"] = widget.ticketList.name;
+        commonMethodToCreateTicket(ticketListData);
       } else if (strName.contains("transportation") ||
           strName.contains("homecare services") ||
           strName.contains("food delivery")) {
@@ -2119,21 +2128,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
             }
           }
 
-          if (field.type == tckConstants.tckTypeDropdown &&
-              field.fieldData != null &&
-              field.fieldData.length > 0) {
-            String strMOS = CommonUtil().validString(
-                textEditingControllers[CommonUtil().getFieldName(field.name)]
+          if (field.type == tckConstants.tckTypeDropdown) {
+            if (field.isRequired) {
+              if (field.fieldData != null && field.fieldData.length > 0) {
+                String strMOS = CommonUtil().validString(textEditingControllers[
+                        CommonUtil().getFieldName(field.name)]
                     .text);
-            if (strMOS.isNotEmpty) {
-              tckConstants.tckPrefMOSId = field.selValueDD != null
-                  ? CommonUtil().validString(field.selValueDD.id)
-                  : "";
-              tckConstants.tckPrefMOSName = strMOS;
-              controller.dynamicTextFiledObj[field.name] = field.selValueDD;
-            } else if (field.isRequired) {
-              showAlertMsg("Please choose " + displayFieldName(field));
-              return;
+                if (strMOS.isNotEmpty) {
+                  tckConstants.tckPrefMOSId = field.selValueDD != null
+                      ? CommonUtil().validString(field.selValueDD.id)
+                      : "";
+                  tckConstants.tckPrefMOSName = strMOS;
+                  controller.dynamicTextFiledObj[field.name] = field.selValueDD;
+                } else if (field.isRequired && dropdownValue == null) {
+                  showAlertMsg("Please choose " + displayFieldName(field));
+                  return;
+                }
+              }
             }
           }
 

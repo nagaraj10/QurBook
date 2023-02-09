@@ -137,6 +137,7 @@ import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'keysofmodel.dart' as keysConstant;
 import 'package:agora_rtc_engine/rtc_engine.dart';
+import 'package:myfhb/chat_socket/viewModel/getx_chat_view_model.dart';
 
 class CommonUtil {
   static String SHEELA_URL = '';
@@ -1923,8 +1924,12 @@ class CommonUtil {
     var jsonParam;
     final _firebaseMessaging = FirebaseMessaging.instance;
     final apiBaseHelper = ApiBaseHelper();
+    var token='';
+    try{
+      token = await _firebaseMessaging.getToken();
+    }catch(e){
 
-    var token = await _firebaseMessaging.getToken();
+    }
     await PreferenceUtil.saveString(Constants.STR_PUSH_TOKEN, token);
     var deviceInfo = Map<String, dynamic>();
     var user = Map<String, dynamic>();
@@ -2103,10 +2108,8 @@ class CommonUtil {
         Constants.KEY_LASTLOGGEDTIME, loginDetails.result.lastLoggedIn);
   }
 
-  Widget getNotificationIcon(
-    BuildContext context, {
-    Color color,
-  }) {
+  Widget getNotificationIcon(BuildContext context,
+      {Color color, bool isFromQurday = false}) {
     try {
       var count = 0;
       var targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -2134,7 +2137,7 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
-                    navigateToNotificationScreen();
+                    navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
                     print(e);
                   }
@@ -2152,7 +2155,7 @@ class CommonUtil {
               return GestureDetector(
                 onTap: () {
                   try {
-                    navigateToNotificationScreen();
+                    navigateToNotificationScreen(isFromQurday);
                   } catch (e) {
                     print(e);
                   }
@@ -2171,7 +2174,7 @@ class CommonUtil {
       return GestureDetector(
         onTap: () {
           try {
-            navigateToNotificationScreen();
+            navigateToNotificationScreen(isFromQurday);
           } catch (e) {
             print(e);
           }
@@ -2187,10 +2190,10 @@ class CommonUtil {
     }
   }
 
-  navigateToNotificationScreen() async {
+  navigateToNotificationScreen(bool isFromQurday) async {
     try {
       Get.to(
-        NotificationMain(),
+        NotificationMain(isFromQurday: isFromQurday),
       );
     } catch (e) {}
   }
@@ -4964,27 +4967,21 @@ class CommonUtil {
     try {
       const platform = MethodChannel(ENABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(ENABLE_BACKGROUND_NOTIFICATION);
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   disableBackgroundNotification() {
     try {
       const platform = MethodChannel(DISABLE_BACKGROUND_NOTIFICATION);
       platform.invokeMethod(DISABLE_BACKGROUND_NOTIFICATION);
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   closeSheelaDialog() {
     try {
       const platform = MethodChannel(strCloseSheelaDialog);
       platform.invokeMethod(strCloseSheelaDialog);
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   bool isNumeric(String s) {
@@ -4993,38 +4990,39 @@ class CommonUtil {
     }
     return int.tryParse(s) != null;
   }
+
   String realNumber(int number) {
-    if(number == 0) {
+    if (number == 0) {
       return zero;
     }
     return generate(number).trim();
   }
+
   String generate(int number) {
-    if(number >= 1000000000) {
-      return generate(number ~/ 1000000000) + " billion " + generate(number % 1000000000);
-    }
-    else if(number >= 1000000) {
-      return generate(number ~/ 1000000) + " million " + generate(number % 1000000);
-    }
-    else if(number >= 1000) {
+    if (number >= 1000000000) {
+      return generate(number ~/ 1000000000) +
+          " billion " +
+          generate(number % 1000000000);
+    } else if (number >= 1000000) {
+      return generate(number ~/ 1000000) +
+          " million " +
+          generate(number % 1000000);
+    } else if (number >= 1000) {
       return generate(number ~/ 1000) + " thousand " + generate(number % 1000);
-    }
-    else if(number >= 100) {
+    } else if (number >= 100) {
       return generate(number ~/ 100) + " hundred " + generate(number % 100);
     }
     return generate1To99(number);
   }
+
   String generate1To99(int number) {
     if (number == 0) {
       return "";
-    }
-    else if (number <= 9) {
+    } else if (number <= 9) {
       return oneToNine[number - 1];
-    }
-    else if (number <= 19) {
+    } else if (number <= 19) {
       return tenToNinteen[number % 10];
-    }
-    else {
+    } else {
       return dozens[number ~/ 10 - 1] + " " + generate1To99(number % 10);
     }
   }
@@ -5174,7 +5172,7 @@ class CommonUtil {
         barrierLabel: 'Label',
         barrierDismissible: false,
         pageBuilder: (_, __, ___) {
-          if(isFirstTime){
+          if (isFirstTime) {
             isFirstTime = false;
             Future.delayed(Duration(seconds: 2), () {
               Get.back();
@@ -5207,7 +5205,8 @@ class CommonUtil {
         });
   }
 
-  void dialogForSheelaQueueStable(BuildContext context, int count,{Function() onTapSheela}) async {
+  void dialogForSheelaQueueStable(BuildContext context, int count,
+      {Function() onTapSheela}) async {
     showGeneralDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -5222,7 +5221,7 @@ class CommonUtil {
                 child: InkWell(
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
-                  onTap: (){
+                  onTap: () {
                     Get.back();
                   },
                   child: Container(
@@ -5233,7 +5232,7 @@ class CommonUtil {
                           badgeCount: count ?? 0,
                           badgeColor: ColorUtils.badgeQueue,
                           icon: GestureDetector(
-                            onTap: (){
+                            onTap: () {
                               onTapSheela();
                             },
                             child: AssetImageWidget(
@@ -5445,6 +5444,85 @@ class CommonUtil {
 
     return missedActvities;
   }
+
+  OnInitAction() async {
+    dbInitialize();
+    QurPlanReminders.getTheRemindersFromAPI();
+    initSocket();
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      if (Platform.isIOS) {
+        if (PreferenceUtil.isKeyValid(NotificationData)) {
+          // changeTabToAppointments();
+        }
+      }
+    });
+    if (!Get.isRegistered<SheelaAIController>()) {
+      Get.put(SheelaAIController());
+    }
+    if (!Get.isRegistered<ChatUserListController>()) {
+      Get.put(ChatUserListController());
+    }
+
+    Get.find<SheelaAIController>().getSheelaBadgeCount();
+  }
+
+  // 1
+  void dbInitialize() {
+    final commonConstants = CommonConstants();
+    commonConstants.getCountryMetrics();
+  }
+
+  // 2
+  void initSocket() {
+    var userId = PreferenceUtil.getStringValue(KEY_USERID);
+
+    if (userId == null)
+      return Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+          ?.socket
+          .off(getChatTotalCountOn);
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .emitWithAck(getChatTotalCountEmit, {
+      'userId': userId,
+    }, ack: (countResponseEmit) {
+      if (countResponseEmit != null) {
+        TotalCountModel totalCountModel =
+            TotalCountModel.fromJson(countResponseEmit);
+        if (totalCountModel != null) {
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(totalCountModel);
+        }
+      }
+    });
+
+    Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+        ?.socket
+        .on(getChatTotalCountOn, (countResponseOn) {
+      if (countResponseOn != null) {
+        TotalCountModel totalCountModelOn =
+            TotalCountModel.fromJson(countResponseOn);
+        if (totalCountModelOn != null) {
+          Provider.of<ChatSocketViewModel>(Get.context, listen: false)
+              ?.updateChatTotalCount(totalCountModelOn);
+        }
+      }
+    });
+  }
+
+  static bool isNotINDReg() {
+    try {
+      bool value = false;
+      if (CommonUtil.REGION_CODE != IND_REG) {
+        value = true;
+      } else {
+        value = false;
+      }
+      return value;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 extension CapExtension on String {
@@ -5502,9 +5580,10 @@ class VideoCallCommonUtils {
     var randomMID = getMyMeetingID();
     var mID = (bookId.isNotEmpty || bookId != null) ? bookId : randomMID;
     vsPayLoad.Payload payLoad = vsPayLoad.Payload(
-        type: regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
+        type:
+            regController.isFromSOS.value ? "sos" : keysConstant.c_ns_type_call,
         //type: keysConstant.c_ns_type_call,
-        priority: regController.isFromSOS.value ?"high":"",
+        priority: regController.isFromSOS.value ? "high" : "",
         userId: regController.careCoordinatorId.value,
         meetingId: mID,
         patientId: patChatId != null ? patChatId : '',
@@ -5569,7 +5648,9 @@ class VideoCallCommonUtils {
         MaterialPageRoute(
           builder: (context) => CallingPage(
             id: mID,
-            name: regController.isFromSOS.value ? emergencyServices : regController.careCoordinatorName.value,
+            name: regController.isFromSOS.value
+                ? emergencyServices
+                : regController.careCoordinatorName.value,
             callMetaData: callMeta,
             healthOrganizationId: healthOrganizationId,
             isCallActualTime: isCallActualTime,
@@ -6244,9 +6325,7 @@ class VideoCallCommonUtils {
           print('SUCCESSSSSSSSSSSSSSSSSSSSSSSSS NON APPOINTMENT CALL UPDATED');
         }
       });
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   Future<bool> handleCameraAndMic({bool isAudioCall = false}) async {
@@ -6395,7 +6474,8 @@ class VideoCallCommonUtils {
       dynamic isCallActualTime,
       HealthRecord healthRecord,
       User patienInfo,
-      bool isFromAppointment,bool isFromSOS,
+      bool isFromAppointment,
+      bool isFromSOS,
       dynamic isDoctor}) {
     try {
       FlutterToast toast = new FlutterToast();
@@ -6442,9 +6522,9 @@ class VideoCallCommonUtils {
           }
           if (callMetaData != null && !isMissedCallNsSent) {
             isMissedCallNsSent = true;
-            if (regController.isFromSOS.value??false) {
+            if (regController.isFromSOS.value ?? false) {
               regController.onGoingSOSCall.value = false;
-            }else{
+            } else {
               unavailabilityOfCC();
             }
             createMissedCallNS(
@@ -6454,15 +6534,12 @@ class VideoCallCommonUtils {
           }
         }
       });
-      myDB
-          .collection('call_log')
-          .doc(cid)
-          .snapshots()
-          .listen((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
+      myDB.collection('call_log').doc(cid).snapshots().listen(
+          (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) async {
         Map<String, dynamic> firestoreInfo = documentSnapshot.data() ?? {};
 
         var recStatus = firestoreInfo['call_status'];
-        if (recStatus!=null&&recStatus == "accept") {
+        if (recStatus != null && recStatus == "accept") {
           String startedTime = '';
           clearAudioPlayer(audioPlayer);
           if (!isFromAppointment) {
@@ -6512,13 +6589,13 @@ class VideoCallCommonUtils {
               startedTime: startedTime,
               isDoctor: isDoctor);
           callPageShouldEndAutomatically = false;
-        } else if (recStatus!=null&&recStatus == "decline") {
+        } else if (recStatus != null && recStatus == "decline") {
           clearAudioPlayer(audioPlayer);
           callPageShouldEndAutomatically = false;
           CommonUtil.isCallStarted = false;
           callActions.value = CallActions.DECLINED;
           var regController = Get.find<QurhomeRegimenController>();
-          if (regController.isFromSOS.value??false) {
+          if (regController.isFromSOS.value ?? false) {
             regController.onGoingSOSCall.value = false;
           } else {
             unavailabilityOfCC();
@@ -6566,7 +6643,8 @@ class VideoCallCommonUtils {
         var callEndRecordLogResponse = await apiResponse.stopRecordSOSCall();
 
         regController.onGoingSOSCall.value = false;
-      } /*else {
+      }
+      /*else {
         UpdatedInfo updateInfo = UpdatedInfo(
             actualEndDateTime: callEndTime,
             actualStartDateTime: callStartTime,
@@ -6592,9 +6670,7 @@ class VideoCallCommonUtils {
           });*/
       CommonUtil.isCallStarted = false;
       CommonUtil.bookedForId = null;
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   Future<void> StartTrackMyCall({
@@ -6613,55 +6689,49 @@ class VideoCallCommonUtils {
           UpdatedInfo(actualStartDateTime: callStartTime, bookingId: appsID);
 
       if (regController.isFromSOS.value) {
-
-        await apiResponse.callLogData(request: getCallLogModel(callStartTime, "", "Started",true));
+        await apiResponse.callLogData(
+            request: getCallLogModel(callStartTime, "", "Started", true));
         await apiResponse.startRecordSOSCall();
       }
-    } catch (e) {
-      
-    }
+    } catch (e) {}
   }
 
   createMissedCallNS({String docName, String patId, String bookingId}) async {
     try {
-
       String callStartTime = '';
       callStartTime = DateFormat(keysConstant.c_yMd_Hms).format(DateTime.now());
       final apiResponse = QurHomeApiProvider();
       await PreferenceUtil.init();
       var regController = Get.find<QurhomeRegimenController>();
 
-      if(regController.isFromSOS.value)
-      {
-
-        await apiResponse.callMissedCallNsAlertAPI(request: getCallLogModel(callStartTime, callStartTime, "",false));
+      if (regController.isFromSOS.value) {
+        await apiResponse.callMissedCallNsAlertAPI(
+            request: getCallLogModel(callStartTime, callStartTime, "", false));
       } else {
         var body = {
           "doctorName": docName,
           "recipientId": patId,
           "bookingId": bookingId,
-          "patientName":regController.userName.value,
+          "patientName": regController.userName.value,
           "isCareCoordinator": true
         };
-        await apiResponse.callMissedCallNsAlertAPI(
-            isFromSheelaRequest: body);
+        await apiResponse.callMissedCallNsAlertAPI(isFromSheelaRequest: body);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
-  CallLogModel getCallLogModel(String callStartTime,String callEndTime,String status,bool isCallLog)
-  {
+  CallLogModel getCallLogModel(
+      String callStartTime, String callEndTime, String status, bool isCallLog) {
     var regController = Get.find<QurhomeRegimenController>();
     AdditionalInfo additionalInfo =
-    new AdditionalInfo(location: regController.locationModel);
+        new AdditionalInfo(location: regController.locationModel);
 
     CallLogModel callLogModel = CallLogModel(
         callerUser: regController.userId.value,
         recipientUser: regController.careCoordinatorId.value,
         recipientId: regController.careCoordinatorId.value,
         startedTime: callStartTime,
-        endTime: !isCallLog?callEndTime:null,
+        endTime: !isCallLog ? callEndTime : null,
         patientName: regController.userName.value,
         status: status,
         additionalInfo: additionalInfo);
