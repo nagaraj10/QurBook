@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/divider_widget.dart';
@@ -24,9 +25,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
   void initState() {
     try {
       super.initState();
-    } catch (e) {
-      //print(e);
-    }
+    } catch (e) {}
   }
 
   @override
@@ -222,33 +221,38 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                           ),
-                          Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                10.0,
-                              ),
-                            ),
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                top: 5.0,
-                                bottom: 5.0,
-                                left: 8.0,
-                                right: 8.0,
-                              ),
-                              child: Text(
-                                appointmentDetailsController
-                                    .appointmentModeOfService.value,
-                                style: TextStyle(
-                                  fontSize: 12.0.sp,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
+                          appointmentDetailsController
+                                  .appointmentModeOfService.value
+                                  .trim()
+                                  .isNotEmpty
+                              ? Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      10.0,
+                                    ),
+                                  ),
+                                  color: Color(
+                                    CommonUtil().getMyPrimaryColor(),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: 5.0,
+                                      bottom: 5.0,
+                                      left: 8.0,
+                                      right: 8.0,
+                                    ),
+                                    child: Text(
+                                      appointmentDetailsController
+                                          .appointmentModeOfService.value,
+                                      style: TextStyle(
+                                        fontSize: 12.0.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink(),
                         ],
                       ),
                       SizedBox(height: 8.0.h),
@@ -356,7 +360,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             commonWidgetForTitleValue(appointmentTestName,
                 appointmentDetailsController.testName.value),
             SizedBox(height: 5.h),
-            commonWidgetForTitleValue(appointmentAddress,
+            commonWidgetForTitleValue(appointmentLabAddress,
                 appointmentDetailsController.providerAddress.value),
           ],
         );
@@ -406,6 +410,13 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
           ],
         );
         break;
+      default:
+        return Column(
+          children: [
+            Container(),
+          ],
+        );
+        break;
     }
   }
 
@@ -447,7 +458,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             style: TextStyle(
               fontSize: 13.0.sp,
               fontWeight: FontWeight.w600,
-              color: Colors.black.withOpacity(0.7),
+              color:
+                  value == "--" ? Colors.grey : Colors.black.withOpacity(0.7),
             ),
           ),
         ),

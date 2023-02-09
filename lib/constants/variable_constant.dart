@@ -791,6 +791,7 @@ const String appointmentSchedule = "Schedule";
 const String appointmentInformation = "Appointment Information";
 const String appointmentTestName = "Test Name";
 const String appointmentAddress = "Address";
+const String appointmentLabAddress = "Lab Address";
 const String appointmentDescription = "Description";
 const String appointmentPickupaddress = "Pick up address";
 const String appointmentDropAddress = "Drop address";
