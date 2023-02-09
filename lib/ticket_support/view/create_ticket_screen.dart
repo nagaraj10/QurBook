@@ -754,17 +754,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                         controller.strAddressLine.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
-                                "Address Line", controller.strAddressLine.value)
+                                tckConstants.address, controller.strAddressLine.value)
                             : SizedBox.shrink(),
                         controller.strCityName.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
-                                "City", controller.strCityName.value)
+                                tckConstants.city, controller.strCityName.value)
+                            : SizedBox.shrink(),
+                        controller.strStateName.value.trim().isNotEmpty &&
+                                isLabAddressVisible
+                            ? CommonUtil().commonWidgetForTitleValue(
+                                tckConstants.state,
+                                controller.strStateName.value)
                             : SizedBox.shrink(),
                         controller.strPincode.value.trim().isNotEmpty &&
                                 isLabAddressVisible
                             ? CommonUtil().commonWidgetForTitleValue(
-                                "Pincode", controller.strPincode.value)
+                                tckConstants.pincode, controller.strPincode.value)
                             : SizedBox.shrink(),
                       ],
                     ))
@@ -820,6 +826,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                 CommonUtil().validString(labData[parameters.strcityName]);
             controller.strPincode.value =
                 CommonUtil().validString(labData[parameters.strpincode]);
+            controller.strStateName.value =
+                CommonUtil().validString(labData[parameters.strstateName]);
           }
         }
       });
@@ -2803,6 +2811,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
       controller.strAddressLine.value = "";
       controller.strCityName.value = "";
       controller.strPincode.value = "";
+      controller.strStateName.value = ""; 
     } catch (e) {
       //print(e);
     }
