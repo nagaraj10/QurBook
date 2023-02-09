@@ -140,7 +140,7 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              getSwitchProfileWidget()
+              if (CommonUtil.REGION_CODE != 'IN') getSwitchProfileWidget()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
