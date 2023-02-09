@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/landing/view/landing_arguments.dart';
+import 'package:myfhb/landing/view_model/landing_view_model.dart';
 import 'package:myfhb/myPlan/view/myPlanList.dart';
+import 'package:myfhb/reminders/QurPlanReminders.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -20,6 +24,7 @@ import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:provider/provider.dart';
 
 import 'MyProfilePage.dart';
 
@@ -44,6 +49,10 @@ class _UserAccountsState extends State<UserAccounts>
 
   MyProfileModel myProfile;
   bool islogout = false;
+  final GlobalKey<State> _key = GlobalKey<State>();
+  Future profileData;
+  bool isUserMainId = true;
+  LandingViewModel landingViewModel;
 
   @override
   void initState() {
@@ -53,6 +62,10 @@ class _UserAccountsState extends State<UserAccounts>
     _sliverTabController = TabController(
         vsync: this, length: 4, initialIndex: widget.arguments.selectedIndex);
     _sliverTabController.addListener(_handleSelected);
+
+    profileData = getMyProfile();
+    Provider.of<LandingViewModel>(context, listen: false)
+        .getQurPlanDashBoard(needNotify: true);
   }
 
   fetchUserProfileInfo() async {
@@ -93,6 +106,8 @@ class _UserAccountsState extends State<UserAccounts>
   @override
   Widget build(BuildContext context) {
     //MyProfileModel myProfile;
+    landingViewModel = Provider.of<LandingViewModel>(context);
+
     if (!islogout) fetchUserProfileInfo();
 
     return new WillPopScope(
@@ -125,6 +140,7 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
+              getSwitchProfileWidget()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
@@ -211,6 +227,106 @@ class _UserAccountsState extends State<UserAccounts>
 
   moveToLoginPage() {
     new CommonUtil().moveToLoginPage();
+  }
+
+  Widget getSwitchProfileWidget() {
+    return FutureBuilder<MyProfileModel>(
+        future: getMyProfile(),
+        builder: (context, snapshot) {
+          if (snapshot != null) if (snapshot.data != null && snapshot.hasData)
+            PreferenceUtil.saveProfileData(
+                Constants.KEY_PROFILE, snapshot.data);
+
+          imageCache.clear();
+          imageCache.clearLiveImages();
+
+          return SwitchProfile().buildActions(
+            context,
+            _key,
+            () {
+              profileData = getMyProfile();
+              checkIfUserIdSame();
+              landingViewModel.getQurPlanDashBoard(needNotify: true);
+              landingViewModel.checkIfUserIdSame().then((value) {
+                isUserMainId = value;
+              });
+              QurPlanReminders.getTheRemindersFromAPI();
+
+              (context as Element).markNeedsBuild();
+              setState(() {});
+            },
+            true,
+          );
+        });
+  }
+
+  void checkIfUserIdSame() async {
+    final userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    setState(() {
+      if (userId != userIdMain) {
+        isUserMainId = false;
+      } else {
+        isUserMainId = true;
+      }
+    });
+  }
+
+  Future<MyProfileModel> getMyProfile() async {
+    final userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    final userIdMain =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    if (userId != userIdMain) {
+      // isUserMainId = false;
+    }
+    try {
+      // await getDeviceSelectionValues().then((value) => {});
+    } catch (e) {}
+    if (userId != null && userId.isNotEmpty) {
+      try {
+        MyProfileModel value =
+            await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
+        myProfile = value;
+
+        if (value != null) {
+          if (value?.result?.userProfileSettingCollection3?.isNotEmpty) {
+            var profileSetting =
+                value?.result?.userProfileSettingCollection3[0].profileSetting;
+            if (profileSetting?.preferredMeasurement != null) {
+              PreferredMeasurement preferredMeasurement =
+                  profileSetting?.preferredMeasurement;
+              await PreferenceUtil.saveString(Constants.STR_KEY_HEIGHT,
+                      preferredMeasurement.height?.unitCode)
+                  .then((value) {
+                PreferenceUtil.saveString(Constants.STR_KEY_WEIGHT,
+                        preferredMeasurement.weight?.unitCode)
+                    .then((value) {
+                  PreferenceUtil.saveString(
+                          Constants.STR_KEY_TEMP,
+                          preferredMeasurement.temperature?.unitCode
+                              .toUpperCase())
+                      .then((value) {});
+                });
+              });
+            } else {
+              new CommonUtil().commonMethodToSetPreference();
+            }
+          } else {
+            new CommonUtil().commonMethodToSetPreference();
+          }
+        } else {
+          new CommonUtil().commonMethodToSetPreference();
+        }
+      } catch (e) {
+        new CommonUtil().commonMethodToSetPreference();
+      }
+    } else {
+      CommonUtil().logout(moveToLoginPage);
+    }
+    return myProfile;
   }
 }
 
