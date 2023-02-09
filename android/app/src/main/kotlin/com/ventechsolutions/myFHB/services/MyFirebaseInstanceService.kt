@@ -458,6 +458,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(Constants.PROP_ISSHEELA, data[Constants.PROP_ISSHEELA])
         onTapNS.putExtra(Constants.OTHERS, data[Constants.OTHERS])
         onTapNS.putExtra(Constants.EVENT_TYPE, data[Constants.EVENT_TYPE])
+        onTapNS.putExtra(Constants.APPOINTMENTID, data[Constants.APPOINTMENTID])
 
 //            onTapNS.putExtra(Constants.PROB_USER_ID, data[Constants.PROB_USER_ID])
 //            onTapNS.putExtra(getString(R.string.pat_name), PAT_NAME)

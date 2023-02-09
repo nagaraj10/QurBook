@@ -831,3 +831,4 @@ const String strCopyVitalsMsg =
     'Matching activity is found in your regimen, do you want to copy the values?';
 const String strglucose = 'SPO2';
 const String strBloodSugar = 'BloodSugar';
+const String strAppointmentDetail = 'appointmentDetail';
