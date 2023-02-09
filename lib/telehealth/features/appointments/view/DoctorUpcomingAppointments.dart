@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -17,6 +18,7 @@ import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -30,6 +32,8 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointme
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'AppointmentDetailScreen.dart';
 
 class DoctorUpcomingAppointments extends StatefulWidget {
   Past doc;
@@ -57,6 +61,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<CategoryResult> filteredCategoryData = new List();
   CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
+  AppointmentDetailsController appointmentDetailsController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -64,6 +70,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
     getCategoryList();
     commonWidget.getCategoryList();
+    appointmentDetailsController = CommonUtil().onInitAppointmentDetailsController();
     super.initState();
   }
 
@@ -74,242 +81,255 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        color: Colors.white,
-        elevation: 0.5,
-        child: Column(
-          children: [
-            Container(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Flexible(
-                      flex: 2,
-                      child: Container(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            commonWidget.docPhotoView(widget.doc),
-                            SizedBoxWidget(
-                              width: 10.0.w,
-                            ),
-                            Expanded(
-                              child: Container(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    commonWidget.docName(
-                                        context,
-                                        commonWidget.getDoctorAndHealthOrganizationName(
-                                            widget.doc)),
-                                    SizedBoxWidget(height: 3.0.h, width: 0.0.h),
-                                    widget.doc.doctorSessionId == null ||
-                                        widget.doc?.doctor?.specialization == null
-                                        ? SizedBox.shrink()
-                                        : Container(
-                                      width: 1.sw / 2,
-                                      child: Text(
-                                        toBeginningOfSentenceCase((widget
-                                            .doc
-                                            .doctor
-                                            .doctorProfessionalDetailCollection !=
-                                            null &&
-                                            widget
-                                                .doc
-                                                .doctor
-                                                .doctorProfessionalDetailCollection
-                                                .length >
-                                                0)
-                                            ? widget
-                                            .doc
-                                            .doctor
-                                            .doctorProfessionalDetailCollection[
-                                        0]
-                                            .specialty !=
-                                            null
-                                            ? widget
-                                            .doc
-                                            .doctor
-                                            .doctorProfessionalDetailCollection[
-                                        0]
-                                            .specialty
-                                            .name !=
-                                            null
-                                            ? widget
-                                            .doc
-                                            .doctor
-                                            .doctorProfessionalDetailCollection[
-                                        0]
-                                            .specialty
-                                            .name
-                                            : ''
-                                            : ''
-                                            : ''),
-                                        style: TextStyle(
-                                            fontSize:
-                                            fhbStyles.fnt_doc_specialist),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
+    return InkWell(
+      onTap: () {
+        try {
+          appointmentDetailsController
+              .getAppointmentDetail(widget.doc?.id ?? "");
+          Get.to(() => AppointmentDetailScreen());
+        } catch (e) {
+          if (kDebugMode) {
+            printError(info: e.toString());
+          }
+        }
+      },
+      child: Card(
+          color: Colors.white,
+          elevation: 0.5,
+          child: Column(
+            children: [
+              Container(
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Flexible(
+                        flex: 2,
+                        child: Container(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              commonWidget.docPhotoView(widget.doc),
+                              SizedBoxWidget(
+                                width: 10.0.w,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      commonWidget.docName(
+                                          context,
+                                          commonWidget.getDoctorAndHealthOrganizationName(
+                                              widget.doc)),
+                                      SizedBoxWidget(height: 3.0.h, width: 0.0.h),
+                                      widget.doc.doctorSessionId == null ||
+                                          widget.doc?.doctor?.specialization == null
+                                          ? SizedBox.shrink()
+                                          : Container(
+                                        width: 1.sw / 2,
+                                        child: Text(
+                                          toBeginningOfSentenceCase((widget
+                                              .doc
+                                              .doctor
+                                              .doctorProfessionalDetailCollection !=
+                                              null &&
+                                              widget
+                                                  .doc
+                                                  .doctor
+                                                  .doctorProfessionalDetailCollection
+                                                  .length >
+                                                  0)
+                                              ? widget
+                                              .doc
+                                              .doctor
+                                              .doctorProfessionalDetailCollection[
+                                          0]
+                                              .specialty !=
+                                              null
+                                              ? widget
+                                              .doc
+                                              .doctor
+                                              .doctorProfessionalDetailCollection[
+                                          0]
+                                              .specialty
+                                              .name !=
+                                              null
+                                              ? widget
+                                              .doc
+                                              .doctor
+                                              .doctorProfessionalDetailCollection[
+                                          0]
+                                              .specialty
+                                              .name
+                                              : ''
+                                              : ''
+                                              : ''),
+                                          style: TextStyle(
+                                              fontSize:
+                                              fhbStyles.fnt_doc_specialist),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
-                                    ),
-                                    widget.doc.doctorSessionId == null ||
-                                        widget.doc?.doctor?.specialization == null
-                                        ? SizedBox.shrink()
-                                        : SizedBox(height: 3.0),
-                                    commonWidget.docLoc(context,
-                                        commonWidget.getLocation(widget.doc)),
-                                    widget.doc.doctorSessionId == null ||
-                                        widget.doc?.doctor?.specialization == null
-                                        ? SizedBox.shrink()
-                                        : SizedBox(height: 3.0),
-                                    widget.doc.doctorSessionId == null
-                                        ? commonWidget.docLoc(
-                                        context,
-                                        commonWidget
-                                            .getServiceCategory(widget.doc))
-                                        : SizedBox.shrink(),
-                                    widget.doc.doctorSessionId == null ||
-                                        widget.doc?.doctor?.specialization == null
-                                        ? SizedBox.shrink()
-                                        : SizedBox(height: 3.0),
-                                    widget.doc.doctorSessionId == null
-                                        ? commonWidget.docLoc(context,
-                                        commonWidget.getModeOfService(widget.doc))
-                                        : SizedBox.shrink(),
-                                    SizedBox(height: 5.0),
-                                    widget.doc.doctorSessionId == null
-                                        ? SizedBox.shrink()
-                                        : DoctorTimeSlotWidget(
-                                      doc: widget.doc,
-                                      onChanged: widget.onChanged,
-                                    ),
-                                    SizedBoxWidget(height: 15.0),
-                                    widget.doc.doctorSessionId == null
-                                        ? SizedBox.shrink()
-                                        : commonWidget
-                                        .docIcons(true, widget.doc, context, () {
-                                      widget.onChanged(
-                                          TranslationConstants.callback.t());
-                                      setState(() {});
-                                    })
-                                  ],
+                                      widget.doc.doctorSessionId == null ||
+                                          widget.doc?.doctor?.specialization == null
+                                          ? SizedBox.shrink()
+                                          : SizedBox(height: 3.0),
+                                      commonWidget.docLoc(context,
+                                          commonWidget.getLocation(widget.doc)),
+                                      widget.doc.doctorSessionId == null ||
+                                          widget.doc?.doctor?.specialization == null
+                                          ? SizedBox.shrink()
+                                          : SizedBox(height: 3.0),
+                                      widget.doc.doctorSessionId == null
+                                          ? commonWidget.docLoc(
+                                          context,
+                                          commonWidget
+                                              .getServiceCategory(widget.doc))
+                                          : SizedBox.shrink(),
+                                      widget.doc.doctorSessionId == null ||
+                                          widget.doc?.doctor?.specialization == null
+                                          ? SizedBox.shrink()
+                                          : SizedBox(height: 3.0),
+                                      widget.doc.doctorSessionId == null
+                                          ? commonWidget.docLoc(context,
+                                          commonWidget.getModeOfService(widget.doc))
+                                          : SizedBox.shrink(),
+                                      SizedBox(height: 5.0),
+                                      widget.doc.doctorSessionId == null
+                                          ? SizedBox.shrink()
+                                          : DoctorTimeSlotWidget(
+                                        doc: widget.doc,
+                                        onChanged: widget.onChanged,
+                                      ),
+                                      SizedBoxWidget(height: 15.0),
+                                      widget.doc.doctorSessionId == null
+                                          ? SizedBox.shrink()
+                                          : commonWidget
+                                          .docIcons(true, widget.doc, context, () {
+                                        widget.onChanged(
+                                            TranslationConstants.callback.t());
+                                        setState(() {});
+                                      })
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        child: Column(
-                          children: [
-                            //joinCallIcon(doc),
-                            widget.doc.doctorSessionId == null
-                                ? SizedBox.shrink()
-                                : IconButton(
-                                icon: ImageIcon(AssetImage(
-                                    Constants.Appointments_chatImage)),
-                                onPressed: () {
-                                  FocusManager.instance.primaryFocus
-                                      .unfocus();
-                                  goToChatIntegration(widget.doc);
-                                }),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          child: Column(
+                            children: [
+                              //joinCallIcon(doc),
+                              widget.doc.doctorSessionId == null
+                                  ? SizedBox.shrink()
+                                  : IconButton(
+                                  icon: ImageIcon(AssetImage(
+                                      Constants.Appointments_chatImage)),
+                                  onPressed: () {
+                                    FocusManager.instance.primaryFocus
+                                        .unfocus();
+                                    goToChatIntegration(widget.doc);
+                                  }),
 //                          SizedBoxWidget(
 //                            height: (widget.hour == Constants.STATIC_HOUR ||
 //                                widget.minute == Constants.STATIC_HOUR)
 //                                ? 0
 //                                : 15,
 //                          ),
-                            SizedBoxWidget(
-                              height:
-                              widget.doc?.doctor?.specialization == null ||
-                                  widget.doc.doctorSessionId == null
-                                  ? 10
-                                  : 20,
-                            ),
-                            widget.doc.doctorSessionId == null
-                                ? SizedBox.shrink()
-                                : commonWidget.count(widget.doc.slotNumber),
-                            TextWidget(
-                              fontsize: 12.0.sp,
-                              text: DateFormat(CommonUtil.REGION_CODE == 'IN'
-                                  ? Constants.Appointments_time_format
-                                  : Constants.Appointments_time_formatUS)
-                                  .format(DateTime.parse(
-                                  widget.doc.plannedStartDateTime))
-                                  .toString() ??
-                                  '',
-                              fontWeight: FontWeight.w600,
-                              colors: Color(new CommonUtil().getMyPrimaryColor()),
-                            ),
-                            TextWidget(
-                              fontsize: 12.0.sp,
-                              text: DateFormat.yMMMEd()
-                                  .format(DateTime.parse(
-                                  widget.doc.plannedStartDateTime))
-                                  .toString() ??
-                                  '',
-                              fontWeight: FontWeight.w500,
-                              overflow: TextOverflow.visible,
-                              colors: Colors.black,
-                            ),
-                          ],
+                              SizedBoxWidget(
+                                height:
+                                widget.doc?.doctor?.specialization == null ||
+                                    widget.doc.doctorSessionId == null
+                                    ? 10
+                                    : 20,
+                              ),
+                              widget.doc.doctorSessionId == null
+                                  ? SizedBox.shrink()
+                                  : commonWidget.count(widget.doc.slotNumber),
+                              TextWidget(
+                                fontsize: 12.0.sp,
+                                text: DateFormat(CommonUtil.REGION_CODE == 'IN'
+                                    ? Constants.Appointments_time_format
+                                    : Constants.Appointments_time_formatUS)
+                                    .format(DateTime.parse(
+                                    widget.doc.plannedStartDateTime))
+                                    .toString() ??
+                                    '',
+                                fontWeight: FontWeight.w600,
+                                colors: Color(new CommonUtil().getMyPrimaryColor()),
+                              ),
+                              TextWidget(
+                                fontsize: 12.0.sp,
+                                text: DateFormat.yMMMEd()
+                                    .format(DateTime.parse(
+                                    widget.doc.plannedStartDateTime))
+                                    .toString() ??
+                                    '',
+                                fontWeight: FontWeight.w500,
+                                overflow: TextOverflow.visible,
+                                colors: Colors.black,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
+                      )
+                    ],
+                  )),
+              SizedBoxWidget(height: 10.0),
+              Container(height: 1, color: Colors.black26),
+              widget.doc.doctorSessionId == null
+                  ? SizedBox.shrink()
+                  : Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
+                child: Row(
+                  children: [
+                    commonWidget.iconWithText(
+                        Constants.Appointments_receiptImage,
+                        Colors.black38,
+                        TranslationConstants.receipt.t(), () {
+                      moveToBilsPage(widget.doc.healthRecord);
+                    }, null),
+                    SizedBoxWidget(width: 15.0.w),
+                    commonWidget.iconWithText(
+                        Constants.Appointments_resheduleImage,
+                        Colors.black38,
+                        TranslationConstants.reschedule.t(), () {
+                      FocusManager.instance.primaryFocus.unfocus();
+                      (widget.doc.status != null &&
+                          widget.doc.status.code == Constants.PATDNA)
+                          ? toast.getToast(
+                          TranslationConstants.dnaAppointment.t(),
+                          Colors.red)
+                          : navigateToProviderScreen(widget.doc, true);
+                    }, null),
+                    SizedBoxWidget(width: 15.0.w),
+                    commonWidget.iconWithText(
+                        Constants.Appointments_cancelImage,
+                        Colors.black38,
+                        TranslationConstants.cancel.t(), () {
+                      FocusManager.instance.primaryFocus.unfocus();
+                      (widget.doc.status != null &&
+                          widget.doc.status.code == Constants.PATDNA)
+                          ? toast.getToast(
+                          TranslationConstants.dnaAppointment.t(),
+                          Colors.red)
+                          : _displayDialog(context, [widget.doc]);
+                    }, null),
+                    SizedBoxWidget(width: 15.0.w),
                   ],
-                )),
-            SizedBoxWidget(height: 10.0),
-            Container(height: 1, color: Colors.black26),
-            widget.doc.doctorSessionId == null
-                ? SizedBox.shrink()
-                : Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
-              child: Row(
-                children: [
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      TranslationConstants.receipt.t(), () {
-                    moveToBilsPage(widget.doc.healthRecord);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_resheduleImage,
-                      Colors.black38,
-                      TranslationConstants.reschedule.t(), () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    (widget.doc.status != null &&
-                        widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(
-                        TranslationConstants.dnaAppointment.t(),
-                        Colors.red)
-                        : navigateToProviderScreen(widget.doc, true);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_cancelImage,
-                      Colors.black38,
-                      TranslationConstants.cancel.t(), () {
-                    FocusManager.instance.primaryFocus.unfocus();
-                    (widget.doc.status != null &&
-                        widget.doc.status.code == Constants.PATDNA)
-                        ? toast.getToast(
-                        TranslationConstants.dnaAppointment.t(),
-                        Colors.red)
-                        : _displayDialog(context, [widget.doc]);
-                  }, null),
-                  SizedBoxWidget(width: 15.0.w),
-                ],
-              ),
-            )
-          ],
-        ));
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   void goToChatIntegration(Past doc) {
