@@ -79,14 +79,13 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
       }
 
       controller.updateTabIndex(0);
+      controller.setActiveQurhomeTo(
+        status: true,
+      );
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-
-        landingViewModel = Provider.of<LandingViewModel>(context);
-        controller.setActiveQurhomeTo(
-          status: true,
-        );
+        landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
     } catch (e) {
       print(e);
@@ -103,9 +102,11 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   @override
   dispose() {
     try {
-      controller.setActiveQurhomeTo(
-        status: false,
-      );
+      if(!CommonUtil.isNotINDReg()){
+        controller.setActiveQurhomeTo(
+          status: false,
+        );
+      }
       CommonUtil().initPortraitMode();
       super.dispose();
     } catch (e) {
