@@ -342,6 +342,7 @@ class SheelaBLEController extends GetxController {
         );
         if (model.deviceType.toLowerCase() == "weight" &&
             (model.data.weight ?? '').isNotEmpty) {
+          model.deviceType = model.deviceType.toUpperCase();
           try {
             weightUnit = PreferenceUtil.getStringValue(STR_KEY_WEIGHT);
           } catch (e) {
@@ -368,6 +369,7 @@ class SheelaBLEController extends GetxController {
         model.ackLocal = actualDateTime;
         hublistController.eid = null;
         hublistController.uid = null;
+
         final bool response =
             await BleConnectApiProvider().uploadBleDataReadings(
           model,

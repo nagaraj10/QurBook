@@ -54,6 +54,7 @@ import LS202_DeviceManager
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
     var poPeripheral: CBPeripheral!
+    var weightPeripheral: CBPeripheral!
     var SPO2Manager : GoldenSPO2Manager!
     var BloodpressureManager : GoldenBloodpressureManager!
     var LS202DeviceManager : GoldenLS202DeviceManager!
