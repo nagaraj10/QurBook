@@ -624,6 +624,7 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
+const String strGoToQurbook = 'Go to Qurbook';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
