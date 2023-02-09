@@ -2233,6 +2233,11 @@ if (redirect_to?.contains("qurbookServiceRequestStatusUpdate") == true ){
         } else if (redirect_to?.contains("communicationSetting") == true) {
 
             sharedValue = "ack&${redirect_to}"
+        }
+        else if (redirect_to?.contains(Constants.APPOINTMENT_DETAIL) == true)
+        {
+
+            sharedValue = "ack&${redirect_to}&${appointmentID}&${notificationListId}"
         } else if (externalLink != null && externalLink != "") {
             if (!externalLink.startsWith("http://") && !externalLink.startsWith("https://"))
                 externalLink = "http://" + externalLink

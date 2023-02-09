@@ -22,6 +22,7 @@ import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Widgets/BadgeIconBig.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/video_call/model/UpdatedInfo.dart';
 import 'package:myfhb/video_call/model/messagedetails.dart';
 import 'package:myfhb/video_call/model/msgcontent.dart';
@@ -5448,7 +5449,7 @@ class CommonUtil {
   OnInitAction() async {
     dbInitialize();
     QurPlanReminders.getTheRemindersFromAPI();
-    initSocket();
+    //initSocket();
     Future.delayed(const Duration(seconds: 1)).then((_) {
       if (Platform.isIOS) {
         if (PreferenceUtil.isKeyValid(NotificationData)) {
@@ -5523,7 +5524,18 @@ class CommonUtil {
       return false;
     }
   }
+
+  AppointmentDetailsController onInitAppointmentDetailsController() {
+    AppointmentDetailsController appointmentDetailsController;
+    if (!Get.isRegistered<AppointmentDetailsController>()) {
+      Get.put(AppointmentDetailsController());
+    }
+    appointmentDetailsController = Get.find();
+    return appointmentDetailsController;
+  }
+
 }
+
 
 extension CapExtension on String {
   String get inCaps =>

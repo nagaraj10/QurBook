@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/unit/choose_unit.dart';
+import 'package:myfhb/QurHub/Controller/HubListViewController.dart';
+import 'package:myfhb/QurHub/View/HubListView.dart';
 import 'package:myfhb/common/DexComWebScreen.dart';
 import 'package:myfhb/common/common_circular_indicator.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
@@ -1480,6 +1482,32 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     ]),
               ),
             ],
+          ),
+        ),
+        Divider(),
+        Theme(
+          data: theme,
+          child: ListTile(
+            onTap: () {
+              try {
+                //Get.back();
+                Get.to(
+                  () => HubListView(),
+                  binding: BindingsBuilder(
+                    () {
+                      if (!Get.isRegistered<HubListViewController>()) {
+                        Get.lazyPut(
+                          () => HubListViewController(),
+                        );
+                      }
+                    },
+                  ),
+                );
+              } catch (e) {}
+            },
+            title: Text(variable.strConnectedDevices,
+                style: TextStyle(
+                    fontWeight: FontWeight.w500, color: Colors.black)),
           ),
         ),
         Divider(),

@@ -782,6 +782,11 @@ double itemWidth = width / 2;
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
 
+const String address = 'Address';
+const String city = 'City';
+const String state = 'State';
+const String pincode = 'Pincode';
+
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {
     await _firebaseAnalytics.logEvent(

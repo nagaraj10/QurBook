@@ -19,6 +19,8 @@ import 'package:myfhb/src/ui/SheelaAI/Services/SheelaAIBLEServices.dart';
 import 'package:myfhb/src/ui/SheelaAI/Services/SheelaQueueServices.dart';
 import 'package:myfhb/src/ui/settings/CaregiverSettng.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 
 import 'IntroScreens/IntroductionScreen.dart';
@@ -970,6 +972,21 @@ class _MyFHBState extends State<MyFHB> {
           });
           Get.to(ManageActivitiesScreen()).then((value) =>
               PageNavigator.goToPermanent(context, router.rt_Landing));
+        }  else if (passedValArr[1] == strAppointmentDetail) {
+          fbaLog(eveParams: {
+            'eventTime': '${DateTime.now()}',
+            'ns_type': 'appointmentDetail',
+            'navigationPage': 'Appointment Detail Page',
+          });
+          if (passedValArr[2] != null) {
+            if (!Get.isRegistered<AppointmentDetailsController>())
+              Get.lazyPut(() => AppointmentDetailsController());
+
+            AppointmentDetailsController appointmentDetailsController =
+            Get.find<AppointmentDetailsController>();
+            appointmentDetailsController.getAppointmentDetail(passedValArr[2]);
+            Get.to(() => AppointmentDetailScreen());
+          }
         } else {
           fbaLog(eveParams: {
             'eventTime': '${DateTime.now()}',
@@ -1529,6 +1546,11 @@ class _MyFHBState extends State<MyFHB> {
                 nsRoute: 'manageActivities',
                 bundle: parsedData[2],
               );
+            } else if (parsedData[1] == strAppointmentDetail) {
+              if (parsedData[2] != null) {
+                return SplashScreen(
+                    nsRoute: strAppointmentDetail, bundle: navRoute);
+              }
             } else {
               return SplashScreen(
                 nsRoute: '',
