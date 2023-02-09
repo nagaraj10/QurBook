@@ -162,14 +162,14 @@ class _LandingScreenState extends State<LandingScreen> {
       //   }
       // });
 
-      // initSocket();
+       CommonUtil().initSocket();
       sheelBadgeController.getSheelaBadgeCount();
     } catch (e) {
       print(e);
     }
   }
 
-  void initSocket() {
+  /*void initSocket() {
     Provider.of<ChatSocketViewModel>(Get.context, listen: false)
         ?.socket
         .off(getChatTotalCountOn);
@@ -201,7 +201,7 @@ class _LandingScreenState extends State<LandingScreen> {
         }
       }
     });
-  }
+  }*/
 
   @override
   void dispose() {

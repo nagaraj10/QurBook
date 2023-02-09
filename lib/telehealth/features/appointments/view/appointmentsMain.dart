@@ -18,9 +18,11 @@ class AppointmentsMain extends StatefulWidget {
   AppointmentsMain({
     this.isHome = false,
     this.onBackPressed,
+    this.isFromQurday=false,
   });
 
   final bool isHome;
+  final bool isFromQurday;
   final Function onBackPressed;
 
   @override
@@ -53,6 +55,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
         ],
         child: Appointments(
           isHome: widget.isHome,
+          isFromQurday: widget.isFromQurday,
         ),
       )),
     );
