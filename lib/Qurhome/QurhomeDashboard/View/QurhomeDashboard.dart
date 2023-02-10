@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
@@ -60,12 +61,23 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
   void initState() {
     try {
       super.initState();
+      onInit();
+    } catch (e) {
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
+    }
+  }
+
+  onInit() async {
+    try {
       if (CommonUtil.isNotINDReg()) {
         Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
         CommonUtil().initSocket();
 
         Provider.of<LandingViewModel>(context, listen: false)
             .getQurPlanDashBoard(needNotify: true);
+        await CommonUtil().getUserProfileData();
       }
       if (CommonUtil.REGION_CODE == "IN") {
         CommonUtil().requestQurhomeDialog();
@@ -88,7 +100,9 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
         //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 

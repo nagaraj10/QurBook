@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/Qurhome/QurhomeDashboard/Controller/QurhomeDashboardController.dart';
 import 'package:myfhb/chat_socket/constants/const_socket.dart';
 import 'package:myfhb/chat_socket/model/TotalCountModel.dart';
 import 'package:myfhb/chat_socket/viewModel/chat_socket_view_model.dart';
@@ -193,6 +194,12 @@ class SwitchProfile {
 
         //Navigator.of(context).pop();
         //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        QurhomeDashboardController qurhomeDashboardController;
+        if (!Get.isRegistered<QurhomeDashboardController>()) {
+          Get.put(QurhomeDashboardController());
+        }
+        qurhomeDashboardController = Get.find();
+        qurhomeDashboardController.updateTabIndex(qurhomeDashboardController.currentSelectedIndex.value);
       });
     });
   }
