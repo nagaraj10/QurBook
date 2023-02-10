@@ -271,11 +271,17 @@ Future<void> main() async {
     }
 
     // check if the app install on first time
-    var isFirstTime = await CommonUtil().isFirstTime();
-    if (!isFirstTime) {
-      try {
+    try {
+      var isFirstTime = await CommonUtil().isFirstTime();
+      var tokenForLogin =
+          await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      if (!isFirstTime && (tokenForLogin ?? '').isNotEmpty) {
         CategoryListBlock().getCategoryLists();
-      } catch (e) {}
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
     // SystemChrome.setSystemUIOverlayStyle(
     //   const SystemUiOverlayStyle(
