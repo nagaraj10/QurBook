@@ -61,7 +61,7 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
 
   HubListViewController hubController = Get.find();
   SheelaBLEController _sheelaBLEController;
-  var chatGetXController = Get.find<ChatUserListController>();
+  ChatUserListController chatGetXController;
 
   AnimationController animationController;
 
@@ -77,7 +77,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
         controller.dateHeader.value = controller.getFormatedDate();
       });
 
+      if (!Get.isRegistered<ChatUserListController>()) {
+        Get.put(ChatUserListController());
+      }
+      chatGetXController = Get.find();
       controller.currLoggedEID.value = "";
+      controller.isFirstTime.value = true;
       controller.getRegimenList();
       chatGetXController.getUnreadCountFamily().then(
         (value) {
@@ -213,8 +218,12 @@ class _QurHomeRegimenScreenState extends State<QurHomeRegimenScreen>
             GestureDetector(
               onTap: () {
                 try {
-                  FHBUtils().check().then((intenet) {
+                  FHBUtils().check().then((intenet) async {
                     if (intenet != null && intenet) {
+                      if (CommonUtil().isTablet &&
+                          controller.careCoordinatorId.value.trim().isEmpty) {
+                        await controller.getCareCoordinatorId();
+                      }
                       initSOSCall();
                     } else {
                       FlutterToast().getToast(

@@ -101,7 +101,9 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                  let serviceId = serviceIdArray.firstObject as? CBUUID{
             let decodedString = newdata.hexEncodedString()
             let macID = decodedString.inserting()
-            centralManager.stopScan()
+            if(centralManager != nil){
+                centralManager.stopScan()
+            }
             connectedWithWeighingscale = false
             guard let deviceName = advertisementData[Constants.BLENameData] as? String else {
                 eventSink?("Failed|Failed to get the device details")
@@ -135,10 +137,12 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
             //            }
         } else if let deviceName = advertisementData[Constants.BLENameData] as? String,((deviceName == Constants.WOWGOWT1) || (deviceName == Constants.WOWGOWT2) || (deviceName == Constants.WOWGOWT3)){
             connectedWithWeighingscale = true
-            centralManager.stopScan()
-            poPeripheral = peripheral
-            poPeripheral.delegate = self
-            centralManager.connect(poPeripheral)
+            if(centralManager != nil){
+                centralManager.stopScan()
+            }
+            weightPeripheral = peripheral
+            weightPeripheral.delegate = self
+            centralManager.connect(weightPeripheral)
         }
     }
     
@@ -146,7 +150,6 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
         if(connectedWithWeighingscale){
             peripheral.discoverServices([Constants.deviceInformationServiceUUID])
         }else{
-            
             eventSink?("connected|connected successfully!!!")
             poPeripheral.discoverServices([Constants.poServiceCBUUID])
         }
@@ -188,10 +191,11 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                             //                            //print( "mac string read as \(macID)!")
                             eventSink?("macid|"+macID)
                             eventSink?("bleDeviceType|weight")
+                            centralManager.cancelPeripheralConnection(weightPeripheral)
+                            weightPeripheral.delegate = nil
+                            weightPeripheral = nil
                             LS202DeviceManager = GoldenLS202DeviceManager(delegate: self)
                             LS202DeviceManager.scanLeDevice(true)
-                            poPeripheral = nil
-                            centralManager = nil
                         }
                         break
                     }
@@ -243,7 +247,11 @@ extension AppDelegate:FlutterStreamHandler, CBCentralManagerDelegate, CBPeripher
                     //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
-                    centralManager.stopScan()
+                    if(centralManager != nil){
+                        centralManager.stopScan()
+                        centralManager.cancelPeripheralConnection(poPeripheral)
+                    }
+                    
                     if( characteristic.isNotifying){
                         peripheral.setNotifyValue(false, for: characteristic)
                     }
@@ -388,13 +396,16 @@ extension AppDelegate:GoldenSPO2ManagerCallback,GoldenBloodpressureManagerCallba
                     //print(serlized)
                     eventSink?("measurement|"+serlized)
                     eventSink = nil
+                    if(centralManager != nil){
+                        centralManager.stopScan()
+                    }
                 }
             }
-//            //print("Weight is %d",weight)
+            //            //print("Weight is %d",weight)
         }
     }
     
     func showLogMessage(_ log: String!) {
-//        //print("GoldenBleDeviceManager Log : ",log!);
+                print("GoldenBleDeviceManager Log : ",log!);
     }
 }

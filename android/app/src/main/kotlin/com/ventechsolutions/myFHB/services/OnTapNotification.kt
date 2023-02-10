@@ -44,6 +44,7 @@ class OnTapNotification:BroadcastReceiver() {
         val isSheela = p1?.getStringExtra(Constants.PROP_ISSHEELA)
         val eventType = p1?.getStringExtra(Constants.EVENT_TYPE)
         val others = p1?.getStringExtra(Constants.OTHERS)
+        val appointmentId = p1?.getStringExtra(Constants.APPOINTMENTID)
 
 
         val appLog = p1?.getStringExtra(p0?.getString(R.string.ns_type_applog))
@@ -96,6 +97,7 @@ class OnTapNotification:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.ns_type_applog),appLog)
         launchIntent?.putExtra(Constants.EVENT_TYPE,eventType)
         launchIntent?.putExtra(Constants.OTHERS,others)
+        launchIntent?.putExtra(Constants.APPOINTMENTID,appointmentId)
 
 
         p0.startActivity(launchIntent)

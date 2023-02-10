@@ -624,6 +624,7 @@ const String strDefaultUI = 'Set Qurhome as default UI';
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
+const String strGoToQurbook = 'Go to Qurbook';
 const String strConnectedDevices = 'Connected Devices';
 const String strQurHome = 'QurHome';
 const String strQurHomeinQurBook = 'QurHome in QurBook';
@@ -784,6 +785,19 @@ const String strAlert = 'Alert';
 
 const String patientId = "patientId";
 const String familyMemberId = "familyMemberId";
+
+const String appointmentDetails = "Appointment Details";
+const String appointmentSchedule = "Schedule";
+const String appointmentInformation = "Appointment Information";
+const String appointmentTestName = "Test Name";
+const String appointmentAddress = "Address";
+const String appointmentLabAddress = "Lab Address";
+const String appointmentDescription = "Description";
+const String appointmentPickupaddress = "Pick up address";
+const String appointmentDropAddress = "Drop address";
+const String appointmentSlot = "Slot";
+const String appointmentHospitalName = "Hospital Name";
+const String appointmentHospitalAddress = "Hospital Address";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

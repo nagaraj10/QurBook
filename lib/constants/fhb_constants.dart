@@ -768,6 +768,8 @@ const String FETCH_PROFILE_PIC = 'file-guard/fileData/profilePicture/';
 
 const String strWrapperCall = 'wrapperCall';
 
+const String IND_REG = 'IN';
+
 double height = 0.0;
 double width = 0.0;
 double kToolbarHeight = 56.0;
@@ -777,6 +779,11 @@ double itemWidth = width / 2;
 
 FirebaseAnalytics _firebaseAnalytics = FirebaseAnalytics();
 var mInitialTime;
+
+const String address = 'Address';
+const String city = 'City';
+const String state = 'State';
+const String pincode = 'Pincode';
 
 Future<void> fbaLog({String eveName, eveParams}) async {
   try {

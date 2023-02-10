@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
@@ -73,6 +74,8 @@ class QurhomeRegimenController extends GetxController {
   var qurhomeDashboardController = Get.put(QurhomeDashboardController());
 
   Timer timer;
+
+  var isFirstTime = true.obs;
 
   getRegimenList({bool isLoading = true}) async {
     try {
@@ -146,10 +149,15 @@ class QurhomeRegimenController extends GetxController {
       qurhomeDashboardController.getValuesNativeAppointment();
 
       update(["newUpdate"]);
-      getUserDetails();
-      getCareCoordinatorId();
+      if (isFirstTime.value) {
+        isFirstTime.value = false;
+        getUserDetails();
+        getCareCoordinatorId();
+      }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
       loadingData.value = false;
       loadingDataWithoutProgress.value = false;
     }
@@ -161,33 +169,23 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       super.onClose();
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   @override
   void onInit() {
-    try {
-      super.onInit();
-    } catch (e) {
-      print(e);
-    }
+    super.onInit();
   }
 
   updateTimerValue(double value) async {
-    try {
-      timerProgress.value = value;
-    } catch (e) {
-      print(e);
-    }
+    timerProgress.value = value;
   }
 
   updateisShowTimerDialog(bool value) async {
-    try {
-      isShowTimerDialog.value = value;
-    } catch (e) {
-      print(e);
-    }
+    isShowTimerDialog.value = value;
   }
 
   getCurrentLocation() async {
@@ -208,11 +206,15 @@ class QurhomeRegimenController extends GetxController {
             .then((Position position) {
           getAddressFromLatLng(position.latitude, position.longitude);
         }).catchError((e) {
-          print(e);
+          if (kDebugMode) {
+            printError(info: e.toString());
+          }
         });
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -243,7 +245,9 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -279,7 +283,9 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -338,7 +344,9 @@ class QurhomeRegimenController extends GetxController {
             'Could not start call due to permission issue', Colors.red);
       }
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -361,7 +369,9 @@ class QurhomeRegimenController extends GetxController {
               .validString(prof.result.userContactCollection3[0].phoneNumber)
           : '';
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -387,16 +397,14 @@ class QurhomeRegimenController extends GetxController {
         }
       }
     } catch (e) {
-      //print(e.toString());
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   void updateSOSAgentCallDialogStatus(bool newStatus) {
-    try {
-      isSOSAgentCallDialogOpen.value = newStatus;
-    } catch (e) {
-      //print(e);
-    }
+    isSOSAgentCallDialogOpen.value = newStatus;
   }
 
   void startTimer() {
@@ -407,7 +415,9 @@ class QurhomeRegimenController extends GetxController {
         getRegimenList(isLoading: false);
       });
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
@@ -416,17 +426,15 @@ class QurhomeRegimenController extends GetxController {
       timer?.cancel();
       startTimer();
     } catch (e) {
-      //print(e);
+      if (kDebugMode) {
+        printError(info: e.toString());
+      }
     }
   }
 
   showCurrLoggedRegimen(RegimentDataModel regimen) {
-    try {
-      currLoggedEID.value = CommonUtil().validString(regimen.eid.toString());
-      getRegimenList();
-    } catch (e) {
-      //print(e);
-    }
+    currLoggedEID.value = CommonUtil().validString(regimen?.eid?.toString());
+    getRegimenList();
   }
 
   String getFormatedDate() {

@@ -645,6 +645,7 @@ const String strPlannedFollowupDate = 'plannedFollowupDate';
 const String strPaymentInfo = 'paymentInfo';
 const String eventType = 'eventType';
 const String others = 'others';
+const String appointmentId = 'appointmentId';
 
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
@@ -815,6 +816,7 @@ const String strHealthRecordMetaId = 'healthRecordMetaId';
 const String strDestinationUserId = 'destinationUserId';
 const String strSourceUserId = 'sourceUserId';
 const String strcityName = 'cityName';
+const String strstateName = 'stateName';
 
 const String errAssociateRecords =
     'Error while creating shared record details.';
@@ -830,3 +832,4 @@ const String strCopyVitalsMsg =
     'Matching activity is found in your regimen, do you want to copy the values?';
 const String strglucose = 'SPO2';
 const String strBloodSugar = 'BloodSugar';
+const String strAppointmentDetail = 'appointmentDetail';

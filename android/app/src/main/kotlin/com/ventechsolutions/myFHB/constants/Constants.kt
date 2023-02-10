@@ -125,5 +125,6 @@ object Constants {
     val OTHERS = "others"
     val WRAPPERCALL = "wrapperCall"
     val NOTIFICATIONLISTID = "notificationListId"
+    val APPOINTMENT_DETAIL = "appointmentDetail"
 
 }

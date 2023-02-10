@@ -15,6 +15,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -34,11 +35,13 @@ import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.da
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/chat/view/PDFViewerController.dart';
@@ -94,6 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
     PreferenceUtil.init();
     CommonUtil().ListenForTokenUpdate();
     Provider.of<ChatSocketViewModel>(Get.context)?.initSocket();
+    CommonUtil().OnInitAction();
   }
 
   @override
@@ -243,7 +247,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           rawTitle = parsedData[0];
                           rawBody = parsedData[1];
                           notificationListId = parsedData[2] ?? '';
-                        }else if (parsedData.length == 5)
+                        } else if (parsedData.length == 5) 
                         {
                           eventType = parsedData[0];
                           others = parsedData[1];
@@ -688,6 +692,26 @@ class _SplashScreenState extends State<SplashScreen> {
                       Get.to(ManageActivitiesScreen()).then((value) =>
                           PageNavigator.goToPermanent(
                               context, router.rt_Landing));
+                    } else if (widget.nsRoute == strAppointmentDetail) {
+                      var passedValArr = widget.bundle?.split('&');
+                      fbaLog(eveParams: {
+                        'eventTime': '${DateTime.now()}',
+                        'ns_type': 'appointmentDetail',
+                        'navigationPage': 'Appointment Detail Page',
+                      });
+                      if (passedValArr[2] != null) {
+                        if (!Get.isRegistered<AppointmentDetailsController>())
+                          Get.lazyPut(() => AppointmentDetailsController());
+
+                        AppointmentDetailsController
+                            appointmentDetailsController =
+                            Get.find<AppointmentDetailsController>();
+                        appointmentDetailsController
+                            .getAppointmentDetail(passedValArr[2]);
+                        Get.to(() => AppointmentDetailScreen()).then((value) =>
+                            PageNavigator.goToPermanent(
+                                context, router.rt_Landing));
+                      }
                     } else {
                       fbaLog(eveParams: {
                         'eventTime': '${DateTime.now()}',

@@ -54,6 +54,7 @@ import LS202_DeviceManager
     let showViewMemberAndCommunicationButtons = "showViewMemberAndCommunicationButtons"
     var centralManager: CBCentralManager!
     var poPeripheral: CBPeripheral!
+    var weightPeripheral: CBPeripheral!
     var SPO2Manager : GoldenSPO2Manager!
     var BloodpressureManager : GoldenBloodpressureManager!
     var LS202DeviceManager : GoldenLS202DeviceManager!
@@ -821,7 +822,7 @@ import LS202_DeviceManager
         //        }else{
         let alert = UIAlertController(title: nil, message: "Loading content", preferredStyle: .actionSheet)
         navigationController?.children.first?.present(alert, animated: true)
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+3) {
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+4) {
             alert.dismiss(animated: true)
             self.responsdToNotificationTap(response: response)
             completionHandler()

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/ui/SheelaAI/Controller/SheelaAIController.dart';
+import 'package:myfhb/telehealth/features/appointments/controller/AppointmentDetailsController.dart';
+import 'package:myfhb/telehealth/features/appointments/view/AppointmentDetailScreen.dart';
 import 'package:myfhb/ticket_support/view/detail_ticket_view_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -380,6 +382,15 @@ class IosNotificationHandler {
           false,
         );
       }
+    } else if (model.redirect == parameters.strAppointmentDetail &&
+        (model.appointmentId ?? '').isNotEmpty) {
+      if (!Get.isRegistered<AppointmentDetailsController>())
+        Get.lazyPut(() => AppointmentDetailsController());
+
+      AppointmentDetailsController appointmentDetailsController =
+          Get.find<AppointmentDetailsController>();
+      appointmentDetailsController.getAppointmentDetail(model.appointmentId);
+      Get.to(() => AppointmentDetailScreen());
     } else if (model.redirect == parameters.chat) {
       if (!notificationReceivedFromKilledState) {
         if ((model.doctorId ?? '').isNotEmpty &&
