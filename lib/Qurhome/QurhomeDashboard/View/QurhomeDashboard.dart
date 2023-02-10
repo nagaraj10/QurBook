@@ -45,7 +45,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
   final sheelBadgeController = Get.put(SheelaAIController());
 
-  LandingViewModel landingViewModel;
+  //LandingViewModel landingViewModel;
 
   double selOption = 30.0.sp;
   double unSelOption = 28.0.sp;
@@ -97,7 +97,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
 
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         sheelBadgeController.getSheelaBadgeCount(isNeedSheelaDialog: true);
-        landingViewModel = Provider.of<LandingViewModel>(Get.context);
+        //landingViewModel = Provider.of<LandingViewModel>(Get.context);
       });
     } catch (e) {
       if (kDebugMode) {
@@ -493,7 +493,7 @@ class _QurhomeDashboardState extends State<QurhomeDashboard> {
             drawer: QurHomeNavigationDrawer(
               myProfile: myProfile,
               moveToLoginPage: moveToLoginPage,
-              userChangedbool: landingViewModel?.isUserMainId ?? false,
+              userChangedbool: false,
               refresh: (userChanged) => refresh(
                 userChanged: userChanged,
               ),
