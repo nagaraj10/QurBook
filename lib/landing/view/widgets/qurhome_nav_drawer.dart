@@ -331,6 +331,7 @@ class QurHomeNavigationDrawer extends StatelessWidget {
                           color: Colors.black54,
                         ),
                         onPressed: () async {
+                          Get.back();
                           Get.toNamed(rt_Regimen);
                         },
                       ),
