@@ -645,6 +645,7 @@ const String strPlannedFollowupDate = 'plannedFollowupDate';
 const String strPaymentInfo = 'paymentInfo';
 const String eventType = 'eventType';
 const String others = 'others';
+const String appointmentId = 'appointmentId';
 
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
