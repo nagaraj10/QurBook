@@ -117,6 +117,17 @@ class _UserAccountsState extends State<UserAccounts>
           appBar: AppBar(
             elevation: 0.0,
             backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(CommonUtil().getMyPrimaryColor()),
+                    Color(CommonUtil().getMyGredientColor()),
+                  ],
+                  stops: [0.5, 1.0],
+                ),
+              ),
+            ),
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
@@ -140,7 +151,7 @@ class _UserAccountsState extends State<UserAccounts>
               } */
             ),
             actions: <Widget>[
-              if (CommonUtil.REGION_CODE != 'IN') getSwitchProfileWidget()
+              if (CommonUtil.REGION_CODE == 'IN') getSwitchProfileWidget()
               // IconButton(
               //     icon: Icon(
               //       Icons.exit_to_app,
